@@ -62,7 +62,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.7 2003/10/19 16:06:32 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.8 2003/10/29 18:58:06 cziegeler Exp $
  */
 public interface Processor extends Component {
 
@@ -108,4 +108,11 @@ public interface Processor extends Component {
      * @since 2.2
      */
     SourceResolver getSourceResolver();
+    
+    /**
+     * Get the context URI for this processor
+     * EXPERIMENTAL
+     * @since 2.2
+     */
+    String getContext();
 }

@@ -95,7 +95,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.19 2003/10/20 08:15:27 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.20 2003/10/29 18:58:06 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -161,8 +161,8 @@ public class TreeProcessor
     /** The different sitemap component configurations */
     protected Map sitemapComponentConfigurations;
     
-    /** The component manager for the sitemap */
-    protected ComponentManager sitemapComponentManager;
+    /** The service manager for the sitemap */
+    protected ServiceManager sitemapComponentManager;
     
     /** The source resolver */
     protected SourceResolver resolver;
@@ -364,8 +364,7 @@ public class TreeProcessor
         }
 
         // and now process
-        //CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
-        EnvironmentHelper.enterProcessor(this);
+        EnvironmentHelper.enterProcessor(this, this.sitemapComponentManager, environment);
         try {
             boolean success = this.rootNode.invoke(environment, context);
             
@@ -388,7 +387,6 @@ public class TreeProcessor
 
         } finally {
             EnvironmentHelper.leaveProcessor();
-            CocoonComponentManager.leaveEnvironment();
         }
     }
     

@@ -49,15 +49,18 @@
 */
 package org.apache.cocoon.components;
 
-import org.apache.avalon.fortress.impl.handler.ComponentHandler;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.xml.XMLConsumer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
+import org.apache.avalon.fortress.impl.handler.ComponentHandler;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentContext;
+import org.apache.cocoon.environment.EnvironmentHelper;
 
 /**
  * RequestLifecycleHelper Encapsulates all the static processing that is needed
@@ -66,183 +69,29 @@ import java.util.*;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-class RequestLifecycleHelper
-{
-    /** The key used to store the current process environment */
-    static final String PROCESS_KEY = RequestLifecycleHelper.class.getName();
-    /** The environment information */
-    private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
+class RequestLifecycleHelper {
 
-    static EnvironmentStack getTopEnvironmentStack()
-    {
-        return (EnvironmentStack)environmentStack.get();
-    }
-
-    /**
-     * This hook must be called by the sitemap each time a sitemap is entered
-     * This method should never raise an exception, except when the
-     * parameters are not set!
-     */
-    static void enterEnvironment(Environment      env,
-                                 ComponentHandler manager,
-                                        Processor        processor) {
-        if ( null == env || null == manager || null == processor) {
-            throw new IllegalArgumentException("CocoonComponentManager.enterEnvironment: all parameters must be set: " + env + " - " + manager + " - " + processor);
+    static final String KEY = RequestLifecycleHelper.class.getName();
+    
+    static EnvironmentDescription getEnvironmentDescription() {
+        final EnvironmentContext context = EnvironmentHelper.getCurrentContext();
+        EnvironmentDescription desc = (EnvironmentDescription) context.getAttribute(KEY);
+        if ( desc == null ) {
+            desc = new EnvironmentDescription(context.getEnvironment());
+            context.addAttribute(KEY, desc);
         }
-
-        EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-		if (stack == null) {
-            stack = new EnvironmentStack();
-			environmentStack.set(stack);
-		}
-		stack.push(new Object[] {env, processor, manager, new Integer(stack.getOffset())});
-        stack.setOffset(stack.size()-1);
-
-        env.setAttribute("CocoonComponentManager.processor", processor);
-    }
-
-    /**
-     * This hook must be called by the sitemap each time a sitemap is left.
-     * It's the counterpart to {@link #enterEnvironment(Environment, ComponentHandler, Processor)}.
-     */
-    static void leaveEnvironment() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objs = (Object[])stack.pop();
-        stack.setOffset(((Integer)objs[3]).intValue());
-        if ( stack.isEmpty() ) {
-            final Environment env = (Environment)objs[0];
-            final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
-            if ( globalComponents != null) {
-
-                final Iterator iter = globalComponents.values().iterator();
-                while ( iter.hasNext() ) {
-                    final Object[] o = (Object[])iter.next();
-                    final Object c = o[0];
-                    ((RequestLifestyleComponentHandler)o[1]).release( c );
-                }
-            }
-            env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
-        }
-    }
-
-    static void checkEnvironment(Logger logger)
-    throws Exception {
-        // TODO (CZ): This is only for testing - remove it later on
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if (stack != null && !stack.isEmpty() ) {
-            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");
-            throw new ProcessingException("Environment stack has not been cleaned up properly. "
-                                          +"Please report this (if possible together with a test case) "
-                                          +"to the Cocoon developers.");
-        }
-    }
-
-    /**
-     * Create an environment aware xml consumer for the cocoon
-     * protocol
-     */
-    static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objs = (Object[])stack.getCurrent();
-        return stack.getEnvironmentAwareConsumerWrapper(consumer, ((Integer)objs[3]).intValue());
-    }
-
-    /**
-     * This hook has to be called before a request is processed.
-     * The hook is called by the Cocoon component and by the
-     * cocoon protocol implementation.
-     * This method should never raise an exception, except when
-     * the environment is not set.
-     *
-     * @return A unique key within this thread.
-     */
-    static Object startProcessing(Environment env) {
-		if ( null == env) {
-			throw new RuntimeException("CocoonComponentManager.startProcessing: environment must be set.");
-		}
-        final EnvironmentDescription desc = new EnvironmentDescription(env);
-        env.getObjectModel().put(PROCESS_KEY, desc);
-		env.startingProcessing();
         return desc;
     }
-
-    /**
-     * This hook has to be called before a request is processed.
-     * The hook is called by the Cocoon component and by the
-     * cocoon protocol implementation.
-     * @param key A unique key within this thread return by
-     *         {@link #startProcessing(Environment)}.
-     */
-    static void endProcessing(Environment env, Object key) {
-		env.finishingProcessing();
-        final EnvironmentDescription desc = (EnvironmentDescription)key;
-        desc.release();
-        env.getObjectModel().remove(PROCESS_KEY);
-    }
-
-    /**
-     * Return the current environment (for the cocoon: protocol)
-     */
-    static Environment getCurrentEnvironment() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if (null != stack && !stack.empty()) {
-            return (Environment) ((Object[])stack.getCurrent())[0];
-        }
-        return null;
-    }
-
-    /**
-     * Return the current processor (for the cocoon: protocol)
-     */
-    static Processor getCurrentProcessor() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if (null != stack && !stack.empty()) {
-            return (Processor) ((Object[])stack.getCurrent())[1];
-        }
-        return null;
-    }
-
-    /**
-     * Return the processor that is actually processing the request
-     */
-    static Processor getLastProcessor(Environment env) {
-        return (Processor)env.getAttribute("CocoonComponentManager.processor");
-    }
-
-    /**
-     * Get the current sitemap component manager.
-     * This method return the current sitemap component manager. This
-     * is the manager that holds all the components of the currently
-     * processed (sub)sitemap.
-     */
-    static public ServiceManager getSitemapComponentManager() {
-		final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-
-		if ( null != stack && !stack.empty()) {
-			Object[] o = (Object[])stack.peek();
-			return (ServiceManager)o[2];
-		}
-
-        // if we don't have an environment yet, just return null
-        return null;
-    }
-
+    
     /**
      * Add an automatically released component
      */
     static void addComponentForAutomaticRelease(final ComponentHandler manager,
                                                        final Object        component)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
-                desc.addToAutoRelease(manager, component);
-            }
-        } else {
-            throw new ProcessingException("Unable to add component for automatic release: no environment available.");
+        EnvironmentDescription desc = getEnvironmentDescription();
+        if ( null != desc ) {
+            desc.addToAutoRelease(manager, component);
         }
     }
 
@@ -251,50 +100,15 @@ class RequestLifecycleHelper
      */
     public static void removeFromAutomaticRelease(final Object component)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
-                desc.removeFromAutoRelease(component);
-            }
-        } else {
-            throw new ProcessingException("Unable to remove component from automatic release: no environment available.");
-        }
-    }
-}
-
-final class CloningInheritableThreadLocal
-        extends InheritableThreadLocal
-{
-
-    /**
-     * Computes the child's initial value for this InheritableThreadLocal
-     * as a function of the parent's value at the time the child Thread is
-     * created.  This method is called from within the parent thread before
-     * the child is started.
-     * <p>
-     * This method merely returns its input argument, and should be overridden
-     * if a different behavior is desired.
-     *
-     * @param parentValue the parent thread's value
-     * @return the child thread's initial value
-     */
-    protected Object childValue( Object parentValue )
-    {
-        if ( null != parentValue )
-        {
-            return ( (EnvironmentStack) parentValue ).clone();
-        }
-        else
-        {
-            return null;
+        EnvironmentDescription desc = getEnvironmentDescription();
+        if ( null != desc ) {
+            desc.removeFromAutoRelease(component);
         }
     }
 }
 
 final class EnvironmentDescription
+implements Disposable
 {
     Environment environment;
     Map objectModel;
@@ -326,7 +140,7 @@ final class EnvironmentDescription
      * All RequestLifecycleComponents and autoreleaseComponents are
      * released.
      */
-    void release()
+    public void dispose()
     {
         if ( this.requestLifecycleComponents != null )
         {

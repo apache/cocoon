@@ -56,6 +56,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -69,13 +70,16 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.5 2003/10/27 07:57:26 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.6 2003/10/29 18:58:06 cziegeler Exp $
  * @since 2.2
  */
-
 public class EnvironmentHelper
 extends AbstractLogEnabled
 implements SourceResolver, Serviceable, Disposable {
+
+    /** The key used to store the current environment context
+     * in the object model */
+    static final String PROCESS_KEY = EnvironmentHelper.class.getName();
 
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver resolver;
@@ -122,7 +126,7 @@ implements SourceResolver, Serviceable, Disposable {
                     this.rootContext = this.context;
                 }
             } catch (IOException ioe) {
-                throw new ServiceException("Unable to resolve environment context. ", ioe);
+                throw new ServiceException("EnvironmentHelper", "Unable to resolve environment context. ", ioe);
             } finally {
                 this.resolver.release(source);
             }
@@ -168,10 +172,24 @@ implements SourceResolver, Serviceable, Disposable {
         return this.resolveURI(location, null, null);
     }
 
+    /**
+     * Return the current context URI
+     */
+    public String getContext() {
+        return this.context;
+    }
+    
+    /**
+     * Return the prefix
+     */
+    public String getPrefix() {
+        return this.prefix;
+    }
+    
     public void changeContext(Environment env) 
     throws ProcessingException {
-        String uris = env.getURI();
         if ( this.prefix != null ) {
+            String uris = env.getURIPrefix() + '/' + env.getURI();
             if (!uris.startsWith(this.prefix)) {
                 String message = "The current URI (" + uris +
                                  ") doesn't start with given prefix (" + prefix + ")";
@@ -182,7 +200,7 @@ implements SourceResolver, Serviceable, Disposable {
             // of uris - the prefix always ends with a slash!
             final int l = this.prefix.length();
             uris = uris.substring(l);
-            env.setURI(uris);
+            env.setURI(this.prefix, uris);
         }
     }
     
@@ -263,7 +281,9 @@ implements SourceResolver, Serviceable, Disposable {
      * This method should never raise an exception, except when the
      * parameters are not set!
      */
-    public static void enterProcessor(Processor processor) {
+    public static void enterProcessor(Processor processor,
+                                      ServiceManager manager,
+                                      Environment env) {
         if ( null == processor) {
             throw new IllegalArgumentException("Processor is not set.");
         }
@@ -273,8 +293,10 @@ implements SourceResolver, Serviceable, Disposable {
             stack = new EnvironmentStack();
             environmentStack.set(stack);
         }
-        stack.push(new EnvironmentInfo(processor, stack.getOffset()));
+        stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), manager, env));
         stack.setOffset(stack.size()-1);
+        // FIXME - Put it somewhere else
+        env.setAttribute("EnvironmentHelper.processor", processor);
     }
 
     /**
@@ -287,25 +309,88 @@ implements SourceResolver, Serviceable, Disposable {
         stack.setOffset(info.oldStackCount);
     }
 
+    public static void checkEnvironment(Logger logger)
+    throws Exception {
+        // TODO (CZ): This is only for testing - remove it later on
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if (stack != null && !stack.isEmpty() ) {
+            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");
+            throw new ProcessingException("Environment stack has not been cleaned up properly. "
+                                          +"Please report this (if possible together with a test case) "
+                                          +"to the Cocoon developers.");
+        }
+    }
+
+    /**
+     * This hook has to be called before a request is processed.
+     * The hook is called by the Cocoon component and by the
+     * cocoon protocol implementation.
+     * This method should never raise an exception, except when
+     * the environment is not set.
+     *
+     * @return A unique key within this thread.
+     */
+    public static Object startProcessing(Environment env) {
+        if ( null == env) {
+            throw new RuntimeException("EnvironmentHelper.startProcessing: environment must be set.");
+        }
+        final EnvironmentContext desc = new EnvironmentContext(env);
+        env.getObjectModel().put(PROCESS_KEY, desc);
+        env.startingProcessing();
+        return desc;
+    }
+
+    /**
+     * Return the environment context
+     */
+    public static EnvironmentContext getCurrentContext() {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final EnvironmentInfo info = stack.getCurrentInfo();
+        final Map objectModel = info.environment.getObjectModel();
+        return (EnvironmentContext)objectModel.get(PROCESS_KEY);
+    }
+    
+    /**
+     * This hook has to be called before a request is processed.
+     * The hook is called by the Cocoon component and by the
+     * cocoon protocol implementation.
+     * @param key A unique key within this thread return by
+     *         {@link #startProcessing(Environment)}.
+     */
+    public static void endProcessing(Environment env, Object key) {
+        env.finishingProcessing();
+        final EnvironmentContext desc = (EnvironmentContext)key;
+        desc.dispose();
+        env.getObjectModel().remove(PROCESS_KEY);
+    }
+
     /**
      * Return the current processor
      */
     public static Processor getCurrentProcessor() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
-            final EnvironmentInfo info = stack.getCurrent();
+            final EnvironmentInfo info = stack.getCurrentInfo();
             return info.processor;
         }
         return null;
     }
     
     /**
+     * Return the processor that is actually processing the request
+     */
+    public static Processor getLastProcessor(Environment env) {
+        // FIXME - Put it somewhere else
+        return (Processor)env.getAttribute("EnvironmentHelper.processor");
+    }
+
+    /**
      * Create an environment aware xml consumer for the cocoon
      * protocol
      */
     public static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final EnvironmentInfo info = stack.getCurrent();
+        final EnvironmentInfo info = stack.getCurrentInfo();
         return stack.getEnvironmentAwareConsumerWrapper(consumer, info.oldStackCount);
     }
 }

@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.environment;
 
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.collections.ArrayStack;
 import org.xml.sax.Attributes;
@@ -63,7 +62,7 @@ import org.xml.sax.SAXException;
  * cocoon protocol and the sitemap source resolving.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.2 2003/10/24 12:49:40 cziegeler Exp $
+ * @version CVS $Id: EnvironmentStack.java,v 1.3 2003/10/29 18:58:06 cziegeler Exp $
  */
 final class EnvironmentStack 
     extends ArrayStack 
@@ -71,8 +70,20 @@ final class EnvironmentStack
     
     int offset;
     
-    EnvironmentInfo getCurrent() {
+    EnvironmentInfo getCurrentInfo() {
         return (EnvironmentInfo)this.get(offset);
+    }
+    
+    void pushInfo(EnvironmentInfo info) {
+        this.push(info);
+    }
+    
+    EnvironmentInfo popInfo() {
+        return (EnvironmentInfo)this.pop();
+    }
+    
+    EnvironmentInfo peekInfo() {
+        return (EnvironmentInfo)this.peek();
     }
     
     int getOffset() {
@@ -92,17 +103,6 @@ final class EnvironmentStack
     XMLConsumer getEnvironmentAwareConsumerWrapper(XMLConsumer consumer, 
                                                    int oldOffset) {
         return new EnvironmentChanger(consumer, this, oldOffset, this.offset);
-    }
-}
-
-final class EnvironmentInfo {
-    
-    public final Processor processor;
-    public final int       oldStackCount;
-    
-    public EnvironmentInfo(Processor processor, int oldStackCount) {
-        this.processor = processor;
-        this.oldStackCount = oldStackCount;
     }
 }
 

@@ -65,10 +65,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
@@ -89,7 +89,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.15 2003/10/29 14:45:54 vgritsenko Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.16 2003/10/29 18:58:05 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -155,7 +155,7 @@ implements Source, XMLizable {
                          Logger         logger)
     throws MalformedURLException {
 
-        Environment env = CocoonComponentManager.getCurrentEnvironment();
+        Environment env = EnvironmentHelper.getCurrentContext().getEnvironment();
         if ( env == null ) {
             throw new MalformedURLException("The cocoon protocol can not be used outside an environment.");
         }
@@ -191,7 +191,7 @@ implements Source, XMLizable {
         } else if (uri.startsWith("/", position)) {
             position ++;
             prefix = null;
-            this.processor = CocoonComponentManager.getCurrentProcessor();
+            this.processor = EnvironmentHelper.getCurrentProcessor();
         } else {
             throw new MalformedURLException("Malformed cocoon URI: " + uri);
         }
@@ -301,14 +301,14 @@ implements Source, XMLizable {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
-            CocoonComponentManager.enterEnvironment(this.environment,
-                                                    this.manager,
-                                                    this.pipelineProcessor);
+            EnvironmentHelper.enterProcessor(this.pipelineProcessor, 
+                                            this.manager,
+                                            this.environment);
             try {
                 
                 this.processingPipeline.process(this.environment);
             } finally {
-                CocoonComponentManager.leaveEnvironment();
+                EnvironmentHelper.leaveProcessor();
             }
             return new ByteArrayInputStream(os.toByteArray());
 
@@ -378,17 +378,17 @@ implements Source, XMLizable {
     protected void init() {
         this.systemIdForCaching = this.systemId;
         try {
-            this.processKey = CocoonComponentManager.startProcessing(this.environment);
+            this.processKey = EnvironmentHelper.startProcessing(this.environment);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
-            this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment); 
+            this.pipelineProcessor = EnvironmentHelper.getLastProcessor(this.environment); 
             this.environment.changeToLastContext();
 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {
 
-                CocoonComponentManager.enterEnvironment(this.environment,
-                                                        this.manager,
-                                                        this.pipelineProcessor);
+                EnvironmentHelper.enterProcessor(this.pipelineProcessor,
+                                                 this.manager,
+                                                 this.environment);
                 try {
                     this.processingPipeline.prepareInternal(this.environment);
                     this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
@@ -407,7 +407,7 @@ implements Source, XMLizable {
                         this.systemIdForCaching = this.systemId; 
                     }
                 } finally {
-                    CocoonComponentManager.leaveEnvironment();
+                    EnvironmentHelper.leaveProcessor();
                 }
             } else {
                 if (redirectURL.indexOf(":") == -1) {
@@ -456,14 +456,14 @@ implements Source, XMLizable {
 	            }
                 // We have to add an environment changer
                 // for clean environment stack handling.
-                CocoonComponentManager.enterEnvironment(this.environment,
-                                                        this.manager,
-                                                        this.pipelineProcessor);
+                EnvironmentHelper.enterProcessor(this.pipelineProcessor,
+                                                 this.manager,
+                                                 this.environment);
                 try {
                     this.processingPipeline.process(this.environment,
-                                       CocoonComponentManager.createEnvironmentAwareConsumer(consumer)); 
+                                 EnvironmentHelper.createEnvironmentAwareConsumer(consumer)); 
                 } finally {
-                    CocoonComponentManager.leaveEnvironment();
+                    EnvironmentHelper.leaveProcessor();
                 }
             }
         } catch (SAXException e) {
@@ -483,7 +483,7 @@ implements Source, XMLizable {
     private void reset() {
         if (this.processingPipeline != null) this.processingPipeline.release();
         if (this.processKey != null) {
-            CocoonComponentManager.endProcessing(this.environment, this.processKey);
+            EnvironmentHelper.endProcessing(this.environment, this.processKey);
             this.processKey = null;
         }
         this.processingPipeline = null;

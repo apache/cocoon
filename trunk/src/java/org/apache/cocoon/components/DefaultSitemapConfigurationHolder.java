@@ -53,10 +53,12 @@ package org.apache.cocoon.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.environment.EnvironmentHelper;
+
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.6 2003/10/22 15:37:50 bloritsch Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.7 2003/10/29 18:58:05 cziegeler Exp $
  */
 public final class DefaultSitemapConfigurationHolder
     implements SitemapConfigurationHolder {
@@ -75,7 +77,7 @@ public final class DefaultSitemapConfigurationHolder
      * @see SitemapConfigurationHolder#getConfiguration()
      */
     public ChainedConfiguration getConfiguration() {
-        Map confs = RequestLifecycleHelper.getCurrentProcessor().getComponentConfigurations();
+        Map confs = EnvironmentHelper.getCurrentProcessor().getComponentConfigurations();
         return (ChainedConfiguration) (confs == null ? null : confs.get(this.role));
     }
 

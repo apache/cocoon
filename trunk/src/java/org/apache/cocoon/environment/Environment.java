@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.8 2003/10/27 07:57:26 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.9 2003/10/29 18:58:06 cziegeler Exp $
  */
 public interface Environment {
 
@@ -71,25 +71,15 @@ public interface Environment {
     String getURI();
 
     /**
-     * Set the URI to process.
-     */
-    void setURI(String value);
-    
-    /**
-     * Get the prefix of the URI in progress - TODO(CZ) - Remove this
+     * Get the URI prefix
      */
     String getURIPrefix();
-
+    
     /**
-     * Get the Root Context - TODO(CZ) - Remove this
+     * Set the URI and the prefix to process.
      */
-    String getRootContext();
-
-    /**
-     * Get current context - TODO(CZ) - Remove this
-     */
-    String getContext();
-
+    void setURI(String prefix, String value);
+    
     /**
      * Get the view to process
      */
@@ -99,17 +89,6 @@ public interface Environment {
      * Get the action to process
      */
     String getAction();
-
-    /**
-     * Set the context. This is similar to changeContext()
-     * except that it is absolute.  - TODO(CZ) - Remove this
-     */
-    void setContext(String prefix, String uri, String context);
-
-    /**
-     * Change the context from uriprefix to context  - TODO(CZ) - Remove this
-     */
-    void changeContext(String uriprefix, String context) throws Exception;
 
     /**
      * Redirect to the given URL

@@ -74,7 +74,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.12 2003/10/19 16:21:28 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.13 2003/10/29 18:58:06 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -92,14 +92,11 @@ public class EnvironmentWrapper
     /** The request object */
     protected Request request;
 
-    /** The last context */
-    protected String lastContext;
-
-    /** The last prefix */
-    protected String lastPrefix;
-
     /** The last uri */
     protected String lastURI;
+    
+    /** The last prefix */
+    protected String lastPrefix;
 
     /** The stream to output to */
     protected OutputStream outputStream;
@@ -155,7 +152,7 @@ public class EnvironmentWrapper
                               boolean          rawMode,
                               String           view)
     throws MalformedURLException {
-        super(env.getURI(), view, env.getContext(), env.getAction());
+        super(env.getURI(), view, env.getAction());
         init(env, requestURI, queryString, logger, manager, rawMode, view);
     }
 
@@ -166,15 +163,11 @@ public class EnvironmentWrapper
                               ServiceManager manager,
                               boolean          rawMode,
                               String           view)
-        throws MalformedURLException {
-//        super(env.getURI(), view, env.getContext(), env.getAction());
-        this.rootContext = env.getRootContext();
+    throws MalformedURLException {
 
         this.enableLogging(logger);
         this.environment = env;
         this.view = view;
-
-        this.prefix = new StringBuffer(env.getURIPrefix());
 
         // create new object model and replace the request object
         Map oldObjectModel = env.getObjectModel();
@@ -198,7 +191,7 @@ public class EnvironmentWrapper
     }
    
     public EnvironmentWrapper(Environment env, ServiceManager manager, String uri,  Logger logger)  throws MalformedURLException {
-        super(env.getURI(), env.getView(), env.getContext(), env.getAction());
+        super(env.getURI(), env.getView(), env.getAction());
 
         // FIXME(SW): code stolen from SitemapSource. Factorize somewhere...
         boolean rawMode = false;
@@ -277,7 +270,7 @@ public class EnvironmentWrapper
 //            this.protocol + "://" + requestURI + "?" + queryString;
 
         this.init(env, requestURI, queryString, logger, manager, rawMode, view);
-        this.setURI(prefix, uri);
+        this.setURI((prefix == null ? env.getURIPrefix() : ""), uri);
         
     }
 
@@ -402,44 +395,12 @@ public class EnvironmentWrapper
     }
 
     /**
-     * Set a new URI for processing. If the prefix is null the
-     * new URI is inside the current context.
-     * If the prefix is not null the context is changed to the root
-     * context and the prefix is set.
-     */
-    public void setURI(String prefix, String uris) {
-        if(getLogger().isDebugEnabled()) {
-            getLogger().debug("Setting uri (prefix=" + prefix + ", uris=" + uris + ")");
-        }
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        if (prefix != null) {
-            setContext(getRootContext());
-            setURIPrefix(prefix);
-        }
-        this.uris = uris;
-        this.lastURI = uris;
-        this.lastContext = this.context;
-        this.lastPrefix = this.prefix.toString();
-    }
-
-    public void changeContext(String prefix, String context)
-    throws IOException {
-        super.changeContext(prefix, context);
-        this.lastContext = this.context;
-        this.lastPrefix  = this.prefix.toString();
-        this.lastURI     = this.uris;
-    }
-
-    /**
      * Change the current context to the last one set by changeContext()
      * and return last processor
      */
     public void changeToLastContext() {
-        this.setContext(this.lastContext);
-        this.setURIPrefix(this.lastPrefix);
         this.uris = this.lastURI;
+        this.prefix = this.lastPrefix;
     }
 
     /**
@@ -451,8 +412,7 @@ public class EnvironmentWrapper
      * @return an <code>Object</code>, the value of the attribute or
      * null if no such attribute was found.
      */
-    public Object getAttribute(String name)
-    {
+    public Object getAttribute(String name) {
         Object value = super.getAttribute(name);
         if (value == null)
             value = this.environment.getAttribute(name);
@@ -476,6 +436,15 @@ public class EnvironmentWrapper
      */
     public boolean isExternal() {
         return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String)
+     */
+    public void setURI(String prefix, String value) {
+        super.setURI(prefix, value);
+        this.lastURI = this.uris;
+        this.lastPrefix = this.prefix;
     }
 
 }

@@ -50,20 +50,13 @@
 */
 package org.apache.cocoon.environment;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 
@@ -73,7 +66,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.20 2003/10/27 07:57:26 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.21 2003/10/29 18:58:06 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -82,33 +75,17 @@ public abstract class AbstractEnvironment
     /** The current uri in progress */
     protected String uris;
 
-    /** The current prefix to strip off from the request uri  - TODO (CZ) Remove this*/
-    protected StringBuffer prefix = new StringBuffer();
-
+    /** The prefix */
+    protected String prefix;
+    
     /** The View requested */
     protected String view;
 
     /** The Action requested */
     protected String action;
 
-     /** The Context path  - TODO (CZ) Remove this*/
-    protected String context;
-
-    /** The context path stored temporarily between constructor and initComponents 
-     *    - TODO (CZ) Remove this*/
-    private String tempInitContext;
-
-    /** The root context path  - TODO (CZ) Remove this*/
-    protected String rootContext;
-
-    /** The servlet object model */
+    /** The object model */
     protected HashMap objectModel;
-
-    /** The real source resolver  - TODO (CZ) Remove this*/
-    protected org.apache.excalibur.source.SourceResolver sourceResolver;
-
-    /** The service manager - TODO (CZ) Remove this */
-    protected ServiceManager manager;
 
     /** The attributes */
     private Map attributes = new HashMap();
@@ -119,33 +96,19 @@ public abstract class AbstractEnvironment
     /** The real output stream */
     protected OutputStream outputStream;
 
-    /** Do we have our components ?  - TODO (CZ) Remove this */
-    protected boolean initializedComponents = false;
-    
     /**
      * Constructs the abstract environment
      */
-    public AbstractEnvironment(String uri, String view, File file)
-    throws MalformedURLException {
-        this(uri, view, file, null);
+    public AbstractEnvironment(String uri, String view) {
+        this(uri, view, null);
     }
 
     /**
      * Constructs the abstract environment
      */
-    public AbstractEnvironment(String uri, String view, File file, String action)
-    throws MalformedURLException {
-        this(uri, view, file.toURL().toExternalForm(), action);
-    }
-
-    /**
-     * Constructs the abstract environment
-     */
-    public AbstractEnvironment(String uri, String view, String context, String action)
-    throws MalformedURLException {
+    public AbstractEnvironment(String uri, String view, String action) {
         this.uris = uri;
         this.view = view;
-        this.tempInitContext = context;
         this.action = action;
         this.objectModel = new HashMap();
     }
@@ -160,155 +123,18 @@ public abstract class AbstractEnvironment
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String)
-     */
-    public void setURI(String value) {
-        this.uris = value;
-    }
-
-    /**
-     * Get the Root Context
-     * TODO (CZ) Remove this method
-     */
-    public String getRootContext() {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        return this.rootContext;
-    }
-
-    /**
-     * Get the current Context
-     * TODO (CZ) Remove this method
-     */
-    public String getContext() {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        return this.context;
-    }
-
-    /**
-     * Get the prefix of the URI in progress
-     * TODO (CZ) Remove this method
+     * @see org.apache.cocoon.environment.Environment#getURIPrefix()
      */
     public String getURIPrefix() {
-        return this.prefix.toString();
+        return this.prefix;
     }
 
-    /**
-     * Set the prefix of the URI in progress
-     * TODO (CZ) Remove this method
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String)
      */
-    protected void setURIPrefix(String prefix) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Set the URI Prefix (OLD=" + getURIPrefix() + ", NEW=" +  prefix + ")");
-        }
-        this.prefix = new StringBuffer(prefix);
-    }
-
-    /**
-     * Set the context.
-     * TODO (CZ) Remove this method
-     */
-    protected void setContext(String context) {
-        this.context = context;
-    }
-
-    /**
-     * Set the context. This is similar to changeContext()
-     * except that it is absolute.
-     * TODO (CZ) Remove this method
-     */
-    public void setContext(String prefix, String uri, String context) {
-        this.setContext(context);
-        this.setURIPrefix(prefix == null ? "" : prefix);
-        this.uris = uri;
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Reset context to " + this.context);
-        }
-    }
-
-    /**
-     * Adds an prefix to the overall stripped off prefix from the request uri
-     * TODO (CZ) Remove this method
-     */
-    public void changeContext(String prefix, String newContext)
-    throws IOException {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Changing Cocoon context");
-            getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");
-            getLogger().debug("  to context(" + newContext + ") and prefix(" + prefix + ")");
-            getLogger().debug("  at URI " + this.uris);
-        }
-        int l = prefix.length();
-        if (l >= 1) {
-            if (!this.uris.startsWith(prefix)) {
-                String message = "The current URI (" + this.uris +
-                                 ") doesn't start with given prefix (" + prefix + ")";
-                getLogger().error(message);
-                throw new RuntimeException(message);
-            }
-            this.prefix.append(prefix);
-            this.uris = this.uris.substring(l);
-
-            // check for a slash at the beginning to avoid problems with subsitemaps
-            if (this.uris.startsWith("/")) {
-                this.uris = this.uris.substring(1);
-                this.prefix.append('/');
-            }
-        }
-
-        if (SourceUtil.getScheme(this.context).equals("zip")) {
-            // if the resource is zipped into a war file (e.g. Weblogic temp deployment)
-            // FIXME (VG): Is this still required? Better to unify both cases.
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Base context is zip: " + this.context);
-            }
-            
-            org.apache.excalibur.source.Source source = null;
-            try {
-                source = this.sourceResolver.resolveURI(this.context + newContext);
-                this.context = source.getURI();
-            } finally {
-                this.sourceResolver.release(source);
-            }
-        } else {
-            String sContext;
-            // if we got a absolute context or one with a protocol resolve it
-            if (newContext.charAt(0) == '/') {
-                // context starts with the '/' - absolute file URL
-                sContext = "file:" + newContext;
-            } else if (newContext.indexOf(':') > 1) {
-                // context have ':' - absolute URL
-                sContext = newContext;
-            } else {
-                // context is relative to old one
-                sContext = this.context + '/' + newContext;
-            }
-
-            // Cut the file name part from context (if present)
-            int i = sContext.lastIndexOf('/');
-            if (i != -1 && i + 1 < sContext.length()) {
-                sContext = sContext.substring(0, i + 1);
-            }
-            
-            org.apache.excalibur.source.Source source = null;
-            try {
-                source = this.sourceResolver.resolveURI(sContext);
-                this.context = source.getURI();
-            } finally {
-                this.sourceResolver.release(source);
-            }
-        }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("New context is " + this.context);
-        }
+    public void setURI(String prefix, String value) {
+        this.prefix = prefix;
+        this.uris = value;
     }
 
     /**
@@ -319,8 +145,6 @@ public abstract class AbstractEnvironment
     public void globalRedirect(boolean sessionmode, String newURL) throws IOException {
         redirect(sessionmode, newURL);
     }
-
-    // Request methods
 
     /**
      * Returns the request view
@@ -336,15 +160,11 @@ public abstract class AbstractEnvironment
         return this.action;
     }
 
-    // Response methods
-
     /**
      * Set a status code
      */
     public void setStatus(int statusCode) {
     }
-
-    // Object model method
 
     /**
      * Returns a Map containing environment specific objects
@@ -439,37 +259,6 @@ public abstract class AbstractEnvironment
     }
 
     /**
-     * Initialize the components for the environment
-     * This gets the source resolver and the xmlizer component
-     * TODO (CZ) Remove this method
-     */
-    protected void initComponents() {
-        this.initializedComponents = true;
-        try {
-            this.manager = CocoonComponentManager.getSitemapComponentManager();
-            this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-            if (this.tempInitContext != null) {
-                org.apache.excalibur.source.Source source = null;
-                try {
-                    source = this.sourceResolver.resolveURI(this.tempInitContext);
-                    this.context = source.getURI();
-                    
-                    if (this.rootContext == null) // hack for EnvironmentWrapper
-                        this.rootContext = this.context;
-                } finally {
-                    this.sourceResolver.release(source);
-                }
-                this.tempInitContext = null;
-            }
-        } catch (ServiceException ce) {
-            // this should never happen!
-            throw new CascadingRuntimeException("Unable to lookup component.", ce);
-        } catch (IOException ie) {
-            throw new CascadingRuntimeException("Unable to resolve URI: "+this.tempInitContext, ie);
-        }
-    }
-    
-    /**
      * Notify that the processing starts.
      */
     public void startingProcessing() {
@@ -481,12 +270,5 @@ public abstract class AbstractEnvironment
      * This can be used to cleanup the environment object
      */
     public void finishingProcessing() {
-        // TODO (CZ) Remove this
-        if ( null != this.manager ) {
-            this.manager.release( this.sourceResolver );
-            this.manager = null;
-            this.sourceResolver = null;
-        }
-        this.initializedComponents = false;
     }
 }

@@ -48,82 +48,33 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon;
+package org.apache.cocoon.environment;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.SourceResolver;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Processor;
 
 /**
- * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
- * It is necessary to avoid infinite dispose loops
+ * Experimental code for cleaning up the environment handling
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.6 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: EnvironmentInfo.java,v 1.1 2003/10/29 18:58:06 cziegeler Exp $
+ * @since 2.2
  */
-public final class ProcessorWrapper
-implements Processor, Component, Disposable, ThreadSafe {
-
-    private Processor processor;
-
-    public void dispose() {
-        this.processor = null;
-    }
-
-    public ProcessorWrapper(Processor processor) {
-        this.processor = processor;
-    }
-
-    /**
-     * Process the given <code>Environment</code> producing the output
-     */
-    public boolean process(Environment environment)
-    throws Exception {
-        return this.processor.process(environment);
-    }
-
-    /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
-     */
-    public ProcessingPipeline buildPipeline(Environment environment)
-    throws Exception {
-        return this.processor.buildPipeline(environment);
-    }
-
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
-     */
-    public Map getComponentConfigurations() {
-        return this.processor.getComponentConfigurations();
-    }
+public class EnvironmentInfo {
     
-    /**
-     * Get the root parent processor of this processor
-     * @since 2.1.1
-     */
-    public Processor getRootProcessor() {
-        return this.processor.getRootProcessor();
+    public final Processor      processor;
+    public final int            oldStackCount;
+    //public final ServiceManager manager;
+    public final Environment    environment;
+    
+    public EnvironmentInfo(Processor processor, 
+                           int oldStackCount,
+                           ServiceManager manager,
+                           Environment    environment) {
+        this.processor = processor;
+        this.oldStackCount = oldStackCount;
+//        this.manager = manager;
+        this.environment = environment;
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getSourceResolver()
-     */
-    public SourceResolver getSourceResolver() {
-        return this.processor.getSourceResolver();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getContext()
-     */
-    public String getContext() {
-        return this.processor.getContext();
-    }
-
 }
+

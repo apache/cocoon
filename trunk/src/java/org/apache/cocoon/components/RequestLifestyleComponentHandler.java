@@ -55,11 +55,9 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.environment.Environment;
 import org.apache.excalibur.mpool.Pool;
 import org.apache.excalibur.mpool.PoolManager;
 
-import java.util.Map;
 
 /**
  * RequestLifestyleComponentHandler does XYZ
@@ -124,16 +122,10 @@ public class RequestLifestyleComponentHandler extends AbstractComponentHandler i
      * @exception Exception if an error occurs
      */
     protected Object doGet()
-            throws Exception
-    {
-        final EnvironmentStack stack = RequestLifecycleHelper.getTopEnvironmentStack();
-        if ( null != stack && !stack.empty() )
-        {
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ( (Environment) objects[0] ).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription) objectModel.get( RequestLifecycleHelper.PROCESS_KEY );
-            if ( null != desc )
-            {
+    throws Exception {
+        EnvironmentDescription desc = RequestLifecycleHelper.getEnvironmentDescription();
+        if ( null != desc ) {
+            if ( null != desc ) {
                 Object component = desc.getRequestLifecycleComponent( m_role );
                 if ( null != component )
                 {
@@ -150,61 +142,49 @@ public class RequestLifestyleComponentHandler extends AbstractComponentHandler i
         final Object component = m_pool.acquire();
         if ( null != component && component instanceof RequestLifecycleComponent )
         {
-            if ( stack == null || stack.empty() )
+            if ( desc == null )
             {
                 throw new ServiceException( m_role, "ComponentManager has no Environment Stack." );
             }
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ( (Environment) objects[0] ).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription) objectModel.get( RequestLifecycleHelper.PROCESS_KEY );
-            if ( null != desc )
-            {
 
-                // first test if the parent CM has already initialized this component
-                if ( !desc.containsRequestLifecycleComponent( m_role ) )
-                {
-                    try
-                    {
-                        ( (RequestLifecycleComponent) component ).setup(
-                                (org.apache.cocoon.environment.SourceResolver) objects[0],
-                                objectModel );
-                    }
-                    catch ( Exception local )
-                    {
-                        throw new ServiceException( m_role, "Exception during setup of RequestLifecycleComponent.", local );
-                    }
-                    desc.addRequestLifecycleComponent( m_role, component, this );
+            // first test if the parent CM has already initialized this component
+            if ( !desc.containsRequestLifecycleComponent( m_role ) )
+            {
+                try
+                {   // FIXME - we need a source resolver here!
+                    ( (RequestLifecycleComponent) component ).setup(
+                            null,
+                            desc.objectModel );
                 }
+                catch ( Exception local )
+                {
+                    throw new ServiceException( m_role, "Exception during setup of RequestLifecycleComponent.", local );
+                }
+                desc.addRequestLifecycleComponent( m_role, component, this );
             }
         }
 
         if ( null != component && component instanceof GlobalRequestLifecycleComponent )
         {
-            if ( stack == null || stack.empty() )
+            if ( desc == null  )
             {
                 throw new ServiceException( m_role, "ComponentManager has no Environment Stack." );
             }
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ( (Environment) objects[0] ).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription) objectModel.get( RequestLifecycleHelper.PROCESS_KEY );
-            if ( null != desc )
-            {
 
-                // first test if the parent CM has already initialized this component
-                if ( !desc.containsGlobalRequestLifecycleComponent( m_role ) )
-                {
-                    try
-                    {
-                        ( (GlobalRequestLifecycleComponent) component ).setup(
-                                (org.apache.cocoon.environment.SourceResolver) objects[0],
-                                objectModel );
-                    }
-                    catch ( Exception local )
-                    {
-                        throw new ServiceException( m_role, "Exception during setup of RequestLifecycleComponent.", local );
-                    }
-                    desc.addGlobalRequestLifecycleComponent( m_role, component, this );
+            // first test if the parent CM has already initialized this component
+            if ( !desc.containsGlobalRequestLifecycleComponent( m_role ) )
+            {
+                try
+                {   // FIXME - we need a source resolver here!
+                    ( (GlobalRequestLifecycleComponent) component ).setup(
+                            null,
+                            desc.objectModel );
                 }
+                catch ( Exception local )
+                {
+                    throw new ServiceException( m_role, "Exception during setup of RequestLifecycleComponent.", local );
+                }
+                desc.addGlobalRequestLifecycleComponent( m_role, component, this );
             }
         }
 

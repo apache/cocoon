@@ -48,82 +48,56 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon;
+package org.apache.cocoon.environment;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.SourceResolver;
+import org.apache.avalon.framework.container.ContainerUtil;
 
 /**
- * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
- * It is necessary to avoid infinite dispose loops
+ * Experimental code for cleaning up the environment handling
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.6 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: EnvironmentContext.java,v 1.1 2003/10/29 18:58:06 cziegeler Exp $
+ * @since 2.2
  */
-public final class ProcessorWrapper
-implements Processor, Component, Disposable, ThreadSafe {
-
-    private Processor processor;
-
-    public void dispose() {
-        this.processor = null;
-    }
-
-    public ProcessorWrapper(Processor processor) {
-        this.processor = processor;
-    }
-
-    /**
-     * Process the given <code>Environment</code> producing the output
-     */
-    public boolean process(Environment environment)
-    throws Exception {
-        return this.processor.process(environment);
-    }
-
-    /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
-     */
-    public ProcessingPipeline buildPipeline(Environment environment)
-    throws Exception {
-        return this.processor.buildPipeline(environment);
-    }
-
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
-     */
-    public Map getComponentConfigurations() {
-        return this.processor.getComponentConfigurations();
+public class EnvironmentContext 
+implements Disposable {
+    
+    protected Environment environment;
+    
+    protected Map attributes;
+    
+    public EnvironmentContext(Environment environment) {
+        this.attributes = new HashMap();
+        this.environment = environment;
     }
     
-    /**
-     * Get the root parent processor of this processor
-     * @since 2.1.1
-     */
-    public Processor getRootProcessor() {
-        return this.processor.getRootProcessor();
+    public Environment getEnvironment() {
+        return this.environment;
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getSourceResolver()
-     */
-    public SourceResolver getSourceResolver() {
-        return this.processor.getSourceResolver();
+    
+    public void addAttribute(String key, Object value) {
+        this.attributes.put(key, value);
     }
-
+    
+    public Object getAttribute(String key) {
+        return this.attributes.get(key);
+    }
     /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getContext()
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public String getContext() {
-        return this.processor.getContext();
+    public void dispose() {
+        final Iterator iter = this.attributes.values().iterator();
+        while ( iter.hasNext() ) {
+            final Object o = iter.next();
+            ContainerUtil.dispose(o);
+        }
+        this.attributes.clear();
     }
 
 }
+

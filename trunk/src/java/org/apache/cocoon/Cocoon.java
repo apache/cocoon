@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.26 2003/10/24 13:00:16 vgritsenko Exp $
+ * @version CVS $Id: Cocoon.java,v 1.27 2003/10/29 18:58:06 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -146,7 +146,7 @@ public class Cocoon
             ContainerUtil.enableLogging(this.environmentHelper, getLogger());
             ContainerUtil.service(this.environmentHelper, this.serviceManager);
         } catch (ContextException e) {
-            throw new ServiceException("Unable to get context root url from context.", e);
+            throw new ServiceException("Cocoon", "Unable to get context root url from context.", e);
         }
     }
 
@@ -369,11 +369,8 @@ public class Cocoon
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
-/*        Object key = CocoonComponentManager.startProcessing(environment);
-        CocoonComponentManager.enterEnvironment(environment,
-                                                this.serviceManager,
-                                                this);              */
-        EnvironmentHelper.enterProcessor(this);
+//        Object key = CocoonComponentManager.startProcessing(environment);
+        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
             if (getLogger().isDebugEnabled()) {
@@ -399,14 +396,13 @@ public class Cocoon
             throw any;
         } finally {
             EnvironmentHelper.leaveProcessor();
-//            CocoonComponentManager.leaveEnvironment();
 //            CocoonComponentManager.endProcessing(environment, key);
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
 
             // TODO (CZ): This is only for testing - remove it later on
-//            CocoonComponentManager.checkEnvironment(getLogger());
+            EnvironmentHelper.checkEnvironment(getLogger());
         }
     }
 
@@ -509,6 +505,13 @@ public class Cocoon
      */
     public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
         return this.environmentHelper;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getContext()
+     */
+    public String getContext() {
+        return this.environmentHelper.getContext();
     }
 
 }

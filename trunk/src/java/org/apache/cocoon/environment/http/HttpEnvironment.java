@@ -65,7 +65,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.12 2003/09/27 12:59:51 joerg Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.13 2003/10/29 18:58:06 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -74,16 +74,16 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
     public static final String HTTP_SERVLET_CONTEXT= "httpservletcontext";
 
     /** The HttpRequest */
-    private HttpRequest request = null;
+    private HttpRequest request;
 
     /** The HttpResponse */
-    private HttpResponse response = null;
+    private HttpResponse response;
 
     /** The HttpContext */
-    private HttpContext webcontext = null;
+    private HttpContext webcontext;
 
     /** Cache content type as there is no getContentType() in reponse object */
-    private String contentType = null;
+    private String contentType;
 
     /** Did we redirect ? */
     private boolean hasRedirected = false;
@@ -101,7 +101,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
                             String containerEncoding,
                             String defaultFormEncoding)
      throws MalformedURLException, IOException {
-        super(uri, req.getParameter(Constants.VIEW_PARAM), root, extractAction(req));
+        super(uri, req.getParameter(Constants.VIEW_PARAM), extractAction(req));
 
         this.request = new HttpRequest(req, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
