@@ -85,7 +85,7 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.5 2003/10/21 13:46:01 cziegeler Exp $
  */
 public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */
@@ -207,6 +207,7 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
     private String linkContentType = LINK_CONTENT_TYPE_DEFAULT;
     private HashSet excludeCrawlingURL;
     private HashSet includeCrawlingURL;
+    // FIXME - The following two are never read, can we delete them?
     private String userAgent = USER_AGENT_DEFAULT;
     private String accept = ACCEPT_DEFAULT;
 
