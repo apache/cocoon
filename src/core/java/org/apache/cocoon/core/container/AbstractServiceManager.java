@@ -154,9 +154,9 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
 
             throw new ConfigurationException( message, ce );
         } catch( final Exception e ) {
-            final String message = "Unexpected exception for role: " + role;
+            final String message = "Unexpected exception for role [" + role + "]";
             if( this.getLogger().isErrorEnabled() ) {
-                this.getLogger().error( "Unexpected exception for role: " + role, e );
+                this.getLogger().error( message, e );
             }
             throw new ConfigurationException( message, e );
         }        

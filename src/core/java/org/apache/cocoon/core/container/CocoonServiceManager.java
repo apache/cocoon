@@ -124,9 +124,9 @@ implements ServiceManager, Configurable {
                     } catch (ServiceException se) {
                         throw se;
                     } catch( final Exception e ) {
-                        final String message = "Could not find component";
+                        final String message = "Could not find component for role [" + role + "]";
                         if( this.getLogger().isDebugEnabled() ) {
-                            this.getLogger().debug( message + " for role: " + role, e );
+                            this.getLogger().debug( message, e );
                         }
                         throw new ServiceException( role, message, e );
                     }
@@ -140,9 +140,9 @@ implements ServiceManager, Configurable {
         }
 
         if( handler == null ) {
-            final String message = "Could not find component";
+            final String message = "Could not find component for role: [" + role + "]";
             if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( message + " for role: " + role );
+                this.getLogger().debug( message );
             }
             throw new ServiceException( role, message );
         }
@@ -160,19 +160,20 @@ implements ServiceManager, Configurable {
                 // Rethrow instead of wrapping a ServiceException with another one
                 throw ce;
             } catch( final Exception e ) {
-                final String message = "Could not access the Component";
+                final String message = "Could not access the component for role [" + role + "]";
                 if( this.getLogger().isDebugEnabled() ) {
-                    this.getLogger().debug( message + " for role [" + role + "]", e );
+                    this.getLogger().debug( message, e );
                 }
 
                 throw new ServiceException( role, message, e );
             }
         } catch ( ServiceException se) {
+            // Rethrow insteand of wrapping it again
             throw se;
         } catch( final Exception e ) {
-            final String message = "Could not access the Component";
+            final String message = "Could not access the component for role [" + role + "]";
             if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( message + " for role [" + role + "]", e );
+                this.getLogger().debug( message, e );
             }
 
             throw new ServiceException( role, message, e );

@@ -20,13 +20,11 @@ import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 
 /**
  * Factory for Avalon based components.
@@ -114,14 +112,8 @@ public class ComponentFactory {
             }
         }
 
-
-        if( component instanceof Contextualizable ) {
-            ContainerUtil.contextualize( component, this.context );
-        }
-
-        if( component instanceof Serviceable ) {
-            ContainerUtil.service( component, this.serviceManager );
-        }
+        ContainerUtil.contextualize( component, this.context );
+        ContainerUtil.service( component, this.serviceManager );
 
         if ( component instanceof CocoonServiceSelector ) {
             ((CocoonServiceSelector)component).setLoggerManager(this.loggerManager);
