@@ -151,6 +151,7 @@
       <!--Eg: Mon, 28 Oct 2002 03:08:49 +1100 -->
     </component-instance>
     <component-instance logger="core.modules.input" name="nullinput"    class="org.apache.cocoon.components.modules.input.NullInputModule"/>
+    <component-instance logger="core.modules.input" name="realpath"     class="org.apache.cocoon.components.modules.input.RealPathModule"/> 
     <component-instance logger="core.modules.input" name="xmlmeta"      class="org.apache.cocoon.components.modules.input.XMLMetaModule"/>
     <component-instance logger="core.modules.input" name="mapmeta"      class="org.apache.cocoon.components.modules.input.MapMetaModule"/>
     <component-instance logger="core.modules.input" name="datemeta"     class="org.apache.cocoon.components.modules.input.DateMetaInputModule"/>
