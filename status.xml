@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.175 2003/10/21 08:08:24 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.176 2003/10/21 09:25:58 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="23625">
+     Closing some memory leaks in the source and component handling.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="22377" due-to="Sam Coward" due-to-email="samc@atnet.net.au">
      Cocoon Protocol: Fixed a bug that broke the environment handling in some cases for internal pipeline calls. (This should also fix bug #15843).
    </action>
