@@ -49,21 +49,20 @@
 
 */
 package org.apache.cocoon.components.language.programming.java;
-import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
+
 import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.internal.compiler.*;
+import org.eclipse.jdt.internal.compiler.ClassFile;
+import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.Compiler;
+import org.eclipse.jdt.internal.compiler.DefaultErrorHandlingPolicies;
+import org.eclipse.jdt.internal.compiler.ICompilerRequestor;
+import org.eclipse.jdt.internal.compiler.IErrorHandlingPolicy;
+import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileReader;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
@@ -71,29 +70,63 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+/**
+ * Eclipse Java Compiler
+ *
+ * @version CVS $Id: EclipseJavaCompiler.java,v 1.2 2003/03/11 17:09:04 vgritsenko Exp $
+ */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
-    List errors = new LinkedList();
+    static boolean target14;
+
+    static {
+        // Detect JDK version we are running under
+        String version = System.getProperty("java.specification.version");
+        try {
+            target14 = Float.parseFloat(version) >= 1.4;
+        } catch (NumberFormatException e) {
+            target14 = false;
+        }
+    }
+
+    boolean debug;
+    boolean source14;
 
     String sourceDir;
     String sourceFile; 
     String destDir;
     String sourceEncoding;
-    boolean debug = true;
-    boolean source14 = true;
-    boolean target14 = true;
+
+    List errors = new LinkedList();
+
+
+    public EclipseJavaCompiler() {
+        this.debug = true;
+        this.source14 = true;
+    }
 
     public void recycle() {
         sourceFile = null;
         sourceDir = null;
         destDir = null;
         sourceEncoding = null;
-        source14 = true;
-        target14 = true;
         errors.clear();
-    }
-
-    public EclipseJavaCompiler() {
     }
 
     public void setFile(String file) {
@@ -103,9 +136,8 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
     public void setSource(String source) {
         // This seems to simply be the directory the file to
-        // be compiled resides in: not sure what this could be used for...
-        //
-        // Not used 
+        // be compiled resides in
+        // FIXME: this.sourceDir = destDir; does not work here
     }
 
     public void setDestination(String destDir) {
