@@ -47,6 +47,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.pluto.om.ControllerFactory;
 import org.apache.pluto.om.common.Parameter;
 import org.apache.pluto.om.common.ParameterCtrl;
@@ -77,7 +78,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: Deploy.java,v 1.4 2004/06/23 14:14:02 cziegeler Exp $
+ * @version CVS $Id: Deploy.java,v 1.5 2004/07/11 23:02:54 antonio Exp $
  */
 public class Deploy {
 
@@ -372,8 +373,8 @@ public class Deploy {
 
         FileWriter writer =
             new FileWriter(webAppsDir + webModule + 
-                                           System.getProperty("file.separator") + "WEB-INF"+
-                                           System.getProperty("file.separator") + "web.xml");
+                                           SystemUtils.FILE_SEPARATOR + "WEB-INF"+
+                                           SystemUtils.FILE_SEPARATOR + "web.xml");
         XMLSerializer serializer = new XMLSerializer(writer, of);
         try {
             Marshaller marshaller = new Marshaller(serializer.asDocumentHandler());

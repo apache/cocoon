@@ -30,6 +30,7 @@ import org.apache.cocoon.components.serializers.encoding.CharsetFactory;
 import org.apache.cocoon.components.serializers.encoding.Encoder;
 import org.apache.cocoon.components.serializers.util.Namespaces;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -38,13 +39,12 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: EncodingSerializer.java,v 1.3 2004/06/01 17:16:28 tcurdt Exp $
+ * @version CVS $Id: EncodingSerializer.java,v 1.4 2004/07/11 23:02:54 antonio Exp $
  */
 public abstract class EncodingSerializer implements Serializer, Locator, Recyclable, Configurable  {
 
     /** The line separator string */
-    private static final char S_EOL[] =
-            System.getProperty("line.separator").toCharArray();
+    private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
 
     /* ====================================================================== */
 

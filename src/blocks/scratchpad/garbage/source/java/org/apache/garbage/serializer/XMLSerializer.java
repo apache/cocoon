@@ -27,13 +27,13 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.2 2004/03/05 10:07:22 bdelacretaz Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.3 2004/07/11 23:02:54 antonio Exp $
  */
 public class XMLSerializer extends EncodingSerializer {
 
     private static final XMLEncoder XML_ENCODER = new XMLEncoder();
 
-    private static final char S_EOL[] =
+    private static final char S_EOL[] = 
             System.getProperty("line.separator").toCharArray();
 
     private static final char S_DOCUMENT_1[] = "<?xml version=\"1.0".toCharArray();

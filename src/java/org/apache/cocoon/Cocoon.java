@@ -61,6 +61,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.commons.lang.SystemUtils;
 
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.command.CommandManager;
@@ -81,7 +82,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.29 2004/07/08 12:42:27 vgritsenko Exp $
+ * @version CVS $Id: Cocoon.java,v 1.30 2004/07/11 23:02:54 antonio Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -515,7 +516,7 @@ public class Cocoon
      * @param environment an <code>Environment</code> value
      */
     protected void debug(Environment environment, boolean internal) {
-        String lineSeparator = System.getProperty("line.separator");
+        String lineSeparator = SystemUtils.LINE_SEPARATOR;
         Map objectModel = environment.getObjectModel();
         Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(false);

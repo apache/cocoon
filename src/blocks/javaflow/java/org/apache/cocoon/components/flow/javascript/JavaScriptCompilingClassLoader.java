@@ -31,6 +31,7 @@ import java.util.Map;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
@@ -54,7 +55,7 @@ public class JavaScriptCompilingClassLoader extends ClassLoader implements Servi
             Source source = resolver.resolveURI(uri);
 
             String classname = getClassName(uri);
-            String filename = System.getProperty("java.io.tmpdir") + File.separator + classname;
+            String filename = SystemUtils.JAVA_IO_TMPDIR + File.separator + classname;
 
             System.out.println("source=" + uri);
             System.out.println("filename=" + filename);

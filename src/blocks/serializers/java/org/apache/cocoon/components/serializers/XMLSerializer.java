@@ -20,20 +20,20 @@ import java.io.CharArrayWriter;
 import org.apache.cocoon.components.serializers.encoding.XMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.apache.cocoon.components.serializers.util.Namespaces;
+import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
 /**
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.6 2004/06/01 17:16:28 tcurdt Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.7 2004/07/11 23:02:54 antonio Exp $
  */
 public class XMLSerializer extends EncodingSerializer {
 
     private static final XMLEncoder XML_ENCODER = new XMLEncoder();
 
-    private static final char S_EOL[] =
-            System.getProperty("line.separator").toCharArray();
+    private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
 
     private static final char S_DOCUMENT_1[] = "<?xml version=\"1.0".toCharArray();
     private static final char S_DOCUMENT_2[] = "\" encoding=\"".toCharArray();
