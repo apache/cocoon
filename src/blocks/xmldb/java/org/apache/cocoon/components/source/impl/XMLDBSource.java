@@ -55,7 +55,6 @@ import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
@@ -95,7 +94,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.11 2004/01/22 03:40:09 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.12 2004/01/22 13:21:54 joerg Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
