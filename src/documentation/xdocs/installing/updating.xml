@@ -22,12 +22,13 @@
    You only need this information if you are updating an existing Cocoon installation, or
    if you want to know what is going on in the development of Cocoon.
   </p>
-  <p>The Cocoon team took great care in making this new version as compatible as
-    possible. However in order to achieve even more flexibility, usability and
+  <p>
+    The Cocoon team took great care in making this new version as compatible as
+    possible. However, in order to achieve even more flexibility, usability and
     performance, the internal architecure of Cocoon has been improved. Due to these
     improvements it has not been possible to be compatible in every little detail. 
-    But if you follow this document closely and follow the instructions listed here, 
-    you should have running an upgraded version very quickly.
+    If you follow the instructions of document closely, however,
+    you should be able to quickly upgrade your Cocoon 2.0.x installation.
   </p>
   <p>
    The Cocoon team has developed many Avalon components that are not specific to Cocoon 
@@ -131,8 +132,8 @@
     <p>In order to reflect the new version, the version information in the <em>cocoon.xconf</em>
        has changed from <em>2.0</em> to <em>2.1</em>.
     </p>
-    <p>We suggest for updating the <em>cocoon.xconf</em> to start with the new cocoon.xconf and
-       incorporate your changes instead of trying to migrate the old configuration file.</p>
+    <p>To update <em>cocoon.xconf</em>, we recommend that you start with the new cocoon.xconf from V2.1 and
+       incorporate your changes in it, instead of trying to migrate your old configuration file.</p>
    </s2>
    <s2 title="Source Resolver">
     <p>The SourceResolver is now an Avalon component
@@ -204,11 +205,10 @@
     <p>The Store and StoreJanitor components and implementations have been moved to
        Avalon Excalibur.</p>
     <p>To make upgrading easier, the class attributes of the store janitor 
-       component has been removed in the <em>cocoon.xconf</em> as the class names have changed.
+       component have been removed in <em>cocoon.xconf</em> as the class names have changed.
        The <em>cache-transient</em> and <em>cache-persistent</em> components do
-       not exists anymore, so remove any reference from the cocoon.xconf. Instead
-       the <em>persistent-store</em> and <em>transient-store</em> components
-       fulfil their tasks.
+       not exist anymore, so any reference to them must be removed from cocoon.xconf.
+       Use the <em>persistent-store</em> and <em>transient-store</em> components instead.
     </p>
     <p>In general the package names changed from <em>org.apache.cocoon.components.store</em>
        to <em>org.apache.excalibur.store</em> (and <em>org.apache.excalibur.store.impl</em>). So
