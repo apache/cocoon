@@ -86,7 +86,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * <p><a href="http://jakarta.apache.org/commons/jxpath"><em>JX</em>Path</a> based implementation of <a href="http://www.w3.org/TR/xforms"><em>XForms</em></a></p>
  */
 
-public class JXFormsGenerator extends AbstractGenerator {
+public class JXFormsGenerator extends ComposerGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
@@ -1211,7 +1211,7 @@ public class JXFormsGenerator extends AbstractGenerator {
         if (startEvent == null) {
             long compileTime = inputSource.getLastModified();
             Parser parser = new Parser();
-            this.resolver.toSAX(this.inputSource, parser);
+            SourceUtil.parse(this.manager, this.inputSource, parser);
             startEvent = parser.getStartEvent();
             startEvent.compileTime = compileTime;
             synchronized (cache) {

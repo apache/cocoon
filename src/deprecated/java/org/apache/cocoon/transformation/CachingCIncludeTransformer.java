@@ -60,6 +60,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.IncludeCacheValidity;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 
@@ -90,7 +91,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
  * @deprecated This transformer violates the avalon/cocoon design principles
- * @version CVS $Id: CachingCIncludeTransformer.java,v 1.1 2003/03/09 00:07:15 pier Exp $
+ * @version CVS $Id: CachingCIncludeTransformer.java,v 1.2 2003/05/16 07:12:28 cziegeler Exp $
  */
 public class CachingCIncludeTransformer extends AbstractTransformer
 implements Composable, Cacheable {
@@ -216,7 +217,7 @@ implements Composable, Cacheable {
         Source source = null;
         try {
             source = this.sourceResolver.resolveURI(src);
-            this.sourceResolver.toSAX(source, getConsumer());
+            SourceUtil.parse(this.manager, source, getConsumer());
         } catch (Exception e) {
             throw new SAXException("CachingCIncludeTransformer could not read resource", e);
         } finally {
