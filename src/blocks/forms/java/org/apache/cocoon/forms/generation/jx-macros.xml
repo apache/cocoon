@@ -6,7 +6,7 @@
         ft:form-template
     -->
     <jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-      <jx:set var="cformsHelper" value="${Packages.org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper(cocoon.consumer)}"/>
+      <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer)}"/>
       <jx:set var="form" value="${CocoonFormsInstance}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
         <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
@@ -97,7 +97,7 @@
     -->
     <jx:macro name="group" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:if test="${cformsHelper.isVisible(widget)}">
         <fi:group id="${widget.getRequestParameterName()}">
@@ -105,7 +105,7 @@
         </fi:group>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:new
     -->
@@ -163,7 +163,7 @@
       
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:set var="validationError" value="${widget.getValidationError()}"/>
-      <jx:if test="${validationError != null}">
+      <jx:if test="${cformsHelper.isValidationError(validationError)}">
         <fi:validation-error>
           <jx:set var="cformsDummy" value="${cformsHelper.generateValidationError(validationError)}"/>
             <jx:evalBody/>
