@@ -13,21 +13,15 @@
   >
   
   <document>
-
     <header>
-      <title>Show number</title>
-      <authors>
-        <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
-      </authors>
+      <title>Show String</title>
     </header>
-
     <body>
       <s1 title="String">
-	<p><jpath:value-of select="replaceme"/></p>
-	<p><jpath:value-of select="parameter"/></p>
-       </s1>
+        <p><jpath:value-of select="replaceme"/></p>
+        <p><jpath:value-of select="parameter"/></p>
+      </s1>
     </body>
-
   </document>
 
 </xsp:page>

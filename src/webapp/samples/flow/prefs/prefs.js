@@ -46,7 +46,7 @@ function registerUser()
     // and print an indicator close to where the errors
     // are. `errorMsg' if not null is printed at the top of the page
     // as an error message.
-    sendPageAndWait("userInfo.html",
+    sendPageAndWait("userInfo",
                     { "check" : check, "errorMsg" : errorMsg,
                     "title": "New User Registration",
                     "button" : "Register",
@@ -83,9 +83,7 @@ function registerUser()
                                                                     email);
       userRegistry.addUser(user);
       break;
-    }
-    else {
-      // TODO: I18N
+    } else {
       errorMsg = "Login name '" + login
         + "' is already in use, please choose another name";
     }
@@ -108,7 +106,7 @@ function registerUser()
   //
   // In the case of this particular function, this is the only exit
   // point.
-  sendPage("registrationSuccessful.html", {"user" : user});
+  sendPage("registrationSuccessful", {"user" : user});
 }
 
 
@@ -119,7 +117,7 @@ function login(errorMsg)
   var password = "";
 
   while (true) {
-    sendPageAndWait("login.html",
+    sendPageAndWait("login",
                     {"errorMsg" : errorMsg, "login" : login, "password" : password});
 
     errorMsg = null;
@@ -129,10 +127,9 @@ function login(errorMsg)
 
     user = userRegistry.getUserWithLogin(login, password);
 
-    if (user != undefined)
+    if (user != undefined) {
       break;
-    else {
-      // TODO: I18N
+    } else {
       errorMsg = "No such user or bad password";
     }
   }
@@ -147,7 +144,7 @@ function login(errorMsg)
   // We send to the user a welcome page which contains links back to
   // what (s)he can do. These links essentially point to other top
   // level functions in this script.
-  sendPage("welcome.html", {"user" : user});
+  sendPage("welcome", {"user" : user});
 }
 
 // This function is called to edit the preferences of an already
@@ -173,7 +170,7 @@ function edit()
     // and print an indicator close to where the errors
     // are. `errorMsg' if not null is printed at the top of the page
     // as an error message.
-    sendPageAndWait("userInfo.html",
+    sendPageAndWait("userInf",
                     { "check" : check, "errorMsg" : errorMsg,
                     "title": "Edit account",
                     "button" : "Change", "cancel" : true,
@@ -199,8 +196,7 @@ function edit()
       check = true;
       errorMsg = "Please correct the marked errors before continuing";
       continue;
-    }
-    else {
+    } else {
       // Save the changes the user made in the User object
       user.login = login;
       user.password = password;
@@ -211,7 +207,7 @@ function edit()
     }
   }
 
-  sendPage("welcome.html", {"user" : user});
+  sendPage("welcome", {"user" : user});
 }
 
 function logout()
