@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.7 2003/03/26 21:21:40 stefano Exp $
+    | CVS $Id: sitemap.xmap,v 1.8 2003/03/28 13:40:24 nicolaken Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -284,8 +284,12 @@
 <!-- =========================== Views =================================== -->
 
   <!--+
-      | Views provide diffent, well, views to resources. Views are
+      | Views provide different, well, views to resources. Views are
       | orthogonal to pipelines. Please refer to the docs.
+      |
+      | It would be wise to disable any unneeded views in a 
+      | production environment in order to avoid exposing data
+      | that you may not necessarily wish to.
       +-->
   <map:views>
     <map:view from-label="content" name="content">
