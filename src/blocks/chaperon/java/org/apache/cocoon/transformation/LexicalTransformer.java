@@ -108,7 +108,7 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformer.java,v 1.3 2003/04/01 16:33:49 stephan Exp $
+ * @version CVS $Id: LexicalTransformer.java,v 1.4 2003/04/09 12:17:20 stephan Exp $
  */
 public class LexicalTransformer extends LexicalProcessorAdapter
   implements Transformer, LogEnabled, Composable, Recyclable, Disposable,
@@ -217,7 +217,7 @@ public class LexicalTransformer extends LexicalProcessorAdapter
                                                   this.lexiconSource.getURI()+
                                                   "' not found");
                 }
-                SourceUtil.toSAX(this.lexiconSource, confighandler);
+                SourceUtil.toSAX(this.manager, this.lexiconSource, null, confighandler);
 
                 Configuration config = confighandler.getConfiguration();
                 Lexicon lexicon = LexiconFactory.createLexicon(config);
