@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.3 2003/03/10 11:12:46 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.4 2003/03/10 18:08:34 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -440,7 +440,7 @@ public class DOMStreamer implements XMLProducer {
                             String qn = pr.equals("") ? "xmlns" : "xmlns:" + pr;
                             newAttrs.addAttribute("", pr1, qn, "CDATA", ns);
                             // System.out.println("starting prefix mapping  for prefix " + pr + " for " + ns);
-                            contentHandler.startPrefixMapping(prefix, ns);
+                            contentHandler.startPrefixMapping(pr, ns);
                         }
                     }
 
