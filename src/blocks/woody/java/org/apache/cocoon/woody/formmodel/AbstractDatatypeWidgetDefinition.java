@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -67,19 +64,14 @@ import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  */
-public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable, Contextualizable {
+public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;
     private SelectionList selectionList;
     private ValueChangedListener listener;
     private ServiceManager manager;
-    private Context context;
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-    }
-    
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
     }
 
     public Datatype getDatatype() {
