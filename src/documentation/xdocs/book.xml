@@ -62,7 +62,7 @@
 
   <menu label="Project">
     <external label="Bug Database" href="http://issues.apache.org/bugzilla/index.html"/>
-    <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-2.1/"/>
+    <external label="Code Repository" href="http://svn.apache.org/viewcvs.cgi/cocoon/branches/BRANCH_2_1_X/?root=Apache-SVN"/>
     <external label="Dev Snapshots" href="http://cocoon.apache.org/mirror.cgi#nightly"/>
   </menu>
 
