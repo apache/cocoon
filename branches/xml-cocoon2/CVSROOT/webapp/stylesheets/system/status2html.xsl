@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0" 
+<xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:status="http://apache.org/cocoon/2.0/status">
 
@@ -14,14 +14,14 @@
   <table bgcolor="#000000" cellspacing="0" cellpadding="2" width="100%">
     <tr>
       <td>
-  
+
   <table bgcolor="#ffffff" noshade="noshade" cellspacing="0" cellpadding="6" width="100%">
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left">
-        <img src="images/cocoon.png" border="0"/>
+        <img src="images/cocoon.gif" border="0"/>
       </td>
       <td bgcolor="#0086b2" valign="top" align="right">
-       <FONT face="arial,helvetica,sanserif" color="#ffffff">   
+       <FONT face="arial,helvetica,sanserif" color="#ffffff">
 	[<xsl:value-of select="@host"/>] <xsl:value-of select="@date"/>
        </FONT>
       </td>
@@ -74,7 +74,7 @@
   <xsl:template match="value">
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left">
-       <FONT face="arial,helvetica,sanserif" color="#ffffff">      
+       <FONT face="arial,helvetica,sanserif" color="#ffffff">
         <xsl:value-of select="@name"/>
        </FONT>
       </td>
