@@ -86,6 +86,8 @@ Test 5.1 Here a link to this same page: [wikitest.html]
 
 Test 5.2 Link to cocoon.apache.org: [http://cocoon.apache.org]
 
+Test 5.3 A link to another wiki site [Text formating rules|rules].
+
 -- 6.MISCELLANEOUS --
 
 Test 6.1 This paragraph should be followed by a horizontal ruler line.
