@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FilterTransformer.java,v 1.3 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: FilterTransformer.java,v 1.4 2004/03/09 00:57:27 joerg Exp $
  */
 public class FilterTransformer
 extends AbstractTransformer
@@ -127,12 +127,17 @@ implements CacheableProcessingComponent {
             if (this.currentBlocknr != (int)Math.ceil((float)this.counter/this.count)) {
                 this.currentBlocknr = (int)Math.ceil((float)this.counter/this.count);
                 AttributesImpl attr = new AttributesImpl();
-                attr.addAttribute(uri, BLOCKID, BLOCKID,"CDATA",String.valueOf(this.currentBlocknr));
+                attr.addAttribute("", BLOCKID, BLOCKID, "CDATA", String.valueOf(this.currentBlocknr));
                 if (this.counter < this.count)  {
-                    super.contentHandler.startElement(uri, BLOCK, BLOCK, attr);
+                    super.contentHandler.startElement("", BLOCK, BLOCK, attr);
                 } else  {
-                    super.contentHandler.endElement(uri, BLOCK, BLOCK);
-                    super.contentHandler.startElement(uri, BLOCK, BLOCK, attr);
+                    // fix Bugzilla Bug 13904, check if counter == 1
+                    // in this case there is no startElement( uri, BLOCK, BLOCK)
+                    // written, yet
+                    if (this.counter > 1) {
+                        super.contentHandler.endElement(uri, BLOCK, BLOCK);
+                    }
+                    super.contentHandler.startElement("", BLOCK, BLOCK, attr);
                 }
             }
         } else if (!this.foundIt)  {
@@ -150,7 +155,7 @@ implements CacheableProcessingComponent {
             // <parent>
             //   <element>
             //     <parent>
-            super.contentHandler.endElement(uri, BLOCK, BLOCK);
+            super.contentHandler.endElement("", BLOCK, BLOCK);
             super.contentHandler.endElement(uri, name, raw);
             this.foundIt = false;
             this.skip = false;

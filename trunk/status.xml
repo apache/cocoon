@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.187 2004/03/08 23:34:12 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.188 2004/03/09 00:57:27 joerg Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="13904" due-to="Bernhard Huber" due-to-email="huber@apache.org">
+     Ported fix from 2.1 to FilterTransformer.
+   </action>
+   <action dev="JH" type="fix" fixes-bug="27301">
+     Fix namespace handling in FilterTransformer.
+   </action>
    <action dev="JH" type="add" fixes-bug="27020" due-to="Peter Horsfield" due-to-email="peter@xml.grumpykitty.biz">
      Added grayscaling and color transformation to the ImageReader.
    </action>
