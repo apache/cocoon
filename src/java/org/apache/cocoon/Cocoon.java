@@ -50,14 +50,6 @@
 */
 package org.apache.cocoon;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Map;
-
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.logger.LogKitManageable;
@@ -70,13 +62,10 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.EnvironmentStack;
@@ -90,24 +79,29 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.excalibur.event.Queue;
-import org.apache.excalibur.event.command.CommandManager;
-import org.apache.excalibur.event.command.TPCThreadManager;
-import org.apache.excalibur.event.command.ThreadManager;
 import org.apache.excalibur.instrument.InstrumentManageable;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
+import org.apache.excalibur.xml.impl.XercesParser;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
+ * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.2 2003/03/12 15:04:18 bloritsch Exp $
+ * @version CVS $Id: Cocoon.java,v 1.3 2003/03/12 15:35:22 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -163,9 +157,6 @@ public class Cocoon
 
     /** The XMLizer */
     private org.apache.excalibur.xmlizer.XMLizer xmlizer;
-    
-    private ThreadManager threadManager;
-    private CommandManager commandManager;
 
     /**
      * Creates a new <code>Cocoon</code> instance.
@@ -175,23 +166,6 @@ public class Cocoon
     public Cocoon() throws ConfigurationException {
         // Set the system properties needed by Xalan2.
         setSystemProperties();
-        
-        try
-        {
-            threadManager = new TPCThreadManager();
-            Parameters params = new Parameters();
-            params.setParameter("threads-per-processor", "1");
-            params.setParameter("sleep-time", "100"); // 1/10 second
-            ContainerUtil.parameterize(threadManager, params);
-            ContainerUtil.initialize(threadManager);
-            
-            commandManager = new CommandManager();
-            threadManager.register(commandManager);
-        }
-        catch(Exception e)
-        {
-            throw new ConfigurationException("Could not set up the event queue", e);
-        }
     }
 
     /**
@@ -212,17 +186,14 @@ public class Cocoon
      */
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
-            this.context = new DefaultContext(context);
-            ((DefaultContext)this.context).put(Queue.ROLE, commandManager.getCommandSink());
-            ((DefaultContext)this.context).makeReadOnly();
-
-            this.classpath = (String)this.context.get(Constants.CONTEXT_CLASSPATH);
-            this.workDir = (File)this.context.get(Constants.CONTEXT_WORK_DIR);
+            this.context = context;
+            this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
+            this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
             try {
                 // FIXME : add a configuration option for the refresh delay.
                 // for now, hard-coded to 1 second.
                 URLSource urlSource = new URLSource();
-                urlSource.init((URL)this.context.get(Constants.CONTEXT_CONFIG_URL), null);
+                urlSource.init((URL)context.get(Constants.CONTEXT_CONFIG_URL), null);
                 this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
                     1000L
                 );
@@ -283,7 +254,7 @@ public class Cocoon
         if ( !Constants.DEFAULT_PARSER.equals( parser ) ) {
             this.getLogger().warn("Deprecated property " +Constants.DEPRECATED_PARSER_PROPERTY+ " is used. Please use "+Constants.PARSER_PROPERTY+" instead.");
             if ( "org.apache.cocoon.components.parser.XercesParser".equals(parser) ) {
-                parser = "org.apache.excalibur.xml.sax.XercesParser";
+                parser = XercesParser.class.getName();
             } else {
                 this.getLogger().warn("Unknown value for deprecated property: " +
                                       Constants.DEPRECATED_PARSER_PROPERTY + ", value: " + parser +
@@ -491,14 +462,13 @@ public class Cocoon
      * Dispose this instance
      */
     public void dispose() {
-        this.disposed = true;
         this.componentManager.release(this.threadSafeProcessor);
         this.componentManager.release(this.sourceResolver);
         this.componentManager.release((Component)this.xmlizer);
         this.sourceResolver = null;
         this.xmlizer = null;
         this.componentManager.dispose();
-        ContainerUtil.dispose(this.threadManager);
+        this.disposed = true;
     }
 
     /**
@@ -615,11 +585,10 @@ public class Cocoon
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
-        environment.setComponents( this.sourceResolver, this.xmlizer );
         Object key = CocoonComponentManager.startProcessing(environment);
         try {
             CocoonComponentManager.enterEnvironment(environment,
-                                                    environment.getObjectModel(),
+                                                    this.componentManager,
                                                     this);
             boolean result;
             if (this.getLogger().isDebugEnabled()) {
