@@ -41,13 +41,12 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-03-12 04:39:07 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-13 09:45:21 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;
     private Parameters generatorParam;
     private String generatorSource;
-    private Exception generatorException;
     private Reader reader;
     private Parameters readerParam;
     private String readerSource;
@@ -62,7 +61,7 @@ public class ResourcePipeline implements Composer {
     private String serializerSource;
     private String serializerMimeType;
     private String sitemapSerializerMimeType;
-    
+
     private Logger log;
 
     /** the component manager */
@@ -71,15 +70,20 @@ public class ResourcePipeline implements Composer {
     public void compose (ComponentManager manager) {
         this.manager = manager;
     }
-    
+
     public void setLogger(Logger log) {
         this.log = log;
     }
 
     public void setGenerator (String role, String source, Parameters param, Exception e)
     throws Exception {
-        this.generatorException = e;
         this.setGenerator (role, source, param);
+        // FIXME(CZ) What can be done if this is not an ErrorNotifier?
+        // (The sitemap uses this setGenerator() method only from inside
+        // the error pipeline, when a ErrorNotifier is explicitly generated.)
+        if (this.generator instanceof ErrorNotifier) {
+            ((ErrorNotifier)this.generator).setException(e);
+        }
     }
 
     public void setGenerator (String role, String source, Parameters param)
@@ -136,7 +140,7 @@ public class ResourcePipeline implements Composer {
         this.transformerSources.add (source);
         this.transformerParams.add (param);
     }
-    
+
     public boolean process(Environment environment)
     throws ProcessingException {
         if ( this.reader != null ) {
@@ -145,10 +149,10 @@ public class ResourcePipeline implements Composer {
             if ( !checkPipeline() ) {
                 throw new ProcessingException("Attempted to process incomplete pipeline.");
             }
-            
+
             setupPipeline(environment);
             connectPipeline();
-            
+
             // execute the pipeline:
             try {
                 this.generator.generate();
@@ -158,13 +162,13 @@ public class ResourcePipeline implements Composer {
                     e
                 );
             }
-            
+
             return true;
         }
     }
-    
+
     /** Process the pipeline using a reader.
-     * @throws ProcessingException if 
+     * @throws ProcessingException if
      */
     private boolean processReader(Environment environment)
     throws ProcessingException {
@@ -186,7 +190,7 @@ public class ResourcePipeline implements Composer {
         }
         return true;
     }
-    
+
     /** Sanity check the non-reader pipeline.
      * @return true if the pipeline is 'sane', false otherwise.
      */
@@ -194,21 +198,21 @@ public class ResourcePipeline implements Composer {
         if ( this.generator == null ) {
             return false;
         }
-        
+
         if ( this.serializer == null ) {
             return false;
         }
-        
+
         Iterator itt = this.transformers.iterator();
         while ( itt.hasNext() ) {
             if ( itt.next() == null) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /** Setup pipeline components.
      */
     private void setupPipeline(Environment environment)
@@ -235,7 +239,7 @@ public class ResourcePipeline implements Composer {
                     (Parameters)transformerParamItt.next()
                 );
             }
-            
+
             this.serializer.setOutputStream(environment.getOutputStream());
             String mimeType = this.serializer.getMimeType();
             if (mimeType != null) {
@@ -259,16 +263,16 @@ public class ResourcePipeline implements Composer {
                 e
             );
         }
-        
-        
+
+
     }
-    
+
     /** Connect the pipeline.
      */
     private void connectPipeline() throws ProcessingException {
         XMLProducer prev = (XMLProducer) this.generator;
         XMLConsumer next;
-        
+
         try {
             Iterator itt = this.transformers.iterator();
             while ( itt.hasNext() ) {
@@ -303,12 +307,12 @@ public class ResourcePipeline implements Composer {
                 e
             );
         }
-        
+
     }
-    
+
     public void dispose() {
         this.log.debug("Disposing of ResourcePipeline");
-        
+
         try {
             // release reader.
             if ( this.reader != null ) {
@@ -347,7 +351,7 @@ public class ResourcePipeline implements Composer {
             this.serializer = null;
             this.transformers.clear();
         }
-        
+
         // Release connectors
         Iterator itt = this.connectors.iterator();
         while ( itt.hasNext() ) {
