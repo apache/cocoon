@@ -131,9 +131,33 @@
     </init-param>
 
     <!--
+      This parameter switches the logging system from LogKit to Log4J for Cocoon.
+      Log4J has to be configured already.
+      <init-param>
+        <param-name>logger-class</param-name>
+        <param-value>org.apache.avalon.excalibur.logger.Log4JLoggerManager</param-value>
+      </init-param>
+    -->
+
+    <!--
+      If you want to configure log4j using Cocoon, then you can define
+      an XML configuration file here. You can use the usual log4j property
+      substituation mechanism, e.g. ${context-root} is replaced by the
+      context root of this web application etc.
+      You can configure the log4j configuration even if you use LogKit 
+      for Cocoon logging. You can use this to configure third party code
+      for example.
+      <init-param>
+        <param-name>log4j-config</param-name>
+        <param-value>/WEB-INF/log4j.xconf</param-value>
+      </init-param>
+    -->
+    
+    <!--
       Allow reinstantiating (reloading) of the cocoon instance. If this is
       set to "yes" or "true", a new cocoon instance can be created using
-      the request parameter "cocoon-reload". Default is no for security reasons.
+      the request parameter "cocoon-reload". It also enables that Cocoon is 
+      reloaded when cocoon.xconf changes. Default is no for security reasons.
     -->
     <init-param>
       <param-name>allow-reload</param-name>
@@ -280,7 +304,7 @@
       length header in the response. This is due to the internal processing
       of Readers and the Caching. So, this might be the reason if you get
       a warning about a wrong content length.
-      See http://nagoya.apache.org/bugzilla/show_bug.cgi?id=17370.
+      See http://issues.apache.org/bugzilla/show_bug.cgi?id=17370.
     <init-param>
       <param-name>show-time</param-name>
       <param-value>hide</param-value>
@@ -299,22 +323,20 @@
     <!--
        If true, Avalon Excalibur instrumentation will be enabled on all
        Instrumentable components with Cocoon and your Cocoon application.
-
+    -->
     <init-param>
       <param-name>enable-instrumentation</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
-    -->
 
     <!--
        This defines the location of the instrument manager configuration, only
        used if the init-param enable-instrumentation is enabled.
-
+    -->
     <init-param>
       <param-name>instrumentation-config</param-name>
       <param-value>/WEB-INF/instrumentation.xconf</param-value>
     </init-param>
-    -->
 
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding

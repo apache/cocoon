@@ -47,6 +47,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.cocoon.util.log.Log4JConfigurator;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -58,6 +59,7 @@ import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
 import org.apache.log.output.ServletOutputLogTarget;
 import org.apache.log.util.DefaultErrorHandler;
+import org.apache.log4j.LogManager;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -824,8 +826,25 @@ public class CocoonServlet extends HttpServlet {
                 final Configuration conf = builder.build(is);
                 ContainerUtil.configure(loggerManager, conf);
             }
-            ContainerUtil.initialize(loggerManager);
 
+            // let's configure log4j
+            final String log4jConfig = getInitParameter("log4j-config", null);
+            if ( log4jConfig != null ) {
+                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext);
+
+                // test if this is a qualified url
+                InputStream is = null;
+                if ( log4jConfig.indexOf(':') == -1) {
+                    is = this.servletContext.getResourceAsStream(log4jConfig);
+                    if (is == null) is = new FileInputStream(log4jConfig);
+                } else {
+                    final URL log4jURL = new URL(log4jConfig);
+                    is = log4jURL.openStream();
+                }
+                configurator.doConfigure(is, LogManager.getLoggerRepository());
+            }
+
+            ContainerUtil.initialize(loggerManager);
         } catch (Exception e) {
             errorHandler.error("Could not set up Cocoon Logger, will use screen instead", e, null);
         }
