@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: messages.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<!-- $Id$ -->
 <catalogue>
 
 	<!-- these keys are bound to your Index Field names -->
@@ -144,6 +144,7 @@
   <message key="simple.page.note">Enter some words and hit submit.</message>
   <message key="simple.page.title">A simple query</message>
 	<message key="required.note">* required</message>
+	<message key="cancel.note">you cancelled your edit</message>
 	<!-- errors -->
   <message key="search.error.noquery">there was no query</message>
   <message key="search.error.nohistory">you have no history at the moment</message>
