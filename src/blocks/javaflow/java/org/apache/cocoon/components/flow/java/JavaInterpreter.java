@@ -20,33 +20,36 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.ReflectionUtils;
 import org.apache.commons.jxpath.JXPathIntrospector;
 
 /**
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.5 2004/04/04 06:40:33 antonio Exp $
+ * @version CVS $Id$
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
     private boolean initialized = false;
-    private int timeToLive = 600000;
 
-    private static final String ACTION_METHOD_PREFIX = "do";
+    private int timeToLive = 600000;
 
     /**
      * Key for storing a global scope object in the Cocoon session
@@ -54,7 +57,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
     public static final String USER_GLOBAL_SCOPE = "JAVA GLOBAL SCOPE";
 
     private ClassLoader classloader;
-    private HashMap methods = new HashMap();
+
+    private Map methods = new HashMap();
 
     static {
         JXPathIntrospector.registerDynamicClass(VarMap.class, VarMapHandler.class);
@@ -64,18 +68,10 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         super.configure(config);
     }
 
-    private static String removePrefix(String name) {
-        int prefixLen = ACTION_METHOD_PREFIX.length();
-        return name.substring(prefixLen, prefixLen + 1).toLowerCase()
-                + name.substring(prefixLen + 1);
-    }
-
     public void initialize() throws Exception {
 
         if (getLogger().isDebugEnabled()) 
             getLogger().debug("initialize java flow interpreter");
-
-        initialized = true;
 
         classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
 
@@ -93,23 +89,15 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             Class clazz = classloader.loadClass(classname);
 
             try {
-                Method[] methods = clazz.getMethods();
-
-                for (int i = 0; i < methods.length; i++) {
-                    String methodName = methods[i].getName();
-                    if (methodName.startsWith(ACTION_METHOD_PREFIX)) {
-                        String function = removePrefix(methodName);
-                        this.methods.put(function, methods[i]);
-
-                        if (getLogger().isDebugEnabled()) 
-                            getLogger().debug("registered method \"" + methodName +
-                                              "\" as function \"" + function + "\"");
-                    }
-                }
+                final Map m = ReflectionUtils.discoverMethods(clazz);
+                methods.putAll(m);
             } catch (Exception e) {
                 throw new ConfigurationException("cannot get methods by reflection", e);
             }
+
         }
+
+        initialized = true;
     }
 
     /**
@@ -123,16 +111,16 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
      * @param redirector
      * @exception Exception if an error occurs
      */
-    public void callFunction(String function, List params, Redirector redirector)
-            throws Exception {
+    public void callFunction(String function, List params, Redirector redirector) throws Exception {
 
         if (!initialized)
             initialize();
 
         Method method = (Method) methods.get(function);
 
-        if (method == null)
-            throw new ProcessingException("No method found for '" + function + "'");
+        if (method == null) {
+            throw new ProcessingException("No method '" + function + "' found. " + methods);
+        }
 
         if (getLogger().isDebugEnabled()) 
             getLogger().debug("calling method \"" + method + "\"");
@@ -152,11 +140,16 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setLogger(getLogger());
         context.setServiceManager(manager);
         context.setRedirector(redirector);
+        Parameters parameters = new Parameters();
+        for(Iterator i=params.iterator(); i.hasNext();) {
+        	Argument argument = (Argument)i.next();
+        	parameters.setParameter(argument.name, argument.value);
+        }
+        context.setParameters(parameters);
 
         Continuation continuation = new Continuation(context);
 
-        WebContinuation wk =
-                continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
@@ -219,6 +212,13 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setLogger(getLogger());
         context.setServiceManager(manager);
         context.setRedirector(redirector);
+        Parameters parameters = new Parameters();
+        for(Iterator i=params.iterator(); i.hasNext();) {
+        	Argument argument = (Argument)i.next();
+        	parameters.setParameter(argument.name, argument.value);
+        }
+        context.setParameters(parameters);
+
         Continuation continuation = new Continuation(parentContinuation, context);
 
         Request request = ContextHelper.getRequest(this.avalonContext);

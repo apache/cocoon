@@ -199,6 +199,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
+     Javaflow: also support inherited methods
+   </action>
+   <action dev="TC" type="add">
+     Javaflow: ported back parameter support from trunk
+   </action>
    <action dev="SW" type="add">
      CForms: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
      state. Updated the stylesheets accordingly to use HTML's disabled inputs.
