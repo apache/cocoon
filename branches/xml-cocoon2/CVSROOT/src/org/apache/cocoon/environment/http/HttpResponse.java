@@ -169,5 +169,9 @@ public class HttpResponse implements HttpServletResponse {
     public Locale getLocale() {
         return this.res.getLocale();
     }
+
+    public void resetBuffer() {
+        this.res.resetBuffer();
+    }
 }
 

@@ -22,7 +22,7 @@ import javax.servlet.ServletOutputStream;
  * Creates a specific servlet response simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-02 11:07:29 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-12-02 00:25:05 $
  */
 
 public class CommandLineResponse implements HttpServletResponse {
@@ -65,4 +65,6 @@ public class CommandLineResponse implements HttpServletResponse {
     public String encodeUrl(String url) { return url; }
     /** @deprecated */
     public String encodeRedirectUrl(String url) { return url; }
+    public java.lang.StringBuffer getRequestURL() { return null; }
+    public void resetBuffer() { }
 }

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-06 21:25:27 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-02 00:25:05 $
  */
 
 /*
@@ -57,6 +57,7 @@ public class CommandLineRequest implements HttpServletRequest {
     private Map attributes;
     private Map parameters;
     private Map headers;
+    private String characterEncoding = null;
 
     public CommandLineRequest(String contextPath, String servletPath, String pathInfo) {
         this(contextPath, servletPath, pathInfo, null, null, null);
@@ -134,7 +135,7 @@ public class CommandLineRequest implements HttpServletRequest {
 
     public BufferedReader getReader() throws IOException { return null; }
     public ServletInputStream getInputStream() throws IOException { return null; }
-    public String getCharacterEncoding() { return null; }
+    public String getCharacterEncoding() { return characterEncoding; }
     public int getContentLength() { return -1; }
 
     public String getContentType() { return null; }
@@ -170,4 +171,8 @@ public class CommandLineRequest implements HttpServletRequest {
     public String getRealPath(String path) { return null; }
     /** @deprecated */
     public boolean isRequestedSessionIdFromUrl() { return false; }
+    public java.util.Map getParameterMap() { return parameters; }
+    public void setCharacterEncoding(java.lang.String env)
+                          throws java.io.UnsupportedEncodingException { characterEncoding = env; }
+    public java.lang.StringBuffer getRequestURL() { return null; }
 }
