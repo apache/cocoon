@@ -51,32 +51,31 @@
 
 package org.apache.cocoon.slop.generation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.slop.parsing.SimpleSlopParser;
-import org.apache.cocoon.slop.interfaces.SlopParser;
-import org.apache.cocoon.generation.ComposerGenerator;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.LocatorImpl;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.slop.interfaces.SlopParser;
+import org.apache.cocoon.slop.parsing.SimpleSlopParser;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.LocatorImpl;
+
 /**
  * SlopGenerator: Simple Line-Oriented Parsing of text files.
  * General code structure lifted from the Chaperon TextGenerator - thanks Stephan!
  *
  * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
- * @version CVS $Id: SlopGenerator.java,v 1.1 2003/08/06 12:59:13 bdelacretaz Exp $
+ * @version CVS $Id: SlopGenerator.java,v 1.2 2003/08/07 11:08:06 cziegeler Exp $
  */
 
 public class SlopGenerator extends ComposerGenerator
