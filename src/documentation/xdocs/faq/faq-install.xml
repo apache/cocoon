@@ -135,7 +135,7 @@ javax.xml.transform.TransformerConfigurationException: Namespace not supported b
   </question>
   <answer>
     <p>
-      Contact the Cocoon Users mail list (cocoon-users@xml.apache.org).
+      Contact the Cocoon Users mail list (users@cocoon.apache.org).
       Please do not contact developers directly for help. Cocoon users are
       generally more responsive because they tend to have more experience than developers
       troubleshooting installation problems.
