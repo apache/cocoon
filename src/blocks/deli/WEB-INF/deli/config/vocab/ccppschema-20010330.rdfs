@@ -5,7 +5,7 @@
   <!ENTITY ns-prf 'http://www.wapforum.org/UAPROF/ccppschema-20010330#'>
 ]>
 <rdf:RDF xmlns:rdf="&ns-rdf;" xmlns:rdfs="&ns-rdfs;" xmlns:prf="&ns-prf;">
-	<rdf:Description rdf:ID="Component">
+	<rdf:Description rdf:about="&ns-prf;Component">
 		<rdf:type rdf:resource="&ns-rdfs;Class"/>
 		<rdfs:subClassOf rdf:resource="&ns-rdfs;Resource"/>
 		<rdfs:label>Component</rdfs:label>
@@ -16,7 +16,7 @@
 	</rdf:Description>
 	<!-- ****************************************************************** -->
 	<!-- ***** Properties shared among the components***** -->
-	<rdf:Description rdf:ID="component">
+	<rdf:Description rdf:about="&ns-prf;component">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:label>component</rdfs:label>
 		<rdfs:comment>
@@ -24,7 +24,7 @@
       (profile).
     </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="Defaults">
+	<rdf:Description rdf:about="&ns-prf;Defaults">
 		<rdfs:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
@@ -37,45 +37,45 @@
 	</rdf:Description>
 	<!-- ****************************************************************** -->
 	<!-- ***** Component Definitions ***** -->
-	<rdf:Description rdf:ID="HardwarePlatform">
+	<rdf:Description rdf:about="&ns-prf;HardwarePlatform">
 		<rdf:type rdf:resource="&ns-rdfs;Class"/>
-		<rdfs:subClassOf rdf:resource="#Component"/>
+		<rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
 		<rdfs:label>Component: HardwarePlatform</rdfs:label>
 		<rdfs:comment>
       The HardwarePlatform component contains properties of the device's
       Hardware, such as display size, supported character sets, etc.
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="SoftwarePlatform">
+	<rdf:Description rdf:about="&ns-prf;SoftwarePlatform">
 		<rdf:type rdf:resource="&ns-rdfs;Class"/>
-		<rdfs:subClassOf rdf:resource="#Component"/>
+		<rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
 		<rdfs:label>Component: SoftwarePlatform</rdfs:label>
 		<rdfs:comment>
       The SoftwarePlatform component contains properties of the device's 
       application environment, operating system, and installed software.
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="BrowserUA">
+	<rdf:Description rdf:about="&ns-prf;BrowserUA">
 		<rdf:type rdf:resource="&ns-rdfs;Class"/>
-		<rdfs:subClassOf rdf:resource="#Component"/>
+		<rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
 		<rdfs:label>Component: BrowserUA</rdfs:label>
 		<rdfs:comment>
       The BrowserUA component contains attributes related to the browser                                  
       user agent running on the device.
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="NetworkCharacteristics">
+	<rdf:Description rdf:about="&ns-prf;NetworkCharacteristics">
 		<rdf:type rdf:resource="&ns-rdfs;Class"/>
-		<rdfs:subClassOf rdf:resource="#Component"/>
+		<rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
 		<rdfs:label>Component: NetworkCharacteristics</rdfs:label>
 		<rdfs:comment>
       The NetworkCharacteristics component contains properties describing the                                  
       network environment including the supported bearers.
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WapCharacteristics">
+	<rdf:Description rdf:about="&ns-prf;WapCharacteristics">
 		<rdf:type rdf:resource="&ns-rdfs;Class"/>
-		<rdfs:subClassOf rdf:resource="#Component"/>
+		<rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
 		<rdfs:label>Component: WapCharacteristics</rdfs:label>
 		<rdfs:comment>
       The WapCharacteristics component contains properties of the WAP
@@ -98,7 +98,7 @@
 -->
 	<!-- ****************************************************************** -->
 	<!-- ***** Component: HardwarePlatform ***** -->
-	<rdf:Description rdf:ID="BitsPerPixel">
+	<rdf:Description rdf:about="&ns-prf;BitsPerPixel">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -110,7 +110,7 @@
       Examples:     "2", "8"
 </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="ColorCapable">
+	<rdf:Description rdf:about="&ns-prf;ColorCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -122,7 +122,7 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="CPU">
+	<rdf:Description rdf:about="&ns-prf;CPU">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -132,7 +132,7 @@
       Examples:     "Pentium III", "PowerPC 750"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="ImageCapable">
+	<rdf:Description rdf:about="&ns-prf;ImageCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -144,22 +144,21 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="InputCharSet">
+	<rdf:Description rdf:about="&ns-prf;InputCharSet">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdfs;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
       Description:  List of character sets supported by the device for text
                     entry. Property's value is a list of character sets,
                     where each item in the list is a character set name, as
-                    registered with IANA. List items are separated by white
-                    space.
-      Type:         Literal
+                    registered with IANA.
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "US-ASCII", "ISO-8859-1", "Shift_JIS"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="Keyboard">
+	<rdf:Description rdf:about="&ns-prf;Keyboard">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -170,7 +169,7 @@
       Examples:     "Disambiguating", "Qwerty", "PhoneKeypad"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="Model">
+	<rdf:Description rdf:about="&ns-prf;Model">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -181,7 +180,7 @@
       Examples:     "Mustang GT", "Q30"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="NumberOfSoftKeys">
+	<rdf:Description rdf:about="&ns-prf;NumberOfSoftKeys">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -191,21 +190,21 @@
       Examples:     "3", "2"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="OutputCharSet">
+	<rdf:Description rdf:about="&ns-prf;OutputCharSet">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdfs;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
       Description:  List of character sets supported by the device for
                     output to the display. Property value is a list of
                     character sets, where each item in the list is a
                     character set name, as registered with IANA. 
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "US-ASCII", "ISO-8859-1", "Shift_JIS"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="PixelAspectRatio">
+	<rdf:Description rdf:about="&ns-prf;PixelAspectRatio">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -215,7 +214,7 @@
       Examples:     "1x2"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="PointingResolution">
+	<rdf:Description rdf:about="&ns-prf;PointingResolution">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -226,7 +225,7 @@
       Examples:     "Character", "Line", "Pixel"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="ScreenSize">
+	<rdf:Description rdf:about="&ns-prf;ScreenSize">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -237,7 +236,7 @@
       Examples:     "160x160", "640x480"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="ScreenSizeChar">
+	<rdf:Description rdf:about="&ns-prf;ScreenSizeChar">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -253,7 +252,7 @@
       Examples:     "12x4", "16x8"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="StandardFontProportional">
+	<rdf:Description rdf:about="&ns-prf;StandardFontProportional">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -264,7 +263,7 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="SoundOutputCapable">
+	<rdf:Description rdf:about="&ns-prf;SoundOutputCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -276,7 +275,7 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="TextInputCapable">
+	<rdf:Description rdf:about="&ns-prf;TextInputCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment> 
@@ -289,7 +288,7 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="Vendor">
+	<rdf:Description rdf:about="&ns-prf;Vendor">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -299,7 +298,7 @@
       Examples:     "Ford", "Lexus"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="VoiceInputCapable">
+	<rdf:Description rdf:about="&ns-prf;VoiceInputCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;HardwarePlatform"/>
 		<rdfs:comment>
@@ -313,7 +312,7 @@
 	</rdf:Description>
 	<!-- ****************************************************************** -->
 	<!-- ***** Component: SoftwarePlatform ***** -->
-	<rdf:Description rdf:ID="AcceptDownloadableSoftware">
+	<rdf:Description rdf:about="&ns-prf;AcceptDownloadableSoftware">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -324,20 +323,20 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="AudioInputEncoder">
+	<rdf:Description rdf:about="&ns-prf;AudioInputEncoder">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of audio input encoders supported by the device.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Example:      "G.711"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="DownloadableSoftwareSupport">
+	<rdf:Description rdf:about="&ns-prf;DownloadableSoftwareSupport">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of executable content types which the device
@@ -345,12 +344,12 @@
                     network. The property value is a list of MIME types,
                     where each item in the list is a content type
                     descriptor as specified by RFC 2045.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Locked
       Examples:     "application/x-msdos-exe"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="JavaEnabled">
+	<rdf:Description rdf:about="&ns-prf;JavaEnabled">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -361,20 +360,20 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="JVMVersion">
+	<rdf:Description rdf:about="&ns-prf;JVMVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of the Java virtual machines installed on the
                     device. Each item in the list is a name token describing
                     the vendor and version of the VM.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "SunJRE/1.2", "MSJVM/1.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="MexeClassmark">
+	<rdf:Description rdf:about="&ns-prf;MexeClassmark">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -387,7 +386,7 @@
       Examples:     "1", "2"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="MexeSpec">
+	<rdf:Description rdf:about="&ns-prf;MexeSpec">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -398,7 +397,7 @@
       Examples:     "7.02"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="OSName">
+	<rdf:Description rdf:about="&ns-prf;OSName">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -408,7 +407,7 @@
       Examples:     "Mac OS", "Windows NT"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="OSVendor">
+	<rdf:Description rdf:about="&ns-prf;OSVendor">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -418,7 +417,7 @@
       Examples:     "Apple", "Microsoft"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="OSVersion">
+	<rdf:Description rdf:about="&ns-prf;OSVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -428,7 +427,7 @@
       Examples:     "6.0", "4.5"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="RecipientAppAgent">
+	<rdf:Description rdf:about="&ns-prf;RecipientAppAgent">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -442,7 +441,7 @@
       Examples:     "SpeedyMail"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="SoftwareNumber">
+	<rdf:Description rdf:about="&ns-prf;SoftwareNumber">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
@@ -453,20 +452,20 @@
       Examples:     "2"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="VideoInputEncoder">
+	<rdf:Description rdf:about="&ns-prf;VideoInputEncoder">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of video input encoders supported by the device. 
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "MPEG-1", "MPEG-2", "H.261"
    </rdfs:comment>
 	</rdf:Description>
 	<!-- ****************************************************************** -->
 	<!-- ***** Component: NetworkCharacteristics ***** -->
-	<rdf:Description rdf:ID="CurrentBearerService">
+	<rdf:Description rdf:about="&ns-prf;CurrentBearerService">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;NetworkCharacteristics"/>
 		<rdfs:comment>
@@ -476,31 +475,31 @@
       Examples:     "OneWaySMS", "GUTS", "TwoWayPacket"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="SecuritySupport">
+	<rdf:Description rdf:about="&ns-prf;SecuritySupport">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;NetworkCharacteristics"/>
 		<rdfs:comment>
       Description:  Type of security or encryption mechanism supported. 
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Locked
       Example:      "PPTP"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="SupportedBearers">
+	<rdf:Description rdf:about="&ns-prf;SupportedBearers">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;NetworkCharacteristics"/>
 		<rdfs:comment>
       Description:  List of bearers supported by the device.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Locked
       Examples:     "GPRS", "GUTS", "SMS", CSD", "USSD"
    </rdfs:comment>
 	</rdf:Description>
 	<!-- ****************************************************************** -->
 	<!-- ***** Component: BrowserUA ***** -->
-	<rdf:Description rdf:ID="BrowserName">
+	<rdf:Description rdf:about="&ns-prf;BrowserName">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -511,7 +510,7 @@
       Examples:     "Mozilla", "MSIE"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="BrowserVersion">
+	<rdf:Description rdf:about="&ns-prf;BrowserVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -521,52 +520,50 @@
       Examples:     "1.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="CcppAccept">
+	<rdf:Description rdf:about="&ns-prf;CcppAccept">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of content types the device supports. Property
                     value is a list of MIME types, where each item in the
                     list is a content type descriptor as specified by
                     RFC 2045. List items are separated by white space.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "text/html", "text/plain", "text/html", "image/gif"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="CcppAccept-Charset">
+	<rdf:Description rdf:about="&ns-prf;CcppAccept-Charset">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of character sets the device supports. Property
                     value is a list of character sets, where each item in
                     the list is a character set name registered with IANA.
-                    List items are separated by white space.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "US-ASCII", "ISO-8859-1", "Shift_JIS"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="CcppAccept-Encoding">
+	<rdf:Description rdf:about="&ns-prf;CcppAccept-Encoding">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of transfer encodings the device supports.
                     Property value is a list of transfer encodings, where
                     each item in the list is a transfer encoding name as
-                    specified by RFC 2045 and registered with IANA. List
-                    items are separated by white space.
-      Type:         Literal
+                    specified by RFC 2045 and registered with IANA.
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "base64", "quoted-printable"
   </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="CcppAccept-Language">
+	<rdf:Description rdf:about="&ns-prf;CcppAccept-Language">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Seq"/>
+		<rdfs:range rdf:resource="&ns-rdf;Seq"/>
 		<rdfs:domain rdf:resource="&ns-prf;SoftwarePlatform"/>
 		<rdfs:comment>
       Description:  List of preferred document languages. If a resource is
@@ -583,9 +580,9 @@
       Examples:     "zh-CN", "en", "fr"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="DownloadableBrowserApps">
+	<rdf:Description rdf:about="&ns-prf;DownloadableBrowserApps">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
       Description:  List of executable content types which the browser
@@ -594,12 +591,12 @@
                     where each item in the list is a content type
                     descriptor as specified by RFC 2045. Items in the
                     list are separated by white space.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "application/x-java-vm/java-applet"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="FramesCapable">
+	<rdf:Description rdf:about="&ns-prf;FramesCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -610,7 +607,7 @@
       Examples:     "Yes", "No"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="HtmlVersion">
+	<rdf:Description rdf:about="&ns-prf;HtmlVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -621,7 +618,7 @@
       Examples:     "2.0", "3.2", "4.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="JavaAppletEnabled">
+	<rdf:Description rdf:about="&ns-prf;JavaAppletEnabled">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -631,7 +628,7 @@
       Examples:     "Yes", "No"   
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="JavaScriptEnabled">
+	<rdf:Description rdf:about="&ns-prf;JavaScriptEnabled">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -641,7 +638,7 @@
       Examples:     "Yes", "No"   
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="JavaScriptVersion">
+	<rdf:Description rdf:about="&ns-prf;JavaScriptVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -652,7 +649,7 @@
       Examples:     "1.4"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="PreferenceForFrames">
+	<rdf:Description rdf:about="&ns-prf;PreferenceForFrames">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -663,7 +660,7 @@
       Examples:     "Yes", "No"   
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="TablesCapable">
+	<rdf:Description rdf:about="&ns-prf;TablesCapable">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -674,7 +671,7 @@
       Examples:     "Yes", "No"   
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="XhtmlVersion">
+	<rdf:Description rdf:about="&ns-prf;XhtmlVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
@@ -684,9 +681,9 @@
       Examples:     "1.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="XhtmlModules">
+	<rdf:Description rdf:about="&ns-prf;XhtmlModules">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;BrowserUA"/>
 		<rdfs:comment>
       Description:  List of XHTML modules supported by the browser. Property
@@ -697,14 +694,14 @@
                     referenced document is a work in progress. Any subsequent
                     changes to the module naming conventions should be
                     reflected in the values of this property.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "XHTML1-struct", "XHTML1-blkstruct", "XHTML1-frames"
    </rdfs:comment>
 	</rdf:Description>
 	<!-- ****************************************************************** -->
 	<!-- ***** Component: WapCharacteristics ***** -->
-	<rdf:Description rdf:ID="WapDeviceClass">
+	<rdf:Description rdf:about="&ns-prf;WapDeviceClass">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
@@ -716,7 +713,7 @@
       Examples:     "A"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WapPushMsgPriority">
+	<rdf:Description rdf:about="&ns-prf;WapPushMsgPriority">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
@@ -727,7 +724,7 @@
       Examples:     "critical", "low", "none"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WapPushMsgSize">
+	<rdf:Description rdf:about="&ns-prf;WapPushMsgSize">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
@@ -738,7 +735,7 @@
       Examples:     "1024"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WapVersion">
+	<rdf:Description rdf:about="&ns-prf;WapVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
@@ -748,7 +745,7 @@
       Examples:     "1.1", "1.2", "2.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WmlDeckSize">
+	<rdf:Description rdf:about="&ns-prf;WmlDeckSize">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
@@ -761,49 +758,49 @@
       Examples:     "4096"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WmlScriptLibraries">
+	<rdf:Description rdf:about="&ns-prf;WmlScriptLibraries">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
       Description:  List of mandatory and optional libraries supported in
                     the device's WMLScript VM.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Locked
       Examples:     "Lang", "Float", "String", "URL", "WMLBrowser", "Dialogs"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WmlScriptVersion">
+	<rdf:Description rdf:about="&ns-prf;WmlScriptVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
       Description:  List of WMLScript versions supported by the device.
                     Property value is a list of version numbers, where
                     each item in the list is a version string conforming
                     to Version. List items are separated by white space.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "1.1", "1.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WmlVersion">
+	<rdf:Description rdf:about="&ns-prf;WmlVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
       Description:  List of WML language versions supported by the device.
                     Property value is a list of version numbers, where
                     each item in the list is a version string conforming
                     to Version. List items are separated by white space.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Append
       Examples:     "1.1", "1.0"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WtaiLibraries">
+	<rdf:Description rdf:about="&ns-prf;WtaiLibraries">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
       Description:  List of WTAI network common and network specific
@@ -813,13 +810,13 @@
                     "WAP WTAI" and its addendums. List items are separated by
                     white space. Any future addendums to "WAP WTAI" should be
                     reflected in the values of this property.
-      Type:         Literal
+      Type:         Literal (bag)
       Resolution:   Locked
       Examples:     "WTAVoiceCall", "WTANetText", "WTAPhoneBook", 
                     "WTACallLog", "WTAMisc", "WTAGSM", "WTAIS136", "WTAPDC"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WtaVersion">
+	<rdf:Description rdf:about="&ns-prf;WtaVersion">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
@@ -829,13 +826,13 @@
       Examples:     "1.1"
    </rdfs:comment>
 	</rdf:Description>
-	<rdf:Description rdf:ID="WapSupportedApplications">
+	<rdf:Description rdf:about="&ns-prf;WapSupportedApplications">
 		<rdf:type rdf:resource="&ns-rdf;Property"/>
-		<rdf:type rdf:resource="&ns-rdf;Bag"/>
+		<rdfs:range rdf:resource="&ns-rdf;Bag"/>
 		<rdfs:domain rdf:resource="&ns-prf;WapCharacteristics"/>
 		<rdfs:comment>
       Description: List of applications supported by the WAP device that are accessible using the push application addressing framework. Each value is a URI and represents an application identifier which may be reigstered with WINA.
-      Type: 	Literal
+      Type: 	Literal (bag)
       Resolution: Locked
       Examples: 	"urn:x-wap-application:push.sia", "urn:x-wap-application:wml.ua", "urn:x-wap-application:wta.ua"
    </rdfs:comment>
@@ -843,116 +840,132 @@
 
 <!-- ****************************************************************** -->
 <!-- ***** Component Definitions ***** -->
-<rdf:Description ID="MmsCharacteristics">
-	<rdf:type resource="&ns-rdfs;Class"/>
-	<rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
-	<rdfs:label>Component: MmsCharacteristics</rdfs:label>
-	<rdfs:comment>
-		The MmsCharacteristics component contains properties of the device's
-		Multimedia messaging capabilities, such as maximum message size, maximum
-		image resolution, etc.
-	</rdfs:comment>
-</rdf:Description>
+
+  <rdf:Description rdf:about="&ns-prf;MmsCharacteristics">
+    <rdf:type rdf:resource="&ns-rdfs;Class"/>
+    <rdfs:subClassOf rdf:resource="&ns-prf;Component"/>
+    <rdfs:label xml:lang="en">Component: MmsCharacteristics</rdfs:label>
+    <rdfs:comment xml:lang="en">
+      The MmsCharacteristics component contains properties of the device's
+      Multimedia messaging capabilities, such as maximum message size, maximum
+      image resolution, etc.
+    </rdfs:comment>
+  </rdf:Description>
 
 <!-- ****************************************************************** -->
 <!-- ***** Component: MmsCharacteristics ***** -->
 <!-- ****************************************************************** -->
+
 <!-- ***** Attributes for component: MmsCharacteristics ***** -->
 
-<rdf:Description ID="MmsMaxMessageSize">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: Maximum size of an MMS message in bytes.
-		Type: Number
-		Resolution: Locked
-		Examples: 2048
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsMaxMessageSize">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Number"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: Maximum size of an MMS message in bytes.
+      Type: Number
+      Resolution: Locked
+      Examples: 2048
+    </rdfs:comment>
+  </rdf:Description>
 
-<rdf:Description ID="MmsMaxImageResolution">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: The maximum size of an image in units of pixels
-		(horizontal x vertical).
-		Type: Literal
-		Resolution: Locked
-		Examples: 80x60
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsMaxImageResolution">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Literal"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: The maximum size of an image in units of pixels
+      (horizontal x vertical).
+      Type: Literal
+      Resolution: Locked
+      Examples: 80x60
+    </rdfs:comment>
+  </rdf:Description>
 
-<rdf:Description ID="MmsCcppAccept">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdf:type rdf:resource="&ns-rdf;Bag"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: Property value is a list of supported content types
-		where each item in the list is a content type name
-		registered as a MIME type
-		Type: Literal bag
-		Resolution: Locked
-		Examples: "image/jpeg", "audio/wav", "video/mpeg-4"
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsCcppAccept">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Literal"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: Property value is a list of supported content types
+      where each item in the list is a content type name
+      registered as a MIME type
+      Type: Literal (bag)
+      Resolution: Locked
+      Examples: “image/jpeg”, “audio/wav”, “video/mpeg-4”
+    </rdfs:comment>
+  </rdf:Description>
 
-<rdf:Description ID="MmsCcppAccept-Charset">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdf:type rdf:resource="&ns-rdf;Bag"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: List of character sets that the MMS Client supports.
-		Property value is a list of character sets, where
-		each item in the list is a character set name registered
-		with IANA
-		Type: Literal bag
-		Resolution: Locked
-		Examples: "US-ASCII", "ISO-8859-1"
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsCcppAcceptCharSet">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Literal"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: List of character sets that the MMS Client supports.
+      Property value is a list of character sets, where
+      each item in the list is a character set name registered
+      with IANA
+      Type: Literal (bag)
+      Resolution: Locked
+      Examples: “US-ASCII”, “ISO-8859-1”
+    </rdfs:comment>
+  </rdf:Description>
 
-<rdf:Description ID="MmsCcppAccept-Language">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdf:type rdf:resource="&ns-rdf;Bag"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: List of preferred languages. The first item in the
-		list should be considered the user’s first choice.
-		Property value is a list of natural languages, where
-		each item in the list is the name of a language as
-		defined by RFC 1766.
-		Type: Literal bag
-		Resolution: Locked
-		Examples: "en", "fr"
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsCcppAcceptLanguage">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Literal"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: List of preferred languages. The first item in the
+      list should be considered the user’s first choice.
+      Property value is a list of natural languages, where
+      each item in the list is the name of a language as
+      defined by RFC 1766.
+      Type: Literal (bag)
+      Resolution: Locked
+      Examples: “en”, “fr”
+    </rdfs:comment>
+  </rdf:Description>
 
-<rdf:Description ID="MmsCcppAccept-Encoding">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdf:type rdf:resource="&ns-rdf;Bag"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: List of transfer encodings that the MMS Client supports.
-		Property value is a list of transfer encodings, where
-		each item in the list is a transfer encoding name as
-		specified by RFC 2045 and registered with IANA.
-		Type: Literal bag
-		Resolution: Locked
-		Examples: "base64", "quoted-printable"
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsCcppAcceptEncoding">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Literal"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: List of transfer encodings that the MMS Client supports.
+      Property value is a list of transfer encodings, where
+      each item in the list is a transfer encoding name as
+      specified by RFC 2045 and registered with IANA.
+      Type: Literal (bag)
+      Resolution: Locked
+      Examples: “base64”, “quoted-printable"
+    </rdfs:comment>
+  </rdf:Description>
 
-<rdf:Description ID="MmsVersion">
-	<rdf:type rdf:resource="&ns-rdf;Property"/>
-	<rdf:type rdf:resource="&ns-rdf;Bag"/>
-	<rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
-	<rdfs:comment>
-		Description: The MMS versions supported by the MMS Client conveyed
-		as majorVersionNumber.minorVersionNumber.
-		Type: Literal bag
-		Resolution: Locked
-		Examples: "2.0", "1.3"
-	</rdfs:comment>
-</rdf:Description>
+  <rdf:Description rdf:about="&ns-prf;MmsVersion">
+    <rdf:type rdf:resource="&ns-rdf;Property"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
+    <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
+    <rdfs:range rdf:resource="&ns-prf;Literal"/>
+    <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
+    <rdfs:comment xml:lang="en">
+      Description: The MMS versions supported by the MMS Client conveyed
+      as majorVersionNumber.minorVersionNumber.
+      Type: Literal (bag)
+      Resolution: Locked
+      Examples: "2.0", "1.3"
+    </rdfs:comment>
+  </rdf:Description>
 
 </rdf:RDF>
