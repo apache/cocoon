@@ -15,18 +15,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.excalibur.event.Queue;
-import org.apache.excalibur.event.Sink;
-import org.apache.excalibur.event.command.RepeatedCommand;
-
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,6 +25,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * The default implementation of {@link ContinuationsManager}.
@@ -49,8 +43,7 @@ import java.util.TreeSet;
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
-        implements ContinuationsManager, Configurable,
-                   ThreadSafe, Contextualizable {
+        implements ContinuationsManager, Configurable, Disposable, ThreadSafe {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -61,7 +54,7 @@ public class ContinuationsManagerImpl
     protected SecureRandom random;
     protected byte[] bytes;
 
-    protected Sink m_commandSink;
+    protected ContinuationInterrupt interrupt;
 
     /**
      * How long does a continuation exist in memory since the last
@@ -103,26 +96,36 @@ public class ContinuationsManagerImpl
         bytes = new byte[CONTINUATION_ID_LENGTH];
     }
 
-    /**
-     * Get the command sink so that we can be notified of changes
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void contextualize(Context context) throws ContextException {
-        m_commandSink = (Sink) context.get(Queue.ROLE);
-    }
-
     public void configure(Configuration config) {
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
 
         final Configuration expireConf = config.getChild("expirations-check");
         try {
-            final ContinuationInterrupt interrupt = new ContinuationInterrupt(expireConf);
-            this.m_commandSink.enqueue(interrupt);
+            this.interrupt = new ContinuationInterrupt(expireConf);
+            Thread thread = new Thread(interrupt);
+            thread.setDaemon(true);
+            thread.setName("continuation-interrupt");
+            thread.start();
+            Thread.yield();
         } catch (Exception e) {
             getLogger().warn("Could not enqueue continuations expiration task. " +
                              "Continuations will not automatically expire.", e);
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        // stop the thread
+        if ( this.interrupt != null ) {
+            this.interrupt.doRun = false;
+        }
+    }
+    
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
@@ -353,47 +356,43 @@ public class ContinuationsManagerImpl
     }
 
 
-    final class ContinuationInterrupt implements RepeatedCommand {
-        private final long m_interval;
-        private final long m_initialDelay;
+    final class ContinuationInterrupt implements Runnable {
+        private final long interval;
+        private final long initialDelay;
 
+        public boolean doRun;
+        
         /**
          * @param expireConf
          */
         public ContinuationInterrupt(Configuration expireConf) {
             // only periodic time triggers are supported
-            m_initialDelay =
-                    expireConf.getChild("offset", true).getValueAsLong(100);
-            m_interval =
-                    expireConf.getChild("period", true).getValueAsLong(100);
-        }
-
-        /**
-         * Repeat forever
-         */
-        public int getNumberOfRepeats() {
-            return -1;
-        }
-
-        /**
-         * Get the number of millis to wait between invocations
-         */
-        public long getRepeatInterval() {
-            return m_interval;
-        }
-
-        /**
-         * Get the number of millis to wait for the first invocation
-         */
-        public long getDelayInterval() {
-            return m_initialDelay;
+            this.initialDelay = expireConf.getChild("offset", true).getValueAsLong(100);
+            this.interval = expireConf.getChild("period", true).getValueAsLong(100);
         }
 
         /**
          * expire any continuations that need expiring.
          */
-        public void execute() throws Exception {
-            expireContinuations();
+        public void run() {
+            this.doRun = true;
+            if ( this.initialDelay > 0 ) {
+                // Sleep
+                try {
+                    Thread.sleep(this.initialDelay);
+                } catch (InterruptedException ignore) { 
+                    // ignore
+                }
+            }
+            while (doRun) {
+                expireContinuations();
+                // Sleep
+                try {
+                    Thread.sleep(this.interval);
+                } catch (InterruptedException ignore) { 
+                    // ignore
+                }
+            }
         }
     }
 }
