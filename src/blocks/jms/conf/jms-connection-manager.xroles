@@ -14,10 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.components.jms.JMSEventListener']">
-	<component class="org.apache.cocoon.components.jms.JMSEventListener"
-               role="org.apache.cocoon.components.jms.JMSEventListener" logger="core">
-       <parameter name="component" value="org.apache.cocoon.caching.Cache/EventAware"/>
-       <parameter name="connection" value="OpenJMS-demo"/>
-    </component>
-</xconf>
+<xroles xpath="/role-list" unless="role[@shorthand='jms-connection-manager']">
+
+  <role name="org.apache.cocoon.components.jms.JMSConnectionManager"
+        shorthand="jms-connection-manager"
+        default-class="org.apache.cocoon.components.jms.JMSConnectionManagerImpl"/>
+
+</xroles>
