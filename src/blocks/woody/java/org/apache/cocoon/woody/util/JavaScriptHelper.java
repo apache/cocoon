@@ -69,15 +69,15 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.2 2003/10/09 09:34:37 sylvain Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.3 2003/12/31 03:25:14 antonio Exp $
  */
 public class JavaScriptHelper {
-    
+
     /**
      * A shared root scope, avoiding to recreate a new one each time.
      */
     private static Scriptable _rootScope = null;
-    
+
     /**
      * Build a script with the content of a DOM element.
      * 
@@ -88,7 +88,7 @@ public class JavaScriptHelper {
     public static Script buildScript(Element element) throws IOException {
         String jsText = DomHelper.getElementText(element);
         String sourceName = DomHelper.getSystemIdLocation(element);
-        
+
         Context ctx = Context.enter();
         Script script;
         try {
@@ -102,10 +102,9 @@ public class JavaScriptHelper {
         } finally {
             Context.exit();
         }
-        
         return script;
     }
-    
+
     /**
      * Get a root scope for building child scopes.
      * 
@@ -121,11 +120,9 @@ public class JavaScriptHelper {
                 Context.exit();
             }
         }
-        
         return _rootScope;
-        
     }
-    
+
     /**
      * Get a parent scope for building a child scope. The request is searched for an existing scope
      * that can be provided by a flowscript higher in the call stack, giving visibility to flowscript
@@ -151,9 +148,8 @@ public class JavaScriptHelper {
     public static Object execScript(Script script, Map values, Request request) throws JavaScriptException {
         Context ctx = Context.enter();
         try {
-            
             Scriptable parentScope = getParentScope(request);
-            
+
             // Create a new local scope for the event listener variables
             Scriptable scope;
             try {
@@ -162,9 +158,8 @@ public class JavaScriptHelper {
                 // Should normally not happen
                 throw new CascadingRuntimeException("Cannont create script scope", e);
             }
-            
             scope.setParentScope(parentScope);
-            
+
             // Populate the scope
             Iterator iter = values.entrySet().iterator();
             while(iter.hasNext()) {
@@ -173,12 +168,9 @@ public class JavaScriptHelper {
                 Object value = entry.getValue();
                 scope.put(key, scope, Context.toObject(value, scope));
             }
-            
             return script.exec(ctx, scope);
-           
         } finally {
             Context.exit();
         }
     }
-
 }
