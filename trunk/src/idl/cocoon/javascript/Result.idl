@@ -54,14 +54,46 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
+ * <p>
+ *   Object returned by a database query.
+ * </p>
  *
+ * <p>
+ *   <dl>
+ *     <dt><b>Authors:</b></dt>
+ *     <dd>
+ *       <a href="mailto:coliver AT apache.org">Christopher Oliver</a>.
+ *     </dd>
+ *     <dt><b>Copyright:</b></dt>
+ *     <dd>
+ *       Copyright &copy; 2002-2003
+ *       <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+ *       All rights reserved.
+ *     </dd>
+ *   </dl>
+ * </p>
  */
-module flow {
-
-    interface Script {
-    };
-
-    #include "cocoon/flow/javascript/_module.idl"
-
+interface Result {
+    /**
+     * An array with a case-insensitive object per row with properties matching column names and values matching column values.
+     */
+    readonly attribute cocoon::Rows rows;
+    /**
+     * An array with an array per row of column values
+     */
+    readonly attribute cocoon::RowsByIndex rowsByIndex;
+    /**
+     * An array of column names
+     */
+    readonly attribute cocoon::StringArray columnNames;
+    /**
+     * Number of rows returned
+     */
+    readonly attribute long rowCount;
+    /**
+     * True if not all rows are included due to reaching a maximum value
+     */
+    readonly attribute boolean isLimitedByMaxRows;
 };

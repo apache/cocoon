@@ -54,14 +54,57 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
+ * <p>
+ *   Representation of continuations in a Web environment.
+ * </p>
  *
+ * <p>
+ *   Because a user may click on the back button of the browser and restart a 
+ *   saved computation in a continuation, each <code>WebContinuation</code> 
+ *   becomes the parent of a subtree of continuations.
+ * </p>
+ *
+ * <p>
+ *   If there is no parent <code>WebContinuation</code>, the created 
+ *   continuation becomes the root of a tree of <code>WebContinuation</code>s.
+ * </p>
+ *
+ * <p>
+ *   <dl>
+ *     <dt><b>Authors:</b></dt>
+ *     <dd>
+ *       <a href="mailto:coliver AT apache.org">Christopher Oliver</a>.
+ *     </dd>
+ *     <dt><b>Copyright:</b></dt>
+ *     <dd>
+ *       Copyright &copy; 2002-2003
+ *       <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+ *       All rights reserved.
+ *     </dd>
+ *   </dl>
+ * </p>
  */
-module flow {
+interface WebContinuation {
+    /**
+     * Unguessable unique identifier of this object.
+     */
+    readonly attribute string id;
 
-    interface Script {
-    };
+    /**
+     * Current continuation.
+     */
+    readonly attribute cocoon::Continuation continuation;
 
-    #include "cocoon/flow/javascript/_module.idl"
+    /**
+     * Deletes this continuation together with all of its children.
+     */
+    void invalidate();
 
+    /**
+     * Debugging aid that displays the tree of continuations rooted
+     * in this object.
+     */
+    void display();
 };
