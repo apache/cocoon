@@ -56,12 +56,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.Enumeration;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
@@ -72,9 +73,9 @@ import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.excalibur.source.ModifiableTraversableSource;
@@ -82,7 +83,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
-import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.util.HttpURL;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.DepthSupport;
@@ -92,9 +92,11 @@ import org.apache.webdav.lib.ResponseEntity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.InputSource;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  *  A source implementation to get access to WebDAV repositories. Use it
@@ -103,7 +105,7 @@ import org.w3c.dom.Document;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.6 2003/08/22 21:33:56 joerg Exp $
+ *  @version $Id: WebDAVSource.java,v 1.7 2003/08/27 17:36:07 gcasper Exp $
 */
 public class WebDAVSource implements Composable, Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -709,41 +711,24 @@ public class WebDAVSource implements Composable, Source,
      public SourceProperty[] getSourceProperties() throws SourceException {
 
          Vector sourceproperties = new Vector();
-         DOMParser parser = null;
-         String xml = "";
          Enumeration props= null;
          org.apache.webdav.lib.Property prop = null;
-         String propValue = null;
         
          try {
-             parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
              Enumeration responses = this.resource.propfindMethod(0);
              while (responses.hasMoreElements()) {
 
                  ResponseEntity response = (ResponseEntity)responses.nextElement();
                  props = response.getProperties();
-                 final String quote = "\"";
                  while (props.hasMoreElements()) {
-
                      prop = (Property) props.nextElement();
-                     String localName = prop.getLocalName();
-                     String namespaceURI = prop.getNamespaceURI();
-                     String pre = "<"+localName+" xmlns="+quote+namespaceURI+quote+" >";
-                     String post = "</"+localName+" >";
-                     propValue = prop.getPropertyAsString();
-                     xml = pre+propValue+post;
-                     StringReader reader = new StringReader(xml);
-                     Document doc = parser.parseDocument(new InputSource(reader));
-                     SourceProperty srcProperty = new SourceProperty(doc.getDocumentElement());
+                     SourceProperty srcProperty = new SourceProperty(prop.getElement());
                      sourceproperties.addElement(srcProperty);
                  }
              }
 
          } catch (Exception e) {
-             throw new SourceException("Could not parse property "+xml, e);
-
-         } finally {
-             this.manager.release((Component) parser);
+             throw new SourceException("Error getting properties", e);
          }
          SourceProperty[] sourcepropertiesArray = new SourceProperty[sourceproperties.size()];
          for (int i = 0; i<sourceproperties.size(); i++) {
@@ -765,43 +750,24 @@ public class WebDAVSource implements Composable, Source,
     public SourceProperty getSourceProperty (String namespace, String name)
     throws SourceException {
 
-          DOMParser parser = null;
-          String xml = "";
           Enumeration props= null;
           org.apache.webdav.lib.Property prop = null;
-          String propValue = null;
-
           try {
-              parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
               Enumeration responses = this.resource.propfindMethod(0);
               while (responses.hasMoreElements()) {
                   ResponseEntity response = (ResponseEntity)responses.nextElement();
                   props = response.getProperties();
-                  final String quote = "\"";
                   while (props.hasMoreElements()) {
                       prop = (Property) props.nextElement();
 
                       if (namespace.equals(prop.getNamespaceURI())
                           && name.equals(prop.getLocalName())){
-
-                          String localName = prop.getLocalName();
-                          String namespaceURI = prop.getNamespaceURI();
-                          String pre = "<"+localName+" xmlns="+quote+namespaceURI+quote+" >";
-                          String post = "</"+localName+" >";
-                          propValue = prop.getPropertyAsString();
-                          xml = pre+propValue+post;
-                          StringReader reader = new StringReader(xml);
-                          Document doc = parser.parseDocument(new InputSource(reader));
-    
-                          return new SourceProperty(doc.getDocumentElement());
+                          return new SourceProperty(prop.getElement());
                       }
-
                   }
               }
           } catch (Exception e) {
-              throw new SourceException("Could not parse property "+xml, e);
-          } finally {
-              this.manager.release((Component) parser);
+              throw new SourceException("Error getting property: "+name, e);
           }
           return null;
     }
@@ -835,14 +801,26 @@ public class WebDAVSource implements Composable, Source,
     throws SourceException {
 
         try {
-            // FIXME SourceProperty.getValueAsString only delivers Text nodes
+
+            Document doc = sourceproperty.getValue().getOwnerDocument();
+            DocumentFragment frag = doc.createDocumentFragment();
+            NodeList list = sourceproperty.getValue().getChildNodes();
+            for (int i=0; i<list.getLength(); i++) {
+                if (list.item(i) instanceof Element)
+                frag.appendChild((Element)list.item(i));
+            }
+
+            Properties format = new Properties();
+            format.put(OutputKeys.METHOD, "xml");
+            format.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            String prop = XMLUtils.serializeNode(frag, format);
+            
             this.resource.proppatchMethod(
                    new PropertyName(sourceproperty.getNamespace(),sourceproperty.getName()),
-                   sourceproperty.getValueAsString(), true);
+                   prop, true);
         } catch (Exception e) {
             throw new SourceException("Could not set property ", e);
         }
     }
-
 
 }

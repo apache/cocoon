@@ -51,21 +51,19 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Map;
-import java.util.Vector;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.xml.dom.DOMParser;
-import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -78,14 +76,16 @@ import org.xml.sax.SAXException;
  *   &lt;source:patch xmlns:source="http://apache.org/cocoon/propwrite/1.0"&gt;
  *     &lt;source:source&gt;webdav://localhost/webdav/step1/repo/contentA.xml&lt;/source:source&gt;
  *     &lt;source:prop name="author" namespace="meta"&gt;me&lt;/source:prop&gt;
- *     &lt;source:prop name="category" namespace="meta"&gt;catA&lt;/source:prop&gt;
+ *     &lt;source:props&gt;
+ *       &lt;myns:author xmlns:myns="meta"&gt;me&lt;/myns:author&gt;
+ *     &lt;/source:props&gt;
  *   &lt;/source:patch&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SourcepropsWritingTransformer.java,v 1.2 2003/08/27 08:33:42 stephan Exp $
+ * @version CVS $Id: SourcepropsWritingTransformer.java,v 1.3 2003/08/27 17:36:07 gcasper Exp $
  */
 public class SourcepropsWritingTransformer
     extends AbstractSAXTransformer {
@@ -95,17 +95,13 @@ public class SourcepropsWritingTransformer
         /** incoming elements */
     public static final String PATCH_ELEMENT = "patch";
     public static final String SOURCE_ELEMENT = "source";
-    public static final String PROP_ELEMENT = "prop";
-
-    /** main tag attributes */
-    public static final String NAME_ATTRIBUTE = "name";
-    public static final String NAMESPACE_ATTRIBUTE = "namespace";
+    public static final String PROPS_ELEMENT = "props";
 
     /** The current state */
-    private static final int STATE_OUTSIDE  = 0;
-    private static final int STATE_PATCH    = 1;
-    private static final int STATE_SOURCE   = 2;
-    private static final int STATE_PROP     = 3;
+    private static final int STATE_OUTSIDE   = 0;
+    private static final int STATE_PATCH     = 1;
+    private static final int STATE_SOURCE    = 2;
+    private static final int STATE_PROPS     = 3;
 
     private int state;
     
@@ -166,12 +162,10 @@ public class SourcepropsWritingTransformer
             this.state = STATE_SOURCE;
             this.startTextRecording();
 
-        // Element: prop
-        } else if (this.state == STATE_PATCH && name.equals(PROP_ELEMENT)) {
-            this.state = STATE_PROP;
-            this.stack.push(attr.getValue(NAME_ATTRIBUTE));
-            this.stack.push(attr.getValue(NAMESPACE_ATTRIBUTE));
-            this.startTextRecording();
+        // Element: props
+        } else if (this.state == STATE_PATCH && name.equals(PROPS_ELEMENT)) {
+            this.state = STATE_PROPS;
+            this.startRecording();
 
         } else {
             super.startTransformingElement(uri, name, raw, attr);
@@ -205,33 +199,24 @@ public class SourcepropsWritingTransformer
         // Element: patch
         if ((name.equals(PATCH_ELEMENT) && this.state == STATE_PATCH)) {
             this.state = STATE_OUTSIDE;
-
             String sourceName = null;
-            Vector props = new Vector();
-            String tag;
+            String tag = null;
+            DocumentFragment frag = null;
             do {
-                String[] prop = new String[3];
                 tag = (String)this.stack.pop();
                 if (tag.equals(SOURCE_ELEMENT)) {
                     sourceName = (String)this.stack.pop();
-                } else if (tag.equals(PROP_ELEMENT)) {
-                    prop[2] = (String)this.stack.pop();
-                    prop[1] = (String)this.stack.pop();
-                    prop[0] = (String)this.stack.pop();
-                    props.addElement(prop);
+                } else if (tag.equals(PROPS_ELEMENT)) {
+                    frag = (DocumentFragment)this.stack.pop();
                 }
             } while ( !tag.equals("END") );
-            
-            String propName = null;
-            String propNamespace = null;
-            String propValue = null;
-            String[] propsArray = new String[3];
-            for (int i = 0; i<props.size(); i++) {
-                propsArray = (String[]) props.elementAt(i);
-                propName = propsArray[0]; 
-                propNamespace = propsArray[1]; 
-                propValue = propsArray[2]; 
-                this.patchSource(sourceName, propName, propNamespace, propValue);
+            NodeList list = frag.getChildNodes();
+            Node node = null;
+            for (int i=0; i<list.getLength(); i++) {
+                node = list.item(i);
+                if (node instanceof Element) {
+                    this.patchSource(sourceName, (Element)node);
+                }
             }
 
         // Element: source
@@ -241,13 +226,11 @@ public class SourcepropsWritingTransformer
             this.stack.push(sourceName);
             this.stack.push(SOURCE_ELEMENT);
 
-        // Element: prop
-        } else if (name.equals(PROP_ELEMENT) == true && this.state == STATE_PROP) {
+        // Element: props
+        } else if (name.equals(PROPS_ELEMENT) == true && this.state == STATE_PROPS) {
             this.state = STATE_PATCH;
-            // FIXME TextRecorder only gets characters events
-            String propValue = this.endTextRecording();
-            this.stack.push(propValue);
-            this.stack.push(PROP_ELEMENT);
+            this.stack.push(this.endRecording());
+            this.stack.push(PROPS_ELEMENT);
 
         // default
         } else {
@@ -259,34 +242,21 @@ public class SourcepropsWritingTransformer
         }
     }
 
-    private void patchSource(String src, String name, String namespace, String value)
+    private void patchSource(String src, Element value)
     throws ProcessingException, IOException, SAXException {
-
-        if (src != null && name != null && namespace != null && value != null) {
-
-            DOMParser parser = null;
-            final String quote = "\"";
+        if (src != null && value != null) {
             try {
-                parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
                 Source source = this.resolver.resolveURI(src);
                 if (source instanceof InspectableSource) {
-                    String pre = "<"+name+" xmlns="+quote+namespace+quote+">";
-                    String post = "</"+name+">";
-                    String xml = pre+value+post;
-                    StringReader reader = new StringReader(xml);
-                    Document doc = parser.parseDocument(new InputSource(reader));
-                    SourceProperty property = new SourceProperty(doc.getDocumentElement());
+                    SourceProperty property = new SourceProperty(value);
                     ((InspectableSource)source).setSourceProperty(property);
 
                 } else {
                     this.getLogger().error("Cannot set properties on " + src +
                                            ": not an inspectable source");
                 }
-
             } catch (Exception e) {
                 throw new ProcessingException("Error setting properties on "+src, e);
-            } finally {
-                this.manager.release((Component) parser);
             }
         } else {
             this.getLogger().error("Error setting properties on "+src);
