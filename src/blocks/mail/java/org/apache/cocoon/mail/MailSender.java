@@ -23,7 +23,7 @@ import javax.mail.internet.AddressException;
  * and the <CODE>sendmail.xsl</CODE> logicsheet for sending an email message.
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: MailSender.java,v 1.1 2004/05/09 20:05:59 haul Exp $
+ * @version CVS $Id$
  */
 public interface MailSender {
     
@@ -32,6 +32,7 @@ public interface MailSender {
 	/** Assemble the message from the defined fields and send it.
 	 * @throws AddressException when problems with email addresses are found
 	 * @throws MessagingException when message could not be send.
+     * @deprecated Use {@link #send()} which doesn't require passing the source resolver
 	 */
 	void send(SourceResolver resolver) throws AddressException,
 			MessagingException;
@@ -40,8 +41,24 @@ public interface MailSender {
 	 * Invokes the {@link #send(SourceResolver)} method but catches any exception thrown. This 
 	 * method is intended to be used from the sendmail logicsheet. 
 	 * @return true when successful
+     * @deprecated Use {@link #sendIt()} which doesn't require passing the source resolver
 	 */
 	boolean sendIt(SourceResolver resolver);
+    
+    /** Assemble the message from the defined fields and send it. The source resolver
+     * is obtained from the hosting component container.
+     * @throws AddressException when problems with email addresses are found
+     * @throws MessagingException when message could not be send.
+     */
+    void send() throws AddressException, MessagingException;
+    
+    /**
+     * Invokes the {@link #send()} method but catches any exception thrown. This 
+     * method is intended to be used from the sendmail logicsheet. The source
+     * resolver is obtained from the hosting component container.
+     * @return true when successful
+     */
+    boolean sendIt();
     
 	/**
 	 *  Accesses any Exception caught by {@link #sendIt(SourceResolver)}.
