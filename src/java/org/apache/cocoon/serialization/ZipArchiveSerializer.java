@@ -102,7 +102,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.4 2003/05/23 09:53:46 cziegeler Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.5 2003/07/06 11:35:40 sylvain Exp $
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -422,6 +422,8 @@ public class ZipArchiveSerializer
         if (this.selector != null) {
             this.manager.release(this.selector);
         }
+        
+        this.nsSupport.reset();
         super.recycle();
     }
     
