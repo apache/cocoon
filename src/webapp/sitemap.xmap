@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.23 2003/06/27 15:10:02 upayavira Exp $
+    | CVS $Id: sitemap.xmap,v 1.24 2003/07/03 00:09:45 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -54,6 +54,7 @@
     <map:generator label="content,data" logger="sitemap.generator.file" name="file" pool-grow="4" pool-max="32" pool-min="8" src="org.apache.cocoon.generation.FileGenerator"/>
     <map:generator label="content,data" logger="sitemap.generator.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.generation.ServerPagesGenerator"/>
     <map:generator label="content,data" logger="sitemap.generator.directory" name="directory" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.DirectoryGenerator"/>
+    <map:generator label="content,data" logger="sitemap.generator.xpathdirectory" name="xpathdirectory" src="org.apache.cocoon.generation.XPathDirectoryGenerator"/>
     <map:generator label="content,data" logger="sitemap.generator.imagedirectory" name="imagedirectory" src="org.apache.cocoon.generation.ImageDirectoryGenerator"/>
     <map:generator label="data" logger="sitemap.generator.request" name="request" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.RequestGenerator"/>
     <map:generator label="content,data" logger="sitemap.generator.stream" name="stream" pool-grow="2" pool-max="16" pool-min="1" src="org.apache.cocoon.generation.StreamGenerator"/>
@@ -522,10 +523,6 @@
         +-->
     <map:match pattern="api/**">
       <map:read src="api/{1}"/>
-    </map:match>
-    
-    <map:match pattern="jh/**">
-      <map:mount check-reload="yes" src="file://D:/xml/" uri-prefix="jh"/>
     </map:match>
 
     <!--+
