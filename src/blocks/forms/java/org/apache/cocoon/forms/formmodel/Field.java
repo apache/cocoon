@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.18 2004/06/29 13:06:04 sylvain Exp $
+ * @version CVS $Id: Field.java,v 1.19 2004/07/11 17:18:26 vgritsenko Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -55,55 +55,55 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     protected String enteredValue;
     protected Object value;
-    
+
     /**
      * Value state indicating that a new value has been read from the request,
      * but has not yet been parsed.
      */
     protected final static int VALUE_UNPARSED = 0;
-    
+
     /**
      * Value state indicating that a value has been parsed, but needs to be
      * validated (that must occur before the value is given to the application)
      */
     protected final static int VALUE_PARSED = 1;
-    
+
     /**
      * Value state indicating that a parse error was encountered but should not
      * yet be displayed.
      */
     protected final static int VALUE_PARSE_ERROR = 2;
-    
+
     /**
      * Value state indicating that validate() has been called when state was
      * VALUE_PARSE_ERROR. This makes the error visible on output.
      */
     protected final static int VALUE_DISPLAY_PARSE_ERROR = 3;
-    
+
     /**
      * Transient value state indicating that validation is going on.
-     * 
+     *
      * @see #validate()
      */
     protected final static int VALUE_VALIDATING = 4;
-    
+
     /**
      * Value state indicating that validation has occured, but that any error should not
      * yet be displayed.
      */
     protected final static int VALUE_VALIDATED = 5;
-    
+
     /**
      * Value state indicating that value validation has occured, and the
      * validation error, if any, should be displayed.
      */
     protected final static int VALUE_DISPLAY_VALIDATION = 6;
-    
+
     // At startup, we have no value to parse (both enteredValue and value are null),
     // but need to validate (e.g. error if field is required)
     protected int valueState = VALUE_PARSED;
 
-    
+
     /**
      * Transient widget processing state indicating that the widget is currently validating
      * (used to avoid endless loops when a validator calls getValue)
@@ -129,7 +129,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.valueState == VALUE_VALIDATING) {
             return this.value;
         }
-        
+
         // Parse the value
         if (this.valueState == VALUE_UNPARSED) {
             doParse();
@@ -176,7 +176,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         //if (newEnteredValue != null) {
             readFromRequest(newEnteredValue);
         //}
-        
+
     }
 
     protected void readFromRequest(String newEnteredValue) {
@@ -196,7 +196,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             validationError = null;
             value = null;
             this.valueState = VALUE_UNPARSED;
-            
+
             if (hasValueChangedListeners()) {
 	        	    // Throw an event that will parse the value only if needed.
 	    	        getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
@@ -208,22 +208,22 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.valueState == VALUE_UNPARSED) {
             doParse();
         }
-        
+
         // Force validation on already validated values (but keep invalid parsings)
         if (this.valueState >= VALUE_VALIDATED) {
             this.valueState = VALUE_PARSED;
         }
-        
+
         if (this.valueState == VALUE_PARSED) {
             doValidate();
             this.valueState = VALUE_DISPLAY_VALIDATION;
         } else if (this.valueState == VALUE_PARSE_ERROR) {
             this.valueState = VALUE_DISPLAY_PARSE_ERROR;
         }
-        
+
         return this.validationError == null;
     }
-    
+
     /**
      * Parse the value that has been read from the request.
      * Should be called when valueState is VALUE_UNPARSED.
@@ -247,17 +247,17 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 this.value = conversionResult.getResult();
                 this.valueState = VALUE_PARSED;
             } else {
-                   // Conversion failed
+                // Conversion failed
                 this.validationError = conversionResult.getValidationError();
                 // No need for further validation (and need to keep the above error)
                 this.valueState = VALUE_PARSE_ERROR;
             }
         } else {
-               // No value: needs to be validated
-               this.valueState = VALUE_PARSED;
+            // No value: needs to be validated
+            this.valueState = VALUE_PARSED;
         }
     }
-    
+
     /**
      * Validate the value once it has been parsed.
      * Should be called when valueState is VALUE_PARSED.
@@ -268,10 +268,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.valueState != VALUE_PARSED) {
             throw new IllegalStateException("Field is not in PARSED state (" + this.valueState + ")");
         }
-        
+
         // Go to transient validating state
         this.valueState = VALUE_VALIDATING;
-        
+
         try {
             if (this.value == null && getFieldDefinition().isRequired()) {
                 // Field is required
@@ -279,7 +279,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             } else {
                 if (super.validate()) {
                     // New-style validators were successful. Check the old-style ones.
-                    this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));                
+                    this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
                 }
             }
         } finally {
@@ -317,7 +317,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-    
+
 
     /**
      * @return "field"
@@ -325,7 +325,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public String getXMLElementName() {
         return FIELD_EL;
     }
-    
+
     /**
      * Adds the @required attribute
      */
@@ -333,8 +333,8 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("required", String.valueOf(isRequired()));
         return attrs;
-    }    
-    
+    }
+
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         if (enteredValue != null || value != null) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
@@ -429,7 +429,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public void removeValueChangedListener(ValueChangedListener listener) {
         this.listener = WidgetEventMulticaster.remove(this.listener, listener);
     }
-    
+
     private boolean hasValueChangedListeners() {
         return this.listener != null || this.fieldDefinition.hasValueChangedListeners();
     }
