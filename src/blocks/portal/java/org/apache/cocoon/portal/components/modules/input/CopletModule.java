@@ -93,7 +93,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * &lt;/map:action&gt;</pre>
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.7 2003/12/11 10:27:35 cziegeler Exp $
+ * @version CVS $Id: CopletModule.java,v 1.8 2003/12/12 16:34:21 cziegeler Exp $
  */
 public class CopletModule 
 implements InputModule, Serviceable, ThreadSafe {
@@ -128,12 +128,14 @@ implements InputModule, Serviceable, ThreadSafe {
             } else {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
                 
-                // set portal name
-                portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
+                if ( copletId != null ) {
+                    // set portal name
+                    portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));                    
+                }
             }
             
             if (copletId == null) {
-                throw new ConfigurationException("copletId must be passed in the object model either directly (e.g. by using ObjectModelAction) or within the parent context.");
+                return null;
             }
             
             JXPathContext jxpathContext = JXPathContext.newContext(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId));
@@ -141,7 +143,6 @@ implements InputModule, Serviceable, ThreadSafe {
                 
             if (value == null) {
                 return null;
-                //throw new ConfigurationException("Could not find value for expression "+name);
             }
                 
             return value.toString();
