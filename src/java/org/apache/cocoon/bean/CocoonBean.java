@@ -71,7 +71,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -89,7 +88,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.23 2003/09/13 10:20:09 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.24 2003/09/15 11:26:04 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -186,17 +185,24 @@ public class CocoonBean extends CocoonWrapper {
         String sourceURI,
         String destURI)
         throws IllegalArgumentException {
-        targets.add(new Target(type, root, sourceURI, destURI));
+        Target target = new Target(type, root, sourceURI, destURI);
+        target.setDefaultFilename(this.defaultFilename);
+        targets.add(target);
+
     }
 
     public void addTarget(String type, String sourceURI, String destURI)
         throws IllegalArgumentException {
-        targets.add(new Target(type, sourceURI, destURI));
+        Target target = new Target(type, sourceURI, destURI);
+        target.setDefaultFilename(this.defaultFilename);
+        targets.add(target);
     }
 
     public void addTarget(String sourceURI, String destURI)
         throws IllegalArgumentException {
-        targets.add(new Target(sourceURI, destURI));
+        Target target = new Target(sourceURI, destURI);
+        target.setDefaultFilename(this.defaultFilename);
+        targets.add(target);
     }
 
     public void addTargets(List uris, String destURI)
@@ -204,6 +210,7 @@ public class CocoonBean extends CocoonWrapper {
         Iterator i = uris.iterator();
         while (i.hasNext()) {
             Target target = new Target((String) i.next(), destURI);
+            target.setDefaultFilename(this.defaultFilename);
             targets.add(target);
         }
     }
@@ -367,30 +374,20 @@ public class CocoonBean extends CocoonWrapper {
         
         int linkCount = 0;
 
-        String destinationURI;
         if (confirmExtension) {
-            destinationURI = (String) allTranslatedLinks.get(target.getSourceURI());
-            if (destinationURI == null) {
-                destinationURI = mangle(target.getSourceURI());
-                final String type = getType(target.getDeparameterizedSourceURI(), target.getParameters());
-                final String ext = NetUtils.getExtension(destinationURI);
-                final String defaultExt = MIMEUtils.getDefaultExtension(type);
-                if (defaultExt != null) {
-                    if ((ext == null) || (!ext.equals(defaultExt))) {
-                        destinationURI += defaultExt;
-                    }
-                }
-                allTranslatedLinks.put(target.getSourceURI(), destinationURI);
+            if (null == allTranslatedLinks.get(target.getSourceURI())) {
+                final String mimeType = getType(target.getDeparameterizedSourceURI(), target.getParameters());
+                target.setMimeType(mimeType);
+                allTranslatedLinks.put(target.getSourceURI(), target.getDestinationURI());
             }
-        } else {
-            destinationURI = target.getSourceURI();
         }
         // Store processed URI list to avoid eternal loop
         allProcessedLinks.put(target, target);
 
-        if ("".equals(destinationURI)) {
-            return new ArrayList();
-        }
+        // IS THIS STILL NEEDED?
+        //if ("".equals(destinationURI)) {
+        //    return new ArrayList();
+        //}
 
         // Process links
         final HashMap translatedLinks = new HashMap();
@@ -415,31 +412,23 @@ public class CocoonBean extends CocoonWrapper {
                     continue;
                 }
 
-                String linkDestinationURI =
-                    (String) allTranslatedLinks.get(linkTarget.getSourceURI());
-                if (linkDestinationURI == null) {
+                if (null == allTranslatedLinks.get(linkTarget.getSourceURI())) {
                     try {
-                        linkDestinationURI =
-                            this.translateURI(linkTarget.getSourceURI());
+                        final String mimeType = 
+                                getType(target.getDeparameterizedSourceURI(), target.getParameters());
+                        target.setMimeType(mimeType);
+                        allTranslatedLinks.put(target.getSourceURI(), target.getDestinationURI());
                         log.info("  Link translated: " + linkTarget.getSourceURI());
-                        allTranslatedLinks.put(
-                            linkTarget.getSourceURI(),
-                            linkDestinationURI);
+                        targets.add(linkTarget);
                     } catch (ProcessingException pe) {
                         this.sendBrokenLinkWarning(linkTarget.getSourceURI(), pe.getMessage());
+                        if (this.brokenLinkGenerate) {
+                           targets.add(linkTarget);
+                        }
                     }
                 }
 
-                // AllTranslatedLinks is for preventing retranslation
-                // translartedLinks is for use by the LinkTranslator
-                final String translatedRelativeLink =
-                    NetUtils.relativize(target.getPath(), linkDestinationURI);
-                translatedLinks.put(linkTarget.getOriginalSourceURI(), translatedRelativeLink);
-
-                // I have to add also broken links to the absolute links
-                // to be able to generate the "broken link" page
-                // @TODO@ Only do this if broken page generation is required
-                targets.add(linkTarget);
+                translatedLinks.put(linkTarget.getOriginalSourceURI(), linkTarget.getTranslatedURI(target.getPath()));
             }
 
             linkCount = translatedLinks.size();
@@ -452,7 +441,7 @@ public class CocoonBean extends CocoonWrapper {
                 status =
                     getPage(
                         target.getDeparameterizedSourceURI(),
-                        getLastModified(target, destinationURI),
+                        getLastModified(target),
                         target.getParameters(),
                         confirmExtension ? translatedLinks : null,
                         gatheredLinks,
@@ -487,14 +476,13 @@ public class CocoonBean extends CocoonWrapper {
             } catch (ProcessingException pe) {
                 output.close();
                 output = null;
-                this.resourceUnavailable(target, target.getSourceURI(), destinationURI);
-                this.sendBrokenLinkWarning(
-                    destinationURI,
+                this.resourceUnavailable(target);
+                this.sendBrokenLinkWarning(target.getSourceURI(),
                     DefaultNotifyingBuilder.getRootCause(pe).getMessage());
             } finally {
                 if (output != null && status != -1) {
 
-                    ModifiableSource source = getSource(target, destinationURI);
+                    ModifiableSource source = getSource(target);
                     try {
                         OutputStream stream = source.getOutputStream();
 
@@ -522,46 +510,19 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     /**
-     * Translate an URI into a file name.
-     *
-     * @param uri a <code>String</code> value to map
-     * @return a <code>String</code> vlaue for the file
-     * @exception Exception if an error occurs
-     */
-    private String translateURI(String uri) throws Exception {
-        if (null == uri || "".equals(uri)) {
-            log.warn("cannot translate empty uri");
-            if (verbose) sendMessage("cannot translate empty uri");
-            return "";
-        }
-        HashMap parameters = new HashMap();
-        String deparameterizedURI = NetUtils.deparameterize(uri, parameters);
-
-        String destinationURI = mangle(uri);
-        String type = getType(deparameterizedURI, parameters);
-        String ext = NetUtils.getExtension(destinationURI);
-        String defaultExt = MIMEUtils.getDefaultExtension(type);
-        if (defaultExt != null) {
-            if ((ext == null) || (!ext.equals(defaultExt))) {
-                destinationURI += defaultExt;
-            }
-        }
-
-        return destinationURI;
-    }
-
-    /**
      * Generate a <code>resourceUnavailable</code> message.
      *
      * @param target being unavailable
      * @exception IOException if an error occurs
      */
-    private void resourceUnavailable(Target target, String uri, String destinationURI)
+    private void resourceUnavailable(Target target)
         throws IOException, ProcessingException {
         if (brokenLinkGenerate) {
-            String brokenFile = NetUtils.decodePath(destinationURI);
+            //Why decode this URI now?
+            //String brokenFile = NetUtils.decodePath(destinationURI);
+            
             if (brokenLinkExtension != null) {
-                brokenFile = brokenFile + brokenLinkExtension;
+                target.setExtension(brokenLinkExtension);
             }
             SimpleNotifyingBean n = new SimpleNotifyingBean(this);
             n.setType("resource-not-found");
@@ -569,10 +530,10 @@ public class CocoonBean extends CocoonWrapper {
             n.setSource("Cocoon commandline (Main.java)");
             n.setMessage("Page Not Available.");
             n.setDescription("The requested resource couldn't be found.");
-            n.addExtraDescription(Notifying.EXTRA_REQUESTURI, uri);
-            n.addExtraDescription("missing-file", uri);
+            n.addExtraDescription(Notifying.EXTRA_REQUESTURI, target.getSourceURI());
+            n.addExtraDescription("missing-file", target.getSourceURI());
 
-            ModifiableSource source = getSource(target, destinationURI);
+            ModifiableSource source = getSource(target);
             try {
                 OutputStream stream = source.getOutputStream();
 
@@ -585,32 +546,10 @@ public class CocoonBean extends CocoonWrapper {
             }
         }
     }
-
-    /**
-     * Mangle a URI.
-     *
-     * @param uri a URI to mangle
-     * @return a mangled URI
-     */
-    private String mangle(String uri) {
-        if (log.isDebugEnabled()) {
-            log.debug("mangle(\"" + uri + "\")");
-        }
-        if (uri.charAt(uri.length() - 1) == '/') {
-            uri += defaultFilename;
-        }
-        uri = uri.replace('"', '\'');
-        uri = uri.replace('?', '_');
-        uri = uri.replace(':', '_');
-        if (log.isDebugEnabled()) {
-            log.debug(uri);
-        }
-        return uri;
-    }
     
-    public ModifiableSource getSource(Target target, String destinationURI)
+    public ModifiableSource getSource(Target target)
         throws IOException, ProcessingException {
-        final String finalDestinationURI = target.getDestinationURI(destinationURI);
+        final String finalDestinationURI = target.getDestinationURI();
         Source src = sourceResolver.resolveURI(finalDestinationURI);
         if (!(src instanceof ModifiableSource)) {
             sourceResolver.release(src);
@@ -620,8 +559,8 @@ public class CocoonBean extends CocoonWrapper {
         return (ModifiableSource) src;
     }
 
-    public long getLastModified(Target target, String destinationURI) throws IOException, ProcessingException {
-        Source src = getSource(target, destinationURI);
+    public long getLastModified(Target target) throws IOException, ProcessingException {
+        Source src = getSource(target);
         long lastModified = src.getLastModified();
         this.releaseSource(src);
         return lastModified;
