@@ -28,9 +28,13 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
+import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
+import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.services.information.PortletURLProvider;
 
@@ -39,7 +43,7 @@ import org.apache.pluto.services.information.PortletURLProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletURLProviderImpl.java,v 1.3 2004/03/15 14:29:09 cziegeler Exp $
+ * @version CVS $Id: PortletURLProviderImpl.java,v 1.4 2004/03/16 15:56:43 cziegeler Exp $
  */
 public class PortletURLProviderImpl 
        implements PortletURLProvider, CopletInstanceEvent {
@@ -161,25 +165,32 @@ public class PortletURLProviderImpl
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            LinkService linkService = service.getComponentManager().getLinkService();
-            
-            //TODO - secure
-            return linkService.getLinkURI(this);
-            
-        } catch (ServiceException se) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", se);
-        } finally {
-            this.manager.release(service);
-        }
+        return this.toString(null);
     }
 
     /**
      * Get the URI and add the event
      */
     public String toString(Event additionalEvent) {
+        final PortletWindowImpl impl = (PortletWindowImpl)this.portletWindow;
+        final CopletLayout cl = impl.getLayout();
+        Event sizingEvent = null;
+        if ( cl != null ) {
+            final CopletInstanceData cid = cl.getCopletInstanceData();
+            WindowState oldState = (WindowState)cid.getAttribute("window-state"); 
+            if ( oldState == null ) {
+                oldState = WindowState.NORMAL;
+            }
+            if ( this.state != null && !this.state.equals(oldState) ) {
+                if ( oldState.equals(WindowState.MAXIMIZED) ) {
+                    sizingEvent = new FullScreenCopletEvent( cid, null );                    
+                } else {
+                    if ( this.state.equals(WindowState.MAXIMIZED) ) {
+                        sizingEvent = new FullScreenCopletEvent( cid, cl );                                            
+                    }
+                }
+            }
+        }
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
@@ -189,6 +200,9 @@ public class PortletURLProviderImpl
             List l = new ArrayList();
             if ( additionalEvent != null ) {
                 l.add(additionalEvent);
+            }
+            if ( sizingEvent != null ) {
+                l.add(sizingEvent);
             }
             l.add(this);
             return linkService.getLinkURI(l);

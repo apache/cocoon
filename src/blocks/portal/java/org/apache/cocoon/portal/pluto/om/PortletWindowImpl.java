@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto.om;
 
+import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.entity.PortletEntity;
 import org.apache.pluto.om.window.PortletWindow;
@@ -25,7 +26,7 @@ import org.apache.pluto.om.window.PortletWindowCtrl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowImpl.java,v 1.4 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id: PortletWindowImpl.java,v 1.5 2004/03/16 15:56:43 cziegeler Exp $
  */
 public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
         
@@ -33,7 +34,8 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
     private ObjectID objectId;
     private String id;
     private PortletEntity portletEntity;
-
+    private CopletLayout layout;
+    
     public PortletWindowImpl(String id) {
         this.id = id;
     }
@@ -53,6 +55,7 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
         }
         return objectId;
     }
+    
     /**
      * Returns the portlet entity
      *
@@ -84,4 +87,11 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
         this.portletEntity = portletEntity;
     }
 
+    public CopletLayout getLayout() {
+        return this.layout;
+    }
+    
+    public void setLayout(CopletLayout layout) {
+        this.layout = layout;
+    }
 }

@@ -23,15 +23,18 @@ import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 /**
  * This is a very simple test portlet
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: TestPortlet.java,v 1.5 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: TestPortlet.java,v 1.6 2004/03/16 15:56:43 cziegeler Exp $
  */
 public class TestPortlet implements Portlet  {
     
@@ -69,6 +72,41 @@ public class TestPortlet implements Portlet  {
         writer.write("<p>I'm running in: " + req.getPortalContext().getPortalInfo());
         writer.write("<p>Current portlet mode: " + req.getPortletMode() + "</p>");
         writer.write("<p>Current window state: " + req.getWindowState() + "</p>");
+        writer.write("<table><tr><td>Change Portlet Mode:</td>");
+        PortletURL url;
+        url = res.createRenderURL();
+        url.setPortletMode(PortletMode.EDIT);
+        this.writeLink(writer, url, "Edit");
+        
+        url = res.createRenderURL();
+        url.setPortletMode(PortletMode.HELP);
+        this.writeLink(writer, url, "Help");
+
+        url = res.createRenderURL();
+        url.setPortletMode(PortletMode.VIEW);
+        this.writeLink(writer, url, "View");
+        
+        writer.write("</tr><tr><td>Change Window Mode:</td>");
+        url = res.createRenderURL();
+        url.setWindowState(WindowState.MINIMIZED);
+        this.writeLink(writer, url, "Minimized");
+
+        url = res.createRenderURL();
+        url.setWindowState(WindowState.NORMAL);
+        this.writeLink(writer, url, "Normal");
+
+        url = res.createRenderURL();
+        url.setWindowState(WindowState.MAXIMIZED);
+        this.writeLink(writer, url, "Maximized");
+        writer.write("</tr></table>");
     }
 
+    protected void writeLink(Writer writer, PortletURL url, String text) 
+    throws IOException {
+        writer.write("<td><a href=\"");
+        writer.write(url.toString());
+        writer.write("\">");
+        writer.write(text);
+        writer.write("</a></td>");
+    }
 }
