@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.20 2000-11-22 10:41:13 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.21 2000-12-01 17:48:38 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,12 +73,13 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.20 $ $Date: 2000-11-22 10:41:13 $
+ * @version $Revision: 1.21 $ $Date: 2000-12-01 17:48:38 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
 
-    private Monitor monitor = new Monitor(10);
+    /* This could probably be more efficient, but it's the easiest way. */
+    private Monitor requestMonitor = new Monitor(10), sheetMonitor = new Monitor(10);
 
     private Parser parser;
     private Store store;
@@ -239,16 +240,21 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
 
         try {
             Object o = this.store.get(resource);
-            if ((o != null) && (!this.hasChanged(request))) {
+            // need to use sheetMonitor instead of requestMonitor because stylesheet pi
+            // might be dynamically generated (as in FAQ examples).
+            if ((o != null) && (!sheetMonitor.hasChanged(resource))) {
                 return (Document) o;
             } else {
+                String encReq = Utils.encode (request);
+                // resource URI might have changed so invalidate previous
+                requestMonitor.invalidate(encReq);
                 Document sheet = getDocument(resource);
                 this.store.hold(resource, sheet);
-                this.monitor.watch(Utils.encode(request), resource);
+                requestMonitor.watch(encReq, resource);
+                sheetMonitor.watch(resource, resource);
                 return sheet;
             }
         } catch (Exception e) {
-            this.monitor.invalidate(request);
             throw new ProcessorException("Could not associate stylesheet to document: "
                 + " error reading " + resource + ": " + e);
         }
@@ -259,7 +265,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
     }
 
     public boolean hasChanged(Object context) {
-        return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context));
+        return requestMonitor.hasChanged(Utils.encode((HttpServletRequest) context));
     }
 
     public boolean isCacheable(HttpServletRequest request) {
