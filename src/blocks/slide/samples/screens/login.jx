@@ -39,7 +39,7 @@
         <p>
          By default write privileges are only granted to
          authenticated users. This means that you would have to configure authentication
-         in order to login and start editing files.<br/>
+         in order to login and start editing files over WebDAV.<br/>
          You can find more info on how to do this for both Jetty and Tomcat in the
          <a href="http://jakarta.apache.org/slide/howto-jaas.html">Slide documentation</a>.
          <br/>
