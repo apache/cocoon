@@ -13,6 +13,7 @@
   <document id="dynamic" label="Dynamic Content" source="dynamic-sbk.xml"/>
   <document id="dcp" label="DCP Processor" source="dcpprocessor-sbk.xml"/>
   <document id="sql" label="SQL Processor" source="sqlprocessor-sbk.xml"/>
+  <document id="ldap" label="LDAP Processor" source="ldapprocessor-sbk.xml"/>
 
   <separator/>
 

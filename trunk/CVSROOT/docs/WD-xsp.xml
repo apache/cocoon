@@ -10,6 +10,7 @@
   <type>Working Draft</type>
   <authors>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+   <person name="Ricardo Rocha" email="ricardo@apache.org"/>
   </authors>
   <notice>
     This is an Apache Working Draft for review by all interested
@@ -223,8 +224,6 @@
 <!ELEMENT xsp:page (xsp:structure?, xsp:logic?, xsp:content)>
 <!ATTLIST xsp:page
   language CDATA #REQUIRED
-  result-ns NMTOKEN #IMPLIED
-  default-space (preserve|strip) "preserve"
   indent-result (yes|no) "no"
   xmlns:xsp CDATA #FIXED "http://www.apache.org/1999/XSP/Layer1"
   xml:space (default|preserve) "preserve"
@@ -287,7 +286,7 @@
   
 <source><![CDATA[
 <?xml version="1.0"?>
-<xsl:transformation 
+<xsl:transform
  xmlns:xsl="http://www.w3.org/1999/XSL/tranform" 
  xmlns:xsp="http://www.apache.org/1999/XSP/Layer1"
  result-ns="http://www.apache.org/1999/XSP/Layer1"
@@ -326,7 +325,7 @@
    <xsl:apply-templates/>
   </xsl:copy>
  </xsl:template>
-</xsl:transformation>
+</xsl:transform>
 ]]></source>
     
   <p>After applying the above logic sheet, the resulting document would be equivalent to the
@@ -677,14 +676,6 @@ public class Counter extends AbstractProducer {
       authors="D.Megginson"/>
 </bl>
 </s1>
-
-<s1 title="Acknowledgements">
-  <p>The following people have greatly contributed to the creation and design of this draft:</p>
-  <ul>
-   <li><p>Ricardo Rocha &lt;<link href="mailto:ricardo@apache.org">ricardo@apache.org</link>&gt;</p></li>
-  </ul>
-</s1>
-
 </appendices>
 
 <footer>

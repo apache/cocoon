@@ -61,6 +61,25 @@
 </faq>
 
 <faq>
+ <question>Are there document translations to other languages?</question>
+ <answer>
+  <p>Given the problems we already have with documentation (which is never big and good enough), 
+  the Cocoon Project uses English as its standard and only documentation language. This is also
+  the only language used in the mail lists. Also, the Cocoon distribution will contain
+  English documentation only to reduce updating problems.</p>
+  <p>On the other hand, we welcome any effort that provides document translations and
+  we will keep here links to those translated documents.</p>
+  <ul>
+   <li><link href="http://www.epita.net">French Translation</link></li>
+  </ul>
+  <note>The Cocoon Project is not directly involved in these translating efforts
+  and we are not resposible for any lack of synch between the official Cocoon
+  documentation and the translated version. For this reason, do not contact
+  the Cocoon Project but directly the people that provide the translation. Thank you.</note>
+ </answer>
+</faq>
+
+<faq>
  <question>The XSL book I read says the correct way of indicating the XSL stylesheet is by
     using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
     using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?
@@ -115,11 +134,20 @@
 </faq>
 
 <faq>
+<question>What is VoiceML and how do I browse VML?</question>
+<answer>
+  <p>VoiceML and VML are the same and stand for "Voice Markup Language". 
+    For more information, please refer to the 
+    <link href="http://www.voiceml.org">VoiceML Official web site</link>. 
+    The Cocoon VML samples have been tested with the 
+    <link href="http://www.voiceml.org">Motorola VoxML SDK 1.1</link>(for windows)
+    which is freely available.</p>
+</answer>
+</faq>
+<faq>
 <question>When I compile Cocoon on my system, I get all a bunch of errors. What's wrong?</question>
 <answer>
-  <p>You probably didn't add all the needed packages to your compiler's
-    classpath or used the wrong version of the servlet classes (Cocoon is
-    compiled with the Servlet 2.1 classes).
+  <p>You probably didn't add all the needed packages to your compiler's classpath.
     Note that Cocoon supports much more packages than you normally use and you should have
     them all to compile the full source code (this is why the cocoon.jar is distributed). To
     avoid this, simply remove (or rename) the classes that wrap around the packages you don't
@@ -131,6 +159,8 @@
   only way to compile it is to manually indicate all the files to compile or to use the
   makefiles after removing the unwanted wrapper classes for the packages you don't have or
   you don't want.</p>
+  <p>Note that Cocoon is built using Ant: please, refer to the build.xml file
+  for more information on how to set up your system to compile Cocoon</p>
 </answer>
 </faq>
 
@@ -141,7 +171,7 @@
   story: I spent my 1998 Xmas vacation with my girlfriend up on the Alps at her cottage. One
   night I couldn't sleep, I went to watch some TV and finishing reading the XSL
   documentation I brought with me. Being a science fiction <em>afficionado</em>, I found out
-  that Ron Howard's movie Cocoon was on and I started watching it. The idea of the XSL
+  that Ron Howard's movie <em>Cocoon</em> was on and I started watching it. The idea of the XSL
   rendering servlet stoke me like the alien &quot;cocoons&quot; in the pool stroke those old men in the
   movie and, while watching, I started paper-coding it right away. After a while the movie
   was over and the publishing framework designed. The name &quot;Cocoon&quot; seemed right

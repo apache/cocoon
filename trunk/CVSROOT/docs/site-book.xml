@@ -18,6 +18,7 @@
   <document id="dynamic" label="Dynamic Content" source="cocoon/dynamic-sbk.xml"/>
   <document id="dcp" label="DCP Processor" source="cocoon/dcpprocessor-sbk.xml"/>
   <document id="sql" label="SQL Processor" source="cocoon/sqlprocessor-sbk.xml"/>
+  <document id="ldap" label="LDAP Processor" source="ldapprocessor-sbk.xml"/>
 
   <separator/>
 

@@ -92,7 +92,7 @@
   </table>   
    
   <table>
-   <caption>Other Components</caption>
+   <caption>Other Packages</caption>
     <tr>
      <th>Name</th>
      <th>Minimum Version</th>
@@ -113,6 +113,11 @@
      <td>1.0.8</td>
      <td><link href="http://www.cacas.org/java/gnu/regexp/">www.cacas.org/java/gnu/regexp</link></td>
     </tr>
+    <tr>
+     <td>JNDI API</td>
+     <td>1.2.1</td>
+     <td><link href="http://java.sun.com/products/jndi/index.html">java.sun.com</link></td>
+    </tr>
   </table>   
   
   <note>
@@ -132,12 +137,13 @@
   </p>
    
    <ul>
-    <li>Apache Xerces (required for the formatting classes)</li>
+    <li>Apache Xerces (required for the formatting classes <em>org.apache.xml.serialize</em>)</li>
     <li>Your favorite XML parser</li>
     <li>Your favorite XSLT processor</li>
     <li>Apache FOP (optional, unless you want PDF rendering)</li>
     <li>GNU Regexp (optional, unless you use <em>ProducerFromMap</em>)</li>
     <li>FESI (optional, unless you use <em>DCP</em>)</li>
+    <li>JNDI (optional, unless you use the <em>LDAP processor</em>)</li>
    </ul>
    
   <p>
@@ -183,6 +189,7 @@ wrapper.classpath=/usr/local/java/lib/xerces.jar
 wrapper.classpath=/usr/local/java/lib/xalan.jar
 wrapper.classpath=/usr/local/java/lib/fop.jar
 wrapper.classpath=/usr/local/java/lib/regexp.jar
+wrapper.classpath=/usr/local/java/lib/jndi.jar
 </source>
    
    <note>
@@ -328,7 +335,16 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
      Everything should be configured fine. Restart Tomcat
      and try accessing the samples contained in the distribution to see
      Cocoon in action.
-    </p>   
+    </p>
+    
+    <note><strong>
+     Tomcat 3.0 has a bug that prevents Cocoon operation. In order to make
+     Cocoon work under Tomcat you need to download a newer version or, if 
+     none is yet avaiable, build it from the latest source code found in the
+     <code>jakarta-tomcat</code> CVS module under <em>jakarta.apache.org</em>.
+     We apologize for this, but it's not something we can control or work
+     around.
+    </strong></note>
   </s2>
 
   <s2 title="Installing Cocoon on BEA WebLogic">
