@@ -51,6 +51,7 @@
 package org.apache.cocoon.environment.http;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 
@@ -71,7 +72,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.6 2003/05/04 20:24:47 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.7 2003/05/07 20:35:43 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -114,7 +115,6 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
         this.request.setContainerEncoding(containerEncoding);
         this.response = new HttpResponse(res);
         this.webcontext = context;
-        this.outputStream = response.getOutputStream();
         
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
@@ -307,4 +307,20 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
         else
           super.toSAX(source, mimeTypeHint, handler);
     }    
+    
+    /**
+     * Get the output stream where to write the generated resource.
+     * The returned stream is buffered by the environment. If the
+     * buffer size is -1 then the complete output is buffered.
+     * If the buffer size is 0, no buffering takes place.
+     * This method replaces {@link #getOutputStream()}.
+     */
+    public OutputStream getOutputStream(final int bufferSize)
+    throws IOException {
+        if ( this.outputStream == null) {
+            this.outputStream = this.response.getOutputStream();
+        }
+        return super.getOutputStream( bufferSize );
+    }
+
 }
