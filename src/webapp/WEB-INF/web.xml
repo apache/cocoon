@@ -46,17 +46,17 @@
 
     <!--
       The regular servlet class (trusts the servlet container classloader)
-      -->
     <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+      -->
     <!--
       The paranoid servlet class, to be used instead of regular one when
       having conflicts between libraries used by Cocoon and the servlet
       container.
-    <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
     -->
+    <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
     <init-param>
       <param-name>classloader-class</param-name>
-      <param-value>org.apache.javaflow.ContinuationClassLoader</param-value>
+      <param-value>org.apache.commons.javaflow.ContinuationCompilingClassLoader</param-value>
     </init-param>
 
     <!--
@@ -135,7 +135,7 @@
     -->
     <init-param>
       <param-name>log-level</param-name>
-      <param-value>WARN</param-value>
+      <param-value>DEBUG</param-value>
     </init-param>
 
     <!--

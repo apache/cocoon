@@ -20,7 +20,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.javaflow.ContinuationContext;
+import org.apache.commons.javaflow.ContinuationContext;
 
 /**
  * Helper class to associate cocoon flow informations to the continuation.

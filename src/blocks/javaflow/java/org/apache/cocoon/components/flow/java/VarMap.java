@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.flow.java;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,54 +25,53 @@ import java.util.Map;
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version CVS $Id$
  */
-public class VarMap {
-    private HashMap map = new HashMap();
+public final class VarMap implements Serializable {
+    private final Map map = new HashMap();
     
-    public VarMap(){
+    public VarMap() {        
+    }
     
-    }
-
-    public VarMap(String name, Object value) {
+    public VarMap(final String name, final Object value) {
         add(name, value);
     }
 
-    public VarMap(String name, int value) {
+    public VarMap(final String name, final int value) {
         add(name, value);
     }
 
-    public VarMap(String name, long value) {
+    public VarMap(final String name, final long value) {
         add(name, value);
     }
 
-    public VarMap(String name, float value) {
+    public VarMap(final String name, final float value) {
         add(name, value);
     }
 
-    public VarMap(String name, double value) {
+    public VarMap(final String name, final double value) {
         add(name, value);
     }
 
-    public VarMap add(String name, Object value) {
+    public VarMap add(final String name, final Object value) {
         map.put(name, value);
         return this;
     }
 
-    public VarMap add(String name, int value) {
+    public VarMap add(final String name, final int value) {
         add(name, new Integer(value));
         return this;
     }
 
-    public VarMap add(String name, long value) {
+    public VarMap add(final String name, final long value) {
         add(name, new Long(value));
         return this;
     }
 
-    public VarMap add(String name, float value) {
+    public VarMap add(final String name, final float value) {
         add(name, new Float(value));
         return this;
     }
 
-    public VarMap add(String name, double value) {
+    public VarMap add(final String name, final double value) {
         add(name, new Double(value));
         return this;
     }

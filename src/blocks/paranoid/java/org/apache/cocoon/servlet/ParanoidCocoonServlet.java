@@ -262,7 +262,9 @@ public class ParanoidCocoonServlet extends HttpServlet {
                 final Class classLoaderClass = Class.forName(className);
                 final Class[] parameterClasses = new Class[] { ClassLoader.class, File.class };
                 final Constructor constructor = classLoaderClass.getConstructor(parameterClasses);
-                final Object[] parameters = new Object[] { this.getClass().getClassLoader(), new File(contextDir, "WEB-INF/src") };
+                // REVISIT: make the path configurable
+                final Object[] parameters = new Object[] { this.getClass().getClassLoader(),
+                        new File(contextDir, "WEB-INF/compile") };
                 final ClassLoader classloader = (ClassLoader) constructor.newInstance(parameters);
                 return classloader;
             } catch (InstantiationException e) {

@@ -29,9 +29,9 @@ import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceUtil;
-import org.apache.javaflow.Continuable;
-import org.apache.javaflow.Continuation;
-import org.apache.javaflow.ContinuationContext;
+import org.apache.commons.javaflow.Continuable;
+import org.apache.commons.javaflow.Continuation;
+import org.apache.commons.javaflow.ContinuationContext;
 
 /**
  * Abstract class to add basic methods for flow handling.

@@ -32,8 +32,8 @@
  <!-- indicates what flow classes to attach to this sitemap -->
  <map:flow language="java">
   <map:script src="org.apache.cocoon.samples.flow.java.CalculatorFlow"/>
-  <map:script src="org.apache.cocoon.samples.flow.java.FormFlow"/>
 <!--
+  <map:script src="org.apache.cocoon.samples.flow.java.FormFlow"/>
   <map:script src="org.apache.cocoon.samples.flow.java.PersistenceFlow"/>
 -->
  </map:flow>
@@ -51,6 +51,7 @@
     <map:serialize/>
    </map:match>
 
+<!--
    <map:match pattern="form/*">
     <map:generate src="forms/{1}-template.xml"/>
     <map:transform type="forms"/>
@@ -63,6 +64,7 @@
     <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl"/>
     <map:serialize/>
    </map:match>
+-->
 
   </map:pipeline>
 

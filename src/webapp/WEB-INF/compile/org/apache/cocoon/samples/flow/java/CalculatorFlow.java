@@ -22,7 +22,7 @@ public class CalculatorFlow extends AbstractContinuable {
 
     private int count = 1;
 
-    public void doCalculator() {
+    public void calculator() {
         float a = getNumber("a", 0f, 0f);
         float b = getNumber("b", a, 0f);
         String op = getOperator(a, b);
