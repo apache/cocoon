@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * Builds a {@link Binding} based on two JavaScript snippets, respectively for loading and saving the form.
  * This binding also optionally accepts named child bindings, which are useful when the bound widget is a container.
  * <p>
- * The syntax for this binding is as follows :
+ * The syntax for this binding is as follows:
  * <pre>
  *   &lt;fb:javascript id="foo" path="@foo"&gt;
  *     &lt;fb:load-form&gt;

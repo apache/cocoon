@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
     protected WidgetDefinition parent;
-    
+
     //TODO consider final on these
     private String location = null;
     private String id;
@@ -67,7 +67,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void setParent(WidgetDefinition definition) {
         this.parent = definition;
     }
-    
+
     /**
      * Gets the parent of this definition.
      * This method returns null for the root definition.
@@ -75,7 +75,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public WidgetDefinition getParent() {
         return this.parent;
     }
-    
+
     public WidgetState getState() {
         return this.state;
     }
@@ -83,7 +83,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void setState(WidgetState state) {
         this.state = state;
     }
-    
+
     protected void setLocation(String location) {
         this.location = location;
     }
@@ -99,7 +99,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     protected void setId(String id) {
         this.id = id;
     }
-    
+
     protected void setAttributes(Map attributes) {
         this.attributes = attributes;   
     }
@@ -113,12 +113,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     }
 
     protected void addCreateListener(CreateListener listener) {
-    		this.createListener = WidgetEventMulticaster.add(this.createListener, listener);
+        this.createListener = WidgetEventMulticaster.add(this.createListener, listener);
     }
-    
+
     public void fireCreateEvent(CreateEvent event) {
         if (this.createListener != null) {
-        	    this.createListener.widgetCreated(event);
+            this.createListener.widgetCreated(event);
         }
     }
 
@@ -136,15 +136,15 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void setDisplayData(Map displayData) {
         this.displayData = displayData;
     }
-    
+
     public void addValidator(WidgetValidator validator) {
         if (this.validators == null) {
             this.validators = new ArrayList();
         }
-        
+
         this.validators.add(validator);
     }
-    
+
     public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException {
         Object data = this.displayData.get(name);
         if (data != null) {
@@ -153,7 +153,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             throw new IllegalArgumentException("Unknown display data name '" + name + "'");
         }
     }
-    
+
     public void generateDisplayData(ContentHandler contentHandler) throws SAXException {
         // Output all non-null display data
         Iterator iter = this.displayData.entrySet().iterator();
@@ -161,7 +161,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             Map.Entry entry = (Map.Entry)iter.next();
             if (entry.getValue() != null) {
                 String name = (String)entry.getKey();
-                
+
                 // Enclose the data into a "wi:{name}" element
                 contentHandler.startElement(Constants.INSTANCE_NS, name, Constants.INSTANCE_PREFIX_COLON + name, XMLUtils.EMPTY_ATTRIBUTES);
 
@@ -171,12 +171,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             }
         }   
     }
-    
+
     public boolean validate(Widget widget) {
         if (this.validators == null) {
             // No validators
             return true;
-            
+
         } else {
             Iterator iter = this.validators.iterator();
             while(iter.hasNext()) {

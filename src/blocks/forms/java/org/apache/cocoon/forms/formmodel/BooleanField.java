@@ -26,8 +26,6 @@ import org.xml.sax.SAXException;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.ValidationError;
 
-
-
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
  *
@@ -70,7 +68,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
             value = Boolean.TRUE;
         else
             value = Boolean.FALSE;
-        
+
         if (value != oldValue) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
@@ -86,7 +84,6 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         //return true;
         return super.validate();
     }
-
 
     /**
      * Returns the validation error, if any. There will always be a validation error in case the
@@ -106,11 +103,10 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         this.validationError = error;
     }
 
-
     private static final String BOOLEAN_FIELD_EL = "booleanfield";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-    
+
     /**
      * @return "booleanfield"
      */
@@ -155,7 +151,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
-    
+
     /**
      * Adds a ValueChangedListener to this widget instance. Listeners defined
      * on the widget instance will be executed in addtion to any listeners

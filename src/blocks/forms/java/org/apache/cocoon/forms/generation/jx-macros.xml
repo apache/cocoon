@@ -8,7 +8,7 @@
 	<jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
 	  <jx:set var="cformsHelper" value="${Packages.org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper(cocoon.consumer)}"/>
       <jx:set var="form" value="${CocoonFormsInstance}"/>
-	  <jx:if test="${cformsHelper.isVisible(form)}">
+      <jx:if test="${cformsHelper.isVisible(form)}">
         <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
         <!-- the form is also the current widget -->
         <jx:set var="widget" value="${form}"/>
@@ -26,7 +26,7 @@
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:if test="${cformsHelper.isVisible(widget)}">
         <jx:set var="cformsDummy" value="${cformsHelper.generateWidget(widget, locale)}"/>
-	    <jx:evalBody/>
+        <jx:evalBody/>
         <jx:set var="cformsDummy" value="${cformsHelper.flushRoot(widget)}"/>
       </jx:if>
     </jx:macro>
@@ -67,10 +67,10 @@
 	
       <jx:set var="repeater" value="${cformsHelper.getRepeater(widget, id)}"/>
       <jx:if test="${cformsHelper.isVisible(repeater)}">
-	    <jx:forEach varStatus="repeaterLoop" begin="0" end="${repeater.getSize() - 1}">
+        <jx:forEach varStatus="repeaterLoop" begin="0" end="${repeater.getSize() - 1}">
           <jx:set var="widget" value="${repeater.getRow(repeaterLoop.index)}"/>
           <jx:if test="${cformsHelper.isVisible(widget)}">
-		    <jx:evalBody/>
+            <jx:evalBody/>
           </jx:if>
         </jx:forEach>
       </jx:if>

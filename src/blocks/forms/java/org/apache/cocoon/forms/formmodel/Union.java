@@ -27,13 +27,14 @@ import org.apache.cocoon.forms.FormContext;
  * @version $Id$
  */
 public class Union extends AbstractContainerWidget {
-    
+
     //Note: union instances behave like simple "field" instance with respect to 
     //      XSLT post-processing, the choice of element-name reflects this.
     private static final String UNION_EL = "field";
+
     private Widget caseWidget;
     private String caseValue;
-    
+
     private final UnionDefinition definition;
 
     public Union(UnionDefinition definition) {
@@ -42,7 +43,7 @@ public class Union extends AbstractContainerWidget {
         // TODO: Remove after moving logic to Field.
         //item.enteredValue = (String)definition.getDefaultValue();
     }
-    
+
     protected WidgetDefinition getDefinition() {
         return definition;
     }
@@ -80,12 +81,12 @@ public class Union extends AbstractContainerWidget {
 
         // Ensure the case widget has read its value
         caseWidget.readFromRequest(formContext);
-        
+
         Widget widget;
         // Read current case from request
         String newValue = (String)getValue();
         if (newValue != null && !newValue.equals("")) {
-            
+
             if (getForm().getSubmitWidget() == caseWidget && !newValue.equals(caseValue)) {
                 // If submitted by the case widget and its value has changed, read the values
                 // for the previous case values. This allows to keep any entered values
@@ -95,7 +96,7 @@ public class Union extends AbstractContainerWidget {
                 // Get the corresponding widget (will create it if needed)
                 widget = getChild(newValue);
             }
-            
+
             if (widget != null) {
                 widget.readFromRequest(formContext);
             }
@@ -124,7 +125,6 @@ public class Union extends AbstractContainerWidget {
         return super.getChild(id);
     }
 
-    
     //TODO: check further: cause the claim in the accompanied comment doesn't seem
     // to be completely correct
     

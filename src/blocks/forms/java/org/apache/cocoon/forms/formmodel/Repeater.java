@@ -221,7 +221,7 @@ public class Repeater extends AbstractWidget
     public boolean validate() {
         if (!getCombinedState().isAcceptingInputs())
             return true;
-        
+
         boolean valid = true;
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {

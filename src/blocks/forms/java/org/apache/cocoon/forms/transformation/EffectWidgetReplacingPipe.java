@@ -289,7 +289,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     input.removeAttribute(LOCATION);
                 }
                 contextWidget = pipeContext.findForm(formJXPath);
-                
+
                 if (!isVisible(contextWidget)) {
                     // Skip widget and its content
                     return nullHandler;
@@ -382,7 +382,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 widgetId = getWidgetId(input.attrs);
                 widget = getWidget(widgetId);
-                
+
                 if (isVisible(widget)) {
                     gotStylingElement = false;
                     out.bufferInit();
@@ -502,7 +502,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (!(widget instanceof AggregateField)) {
                     throwWrongWidgetType("AggregateWidgetHandler", input.loc, "aggregate");
                 }
-                
+
                 if (isVisible(widget)) {
                     contextWidgets.addFirst(contextWidget);
                     contextWidget = widget;

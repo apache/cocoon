@@ -72,7 +72,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
             return;
 
         Object obj = formContext.getRequest().get(getRequestParameterName());
-        
+
         // If the request object is a Part, keep it
         if (obj instanceof Part) {
             Part requestPart = (Part)obj;
@@ -80,12 +80,12 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
                 // Replace the current part
                 this.part.dispose();
             }
-        
+
             // Keep the request part
             requestPart.setDisposeWithRequest(false);
             this.part = requestPart;
             this.validationError = null;
-            
+
         // If it's not a part and not null, clear any existing value
         // We also check if we're the submit widget, as a result of clicking the "..." button
         } else if (obj != null || getForm().getSubmitWidget() == this){
@@ -96,7 +96,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
             }
             this.validationError = null;
         }
-        
+
         // And keep the current state if the parameter doesn't exist or is null
     }
 
@@ -123,7 +123,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
                 this.validationError = null;
             }
         }
-        
+
         return validationError == null ? super.validate() : false;
     }
 
@@ -134,7 +134,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     public ValidationError getValidationError() {
         return validationError;
     }
-    
+
     /**
      * Set a validation error on this field. This allows fields to be externally marked as invalid by
      * application logic.
@@ -145,33 +145,30 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         this.validationError = error;
     }
 
-
     private static final String UPLOAD_EL = "upload";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-    
+
     /**
      * @return "upload"
      */
     public String getXMLElementName() {
         return UPLOAD_EL;
     }
-
     
-    
-	/**
-	 * Adds attributes @required, @mime-types
-	 */
-	public AttributesImpl getXMLElementAttributes() {
-		AttributesImpl attrs = super.getXMLElementAttributes();
+    /**
+     * Adds attributes @required, @mime-types
+     */
+    public AttributesImpl getXMLElementAttributes() {
+        AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("id", getRequestParameterName());
         attrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
         if (uploadDefinition.getMimeTypes() != null) {
             attrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
         }
-		return attrs;
-	}
-    
+        return attrs;
+    }
+
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         if (this.part != null) {
             String name = (String)this.part.getHeaders().get("filename");

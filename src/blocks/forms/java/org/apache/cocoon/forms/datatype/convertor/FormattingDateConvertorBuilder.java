@@ -57,7 +57,7 @@ public class FormattingDateConvertorBuilder implements ConvertorBuilder {
                 convertor.setVariant(variant);
             } else {
                 throw new Exception("Invalid value \"" + variant + "\" for variant attribute at " + DomHelper.getLocation(configElement));
-        }
+            }
         }
 
         Element patternsEl = DomHelper.getChildElement(configElement, Constants.DEFINITION_NS, "patterns", false);

@@ -37,14 +37,14 @@
       <fi:group>
         <fi:styling layout="columns"/>
         <fi:items>
-            <ft:widget id="us-nonus">
-              <fi:styling submit-on-change="true"/>
-            </ft:widget>
-            <ft:widget id="country">
-              <fi:styling submit-on-change="true"/>
-            </ft:widget>
-      <ft:widget id="message"/>
-      <input type="submit"/>
+          <ft:widget id="us-nonus">
+            <fi:styling submit-on-change="true"/>
+          </ft:widget>
+          <ft:widget id="country">
+            <fi:styling submit-on-change="true"/>
+          </ft:widget>
+          <ft:widget id="message"/>
+          <input type="submit"/>
         </fi:items>
       </fi:group>
     </ft:form-template>

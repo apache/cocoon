@@ -78,17 +78,17 @@ public class FormattingDecimalConvertor implements Convertor {
         if (decimalValue instanceof BigDecimal) {
             // no need for conversion
         } else if (decimalValue instanceof Integer) {
-				decimalValue = new BigDecimal(decimalValue .intValue());
+            decimalValue = new BigDecimal(decimalValue.intValue());
         } else if (decimalValue instanceof Long) {
-                decimalValue = new BigDecimal(decimalValue.longValue());
+            decimalValue = new BigDecimal(decimalValue.longValue());
         } else if (decimalValue instanceof Double) {
-                decimalValue = new BigDecimal(decimalValue.doubleValue());
+            decimalValue = new BigDecimal(decimalValue.doubleValue());
         } else if (decimalValue instanceof BigInteger) {
-                decimalValue = new BigDecimal((BigInteger)decimalValue);
+            decimalValue = new BigDecimal((BigInteger)decimalValue);
         } else {
-                return ConversionResult.create("decimal");
+            return ConversionResult.create("decimal");
         }
-            return new ConversionResult(decimalValue);
+        return new ConversionResult(decimalValue);
     }
 
     public String convertToString(Object value, Locale locale, Convertor.FormatCache formatCache) {

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,13 +28,13 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
-    
+
     /**
      * List of contained widgets.
      */
     protected WidgetList widgets;
 
-    /** 
+    /**
      * Constructs AbstractContainerWidget
      */
     public AbstractContainerWidget(AbstractWidgetDefinition definition) {
@@ -54,20 +54,20 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     public Widget getChild(String id) {
         return widgets.getWidget(id);
     }
-    
+
     public Iterator getChildren() {
         return widgets.iterator();
     }
 
     /**
      * Delegates the readFromRequest() down to the contained child-widgets.
-     *  
-     * When overriding one should call <code>super.readFromRequest()</code> 
-     * to allow child-widgets to process the request.  
-     * 
-     * Overide only to add possible request-reading statements on the containment level.  
-     * 
-     * @param formContext to be passed to the {@link Widget#readFromRequest(FormContext)} 
+     *
+     * When overriding one should call <code>super.readFromRequest()</code>
+     * to allow child-widgets to process the request.
+     *
+     * Overide only to add possible request-reading statements on the containment level.
+     *
+     * @param formContext to be passed to the {@link Widget#readFromRequest(FormContext)}
      *                    of the contained widgets.
      */
     public void readFromRequest(FormContext formContext) {
@@ -80,27 +80,26 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * Delegates the <code>validate()</code> down to the contained child-widgets,
      * and validates the extra rules on this containment level regardless of
      * children widget's validities.
-     * 
+     *
      * <p>When overriding one should call <code>super.validate()</code> as the first
      * statement to keep in sync with this behaviour.</p>
-     * 
-     * @return <code>true</code> only if all contained widgets are valid and the 
+     *
+     * @return <code>true</code> only if all contained widgets are valid and the
      *         extra validation rules on this containment level are ok.
      */
     public boolean validate() {
         if (!getCombinedState().isAcceptingInputs())
             return true;
-        
+
         // Validate children first, then always validate self. Return combined result.
         final boolean valid = widgets.validate();
         return super.validate() && valid;
     }
 
-
     /**
-     * Subclass container widgets can call this super.generateItemSaxFragment(..) 
-     * to just insert the child-widget content wrapped in a @lt;fi:widgets@gt; 
-     * 
+     * Subclass container widgets can call this super.generateItemSaxFragment(..)
+     * to just insert the child-widget content wrapped in a @lt;fi:widgets@gt;
+     *
      * @param contentHandler where the SAX is sent to via {@link Widget#generateSaxFragment(ContentHandler, Locale)}
      * @param locale
      * @throws SAXException
