@@ -294,6 +294,12 @@ public class DomHelper {
         }
 
         private final void setLocation() {
+            // Older versions of Xerces had a different signature for the startDocument method. If such a
+            // version is used, the startDocument method above will not be called and locator will hence be null.
+            // Tell the users this so that they don't get a stupid NPE.
+            if (this.locator == null)
+                throw new RuntimeException("Error: locator is null. Check that you have the correct version of Xerces (such as the one that comes with Cocoon) in your endorsed library path.");
+
             NodeImpl node = null;
             try {
                 node = (NodeImpl) this.getProperty("http://apache.org/xml/properties/dom/current-element-node");
