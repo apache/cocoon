@@ -16,7 +16,6 @@
 
 package org.apache.cocoon.transformation.pagination;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +23,6 @@ import java.util.Map;
 
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.util.ResizableContainer;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -45,7 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.8 2004/07/22 09:12:34 unico Exp $
+ * @version CVS $Id: Pagesheet.java,v 1.9 2004/07/22 23:21:55 joerg Exp $
  */
 
 /*

@@ -341,14 +341,11 @@ public class AdminHelper {
                                       String caller,
                                       String userUri,
                                       String password) throws Exception {
-        
-        String usersPath = nat.getNamespaceConfig().getUsersPath();
-        
+
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Content content = nat.getContentHelper();
-        
+
         try {
-            
             nat.begin();
 
             NodeRevisionDescriptors revisions = content.retrieve(slideToken, userUri);
@@ -356,7 +353,7 @@ public class AdminHelper {
             revision.setLastModified(new Date());
             revision.setProperty(new NodeProperty("password", password, NodeProperty.SLIDE_NAMESPACE));
             content.store(slideToken, userUri, revision, null);
-            
+
             nat.commit();
         }
         catch (Exception e) {
