@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Request;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.5 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: NetUtils.java,v 1.6 2003/10/31 21:41:59 vgritsenko Exp $
  */
 
 public class NetUtils {
@@ -242,19 +242,20 @@ public class NetUtils {
      */
     public static String getPath(String uri) {
         int i = uri.lastIndexOf('/');
-        if(i > -1)
+        if (i > -1) {
             return uri.substring(0, i);
+        }
         i = uri.indexOf(':');
-        return (i > -1) ? uri.substring(i+1,uri.length()) : "";
+        return (i > -1) ? uri.substring(i + 1, uri.length()) : "";
     }
 
-   /**
-    * Remove path and file information from a filename returning only its
-    * extension  component
-    *
-    * @param uri The filename
-    * @return The filename extension (with starting dot!)
-    */
+    /**
+     * Remove path and file information from a filename returning only its
+     * extension  component
+     *
+     * @param uri The filename
+     * @return The filename extension (with starting dot!)
+     */
     public static String getExtension(String uri) {
         int dot = uri.lastIndexOf('.');
         if (dot > -1) {
@@ -283,26 +284,38 @@ public class NetUtils {
     }
 
     /**
-     * Absolutize a relative resource on the given absolute path.
+     * Absolutize a relative resource path on the given absolute base path.
      *
-     * @param path The absolute path
-     * @param relativeResource The relative resource
-     * @return the absolutized resource
+     * @param path The absolute base path
+     * @param resource The relative resource path
+     * @return The absolutized resource path
      */
-    public static String absolutize(String path, String relativeResource) {
-        if (("".equals(path)) || (path == null)) return relativeResource;
-        if (relativeResource.charAt(0) != '/') {
-            int length = path.length() - 1;
-            boolean slashPresent = (path.charAt(length) == '/');
-            StringBuffer b = new StringBuffer();
-            b.append(path);
-            if (!slashPresent) b.append('/');
-            b.append(relativeResource);
-            return b.toString();
-        } else {
-            // resource is already absolute
-            return relativeResource;
+    public static String absolutize(String path, String resource) {
+        if (path == null || path.length() == 0) {
+            // Base path is empty
+            return resource;
         }
+        
+        if (resource == null || resource.length() == 0) {
+            // Resource path is empty
+            return path;
+        }
+
+        if (resource.charAt(0) == '/') {
+            // Resource path is already absolute
+            return resource;
+        }
+        
+        int length = path.length() - 1;
+        boolean slash = (path.charAt(length) == '/');
+        
+        StringBuffer b = new StringBuffer();
+        b.append(path);
+        if (!slash) {
+            b.append('/');
+        } 
+        b.append(resource);
+        return b.toString();
     }
 
     /**
@@ -313,8 +326,14 @@ public class NetUtils {
      * @return the resource relative to the given path
      */
     public static String relativize(String path, String absoluteResource) {
-        if (("".equals(path)) || (path == null)) return absoluteResource;
-        if (path.charAt(path.length() - 1) != '/') path += "/";
+        if (path == null || "".equals(path)) {
+            return absoluteResource;
+        }
+        
+        if (path.charAt(path.length() - 1) != '/') {
+            path += "/";
+        }
+        
         if (absoluteResource.startsWith(path)) {
             // resource is direct descentant
             return absoluteResource.substring(path.length());
@@ -395,12 +414,17 @@ public class NetUtils {
      */
     public static String deparameterize(String uri, Map parameters) {
         int i = uri.lastIndexOf('?');
-        if (i == -1) return uri;
-        String[] params = StringUtils.split(uri.substring(i+1), "&");
+        if (i == -1) {
+            return uri;
+        }
+        
+        String[] params = StringUtils.split(uri.substring(i + 1), "&");
         for (int j = 0; j < params.length; j++) {
             String p = params[j];
             int k = p.indexOf('=');
-            if (k == -1) break;
+            if (k == -1) {
+                break;
+            }
             String name = p.substring(0, k);
             String value = p.substring(k+1);
             parameters.put(name, value);
@@ -412,6 +436,7 @@ public class NetUtils {
         if (parameters.size() == 0) {
             return uri;
         }
+        
         StringBuffer buffer = new StringBuffer(uri);
         buffer.append('?');
         for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
@@ -432,18 +457,20 @@ public class NetUtils {
      */
     public static SourceParameters createParameters(Request request) {
         final SourceParameters pars = new SourceParameters();
-        if ( null != request ) {
+
+        if (null != request) {
             final Enumeration names = request.getParameterNames();
-            while ( names.hasMoreElements() ) {
+            while (names.hasMoreElements()) {
                 final String current = (String)names.nextElement();
-                final String[] values = request.getParameterValues( current );
-                if ( null != values ) {
+                final String[] values = request.getParameterValues(current);
+                if (null != values) {
                     for(int i=0; i < values.length; i++) {
-                        pars.setParameter( current, values[i]);
+                        pars.setParameter(current, values[i]);
                     }
                 }
             }
         }
+
         return pars;
     }
 
@@ -454,6 +481,7 @@ public class NetUtils {
         if (uri.indexOf("@")!=-1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
             return uri.substring(0, uri.indexOf(":")+2)+uri.substring(uri.indexOf("@")+1);
         } 
+
         return uri;
     }
 }

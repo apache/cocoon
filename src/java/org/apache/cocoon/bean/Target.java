@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.8 2003/10/17 14:22:15 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.9 2003/10/31 21:41:59 vgritsenko Exp $
  */
 public class Target {
     // Defult type is append
@@ -93,14 +93,14 @@ public class Target {
     private transient int _hashCode;
     private transient String _toString;
 
-    public Target(
-        String type,
-        String root,
-        String sourceURI,
-        String destURI)
-        throws IllegalArgumentException {
+    public Target(String type,
+                  String root,
+                  String sourceURI,
+                  String destURI)
+    throws IllegalArgumentException {
         this.type = type;
         this.root = root;
+        
         if (destURI == null || destURI.length() == 0) {
             throw new IllegalArgumentException("You must specify a destination directory when defining a target");
         }

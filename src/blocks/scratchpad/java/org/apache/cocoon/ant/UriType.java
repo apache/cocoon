@@ -62,7 +62,7 @@ import org.apache.cocoon.util.NetUtils;
  * over all classes.
  *
  * @author    huber@apache.org
- * @version CVS $Id: UriType.java,v 1.1 2003/09/04 12:42:41 cziegeler Exp $
+ * @version CVS $Id: UriType.java,v 1.2 2003/10/31 21:41:59 vgritsenko Exp $
  */
 public class UriType {
     private String uri;
@@ -254,7 +254,7 @@ public class UriType {
 
 
     /**
-     *   Gets the parameterizedURI attribute of the UriType object
+     * Gets the parameterizedURI attribute of the UriType object
      *
      * @param  addOriginalParameters    Description of Parameter
      * @param  addAdditionalParameters  Description of Parameter
@@ -262,8 +262,8 @@ public class UriType {
      * @return                          The parameterizedURI value
      */
     public String getParameterizedUri(boolean addOriginalParameters,
-            boolean addAdditionalParameters,
-            Map additionalParameters) {
+                                      boolean addAdditionalParameters,
+                                      Map additionalParameters) {
         Map mergedParameters = new HashMap();
         if (addOriginalParameters) {
             mergedParameters.putAll(parameters);
@@ -356,7 +356,7 @@ public class UriType {
 
 
     /**
-     *   Calculate all member values depending on the uri member value
+     * Calculate all member values depending on the uri member value
      */
     protected void init() {
         if (uri != null) {
