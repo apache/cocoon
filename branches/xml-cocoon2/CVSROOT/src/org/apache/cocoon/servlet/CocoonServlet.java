@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.7 $ $Date: 2000-02-27 17:48:50 $
+ * @version CVS $Revision: 1.1.4.8 $ $Date: 2000-03-21 18:23:50 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -44,10 +44,10 @@ public class CocoonServlet extends HttpServlet {
     throws ServletException {
         super.init(conf);
         this.context=conf.getServletContext();
-        this.configurationFile=conf.getInitParameter("configurationFile");
+        this.configurationFile=conf.getInitParameter("configurations");
         if (this.configurationFile==null) {
             throw new ServletException("Servlet initialization argument "+
-                                       "'configurationFile' not specified");
+                                       "'configurations' not specified");
         }
         this.cocoon=this.create();
     }
