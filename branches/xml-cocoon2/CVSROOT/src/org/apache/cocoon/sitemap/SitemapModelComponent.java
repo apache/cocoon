@@ -8,7 +8,7 @@
 package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
-import java.util.Dictionary;
+import java.util.Map;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.utils.Parameters;
@@ -21,14 +21,14 @@ import org.xml.sax.EntityResolver;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-04 21:12:12 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-02 21:12:39 $
  */
 public interface SitemapModelComponent extends Component {
 
     /**
-     * Set the <code>EntityResolver</code>, objectModel <code>Dictionary</code>,
+     * Set the <code>EntityResolver</code>, objectModel <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par)
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException;
 }

@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public abstract class AbstractEnvironment implements Environment {
     protected URL context = null;
 
     /** The servlet object model */
-    protected Hashtable objectModel = null;
+    protected HashMap objectModel = null;
 
     /**
      * Constructs the abstract enviornment
@@ -58,7 +58,7 @@ public abstract class AbstractEnvironment implements Environment {
         this.uri = uri;
         this.view = view;
         this.context = context.toURL();
-        this.objectModel = new Hashtable();
+        this.objectModel = new HashMap();
     }
 
     // Sitemap methods
@@ -117,9 +117,9 @@ public abstract class AbstractEnvironment implements Environment {
     // Object model method
 
     /**
-     * Returns a Dictionary containing environment specific objects
+     * Returns a Map containing environment specific objects
      */
-    public Dictionary getObjectModel() {
+    public Map getObjectModel() {
         return this.objectModel;
     }
 

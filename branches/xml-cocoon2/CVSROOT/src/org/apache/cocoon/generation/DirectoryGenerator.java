@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Dictionary;
+import java.util.Map;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -55,7 +55,7 @@ import org.apache.avalon.utils.Parameters;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-29 22:17:51 $ */
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-02 21:12:36 $ */
  
 public class DirectoryGenerator extends ComposerGenerator {
 
@@ -90,13 +90,13 @@ public class DirectoryGenerator extends ComposerGenerator {
      * @param   resolver
      *      the EntityResolver object
      * @param   objectModel
-     *      a <code>Dictionary</code> containing model object
+     *      a <code>Map</code> containing model object
      * @param   src
      *      the URI for this request (?)
      * @param   par
      *      configuration parameters
      */
-    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
         super.setup(resolver, objectModel, src, par);
     
         String dateFormatString = par.getParameter("dateFormat", null);

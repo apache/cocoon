@@ -14,7 +14,6 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Hashtable;
-import java.util.Dictionary;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
@@ -26,7 +25,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-08-16 05:08:16 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-02 21:12:38 $
  */
 public class ResourceReader extends AbstractReader {
 

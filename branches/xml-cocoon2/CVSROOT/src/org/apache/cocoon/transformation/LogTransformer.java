@@ -20,7 +20,7 @@ import org.xml.sax.EntityResolver;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Dictionary;
+import java.util.Map;
 
 /**
  *
@@ -45,7 +45,7 @@ import java.util.Dictionary;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:13 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:40 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
@@ -66,7 +66,7 @@ public class LogTransformer extends AbstractTransformer {
 
     /** BEGIN SitemapComponent methods **/
 
-    public void setup(EntityResolver resolver, Dictionary objectModel,
+    public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {
         if (logfile == null) {

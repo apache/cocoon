@@ -11,7 +11,7 @@ package org.apache.cocoon.environment;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.util.Dictionary;
+import java.util.Map;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-31 16:44:11 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-09-02 21:12:35 $
  */
 
 public interface Environment extends EntityResolver {
@@ -63,7 +63,7 @@ public interface Environment extends EntityResolver {
     /**
      * Get the underlying object model
      */
-    public Dictionary getObjectModel();
+    public Map getObjectModel();
 
 }
 

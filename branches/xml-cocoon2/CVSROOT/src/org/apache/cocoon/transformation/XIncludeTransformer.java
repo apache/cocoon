@@ -14,7 +14,7 @@ import java.io.Reader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Stack;
-import java.util.Dictionary;
+import java.util.Map;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -42,7 +42,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:14 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:40 $ $Author: giacomo $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -76,7 +76,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
 	protected Stack xmlbase_element_name_stack = new Stack();
 
-    public void setup(EntityResolver resolver, Dictionary objectModel,
+    public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {}
 	/*

@@ -9,7 +9,7 @@ package org.apache.cocoon.transformation;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Dictionary;
+import java.util.Map;
 import java.text.StringCharacterIterator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:12:14 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-02 21:12:40 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -52,11 +52,11 @@ implements Transformer, Composer {
     private XSLTProcessor processor=null;
 
     /**
-     * Set the <code>EntityResolver</code>, the <code>Dictionary</code> with 
+     * Set the <code>EntityResolver</code>, the <code>Map</code> with 
      * the object model, the source and sitemap
      * <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par)
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */

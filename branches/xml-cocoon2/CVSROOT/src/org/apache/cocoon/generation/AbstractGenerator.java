@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import java.util.Dictionary;
+import java.util.Map;
 
 import org.apache.avalon.utils.Parameters;
 
@@ -19,25 +19,25 @@ import org.xml.sax.EntityResolver;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:40 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:36 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer
 implements Generator {
 
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
-    /** The current <code>Dictionary</code> objectModel. */
-    protected Dictionary objectModel=null;
+    /** The current <code>Map</code> objectModel. */
+    protected Map objectModel=null;
     /** The current <code>Parameters</code>. */
     protected Parameters parameters=null;
     /** The source URI associated with the request or <b>null</b>. */
     protected String source=null;
 
     /**
-     * Set the <code>EntityResolver</code>, object model <code>Dictionary</code>,
+     * Set the <code>EntityResolver</code>, object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
         this.resolver=resolver;
         this.objectModel=objectModel;
         this.source=src;

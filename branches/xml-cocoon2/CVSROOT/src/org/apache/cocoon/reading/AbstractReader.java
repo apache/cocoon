@@ -8,7 +8,7 @@
 package org.apache.cocoon.reading;
 
 import java.io.OutputStream;
-import java.util.Dictionary;
+import java.util.Map;
 
 import org.apache.avalon.utils.Parameters;
 
@@ -17,13 +17,13 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-08-16 05:08:15 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-02 21:12:38 $
  */
 public abstract class AbstractReader implements Reader {
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
-    /** The current <code>Dictionary</code> of the object model. */
-    protected Dictionary objectModel=null;
+    /** The current <code>Map</code> of the object model. */
+    protected Map objectModel=null;
     /** The current <code>Parameters</code>. */
     protected Parameters parameters=null;
     /** The source URI associated with the request or <b>null</b>. */
@@ -32,10 +32,10 @@ public abstract class AbstractReader implements Reader {
     protected OutputStream out=null;
 
     /**
-     * Set the <code>EntityResolver</code> the object model <code>Dictionary</code>,
+     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
         this.resolver=resolver;
         this.objectModel=objectModel;
         this.source=src;

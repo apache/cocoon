@@ -16,7 +16,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Dictionary;
+import java.util.Map;
 import java.util.Enumeration;
 
 import org.apache.avalon.utils.Parameters;
@@ -37,7 +37,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-29 18:22:57 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-02 21:12:40 $ $Author: giacomo $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -93,7 +93,7 @@ public class SQLTransformer extends AbstractTransformer {
 
     /** BEGIN SitemapComponent methods **/
 
-    public void setup(EntityResolver resolver, Dictionary objectModel,
+    public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters) 
     throws ProcessingException, SAXException, IOException {
         current_state = STATE_OUTSIDE;

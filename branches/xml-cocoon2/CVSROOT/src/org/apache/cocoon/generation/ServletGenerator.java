@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import java.util.Dictionary;
+import java.util.Map;
 
 import javax.servlet.ServletContext; 
 import javax.servlet.http.HttpServletRequest; 
@@ -22,7 +22,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-04 21:11:47 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-02 21:12:36 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer {
@@ -31,7 +31,7 @@ implements Composer {
     protected HttpServletResponse response=null;
     protected ServletContext context=null;
 
-    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
       super.setup(resolver, objectModel, src, par);
       this.request = (HttpServletRequest) objectModel.get("request");
       this.response = (HttpServletResponse) objectModel.get("response");

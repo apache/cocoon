@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2000-09-02 19:28:12 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2000-09-02 21:12:34 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -40,7 +40,7 @@
 
     import java.util.List; 
     import java.util.ArrayList; 
-    import java.util.Dictionary; 
+    import java.util.Map; 
 
     import org.apache.avalon.Configurable;
     import org.apache.avalon.Configuration;
@@ -125,7 +125,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
-        private List <xsl:value-of select="$matcher-name"/> (String pattern, Dictionary objectModel) {
+        private List <xsl:value-of select="$matcher-name"/> (String pattern, Map objectModel) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -145,7 +145,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($selector-name),string(@pattern),$config)"/>
-        private boolean <xsl:value-of select="$selector-name"/> (String pattern, Dictionary objectModel) {
+        private boolean <xsl:value-of select="$selector-name"/> (String pattern, Map objectModel) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($selector-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -257,7 +257,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       List listOfLists = (List)(new ArrayList());
       List list = null;
       Parameters param = null; 
-      Dictionary objectModel = environment.getObjectModel(); 
+      Map objectModel = environment.getObjectModel(); 
       String cocoon_view = environment.getView();
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
         <xsl:variable name="pipeline-position" select="position()"/>
@@ -286,7 +286,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
       <xsl:variable name="pipeline-position" select="position()"/>
       <xsl:if test="(./map:handle-errors)">
-        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Dictionary objectModel, Exception e) 
+        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e) 
         throws Exception { 
           ResourcePipeline pipeline = new ResourcePipeline ();
           pipeline.setComponentManager (this.manager);
