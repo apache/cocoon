@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.313 2004/05/06 14:23:04 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.314 2004/05/07 14:42:20 upayavira Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,16 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UV" type="add">
+     Extended FOM so that cocoon.redirectTo("url", true) will do a global 
+     redirect. cocoon.redirectTo("url") will act as before. This enables
+     FOM to redirect when it is called from within cocoon: protocol 
+     requests, aggregations, etc.
+   </action>
+   <action dev="UV" type="fix">
+     Moving check on number of specified targets within CocoonBean. This was
+     preventing the processURI(uri, outputStream) method from working.
+   </action>
    <action dev="VG" type="remove">
      CForms: Remove custom flow level forms validators.
    </action>
