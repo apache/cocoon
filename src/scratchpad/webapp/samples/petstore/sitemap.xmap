@@ -4,12 +4,12 @@
   <!-- =========================== Components ================================ -->
   <map:components> 
     <map:transformers default="xslt">
-      <map:transformer name="xmlform" src="org.apache.cocoon.transformation.XMLFormTransformer" logger="xmlform.sitemap.transformer"/>
       <map:transformer name="jx" src="org.apache.cocoon.transformation.JXTemplateTransformer" logger="jx.sitemap.transformer"/>
     </map:transformers>
     <map:generators default="file">
         <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
         <map:generator label="content,data" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+      <map:generator name="jxforms" src="org.apache.cocoon.generation.JXFormsGenerator" logger="sitemap.generator.jxforms"/>
     </map:generators>
     <map:flow-interpreters default="JavaScript"/>
     <map:serializers default="html"/>
@@ -67,36 +67,39 @@
         </map:call>
       </map:match>
       <map:match pattern="petstore"> 
-        <map:call function="xmlForm"/> <!-- 
-              Without parameters xmlForm() handles XMLForm continuations:
+        <map:call function="jxForm"/> <!-- 
+              Without parameters jxForm() handles continuations:
 	      The pattern I'm matching here, "petstore", must match the value 
-              of the "action" attribute in the view's <xf:submit> elements
+              of the "action" attribute in the view's <xf:submit> element
            -->
       </map:match>
       <map:match pattern="">
         <map:call function="index"/>
       </map:match>
       <map:match pattern="editAccount.form">
-        <map:call function="xmlForm">
-          <map:parameter name="xmlform-function" value="editAccountForm"/>
-	  <map:parameter name="xmlform-id" value="petstore-edit-account"/> <!--
+        <map:call function="jxForm">
+          <map:parameter name="function" value="editAccountForm"/>
+	  <map:parameter name="id" value="petstore-edit-account"/> <!--
                   The value I supply here, "petstore-edit-account", must match 
                   the "id" attribute of the view's <xf:form> element
              -->
-          <map:parameter name="xmlform-validator-schema-ns"/> <!-- no validator -->
-          <map:parameter name="xmlform-validator-schema"/> <!-- no validator -->
-          <map:parameter name="xmlform-scope" value="session"/>
+          <map:parameter name="validator-schema-ns"/> <!-- no validator -->
+          <map:parameter name="validator-schema"/> <!-- no validator -->
+          <map:parameter name="scope" value="request"/>
         </map:call>
       </map:match>
 
-      <map:match pattern="view/xmlform/*.xml">
-	      <!-- original XMLForm document -->
-	      <map:generate src="view/xmlform/{1}.xml"/>
-	      
-	      <!-- populating the document with model instance data -->
+      <map:match pattern="view/jxforms/*.xml">
+	      <!-- original JXForms document -->
+	      <map:generate type="jxforms" src="view/jxforms/{1}.xml"/>
 
-	      <map:transform type="xmlform"  label="debug"/>
+	      <map:transform type="xalan" src="stylesheets/form2html.xsl"  label="debug1"/>
+
+	      <map:transform type="xalan" src="../jxforms/stylesheets/jxforms2html.xsl" />
+
+
 	      <map:transform type="xalan" src="stylesheets/site2html.xsl"  label="debug1"/>
+
 	      <map:serialize type="html" />
 	</map:match>	      
     </map:pipeline>

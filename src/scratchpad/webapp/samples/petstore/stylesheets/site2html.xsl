@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xf="http://cocoon.apache.org/jxforms/2002/cr"
 	exclude-result-prefixes="xalan" >
 
 	<xsl:template match="site">
@@ -442,6 +442,10 @@
 		</p>
 	</xsl:template>
 
+	<xsl:template match="editAccountForm">
+             <xsl:copy-of select="*"/>
+        </xsl:template>
+
 	<xsl:template match="form[@styleId='workingAccountForm']">
 		<form>
 			<xsl:copy-of select="@action | @method | @styleId "/>
@@ -592,131 +596,6 @@
 		<center>
 			<a href="newAccountForm.do"><img border="0" src="images/button_register_now.gif" /></a>
 		</center>
-	</xsl:template>
-
-
-<!-- XML-Form -->
-
-
-	<xsl:template match="xf:form[@view='edit-account']">
-		<form>
-			<xsl:copy-of select="@*"/>
-			<input type="hidden" name="cocoon-xmlform-view" value="{@view}"/>
-			<table cellpadding="10" cellspacing="0" align="center" border="1" bgcolor="#dddddd">
-
-				<xsl:if test="count(error/xf:violation) > 0">
-					<tr>
-						<td align="left" colspan="3"
-							class="{error/xf:violation[1]/@class}">
-							<p>* There are [<b><xsl:value-of
-								select="count(error/xf:violation)"/></b>] 
-								errors. Please fix these errors and submit the
-								form again.</p>
-						</td>
-					</tr>
-				</xsl:if>
-
-				<tr>
-					<td>
-					<xsl:apply-templates select="*[name() != 'xf:submit']" />
-					</td>
-				</tr>
-			</table>
-			<br />
-			<center>
-				<!--<input border="0" type="image" src="images/button_submit.gif" name="submit" value="Save Account Information"  id="{xf:submit/@id}" continuation="forward"/> -->
-			<xsl:apply-templates select="xf:submit" />
-			</center>
-		</form>
-		<xsl:if test="/site/@signOn='false'">
-			<p>
-				<center><b><a href="listOrders.do">My Orders</a></b></center>
-			</p>
-		</xsl:if>
-	</xsl:template>
-
-	<xsl:template match="xf:group/xf:caption" />
-	<xsl:template match="xf:hint">
-		<xsl:attribute name="title"><xsl:value-of select="."/></xsl:attribute>
-	</xsl:template>
-	<xsl:template match="xf:violation" />
-
-	<xsl:template match="xf:group">
-		<font color="darkgreen"><h3><xsl:value-of select="xf:caption" /></h3></font>
-		<table border="0" cellpadding="3" cellspacing="1" bgcolor="#008800">
-			<xsl:apply-templates/>
-		</table>
-	</xsl:template>
-
-
-	<xsl:template match="xf:textbox">
-		<tr bgcolor="#FFFF88">
-			<td><xsl:value-of select="xf:caption" /></td>
-			<td>
-				<input name="{@ref}" type="textbox" value="{xf:value/text()}">
-					<xsl:copy-of select="@*[not(name()='ref')]"/>
-				</input>
-				<xsl:apply-templates select="xf:hint"/>
-				<xsl:apply-templates select="xf:violation"/>
-			</td>
-		</tr>
-   </xsl:template>
-   
-	<xsl:template match="xf:password">
-		<tr bgcolor="#FFFF88">
-			<td><xsl:value-of select="xf:caption" /></td>
-			<td>
-				<input name="{@ref}" type="password" value="{xf:value/text()}">
-					<xsl:copy-of select="@*[not(name()='ref')]"/>
-				</input>
-				<xsl:apply-templates select="xf:violation"/>
-			</td>
-		</tr>
-   </xsl:template>
-
-
-	<xsl:template match="xf:selectOne | xf:selectOne[@selectUIType='listbox']">
-		<tr bgcolor="#FFFF88">
-			<td><xsl:value-of select="xf:caption" /></td>
-			<td>
-				<select name="{@ref}">
-					<xsl:copy-of select="@*[not(name()='ref')]"/>
-					<xsl:variable name="selected" select="xf:value"/>
-					<xsl:for-each select="xf:item">
-						<option value="{xf:value}">
-							<xsl:if test="$selected = xf:value">
-								<xsl:attribute name="selected"/>
-							</xsl:if>
-							<xsl:value-of select="xf:caption"/>
-						</option>
-					</xsl:for-each>
-				</select>
-				<xsl:apply-templates select="xf:violation"/>
-			</td>
-		</tr>
-	</xsl:template>
-
-	<xsl:template match="xf:selectBoolean">
-		<tr bgcolor="#FFFF88">
-			<td colspan="2">
-				<input name="{@ref}" type="checkbox" value="true">
-					<xsl:copy-of select="@*[not(name()='ref')]"/>
-					<xsl:if test="xf:value/text() = 'true'">
-						<xsl:attribute name="checked"/>
-					</xsl:if>
-				</input> 
-				<xsl:value-of select="xf:caption" />
-			</td>
-		</tr>
-	</xsl:template>
-
-	<xsl:template match="xf:submit">
-       <!-- the id attribute of the submit control is sent to the server -->
-       <!-- as a conventional Cocoon Action parameter of the form cocoon-action-* -->
-		<input name="cocoon-action-{@id}" type="submit" value="{xf:caption/text()}">
-			<xsl:copy-of select="@*[not(name()='id')]"/>
-			<xsl:apply-templates select="xf:hint"/>
-		</input>
 	</xsl:template>
 
 </xsl:stylesheet>
