@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xlog xpath="/logkit/targets" unless="cocoon[@name='xmlform']">
+<xlog xpath="/logkit/targets" unless="cocoon[@id='xmlform']">
     <!-- The logger for the xmlform components -->
     <cocoon id="xmlform">
       <filename>${context-root}/WEB-INF/logs/xmlform.log</filename>
