@@ -28,8 +28,8 @@
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/ojb/ojb.roles"/>
 
-  <!-- ODMG Implementation Interface -->
-  <ojb-odmg logger="core.ojb-odmg"/>
+  <!-- ODMG Implementation Interface 
+  <ojb-odmg logger="core.ojb-odmg"/ -->
   <!-- PersistenceBroker Interface -->
   <ojb-pb logger="core.ojb-pb"/>
   
