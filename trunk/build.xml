@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.16 2003/03/17 00:47:42 vgritsenko Exp $:
+       CVS $Id: build.xml,v 1.17 2003/03/17 13:23:57 stefano Exp $:
 
 ============================================================================ -->
 
@@ -305,7 +305,7 @@
   <!-- package the scratchpad -->
   <target name="package-scratchpad" depends="compile-scratchpad" unless="unless.exclude.scratchpad">
     <jar jarfile="${build}/${name}-scratchpad.jar">
-      <fileset dir="${build.scratchpad}"/>
+      <fileset dir="${build.scratchpad.dest}"/>
     </jar>
   </target>
 
@@ -704,6 +704,10 @@
 
   <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples, scratchpad-samples" unless="unless.exclude.webapp.samples"/>
  
+  <target name="prepare-webapp-scratchpad" depends="prepare-webapp, compile-scratchpad" unless="unless.exclude.webapp.scratchpad">
+    <copy file="${build}/${name}-scratchpad.jar" tofile="${build.webapp.lib}/${name}-${version}-scratchpad.jar"/>
+  </target>
+ 
   <target name="prepare-webapp-deprecated" depends="prepare-webapp,init-xpatch" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch directory="${deprecated.conf}" extension="xconf" configuration="${build.webapp}/WEB-INF/cocoon.xconf"/>
@@ -755,7 +759,7 @@
     <xpatch directory="${documentation}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
   </target>
   
-  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,validate-config,init-loader"/>
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-config,init-loader"/>
 
   <target name="war" depends="webapp">
     <!-- A task to create manifest for webapp. -->
