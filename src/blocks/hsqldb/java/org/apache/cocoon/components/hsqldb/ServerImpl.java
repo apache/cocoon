@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,6 +55,16 @@ public class ServerImpl extends AbstractLogEnabled
                Serviceable,
                Startable {
 
+    private static final String DEFAULT_TRACE = "false";
+    private static final String DEFAULT_SILENT = "true";
+    private static final String DEFAULT_PORT = "9002";
+    private static final String CONTEXT_PROTOCOL = "context:/"; 
+    private static final String DEFAULT_DB_NAME = "cocoondb";
+    private static final String DEFAULT_DB_PATH = "context://WEB-INF/db";
+    
+    /** Cocoon context **/
+    private org.apache.cocoon.environment.Context cocoonContext;
+    
     /** Port which HSQLDB server will listen to */
     private String port;
 
@@ -83,35 +93,34 @@ public class ServerImpl extends AbstractLogEnabled
         this.getLogger().debug("Parameterize ServerImpl");
 
         arguments[0] = "-port";
-        arguments[1] = this.port = params.getParameter("port", "9002");
+        arguments[1] = this.port = params.getParameter("port", DEFAULT_PORT);
         arguments[2] = "-silent";
-        arguments[3] = params.getParameter("silent", "true");
+        arguments[3] = params.getParameter("silent", DEFAULT_SILENT);
         arguments[4] = "-trace";
-        arguments[5] = params.getParameter("trace", "false");
+        arguments[5] = params.getParameter("trace", DEFAULT_TRACE);
         arguments[6] = "-no_system_exit";
-        arguments[7] = "true";
+        arguments[7] = DEFAULT_SILENT;
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Configure ServerImpl with port: " + arguments[1]
                     + ", silent: " + arguments[3]
                     + ", trace: " +arguments[5]);
         }
         m_daemonThreadPoolName = params.getParameter( "thread-pool-name", m_daemonThreadPoolName );
-    }
 
-    /** Contextualize this class */
-    public void contextualize(Context context) throws ContextException {
-        org.apache.cocoon.environment.Context ctx =
-                (org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        String dbPath = params.getParameter("path", DEFAULT_DB_PATH);
+        
         // test if we are running inside a WAR file
-        final String dbPath = ctx.getRealPath("/WEB-INF/db");
+        if(dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
+            dbPath = this.cocoonContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
+        } 
         if (dbPath == null) {
-            throw new ContextException("The hsqldb cannot be used inside a WAR file.");
-        }
-
+            throw new RuntimeException("The hsqldb cannot be used inside a WAR file.");
+        }        
+        
         try {
-            arguments[8] = "-database";
+            arguments[8] = "-database.0";
             arguments[9] = new File(dbPath).getCanonicalPath();
-            arguments[9] += File.separator + "cocoondb";
+            arguments[9] += File.separator + params.getParameter("name", DEFAULT_DB_NAME);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("database is " + arguments[9]);
             }
@@ -119,7 +128,13 @@ public class ServerImpl extends AbstractLogEnabled
             getLogger().error("MalformedURLException - Could not get database directory ", e);
         } catch (IOException e) {
             getLogger().error("IOException - Could not get database directory ", e);
-        }
+        }        
+        
+    }
+
+    /** Contextualize this class */
+    public void contextualize(Context context) throws ContextException {
+        cocoonContext = (org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
     /**
      * @param serviceManager The <@link ServiceManager} instance
@@ -143,7 +158,7 @@ public class ServerImpl extends AbstractLogEnabled
             RunnableManager runnableManager = null;
             try
             {
-            this.getLogger().debug("Intializing hsqldb server thread");
+                this.getLogger().debug("Intializing hsqldb server thread");
                 runnableManager = (RunnableManager)m_serviceManager.lookup(RunnableManager.ROLE);
                 runnableManager.execute( m_daemonThreadPoolName, this );
             }
@@ -164,11 +179,10 @@ public class ServerImpl extends AbstractLogEnabled
     /** Stop the server */
     public void stop() {
         if (started) {
-            Statement statement = null;
             try {
                 getLogger().debug("Shutting down HSQLDB");
                 Connection connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:" + this.port, "sa", "");
-                statement = connection.createStatement();
+                Statement statement = connection.createStatement();
                 statement.executeQuery("SHUTDOWN");
                 try {
                     connection.close();
@@ -179,14 +193,6 @@ public class ServerImpl extends AbstractLogEnabled
                 }
             } catch (Exception e){
                 getLogger().error("Error while shutting down HSQLDB", e);
-            } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                } catch(SQLException sqle) {
-                    getLogger().error("Error while shutting down HSQLDB", sqle);
-                }
             }
             getLogger().debug("Shutting down HSQLDB: Done");
         }

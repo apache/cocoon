@@ -23,6 +23,8 @@
       |  port   : number      port where the server is listening
       |  silent : true/false  display all queries
       |  trace  : true/false  display JDBC trace messages
+      |  name   : string      name of the HSQL-DB
+      |  path   : string      path to the database - context-protocol is resolved      
       +-->
   <hsqldb-server class="org.apache.cocoon.components.hsqldb.ServerImpl"
                  logger="core.hsqldb-server"
@@ -31,6 +33,8 @@
      <parameter name="silent" value="true"/>
      <parameter name="trace" value="false"/>
      <parameter name="thread-pool-name" value="daemon"/>
+     <parameter name="name" value="cocoondb"/>
+     <parameter name="path" value="context://WEB-INF/db"/>     
   </hsqldb-server>
 
 </xconf>
