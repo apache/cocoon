@@ -36,7 +36,6 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
@@ -48,7 +47,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  A Cocoon Generator that runs an Ant build file
  *
  * @author <a href="mailto:ceyates@stanford.edu">Charles Yates</a>
- * @version CVS $Id: AntBuildGenerator.java,v 1.3 2004/04/17 11:32:24 antonio Exp $
+ * @version CVS $Id: AntBuildGenerator.java,v 1.4 2004/04/17 17:26:45 antonio Exp $
  */
 public class AntBuildGenerator
     extends AbstractLogEnabled
@@ -83,8 +82,8 @@ public class AntBuildGenerator
     private static final AttributesImpl MSSG_ATTRS = new AttributesImpl();
     private static final AttributesImpl NAME_ATTRS = new AttributesImpl();
     static {
-        MSSG_ATTRS.addAttribute(StringUtils.EMPTY, PRIORITY, PRIORITY, CDATA, null);
-        NAME_ATTRS.addAttribute(StringUtils.EMPTY, NAME, NAME, CDATA, null);
+        MSSG_ATTRS.addAttribute("", PRIORITY, PRIORITY, CDATA, null);
+        NAME_ATTRS.addAttribute("", NAME, NAME, CDATA, null);
     }
 
     /** the build file */
@@ -181,7 +180,7 @@ public class AntBuildGenerator
         }
         String target = ObjectModelHelper.getRequest(aMap).getParameter(TARGET);
         if (target == null) {
-            target = StringUtils.EMPTY;
+            target = "";
         }
         myThreadTarget.set(target);
         myThreadPriorityLevel.set(new Integer(priorityLevel));
@@ -208,7 +207,7 @@ public class AntBuildGenerator
             theProject.init();
             ProjectHelper helper = ProjectHelper.getProjectHelper();
             helper.parse(theProject, myBuildFile);
-            if (target.equals(StringUtils.EMPTY)) {
+            if (target.equals("")) {
                 target = theProject.getDefaultTarget();
             }
             if (getLogger().isDebugEnabled()) {
@@ -220,7 +219,7 @@ public class AntBuildGenerator
             getLogger().error(e.getMessage(), e);
             while (!myStack.isEmpty()) {
                 String tag = (String) myStack.pop();
-                myConsumer.endElement(StringUtils.EMPTY, tag, tag);
+                myConsumer.endElement("", tag, tag);
             }
         } finally {
             myConsumer.endDocument();
@@ -233,7 +232,7 @@ public class AntBuildGenerator
      */
     public void buildStarted(BuildEvent anEvent) {
         try {
-            myConsumer.startElement(StringUtils.EMPTY, BUILD, BUILD, EMPTY_ATTRS);
+            myConsumer.startElement("", BUILD, BUILD, EMPTY_ATTRS);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
@@ -250,7 +249,7 @@ public class AntBuildGenerator
      */
     public void buildFinished(BuildEvent anEvent) {
         try {
-            myConsumer.endElement(StringUtils.EMPTY, BUILD, BUILD);
+            myConsumer.endElement("", BUILD, BUILD);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
@@ -270,7 +269,7 @@ public class AntBuildGenerator
         }
         try {
             NAME_ATTRS.setValue(0, anEvent.getTarget().getName());
-            myConsumer.startElement(StringUtils.EMPTY, TARGET, TARGET, NAME_ATTRS);
+            myConsumer.startElement("", TARGET, TARGET, NAME_ATTRS);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
@@ -288,7 +287,7 @@ public class AntBuildGenerator
             return;
         }
         try {
-            myConsumer.endElement(StringUtils.EMPTY, TARGET, TARGET);
+            myConsumer.endElement("", TARGET, TARGET);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
@@ -308,7 +307,7 @@ public class AntBuildGenerator
         }
         try {
             NAME_ATTRS.setValue(0, anEvent.getTask().getTaskName());
-            myConsumer.startElement(StringUtils.EMPTY, TASK, TASK, NAME_ATTRS);
+            myConsumer.startElement("", TASK, TASK, NAME_ATTRS);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
@@ -326,7 +325,7 @@ public class AntBuildGenerator
             return;
         }
         try {
-            myConsumer.endElement(StringUtils.EMPTY, TASK, TASK);
+            myConsumer.endElement("", TASK, TASK);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
@@ -361,11 +360,11 @@ public class AntBuildGenerator
         MSSG_ATTRS.setValue(0, value);
         String message = anEvent.getMessage();
         try {
-            myConsumer.startElement(StringUtils.EMPTY, MESSAGE, MESSAGE, MSSG_ATTRS);
+            myConsumer.startElement("", MESSAGE, MESSAGE, MSSG_ATTRS);
             myConsumer.startCDATA();
             myConsumer.characters(message.toCharArray(), 0, message.length());
             myConsumer.endCDATA();
-            myConsumer.endElement(StringUtils.EMPTY, MESSAGE, MESSAGE);
+            myConsumer.endElement("", MESSAGE, MESSAGE);
         } catch (SAXException e) {
             getLogger().error(e.getMessage(), e);
             if (mySAXException == null) {
