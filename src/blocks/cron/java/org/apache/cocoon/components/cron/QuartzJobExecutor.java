@@ -15,26 +15,17 @@
  */
 package org.apache.cocoon.components.cron;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
-
-import org.apache.cocoon.environment.background.BackgroundEnvironment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import java.util.Map;
 
 /**
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
@@ -46,110 +37,99 @@ import java.util.Map;
  */
 public class QuartzJobExecutor implements Job {
 
+    protected Logger m_logger;
+    protected Context m_context;
+    protected ServiceManager m_manager;
+
     /* (non-Javadoc)
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
-    public void execute(final JobExecutionContext context)
-    throws JobExecutionException {
-        final JobDataMap data = context.getJobDetail().getJobDataMap();
-        // data.put(QuartzJobScheduler.DATA_MAP_JOB_EXECUTION_CONTEXT, context);
+    public void execute(final JobExecutionContext context) throws JobExecutionException {
 
-        final Logger logger = (Logger)data.get(QuartzJobScheduler.DATA_MAP_LOGGER);
-        final String name = (String)data.get(QuartzJobScheduler.DATA_MAP_NAME);
-        final Boolean canRunConcurrentlyB = ((Boolean)data.get(QuartzJobScheduler.DATA_MAP_RUN_CONCURRENT));
+        final JobDataMap data = context.getJobDetail().getJobDataMap();
+
+        final String name = (String) data.get(QuartzJobScheduler.DATA_MAP_NAME);
+
+        m_logger = (Logger) data.get(QuartzJobScheduler.DATA_MAP_LOGGER);
+        m_context = (Context) data.get(QuartzJobScheduler.DATA_MAP_CONTEXT);
+        m_manager = (ServiceManager) data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
+        
+        final Boolean canRunConcurrentlyB = ((Boolean) data.get(QuartzJobScheduler.DATA_MAP_RUN_CONCURRENT));
         final boolean canRunConcurrently = ((canRunConcurrentlyB == null) ? true : canRunConcurrentlyB.booleanValue());
 
         if (!canRunConcurrently) {
-            Boolean isRunning = (Boolean)data.get(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING);
+            Boolean isRunning = (Boolean) data.get(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING);
             if (Boolean.TRUE.equals(isRunning)) {
-                logger.warn("Cron job name '" + name +
+                m_logger.warn("Cron job name '" + name +
                             " already running but configured to not allow concurrent runs. Will discard this scheduled run");
                 return;
             }
         }
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Executing cron job named '" + name + "'");
+        if (m_logger.isInfoEnabled()) {
+            m_logger.info("Executing cron job named '" + name + "'");
         }
 
-        Context appContext = (Context) data.get(QuartzJobScheduler.DATA_MAP_CONTEXT);
-        ServiceManager manager = (ServiceManager)data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
-        org.apache.cocoon.environment.Context envContext;
-        try {
-        	envContext = (org.apache.cocoon.environment.Context) appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-        } catch (ContextException e) {
-        	throw new JobExecutionException(e);
-        }
-
-        BackgroundEnvironment env = new BackgroundEnvironment(logger, envContext);
+        setup(data);
 
         Object job = null;
         String jobrole = null;
-
-        Processor processor;
-        try {
-            processor = (Processor)manager.lookup(Processor.ROLE);
-        } catch (ServiceException e) {
-            throw new JobExecutionException(e);
-        }
-
         boolean release = false;
         boolean dispose = false;
         try {
-            env.startingProcessing();
-            EnvironmentHelper.enterProcessor(processor, manager, env);
-
-            jobrole = (String)data.get(QuartzJobScheduler.DATA_MAP_ROLE);
+            jobrole = (String) data.get(QuartzJobScheduler.DATA_MAP_ROLE);
 
             if (null == jobrole) {
                 job = data.get(QuartzJobScheduler.DATA_MAP_OBJECT);
-                ContainerUtil.enableLogging(job, logger);
-                ContainerUtil.contextualize(job, appContext);
-                ContainerUtil.service(job, manager);
+                ContainerUtil.enableLogging(job, m_logger);
+                ContainerUtil.contextualize(job, m_context);
+                ContainerUtil.service(job, m_manager);
                 dispose = true;
             } else {
-                job = manager.lookup(jobrole);
+                job = m_manager.lookup(jobrole);
                 release = true;
             }
 
             if (job instanceof ConfigurableCronJob) {
-                final Parameters params = (Parameters)data.get(QuartzJobScheduler.DATA_MAP_PARAMETERS);
-                final Map objects = (Map)data.get(QuartzJobScheduler.DATA_MAP_OBJECTMAP);
-                ((ConfigurableCronJob)job).setup(params, objects);
+                final Parameters params = (Parameters) data.get(QuartzJobScheduler.DATA_MAP_PARAMETERS);
+                final Map objects = (Map) data.get(QuartzJobScheduler.DATA_MAP_OBJECTMAP);
+                ((ConfigurableCronJob) job).setup(params, objects);
             }
-
-            data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.TRUE);
 
             if (job instanceof Job) {
-                ((Job)job).execute(context);
+                ((Job) job).execute(context);
             } else if (job instanceof CronJob) {
-                ((CronJob)job).execute(name);
+                ((CronJob) job).execute(name);
             } else if (job instanceof Runnable) {
-                ((Runnable)job).run();
+                ((Runnable) job).run();
             } else {
-                logger.error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
+                m_logger.error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
             }
         } catch (final Throwable t) {
-            logger.error("Cron job name '" + name + "' died.", t);
+            m_logger.error("Cron job name '" + name + "' died.", t);
 
             if (t instanceof JobExecutionException) {
                 throw (JobExecutionException) t;
             }
         } finally {
-            data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
 
-            EnvironmentHelper.leaveProcessor();
-            env.finishingProcessing();
+            release(data);
 
-            if (manager != null) {
-                manager.release(processor);
-                if (release) {
-                    manager.release(job);
-                }
+            if (m_manager != null && release) {
+                m_manager.release(job);
             }
             if (dispose) {
             	ContainerUtil.dispose(job);
             }
         }
     }
+
+    protected void setup(JobDataMap data) throws JobExecutionException {
+        data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.TRUE);
+    }
+
+    protected void release(JobDataMap data) {
+        data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
+    }
+
 }
