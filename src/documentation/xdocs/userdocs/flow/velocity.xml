@@ -12,7 +12,7 @@
 <body>
 	<s1 title="Velocity Generator">
   <p>
-If called from a Flowscript, the Cocoon <link href="http://jakarta.apache.org/velocity">Velocity</link> Generator provides access to the immediate properties of the context object passed to <code>sendPage</code> and <code>sendPageAndWait</code>. In that case, the current <code>WebContinuation</code> is also available as a variable named <code>$continuation</code>
+If called from a Flowscript, the Cocoon <link href="http://jakarta.apache.org/velocity">Velocity</link> <link href="../generators/velocity-generator.html">Generator</link> provides access to the immediate properties of the context object passed to <code>sendPage</code> and <code>sendPageAndWait</code>. In that case, the current <code>WebContinuation</code> is also available as a variable named <code>$continuation</code>
  You would 
 typically access its <code>id</code>:</p>
 <source>
