@@ -54,15 +54,14 @@ package org.apache.cocoon.components.slide.impl;
 import java.util.Hashtable;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -81,19 +80,14 @@ import org.xml.sax.InputSource;
 /**
  * The class represent a manger for slide repositories
  * 
- * IMPORTANT: do not remove Component interface as this cause ECM to
- * throw an exception during startup. (Due to dynamic proxy generation 
- * and the fact that JTA is not on the classpath).
- * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepositoryImpl.java,v 1.4 2003/12/10 17:23:39 unico Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.5 2004/01/20 11:12:31 unico Exp $
  */
-public class SlideRepositoryImpl
-implements SlideRepository, LogEnabled, Serviceable, Configurable,
-Contextualizable, Disposable, Component, ThreadSafe  {
+public class SlideRepositoryImpl extends AbstractLogEnabled
+implements SlideRepository, Contextualizable, Serviceable, Configurable, 
+Initializable, Disposable, ThreadSafe  {
 
-    /** The service manager instance */
-    protected ServiceManager manager = null;
+    private ServiceManager manager;
 
     /**
      * The SlideRepository will handle the domain lifecycle only,
@@ -101,75 +95,48 @@ Contextualizable, Disposable, Component, ThreadSafe  {
      */
     private EmbeddedDomain domain = null;
 
-    private Logger logger;
     private String file;
-    private boolean initialized = false;
-    private String contextpath = null;
+    private String contextpath;
+    private String workdir;
 
-    /**
-     * Provide service with a logger.
-     *
-     * @param logger the logger
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
+
+    public SlideRepositoryImpl() {
     }
 
-    /**
-     * Set the current <code>ServiceManager</code> instance used by this
-     * <code>Serviceable</code>.
-     *
-     * @param manager Service manager.
-     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
-    /**
-     * Get the context
-     *
-     * @param context
-     */
     public void contextualize(org.apache.avalon.framework.context.Context context)
       throws ContextException {
-        this.contextpath = ((Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT)).getRealPath("/");
+        Context ctx = ((Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
+        this.contextpath = ctx.getRealPath("/");
+        this.workdir = context.get(Constants.CONTEXT_WORK_DIR).toString();
     }
 
-    /**
-     * Pass the Configuration to the Configurable class. This method must
-     * always be called after the constructor and before any other method.
-     *
-     * @param configuration the class configurations.
-     */
     public void configure(Configuration configuration)
       throws ConfigurationException {
 
         this.file = configuration.getAttribute("file", "WEB-INF/slide.xconf");
     }
 
-    /**
-     * Initialize the service. Initialization includes
-     * allocating any resources required throughout the
-     * service's lifecycle.
-     */
     public void initialize() throws Exception {
-
-        SourceResolver resolver = null;
-        SAXParser parser = null;
-        Source source = null;
-        Configuration configuration = null;
 
         if (Domain.isInitialized()) {
             return;
         }
 
-        this.logger.info("Initializing domain.");
+        getLogger().info("Initializing domain.");
 
         this.domain = new EmbeddedDomain();
         // FIXME Could not remove deprecated method, because some important
         // messages were thrown over the domain logger
-        domain.setLogger(new SlideLoggerAdapter(this.logger));
+        domain.setLogger(new SlideLoggerAdapter(getLogger()));
 
+        SourceResolver resolver = null;
+        SAXParser parser = null;
+        Source source = null;
+        Configuration configuration = null;
         try {
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 
@@ -177,94 +144,58 @@ Contextualizable, Disposable, Component, ThreadSafe  {
             SAXConfigurationHandler confighandler = new SAXConfigurationHandler();
 
             source = resolver.resolveURI(this.file);
-
-            parser.parse(new InputSource(source.getInputStream()),
-                         confighandler);
-
+            parser.parse(new InputSource(source.getInputStream()),confighandler);
             configuration = confighandler.getConfiguration();
 
-        } catch (Exception e) {
-            this.logger.error("Could not load slide configuration file", e);
-            return;
         } finally {
-            if (source!=null) {
+            if (source != null) {
                 resolver.release(source);
             }
-            if (parser!=null) {
+            if (parser != null) {
                 this.manager.release(parser);
             }
-            if (resolver!=null) {
+            if (resolver != null) {
                 this.manager.release(resolver);
             }
         }
-
-        try {
-            
-            domain.setDefaultNamespace(configuration.getAttribute("default","slide"));
-
-            this.logger.info("Initializing Domain");
-
-            Configuration[] namespaceDefinitions = configuration.getChildren("namespace");
-
-            for (int i = 0; i<namespaceDefinitions.length; i++) {
-                // Initializes a new namespace based on the given configuration data.
-
-                this.logger.info("Initializing namespace : "+
-                                 namespaceDefinitions[i].getAttribute("name"));
-
-                String name = namespaceDefinitions[i].getAttribute("name");
-                Configuration namespaceDefinition = namespaceDefinitions[i].getChild("definition");
-                Configuration namespaceConfigurationDefinition = namespaceDefinitions[i].getChild("configuration");
-                Configuration namespaceBaseDataDefinition = namespaceDefinitions[i].getChild("data");
-                
-                domain.addNamespace(name,
-                                    new SlideLoggerAdapter(this.logger.getChildLogger(name)),
-                                    new SlideConfigurationAdapter(namespaceDefinition),
-                                    new SlideConfigurationAdapter(namespaceConfigurationDefinition),
-                                    new SlideConfigurationAdapter(namespaceBaseDataDefinition));
-
-                this.logger.info("Namespace configuration complete");
-            }
-            
-            Configuration[] parameters = configuration.getChildren("parameter");
-            Hashtable table = new Hashtable();
-
-            for (int i = 0; i<parameters.length; i++) {
-                String name = parameters[i].getAttribute("name");
-                table.put(name, parameters[i].getValue(""));
-            }
-            table.put("contextpath", this.contextpath);
-            this.domain.setParameters(table);
-            
-        } catch (ConfigurationException ce) {
-            this.logger.error("Could not configure Slide domain", ce);
-            return;
+        
+        Configuration[] parameters = configuration.getChildren("parameter");
+        Hashtable table = new Hashtable();
+        for (int i = 0; i < parameters.length; i++) {
+            String name = parameters[i].getAttribute("name");
+            table.put(name, parameters[i].getValue(""));
         }
+        table.put("contextpath", this.contextpath);
+        table.put("workdir", this.workdir);
+        this.domain.setParameters(table);
+        
+        domain.setDefaultNamespace(configuration.getAttribute("default","cocoon"));
+        Configuration[] namespace = configuration.getChildren("namespace");
 
-        initialized = true;
+        for (int i = 0; i< namespace.length; i++) {
+            String name = namespace[i].getAttribute("name");
+            Configuration definition = namespace[i].getChild("definition");
+            Configuration config = namespace[i].getChild("configuration");
+            Configuration data = namespace[i].getChild("data");
+            
+            getLogger().info("Initializing namespace: " + name);
+            
+            domain.addNamespace(name,
+                                new SlideLoggerAdapter(getLogger().getChildLogger(name)),
+                                new SlideConfigurationAdapter(definition),
+                                new SlideConfigurationAdapter(config),
+                                new SlideConfigurationAdapter(data));
 
-        if (initialized) {
-            try {
-                domain.start();
-            } catch (Exception e) {
-                this.logger.error("Could not start domain", e);
-            }
         }
+        
+        domain.start();
     }
 
-    /**
-     * The dispose operation is called at the end of a service's lifecycle.
-     * This method will be called after Startable.stop() method (if implemented
-     * by service). Services use this method to release and destroy any
-     * resources that the service owns.
-     */
     public void dispose() {
-        if (initialized) {
-            try {
-                domain.stop();
-            } catch (Exception e) {
-                this.logger.error("Could not stop domain", e);
-            }
+        try {
+            domain.stop();
+        } catch (Exception e) {
+            getLogger().error("Could not stop domain", e);
         }
     }
 
@@ -274,16 +205,8 @@ Contextualizable, Disposable, Component, ThreadSafe  {
      * @return NamespaceAccessToken Access token to the namespace
      */
     public NamespaceAccessToken getDefaultNamespaceToken() {
-        // Initialization on demand
-        if ((domain==null) && ( !initialized)) {
-            try {
-                initialize();
-            } catch (Exception e) {
-                this.logger.error("Could not initialize Slide repository", e);
-            }
-        }
 
-        if (domain!=null) {
+        if (domain != null) {
             return this.domain.getNamespaceToken(this.domain.getDefaultNamespace());
         }
 
@@ -297,20 +220,12 @@ Contextualizable, Disposable, Component, ThreadSafe  {
      * @return NamespaceAccessToken Access token to the namespace
      */
     public NamespaceAccessToken getNamespaceToken(String namespaceName) {
-        // Initialization on demand
-        if ((domain==null) && ( !initialized)) {
-            try {
-                initialize();
-            } catch (Exception e) {
-                this.logger.error("Could not initialize Slide repository", e);
-            }
-        }
-
-        if (namespaceName==null) {
+        
+        if (namespaceName == null) {
             return getDefaultNamespaceToken();
         }
 
-        if (domain!=null) {
+        if (domain != null) {
             return this.domain.getNamespaceToken(namespaceName);
         }
 
