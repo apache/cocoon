@@ -17,7 +17,7 @@
      <p>The <code>flow</code> element defines a Flowscript interpreter for a sitemap. The <code>language</code> attribute specifies the target programming language. Currently the only supported language is <code>"javascript"</code>. Its embedded <code>script</code> elements allow you to specify the files that make up the flow for this sitemap. Each <code>script</code> element specifies the URI of a script that will be compiled and executed when this Sitemap is created. The <code>src</code> attribute specifies the URI of the script.</p>
       <source><![CDATA[
         <map:flow language="Language">
-           <map:script src="URI"/>+
+           <map:script src="URI"/>
         </map:flow>
       ]]></source>
     <p>Example:</p>
