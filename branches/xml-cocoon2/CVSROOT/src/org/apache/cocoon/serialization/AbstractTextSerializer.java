@@ -8,6 +8,8 @@
 
 package org.apache.cocoon.serialization;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
@@ -15,16 +17,21 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.util.TraxErrorHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-30 14:17:37 $
+ * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-05-04 11:02:14 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable, Cacheable {
 
@@ -37,6 +44,21 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
      * The <code>Properties</code> used by this serializer.
      */
     protected Properties format = new Properties();
+    
+    /**
+     * The prefixes of startPreficMapping() declarations for the coming element.
+     */
+    private List prefixList = new ArrayList();
+    
+    /**
+     * The URIs of startPrefixMapping() declarations for the coming element.
+     */
+    private List uriList = new ArrayList();
+    
+    /**
+     * True if there has been some startPrefixMapping() for the coming element.
+     */
+    private boolean hasMappings = false;
 
     /**
      * Helper for TransformerFactory.
@@ -127,6 +149,108 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
      * Recycle serializer by removing references
      */
     public void recycle() {
+        clearMappings();
         super.recycle();
+    }
+    
+    /**
+     *
+     */
+    public void startDocument()
+      throws SAXException {
+        // Cleanup
+        clearMappings();
+        super.startDocument();
+    }
+    
+    /**
+     * Add tracking of mappings to be able to add <code>xmlns:</code> attributes
+     * in <code>startElement()</code>.
+     */
+    public void startPrefixMapping(String prefix, String uri)
+      throws SAXException {
+        // Store the mappings to reconstitute xmlns:attributes
+        this.hasMappings = true;
+        this.prefixList.add(prefix);
+        this.uriList.add(uri);
+        
+        super.startPrefixMapping(prefix, uri);
+    }
+    
+    /**
+     * Ensure all namespace declarations are present as <code>xmlns:</code> attributes
+     * and add those needed before calling superclass. This is a workaround for a Xalan bug
+     * (at least in version 2.0.1) : <code>org.apache.xalan.serialize.SerializerToXML</code>
+     * ignores <code>start/endPrefixMapping()</code>.
+     */
+    public void startElement(String eltUri, String eltLocalName, String eltQName, Attributes attrs)
+      throws SAXException {
+      
+        if (this.hasMappings) {
+            // Add xmlns* attributes where needed
+            
+            // New Attributes if we have to add some.
+            AttributesImpl newAttrs = null;
+            
+            int mappingCount = this.prefixList.size();
+            int attrCount = attrs.getLength();
+            
+            for(int mapping = 0; mapping < mappingCount; mapping++) {
+                
+                // Build infos for this namespace
+                String uri = (String)this.uriList.get(mapping);
+                String prefix = (String)this.prefixList.get(mapping);
+                String qName = prefix.equals("") ? "xmlns" : ("xmlns:" + prefix);
+
+                // Search for the corresponding xmlns* attribute
+                boolean found = false;
+                find : for (int attr = 0; attr < attrCount; attr++) {
+                    if (qName.equals(attrs.getQName(attr))) {
+                        // Check if mapping and attribute URI match
+                        if (! uri.equals(attrs.getValue(attr))) {
+                            getLogger().error("AbstractTextSerializer:URI in prefix mapping and attribute do not match : '" + uri + "' - '" + attrs.getURI(attr) + "'");
+                            throw new SAXException("URI in prefix mapping and attribute do not match");
+                        }
+                        found = true;
+                        break find;
+                    }
+                }
+                
+                if (!found) {
+                    // Need to add this namespace
+                    if (newAttrs == null) {
+                        // Need to test if attrs is empty or we go into an infinite loop...
+                        // Well know SAX bug which I spent 3 hours to remind of :-(
+                        if (attrCount == 0)
+                            newAttrs = new AttributesImpl();
+                        else
+                            newAttrs = new AttributesImpl(attrs);
+                    }
+                    
+                    if (prefix.equals("")) {
+                        newAttrs.addAttribute(Constants.XML_NAMESPACE_URI, "xmlns", "xmlns", "CDATA", uri);
+                    } else {
+                        newAttrs.addAttribute(Constants.XML_NAMESPACE_URI, prefix, qName, "CDATA", uri);
+                    }
+                }
+            } // end for mapping
+            
+            // Cleanup for the next element
+            clearMappings();
+            
+            // Start element with new attributes, if any
+            super.startElement(eltUri, eltLocalName, eltQName, newAttrs == null ? attrs : newAttrs);
+        }
+        else {
+            // Normal job
+            super.startElement(eltUri, eltLocalName, eltQName, attrs);
+        }
+    }
+        
+    private void clearMappings()
+    {
+        this.hasMappings = false;
+        this.prefixList.clear();
+        this.uriList.clear();
     }
 }

@@ -38,7 +38,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.10 2001-04-30 14:17:42 bloritsch Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.11 2001-05-04 11:02:25 dims Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
@@ -333,11 +333,6 @@ public class ContentAggregator extends ContentHandlerWrapper
         String qname = name;
         if (!namespaceURI.equals("")) {
             this.documentHandler.startPrefixMapping(prefix, namespaceURI);
-            if (!prefix.equals("")) {
-                attrs.addAttribute("", prefix, "xmlns:" + prefix, "CDATA", namespaceURI);
-            } else {
-                attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
-            }
         }
         this.documentHandler.startElement(namespaceURI, name, name, attrs);
     }

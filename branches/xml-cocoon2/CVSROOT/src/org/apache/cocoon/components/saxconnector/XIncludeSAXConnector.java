@@ -40,7 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:15 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-05-04 11:02:05 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 
@@ -117,11 +117,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         String qname = name;
         if (!namespaceURI.equals("")) {
             super.startPrefixMapping(prefix, namespaceURI);
-            if (prefix!= null && !prefix.equals("")) {
-                attrs.addAttribute("", prefix, "xmlns:" + prefix, "CDATA", namespaceURI);
-            } else {
-                attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
-            }
         }
         super.startElement(namespaceURI, name, name, attrs);
     }
