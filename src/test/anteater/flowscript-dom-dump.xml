@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="flowscript-dom-dump" default="flowscript-dom-dump">
+
+    <!--
+      Check various ways of dumping DOM objects in Flowscript
+      (bugzilla 29381)
+    -->
+    <target name="flowscript-dom-dump">
+        <property name="baseUrl" value="${anteater.env.cocoon}/samples/test/flowscript-dom-dump"/>
+
+        <httpRequest href="${baseUrl}/dom-dump" description="Check dump without XSLT transform">
+            <match>
+                <header name="Content-type" value="text/xml"/>
+                <xpath select="//dump-without-star/root/child" pattern="childText"/>
+                <xpath select="//dump-with-star/root/child" pattern="childText"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/dom-dump-xslt" description="Check dump with XSLT transform">
+            <match>
+                <header name="Content-type" value="text/xml"/>
+                <xpath select="//dump-without-star/root/@test-transform" pattern="true"/>
+                <xpath select="//dump-without-star/root/child" pattern="childText"/>
+                <xpath select="//dump-with-star/root/@test-transform" pattern="true"/>
+                <xpath select="//dump-with-star/root/child" pattern="childText"/>
+            </match>
+        </httpRequest>
+
+    </target>
+
+</project>

@@ -2517,9 +2517,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
     }
 
+    /** dump a DOM document, using an IncludeXMLConsumer to filter out start/end document events */
     private void executeDOM(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext, Node node)
             throws SAXException {
-        DOMStreamer streamer = new DOMStreamer(consumer);
+        IncludeXMLConsumer includer = new IncludeXMLConsumer(consumer);
+        DOMStreamer streamer = new DOMStreamer(includer);
         streamer.stream(node);
    }
 
