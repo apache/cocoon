@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.layout;
 
 import java.util.Map;
 import java.util.Iterator;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
