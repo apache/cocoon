@@ -497,9 +497,9 @@ implements Source, XMLizable {
     /**
      * A simple SourceValidity protecting callers from resets.
      */
-    public static final class SitemapSourceValidity implements SourceValidity {
+    private static final class SitemapSourceValidity implements SourceValidity {
 
-        public SourceValidity nested_validity = null;
+        private SourceValidity nested_validity = null;
 
         private SitemapSourceValidity() {
             super();
