@@ -96,6 +96,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         try {
             datasource = (DataSourceComponent) dbselector.select(dsn);
             con = datasource.getConnection();
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(getQuery());
             statement.setString(1, this.source);
             ResultSet set = statement.executeQuery();
@@ -104,14 +105,27 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
             HttpServletResponse res = (HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);
             HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
 
-            if (this.modifiedSince(set, req, res) == false) {
-                res.setContentType(this.parameters.getParameter("content-type", null));
-                this.serialize(set.getBlob(this.parameters.getParameter("image", null)), res);
+            if (this.modifiedSince(set, req, res)) {
+                Blob object = set.getBlob(1);
+
+                if (object == null) {
+                    throw new ResourceNotFoundException("There is no image with that key");
+                }
+
+                res.setContentType(this.parameters.getParameter("content-type", ""));
+                this.serialize(object, res);
             }
+
+            con.commit();
         } catch (IOException ioe) {
             getLogger().debug("Assuming client reset stream");
+
+            if (con != null) try {con.rollback();} catch (SQLException se) {}
         } catch (Exception e) {
             getLogger().warn("Could not get resource from Database", e);
+
+            if (con != null) try {con.rollback();} catch (SQLException se) {}
+
             throw new ResourceNotFoundException("DatabaseReader error:", e);
         } finally {
             if (con != null) {
@@ -189,6 +203,10 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
      */
     public void serialize(Blob object, HttpServletResponse response)
     throws IOException, SQLException {
+        if (object == null) {
+            throw new SQLException("The Blob is empty!");
+        }
+
         InputStream is = object.getBinaryStream();
         OutputStream os = response.getOutputStream();
 
