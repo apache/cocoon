@@ -1,4 +1,4 @@
-/*-- $Id: XMLFormatter.java,v 1.4 2000-02-13 18:29:20 stefano Exp $ -- 
+/*-- $Id: XMLFormatter.java,v 1.5 2000-04-04 11:11:17 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,32 +58,26 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:20 $
+ * @version $Revision: 1.5 $ $Date: 2000-04-04 11:11:17 $
  */
 
-public class XMLFormatter extends AbstractFormatter implements Status {
+public class XMLFormatter extends AbstractFormatter {
 
-    private SerializerFactory factory;
+    SerializerFactory factory;
         
     public XMLFormatter () {
         this.factory = SerializerFactory.getSerializerFactory(Method.XML);
+        super.MIMEtype = "text/xml";
+        super.statusMessage = "XML Formatter";
+    }
+
+    public void init(Configurations conf) {
+        super.init(conf);
+        format.setMethod(Method.XML);
+        format.setOmitXMLDeclaration(false);
     }
 
     public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        OutputFormat format = super.getFormat(p);
-        format.setMethod(Method.XML);
-        format.setOmitXMLDeclaration(false);
-        format.setPreserveSpace(true);
-        format.setVersion("1.0");
-        Serializer serializer = this.factory.makeSerializer(writer, format);
-        serializer.asDOMSerializer().serialize(document);
-    }
-
-    public String getMIMEType() {
-        return "text/xml";
-    }
-    
-    public String getStatus() {
-        return "XML Formatter";
+        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
     }
 }

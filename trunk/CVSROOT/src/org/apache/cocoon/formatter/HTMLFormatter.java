@@ -1,4 +1,4 @@
-/*-- $Id: HTMLFormatter.java,v 1.4 2000-02-13 18:29:20 stefano Exp $ -- 
+/*-- $Id: HTMLFormatter.java,v 1.5 2000-04-04 11:11:16 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,34 +57,35 @@ import org.apache.xml.serialize.*;
 import org.apache.cocoon.framework.*;
 
 /**
+ * This formatter is used to serialize HTML content. The difference between
+ * this formatter and the XMLFormatter is that while the XML formatter doesn't
+ * have any semantic information about the document type being formatted,
+ * this class handles tags like <em>&lt;br/&gt;</em> and transforms them to
+ * HTML that non-XML-aware browsers can understand. Can be imagined as 
+ * an XHTML->HTML adaptor, so use the XML formatter to print XHTML, not this
+ * class.
+ *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:20 $
+ * @version $Revision: 1.5 $ $Date: 2000-04-04 11:11:16 $
  */
 
-public class HTMLFormatter extends AbstractFormatter implements Status {
+public class HTMLFormatter extends AbstractFormatter {
 
-    private SerializerFactory factory;
-        
+    SerializerFactory factory;
+
     public HTMLFormatter () {
         this.factory = SerializerFactory.getSerializerFactory(Method.HTML);
-    }
-
-    public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        OutputFormat format = super.getFormat(p);
+        super.MIMEtype = "text/html";
+        super.statusMessage = "HTML Formatter";
+    }       
+        
+    public void init(Configurations conf) {
+        super.init(conf);
         format.setMethod(Method.HTML);
         format.setOmitXMLDeclaration(true);
-        format.setPreserveSpace(true);
-        format.setDoctype("-//W3C//DTD HTML 4.0//EN", "http://www.w3.org/TR/REC-html40/strict.dtd");
-        format.setVersion("4.0");
-        Serializer serializer = factory.makeSerializer(writer, format);
-        serializer.asDOMSerializer().serialize(document);
-    }
-
-    public String getMIMEType() {
-        return "text/html";
-    }
-    
-    public String getStatus() {
-        return "HTML Formatter";
-    }
-}
+    }       
+        
+    public void format(Document document, Writer writer, Dictionary p) throws Exception {
+        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
+    }       
+}        

@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.2 2000-02-13 18:29:20 stefano Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.3 2000-04-04 11:11:16 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,18 +54,26 @@ import java.io.*;
 import java.util.*;
 import org.w3c.dom.*;
 import org.apache.fop.apps.*;
-import org.apache.cocoon.formatter.*;
 import org.apache.cocoon.framework.*;
 
 /**
- * This class wraps around FOP classes to perform XSL:FO to PDF formatting.
+ * This class wraps around FOP to perform XSL:FO to PDF formatting.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2000-02-13 18:29:20 $
+ * @version $Revision: 1.3 $ $Date: 2000-04-04 11:11:16 $
  */
 
-public class FO2PDFFormatter implements Formatter, Status {
+public class FO2PDFFormatter extends AbstractFormatter {
  
+    public FO2PDFFormatter() {
+        super.MIMEtype = "application/pdf";
+        super.statusMessage = org.apache.fop.apps.Version.getVersion() + " formatter";
+    }
+        
+    public void init(Configurations conf) {
+        super.init(conf);
+    }
+
     public void format(Document document, Writer writer, Dictionary parameters) throws Exception {
         Driver driver = new Driver();
         driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", org.apache.fop.apps.Version.getVersion());
@@ -75,13 +83,5 @@ public class FO2PDFFormatter implements Formatter, Status {
         driver.buildFOTree(document);
         driver.format();
         driver.render();
-    }
-    
-    public String getMIMEType() {
-        return "application/pdf";
-    }
-    
-    public String getStatus() {
-        return org.apache.fop.apps.Version.getVersion() + " formatter";
     }
 }

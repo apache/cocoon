@@ -1,4 +1,4 @@
-/*-- $Id: TextFormatter.java,v 1.4 2000-02-13 18:29:20 stefano Exp $ -- 
+/*-- $Id: TextFormatter.java,v 1.5 2000-04-04 11:11:16 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,32 +57,30 @@ import org.apache.xml.serialize.*;
 import org.apache.cocoon.framework.*;
 
 /**
+ * This formatter is used to serialize non-marked-up results, such as 
+ * plain text outputs, VRML, CSS, etc..
+ *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:20 $
+ * @version $Revision: 1.5 $ $Date: 2000-04-04 11:11:16 $
  */
 
-public class TextFormatter extends AbstractFormatter implements Status {
+public class TextFormatter extends AbstractFormatter {
 
-    private SerializerFactory factory;
+    SerializerFactory factory;
         
     public TextFormatter () {
         this.factory = SerializerFactory.getSerializerFactory(Method.TEXT);
+        super.MIMEtype = "text/plain";
+        super.statusMessage = "Text Formatter";
+    }
+
+    public void init(Configurations conf) {
+        super.init(conf);
+        format.setMethod(Method.TEXT);
+        format.setOmitXMLDeclaration(true);
     }
 
     public void format(Document document, Writer writer, Dictionary p) throws Exception {
-        OutputFormat format = super.getFormat(p);
-        format.setMethod(Method.TEXT);
-        format.setOmitXMLDeclaration(true);
-        format.setPreserveSpace(true);
-        Serializer serializer = this.factory.makeSerializer(writer, format);
-        serializer.asDOMSerializer().serialize(document);
-    }
-
-    public String getMIMEType() {
-        return "text/plain";
-    }
-    
-    public String getStatus() {
-        return "Text Formatter";
+        factory.makeSerializer(writer, format).asDOMSerializer().serialize(document);
     }
 }

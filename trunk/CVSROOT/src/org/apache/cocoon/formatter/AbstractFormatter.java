@@ -1,4 +1,4 @@
-/*-- $Id: AbstractFormatter.java,v 1.2 2000-02-13 18:29:20 stefano Exp $ -- 
+/*-- $Id: AbstractFormatter.java,v 1.3 2000-04-04 11:11:16 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -50,26 +50,114 @@
  */
 package org.apache.cocoon.formatter;
 
+import java.io.*;
 import java.util.*;
+import org.w3c.dom.*;
 import org.apache.xml.serialize.*;
+import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2000-02-13 18:29:20 $
+ * @version $Revision: 1.3 $ $Date: 2000-04-04 11:11:16 $
  */
 
-public abstract class AbstractFormatter implements Formatter {
+public abstract class AbstractFormatter implements Configurable, Formatter, Status {
+ 
+    protected String statusMessage = "Abstract Formatter";
+    protected String MIMEtype;
+    protected String encoding;
+    protected String doctypePublic;
+    protected String doctypeSystem;
+    protected String indent;
+    protected String lineWidth;
+    protected String preserveSpace;
+    protected OutputFormat format;
+        
+    public void init(Configurations conf) {
 
-    public OutputFormat getFormat(Dictionary p) {
-        String style = (String) p.get("style");
-        OutputFormat format = new OutputFormat();
-        if ((style != null) && (style.equals("compact"))) {
-            format.setIndenting(false);
-        } else {
-            format.setIndenting(true);
-            format.setIndent(1);
-            format.setLineWidth(120);
+        String mt = (String) conf.get("MIME-type");
+        if (mt != null) {
+            this.MIMEtype = mt;
         }
-        return format;
+
+        format = new OutputFormat();
+        format.setPreserveSpace(true);
+
+        encoding = (String) conf.get("encoding");
+        if (encoding != null) {
+            format.setEncoding(encoding);
+        }
+
+        doctypePublic = (String) conf.get("doctype-public");
+        doctypeSystem = (String) conf.get("doctype-system");
+        if (doctypeSystem != null) {
+            format.setDoctype(doctypePublic, doctypeSystem);
+        }
+
+        indent = (String) conf.get("indent");
+        if (indent != null) {
+            format.setIndenting(true);
+            format.setIndent(Integer.parseInt(indent));
+        }
+
+        preserveSpace = (String) conf.get("preserve-space");
+        if (preserveSpace!= null) {
+            format.setPreserveSpace(Boolean.getBoolean(preserveSpace));
+        }
+        
+        lineWidth = (String) conf.get("line-width");
+        if (lineWidth != null) {
+            format.setLineWidth(Integer.parseInt(lineWidth));
+        }        
     }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public String getMIMEType() {
+        return MIMEtype;
+    }
+    
+    public String getStatus() {
+        StringBuffer message = new StringBuffer();
+        message.append(statusMessage);
+        message.append("<br>");
+        if (MIMEtype != null) {
+            message.append("[ MIME type:  ");
+            message.append(MIMEtype);
+            message.append(" ]<br>");
+        }
+        if (encoding != null) {
+            message.append("[ Encoding:  ");
+            message.append(encoding);
+            message.append(" ]<br>");
+        }
+        if (doctypeSystem != null) {
+            message.append("[ Doctype:  ");
+            if (doctypePublic != null) {
+                message.append(doctypePublic);
+                message.append(" ");
+            }
+            message.append(doctypeSystem);
+            message.append(" ]<br>");
+        }
+        if (preserveSpace != null) {
+            message.append("[ Preserve Space:  ");
+            message.append(preserveSpace);
+            message.append(" ]<br>");
+        }
+        if (indent != null) {
+            message.append("[ Indent:  ");
+            message.append(indent);
+            message.append(" ]<br>");
+        }
+        if (lineWidth != null) {
+            message.append("[ Line Width:  ");
+            message.append(lineWidth);
+            message.append(" ]<br>");
+        }
+        message.append("<br>");
+        return message.toString();
+    }       
 }
