@@ -53,6 +53,7 @@ package org.apache.cocoon.bean;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.MIMEUtils;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -101,7 +102,8 @@ import java.util.List;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonBean.java,v 1.1 2003/03/09 00:08:42 pier Exp $
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
+ * @version CVS $Id: CocoonBean.java,v 1.2 2003/03/18 15:23:28 nicolaken Exp $
  */
 public class CocoonBean {
 
@@ -109,17 +111,19 @@ public class CocoonBean {
     protected static final String DEFAULT_ACCEPT = "text/html, */*";
 
     // User Supplied Parameters
-    private String contextDir = null;
+    private String contextDir = Constants.DEFAULT_CONTEXT_DIR;
     private String configFile = null;
     private String brokenLinkFileName = null;
-    private String workDir = null;
+    private String workDir = Constants.DEFAULT_WORK_DIR;
     private String logKit = null;
     private String logger = null;
     private String userAgent = DEFAULT_USER_AGENT;
     private String accept = DEFAULT_ACCEPT;
+    private String defaultFilename = Constants.INDEX_URI;
     private boolean followLinks = true;
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
+    private List classList = null;
 
     // Objects used alongside User Supplied Parameters
     private File context;
@@ -199,6 +203,9 @@ public class CocoonBean {
             File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
+
+            loadClasses(classList);
+
             cocoon = new Cocoon();
             cocoon.enableLogging(new LogKitLogger(log));
             cocoon.contextualize(appContext);
@@ -294,6 +301,25 @@ public class CocoonBean {
         super.finalize();
     }
 
+    protected void loadClasses(List classList) {
+        if (classList != null) {
+            for (Iterator i = classList.iterator();i.hasNext();) {
+                String className = (String) i.next();
+                try {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Trying to load class: " + className);
+                    }
+                    ClassUtils.loadClass(className).newInstance();
+                } catch (Exception e) {
+                    if (log.isWarnEnabled()) {
+                        log.warn("Could not force-load class: " + className, e);
+                    }
+                    // Do not throw an exception, because it is not a fatal error.
+                }
+            }
+        }
+    }
+
     //
     // GETTERS AND SETTERS FOR CONFIGURATION PROPERTIES
     //
@@ -347,6 +373,10 @@ public class CocoonBean {
     public void setAcceptOptions(String accept) {
         this.accept = accept;
     }
+ 
+    public void setDefaultFilename(String filename) {
+        defaultFilename = filename;
+    }
 
     public void setFollowLinks(boolean follow) {
         followLinks = follow;
@@ -366,6 +396,10 @@ public class CocoonBean {
 
     public void setVerbose(boolean verbose){
          this.verbose = verbose;
+    }
+    
+    public void setLoadedClasses(List classList) {
+        this.classList = classList;
     }
 
     public Logger getLogger(){
@@ -609,6 +643,9 @@ public class CocoonBean {
         // Process links
         final ArrayList absoluteLinks = new ArrayList();
         final HashMap translatedLinks = new HashMap();
+        final ArrayList gatheredLinks = new ArrayList();
+
+        if (followLinks && confirmExtension) {        
         final Iterator i = this.getLinks(deparameterizedURI, parameters).iterator();
 
         while (i.hasNext()) {
@@ -644,6 +681,7 @@ public class CocoonBean {
         }
 
         printInfo("["+translatedLinks.size()+"] ");
+      }
 
         try {
             // Process URI
@@ -651,7 +689,23 @@ public class CocoonBean {
             OutputStream output = dest.getOutputStream(file);
 
             try{
-                getPage(deparameterizedURI, parameters, translatedLinks, output);
+                getPage(deparameterizedURI, parameters, confirmExtension ? translatedLinks : null, gatheredLinks, output);
+
+                if (followLinks && !confirmExtension) {
+                    for (Iterator it=gatheredLinks.iterator();it.hasNext();){
+                        String link = (String) it.next();
+                        if (link.startsWith("?")) {
+                            link = pageURI + link;
+                        }
+                        String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, link));
+                        {
+                            final TreeMap p = new TreeMap();
+                            absoluteLink = NetUtils.parameterize(NetUtils.deparameterize(absoluteLink, p), p);
+                        }
+                        absoluteLinks.add(absoluteLink);
+                    }
+                }
+
                 printlnInfo(uri); // (can also output type returned by getPage)
             } catch(ProcessingException pe) {
                 printBroken(filename, DefaultNotifyingBuilder.getRootCause(pe).getMessage());
@@ -738,7 +792,7 @@ public class CocoonBean {
             log.debug("mangle(\"" + uri + "\")");
         }
         if (uri.charAt(uri.length() - 1) == '/') {
-            uri += Constants.INDEX_URI;
+            uri += defaultFilename;
         }
         uri = uri.replace('"', '\'');
         uri = uri.replace('?', '_');
@@ -778,12 +832,13 @@ public class CocoonBean {
      * @return a <code>String</code> value for the content
      * @exception Exception if an error occurs
      */
-    protected String getPage(String deparameterizedURI, Map parameters, Map links, OutputStream stream) throws Exception {
+    protected String getPage(String deparameterizedURI, Map parameters, Map links, List gatheredLinks, OutputStream stream) throws Exception {
         FileSavingEnvironment env = new FileSavingEnvironment(deparameterizedURI,
                                                               context,
                                                               attributes,
                                                               parameters,
                                                               links,
+                                                              gatheredLinks,
                                                               cliContext,
                                                               stream,
                                                               new LogKitLogger(log));
@@ -815,6 +870,7 @@ public class CocoonBean {
                                                               attributes,
                                                               parameters,
                                                               empty,
+                                                              null,
                                                               cliContext,
                                                               new NullOutputStream(),
                                                               new LogKitLogger(log));
@@ -935,3 +991,35 @@ public class CocoonBean {
         return buildClassPath.toString();
      }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

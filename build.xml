@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.20 2003/03/18 11:59:55 stefano Exp $:
+       CVS $Id: build.xml,v 1.21 2003/03/18 15:23:28 nicolaken Exp $:
 
 ============================================================================ -->
 
@@ -424,7 +424,7 @@
   <!-- Create docs -->
   <target name="docs" depends="prepare-docs, validate-xdocs, docs_done" unless="docs.notrequired" description="Builds the documentation">
     <mkdir dir="${build.docs}"/>
-
+<!--
     <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
       <arg value="-c."/>
       <arg value="-d../docs"/>
@@ -438,6 +438,17 @@
         <path refid="documentation.classpath"/>
       </classpath>
     </java>
+-->    
+
+    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
+      <arg value="-u${build.docs.loglevel}"/>
+      <arg value="-x../../../cli.xconf"/>
+      <arg value="index.html"/>
+      <classpath>
+        <path refid="documentation.classpath"/>
+      </classpath>
+    </java>
+
   </target>
 
   <!-- Prepares the printer-docs -->
