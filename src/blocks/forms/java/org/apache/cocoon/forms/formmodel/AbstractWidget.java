@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.18 2004/05/07 16:43:42 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.19 2004/05/07 22:31:05 joerg Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -173,7 +173,7 @@ public abstract class AbstractWidget implements Widget {
      * return the actual child-widget.
      * 
      * @param id of the child-widget
-     * @returns <code>null</code> if not overriden.
+     * @return <code>null</code> if not overriden.
      */
     protected Widget getChild(String id) {
     	return null;
