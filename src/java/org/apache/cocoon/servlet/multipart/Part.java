@@ -58,7 +58,7 @@ import java.util.Map;
  * This (abstract) class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: Part.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
+ * @version CVS $Id: Part.java,v 1.2 2003/04/17 20:11:24 haul Exp $
  */
 public abstract class Part {
 
@@ -80,6 +80,13 @@ public abstract class Part {
      * Returns the filename
      */
     public abstract String getFileName();
+    
+    /**
+     * Returns the original filename
+     */
+    public String getUploadName(){
+        return (String) headers.get("filename");
+    }
     
     /**
      * Returns the length of the file content
