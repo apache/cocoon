@@ -188,7 +188,9 @@ public abstract class AbstractProcessingPipeline
      * Informs pipeline we have come across a branch point
      * Default Behaviour is do nothing
      */
-    public void informBranchPoint() {}
+    public void informBranchPoint() {
+        // this can be overwritten in subclasses
+    }
 
     /**
      * Set the generator that will be used as the initial step in the pipeline.
@@ -387,28 +389,6 @@ public abstract class AbstractProcessingPipeline
                     this.serializerParam
                 );
             }
-
-            if (this.lastConsumer == null) {
-                // internal processing: text/xml
-                environment.setContentType("text/xml");
-            } else {
-                String mimeType = this.serializer.getMimeType();
-                if (mimeType != null) {
-                    // we have a mimeType from the component itself
-                    environment.setContentType (mimeType);
-                } else if (serializerMimeType != null) {
-                    // there was a mimeType specified in the sitemap pipeline
-                    environment.setContentType (serializerMimeType);
-                } else if (this.sitemapSerializerMimeType != null) {
-                    // use the mimeType specified in the sitemap component declaration
-                    environment.setContentType (this.sitemapSerializerMimeType);
-                } else {
-                    // No mimeType available
-                    String message = "Unable to determine MIME type for " +
-                        environment.getURIPrefix() + "/" + environment.getURI();
-                    throw new ProcessingException(message);
-                }
-            }
         } catch (SAXException e) {
             throw new ProcessingException(
                 "Could not setup pipeline.",
@@ -485,10 +465,9 @@ public abstract class AbstractProcessingPipeline
             }
 
             return this.processReader(environment);
-        } else {
-            this.connectPipeline(environment);
-            return this.processXMLPipeline(environment);
         }
+        this.connectPipeline(environment);
+        return this.processXMLPipeline(environment);
     }
 
     /**
@@ -524,6 +503,8 @@ public abstract class AbstractProcessingPipeline
     protected boolean processXMLPipeline(Environment environment)
     throws ProcessingException {
 
+        this.setMimeTypeForSerializer(environment);
+        
         try {
             if (this.serializer != this.lastConsumer) {
                 // internal processing
@@ -560,16 +541,7 @@ public abstract class AbstractProcessingPipeline
     protected void setupReader(Environment environment)
     throws ProcessingException {
         try {
-            String mimeType;
             this.reader.setup(environment,environment.getObjectModel(),readerSource,readerParam);
-            mimeType = this.reader.getMimeType();
-            if ( mimeType != null ) {
-                environment.setContentType(mimeType);
-            } else if ( readerMimeType != null ) {
-                environment.setContentType(this.readerMimeType);
-            } else {
-                environment.setContentType(this.sitemapReaderMimeType);
-            }
             // set the expires parameter on the pipeline if the reader is configured with one
             if (readerParam.isParameter("expires")) {
 	            // should this checking be done somewhere else??
@@ -584,12 +556,55 @@ public abstract class AbstractProcessingPipeline
         }
     }
 
+    /**
+     * Set the mime-type for a reader
+     * @param environment The current environment
+     */
+    protected void setMimeTypeForReader(Environment environment) {
+        String mimeType = this.reader.getMimeType();
+        if ( mimeType != null ) {
+            environment.setContentType(mimeType);
+        } else if ( readerMimeType != null ) {
+            environment.setContentType(this.readerMimeType);
+        } else {
+            environment.setContentType(this.sitemapReaderMimeType);
+        }
+    }
+    
+    /**
+     * Set the mime-type for a serializer
+     * @param environment The current environment
+     */
+    protected void setMimeTypeForSerializer(Environment environment) 
+    throws ProcessingException {
+        if (this.lastConsumer == null) {
+            // internal processing: text/xml
+            environment.setContentType("text/xml");
+        } else {
+            String mimeType = this.serializer.getMimeType();
+            if (mimeType != null) {
+                // we have a mimeType from the component itself
+                environment.setContentType (mimeType);
+            } else if (serializerMimeType != null) {
+                // there was a mimeType specified in the sitemap pipeline
+                environment.setContentType (serializerMimeType);
+            } else if (this.sitemapSerializerMimeType != null) {
+                // use the mimeType specified in the sitemap component declaration
+                environment.setContentType (this.sitemapSerializerMimeType);
+            } else {
+                // No mimeType available
+                String message = "Unable to determine MIME type for " +
+                    environment.getURIPrefix() + "/" + environment.getURI();
+                throw new ProcessingException(message);
+            }
+        }
+    }
+
     protected boolean checkIfModified(Environment environment,
                                         long lastModified)
     throws ProcessingException {
         // has the read resource been modified?
         if(!environment.isResponseModified(lastModified)) {
-
             // environment supports this, so we are finished
             environment.setResponseIsNotModified();
             return true;
@@ -604,6 +619,7 @@ public abstract class AbstractProcessingPipeline
     protected boolean processReader(Environment environment)
     throws ProcessingException {
         try {
+            this.setMimeTypeForReader(environment);
             if (this.reader.shouldSetContentLength()) {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 this.reader.setOutputStream(os);
@@ -674,10 +690,9 @@ public abstract class AbstractProcessingPipeline
         this.lastConsumer = consumer;
         if ( this.reader != null ) {
             throw new ProcessingException("Streaming of an internal pipeline is not possible with a reader.");
-        } else {
-            this.connectPipeline(environment);
-            return this.processXMLPipeline(environment);
         }
+        this.connectPipeline(environment);
+        return this.processXMLPipeline(environment);
     }
 
     /**

@@ -41,7 +41,7 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.6 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -50,7 +50,7 @@ public class CachingPointProcessingPipeline
     protected ArrayList xmlSerializerArray = new ArrayList();
     protected boolean nextIsCachePoint = false;
     protected String autoCachingPointSwitch;
-    protected  boolean autoCachingPoint = true;
+    protected boolean autoCachingPoint = true;
 
 
    /**
@@ -79,9 +79,9 @@ public class CachingPointProcessingPipeline
         }
     }
 
-   /**
-    * Set the generator.
-    */
+    /**
+     * Set the generator.
+     */
     public void setGenerator (String role, String source, Parameters param, Parameters hintParam) 
     throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
@@ -94,9 +94,7 @@ public class CachingPointProcessingPipeline
             if (this.getLogger().isDebugEnabled()) {
                 getLogger().debug("generator caching-point pipeline-hint is set to: " + pipelinehint);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             if (this.getLogger().isWarnEnabled()) {
                 getLogger().warn("caching-point hint Exception, pipeline-hint ignored: " + ex);
             }
@@ -125,9 +123,7 @@ public class CachingPointProcessingPipeline
             if (this.getLogger().isDebugEnabled()) {
                 getLogger().debug("transformer caching-point pipeline-hint is set to: " + pipelinehint);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             if (this.getLogger().isWarnEnabled()) {
                 getLogger().warn("caching-point hint Exception, pipeline-hint ignored: " + ex);
             }
@@ -155,16 +151,17 @@ public class CachingPointProcessingPipeline
      */
     public void informBranchPoint() {
 
-        if (this.generator == null)
-        return;
-
-    if (!this.autoCachingPoint)
-        return;
+        if (this.generator == null) {
+            return;
+        }
+        if (!this.autoCachingPoint) {
+            return;
+        }   
 
         this.nextIsCachePoint = true;
-         if (this.getLogger().isDebugEnabled()) {
-           this.getLogger().debug("Informed Pipeline of branch point");
-         }
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Informed Pipeline of branch point");
+        }
     }
 
     /**
@@ -180,6 +177,7 @@ public class CachingPointProcessingPipeline
                 }
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           ((CachingOutputStream)os).getContent());
+                response.setContentType(environment.getContentType());
                 this.cache.store(this.toCacheKey.copy(),
                                  response);
                 //
