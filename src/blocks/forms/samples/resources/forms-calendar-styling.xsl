@@ -70,7 +70,8 @@
     <!-- calendar popup -->
     <a href="#" name="{$id}" id="{$id}"
        onClick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
-      <img src="{$resources-uri}/cal.gif" border="0" alt="Calendar"/>
+      <!-- TODO: i18n key for @alt -->
+      <img src="{$resources-uri}/cal.gif" alt="Calendar"/>
     </a>
 
     <!-- common stuff -->

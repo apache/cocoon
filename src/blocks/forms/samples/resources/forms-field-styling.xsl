@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.12 2004/06/29 19:44:25 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.13 2004/06/30 18:51:48 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -307,7 +307,9 @@
       <xsl:value-of select="@name"/>
       <xsl:if test="not(@name)">continuation-id</xsl:if>
     </xsl:variable>
-    <input name="{$name}" type="hidden" value="{.}"/>
+    <div style="display: none;">
+      <input name="{$name}" type="hidden" value="{.}"/>
+    </div>
   </xsl:template>
 
   <!--+

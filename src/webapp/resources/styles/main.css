@@ -72,3 +72,10 @@ span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
     margin-top: 0.2em;
 }
 
+div.resources {
+    text-align: right;
+}
+
+div.resources a {
+    margin: 5px;
+}
