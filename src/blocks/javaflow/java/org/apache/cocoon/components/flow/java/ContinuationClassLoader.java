@@ -72,56 +72,40 @@ import org.apache.bcel.verifier.structurals.UninitializedObjectType;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.4 2004/04/04 06:35:08 antonio Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.5 2004/04/06 07:31:34 antonio Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
-    private static final String CONTINUATION_CLASS =
-            "org.apache.cocoon.components.flow.java.Continuation";
+    private static final String CONTINUATION_CLASS = Continuation.class.getName();
+    private static final ObjectType CONTINUATION_TYPE = new ObjectType(CONTINUATION_CLASS);
 
-    private static final ObjectType CONTINUATION_TYPE = 
-            new ObjectType(CONTINUATION_CLASS);
+    private static final String STACK_CLASS = ContinuationStack.class.getName();
+    private static final ObjectType STACK_TYPE = new ObjectType(STACK_CLASS);
 
-    private static final String STACK_CLASS =
-            "org.apache.cocoon.components.flow.java.ContinuationStack";
+    private static final String CONTINUABLE_CLASS = Continuable.class.getName();
 
-    private static final ObjectType STACK_TYPE =
-            new ObjectType(STACK_CLASS);
-
-    private static final String CONTINUABLE_CLASS =
-            "org.apache.cocoon.components.flow.java.Continuable";
+    private static final String CONTINUATIONCAPABLE_CLASS = ContinuationCapable.class.getName();
 
     private static final String CONTINUATION_METHOD = "currentContinuation";
-
     private static final String STACK_METHOD = "getStack";
-
     private static final String POP_METHOD = "pop";
-
     private static final String PUSH_METHOD = "push";
-
     private static final String RESTORING_METHOD = "isRestoring";
-
     private static final String CAPURING_METHOD = "isCapturing";
 
     private static boolean currentMethodStatic;
 
     public ContinuationClassLoader(ClassLoader parent) {
         super(parent);
-
         Repository.setRepository(new ClassLoaderRepository(parent));
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
-
-        //System.out.println("load class "+name);
-
-        // this finds also classes, which are already transformed, 
-        // via findLoadedClass
+        // this finds also classes, which are already transformed, via findLoadedClass
         Class c = super.loadClass(name, resolve);
 
-        // transform class if class is continuable 
-        // and not continuation capable
+        // transform class if class is continuable and not continuation capable
         if ((Continuable.class.isAssignableFrom(c)) && 
             (!ContinuationCapable.class.isAssignableFrom(c)) && 
             (!c.isInterface())) {
@@ -130,37 +114,22 @@ public class ContinuationClassLoader extends ClassLoader {
             byte data[] = transform(clazz);
             c = defineClass(name, data, 0, data.length);
         }
-
-        if (c == null)
+        if (c == null) {
             throw new ClassNotFoundException(name);
-
-        if (resolve)
+        }
+        if (resolve) {
             resolveClass(c);
-
+        }
         return c;
     }
 
     private byte[] transform(JavaClass javaclazz) throws ClassNotFoundException {
-
         // make all methods of java class continuable
-        System.out.println("transforming flow class " + javaclazz.getClassName());
-
-        /*try {
-            FileOutputStream fos = new FileOutputStream(javaclazz.getClassName() + ".orig.java");
-            JasminVisitor v = new JasminVisitor(javaclazz, fos);
-            v.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
         ClassGen clazz = new ClassGen(javaclazz);
-
         ConstantPoolGen cp = clazz.getConstantPool();
-
         // obsolete, but neccesary to execute the InvokeContext
         InstConstraintVisitor icv = new InstConstraintVisitor();
         icv.setConstantPoolGen(cp);
-
         // vistor to build the frame information
         ExecutionVisitor ev = new ExecutionVisitor();
         ev.setConstantPoolGen(cp);
@@ -170,68 +139,30 @@ public class ContinuationClassLoader extends ClassLoader {
             MethodGen method = new MethodGen(methods[i], clazz.getClassName(), cp);
 
             currentMethodStatic = methods[i].isStatic();
-
             if (isValid(method)) {
-
                 // analyse the code of the method to create the frame
                 // information about every instruction
-                //System.out.println("analyse " + methods[i].getName());
                 ControlFlowGraph cfg = new ControlFlowGraph(method);
                 analyse(clazz, method, cfg, icv, ev);
-
                 // add intercepting code 
-                //System.out.println("rewriting " + methods[i].getName());
                 rewrite(method, cfg);
-
                 // make last optional check for consistency
-                //System.out.println("check " + methods[i].getName());
-
-                /*try {
-                    cfg = new ControlFlowGraph(method);
-                    analyse(clazz, method, cfg, icv, ev);
-                    //printFrameInfo(method, cfg);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new ClassNotFoundException("Rewritten method is not consistent", e);
-                }*/
-
-                //methods[i] = method.getMethod();
                 clazz.replaceMethod(methods[i], method.getMethod());
             }
         }
-
-        clazz.addInterface("org.apache.cocoon.components.flow.java.ContinuationCapable");
-
-        /*try {
-            FileOutputStream fos = new FileOutputStream(clazz.getClassName() + ".rewritten.java");
-            JasminVisitor v = new JasminVisitor(clazz.getJavaClass(), fos);
-            v.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
-
-        /*byte[] changed = clazz.getJavaClass().getBytes();
-        try {
-            java.io.FileOutputStream out = new java.io.FileOutputStream(clazz.getClassName() + ".rewritten");
-            out.write(changed);
-            out.flush();
-            out.close();
-        } catch (java.io.IOException ioe) {
-            ioe.printStackTrace();
-        }*/
-
+        clazz.addInterface(CONTINUATIONCAPABLE_CLASS);
         return clazz.getJavaClass().getBytes();
     }
 
     private boolean isValid(MethodGen m) {
-        if (m.getName().equals(Constants.CONSTRUCTOR_NAME))
+        if (m.getName().equals(Constants.CONSTRUCTOR_NAME)
+                || m.getName().equals(Constants.STATIC_INITIALIZER_NAME)
+                || m.isNative()
+                || m.isAbstract()) {
             return false;
-        if (m.getName().equals(Constants.STATIC_INITIALIZER_NAME))
-            return false;
-        if (m.isNative() || m.isAbstract())
-            return false;
-        return true;
+        } else {
+            return true;
+        }
     }
 
     private void analyse(ClassGen clazz, MethodGen method, ControlFlowGraph cfg,
@@ -263,7 +194,6 @@ public class ContinuationClassLoader extends ClassLoader {
                 vanillaFrame.getLocals().set(twoslotoffset + j + (method.isStatic() ? 0 : 1), Type.UNKNOWN);
             }
         }
-
         icv.setMethodGen(method);
 
         Vector ics = new Vector(); // Type: InstructionContext
@@ -278,19 +208,18 @@ public class ContinuationClassLoader extends ClassLoader {
         ecs.add(new ArrayList());
 
         while (!ics.isEmpty()) {
+            InstructionContext u = (InstructionContext)ics.remove(0);
+            ArrayList ec = (ArrayList)ecs.remove(0);
 
-            InstructionContext u = (InstructionContext) ics.remove(0);
-            ArrayList ec = (ArrayList) ecs.remove(0);
-
-            ArrayList oldchain = (ArrayList) (ec.clone());
-            ArrayList newchain = (ArrayList) (ec.clone());
+            ArrayList oldchain = (ArrayList)(ec.clone());
+            ArrayList newchain = (ArrayList)(ec.clone());
             newchain.add(u);
 
             if ((u.getInstruction().getInstruction()) instanceof RET) {
                 // We can only follow _one_ successor, the one after the
                 // JSR that was recently executed.
-                RET ret = (RET) (u.getInstruction().getInstruction());
-                ReturnaddressType t = (ReturnaddressType) u.getOutFrame(oldchain).getLocals().get(ret.getIndex());
+                RET ret = (RET)u.getInstruction().getInstruction();
+                ReturnaddressType t = (ReturnaddressType)u.getOutFrame(oldchain).getLocals().get(ret.getIndex());
                 InstructionContext theSuccessor = cfg.contextOf(t.getTarget());
 
                 if (theSuccessor.execute(u.getOutFrame(oldchain), newchain, icv, ev)) {
@@ -302,14 +231,12 @@ public class ContinuationClassLoader extends ClassLoader {
                 InstructionContext[] succs = u.getSuccessors();
                 for (int s = 0; s < succs.length; s++) {
                     InstructionContext v = succs[s];
-
                     if (v.execute(u.getOutFrame(oldchain), newchain, icv, ev)) {
                         ics.add(v);
                         ecs.add(newchain.clone());
                     }
                 }
             }
-
             // Exception Handlers. Add them to the queue of successors.
             ExceptionHandler[] exc_hds = u.getExceptionHandlers();
             for (int s = 0; s < exc_hds.length; s++) {
@@ -335,37 +262,8 @@ public class ContinuationClassLoader extends ClassLoader {
         }
     }
 
-//    private void printFrameInfo(MethodGen method, ControlFlowGraph cfg) {
-//        InstructionHandle handle = method.getInstructionList().getStart();
-//        do {
-//            System.out.println(handle);
-//            try {
-//                InstructionContext context = cfg.contextOf(handle);
-//
-//                Frame f = context.getOutFrame(new ArrayList());
-//
-//                LocalVariables lvs = f.getLocals();
-//                System.out.print("Locales: ");
-//                for (int i = 0; i < lvs.maxLocals(); i++) {
-//                    System.out.print(lvs.get(i) + ",");
-//                }
-//
-//                OperandStack os = f.getStack();
-//                System.out.print(" Stack: ");
-//                for (int i = 0; i < os.size(); i++) {
-//                    System.out.print(os.peek(i) + ",");
-//                }
-//                System.out.println();
-//            }
-//            catch (AssertionViolatedException ave) {
-//                System.out.println("no frame information");
-//            }
-//        }
-//        while ((handle = handle.getNext()) != null);
-//    }
-
-    private void rewrite(MethodGen method, ControlFlowGraph cfg) throws ClassNotFoundException {
-
+    private void rewrite(MethodGen method, ControlFlowGraph cfg)
+            throws ClassNotFoundException {
         InstructionFactory insFactory = new InstructionFactory(method.getConstantPool());
         Vector invokeIns = new Vector();
         int count = 0;
@@ -381,91 +279,86 @@ public class ContinuationClassLoader extends ClassLoader {
             try {
                 context = cfg.contextOf(ins);
                 frame = context.getOutFrame(new ArrayList());
-            } catch (AssertionViolatedException ave) {}
+            } catch (AssertionViolatedException ave) {
+                // empty
+            }
+            if (frame != null) {
+                if (rewriteable(method, ins)) {
+                    // Add frame saver and restorer for the current breakpoint
 
-
-            if ((frame!=null) && (rewriteable(method, ins))) {
-                // Add frame saver and restorer for the current breakpoint
-              
-                // determine type of object for the method invocation
-                InvokeInstruction invoke = (InvokeInstruction)ins.getInstruction();
-                Type[] arguments = invoke.getArgumentTypes(method.getConstantPool());  
-                ObjectType objecttype = null;
-                if (!(invoke instanceof INVOKESTATIC)) {
-                    objecttype = (ObjectType)context.getInFrame().getStack().peek(arguments.length);
-                }
-                 
-                InstructionList rList = restoreFrame(method, ins, insFactory, frame, objecttype);
-                insList.append(ins, saveFrame(method, ins, count++, insFactory, frame));
-                invokeIns.addElement(rList.getStart());
-                restorer.append(rList);
-            } 
-
-            // remove all new's
-            if ((frame != null) && (ins.getInstruction().getOpcode() == Constants.NEW)) {
-                try {
-                    // remove additional dup's
-                    while ((next != null) && (next.getInstruction().getOpcode() == Constants.DUP)) {
-                        context = cfg.contextOf(next);
-                        frame = context.getOutFrame(new ArrayList());
-                        InstructionHandle newnext = next.getNext();
-                        insList.delete(next);
-                        next = newnext;
+                    // determine type of object for the method invocation
+                    InvokeInstruction invoke = (InvokeInstruction)ins.getInstruction();
+                    Type[] arguments = invoke.getArgumentTypes(method.getConstantPool());  
+                    ObjectType objecttype = null;
+                    if (!(invoke instanceof INVOKESTATIC)) {
+                        objecttype = (ObjectType)context.getInFrame().getStack().peek(arguments.length);
                     }
-
-                    InstructionTargeter[] targeter = ins.getTargeters();
-                    if (targeter != null) {
-                        InstructionHandle newnext = ins.getNext();
-                        for (int i = 0; i < targeter.length; i++)
-                            targeter[i].updateTarget(ins, newnext);
+                    InstructionList rList = restoreFrame(method, ins, insFactory, frame, objecttype);
+                    insList.append(ins, saveFrame(method, ins, count++, insFactory, frame));
+                    invokeIns.addElement(rList.getStart());
+                    restorer.append(rList);
+                }     
+                // remove all new's                
+                if (ins.getInstruction().getOpcode() == Constants.NEW) {
+                    try {
+                        // remove additional dup's
+                        while (next != null && next.getInstruction().getOpcode() == Constants.DUP) {
+                            context = cfg.contextOf(next);
+                            frame = context.getOutFrame(new ArrayList());
+                            InstructionHandle newnext = next.getNext();
+                            insList.delete(next);
+                            next = newnext;
+                        }
+                        InstructionTargeter[] targeter = ins.getTargeters();
+                        if (targeter != null) {
+                            InstructionHandle newnext = ins.getNext();
+                            for (int i = 0; i < targeter.length; i++) {
+                                targeter[i].updateTarget(ins, newnext);
+                            }
+                        }
+                        insList.delete(ins);
+                    } catch (TargetLostException tle) {
+                        throw new ClassNotFoundException(tle.getMessage(), tle);
                     }
-                    insList.delete(ins);
-                } catch (TargetLostException tle) {
-                    throw new ClassNotFoundException(tle.getMessage(), tle);
-                }
-            } else if ((frame != null) && (ins.getInstruction().getOpcode() == Constants.INVOKESPECIAL)) {
-                // duplicate stack before invokespecial to insert uninitialized object
-                frame = context.getInFrame();
-
-                InvokeInstruction invoke = (InvokeInstruction)ins.getInstruction();
-                Type[] arguments = invoke.getArgumentTypes(method.getConstantPool());
-
-                OperandStack os = frame.getStack();
-                Type type = os.peek(arguments.length);
-                if (type instanceof UninitializedObjectType) {
-                    ObjectType objecttype = ((UninitializedObjectType) type).getInitialized();
-
-                    InstructionList duplicator = duplicateStack(method, invoke, objecttype);
+                } else if (ins.getInstruction().getOpcode() == Constants.INVOKESPECIAL) {
+                    // duplicate stack before invokespecial to insert uninitialized object
+                    frame = context.getInFrame();
+                    InvokeInstruction invoke = (InvokeInstruction)ins.getInstruction();
+                    Type[] arguments = invoke.getArgumentTypes(method.getConstantPool());
     
-                    InstructionTargeter[] targeter = ins.getTargeters();
-                    if (targeter!=null) {
-                        InstructionHandle newnext = duplicator.getStart();
-                        for(int i=0; i<targeter.length; i++)
-                            targeter[i].updateTarget(ins, newnext);
-                    }
+                    OperandStack os = frame.getStack();
+                    Type type = os.peek(arguments.length);
+                    if (type instanceof UninitializedObjectType) {
+                        ObjectType objecttype = ((UninitializedObjectType) type).getInitialized();
+                        InstructionList duplicator = duplicateStack(method, invoke, objecttype);
+                        InstructionTargeter[] targeter = ins.getTargeters();
 
-                    insList.insert(ins, duplicator);
+                        if (targeter!=null) {
+                            InstructionHandle newnext = duplicator.getStart();
+                            for(int i=0; i < targeter.length; i++) {
+                                targeter[i].updateTarget(ins, newnext);
+                            }
+                        }
+                        insList.insert(ins, duplicator);
+                    }
                 }
             }
-
             ins = next;
         }
         InstructionHandle firstIns = insList.getStart();
         if (count > 0) {
             InstructionHandle[] tableTargets = new InstructionHandle[count];
             int[] match = new int[count];
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 match[i] = i;
+            }
             invokeIns.copyInto(tableTargets);
-
             insList.insert(restorer);
 
             // select frame restorer
             insList.insert(new TABLESWITCH(match, tableTargets, firstIns));
             insList.insert(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.INT), Type.INT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             insList.insert(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
-
-            //insList.insert(insFactory.createPrintln("--- restoring invocation "+method)); 
 
             // test if the continuation should be restored
             insList.insert(new IFEQ(firstIns));
@@ -500,53 +393,51 @@ public class ContinuationClassLoader extends ClassLoader {
         method.setMaxStack(method.getMaxStack() + 2);
     }
 
-    private InstructionList duplicateStack(MethodGen method, InvokeInstruction invoke, ObjectType objecttype) throws ClassNotFoundException {
-
+    private InstructionList duplicateStack(MethodGen method, InvokeInstruction invoke,
+            ObjectType objecttype) throws ClassNotFoundException {
         // reconstruction of an uninitialed object to call the constructor.
         InstructionFactory insFactory = new InstructionFactory(method.getConstantPool());
         InstructionList insList = new InstructionList();
 
         Type[] arguments = invoke.getArgumentTypes(method.getConstantPool());
         // pop all arguments for the constructor from the stack
-        for (int i = arguments.length-1; i>=0; i--) {
+        for (int i = arguments.length - 1; i >= 0; i--) {
             Type type = arguments[i];
+            insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+            insList.append(new SWAP());
             if (type instanceof BasicType) {
-                if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
+                if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
-                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
-                insList.append(new SWAP());
+                }
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
             } else if (type instanceof ReferenceType) {
-                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
-                insList.append(new SWAP());
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
         }
-        
         // create uninitialzed object
         insList.append(insFactory.createNew(objecttype));
         insList.append(InstructionFactory.createDup(objecttype.getSize()));
-          
         // return the arguments into the stack
-        for (int i = 0; i<arguments.length; i++) {
+        for (int i = 0; i < arguments.length; i++) {
             Type type = arguments[i];
+            insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
             if (type instanceof BasicType) {
-                if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
+                if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
-                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                }
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             } else if (type instanceof ReferenceType) {
-                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.OBJECT), Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-                if (!type.equals(Type.OBJECT))
+                if (!type.equals(Type.OBJECT)) {
                     insList.append(insFactory.createCast(Type.OBJECT, type));
+                }
             }
         }
         return insList;
     }
 
-    private boolean rewriteable(MethodGen method, InstructionHandle handle) throws ClassNotFoundException {
-
+    private boolean rewriteable(MethodGen method, InstructionHandle handle)
+            throws ClassNotFoundException {
         // check in the invocation can be a breakpoint.
         int opcode = handle.getInstruction().getOpcode();
         boolean invokeSpecialSuper = false;
@@ -556,10 +447,10 @@ public class ContinuationClassLoader extends ClassLoader {
             invokeSpecialSuper = !mName.equals(Constants.CONSTRUCTOR_NAME);
         }
 
-        if ((opcode == Constants.INVOKEVIRTUAL) ||
-            (opcode == Constants.INVOKESTATIC) ||
-            (opcode == Constants.INVOKEINTERFACE) ||
-            (invokeSpecialSuper)) {
+        if (opcode == Constants.INVOKEVIRTUAL ||
+            opcode == Constants.INVOKESTATIC ||
+            opcode == Constants.INVOKEINTERFACE ||
+            invokeSpecialSuper) {
 
             int index = ((InvokeInstruction) handle.getInstruction()).getIndex();
             String classname = getObjectType(method.getConstantPool().getConstantPool(), index).getClassName();
@@ -578,19 +469,19 @@ public class ContinuationClassLoader extends ClassLoader {
         // Remove needless return type from stack
         InvokeInstruction inv = (InvokeInstruction) handle.getInstruction();
         Type returnType = getReturnType(method.getConstantPool().getConstantPool(), inv.getIndex());
-        if (returnType.getSize() > 0)
+        if (returnType.getSize() > 0) {
             insList.insert(InstructionFactory.createPop(returnType.getSize()));
+        }
         boolean skipFirst = returnType.getSize() > 0;
-
-        //insList.append(insFactory.createPrintln("save stack"));
 
         // save stack
         OperandStack os = frame.getStack();
         for (int i = skipFirst ? 1 : 0; i < os.size(); i++) {
             Type type = os.peek(i);
             if (type instanceof BasicType) {
-                if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
+                if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
+                }
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(new SWAP()); // TODO: check for types with two words on stack
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
@@ -605,22 +496,14 @@ public class ContinuationClassLoader extends ClassLoader {
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
         }
-
-        //insList.insert(insFactory.createPrintln("--- capturing invocation "+method));
-
         // add isCapturing test
         insList.insert(new IFEQ(handle.getNext()));
-
         // test if the continuation should be captured after the invocation
         insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, CAPURING_METHOD, Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
         insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
-
         // test if continuation exists
         insList.insert(new IFNULL(handle.getNext()));
         insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
-  
-        //insList.append(insFactory.createPrintln("save local variables"));
-
         // save local variables
         LocalVariables lvs = frame.getLocals();
         for (int i = 0; i < lvs.maxLocals(); i++) {
@@ -628,7 +511,7 @@ public class ContinuationClassLoader extends ClassLoader {
             if (type instanceof BasicType) {
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(InstructionFactory.createLoad(type, i));
-                if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
+                if (type.getSize() < 2 && !type.equals(Type.FLOAT))
                     type = Type.INT;
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
             } else if (type == null) {
@@ -647,44 +530,37 @@ public class ContinuationClassLoader extends ClassLoader {
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
         }
-
         // save programcounter
         insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
         insList.append(new PUSH(method.getConstantPool(), pc));
         insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.INT), Type.VOID, new Type[]{Type.INT}, Constants.INVOKEVIRTUAL));
-
         // return NULL result
         insList.append(InstructionFactory.createNull(method.getReturnType()));
         insList.append(InstructionFactory.createReturn(method.getReturnType()));
-
         return insList;
     }
 
-    private InstructionList restoreFrame(MethodGen method, InstructionHandle handle, InstructionFactory insFactory, Frame frame, ObjectType objecttype) {
+    private InstructionList restoreFrame(MethodGen method, InstructionHandle handle,
+            InstructionFactory insFactory, Frame frame, ObjectType objecttype) {
         InstructionList insList = new InstructionList();
-
-        //insList.append(insFactory.createPrintln("restore local variables"));
-
         // restore local variables
         LocalVariables lvs = frame.getLocals();
-        for (int i = lvs.maxLocals()-1; i >= 0; i--) {
+        for (int i = lvs.maxLocals() - 1; i >= 0; i--) {
             Type type = lvs.get(i);
             if (type instanceof BasicType) {
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
-                if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
+                if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
+                }
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
                 insList.append(InstructionFactory.createStore(type, i));
-            }
-            else if (type == null) {
+            } else if (type == null) {
                 insList.append(new ACONST_NULL());
                 insList.append(InstructionFactory.createStore(new ObjectType("<null object>"), i));
-            }
-            else if (type instanceof UninitializedObjectType) {
+            } else if (type instanceof UninitializedObjectType) {
                 // No uninitilaized objects should be found
                 // in the local variables.
-            }
-            else if (type instanceof ReferenceType) {
+            } else if (type instanceof ReferenceType) {
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.OBJECT), Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
                 if (!type.equals(Type.OBJECT) && (!type.equals(Type.NULL))) {
@@ -698,15 +574,14 @@ public class ContinuationClassLoader extends ClassLoader {
         Type returnType = getReturnType(method.getConstantPool().getConstantPool(), inv.getIndex());
         boolean skipFirst = returnType.getSize() > 0;
 
-        //insList.append(insFactory.createPrintln("restore stack"));
-
         // restore stack
         OperandStack os = frame.getStack();
         for (int i = os.size() - 1; i >= (skipFirst ? 1 : 0); i--) {
             Type type = os.peek(i);
             if (type instanceof BasicType) {
-                if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
+                if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
+                }
                 insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             } else if (type == null) {
@@ -721,20 +596,17 @@ public class ContinuationClassLoader extends ClassLoader {
                     insList.append(insFactory.createCast(Type.OBJECT, type));
             }
         }
-
         // retrieve current object
         if (!(inv instanceof INVOKESTATIC)) {
             insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
             insList.append(insFactory.createInvoke(STACK_CLASS, POP_METHOD + "Reference", Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             insList.append(insFactory.createCast(Type.OBJECT, objecttype));
         }
-
         // Create null types for the parameters of the method invocation
         Type[] paramTypes = getParamTypes(method.getConstantPool().getConstantPool(), inv.getIndex());
         for (int j = 0; j < paramTypes.length; j++) {
             insList.append(InstructionFactory.createNull(paramTypes[j]));
         }
-
         // go to last invocation
         insList.append(new GOTO(handle));
         return insList;
@@ -761,52 +633,31 @@ public class ContinuationClassLoader extends ClassLoader {
     }
 
     private String getPopMethod(Type type) {
-        if (type.equals(Type.BOOLEAN))
-            return POP_METHOD + "Int";
-        else if (type.equals(Type.CHAR))
-            return POP_METHOD + "Int";
-        else if (type.equals(Type.FLOAT))
-            return POP_METHOD + "Float";
-        else if (type.equals(Type.DOUBLE))
-            return POP_METHOD + "Double";
-        else if (type.equals(Type.BYTE))
-            return POP_METHOD + "Int";
-        else if (type.equals(Type.SHORT))
-            return POP_METHOD + "Int";
-        else if (type.equals(Type.INT))
-            return POP_METHOD + "Int";
-        else if (type.equals(Type.LONG))
-            return POP_METHOD + "Long";
-        else if (type.equals(Type.VOID))
-            return POP_METHOD + "Object";
-        else if (type.equals(Type.OBJECT))
-            return POP_METHOD + "Object";
-
-        return POP_METHOD + "Object";
+        return POP_METHOD + getTypeSuffix(type);
+    }
+    
+    private String getPushMethod(Type type) {
+           return PUSH_METHOD + getTypeSuffix(type);
     }
 
-    private String getPushMethod(Type type) {
+    private String getTypeSuffix(Type type) {
         if (type.equals(Type.BOOLEAN))
-            return PUSH_METHOD + "Int";
+            return "Int";
         else if (type.equals(Type.CHAR))
-            return PUSH_METHOD + "Int";
+            return "Int";
         else if (type.equals(Type.FLOAT))
-            return PUSH_METHOD + "Float";
+            return "Float";
         else if (type.equals(Type.DOUBLE))
-            return PUSH_METHOD + "Double";
+            return "Double";
         else if (type.equals(Type.BYTE))
-            return PUSH_METHOD + "Int";
+            return "Int";
         else if (type.equals(Type.SHORT))
-            return PUSH_METHOD + "Int";
+            return "Int";
         else if (type.equals(Type.INT))
-            return PUSH_METHOD + "Int";
+            return "Int";
         else if (type.equals(Type.LONG))
-            return PUSH_METHOD + "Long";
-        else if (type.equals(Type.VOID))
-            return PUSH_METHOD + "Object";
-        else if (type.equals(Type.OBJECT))
-            return PUSH_METHOD + "Object";
-
-        return PUSH_METHOD + "Object";
+            return "Long";
+        // VOID and OBJECT are "Object"
+        return POP_METHOD + "Object";
     }
 }
