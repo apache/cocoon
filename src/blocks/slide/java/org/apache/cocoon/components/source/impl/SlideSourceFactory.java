@@ -64,7 +64,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.slide.SlideRepository;
-import org.apache.cocoon.components.slide.impl.SlideRepositoryImpl;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
@@ -77,7 +76,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  * A factory for sources from a Jakarta Slide repository.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.5 2003/12/02 19:18:46 unico Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.6 2003/12/02 19:44:02 joerg Exp $
  */
 public class SlideSourceFactory extends AbstractLogEnabled
   implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
