@@ -47,8 +47,10 @@ import org.apache.excalibur.source.SourceValidity;
  * 
  * @version CVS $Id$
  */
-public class StaticProfileManager extends AbstractProfileManager implements Configurable
-{
+public class StaticProfileManager 
+extends AbstractProfileManager 
+implements Configurable {
+    
     protected String profilesPath;
 
     protected StaticBucketMap copletInstanceDataManagers = new StaticBucketMap();
@@ -66,11 +68,7 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
             if (layoutKey == null) {
-                Layout l = getEntryLayout();
-                if (null != l) {
-                    return l;
-                }
-                layoutKey = getDefaultLayoutKey();
+                layoutKey = service.getDefaultLayoutKey();
             }
 
             String serviceKey = LAYOUTKEY_PREFIX + layoutKey;
@@ -329,18 +327,10 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
-     */
-    public void saveUserProfiles() {
-        // nothing to do
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration) 
     throws ConfigurationException {
-        super.configure(configuration);
         Configuration child = configuration.getChild("profiles-path");
         this.profilesPath = child.getValue("cocoon:/profiles");
     }

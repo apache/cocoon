@@ -61,10 +61,10 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#logout()
      */
     public void logout() {
-        final String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         ServiceSelector adapterSelector = null;
         try {
+            final String layoutKey = service.getDefaultLayoutKey();
             adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
@@ -146,11 +146,11 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
      */
     public CopletInstanceData getCopletInstanceData(String copletID) {
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         String attribute = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
 			attribute = "CopletInstanceData:"+layoutKey;
 			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
@@ -167,11 +167,11 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletData(java.lang.String)
      */
     public CopletData getCopletData(String copletDataId) {
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         String attribute = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             attribute = "CopletInstanceData:"+layoutKey;
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
@@ -198,12 +198,12 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
      */
     public List getCopletInstanceData(CopletData data) {
-        String layoutKey = this.getDefaultLayoutKey();
         List coplets = new ArrayList();
         PortalService service = null;
         String attribute = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             attribute = "CopletInstanceData:" + layoutKey;
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
@@ -227,11 +227,11 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void register(CopletInstanceData coplet) {
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         String attribute = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             attribute = "CopletInstanceData:" + layoutKey;
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
@@ -249,11 +249,11 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void unregister(CopletInstanceData coplet) {
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         String attribute = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             attribute = "CopletInstanceData:" + layoutKey;
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
@@ -267,11 +267,14 @@ public abstract class AbstractUserProfileManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
+     */
     public void register(Layout layout) {
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             Map layoutMap = (Map)service.getAttribute("Layout-Map:" + layoutKey);
             if ( layoutMap == null ) {
@@ -294,11 +297,14 @@ public abstract class AbstractUserProfileManager
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
+     */
     public void unregister(Layout layout) {
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             Map layoutMap = (Map)service.getAttribute("Layout-Map:" + layoutKey);
             
@@ -328,12 +334,7 @@ public abstract class AbstractUserProfileManager
             adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             
             if ( null == layoutKey ) {
-                layoutKey = this.getDefaultLayoutKey();
-            }
-            // FIXME actually this is a hack for full screen
-            Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
-            if ( null != l) {
-                return l;
+                layoutKey = service.getDefaultLayoutKey();
             }
             
             final String layoutAttributeKey = "Layout:" + layoutKey;
@@ -380,10 +381,10 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDatas()
      */
     public Collection getCopletDatas() {
-        final String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
             CopletDataManager manager = (CopletDataManager)service.getAttribute("CopletData:" + layoutKey);
             return manager.getCopletData().values();
         } catch (Exception e) {
@@ -397,10 +398,10 @@ public abstract class AbstractUserProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceDatas()
      */
     public Collection getCopletInstanceDatas() {
-        final String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
             CopletInstanceDataManager manager = (CopletInstanceDataManager)service.getAttribute("CopletInstanceData:" + layoutKey);
             return manager.getCopletInstanceData().values();
         } catch (Exception e) {
