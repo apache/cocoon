@@ -76,7 +76,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.22 2003/10/10 14:11:50 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.23 2003/10/13 12:08:10 upayavira Exp $
  */
 public class Main {
 
@@ -344,7 +344,7 @@ public class Main {
 
         cocoon.addTargets(line.getArgList(), destDir);
 
-        System.out.println(getProlog());
+        listener.messageGenerated(CocoonBean.getProlog());
 
         cocoon.initialize();
         cocoon.process();
@@ -373,18 +373,6 @@ public class Main {
         }
 
     }
-    /**
-     * Print a description of the software before running
-     */
-    private static String getProlog() {
-        String lSep = System.getProperty("line.separator");
-        StringBuffer msg = new StringBuffer();
-        msg.append("------------------------------------------------------------------------ ").append(lSep);
-        msg.append(Constants.NAME).append(" ").append(Constants.VERSION).append(lSep);
-        msg.append("Copyright (c) ").append(Constants.YEAR).append(" Apache Software Foundation. All rights reserved.").append(lSep);
-        msg.append("------------------------------------------------------------------------ ").append(lSep).append(lSep);
-        return msg.toString();
-    }
 
     /**
      * Print the usage message and exit
@@ -393,7 +381,7 @@ public class Main {
         HelpFormatter formatter = new HelpFormatter();
 
         formatter.printHelp("cocoon cli [options] [targets]",
-                            getProlog().toString(),
+                            CocoonBean.getProlog(),
                             options,
                             "Note: the context directory defaults to '"+ Constants.DEFAULT_CONTEXT_DIR + "'");
         System.exit(0);
