@@ -19,9 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang.BooleanUtils;
+
 /**
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: XmlTreeConstraint.java,v 1.4 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class XmlTreeConstraint {
 
@@ -60,14 +62,14 @@ public class XmlTreeConstraint {
 
 		this.allowedMyUriStackEnd = Arrays.asList(allowedMyUriStackEnd);
 		this.allowedGlobalStackEnd = Arrays.asList(allowedGlobalStackEnd);
-		this.isMyUriRequired = new Boolean(isMyUriRequired);
+		this.isMyUriRequired = BooleanUtils.toBooleanObject(isMyUriRequired);
 	}
 
 
 	public XmlTreeConstraint(String[] allowedMyUriStackEnd,
 			boolean isMyUriRequired) {
 		this.allowedMyUriStackEnd = Arrays.asList(allowedMyUriStackEnd);
-		this.isMyUriRequired = new Boolean(isMyUriRequired);
+		this.isMyUriRequired = BooleanUtils.toBooleanObject(isMyUriRequired);
 	}
 
 

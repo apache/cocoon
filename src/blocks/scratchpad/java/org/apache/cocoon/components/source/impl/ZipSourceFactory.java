@@ -37,14 +37,14 @@ import org.apache.excalibur.source.SourceResolver;
   * zip://myFile.xml@myZip.zip (zip://[file]@[archive])
   * 
   * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a>
-  * @version CVS $Id: ZipSourceFactory.java,v 1.2 2004/03/05 10:07:25 bdelacretaz Exp $
+  * @version CVS $Id$
   * @since 2.1.4
   */ 
 public class ZipSourceFactory extends AbstractLogEnabled
     implements SourceFactory, ThreadSafe, Serviceable {
 
     protected ServiceManager manager;
-    public static String ZIP_SOURCE_SCHEME = "zip:";
+    public final static String ZIP_SOURCE_SCHEME = "zip:";
 
     public Source getSource(String location, Map parameters)
         throws IOException, MalformedURLException {
