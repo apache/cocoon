@@ -48,6 +48,11 @@
         <exclude name="**/*.java"/>
       </fileset>
     </copy>
+    <copy todir="${build.dest}">
+      <fileset dir="${src.core}">
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
 
     <echo message="Compiling Cocoon Core"/>
     <javac srcdir="${src.core}"
