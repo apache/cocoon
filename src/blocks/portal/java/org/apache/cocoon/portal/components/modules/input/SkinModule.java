@@ -58,14 +58,6 @@ implements Disposable {
 	 */
 	public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
     throws ConfigurationException {
-        if ( "skin".equals(name) ) {
-            return "common";
-        } else if ( "skin.basepath".equals(name) ) {
-            return "context://samples/blocks/portal/skins/common";
-        } else if ( "skin.thumbnailpath".equals(name) ) {
-            return "thumbnail.jpg";
-        }
-
         // lazy init
         if ( this.moduleSelector == null ) {
             synchronized ( this ) {
