@@ -2,10 +2,16 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.1 2003/03/09 00:01:33 pier Exp $
+# $Id: cocoon.sh,v 1.2 2003/03/19 15:50:44 stefano Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
+#
+# COCOON_HOME
+#   The root of the Cocoon distribution
+#
+# COCOON_WEBAPP_HOME
+#   The root of the Cocoon web application
 #
 # COCOON_LIB
 #   Folder containing all the library files needed by the Cocoon CLI
@@ -16,8 +22,11 @@
 # JAVA_OPTIONS
 #   Extra options to pass to the JVM
 #
-# JAVA_DEBUG_PORT
-#   The location where the JVM debug server should listen to
+# JAVA_DEBUG_ARGS
+#   The command line arguments for the internal JVM debugger
+#
+# JAVA_PROFILE_ARGS
+#   The command line arguments for the internal JVM profiler
 #
 # JETTY_PORT
 #   Override the default port for Jetty
@@ -25,18 +34,17 @@
 # JETTY_ADMIN_PORT
 #   The port where the jetty web administration should bind
 #
-# JETTY_WEBAPP
-#   The directory where the webapp that jetty has to execute is located
-#
+
 
 usage()
 {
     echo "Usage: $0 (action)"
     echo "actions:"
-    echo "  cli             Run Cocoon from command line"
-    echo "  servlet         Run Cocoon in a servlet container"
-    echo "  servlet-admin   Run Cocoon in a servlet container and turn container web administration on"
-    echo "  servlet-debug   Run Cocoon in a servlet container and turn remote debug on"
+    echo "  cli               Run Cocoon from the command line"
+    echo "  servlet           Run Cocoon in a servlet container"
+    echo "  servlet-admin     Run Cocoon in a servlet container and turn on container web administration"
+    echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
+    echo "  servlet-profile   Run Cocoon in a servlet container and turn on JVM profiling"
     exit 1
 }
 
@@ -53,47 +61,80 @@ if [ "$JAVA_HOME" = "" ] ; then
   exit 1
 fi
 
+if [ "$JAVA_OPTIONS" = "" ] ; then
+  JAVA_OPTIONS='-Xms32M -Xmx512M'
+fi
+
+if [ "$COCOON_HOME" = "" ] ; then
+  COCOON_HOME='.'
+fi
+
+if [ "$COCOON_WEBAPP_HOME" = "" ] ; then
+  COCOON_WEBAPP_HOME=$COCOON_HOME/build/webapp
+fi
+
 if [ "$COCOON_LIB" = "" ] ; then
-  COCOON_LIB=build/webapp/WEB-INF/lib
+  COCOON_LIB=$COCOON_WEBAPP_HOME/WEB-INF/lib
 fi
 
 if [ "$JETTY_PORT" = "" ] ; then
-  JETTY_PORT=8888
+  JETTY_PORT='8888'
 fi
 
 if [ "$JETTY_ADMIN_PORT" = "" ] ; then
-  JETTY_ADMIN_PORT=8889
+  JETTY_ADMIN_PORT='8889'
 fi
 
-if [ "$JETTY_WEBAPP" = "" ] ; then
-  JETTY_WEBAPP=build/webapp
+if [ "$JAVA_DEBUG_ARGS" = "" ] ; then
+  JAVA_DEBUG_ARGS='-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n'
 fi
 
-if [ "$JAVA_DEBUG_PORT" = "" ] ; then
-  JAVA_DEBUG_PORT=8000
+if [ "$JAVA_PROFILE_ARGS" = "" ] ; then
+  JAVA_PROFILE_ARGS='-Xrunhprof:heap=all,cpu=samples,thread=y,depth=3'
 fi
 
-# ----- Set Classpath ----------------------------------------------------------
+# ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
-CP=./tools/loader
+JAVA=$JAVA_HOME/bin/java
+ENDORSED_LIBS=$COCOON_HOME/lib/endorsed
+ENDORSED=-Djava.endorsed.dirs=$ENDORSED_LIBS
+PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
+LOADER=Loader
+LOADER_LIB=$COCOON_HOME/tools/loader
+
+CLI=-Dloader.main.class=org.apache.cocoon.Main
+CLI_LIBRARIES=-Dloader.jar.repositories=$COCOON_LIB
+
+JETTY=-Dloader.main.class=org.mortbay.jetty.Server
+JETTY_CONF=$COCOON_HOME/tools/jetty/conf
+JETTY_MAIN=$JETTY_CONF/main.xml
+JETTY_ADMIN=$JETTY_CONF/admin.xml
+JETTY_WEBAPP=-Dwebapp=$COCOON_WEBAPP_HOME
+JETTY_PORT_ARGS=-Djetty.port=$JETTY_PORT
+JETTY_ADMIN_ARGS=-Djetty.admin.port=$JETTY_ADMIN_PORT
+JETTY_LIBRARIES=-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib,$ENDORSED_LIBS
 
 # ----- Do the action ----------------------------------------------------------
 
 case "$ACTION" in
   cli)
-        $JAVA_HOME/bin/java $JAVA_OPT -classpath %CP% -Djava.endorsed.dirs=lib/endorsed -Dloader.jar.repositories=%COCOON_LIB% -Dloader.main.class=org.apache.cocoon.Main Loader $ARGS
+        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $CLI_LIBRARIES $CLI $LOADER $ARGS
         ;;
 
   servlet)
-        $JAVA_HOME/bin/java $JAVA_OPT -classpath $CP -Djava.endorsed.dirs=lib/endorsed -Dwebapp=$JETTY_WEBAPP -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=$JETTY_PORT -Djetty.admin.port=$JETTY_ADMIN_PORT -Dloader.jar.repositories=tools/jetty/lib,lib/endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader tools/jetty/conf/main.xml
+        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY $LOADER $JETTY_MAIN
         ;;
 
   servlet-admin)
-        $JAVA_HOME/bin/java $JAVA_OPT -classpath $CP -Djava.endorsed.dirs=lib/endorsed -Dwebapp=$JETTY_WEBAPP -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=$JETTY_PORT -Djetty.admin.port=$JETTY_ADMIN_PORT -Dloader.jar.repositories=tools/jetty/lib,lib/endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader tools/jetty/conf/main.xml tools/jetty/conf/admin.xml
+        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY $LOADER $JETTY_MAIN $JETTY_ADMIN
         ;;
 
   servlet-debug)
-        $JAVA_HOME/bin/java $JAVA_OPT -Xdebug -Xrunjdwp:transport=dt_socket,address=$JAVA_DEBUG_PORT,server=y,suspend=n -classpath $CP -Djava.endorsed.dirs=lib/endorsed -Dwebapp=$JETTY_WEBAPP -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=$JETTY_PORT -Djetty.admin.port=$JETTY_ADMIN_PORT -Dloader.jar.repositories=tools/jetty/lib,lib/endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader tools/jetty/conf/main.xml tools/jetty/conf/admin.xml
+        $JAVA $JAVA_OPTIONS $JAVA_DEBUG_ARGS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY $LOADER $JETTY_MAIN
+        ;;
+
+  servlet-profile)
+        $JAVA $JAVA_OPTIONS $JAVA_PROFILE_ARGS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY $LOADER $JETTY_MAIN
         ;;
 
   *)
