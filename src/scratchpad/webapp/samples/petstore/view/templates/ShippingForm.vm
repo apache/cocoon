@@ -2,7 +2,7 @@
 
 <form action="${continuation.id}.kont" styleId="workingOrderForm" method="post" >
 
-<TABLE border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
+<TABLE align="center" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
 <TR bgcolor="#FFFF88"><TD colspan="2">
 <FONT color="GREEN" size="4"><B>Shipping Address</B></FONT>
 </TD></TR>
@@ -37,9 +37,9 @@ Country: </TD><TD><input type="text" size="15" name="shipCountry" />
 
 
 </TABLE>
-<P>
+<P><center>
 <input type="image" src="images/button_submit.gif"/>
-</P>
+</center></P>
 </form>
 
 #parse("view/templates/IncludeBottom.vm")

@@ -39,7 +39,7 @@
 #end
 <tr bgcolor="#FFFF88">
 <td colspan="5" align="right">
-cart=$cartForm.cart.numberOfItems
+
 <b>Sub Total: $fmt.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
 
 </td>
