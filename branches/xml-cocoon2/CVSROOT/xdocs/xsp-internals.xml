@@ -121,8 +121,11 @@
   </ul>
 
   <note>
-    Despite its particular usage for XSP, <code>ProgramGenerator</code> is not
-    restricted to run in a server pages environment.
+    Despite its particular usage for XSP,
+    <link href="javadocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
+      <code>ProgramGenerator</code>
+    </link>
+    is not restricted to run in a server pages environment.
   </note>
  </s1>
 
@@ -130,14 +133,19 @@
  <s1 title="XSP and Cocoon Generators">
   <p>
     As a rule, XSP pages are translated into Cocoon
-    <code><em>Generator</em></code>'s.
+    <link href="javadocs/org/apache/cocoon/generators/Generator.html">
+      <code><em>Generator</em></code>'s.
+    </link>
   </p>
 
   <s2 title="Server Pages Generator Proxy">
     <p>
       <code>Generator</code>'s created by XSP are invoked exclusively through
-      <code><em>ServerPagesGenerator</em></code>, a proxy that uses Cocoon's
-      <jump anchor="#program-generator"><code>ProgramGenerator</code></jump>
+      <link href="javadocs/org/apache/cocoon/generators/ServerPagesGenerator.html">
+        <code><em>ServerPagesGenerator</em></code>,
+      </link>
+      a proxy that uses Cocoon's
+      <jump anchor="program-generator"><code>ProgramGenerator</code></jump>
       component to load pages and subsequently delegates actual SAX event
       generation to them.
     </p>
@@ -150,11 +158,14 @@
       <code>ProgramGenerator</code>, on the other hand, refers to a Cocoon
       component responsible for building and executing programs derived from XML
       documents containing dynamic markup:
-      <code>org.apache.cocoon.components.language.generator.ProgramGenerator</code>
+      <link href="javadocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
+        <code>org.apache.cocoon.components.language.generator.ProgramGenerator</code>
+      </link>
     </note>
   
     <p>
-      <code>ServerPagesGenerator</code> attempts to cope with a not unlikely
+      <code>ServerPagesGenerator</code>
+      attempts to cope with a not unlikely
       possibility: <em>premature</em> termination of proxied generator
       execution.
       "Premature" here means that the invoked generator may return after
@@ -236,16 +247,24 @@
      <link href="http://www.mozilla.org/rhino/"><em>Rhino</em></link>
      Javascript),
      XSP pages are translated into classes extending
-     <code>AbstractServerPage</code>.
+     <link href="javadocs/org/apache/cocoon/generators/AbstractServerPage.html">
+       <code>AbstractServerPage</code>.
+     </link>
      This class, in turn, extends
-     <code>ComposerGenerator</code>,
+     <link href="javadocs/org/apache/cocoon/components/language/generators/ComposerGenerator.html">
+       <code>ComposerGenerator</code>,
+     </link>
      which gives it access to commonly used components such as
      <em>parser</em> or <em>cocoon</em> itself (typically used as
      <code>EntityResolver</code> for request URI's).
    </p>
  
    <p>
-     <code>AbstractServerPage</code> implements <code>Modifiable</code>. This
+     <code>AbstractServerPage</code> implements
+     <link href="javadocs/org/apache/arch/Modifiable.html">
+       <code>Modifiable</code>.
+     </link>
+     This
      is tested by <code>ProgramGenerator</code> to assert whether the page has
      been invalidated as a result of files it depends on having changed on disk.
      These files are typically
@@ -258,7 +277,9 @@
      will be based on
      <link href="mailto:balld@webslingerZ.com">Donald Ball</link>'s
      (possibly extended)
-     <code>XIncludeFilter</code>.
+     <link href="javadocs/org/apache/cocoon/filters/XIncludeFilter.html">
+       <code>XIncludeFilter</code>.
+     </link>
    </note>
  
    <p>
@@ -293,7 +314,11 @@
  <anchor id="programming-language"/>
  <s1 title="The Programming Language Processor">
    <p>
-     A Cocoon's <code>ProgrammingLanguage</code> processor exposes the
+     A Cocoon's
+     <link href="javadocs/org/apache/cocoon/components/language/programming/ProgrammingLanguage.html">
+       <code>ProgrammingLanguage</code>
+     </link>
+     processor exposes the
      following methods:
    </p>
 
@@ -315,9 +340,9 @@
      </li>
      <li><code><em>getCodeFormatter</em></code>
          Return an (optional) instance of
-         <jump anchor="code-formatting">
-         <code>CodeFormatter</code>
-         </jump>
+          <link href="javadocs/org/apache/cocoon/components/language/programming/CodeFormatter.html">
+           <code>CodeFormatter</code>
+         </link>
          used to beautify source code written in this programming language
      </li>
      <li><code><em>quoteString</em></code>
@@ -326,11 +351,13 @@
    </ul>
 
    <p>
-     A default implementation (<code>AbstractProgrammingLanguage</code>) is
+     A default implementation (<link href="javadocs/org/apache/cocoon/components/language/programming/AbstractProgrammingLanguage.html">
+       <code>AbstractProgrammingLanguage</code>
+     </link>) is
      provided that extends
-     <jump anchor="named-components">
+     <link href="javadocs/org/apache/arch/named/AbstractNamedComponent.html">
        <code>AbstractNamedComponent</code>
-     </jump>
+     </link>
      and retrieves language-related sitemap parameters.
    </p>
 
@@ -426,7 +453,9 @@
      </p>
 
      <p>
-       The base class <code>AbstractProgrammingLanguage</code> implements
+       The base class
+       <code>AbstractProgrammingLanguage</code>
+       implements
        this method <em>as <code>final</code></em> to delete the unloaded
        <em>source</em> program file and delegate actual unloading to
        method <code>doUnload</code>.
@@ -490,12 +519,17 @@
    <anchor id="code-formatting"/>
    <s2 title="Code Formatting">
      <p>
-       Programming languages may provide a <code>CodeFormatter</code>
+       Programming languages may provide a
+       <link href="javadocs/org/apache/cocoon/components/language/programming/CodeFormatter.html">
+         <code>CodeFormatter</code>
+       </link>
        instance used by code generators to beautify source code.
      </p>
 
      <p>
-       Interface <code>CodeGenerator</code> exposes a single method:
+       Interface
+       <code>CodeFormatter</code>
+       exposes a single method:
        <code>formatCode</code>. <code>formatCode</code> takes as
        arguments a <code>String</code> containing the source code to
        be beautified and an <code>encoding</code> to be preserved
@@ -548,7 +582,10 @@
    </p>
 
    <p>
-     A default implementation (<code>CompiledProgrammingLanguage</code>)
+     A base implementation
+    <link href="javadocs/org/apache/cocoon/components/language/programming/CompiledProgrammingLanguage.html">
+       (<code>CompiledProgrammingLanguage</code>)
+     </link>
      is provided that adds the following protected variables and
      abstract/overridable methods:
    </p>
@@ -586,8 +623,7 @@
 
 <source><![CDATA[
 <component-instance name="java"
-  class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
-  . . .
+  class="org.apache.cocoon.components.language.programming.java.JavaLanguage"> . . .
   <parameter name="compiler"
     value="org.apache.cocoon.components.language.programming.java.Jikes"/>
   . . .
@@ -612,7 +648,7 @@
    <anchor id="compilation"/>
    <s2 title="Program Compilation">
      <p>
-       Compilation is delegated to a sitemap-defined
+       Compilation is delegated to a sitemap-specified
        <code>LanguageCompiler</code> instance, as explained below.
      </p>
    </s2>
@@ -620,7 +656,11 @@
    <anchor id="compiler"/>
    <s2 title="Compilers">
      <p>
-       Interface <code>LanguageCompiler</code> defines the
+       Interface
+      <link href="javadocs/org/apache/cocoon/components/language/programming/LanguageCompiler.html">
+         <code>LanguageCompiler</code>
+       </link>
+       defines the
        initialization and behavior for all compilers.
      </p>
 
@@ -662,7 +702,11 @@
        </p>
 
        <p>
-         Class <code>CompilerError</code> exposes the following
+         Class
+         <link href="javadocs/org/apache/cocoon/components/language/programming/CompilerError.html">
+           <code>CompilerError</code>
+         </link>
+         exposes the following
          methods:
        </p>
 
@@ -705,7 +749,9 @@
 
          <p>
            Both of these compilers are based on
-           <code>AbstractJavaCompiler</code>.
+           <link href="javadocs/org/apache/cocoon/components/language/programming/java/AbstractJavaCompiler.html">
+             <code>AbstractJavaCompiler</code>.
+           </link>
          </p>
      </s3>
 
@@ -761,7 +807,9 @@
      <p>
        To circumvent standard Java class loaders limitation, Cocoon provides a
        simple customized class loader
+       <link href="javadocs/org/apache/cocoon/components/classloader/RepositoryClassLoader.html">
        (<code>RepositoryClassLoader</code>)
+     </link>
        that features:
      </p>
 
@@ -782,7 +830,10 @@
 
      <p>
        Access to <em>protected</em> <code>RepositoryClassLoader</code> class
-       is proxied through interface <code>ClassLoaderManager</code>.
+       is proxied through interface
+       <link href="javadocs/org/apache/cocoon/components/classloader/ClassLoaderManager.html">
+         <code>ClassLoaderManager</code>.
+       </link>
        This interface exposes the following methods:
      </p>
 
@@ -799,7 +850,11 @@
      </ul>
 
      <p>
-       Class <code>ClassLoaderManagerImpl</code> implements
+       Class
+       <link href="javadocs/org/apache/cocoon/components/classloader/ClassLoaderManagerImpl.html">
+         <code>ClassLoaderManagerImpl</code>
+       </link>
+       implements
        <code>ClassLoaderManager</code> in a singleton-like fashion that
        ensures that only one instance of this class loader exists,
        thus ensuring the reinstantiation mechanism works properly.
@@ -887,7 +942,12 @@
  <anchor id="markup-language"/>
  <s1 title="The Markup Language Processor">
    <p>
-     A Cocoon's <code>MarkupLanguage</code> processor exposes the
+     A Cocoon's
+     <link
+     href="javadocs/org/apache/cocoon/components/language/markup/MarkupLanguage.html">
+       <code>MarkupLanguage</code>
+     </link>
+     processor exposes the
      following methods:
    </p>
 
@@ -906,8 +966,16 @@
 
    <p>
      A base markup language processor implementation is provided in
-     class <code>AbstractMarkupLanguage</code>. This class extends
-     <code>AbstractNamedComponent</code> to set the markup language's
+     class
+     <link
+     href="javadocs/org/apache/cocoon/components/language/markup/AbstractMarkupLanguage.html">
+       <code>AbstractMarkupLanguage</code>.
+     </link>
+     This class extends
+     <link href="javadocs/org/arch/named/AbstractNamedComponent.html">
+       <code>AbstractNamedComponent</code>
+     </link>
+     to set the markup language's
      associated namespace using the following required parameters:
    </p>
    
@@ -1012,7 +1080,11 @@
       </p>
 
       <p>
-        Logicsheets are represented in class <code>Logichseet</code>. This
+        Logicsheets are represented in class
+        <link href="javadocs/org/apache/cocoon/components/language/markup/Logicsheet.html">
+          <code>Logichseet</code>.
+        </link>
+        This
         class exposes the following methods:
       </p>
   
@@ -1064,7 +1136,11 @@
       </p>
 
       <p>
-        Class <code>NamedLogicsheet</code> extends <code>Logicsheet</code>
+        Class
+        <link href="javadocs/org/apache/cocoon/components/language/markup/NamedLogicsheet.html">
+	  <code>NamedLogicsheet</code>
+        </link>
+	extends <code>Logicsheet</code>
         to associate it with a namespace. This class exposes the following
         additional methods:
       </p>
@@ -1115,11 +1191,16 @@
       <p>
         Code generation as such (i.e., the final production of a string
         containing a source program written in a programming language) is
-        the responsibility of class <code>CodeGenerator</code>.
+        the responsibility of class <code>LogicsheetCodeGenerator</code>.
       </p>
 
       <p>
-        The <code>CodeGenerator</code> exposes the following methods:
+        Class
+        <link
+	href="javadocs/org/apache/cocoon/components/language/markup/LogicsheetCodeGenerator.html">
+	  <code>LogicsheetCodeGenerator</code>
+        </link>
+	exposes the following methods:
       </p>
 
       <ul>
@@ -1134,9 +1215,10 @@
       </ul>
 
       <p>
-        Though "regular" logicsheets do not emit source code as such,
-        <code>CogeGenerator</code> expects its <em>last</em> stylesheet
-        to produce a single element containing only text.
+        Though "regular" logicsheets as such do not emit source code,
+        <code>LogicshetCodeGenerator</code> expects its <em>last</em>
+	stylesheet to produce <em>a single element</em> containing only
+	a text node.
       </p>
 
       <p>
@@ -1151,9 +1233,9 @@
       </p>
 
       <note>
-        <code>CodeGenerator</code> is currently implemented as a class.
-        It should be defined as an interface in order to the decouple the
-        code generator abstraction from its logicsheet-based implementation.
+        <code>LogicsheetCodeGenerator</code> is currently implemented as a
+	class.  It should be defined as an interface in order to the decouple
+	the code generator abstraction from its logicsheet-based implementation.
         This would allow for alternative code-generation strategies to
         be plugged.
       </note>
@@ -1244,7 +1326,11 @@
    <anchor id="xsp-encoding"/>
    <s2 title="Markup Encoding">
      Method <code>getEncoding</code> is implemented by class
-     <code>XSPMarkupLanguage</code> by retrieving the attribute named
+     <link
+     href="javadocs/org/apache/cocoon/components/language/markup/xsp/XSPMarkupLanguage.html">
+       <code>XSPMarkupLanguage</code>
+     </link>
+     by retrieving the attribute named
      <code>encoding</code> in the root <code>&lt;xsp:page&gt;</code> element.
 
      <note>
@@ -1362,7 +1448,11 @@
  <anchor id="program-generator"/>
  <s1 title="The Program Generator">
    <p>
-     The <code>ProgramGenerator</code> interface exposes a single
+     The
+     <link href="javadocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
+       <code>ProgramGenerator</code>
+     </link>
+     interface exposes a single
      <code>load</code> method that takes as arguments a <code>File</code>
      pointing to a source XML document, as well as a <em>markup</em> and
      <em>programming</em> language name pair.
@@ -1398,8 +1488,15 @@
 
    <p>
      A default implementation of <code>ProgramGenerator</code>
-     is provided that uses a <code>FilesystemStore</code> as
-     repository: <code>ProgramGeneratorImpl</code>.
+     is provided that uses a
+     <link href="javadocs/org/apache/cocoon/components/store/FilesystemStore.html">
+       <code>FilesystemStore</code>
+     </link>
+     as
+     repository:
+     <link href="javadocs/org/apache/cocoon/components/language/generator/ProgramGeneratorImpl.html">
+       <code>ProgramGeneratorImpl</code>.
+     </link>
    </p>
 
    <anchor id="program-repository"/>
@@ -1481,12 +1578,18 @@
    <p>
      In order to support pluggable markup and programming languages,
      a new abstraction was added to Cocoon's <code>arch</code>
-     core interfaces: <code>NamedComponent</code>'s.
+     core interfaces:
+     <link href="javadocs/org/apache/arch/named/NamedComponent.html">
+       <code>NamedComponent</code>.
+     </link>
    </p>
 
    <p>
      Interface <code>NamedComponent</code> is simply an extension to
-     <code>Component</code> that exposes a <code>getName()</code>
+     <link href="javadocs/org/apache/arch/Component.html">
+       <code>Component</code>
+     </link>
+     that exposes a <code>getName()</code>
      method.
    </p>
 
@@ -1497,7 +1600,11 @@
    </p>
 
    <p>
-     A <code>NamedComponentManager</code> is a component responsible
+     A
+     <link href="javadocs/org/apache/arch/named/NamedComponentManager.html">
+       <code>NamedComponentManager</code>
+     </link>
+     is a component responsible
      for storing and locating <code>NamedComponent</code> instances.
      This interface exposes the following methods:
    </p>
@@ -1516,12 +1623,21 @@
 
    <p>
      A default implementation is provided for this interface:
-     <code>NamedComponentManagerImpl</code>.
+     <link href="javadocs/org/apache/arch/named/NamedComponentImpl.html">
+       <code>NamedComponentManagerImpl</code>.
+     </link>
    </p>
 
    <p>
-     Class <code>AbstractNamedComponent</code> provides a base implementation
-     for <code>NamedComponent</code> that extends <code>Configurable</code>.
+     Class
+     <link href="javadocs/org/apache/named/AbstractNamedComponent.html">
+       <code>AbstractNamedComponent</code>
+     </link>
+     provides a base implementation
+     for <code>NamedComponent</code> that extends
+     <link href="javadocs/org/apache/arch/Configurable.html">
+       <code>Configurable</code>.
+     </link>
      This class exposes the following methods:
    </p>
    
