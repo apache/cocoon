@@ -15,11 +15,15 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.7 2004/03/06 02:26:18 antonio Exp $ -->
-
+<!--+
+    | $Id$
+    +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:components>
+    <map:generators default="file">
+      <map:generator name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionGenerator"/>
+    </map:generators>
     <map:selectors default="browser">
       <map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector">
         <exception name="application" class="org.apache.cocoon.samples.errorhandling.ApplicationException">
@@ -31,6 +35,9 @@
         <exception class="java.lang.Throwable" unroll="true"/>
       </map:selector>
     </map:selectors>
+    <map:actions>
+      <map:action name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionAction"/>
+    </map:actions>
   </map:components>
 
   <map:pipelines>
@@ -47,12 +54,18 @@
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="main">
-        <map:generate src="main.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+      <map:match pattern="not-exists">
+        <map:generate src="{0}.xml"/>
         <map:serialize/>
+      </map:match>
+
+      <map:match pattern="*">
+        <map:generate type="exception" src="{1}"/>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="internal/**">
+        <map:mount uri-prefix="internal" src="internal/"/>
       </map:match>
     </map:pipeline>
 
@@ -62,7 +75,7 @@
       <map:handle-errors>
         <map:select type="exception">
           <map:when test="not-found">
-            <map:generate src="resourceNotFound.htm"/>
+            <map:generate src="notFound.html"/>
             <map:serialize/>
           </map:when>
         </map:select>
