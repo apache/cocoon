@@ -82,7 +82,7 @@ import org.exolab.castor.xml.Marshaller;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.2 2003/05/27 14:07:16 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
  */
 public class StaticProfileManager 
     extends AbstractLogEnabled 
@@ -102,7 +102,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(Object)
+     * @see ProfileManager#getPortalLayout(String)
      */
     public Layout getPortalLayout(String key) {
         PortalService service = null;

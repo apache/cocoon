@@ -76,7 +76,7 @@ import org.apache.cocoon.mail.command.MailCommands;
  *
  * @author Bernhard Huber
  * @since 23 October 2002
- * @version CVS $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @version CVS $Id: MailCommandManager.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
  */
 public class MailCommandManager extends AbstractLogEnabled {
 
@@ -214,9 +214,6 @@ public class MailCommandManager extends AbstractLogEnabled {
     /**
      *  Retrieve folder, and put it as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailFolderCatCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -253,13 +250,9 @@ public class MailCommandManager extends AbstractLogEnabled {
     }
 
 
-////
     /**
      *  Retrieve folder, and put it as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailRefreshFolderCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -301,9 +294,6 @@ public class MailCommandManager extends AbstractLogEnabled {
      *  Retrieved headers of all messages of a folder, put
      *   retrieved messages as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailListMessagesCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -360,9 +350,6 @@ public class MailCommandManager extends AbstractLogEnabled {
      *  List all subfolders of a folder, put
      *  all retrieved folders as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailListFolderCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -427,9 +414,6 @@ public class MailCommandManager extends AbstractLogEnabled {
      *  Retrieved a message (envelope plus content) of a folder by its uid, put
      *   retrieved message as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailCatMessageByUIDCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -484,9 +468,6 @@ public class MailCommandManager extends AbstractLogEnabled {
      *  Retrieved a message (envelope plus content) of a folder by its id, put
      *   retrieved message as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailCatMessageByIdCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -541,9 +522,6 @@ public class MailCommandManager extends AbstractLogEnabled {
      *  Retrieved a message part by its part id, specifying the message by id, put
      *   retrieved part as command result.
      *
-     *@author     Bernhard Huber
-     *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailCatAttachmentMessageByIdCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -633,9 +611,6 @@ public class MailCommandManager extends AbstractLogEnabled {
     /**
      *  Description of the Class
      *
-     *@author     Administrator
-     *@created    02. Jänner 2003
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailSearchMessagesCommand extends AbstractMailCommand implements Contextualizable {
         private Folder aFolder;

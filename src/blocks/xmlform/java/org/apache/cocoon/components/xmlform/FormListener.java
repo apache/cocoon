@@ -54,7 +54,7 @@ package org.apache.cocoon.components.xmlform;
  * Defines events fired by a Form object.
  *
  * @author Ivelin Ivanov, ivelin@apache.org
- * @version CVS $Id: FormListener.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
+ * @version CVS $Id: FormListener.java,v 1.3 2003/07/03 08:27:46 cziegeler Exp $
  */
 public interface FormListener {
 
@@ -82,8 +82,6 @@ public interface FormListener {
      *
      * @param form       
      * @param parameterName
-     *
-     * @return
      */
     boolean filterRequestParameter(Form form, String parameterName);
 }

@@ -53,15 +53,10 @@ package org.apache.cocoon.components.validation;
 /**
  *
  * @author  ivelin@apache.org
- * @version CVS $Id: Schema.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
+ * @version CVS $Id: Schema.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
  */
 public interface Schema {
 
-    /**
-     *
-     *
-     * @return
-     */
     Validator newValidator() throws InstantiationException;
 
 }

@@ -77,7 +77,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.3 2003/05/30 21:20:47 joerg Exp $
+ * @version CVS $Id: Form.java,v 1.4 2003/07/03 08:27:46 cziegeler Exp $
  */
 public class Form {
 
@@ -320,7 +320,6 @@ public class Form {
      * Performs complete validation
      * of the form model.
      *
-     * @return
      */
     public boolean validate() {
         return validate(null);
@@ -549,7 +548,6 @@ public class Form {
      *
      * @param name       
      *
-     * @return
      */
     protected boolean filterRequestParameter(String name) {
         // filter standard cocoon-* parameters
@@ -585,7 +583,6 @@ public class Form {
      *
      * @param paramName  
      *
-     * @return
      */
     protected boolean filterDefaultRequestParameter(String paramName) {
         if (paramName.startsWith(Constants.ACTION_PARAM_PREFIX) ||
@@ -605,7 +602,6 @@ public class Form {
      *
      * @param sitemapObjectModel
      *
-     * @return
      */
     public String getFormView(Map sitemapObjectModel) {
         return getRequest(sitemapObjectModel).getParameter(Form.FORM_VIEW_PARAM);
@@ -645,7 +641,6 @@ public class Form {
      * @param sitemapObjectModel
      * @param id the form id
      *
-     * @return
      */
     public static Form lookup(Map sitemapObjectModel, String id) {
         Request request = getRequest(sitemapObjectModel);
