@@ -14,45 +14,45 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<wd:form
-	xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
-	<wd:widgets>
+	<fd:widgets>
 
-		<wd:field id="message" required="false">
-			<wd:label>message:</wd:label>
-			<wd:datatype base="string">
-			</wd:datatype>
-		</wd:field>
-		<wd:field id="username" required="true">
-			<wd:label>Username:</wd:label>
-			<wd:datatype base="string">
-				<wd:validation>
-					<wd:length min="2"/>
-				</wd:validation>
-			</wd:datatype>
-		</wd:field>
+		<fd:field id="message" required="false">
+			<fd:label>message:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
+		<fd:field id="username" required="true">
+			<fd:label>Username:</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:length min="2"/>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
 	
-		<wd:field id="password" required="true">
-			<wd:label>Password:</wd:label>
-			<wd:datatype base="string">
-				<wd:validation>
-					<wd:length min="2" max="20"/>
-				</wd:validation>
-			</wd:datatype>
-		</wd:field>
+		<fd:field id="password" required="true">
+			<fd:label>Password:</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:length min="2" max="20"/>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
 	
-		<wd:field id="retypepassword" required="true">
-			<wd:label>Re-enter password:</wd:label>
-			<wd:datatype base="string">
-				<wd:validation>
-					<wd:assert test="password = retypepassword">
-						<wd:failmessage>The two passwords are not equal.</wd:failmessage>
-					</wd:assert>
-				</wd:validation>
-			</wd:datatype>
-		</wd:field>
+		<fd:field id="retypepassword" required="true">
+			<fd:label>Re-enter password:</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:assert test="password = retypepassword">
+						<fd:failmessage>The two passwords are not equal.</fd:failmessage>
+					</fd:assert>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
 
-	</wd:widgets>
-</wd:form>
+	</fd:widgets>
+</fd:form>

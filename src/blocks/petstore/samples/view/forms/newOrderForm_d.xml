@@ -14,87 +14,87 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<wd:form
-	xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
-	<wd:widgets>
+	<fd:widgets>
 
 
-		<wd:field id="cardType" required="true">
-			<wd:label>Card Type</wd:label>
-			<wd:datatype base="string"/>
-				<wd:selection-list>
-					<wd:item value="">
-						<wd:label>Choose Card Type</wd:label>
-					</wd:item>
-					<wd:item value="master">
-						<wd:label>Master Card</wd:label>
-					</wd:item>
-					<wd:item value="visa">
-						<wd:label>Visa Card</wd:label>
-					</wd:item>
-					<wd:item value="ae">
-						<wd:label>American Express</wd:label>
-					</wd:item>
-				</wd:selection-list>
-		</wd:field>
+		<fd:field id="cardType" required="true">
+			<fd:label>Card Type</fd:label>
+			<fd:datatype base="string"/>
+				<fd:selection-list>
+					<fd:item value="">
+						<fd:label>Choose Card Type</fd:label>
+					</fd:item>
+					<fd:item value="master">
+						<fd:label>Master Card</fd:label>
+					</fd:item>
+					<fd:item value="visa">
+						<fd:label>Visa Card</fd:label>
+					</fd:item>
+					<fd:item value="ae">
+						<fd:label>American Express</fd:label>
+					</fd:item>
+				</fd:selection-list>
+		</fd:field>
 		
 		
-		<wd:field id="creditCard" required="true">
-			<wd:label>Card Number</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="creditCard" required="true">
+			<fd:label>Card Number</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="expiryDate" required="true">
-			<wd:label>Expiry Date (MM/YYYY)</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="expiryDate" required="true">
+			<fd:label>Expiry Date (MM/YYYY)</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="billToFirstName" required="true">
-			<wd:label>First name</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="billToFirstName" required="true">
+			<fd:label>First name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="billToLastName" required="true">
-			<wd:label>Last name</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
-	
-	
-		<wd:field id="billAddress1" required="true">
-			<wd:label>Address 1</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="billToLastName" required="true">
+			<fd:label>Last name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
 	
-		<wd:field id="billAddress2" required="false">
-			<wd:label>Address 2</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="billAddress1" required="true">
+			<fd:label>Address 1</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="billCity" required="true">
-			<wd:label>City</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
 	
-		<wd:field id="billState">
-			<wd:label>State</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="billAddress2" required="false">
+			<fd:label>Address 2</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="billZip" required="true">
-			<wd:label>Zip</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="billCity" required="true">
+			<fd:label>City</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="billCountry" required="true">
-			<wd:label>Country</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="billState">
+			<fd:label>State</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:booleanfield id="shippingAddressRequired">
-			<wd:label>Ship to different address...</wd:label>
-		</wd:booleanfield>
-	</wd:widgets>
-</wd:form>
+		<fd:field id="billZip" required="true">
+			<fd:label>Zip</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billCountry" required="true">
+			<fd:label>Country</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:booleanfield id="shippingAddressRequired">
+			<fd:label>Ship to different address...</fd:label>
+		</fd:booleanfield>
+	</fd:widgets>
+</fd:form>

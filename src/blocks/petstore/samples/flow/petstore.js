@@ -17,7 +17,7 @@
 // Page Flow for PetStore Application
 
 // load WOODY support
-cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/forms.js");
 
 var MAX_RESULTS = 5;
 

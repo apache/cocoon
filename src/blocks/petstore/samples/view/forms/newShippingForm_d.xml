@@ -14,54 +14,54 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<wd:form
-	xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
-	<wd:widgets>
+	<fd:widgets>
 
-		<wd:field id="shipToFirstName" required="true">
-			<wd:label>First name</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="shipToFirstName" required="true">
+			<fd:label>First name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="shipToLastName" required="true">
-			<wd:label>Last name</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
-	
-	
-		<wd:field id="shipAddress1" required="true">
-			<wd:label>Address 1</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="shipToLastName" required="true">
+			<fd:label>Last name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
 	
-		<wd:field id="shipAddress2" required="false">
-			<wd:label>Address 2</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="shipAddress1" required="true">
+			<fd:label>Address 1</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="shipCity" required="true">
-			<wd:label>City</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
 	
-		<wd:field id="shipState">
-			<wd:label>State</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="shipAddress2" required="false">
+			<fd:label>Address 2</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="shipZip" required="true">
-			<wd:label>Zip</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="shipCity" required="true">
+			<fd:label>City</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 	
-		<wd:field id="shipCountry" required="true">
-			<wd:label>Country</wd:label>
-			<wd:datatype base="string"/>
-		</wd:field>
+		<fd:field id="shipState">
+			<fd:label>State</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="shipZip" required="true">
+			<fd:label>Zip</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="shipCountry" required="true">
+			<fd:label>Country</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
 
-	</wd:widgets>
+	</fd:widgets>
 
-</wd:form>
+</fd:form>
