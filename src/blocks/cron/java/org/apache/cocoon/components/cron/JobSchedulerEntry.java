@@ -52,11 +52,12 @@ package org.apache.cocoon.components.cron;
 
 import java.util.Date;
 
+
 /**
  * Interface for classes holding scheduled job entries.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: JobSchedulerEntry.java,v 1.1 2003/09/04 15:56:51 giacomo Exp $
+ * @version CVS $Id: JobSchedulerEntry.java,v 1.2 2003/09/05 10:20:57 giacomo Exp $
  */
 public interface JobSchedulerEntry {
     /**
@@ -86,4 +87,12 @@ public interface JobSchedulerEntry {
      * @return whether this job is currently running?
      */
     boolean isRunning();
+
+    /**
+     * Get a human readable representation of the schedule of this entry. Is up to an implementation how it presents
+     * the schedule for this entry
+     *
+     * @return the human readable representation of the schedule of this entry
+     */
+    String getSchedule();
 }
