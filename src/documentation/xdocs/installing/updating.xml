@@ -203,7 +203,13 @@
    <s2 title="Stores">
     <p>The Store and StoreJanitor components and implementations have been moved to
        Avalon Excalibur.</p>
-    <p>TODO:Changes in cocoon.xconf...</p>
+    <p>To make upgrading easier, the class attributes of the store janitor 
+       component has been removed in the <em>cocoon.xconf</em> as the class names have changed.
+       The <em>cache-transient</em> and <em>cache-persistent</em> components do
+       not exists anymore, so remove any reference from the cocoon.xconf. Instead
+       the <em>persistent-store</em> and <em>transient-store</em> components
+       fulfil their tasks.
+    </p>
     <p>In general the package names changed from <em>org.apache.cocoon.components.store</em>
        to <em>org.apache.excalibur.store</em> (and <em>org.apache.excalibur.store.impl</em>). So
        if you have custom java code using these components, you have to change
