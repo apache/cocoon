@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.4 2003/04/29 10:45:20 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.5 2003/05/07 11:19:13 bruno Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -307,6 +307,9 @@ public class EnvironmentWrapper
     public void setURI(String prefix, String uris) {
         if(getLogger().isDebugEnabled()) {
             getLogger().debug("Setting uri (prefix=" + prefix + ", uris=" + uris + ")");
+        }
+        if ( !this.initializedComponents) {
+            this.initComponents();
         }
         if (prefix != null) {
             setContext(getRootContext());
