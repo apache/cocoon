@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.6 2003/03/20 13:11:28 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.7 2003/04/26 14:06:50 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -128,6 +128,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     /** The AvalonToCocoonSourceWrapper (this is for the deprecated support) */
     static protected Constructor avalonToCocoonSourceWrapper;
 
+    /** Do we have our components ? */
+    protected boolean initializedComponents;
+    
     /**
      * Constructs the abstract environment
      */
@@ -344,6 +347,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public Source resolve(String systemId)
     throws ProcessingException, SAXException, IOException {
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
         if (getLogger().isDebugEnabled()) {
             this.getLogger().debug("Resolving '"+systemId+"' in context '" + this.context + "'");
         }
@@ -487,6 +493,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                                                          String baseURI,
                                                          final Map    parameters)
     throws MalformedURLException, IOException, SourceException {
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
         return this.sourceResolver.resolveURI(location, baseURI, parameters);
     }
 
@@ -516,6 +525,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                 String         mimeTypeHint,
                 ContentHandler handler )
     throws SAXException, IOException, ProcessingException {
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
         String mimeType = source.getMimeType();
         if (null == mimeType) {
             mimeType = mimeTypeHint;
@@ -551,18 +563,26 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
     }
 
+    /**
+     * Initialize the components for the environment
+     * This gets the source resolver and the xmlizer component
+     */
+    protected void initComponents() {
+        try {
+            this.manager = CocoonComponentManager.getSitemapComponentManager();
+            this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
+            this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
+        } catch (ComponentException ce) {
+            // this should never happen!
+            throw new CascadingRuntimeException("Unable to lookup component.", ce);
+        }
+    }
+    
 	/**
 	 * Notify that the processing starts.
 	 */
 	public void startingProcessing() {
-		try {
-			this.manager = CocoonComponentManager.getSitemapComponentManager();
-			this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
-			this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-		} catch (ComponentException ce) {
-			// this should never happen!
-			throw new CascadingRuntimeException("Unable to lookup component.", ce);
-		}
+        // do nothing here
 	}
 
 	/**
@@ -577,6 +597,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 			this.xmlizer = null;
 			this.sourceResolver = null;
 		}
+        this.initializedComponents = false;
 	}
 
 }
