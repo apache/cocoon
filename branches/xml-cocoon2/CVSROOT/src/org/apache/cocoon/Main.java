@@ -49,7 +49,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.24 $ $Date: 2001-02-24 15:58:04 $
+ * @version CVS $Revision: 1.1.4.25 $ $Date: 2001-02-24 20:04:18 $
  */
 
 public class Main {
@@ -67,35 +67,35 @@ public class Main {
 
     protected static final CLOptionDescriptor [] options = new CLOptionDescriptor [] {
         new CLOptionDescriptor("help",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                HELP_OPT,
                                "print this message and exit"),
         new CLOptionDescriptor("version",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                VERSION_OPT,
                                "print the version information and exit"),
         new CLOptionDescriptor("logUrl",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_REQUIRED,
                                LOG_URL_OPT,
                                "use given file for log"),
         new CLOptionDescriptor("logLevel",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_REQUIRED,
                                LOG_LEVEL_OPT,
                                "choose the minimum log level for logging (DEBUG, INFO, WARN, ERROR, FATAL_ERROR)"),
         new CLOptionDescriptor("contextDir",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_REQUIRED,
                                CONTEXT_DIR_OPT,
                                "use given dir as context"),
         new CLOptionDescriptor("destDir",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_REQUIRED,
                                DEST_DIR_OPT,
                                "use given dir as destination"),
         new CLOptionDescriptor("workDir",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_REQUIRED,
                                WORK_DIR_OPT,
                                "use given dir as working directory"),
         new CLOptionDescriptor("xspOnly",
-                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                XSP_OPT,
                                "generate java code for xsp files")
     };
