@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:45 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 16:42:34 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */
@@ -198,7 +198,7 @@ public class NamespacesTable {
         if (uri.length()>0) {
             // We have a URI and a prefix, check them
             if ((prefix.length()>0) &&  (!uri.equals(this.getUri(prefix)))) {
-                throw new SAXException("URI/Prefix mismatch");
+                throw new SAXException("URI/Prefix mismatch [" + prefix + "," + uri + "]");
             } else {
                 String temp=this.getPrefix(uri);
                 if (temp==null) throw new SAXException("URI not declared");
