@@ -234,7 +234,7 @@ public class ContinuationsManagerImpl
         if (continuationsHolder == null)
             return null;
         
-        WebContinuation kont = (WebContinuation) continuationsHolder.get(id);
+        WebContinuation kont = continuationsHolder.get(id);
         if ( kont != null ) {
             boolean interpreterMatches = kont.interpreterMatches(interpreterId);
             if (!interpreterMatches && getLogger().isWarnEnabled()) {
@@ -484,7 +484,7 @@ public class ContinuationsManagerImpl
         Set continuationIds = continuationsHolder.getContinuationIds();
         Iterator idsIter = continuationIds.iterator();
         while (idsIter.hasNext()) {
-            WebContinuation wk = continuationsHolder.get((String) idsIter.next());
+            WebContinuation wk = continuationsHolder.get(idsIter.next());
             if (wk != null) {
                 _detach(wk);
                 _invalidate(continuationsHolder, wk);
