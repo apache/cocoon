@@ -91,15 +91,16 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="optimize"    value="on"/>
     <property name="deprecation" value="off"/>
 
-    <property name="src.dir"     value="./src"/>
-    <property name="lib.dir"     value="./lib"/>
-    <property name="conf.dir"    value="./conf"/>
-    <property name="docs.dir"    value="./xdocs"/>
-    <property name="dtd.dir"     value="./xdocs/dtd"/>
-    <property name="skins.dir"   value="./skins"/>
-    <property name="images.dir"  value="./xdocs/images"/>
-    <property name="samples.dir" value="./samples"/>
-    <property name="packages"    value="org.apache.*"/>
+    <property name="src.dir"      value="./src"/>
+    <property name="lib.dir"      value="./lib"/>
+    <property name="conf.dir"     value="./conf"/>
+    <property name="docs.dir"     value="./xdocs"/>
+    <property name="dtd.dir"      value="./xdocs/dtd"/>
+    <property name="skins.dir"    value="./skins"/>
+    <property name="images.dir"   value="./xdocs/images"/>
+    <property name="webapp.dir"   value="./webapp"/>
+    <property name="resource.dir" value="./resources"/>
+    <property name="packages"     value="org.apache.*"/>
 
     <property name="browser.skin" value="${skins.dir}/xml.apache.org/"/>
     <property name="printer.skin" value="${skins.dir}/printer/"/>
@@ -127,24 +128,13 @@ NOTE: the "site" target is only useful for site mantainers.
     <filter token="log"     value="true"/>
     <filter token="verbose" value="true"/>
  
-    <available property="php.present" 
-               classname="net.php.servlet" />
-
-    <available property="servlet.present" 
-               classname="javax.servlet.http.HttpServlet" />
-
-    <available property="svg.present" 
-               classname="org.csiro.svgv.display.SvgToAwtConverter" />
-
-    <available property="rhino.present" 
-               classname="org.mozilla.javascript.tools.jsc.Main" />
-
-    <available property="jstyle.present" 
-               classname="jstyle.JSFormatter" />
-
-    <available property="fop.present" 
-               classname="org.apache.fop.apps.Driver" />
-
+    <available property="php.present"     classname="net.php.servlet"/>
+    <available property="servlet.present" classname="javax.servlet.http.HttpServlet"/>
+    <available property="svg.present"     classname="org.csiro.svg.tools.SvgToImageConverter"/>
+    <available property="rhino.present"   classname="org.mozilla.javascript.tools.jsc.Main"/>
+    <available property="jstyle.present"  classname="jstyle.JSFormatter"/>
+    <available property="fop.present"     classname="org.apache.fop.apps.Driver"/>
+    
   </target>
 
   <!-- =================================================================== -->
@@ -197,8 +187,8 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <target name="compile" depends="prepare-src">
     <copydir src="${build.src}" dest="${build.dest}">
-      <include name="**/Manifest.mf" />
-      <include name="**/*.xsl" />
+      <include name="**/Manifest.mf"/>
+      <include name="**/*.xsl"/>
     </copydir>
 
     <javac srcdir="${build.src}"
@@ -206,13 +196,13 @@ NOTE: the "site" target is only useful for site mantainers.
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}">
-      <exclude name="**/*.html" />
-      <exclude name="**/CocoonServlet*.java" unless="servlet.present" />
-      <exclude name="**/SVGSerializer.java" unless="svg.present" />
-      <exclude name="**/Javascript*" unless="rhino.present" />
-      <exclude name="**/Jstyle*" unless="jstyle.present" />
-      <exclude name="**/FO2*" unless="fop.present" />
-      <exclude name="**/Php*" unless="php.present" />
+      <exclude name="**/*.html"/>
+      <exclude name="**/CocoonServlet*.java" unless="servlet.present"/>
+      <exclude name="**/SVGSerializer.java" unless="svg.present"/>
+      <exclude name="**/Javascript*" unless="rhino.present"/>
+      <exclude name="**/Jstyle*" unless="jstyle.present"/>
+      <exclude name="**/FO2*" unless="fop.present"/>
+      <exclude name="**/Php*" unless="php.present"/>
     </javac>
   </target>
 
@@ -234,12 +224,12 @@ NOTE: the "site" target is only useful for site mantainers.
 
     <copydir src="${conf.dir}" dest="${build.war}" filtering="on"/>
 
-    <copydir src="${samples.dir}" dest="${build.war}" filtering="on">
+    <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
       <exclude name="**/images/*"/>
       <exclude name="README"/>
     </copydir>
 
-    <copydir src="${samples.dir}" dest="${build.war}" filtering="off">
+    <copydir src="${webapp.dir}" dest="${build.war}" filtering="off">
       <include name="**/images/*"/>
     </copydir>
 
@@ -310,7 +300,7 @@ NOTE: the "site" target is only useful for site mantainers.
              windowtitle="${Name} API"
              doctitle="${Name}"
              bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
-             stylesheetfile="${skins.dir}/javadoc.css"
+             stylesheetfile="${resource.dir}/javadoc.css"
     />
   </target>
 
@@ -325,19 +315,17 @@ NOTE: the "site" target is only useful for site mantainers.
     <mkdir dir="${dist.dir}/conf"/>
     <mkdir dir="${dist.dir}/docs"/>
     <mkdir dir="${dist.dir}/docs/api"/>
-    <mkdir dir="${dist.dir}/samples"/>
     <mkdir dir="${dist.dir}/skins"/>
-    <mkdir dir="${dist.dir}/webapps"/>
+    <mkdir dir="${dist.dir}/webapp"/>
     <mkdir dir="${dist.dir}/xdocs"/>
 
     <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/bin/${name}.jar"/>
-    <copyfile src="${build.war}/${name}.war" dest="${dist.dir}/webapps/${name}.war"/>
+    <copyfile src="${build.war}/${name}.war" dest="${dist.dir}/webapp/${name}.war"/>
 
     <copydir src="${build.src}"      dest="${dist.dir}/src"/>
     <copydir src="${conf.dir}"       dest="${dist.dir}/conf"/>
     <copydir src="${build.docs}"     dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
-    <copydir src="${samples.dir}"    dest="${dist.dir}/samples"/>
     <copydir src="${docs.dir}"       dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
     <copydir src="${docs.dir}"       dest="${dist.dir}" includes="changes.xml, todo.xml"/>
     <copydir src="${skins.dir}"      dest="${dist.dir}/skins"/>
@@ -348,6 +336,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <chmod perm="+x" file="${dist.dir}/build.sh"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.sh"  cr="remove"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.bat" cr="add"/>
+    <fixcrlf srcdir="${dist.dir}" includes="lcp.bat"   cr="add"/>
   </target>
 
   <!-- =================================================================== -->

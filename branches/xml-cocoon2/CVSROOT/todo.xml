@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.10 2000-08-17 16:44:53 stefano Exp $
+  $Id: todo.xml,v 1.6.2.11 2000-08-21 17:33:04 stefano Exp $
 -->
 
 
@@ -39,12 +39,6 @@
   </action>
 
   <action context="code">
-   Extend the cocoon demo war file to create a complete presentation of current
-   publishing capabilities (need FO, SVG, SMIL, RSS, VRML... we can just port
-   them from Cocoon1 and adapt them for the new processing)
-  </action>
-
-  <action context="code">
    Check and fix xsl:import which doesn't seem to work expected... very strange..
    it might be an XSLT problem with the XSP example since it uses namespaces
    heavily... should we use the namespace() axis?
@@ -55,23 +49,21 @@
    for SAX2 final.
   </action>
 
+  <action context="code">
+   Finish writing SVGSerializer.
+  </action>
  </actions>
  
  <actions priority="medium">
-
-  <action context="code" assigned-to="RB">
-   Create a SVGSerializer
-  </action>
 
   <action context="code">
    Create a better logging subsystem.
   </action>
 
   <action context="code">
-   Create a Cocoon1-like status page to indicate current status. Should be 
-   implemented as a Generator directly. It should also be able to generate
-   SVG graphs of current load and so forth. Now that we have the technology,
-   let's use it!.
+   Implement a internal profiling tool that should indicate the load and history of 
+   such along with the status page. Something both useful and fancy to show the 
+   power of C2.
   </action>
   
  </actions>
