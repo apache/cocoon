@@ -3,7 +3,7 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- indicates what flowscript to attach to this sitemap -->
-  <map:flow language="JavaScript">
+  <map:flow language="javascript">
     <map:script src="calc.js"/>
   </map:flow>
 

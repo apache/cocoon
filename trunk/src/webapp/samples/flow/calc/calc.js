@@ -21,18 +21,24 @@ function calculator()
 function getNumber(name, a, b)
 {
   var uri = "page/getNumber" + name.toUpperCase();
-  sendPageAndWait(uri, { "a" : a, "b" : b });
-  return parseFloat(cocoon.request.getParameter(name));
+  cocoon.sendPageAndWait(uri, { "a" : a, "b" : b });
+  return parseFloat(cocoon.request.name);
 }
 
 function getOperator(a, b)
 {
-  sendPageAndWait("page/getOperator", { "a" : a, "b" : b });
-  return cocoon.request.getParameter("operator");
+  cocoon.sendPageAndWait("page/getOperator", { "a" : a, "b" : b });
+  return cocoon.request.operator;
 }
 
 function sendResult(a, b, op, result)
 {
-  sendPage("page/displayResult",
-           { "a" : a, "b" : b, "operator" : op, "result" : result });
+  cocoon.sendPage("page/displayResult",
+           { 
+                "a" : a, 
+                "b" : b, 
+                "operator" : op, 
+                "result" : result 
+           }
+  );
 }
