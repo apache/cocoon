@@ -48,7 +48,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * at this time.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-23 22:34:45 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-26 17:42:57 $
  */
 public class ImageUploadAction extends ComposerAction implements Contextualizable {
     private final static int SIZE = 0;
@@ -162,6 +162,7 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
         }
 
         File image = null;
+        FileInputStream imageStream = null;
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
@@ -172,8 +173,9 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
             int [] dimensions = ImageDirectoryGenerator.getSize(image);
             paramValues[ImageUploadAction.WIDTH] = dimensions[0];
             paramValues[ImageUploadAction.HEIGHT] = dimensions[1];
+            imageStream = new FileInputStream(image);
 
-            statement.setBinaryStream(1, new FileInputStream(image), paramValues[ImageUploadAction.SIZE]);
+            statement.setBinaryStream(1, imageStream, paramValues[ImageUploadAction.SIZE]);
 
             int maxIndex = 1;
             for (int i = 0; i < ImageUploadAction.NUM_PARAMS; i++) {
@@ -196,6 +198,7 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
         } catch (Exception e) {
             getLogger().warn("Could not commit file: " + query, e);
         } finally {
+            if (imageStream != null) imageStream.close();
             if (image != null) image.delete();
 
             try {
