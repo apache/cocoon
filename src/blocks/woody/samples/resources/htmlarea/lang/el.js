@@ -1,18 +1,3 @@
-/*
-* Copyright 1999-2004 The Apache Software Foundation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
 // I18N constants
 
 // LANG: "en", ENCODING: UTF-8 | ISO-8859-1
@@ -36,57 +21,57 @@ HTMLArea.I18N = {
 	tooltips: {
 		bold:           "Έντονα",
 		italic:         "Πλάγια",
-		underline:      "Υπογραμμισμένα",
-		strikethrough:  "Διαγραμμένα",
+		underline:      "Υπογ�?αμμισμένα",
+		strikethrough:  "Διαγ�?αμμένα",
 		subscript:      "Δείκτης",
 		superscript:    "Δείκτης",
-		justifyleft:    "Στοίχιση Αριστερά",
-		justifycenter:  "Στοίχιση Κέντρο",
+		justifyleft:    "Στοίχιση Α�?ιστε�?ά",
+		justifycenter:  "Στοίχιση Κέντ�?ο",
 		justifyright:   "Στοίχιση Δεξιά",
-		justifyfull:    "Πλήρης Στοίχιση",
-		orderedlist:    "Αρίθμηση",
+		justifyfull:    "Πλή�?ης Στοίχιση",
+		orderedlist:    "Α�?ίθμηση",
 		unorderedlist:  "Κουκκίδες",
 		outdent:        "Μείωση Εσοχής",
-		indent:         "Αύξηση Εσοχής",
-		forecolor:      "Χρώμα Γραμματοσειράς",
-		hilitecolor:    "Χρώμα Φόντου",
-		horizontalrule: "Οριζόντια Γραμμή",
+		indent:         "Α�?ξηση Εσοχής",
+		forecolor:      "Χ�?ώμα Γ�?αμματοσει�?άς",
+		hilitecolor:    "Χ�?ώμα Φόντου",
+		horizontalrule: "Ο�?ιζόντια Γ�?αμμή",
 		createlink:     "Εισαγωγή Συνδέσμου",
-		insertimage:    "Εισαγωγή/Τροποποίηση Εικόνας",
+		insertimage:    "Εισαγωγή/Τ�?οποποίηση Εικόνας",
 		inserttable:    "Εισαγωγή Πίνακα",
 		htmlmode:       "Εναλλαγή σε/από HTML",
-		popupeditor:    "Μεγένθυνση επεξεργαστή",
-		about:          "Πληροφορίες",
+		popupeditor:    "Μεγένθυνση επεξε�?γαστή",
+		about:          "Πλη�?οφο�?ίες",
 		showhelp:       "Βοήθεια",
-		textindicator:  "Παρών στυλ",
-		undo:           "Αναίρεση τελευταίας ενέργειας",
-		redo:           "Επαναφορά από αναίρεση",
+		textindicator:  "Πα�?ών στυλ",
+		undo:           "Αναί�?εση τελευταίας ενέ�?γειας",
+		redo:           "Επαναφο�?ά από αναί�?εση",
 		cut:            "Αποκοπή",
-		copy:           "Αντιγραφή",
+		copy:           "Αντιγ�?αφή",
 		paste:          "Επικόλληση",
-        lefttoright:    "Κατεύθυνση αριστερά προς δεξιά",
-        righttoleft:    "Κατεύθυνση από δεξιά προς τα αριστερά"
+        lefttoright:    "Κατε�?θυνση α�?ιστε�?ά π�?ος δεξιά",
+        righttoleft:    "Κατε�?θυνση από δεξιά π�?ος τα α�?ιστε�?ά"
 	},
 
 	buttons: {
 		"ok":           "OK",
-		"cancel":       "Ακύρωση"
+		"cancel":       "Ακ�?�?ωση"
 	},
 
 	msg: {
-		"Path":         "Διαδρομή",
-		"TEXT_MODE":    "Είστε σε TEXT MODE.  Χρησιμοποιήστε το κουμπί [<>] για να επανέρθετε στο WYSIWIG.",
+		"Path":         "Διαδ�?ομή",
+		"TEXT_MODE":    "Είστε σε TEXT MODE.  Χ�?ησιμοποιήστε το κουμπί [<>] για να επανέ�?θετε στο WYSIWIG.",
 
-       "IE-sucks-full-screen":	"Η κατάσταση πλήρης οθόνης έχει προβλήματα με τον Internet Explorer, " +
-       							"λόγω σφαλμάτων στον ίδιο τον browser.  Αν το σύστημα σας είναι Windows 9x " +
-       							"μπορεί και να χρειαστείτε reboot. Αν είστε σίγουροι, πατήστε ΟΚ."
+       "IE-sucks-full-screen":	"Η κατάσταση πλή�?ης οθόνης έχει π�?οβλήματα με τον Internet Explorer, " +
+       							"λόγω σφαλμάτων στον ίδιο τον browser.  Αν το σ�?στημα σας είναι Windows 9x " +
+       							"μπο�?εί και να χ�?ειαστείτε reboot. Αν είστε σίγου�?οι, πατήστε ΟΚ."
        },
 
        dialogs: {
-               "Cancel"                                            : "Ακύρωση",
-               "Insert/Modify Link"                                : "Εισαγωγή/Τροποποίηση σύνδεσμου",
-               "New window (_blank)"                               : "Νέο παράθυρο (_blank)",
-               "None (use implicit)"                               : "Κανένα (χρήση απόλυτου)",
+               "Cancel"                                            : "Ακ�?�?ωση",
+               "Insert/Modify Link"                                : "Εισαγωγή/Τ�?οποποίηση σ�?νδεσμου",
+               "New window (_blank)"                               : "�?έο πα�?άθυ�?ο (_blank)",
+               "None (use implicit)"                               : "Κανένα (χ�?ήση απόλυτου)",
                "OK"                                                : "Εντάξει",
                "Other"                                             : "Αλλο",
                "Same frame (_self)"                                : "Ίδιο frame (_self)",
@@ -94,6 +79,6 @@ HTMLArea.I18N = {
                "Title (tooltip):"                                  : "Τίτλος (tooltip):",
                "Top frame (_top)"                                  : "Πάνω frame (_top)",
                "URL:"                                              : "URL:",
-               "You must enter the URL where this link points to"  : "Πρέπει να εισάγετε το URL που οδηγεί αυτός ο σύνδεσμος"
+               "You must enter the URL where this link points to"  : "Π�?έπει να εισάγετε το URL που οδηγεί αυτός ο σ�?νδεσμος"
        }
 };
