@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.xml.dom;
 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.excalibur.xml.sax.XMLizable;
 
 import org.w3c.dom.Attr;
@@ -75,7 +78,7 @@ import org.xml.sax.SAXException;
  *  like XMLizable and a toString() method.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DocumentWrapper.java,v 1.1 2003/03/09 00:09:48 pier Exp $
+ * @version CVS $Id: DocumentWrapper.java,v 1.2 2003/08/15 15:55:03 haul Exp $
 */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
@@ -102,7 +105,11 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
 
     public String toString() {
-        return DOMUtil.node2String(this.document).toString();
+        try {
+            return XMLUtils.serializeNodeToXML(this.document);
+        } catch (ProcessingException e) {
+        }
+        return "";
     }
 
 
