@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: aggregate.xml,v 1.1 2004/02/07 15:13:26 joerg Exp $ -->
+<!-- CVS $Id: aggregate.xml,v 1.2 2004/02/07 15:17:20 joerg Exp $ -->
 
 <page xmlns:cinclude="http://apache.org/cocoon/include/1.0">
-    <cinclude:include src="cocoon:/slashdot"/>
-    <cinclude:include src="cocoon:/moreover"/>
-    <cinclude:include src="cocoon:/xmlhack"/>
+    <slashdot>
+        <cinclude:include src="cocoon:/slashdot"/>
+    </slashdot>
+    <moreover>
+        <cinclude:include src="cocoon:/moreover"/>
+    </moreover>
+    <xmlhack>
+        <cinclude:include src="cocoon:/xmlhack"/>
+    </xmlhack>
 </page>
