@@ -18,9 +18,9 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id$
+    | $Id$
     +-->
-<module name="cocoon-2.1">
+<module name="cocoon">
 
   <url href="http://cocoon.apache.org/"/>
   <description>Java XML Framework</description>
@@ -1212,7 +1212,7 @@
       Delivery context library
     </description>
     <home nested="src/blocks/deli/lib"/>
-    <jar name="deli-0.9.8.jar"/>
+    <jar name="deli-x020904.jar"/>
   </project>
 
   <project name="jing">
