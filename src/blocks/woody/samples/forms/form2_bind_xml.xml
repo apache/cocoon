@@ -79,6 +79,10 @@
     </wb:on-delete-row>
 
     <wb:on-insert-row>
+      <!-- The insert-node element contains a piece of template XML to be
+      inserted for new rows. Alternatively, you could also add a "src"
+      attribute on the insert-node element pointing to an external source
+      to retrieve the template from. -->
       <wb:insert-node>
       	<!-- template inserted by the binding for new rows (mapping new nodes) -->
         <contact id="" row-state="new">
