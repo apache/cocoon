@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="reader-mime-type" default="reader-mime-type">
+
+    <group id="default">
+        <property name="usetidy" value="false"/>
+    </group>
+
+    <!-- Check mime-types (bugzilla 25212) -->
+    <target name="reader-mime-type">
+        <property name="baseUrl" value="${anteater.env.cocoon}/samples/test/reader-mime-type"/>
+
+        <httpRequest href="${baseUrl}/test10.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test20.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test30.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test40.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test50.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test60.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test70.html" description="Check content-type">
+            <match>
+                <header name="Content-type" value="text/html"/>
+            </match>
+        </httpRequest>
+
+    </target>
+
+</project>

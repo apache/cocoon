@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <translations>
 	<!-- 
 	Languages:
@@ -13,11 +28,11 @@
 	<entry>
 		<key>count_title</key>
 		<translation lang="en">This page was accessed {0} times. Last at: {1}.</translation>
-		<translation lang="ru">На эту страницу заходили {0} раз(а). В последний раз {1}.</translation>
+		<translation lang="ru">�?а �?ту �?траницу заходили {0} раз(а). В по�?ледний раз {1}.</translation>
 		<translation lang="de">Diese Seite wurde {0}mal aufgerufen. Letzter Aufruf: {1}.</translation>
 		<translation lang="pl">Ta strona była pobierana {0} razy. Ostatnio {1}</translation>
 		<translation lang="es">Esta página fue tenida acceso {0} veces. Pasado en: {1}.</translation>
-		<translation lang="hy">²Ûë ¿çÁ ³Ûó»É»É »Ý {0} ³Ý·³Ù. ì»ñçÇÝÁ {1}.</translation>
+		<translation lang="hy">²Ûë ¿ç�? ³Ûó»É»É »�? {0} ³�?·³Ù. ì»ñçÇ�?�? {1}.</translation>
 	</entry>
 	<entry>
 		<key>a_key</key>
@@ -26,7 +41,7 @@
 		<translation lang="de">Dies ist der Wert eines Schlüssels.</translation>
 		<translation lang="pl">To jest klucz.</translation>
 		<translation lang="es">Esto es un valor clave.</translation>
-		<translation lang="hy">ê³ µ³Ý³ÉÇÇ ³éÅ»ùÝ ¿£</translation>
+		<translation lang="hy">ê³ µ³�?³ÉÇÇ ³éÅ»ù�? ¿£</translation>
 	</entry>
 	<entry>
 		<key>lang_id1</key>
@@ -77,74 +92,74 @@
 	<entry>
 		<key>language</key>
 		<translation lang="en">English</translation>
-		<translation lang="ru">Русский</translation>
+		<translation lang="ru">Ру�?�?кий</translation>
 		<translation lang="de">Deutsch</translation>
 		<translation lang="pl">Polski</translation>
 		<translation lang="es">Español</translation>
-		<translation lang="hy">Ð³Û»ñ»Ý</translation>
+		<translation lang="hy">�?³Û»ñ»�?</translation>
 	</entry>
 	<entry>
 		<key>language1</key>
 		<translation lang="en">Russian</translation>
-		<translation lang="ru">Английский</translation>
+		<translation lang="ru">�?нглий�?кий</translation>
 		<translation lang="de">Englische</translation>
 		<translation lang="pl">Angielski</translation>
 		<translation lang="es">Inglés</translation>
-		<translation lang="hy">²Ý·É»ñ»Ý</translation>
+		<translation lang="hy">²�?·É»ñ»�?</translation>
 	</entry>
 	<entry>
 		<key>language2</key>
 		<translation lang="en">German</translation>
-		<translation lang="ru">Немецкий</translation>
+		<translation lang="ru">�?емецкий</translation>
 		<translation lang="de">Russe</translation>
 		<translation lang="pl">Rosyjski</translation>
 		<translation lang="es">Ruso</translation>
-		<translation lang="hy">èáõë»ñ»Ý</translation>
+		<translation lang="hy">èáõë»ñ»�?</translation>
 	</entry>
 	<entry>
 		<key>language3</key>
 		<translation lang="en">Polish</translation>
-		<translation lang="ru">Польский</translation>
+		<translation lang="ru">Поль�?кий</translation>
 		<translation lang="de">Polnisch</translation>
 		<translation lang="pl">Niemiecki</translation>
 		<translation lang="es">Alemán</translation>
-		<translation lang="hy">¶»ñÙ³Ý»ñ»Ý</translation>
+		<translation lang="hy">¶»ñÙ³�?»ñ»�?</translation>
 	</entry>
 	<entry>
 		<key>language4</key>
 		<translation lang="en">Spanish</translation>
-		<translation lang="ru">Испанский</translation>
+		<translation lang="ru">И�?пан�?кий</translation>
 		<translation lang="de">Spanisch</translation>
 		<translation lang="pl">Hiszpañski</translation>
 		<translation lang="es">Polaco</translation>
-		<translation lang="hy">È»Ñ»ñ»Ý</translation>
+		<translation lang="hy">È»Ñ»ñ»�?</translation>
 	</entry>
 	<entry>
 		<key>language5</key>
 		<translation lang="en">Armenian</translation>
-		<translation lang="ru">Армянский</translation>
+		<translation lang="ru">�?рм�?н�?кий</translation>
 		<translation lang="de">Armenier</translation>
 		<translation lang="pl">Armeñski</translation>
 		<translation lang="es">Armenio</translation>
-		<translation lang="hy">Æëå³Ý»ñ»Ý</translation>
+		<translation lang="hy">Æëå³�?»ñ»�?</translation>
 	</entry>
 	<entry>
 		<key>Hello, internationalization!</key>
 		<translation lang="en">Hello, internationalization!</translation>
-		<translation lang="ru">Привет, многоязычность!</translation>
+		<translation lang="ru">Привет, много�?зычно�?ть!</translation>
 		<translation lang="de">Herzlich willkommen, Internationalisierung!</translation>
 		<translation lang="pl">Witam, oto przykład wielojęzycznej strony!</translation>
 		<translation lang="es">¡¡Hola!, internacionalización!</translation>
-		<translation lang="hy">´³ñ¢°, ÇÝï»ñÝ³óÛáÝ³ÉáõÃÛáõÝ£</translation>
+		<translation lang="hy">´³ñ¢°, Ç�?ï»ñ�?³óÛá�?³ÉáõÃÛáõ�?£</translation>
 	</entry>
 	<entry>
 		<key>Documentation link:</key>
 		<translation lang="en">See i18n documentation for details:</translation>
-		<translation lang="ru">Для дополнительной информации по i18n смотри:</translation>
+		<translation lang="ru">Дл�? дополнительной информации по i18n �?мотри:</translation>
 		<translation lang="de">Näheres unter der i18n Dokumentation:</translation>
 		<translation lang="pl">Widzą i18n dokumentacja dla szczegółów:</translation>
 		<translation lang="es">Visto la documentación i18n para detalles:</translation>
-		<translation lang="hy">Ø³Ýñ³Ù³ë µ³ó³ïñáõÃÛ³Ý Ñ³Ù³ñ Ý³Çñª</translation>
+		<translation lang="hy">Ø³�?ñ³Ù³ë µ³ó³ïñáõÃÛ³�? Ñ³Ù³ñ �?³Çñª</translation>
 	</entry>
 	<entry>
 		<key>first</key>
@@ -153,7 +168,7 @@
 		<translation lang="de">Erstens</translation>
 		<translation lang="pl">Pierwszy</translation>
 		<translation lang="es">Primero</translation>
-		<translation lang="hy">²é³çÇÝ</translation>
+		<translation lang="hy">²é³çÇ�?</translation>
 	</entry>
 	<entry>
 		<key>second</key>
@@ -162,7 +177,7 @@
 		<translation lang="de">Zweitens</translation>
 		<translation lang="pl">Drugi</translation>
 		<translation lang="es">Segundo</translation>
-		<translation lang="hy">ºñÏñáñ¹</translation>
+		<translation lang="hy">ºñ�?ñáñ¹</translation>
 	</entry>
 	<entry>
 		<key>third</key>
@@ -185,11 +200,11 @@
 	<entry>
 		<key>article</key>
 		<translation lang="en">Article</translation>
-		<translation lang="ru">Статья</translation>
+		<translation lang="ru">Стать�?</translation>
 		<translation lang="de">Artikel</translation>
 		<translation lang="pl">Artykuł</translation>
 		<translation lang="es">Artículo</translation>
-		<translation lang="hy">Ðá¹í³Í</translation>
+		<translation lang="hy">�?á¹í³�?</translation>
 	</entry>
 	<entry>
 		<key>article_text1</key>
@@ -198,34 +213,34 @@
 		<translation lang="de">Dies ist ein Absatz nach i18n.</translation>
 		<translation lang="pl">To jest paragraf w i18n.</translation>
 		<translation lang="es">Esto es un párrafo i18n.</translation>
-		<translation lang="hy">ê³ ÇÝï»ñÝ³óÛáÝ³É å³ñ³·ñ³ý ¿£</translation>
+		<translation lang="hy">ê³ Ç�?ï»ñ�?³óÛá�?³É å³ñ³·ñ³ý ¿£</translation>
 	</entry>
 	<entry>
 		<key>article_text2</key>
 		<translation lang="en">This is another i18n paragraph and is also a cool one.</translation>
-		<translation lang="ru">Это тоже интернационализированный абзац и такой же классный.</translation>
+		<translation lang="ru">Это тоже интернационализированный абзац и такой же кла�?�?ный.</translation>
 		<translation lang="de">Dies ist ein weiterer Absatz nach i18n und auch noch ein ziemlich cooler dazu.</translation>
 		<translation lang="pl">To jest następny paragraf w i18n i jest takze fajny.</translation>
 		<translation lang="es">Esto es otro párrafo i18n y es también uno 'cool'.</translation>
-		<translation lang="hy">ê³ ÙÇ áõñÇß ÇÝï»ñÝ³óÛáÝ³É å³ñ³·ñ³ý ¿, ¢ ÝáõÛÝ å»ë ó»Ýïñ£</translation>
+		<translation lang="hy">ê³ ÙÇ áõñÇß Ç�?ï»ñ�?³óÛá�?³É å³ñ³·ñ³ý ¿, ¢ �?áõÛ�? å»ë ó»�?ïñ£</translation>
 	</entry>
 	<entry>
 		<key>copyright</key>
 		<translation lang="en">Copyright © 2001 Konstantin Piroumian. No rights are reserved.</translation>
-		<translation lang="ru">Авторские права © 2001 Константин Пирумян. Ничто не защищено.</translation>
+		<translation lang="ru">�?втор�?кие права © 2001 Кон�?тантин Пирум�?н. �?ичто не защищено.</translation>
 		<translation lang="de">Copyright © 2001 Konstantin Piroumian. Deutsche Übersetzung von Jörg Prante.</translation>
 		<translation lang="pl">Copyright © 2001 Konstantin Piroumian i Krzysztof Zieliński. Żadne prawa nie są zastrzeżone:)</translation>
 		<translation lang="es">Copyright © 2001 Konstantin Piroumian. Ningunos derechos son reservados.</translation>
-		<translation lang="hy">Copyright © 2001 Konstantin Piroumian. àãÇÝã ãÇ å³Ñå³Ýí³Í£</translation>
+		<translation lang="hy">Copyright © 2001 Konstantin Piroumian. àãÇ�?ã ãÇ å³Ñå³�?í³�?£</translation>
 	</entry>
 	<entry>
 		<key>Hello, {0}! Glad to see you!</key>
 		<translation lang="en">Hello, {0}! Glad to see you!</translation>
-		<translation lang="ru">Привет, {0}! Рад тебя видеть!</translation>
+		<translation lang="ru">Привет, {0}! Рад теб�? видеть!</translation>
 		<translation lang="de">Hallo {0}! Schön, dich zu sehen!</translation>
 		<translation lang="pl">Witam, {0}! Miło Cię widzieć!</translation>
 		<translation lang="es">¡¡Hola!, {0}! ¡Alegre de verle!</translation>
-		<translation lang="hy">´³ñ¢¯ {0}: àõñ³Ë »Ù ù»½ ï»ëÝ»É£</translation>
+		<translation lang="hy">´³ñ¢¯ {0}: àõñ³Ë »Ù ù»½ ï»ë�?»É£</translation>
 	</entry>
 	<entry>
 		<key>Kot</key>
@@ -239,7 +254,7 @@
 	<entry>
 		<key>none</key>
 		<translation lang="en">None</translation>
-		<translation lang="ru">Никто</translation>
+		<translation lang="ru">�?икто</translation>
 		<translation lang="de">nichts</translation>
 		<translation lang="pl">Nic</translation>
 		<translation lang="es">Ninguno</translation>
@@ -252,7 +267,7 @@
 		<translation lang="de">eins</translation>
 		<translation lang="pl">raz</translation>
 		<translation lang="es">un</translation>
-		<translation lang="hy">Ù»Ï</translation>
+		<translation lang="hy">Ù»�?</translation>
 	</entry>
 	<entry>
 		<key>two</key>
@@ -261,6 +276,6 @@
 		<translation lang="de">zwei</translation>
 		<translation lang="pl">dwa</translation>
 		<translation lang="es">dos</translation>
-		<translation lang="hy">»ñÏáõë</translation>
+		<translation lang="hy">»ñ�?áõë</translation>
 	</entry>
 </translations>

@@ -1,21 +1,25 @@
 <?xml version="1.0"?>
-
-<!-- $Id: xsp.xsl,v 1.1 2003/03/09 00:08:59 pier Exp $-->
 <!--
- *****************************************************************************
- * Copyright (C) The Apache Software Foundation. All rights reserved.        *
- * _________________________________________________________________________ *
- * This software is published under the terms of the Apache Software License *
- * version 1.1, a copy of which has been included  with this distribution in *
- * the LICENSE file.                                                         *
- *****************************************************************************
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 -->
 
 <!--
  * XSP Core logicsheet for the JavaScript language
  *
  * @author <a href="mailto:vgritsenko@apache.org>Vadim Gritsenko</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:59 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/03/10 09:46:23 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -402,7 +406,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
         <xsl:value-of select="."/>
       </xsl:when>
       <xsl:otherwise>
-        page.xspCharacters("<xsl:value-of select="XSLTExtension:escape($extension, .)"/>");
+        page.xspCharacters("<xsl:value-of select="XSLTExtension:escapeJava($extension, .)"/>");
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

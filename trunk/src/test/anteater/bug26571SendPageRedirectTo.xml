@@ -15,21 +15,26 @@
   limitations under the License.
 -->
 
-<project name="internal-request-test" default="internal-request-test">
+<project name="sendpage-redirect-test" default="sendpage-redirect-test">
 
   <group id="default">
     <property name="usetidy" value="false"/>
   </group>
 
-  <!-- test samples/test/simpletest -->
-  <target name="internal-request-test">
-    <property name="internal-request-test" value="${anteater.env.cocoon}/samples/test/internal-request/simpletest"/>
+  <target name="sendpage-redirect-test">
+    <property name="sendpage-redirect-test" value="${anteater.env.cocoon}/samples/test/sendpage-redirect/test"/>
 
-      <httpRequest href="${internal-request-test}"
-		   description="Test the internal request handling">
-        <match>
-          <xpath select="test/test/@file" value="c"/>
-        </match>
-      </httpRequest>
+    <httpRequest href="${sendpage-redirect-test}-good">
+      <match>
+        <responseCode value="302"/>
+      </match>
+    </httpRequest>
+    
+    <httpRequest href="${sendpage-redirect-test}-bad">
+      <match>
+        <responseCode value="302"/>
+      </match>
+    </httpRequest>
+
   </target>
 </project>
