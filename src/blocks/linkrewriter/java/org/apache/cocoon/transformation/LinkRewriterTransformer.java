@@ -99,9 +99,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * <pre>
  *  &lt;map:transformer name="linkrewriter"
  *    src="org.apache.cocoon.transformation.LinkRewriterTransformer">
- *    &lt;input-module name="site" src="cocoon://samples/link/linkmap" reloadable="true"/>
+ *    &lt;input-module name="site">
+ *      &lt;file src="cocoon://samples/link/linkmap" reloadable="true"/>
+ *    &lt;/input-module>
  *    &lt;input-module name="mapper">
- *      &lt;input-module name="site" src="{src}" reloadable="true"/>
+ *      &lt;input-module name="site">
+ *        &lt;file src="{src}" reloadable="true"/>
+ *      &lt;/input-module>
  *      &lt;prefix>/site/&lt;/prefix>
  *      &lt;suffix>/@href&lt;/suffix>
  *    &lt;/input-module>
@@ -111,11 +115,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * 'site' (an {@link org.apache.cocoon.components.modules.input.XMLFileModule}
  * and 'mapper' (A {@link
  * org.apache.cocoon.components.modules.input.SimpleMappingMetaModule}.  All
- * other InputModules will use their static configs.  Note that the dynamic
- * config syntax different to the static config syntax (attributes instead of
- * elements).  Note also that, when configuring a Meta InputModule like
- * 'mapper', we need to also configure the 'inner' module (here, 'site') with a
- * nested &lt;input-module>.
+ * other InputModules will use their static configs.  Note that, when
+ * configuring a Meta InputModule like 'mapper', we need to also configure the
+ * 'inner' module (here, 'site') with a nested &lt;input-module>.
  * <p>
  * There is one further twist; to have <em>really</em> dynamic configuration,
  * we need information available only when the transformer actually runs.  This
@@ -148,6 +150,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  * in the map:transform
  * <p>
+ * A live example of LinkRewriterTransformer can be found in the <a
+ * href="http://xml.apache.org/forrest/">Apache Forrest</a> sitemap.
+ * <p>
  *
  * <h3>Configuration</h3>
  * <p>
@@ -169,7 +174,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.5 2003/05/03 11:22:55 jefft Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.6 2003/05/13 11:13:00 jefft Exp $
  */
 public class LinkRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
