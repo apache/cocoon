@@ -49,10 +49,6 @@
                 </table>
                 
                 <xsl:apply-templates select="*"/>
-                <script type="text/javascript">
-//                    alert("done");
-//                    test();
-                </script>"
             </body>
         </html>
     
@@ -209,10 +205,10 @@
     
     
 
-    <xsl:template match="call">
+    <!--xsl:template match="call">
         <xsl:if test="$debug"><xsl:apply-templates select="." mode="debug"/></xsl:if>
         <xsl:apply-templates/>
-    </xsl:template>
+    </xsl:template-->
 
 
     <xsl:template match="*">
@@ -363,7 +359,7 @@
     <xsl:param name="refinfo"  select="''"/>
 
     <xsl:if test=" $afterslashes=$nomatch or 
-            name()='serialize' or name()='act' or name()='transform' or $afterslashes!='' or
+            name()='serialize' or name()='act' or name()='call' or name()='transform' or $afterslashes!='' or
              concat(substring-before($name,$afterslashes),$refinfo,@element,@test, @mime-type,@type,@parameter)!='' or
              count(parameter)>0">
              
@@ -404,7 +400,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
                 <xsl:choose>
-                    <xsl:when test="name()='serialize' or name()='act'"><xsl:value-of select="name()"/></xsl:when>
+                    <xsl:when test="name()='serialize' or name()='act' or name()='call'"><xsl:value-of select="name()"/></xsl:when>
                     <xsl:when test="name()='transform'">xlst</xsl:when>
                 </xsl:choose>
             </td></tr>
@@ -430,8 +426,17 @@
                         <xsl:when test="@mime-type">
                             <xsl:value-of select="@mime-type"/>
                         </xsl:when>
+                        <xsl:when test="@function">
+                            <xsl:value-of select="@function"/>
+                        </xsl:when>
                         <xsl:when test="@parameter">
                             <xsl:value-of select="@parameter"/>
+                        </xsl:when>
+                        <xsl:when test="@*">
+                            <xsl:for-each select="@*[name()!='pattern' and name()!='@src' and name()!='ref']">
+                                <xsl:value-of select="concat(name(),'=',.)"/>
+                                <xsl:if test="position()>1"><br/></xsl:if>
+                            </xsl:for-each>
                         </xsl:when>
                     </xsl:choose>
                 </pre>
