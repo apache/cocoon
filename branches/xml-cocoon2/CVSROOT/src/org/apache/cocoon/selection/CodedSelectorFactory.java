@@ -18,7 +18,7 @@ import org.apache.cocoon.CodeFactory;
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-10 19:49:52 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-31 15:48:38 $
  */
 public class CodedSelectorFactory extends java.lang.Object
         implements CodeFactory {
@@ -38,7 +38,7 @@ public class CodedSelectorFactory extends java.lang.Object
           .append( "_expr = new org.apache.cocoon.selection.helpers.CodedSelectorHelper() {" )
           .append( "public boolean evaluate(Map objectModel) {" )
           .append( "initialize(objectModel);" )
-          .append( "return (" + test + ");" )
+          .append( "return (").append(test).append(");" )
           .append( "}" )
           .append( "};" );
         return sb.toString();

@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.8 $ $Date: 2000-12-11 15:06:02 $
+ * @version $Revision: 1.1.2.9 $ $Date: 2001-01-31 15:48:36 $
  * @since 2.0
  */
 
@@ -153,11 +153,11 @@ public class Jikes extends AbstractJavaCompiler {
     protected List parseStream(BufferedReader input) throws IOException {
         List errors = null;
         String line = null;
-        StringBuffer buffer = new StringBuffer();
+        StringBuffer buffer = null;
 
         while (true) {
             // cleanup the buffer
-            buffer.delete(0, buffer.length());
+            buffer = new StringBuffer(); // this is faster than clearing it
 
             // first line is not space-starting
             if (line == null) line = input.readLine();

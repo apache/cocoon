@@ -24,7 +24,7 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-01-22 21:56:46 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-01-31 15:48:38 $
  */
 
 public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
@@ -83,7 +83,7 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
         try {
             this.setPattern (pattern);
 
-            result.append ("\n// wildcard pattern = \"" + pattern + "\"\n\t")
+            result.append ("\n// wildcard pattern = \"").append(pattern).append("\"\n\t")
                   .append ("static int[] ").append(prefix).append("_expr = {");
 
             int j = sourcePattern.length - 1;

@@ -48,7 +48,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.18 $ $Date: 2001-01-22 21:56:32 $
+ * @version CVS $Revision: 1.1.4.19 $ $Date: 2001-01-31 15:48:35 $
  */
 
 public class Main {
@@ -212,14 +212,14 @@ public class Main {
     private static void printUsage() {
         String lSep = System.getProperty("line.separator");
         StringBuffer msg = new StringBuffer();
-        msg.append("------------------------------------------------------------------------ " + lSep);
-        msg.append(Cocoon.NAME + " " + Cocoon.VERSION + lSep);
-        msg.append("Copyright (c) " + Cocoon.YEAR + " Apache Software Foundation. All rights reserved." + lSep);
-        msg.append("------------------------------------------------------------------------ " + lSep + lSep);
-        msg.append("Usage: java org.apache.cocoon.Main [options] [targets]" + lSep + lSep);
-        msg.append("Options: " + lSep);
+        msg.append("------------------------------------------------------------------------ ").append(lSep);
+        msg.append(Cocoon.NAME).append(" ").append(Cocoon.VERSION).append(lSep);
+        msg.append("Copyright (c) ").append(Cocoon.YEAR).append(" Apache Software Foundation. All rights reserved.").append(lSep);
+        msg.append("------------------------------------------------------------------------ ").append(lSep).append(lSep);
+        msg.append("Usage: java org.apache.cocoon.Main [options] [targets]").append(lSep).append(lSep);
+        msg.append("Options: ").append(lSep);
         msg.append(CLUtil.describeOptions(Main.options).toString());
-        msg.append("Note: the context directory defaults to '" + Cocoon.DEFAULT_CONTEXT_DIR + "'" + lSep);
+        msg.append("Note: the context directory defaults to '").append(Cocoon.DEFAULT_CONTEXT_DIR + "'").append(lSep);
         System.out.println(msg.toString());
         System.exit(0);
     }

@@ -18,7 +18,7 @@ import org.apache.log.LogKit;
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.10 $ $Date: 2001-01-31 05:21:45 $
+ * @version $Revision: 1.1.2.11 $ $Date: 2001-01-31 15:48:36 $
  * @since 2.0
  */
 
@@ -91,11 +91,11 @@ public class Javac extends AbstractJavaCompiler {
   protected List parseModernStream(BufferedReader input) throws IOException {
     List errors = null;
     String line = null;
-    StringBuffer buffer = new StringBuffer();
+    StringBuffer buffer = null;
 
     while (true) {
       // cleanup the buffer
-      buffer.delete(0, buffer.length());
+      buffer = new StringBuffer(); // this is quicker than clearing it
 
       // each error terminates with the '^' char
       do {
@@ -147,11 +147,11 @@ public class Javac extends AbstractJavaCompiler {
 
     List errors = null;
     String line = null;
-    StringBuffer buffer = new StringBuffer();
+    StringBuffer buffer = null;
 
     while (true) {
       // cleanup the buffer
-      buffer.delete(0, buffer.length());
+      buffer = new StringBuffer(); // this is faster than clearing it
 
       // each error has 3 lines
       for (int i = 0; i < 3 ; i++) {

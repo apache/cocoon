@@ -32,9 +32,9 @@ import org.xml.sax.ContentHandler;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-12 16:43:11 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-31 15:48:35 $
  */
- 
+
 public class Notifier {
 
     /**
@@ -45,22 +45,22 @@ public class Notifier {
         StringBuffer sb = new StringBuffer();
 
         // FIXME (SM) how can we send the error with the proper content type?
-        
+
         res.setContentType("text/html");
-        sb.append("<html><head><title>" + n.getTitle() + "</title>");
+        sb.append("<html><head><title>").append(n.getTitle()).append("</title>");
         sb.append("<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
         sb.append("BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
         sb.append("B{color : white;background-color : #0086b2;} ");
         sb.append("HR{color : #0086b2;} ");
         sb.append("--></STYLE> ");
         sb.append("</head><body>");
-        sb.append("<h1>Cocoon 2 - " + n.getTitle() + "</h1>");
+        sb.append("<h1>Cocoon 2 - ").append(n.getTitle()).append("</h1>");
         sb.append("<HR size=\"1\" noshade>");
-        sb.append("<p><b>type</b> " + n.getType() + "</p>");
-        sb.append("<p><b>message</b> <u>" + n.getMessage() + "</u></p>");
-        sb.append("<p><b>description</b> <u>" + n.getDescription() + "</u></p>");
-        sb.append("<p><b>sender</b> " + n.getSender() + "</p>");
-        sb.append("<p><b>source</b> " + n.getSource() + "</p>");
+        sb.append("<p><b>type</b> ").append(n.getType()).append("</p>");
+        sb.append("<p><b>message</b> <u>").append(n.getMessage()).append("</u></p>");
+        sb.append("<p><b>description</b> <u>").append(n.getDescription()).append("</u></p>");
+        sb.append("<p><b>sender</b> ").append(n.getSender()).append("</p>");
+        sb.append("<p><b>source</b> ").append(n.getSource()).append("</p>");
 
         HashMap extraDescriptions = n.getExtraDescriptions();
         Iterator keyIter = extraDescriptions.keySet().iterator();
@@ -68,7 +68,7 @@ public class Notifier {
         while (keyIter.hasNext()) {
             String key = (String) keyIter.next();
 
-            sb.append("<p><b>" + key + "</b><pre>" + extraDescriptions.get(key) + "</pre></p>");
+            sb.append("<p><b>").append(key).append("</b><pre>").append(extraDescriptions.get(key)).append("</pre></p>");
         }
 
         sb.append("<HR size=\"1\" noshade>");
@@ -86,7 +86,7 @@ public class Notifier {
         final String URI = Cocoon.ERROR_NAMESPACE_URI;
 
         String buf;
-        
+
         // Start the document
         ch.startDocument();
         ch.startPrefixMapping(PREFIX, URI);

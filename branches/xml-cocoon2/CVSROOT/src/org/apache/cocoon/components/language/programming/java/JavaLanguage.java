@@ -32,7 +32,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-01-31 05:21:44 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-01-31 15:48:36 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -278,7 +278,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
     File[] files = dir.listFiles(new JavaArchiveFilter());
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < files.length; i++) {
-        buffer.append(files[i] + File.pathSeparator);
+        buffer.append(files[i]).append(File.pathSeparator);
     }
     return buffer.toString();
   }
