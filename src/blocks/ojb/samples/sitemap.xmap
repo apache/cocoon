@@ -19,19 +19,15 @@
 
  <map:components>
 
-      <map:transformers default="xalan">
-        <map:transformer name="woody" src="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer" logger="woody"/>
-        <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-          <catalogues default="other">
-            <catalogue id="other" name="OtherMessages" location="context://samples/woody/messages"/>
-            <catalogue id="woody" name="WoodyMessages" location="context://samples/woody/messages"/>
-          </catalogues>
-          <cache-at-startup>true</cache-at-startup>
-        </map:transformer>
-      </map:transformers>
-
-      <map:pipes default="caching">
-      </map:pipes>
+   <map:transformers default="xalan">
+     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+       <catalogues default="forms">
+         <catalogue id="other" name="OtherMessages" location="messages"/>
+         <catalogue id="forms" name="FormMessages" location="messages"/>
+       </catalogues>
+       <cache-at-startup>true</cache-at-startup>
+     </map:transformer>
+   </map:transformers>
 
  </map:components>
 
@@ -52,7 +48,7 @@
 
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="javascript">
-	<map:script src="woody/employee.js"/>
+  <map:script src="forms/employee.js"/>
   </map:flow>
 
  <map:pipelines>
@@ -79,48 +75,48 @@
      </map:match>
 
      <!--
-        | "Form1" example, demonstrates usage of flow and woody
+        | "Form1" example, demonstrates usage of flow and forms
         -->
 
-    <map:match pattern="jdo/woody/employee">
-        <map:call function="woody">
+    <map:match pattern="jdo/forms/employee">
+        <map:call function="forms">
             <map:parameter name="function" value="employeeform_jdo"/>
-            <map:parameter name="form-definition" value="woody/employee.xml"/>
-            <map:parameter name="bindingURI" value="woody/employee_bind.xml"/>            
+            <map:parameter name="form-definition" value="forms/employee.xml"/>
+            <map:parameter name="bindingURI" value="forms/employee_bind.xml"/>            
         </map:call>
     </map:match>
 
-    <map:match pattern="jdo/woody/employee-form-display">
-        <map:generate src="woody/employee_template.xml"/>
-        <map:transform type="woody"/>
+    <map:match pattern="jdo/forms/employee-form-display">
+        <map:generate src="forms/employee_template.xml"/>
+        <map:transform type="form"/>
         <map:transform type="i18n">
             <map:parameter name="locale" value="en-US"/>
         </map:transform>
-        <map:transform src="context://samples/woody/xsl/html/woody-default.xsl"/>
+        <map:transform src="context://samples/forms/xsl/html/forms-default.xsl"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="servletPath" value="{request:servletPath}"/>
             <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="file" value="woody/employee.xml"/>
+            <map:parameter name="file" value="forms/employee.xml"/>
             <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>
     </map:match>
 
-    <map:match pattern="jdo/woody/employee-form-success">
-        <map:generate type="serverpages" src="woody/success.xsp"/>
+    <map:match pattern="jdo/forms/employee-form-success">
+        <map:generate type="serverpages" src="forms/success.xsp"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="servletPath" value="{request:servletPath}"/>
             <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="file" value="woody/success.xsp"/>
+            <map:parameter name="file" value="forms/success.xsp"/>
             <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>
     </map:match>
 
      <!-- Manages continuations -->
-     <map:match pattern="jdo/woody/*.continue">
+     <map:match pattern="jdo/forms/*.continue">
        <map:call continuation="{1}"/>
      </map:match>
 
