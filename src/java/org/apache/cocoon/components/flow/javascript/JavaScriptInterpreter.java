@@ -90,7 +90,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.11 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.12 2003/03/24 15:07:40 stefano Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -451,7 +451,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 compiledScripts.put(sourceURI, entry);
             }
             // Compile the script if necessary
-            Script script = entry.getScript(context, this.scope, needsRefresh);
+            entry.getScript(context, this.scope, needsRefresh);
         }
         // Execute the scripts if necessary
         for (int i = 0, size = execList.size(); i < size; i++) {
