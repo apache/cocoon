@@ -63,7 +63,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachedResponse.java,v 1.3 2003/07/14 16:06:21 cziegeler Exp $
+ * @version CVS $Id: CachedResponse.java,v 1.4 2003/08/06 09:26:44 cziegeler Exp $
  */
 public final class CachedResponse
         implements Serializable {
@@ -83,6 +83,17 @@ public final class CachedResponse
     public CachedResponse(SourceValidity[] validityObjects,
                           byte[]           response) {
         this(validityObjects, response, null);
+    }
+
+    /**
+     * Create a new entry for the cache.
+     *
+     * @param validityObject  The SourceValidity object 
+     * @param response        The cached sax stream or character stream
+     */
+    public CachedResponse(SourceValidity   validityObject,
+                          byte[]           response) {
+        this(new SourceValidity[] {validityObject}, response, null);
     }
 
     /**
