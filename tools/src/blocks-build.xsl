@@ -13,7 +13,7 @@
         </fileset>
         <fileset dir="{string('${lib.endorsed}')}">
           <include name="*.jar"/>
-        </fileset>    
+        </fileset>
         <!-- Currently, we have no JVM dependent libraries
           <fileset dir="{string('${lib.core}/jvm${target.vm}')}">
              <include name="*.jar"/>
@@ -303,6 +303,7 @@
 
          <!-- Test if this block has samples -->
       <available property="{$block-name}.has.samples" file="{string('${blocks}')}/{$block-name}/samples/sitemap.xmap"/>
+      <available property="{$block-name}.has.samples" file="{string('${blocks}')}/{$block-name}/conf/{$block-name}.xsamples"/>
 
       <antcall target="{$block-name}-samples"/>
     </target>
