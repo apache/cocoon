@@ -77,16 +77,20 @@
   <!-- Stores: -->
   <role name="org.apache.excalibur.store.Store"
        shorthand="store"
-       default-class="org.apache.cocoon.components.store.impl.DefaultStore"/>
-
-  <role name="org.apache.excalibur.store.Store/PersistentStore"
-        shorthand="persistent-store"
-        default-class="org.apache.cocoon.components.store.impl.DefaultPersistentStore"/>
+       default-class="org.apache.cocoon.components.store.impl.JCSDefaultStore"/>
 
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
         default-class="org.apache.cocoon.components.store.impl.DefaultTransientStore"/>
 
+<!--
+  The persistent store is only an auxiliary store that shouldn't be
+  used by Cocoon users. It should only be used - if required - by
+  the Store. If we use JCS, we don't need a persistent store.
+  <role name="org.apache.excalibur.store.Store/PersistentStore"
+        shorthand="persistent-store"
+        default-class="org.apache.cocoon.components.store.impl.DefaultPersistentStore"/>
+-->
   <role name="org.apache.excalibur.store.StoreJanitor"
        shorthand="store-janitor"
        default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"/>
