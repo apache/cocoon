@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,36 +17,36 @@ package org.apache.cocoon.components.pipeline;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.xml.XMLConsumer;
+
 import org.apache.excalibur.source.SourceValidity;
 
 /**
  * A <code>ProcessingPipeline<code> produces the response for a given request.
  * It is assembled according to the commands in the sitemap and can either
  * <ul>
- *  <li>collect a <code>Reader</code> and let it produce a character stream</li>
- *  <li>or connect a <code>Generator</code> with zero or more
- *      <code>Transformer</code>s and a <code>Serializer</code> and let them
+ *  <li>Collect a <code>Reader</code> and let it produce a byte stream,</li>
+ *  <li>Or connect a <code>Generator</code> with zero or more
+ *      <code>Transformer</code>s and a <code>Serializer</code>, and let them
  *      produce the byte stream. This pipeline uses SAX events for
  *      communication.
  *  </li>
  * </ul>
  *
- * <p>
- *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+= * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface ProcessingPipeline {
 
     String ROLE = ProcessingPipeline.class.getName();
 
     /**
-     * Setup this component
+     * Setup this component.
      */
     void setup(Parameters params);
 
@@ -61,7 +61,7 @@ public interface ProcessingPipeline {
      * @param param the parameters for the generator.
      * @throws ProcessingException if the generator couldn't be obtained.
      */
-    void setGenerator (String role, String source, Parameters param, Parameters hintParam)
+    void setGenerator(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException;
 
     /**
@@ -73,7 +73,7 @@ public interface ProcessingPipeline {
      * Informs pipeline we have come across a branch point
      */
     void informBranchPoint();
-    
+
     /**
      * Set the <code>ServiceManager</code> where pipeline components have to be searched for.
      * @param manager the processor's service manager.
@@ -91,21 +91,21 @@ public interface ProcessingPipeline {
      * @param param the parameters for the transfomer.
      * @throws ProcessingException if the generator couldn't be obtained.
      */
-    void addTransformer (String role, String source, Parameters param, Parameters hintParam)
+    void addTransformer(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException;
 
     /**
      * Set the serializer for this pipeline
      * @param mimeType Can be null
      */
-    void setSerializer (String role, String source, Parameters param, Parameters hintParam, String mimeType)
+    void setSerializer(String role, String source, Parameters param, Parameters hintParam, String mimeType)
     throws ProcessingException;
 
     /**
      * Set the reader for this pipeline
      * @param mimeType Can be null
      */
-    void setReader (String role, String source, Parameters param, String mimeType)
+    void setReader(String role, String source, Parameters param, String mimeType)
     throws ProcessingException;
 
     /**
@@ -137,7 +137,7 @@ public interface ProcessingPipeline {
      * Otherwise return <code>null</code>
      */
     SourceValidity getValidityForEventPipeline();
-    
+
     /**
      * Return the key for the event pipeline
      * If the "event pipeline" (= the complete pipeline without the
