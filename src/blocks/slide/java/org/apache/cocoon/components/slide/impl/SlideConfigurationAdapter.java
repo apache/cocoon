@@ -25,7 +25,7 @@ import org.apache.slide.util.conf.ConfigurationException;
 /**
  * The class represent an adapter for the configuration class from jakarta slide
  *
- * @version CVS $Id: SlideConfigurationAdapter.java,v 1.4 2004/04/13 15:16:37 unico Exp $
+ * @version CVS $Id: SlideConfigurationAdapter.java,v 1.5 2004/06/29 09:46:27 unico Exp $
  */
 public class SlideConfigurationAdapter implements Configuration {
 
@@ -62,6 +62,9 @@ public class SlideConfigurationAdapter implements Configuration {
      */
     public Configuration getConfiguration(String child)
       throws ConfigurationException {
+        if (this.configuration.getChild(child, false) == null)
+            throw new ConfigurationException("No configuration element " + child 
+                    + " at " + this.configuration.getLocation(), this);
         return new SlideConfigurationAdapter(this.configuration.getChild(child));
     }
 
