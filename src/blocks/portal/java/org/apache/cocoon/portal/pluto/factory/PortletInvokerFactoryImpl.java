@@ -45,6 +45,13 @@
 */
 package org.apache.cocoon.portal.pluto.factory;
 
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionImpl;
 import org.apache.pluto.factory.PortletInvokerFactory;
 import org.apache.pluto.invoker.PortletInvoker;
@@ -56,11 +63,31 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletInvokerFactoryImpl.java,v 1.1 2004/01/27 08:05:35 cziegeler Exp $
+ * @version CVS $Id: PortletInvokerFactoryImpl.java,v 1.2 2004/01/27 09:56:37 cziegeler Exp $
  */
 public class PortletInvokerFactoryImpl 
 extends AbstractFactory
-implements PortletInvokerFactory {
+implements PortletInvokerFactory, Serviceable, Contextualizable {
+
+    /** The avalon context */
+    protected Context context;
+    
+    /** The service manager */
+    protected ServiceManager manager;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.factory.PortletInvokerFactory#getPortletInvoker(org.apache.pluto.om.portlet.PortletDefinition)
@@ -77,17 +104,26 @@ implements PortletInvokerFactory {
             if ( invoker == null ) {
                 invoker = new LocalPortletInvokerImpl(portletDefinition, this.servletConfig);
                 ((PortletDefinitionImpl)portletDefinition).setLocalPortletInvoker(invoker);
+                try {
+                    ContainerUtil.enableLogging(invoker, this.getLogger());
+                    ContainerUtil.contextualize(invoker, this.context);
+                    ContainerUtil.service(invoker, this.manager);
+                    ContainerUtil.initialize(invoker);
+                } catch (Exception ignore) {
+                    this.getLogger().warn("Unable to initialize local portlet invoker.", ignore);
+                }
             }
         } else {
             invoker = new PortletInvokerImpl(portletDefinition, this.servletConfig);
         }
+        
         return invoker;
     }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.factory.PortletInvokerFactory#releasePortletInvoker(org.apache.pluto.invoker.PortletInvoker)
      */
-    public void releasePortletInvoker(PortletInvoker arg0) {
+    public void releasePortletInvoker(PortletInvoker invoker) {
         // nothing to do here
     }
 
