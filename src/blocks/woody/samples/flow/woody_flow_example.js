@@ -37,6 +37,24 @@ function selectCar() {
     cocoon.sendPage("carselector-success");
 }
 
+var states = [
+    { key: "AL", value: "Alabama" },
+    { key: "AK", value: "Alaska" },
+    { key: "WY", value: "Wyoming" }
+];
+
+var countries = [
+    { key: "ad", value: "Andorra, Principality of" },
+    { key: "zw", value: "Zimbabwe" }
+];
+
+function selectCountry() {
+    var form = new Form("forms/countryselector_form.xml");
+    form.showForm("countryselector-view");
+    cocoon.request.setAttribute("countryselectorform", form.getWidget());
+    cocoon.sendPage("countryselector-success");
+}
+
 function determineLocale() {
     var localeParam = cocoon.request.get("locale");
     if (localeParam != null && localeParam.length > 0) {

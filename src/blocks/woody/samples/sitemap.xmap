@@ -343,6 +343,53 @@
        </map:transform>
        <map:serialize/>
      </map:match>
+
+     <!--
+         | Country selector sample.
+         -->
+
+     <map:match pattern="countryselector">
+       <map:select type="request-method">
+         <map:when test="GET">
+           <map:call function="selectCountry"/>
+         </map:when>
+         <map:when test="POST">
+           <map:call continuation="{request-param:continuation-id}"/>
+         </map:when>
+         <map:otherwise>
+           <!-- todo: do something here -->
+         </map:otherwise>
+       </map:select>
+     </map:match>
+     
+     <map:match pattern="countryselector-view">
+       <map:generate src="forms/countryselector_template.xml"/>
+       <map:transform type="woody"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:transform src="resources/woody-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+     
+     <map:match pattern="countryselector-success">
+       <map:generate type="serverpages" src="forms/countryselector_success.xsp"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
      
      <map:match pattern="resources/**">
        <map:read src="{0}"/>
