@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/sh -x
 
-# $Id: create-repository-jars.sh,v 1.6 2004/02/02 20:12:36 giacomo Exp $
+
+# $Id: create-repository-jars.sh,v 1.7 2004/02/02 20:28:03 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
@@ -48,8 +49,8 @@ if [ "$REMOTEPATH" = "" ]; then
 fi
 
 # Where is the md5sum command to be used
-if [ "$MD5CMD" = "" ]; then
-  MD5CMD=/sbin/md5
+if [ "$MD5SUM" = "" ]; then
+  MD5SUM=/sbin/md5
 fi
 
 # ------- NO NEED TO CHANGE ANYTHING BELOW HERE ----------
@@ -196,12 +197,12 @@ for i in $JARS; do
     CMD="$RM \
          cd $REMOTEPATH/jars; \
          ln -fs cocoon$BLOCKPART-$TVERSION.jar cocoon$BLOCKPART-SNAPSHOT.jar; \
-         echo $TVERSION >cocoon$BLOCKPART-snapshot.version"
+         echo $TVERSION >cocoon$BLOCKPART-snapshot.version;"
   else
     CMD=""
   fi
-  ssh $REMOTEHOST "$CMD; \
-                   $MD5SUM $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
+  ssh $REMOTEHOST "$CMD \
+                   $MD5SUM <$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
                      sed 's/ .*$//' >$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar.md5; \
                    chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.*"
 done
@@ -221,12 +222,12 @@ if [ "$REVISION" = "HEAD" ]; then
   CMD="$RM \
        cd $REMOTEPATH/wars; \
        ln -fs cocoon-war-$TVERSION.war cocoon-war-SNAPSHOT.war; \
-       echo $TVERSION >cocoon-war-snapshot.version"
+       echo $TVERSION >cocoon-war-snapshot.version;"
 else
   CMD=""
 fi
-ssh $REMOTEHOST "$CMD; \
-                 $MD5SUM $REMOTEPATH/wars/cocoon-war-$TVERSION.jar | \
+ssh $REMOTEHOST "$CMD \
+                 $MD5SUM <$REMOTEPATH/wars/cocoon-war-$TVERSION.jar | \
                    sed 's/ .*$//' >$REMOTEPATH/jars/cocoon-war-$TVERSION.jar.md5; \
                  chmod g+w $REMOTEPATH/jars/cocoon-war-$TVERSION.*"
 
