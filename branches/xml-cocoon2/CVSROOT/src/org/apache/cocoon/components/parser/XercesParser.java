@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-01 15:52:37 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-06 20:21:29 $
  */
 public class XercesParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, DOMFactory {
@@ -37,12 +37,12 @@ implements Parser, ErrorHandler, DOMFactory {
 
 	this.parser.setFeature("http://xml.org/sax/features/validation",false);
 	this.parser.setFeature("http://xml.org/sax/features/namespaces",true);
-	this.parser.setProperty("http://xml.org/sax/properties/lexical-handler",
-	              super.lexicalHandler);
     }
     
     public void parse(InputSource in)
     throws SAXException, IOException {
+      this.parser.setProperty("http://xml.org/sax/properties/lexical-handler",
+                              super.lexicalHandler);
         this.parser.setErrorHandler(this);
         this.parser.setContentHandler(super.contentHandler);
         this.parser.parse(in);
