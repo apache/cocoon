@@ -1,5 +1,15 @@
+/*                      status='javascript loading';
+//                      alert('loading');
+
+function test()
+{
+    alert("test");
+}
+*/
+
                   function Toggle(button)
                   {
+//                      alert('toggle');
                       ypos = document.body.scrollTop;
 //                      alert(button.firstChild.src);
 
@@ -16,19 +26,6 @@
                           button.parentNode.nextSibling.style.display='none';
                       }
                       
-/*
-                      if (button.firstChild.src.indexOf('-op.gif')>=0)
-                      {
-                          button.firstChild.src= button.firstChild.src.substr(1,pos)+ 'neer.gif';
-                          button.parentNode.nextSibling.style.display='';
-                      }
-                      else if (button.firstChild.src.indexOf('-neer.gif')>=0)
-                      {
-                          button.firstChild.src= button.firstChild.src.substr(1,pos)+ 'op.gif';
-                          button.parentNode.nextSibling.style.display='none';
-                      }
-                      window.setTimeout('window.scrollTo(0,ypos);',100);
-*/                      
                   }
 
                 
@@ -38,7 +35,7 @@
                     {                      
                       if (node.style!=null && node.style.display!=newDisplay)
                       {
-                          if (node.previousSibling && node.previousSibling.firstChild && node.previousSibling.firstChild.firstChild && node.previousSibling.firstChild.firstChild.src )
+                          if (node.previousSibling && node.previousSibling.firstChild && node.previousSibling.firstChild.firstChild && node.previousSibling.firstChild.firstChild.src && node.previousSibling.firstChild.firstChild.src.indexOf('_pre') <0 )
                           {
                               node.style.display=newDisplay;
 
@@ -72,24 +69,7 @@
                           DoRecursive(button.parentNode.nextSibling,'none','_op.gif');        
                       }
                       
-/*
-                      if (button.firstChild.src.indexOf('plus-op.gif')>=0)
-                      {
-                          DoRecursive(button.parentNode.nextSibling,'','plus-neer.gif');        
-                      }
-                      else if (button.firstChild.src.indexOf('pijl-op.gif')>=0)
-                      {
-                          DoRecursive(button.parentNode.nextSibling,'','pijl-neer.gif');        
-                      }
-                      else if (button.firstChild.src.indexOf('pijl-neer.gif')>=0)
-                      {
-                          DoRecursive(button.parentNode.nextSibling,'','pijl-op.gif');        
-                      }
-                      else
-                      {
-                          DoRecursive(button.parentNode.nextSibling,'none','plus-op.gif');
-                      }
-*/
                       event.cancelBubble=true;
                       return false;
                   }
+//                      alert('javascript loaded');

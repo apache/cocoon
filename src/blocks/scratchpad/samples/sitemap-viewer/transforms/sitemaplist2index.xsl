@@ -16,15 +16,15 @@
         <body>
             <xsl:copy-of select="/introhtml|/*/introhtml"/>
             <hr/>       
-            <xsl:variable name="dircnthalf" select="count(.//dir)  div 2"/>
+            <xsl:variable name="filecnthalf" select="(count(.//file)+1)  div 2"/>
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <xsl:apply-templates select=".//dir[text()!='..' and position() &lt;= $dircnthalf]"/>
+                            <xsl:apply-templates select=".//file[position() &lt;= $filecnthalf]"/>
                         </td>
                         <td>
-                            <xsl:apply-templates select=".//dir[text()!='..' and position() &gt; $dircnthalf]"/>
+                            <xsl:apply-templates select=".//file[position() &gt; $filecnthalf]"/>
                         </td>
                     </tr>
                 </tbody>
@@ -44,12 +44,15 @@
 </xsl:template>
 
 <xsl:template match="file">
-</xsl:template>
-
-<xsl:template match="dir">
     <li>
         <a href="{.}"><xsl:value-of select="."/></a>
     </li>
+</xsl:template>
+
+<xsl:template match="dir">
+    <!--li>
+        <a href="{.}"><xsl:value-of select="."/></a>
+    </li-->
 </xsl:template>
 
 

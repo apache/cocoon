@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <introhtml>
 <p>
-    This is a Sitemap-viewer, contributed Jelle Alten (jelle at ordina.nl), see
-    <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=24294">Bugzilla 24294</a>
+    This is a Sitemap-viewer, made by Jelle Alten.
 </p>
 <p>
     This viewer reads a sitemap, attempts to follow links, references and other interesting lines in the &apos;match&apos; elements and generates an HTML file from this information. If you use IE or Mozilla, the resulting HTML has clickable buttons for folding and unfoling elements. 
 </p>
 <p>
     <b>Warning: This tool can show the contents of sitemaps, don't put this tool in a production environment for security reasons.</b>
-    The source-viewing is turned on and off in the sitemap, in the "showsource" parameter. At this point if you know the url you can still get there. I will fix this.
+    The source-viewing is turned on and off in the sitemap, in the "showsource" parameter and by setting the internal-only attribute of the "srcviewing"-pipeline.
 </p>
-<p>See this <a href="example.html">example of a difficut sitemap</a> to see where it won't work.</p>
+<p>See this <a href="example.html">example of a difficult sitemap</a> to see where it won't work.</p>
 <p>
     It is in a testing stage, and some work, cleanup and documentation should still be done. It works fine on Cocoon 2.1.2.
 </p>
 <p>
     <h4>Known bugs</h4>
     <ul>
-        <li>You can't view the root sitemap yet. Or rather, this viewer will go up one level and tries to find all sitmaps in levels below that one, so if you place this viewer in a mount-dir, it will only view sitemaps in sub-directories.</li>
-        <li>Rightclicking a button should expand all children of the element, but that's not working properly.</li>
-        <li>Security issues (showing the contents of sitemaps and so on).</li>
+        <li>please tell the Cocoon mailing lists</li>
     </ul>
     <h4>Todo</h4>
     <ul>
         <li>Find people to test this</li>
         <li>Collect wishes and bugs from people</li>
-        <li>Do something with the root sitemap</li>
-        <li>Test on Cocoon 2.0.4</li>
-    </ul>
-    <h4>Wishlist</h4>
-    <ul>
-        <li>Speed things up by making a two-step xslt for the sitemap2descr: don't recurse the first step.</li>
+        <li>Test on all example sitemaps</li>
     </ul>
 </p>
 </introhtml>

@@ -12,8 +12,15 @@
     <xsl:choose>
         <xsl:when test="$depth &gt; 100">
         </xsl:when>
+
         <xsl:when test="count(/*/match[@pattern=$thepattern])&gt;0">
             <xsl:apply-templates select="/*/match[@pattern=$thepattern]" >
+                <xsl:with-param name="depth" select="$depth+1"/>
+            </xsl:apply-templates>
+        </xsl:when>
+
+        <xsl:when test="count(/*/*/match[@pattern=$thepattern])&gt;0">
+            <xsl:apply-templates select="/*/*/match[@pattern=$thepattern]" >
                 <xsl:with-param name="depth" select="$depth+1"/>
             </xsl:apply-templates>
         </xsl:when>
