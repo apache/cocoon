@@ -54,7 +54,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.2 2004/03/11 02:56:33 joerg Exp $
+ * @version CVS $Id: Widget.java,v 1.3 2004/03/25 16:41:48 bruno Exp $
  */
 public interface Widget {
 
@@ -155,4 +155,14 @@ public interface Widget {
      * Broadcast an event previously queued by this widget to its event listeners.
      */
     public void broadcastEvent(WidgetEvent event);
+
+    public Object getAttribute(String name);
+
+    /**
+     * Sets an attribute on this widget. This can be used to store custom
+     * data with each widget.
+     */
+    public void setAttribute(String name, Object value);
+
+    public void removeAttribute(String name);
 }

@@ -15,10 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
@@ -32,7 +29,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: AbstractWidget.java,v 1.3 2004/03/25 16:41:47 bruno Exp $
  */
 public abstract class AbstractWidget implements Widget {
     private String location;
@@ -41,6 +38,7 @@ public abstract class AbstractWidget implements Widget {
     protected AbstractWidgetDefinition definition;
     
     private List validators;
+    private Map attributes;
 
     /**
      * Sets the definition of this widget.
@@ -192,5 +190,23 @@ public abstract class AbstractWidget implements Widget {
         contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
         generateItemSaxFragment(contentHandler, locale);
         contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
+    }
+
+    public Object getAttribute(String name) {
+        return this.attributes == null ? null : this.attributes.get(name);
+    }
+
+    public void setAttribute(String name, Object value) {
+        if (this.attributes == null) {
+            this.attributes = new HashMap();
+        }
+
+        this.attributes.put(name, value);
+    }
+
+    public void removeAttribute(String name) {
+        if (this.attributes != null) {
+            this.attributes.remove(name);
+        }
     }
 }
