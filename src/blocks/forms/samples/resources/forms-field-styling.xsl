@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.3 2004/03/11 02:56:31 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.4 2004/03/11 19:18:40 reinhard Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -39,7 +39,7 @@
       | Generic fi:field : produce an <input>
       +-->
   <xsl:template match="fi:field">
-    <input name="{@id}" id="{@id}" value="{fi:value}" title="{fi:hint}">
+    <input name="{@id}" id="{@id}" value="{fi:value}" title="{fi:hint}" type="text">
       <xsl:apply-templates select="." mode="styling"/>
     </input>
     <xsl:apply-templates select="." mode="common"/>
