@@ -188,6 +188,10 @@ by the main ones.
     <available property="tidy.present" classname="org.w3c.tidy.Tidy">
       <classpath refid="classpath"/>
     </available>
+    <available property="servlet23.present"
+        classname="javax.servlet.http.HttpServletRequestWrapper">
+      <classpath refid="classpath"/>
+    </available>
   </target>
 
   <!-- =================================================================== -->
@@ -200,13 +204,45 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare">
+  <target name="prepare-src-main" depends="prepare">
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
     <copy todir="${build.src}" filtering="on">
-      <fileset dir="${src.dir}"/>
-    </copy>    
+      <fileset dir="${src.dir}">
+        <exclude name="**/http/HttpRequest2*.java"/>
+        <exclude name="**/http/HttpResponse2*.java"/>
+      </fileset>
+    </copy>
   </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the servlet 2.3 source code                                -->
+  <!-- =================================================================== -->
+  <target name="prepare-src-23" depends="prepare-src-main" if="servlet23.present">
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest23.java"
+        tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
+        filtering="on"/>
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse23.java"
+        tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
+        filtering="on"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the servlet 2.2 source code                                -->
+  <!-- =================================================================== -->
+  <target name="prepare-src-22" depends="prepare-src-23" unless="servlet23.present">
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest22.java"
+        tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
+        filtering="on"/>
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse22.java"
+        tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
+        filtering="on"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="prepare-src" depends="prepare-src-22"/>
 
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
@@ -282,9 +318,10 @@ by the main ones.
         <include name="*.jar"/>
         <exclude name="ant*.jar"/>
         <exclude name="stylebook*.jar"/>
+        <!-- <exclude name="servlet*.jar"/> -->
       </fileset>
     </copy>
-    
+
     <!-- NOTE: java.home is normally set by the JVM to the /jre directory -->
     <copy file="${java.home}/../lib/tools.jar" tofile="${build.war}/WEB-INF/lib/javac.jar"/>
     <copy file="${build.dir}/${name}.jar" tofile="${build.war}/WEB-INF/lib/${name}-${version}.jar"/>

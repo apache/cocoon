@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-03 13:56:33 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-05 22:02:02 $
  */
 
 /*
@@ -93,7 +93,7 @@ public class CommandLineRequest implements HttpServletRequest {
     public String getQueryString() { return null; } // use parameters instead
     public String getPathTranslated() { return null; } // FIXME (SM) this is legal but should we do something more?
 
-    public Object getAttribute(String name) { 
+    public Object getAttribute(String name) {
         return (attributes != null) ? attributes.get(name) : null;
     }
     public Enumeration getAttributeNames() { 
@@ -102,7 +102,7 @@ public class CommandLineRequest implements HttpServletRequest {
     public void setAttribute(String name, Object value) { 
         if (attributes != null) attributes.put(name, value);
     }
-    public void removeAttribute(String name) { 
+    public void removeAttribute(String name) {
         if (attributes != null) attributes.remove(name);
     }
 
