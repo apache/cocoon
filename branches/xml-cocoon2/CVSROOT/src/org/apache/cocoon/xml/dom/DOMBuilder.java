@@ -40,7 +40,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-02 17:19:49 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-09 13:28:51 $
  */
 public class DOMBuilder implements XMLConsumer {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -257,16 +257,18 @@ public class DOMBuilder implements XMLConsumer {
         if(state!=S_BODY) throw new SAXException("Invalid state"+location());
         // Create the Element node
         Element e=this.document.createElementNS(n.getUri(),n.getQName());
-        // Process all attributes
+        // Process all attributes, leave out namespace attributes
         for(int x=0;x<a.getLength();x++) {
             String auri=a.getURI(x);
             String aloc=a.getLocalName(x);
             String araw=a.getQName(x);
             String aval=a.getValue(x);
-            NamespacesTable.Name k=this.namespaces.resolve(auri,araw,null,aloc);
-            // Set the attribute into the element
-            auri=k.getPrefix().length()==0 ? null : k.getUri();
-            e.setAttributeNS(auri,k.getQName(),aval);
+            if (araw.startsWith("xmlns:")==false) {
+                NamespacesTable.Name k=this.namespaces.resolve(auri,araw,null,aloc);
+                // Set the attribute into the element
+                auri=k.getPrefix().length()==0 ? null : k.getUri();
+                e.setAttributeNS(auri,k.getQName(),aval);
+            }
         }
         // Append the xmlns... attributes
         if (this.undecl.size()>0) {
