@@ -18,7 +18,6 @@ package org.apache.cocoon.transformation;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -150,6 +149,7 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
      * @return A DOM Document to stream down the pipeline
      */
     protected abstract Document transform(Document doc);
+
 
     //
     // SAX Methods. Send incoming SAX events to the DOMBuilder.
