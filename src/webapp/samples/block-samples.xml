@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: block-samples.xml,v 1.2 2003/03/20 08:14:06 crossley Exp $ -->
+<!-- CVS: $Id: block-samples.xml,v 1.3 2003/03/27 17:55:45 stefano Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="blocks">
-
- <group name="Main examples page">
-  <sample name="Back" href="welcome">to Cocoon examples main page</sample>
- </group>
   
 </samples>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: logicsheet.xsp,v 1.1 2003/03/26 21:21:33 stefano Exp $ -->
+<!-- CVS: $Id: logicsheet.xsp,v 1.2 2003/03/27 17:55:47 stefano Exp $ -->
 
 <!-- XSP can be assotiated with the logicsheet using processing
      instruction xml-logicsheet or the xsp:logicsheet element.
@@ -19,7 +19,7 @@
 
   <!-- Context URL also can be used:
 
-  <xsp:logicsheet location="context://logicsheets/hello.xsl"/>
+  <xsp:logicsheet location="context://samples/xsp/logicsheets/hello.xsl"/>
 
      URL relative to the current sitemap CAN NOT be used, as 
      logicsheet is the global object, shared between all sitemaps.
