@@ -1340,7 +1340,7 @@
     <description>
       Delivery context library
     </description>
-    <home nested="ib/optional"/>
+    <home nested="lib/optional"/>
     <jar name="deli-x031104.jar"/>
   </project>
 
@@ -1369,7 +1369,7 @@
     <description>
       Chaperon is a project that helps to convert structured text to XML
     </description>
-    <home nested="ib/optional"/>
+    <home nested="lib/optional"/>
     <jar name="chaperon-20040205.jar"/>
   </project>
 
@@ -1378,7 +1378,7 @@
     <description>
       iText is a library that allows you to generate PDF files on the fly
     </description>
-    <home nested="ib/optional"/>
+    <home nested="lib/optional"/>
     <jar name="itext-1.1.jar"/>
   </project>
 
@@ -1431,7 +1431,7 @@
 
   <project name="daisy-htmlcleaner">
     <package>org.outerj.daisy.htmlcleaner</package>
-    <jar name="optional/daisy-htmlcleaner-1.1.jar"/>
+    <jar name="lib/optional/daisy-htmlcleaner-1.1.jar"/>
   </project>  
   
   <project name="daisy-util">
