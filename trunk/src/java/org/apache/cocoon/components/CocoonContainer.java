@@ -49,19 +49,30 @@
 */
 package org.apache.cocoon.components;
 
+import org.apache.avalon.fortress.impl.AbstractContainer;
 import org.apache.avalon.fortress.impl.DefaultContainer;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Constants;
 
+import java.util.Map;
+
 /**
- * CocoonContainer does XYZ
+ * Customize the Fortress container to handle Cocoon semantics.
  *
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
 public abstract class CocoonContainer extends DefaultContainer
 {
+    /**
+     * Provide some validation for the core Cocoon components
+     *
+     * @param conf  The configuration
+     *
+     * @throws ConfigurationException  if the coniguration is invalid
+     */
     public void configure(Configuration conf) throws ConfigurationException
     {
         if ( ! "cocoon".equals(conf.getName()) ) throw new ConfigurationException("Invalid configuration format", conf);
@@ -70,5 +81,38 @@ public abstract class CocoonContainer extends DefaultContainer
         if ( ! Constants.CONF_VERSION.equals(confVersion) ) throw new ConfigurationException("Uncompatible configuration format", conf);
 
         super.configure(conf);
+    }
+
+    /**
+     * Ensure that we return the latest and greatest component for the role/hint combo if possible.
+     * Otherwise default to normal behavior.
+     *
+     * @param role  The role of the component we are looking up.
+     * @param hint  The hint for the component we are looking up.
+     *
+     * @return  The component for the role/hint combo
+     * @throws ServiceException if the role/hint combo cannot be resolved.
+     */
+    public Object get(final String role, final Object hint) throws ServiceException
+    {
+        Object component = null;
+
+        if (null != hint
+            && !AbstractContainer.DEFAULT_ENTRY.equals(hint)
+            && !AbstractContainer.SELECTOR_ENTRY.equals(hint))
+        {
+            Map implementations = (Map)m_mapper.get(role);
+            if (null != implementations)
+            {
+                component = implementations.get(hint);
+            }
+        }
+
+        if (null == component)
+        {
+            component = super.get(role, hint);
+        }
+
+        return component;
     }
 }

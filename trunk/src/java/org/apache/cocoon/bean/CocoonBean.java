@@ -52,6 +52,7 @@ package org.apache.cocoon.bean;
 import org.apache.avalon.fortress.ContainerManager;
 import org.apache.avalon.fortress.impl.DefaultContainerManager;
 import org.apache.avalon.fortress.util.FortressConfig;
+import org.apache.avalon.fortress.util.LifecycleExtensionManager;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.DefaultContext;
@@ -62,6 +63,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.CocoonContainer;
+import org.apache.cocoon.components.SitemapConfigurableAccessor;
 
 import java.io.File;
 import java.util.*;
@@ -255,6 +257,28 @@ public class CocoonBean
         m_classPath = classPath;
     }
 
+    public void setProperty( String key, Object value )
+    {
+        if ( null == value )
+        {
+            m_properties.remove( key );
+        }
+        else
+        {
+            m_properties.put( key, value );
+        }
+    }
+
+    public Object getProperty( String key )
+    {
+        return m_properties.get( key );
+    }
+
+    public void clearAllProperties()
+    {
+        m_properties.clear();
+    }
+
     public void initialize() throws Exception
     {
         // restart....
@@ -276,8 +300,7 @@ public class CocoonBean
         m_confBuilder.setCommandFailureHandlerClass( CocoonCommandFailureHandler.class );
         m_confBuilder.setContainerClass(CocoonContainer.class);
 
-        // TODO: implement this.
-        //m_confBuilder.setLifecycleExtensionManager( m_lifecycleExtensions );
+        m_confBuilder.setLifecycleExtensionManager( getLifecycleExtensionManager() );
 
         DefaultContext initContext = new DefaultContext( m_confBuilder.getContext() );
         Iterator it = m_properties.entrySet().iterator();
@@ -289,6 +312,14 @@ public class CocoonBean
 
         m_contManager = new DefaultContainerManager( initContext, m_initializationLogger );
         ContainerUtil.initialize( m_contManager );
+    }
+
+    private LifecycleExtensionManager getLifecycleExtensionManager()
+    {
+        LifecycleExtensionManager manager = new LifecycleExtensionManager();
+        manager.addAccessorExtension(new SitemapConfigurableAccessor());
+
+        return manager;
     }
 
     private void forceLoadClasses()
@@ -327,27 +358,5 @@ public class CocoonBean
     {
         dispose();
         super.finalize();
-    }
-
-    public void setProperty( String key, Object value )
-    {
-        if ( null == value )
-        {
-            m_properties.remove(key);
-        }
-        else
-        {
-            m_properties.put(key, value);
-        }
-    }
-
-    public Object getProperty( String key )
-    {
-        return m_properties.get(key);
-    }
-
-    public void clearAllProperties()
-    {
-        m_properties.clear();
     }
 }
