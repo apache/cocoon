@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <samplesxpipe xpath="/sitemap/pipelines"
-       unless="pipeline/match[@pattern='xmldb/**']">
+              unless="pipeline/match[@pattern='xmldb/**']">
 
   <map:pipeline>
     <!-- ======================= XML:DB ============================== -->
