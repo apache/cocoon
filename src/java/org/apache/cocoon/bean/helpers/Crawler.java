@@ -16,10 +16,8 @@
 package org.apache.cocoon.bean.helpers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.cocoon.bean.Target;
 import org.apache.cocoon.ProcessingException;
