@@ -105,7 +105,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * </tr>
  * </tbody></table>
  *  
- * @version CVS $Id: CachingSourceFactory.java,v 1.7 2004/03/23 16:28:54 unico Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.8 2004/03/26 16:45:31 unico Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory extends AbstractLogEnabled
@@ -270,7 +270,7 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
             final Iterator names = sp.getParameterNames();
             while (names.hasNext()) {
                 String name = (String) names.next();
-                if (name.startsWith("cocoon:")) {
+                if (name.startsWith("cocoon:cache")) {
                     params.setParameter(name.substring("cocoon:".length()), sp.getParameter(name));
                     sp.removeParameter(name);
                 }
