@@ -101,6 +101,7 @@
       <xsl:when test="$vertical">
         <table cellpadding="0" cellspacing="0" border="0" title="{wi:hint}">
           <xsl:variable name="id" select="@id"/>
+          <xsl:variable name="on-change" select="wi:styling/@submit-on-change"/>
           <xsl:for-each select="wi:selection-list/wi:item">
             <tr>
               <td>
@@ -108,7 +109,7 @@
                   <xsl:if test="@value = $value">
                     <xsl:attribute name="checked">checked</xsl:attribute>
                   </xsl:if>
-                  <xsl:if test="wi:styling/@submit-on-change='true'">
+                  <xsl:if test="$on-change='true'">
                     <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
                   </xsl:if>
                 </input>
