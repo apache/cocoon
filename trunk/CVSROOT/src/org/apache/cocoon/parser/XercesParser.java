@@ -1,4 +1,4 @@
-/*-- $Id: XercesParser.java,v 1.4 2000-01-07 06:04:53 ricardo Exp $ -- 
+/*-- $Id: XercesParser.java,v 1.5 2000-01-23 23:15:55 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
  * This class implements an XML parser using the Apache Xerces XML parser.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-07 06:04:53 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-23 23:15:55 $
  */
 
 public class XercesParser extends AbstractParser implements Status {
@@ -73,7 +73,7 @@ public class XercesParser extends AbstractParser implements Status {
      */
     public Document parse(InputSource input) throws SAXException, IOException {
         DOMParser parser = new DOMParser();
-	    // parser.setEntityResolver(resolver);
+        // parser.setEntityResolver(resolver);
         parser.setFeature("http://xml.org/sax/features/validation", validate);
         parser.setFeature("http://apache.org/xml/features/dom/create-entity-ref-nodes", false);
         parser.setFeature("http://apache.org/xml/features/validation/warn-on-duplicate-attdef", validate);
