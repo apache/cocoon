@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.23 2004/04/01 19:05:42 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.24 2004/04/08 20:15:20 ugo Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -24,6 +24,7 @@
  <map:components>
   <map:generators default="file">
    <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
+   <map:generator name="calendar" src="org.apache.cocoon.generation.CalendarGenerator"/>
   </map:generators>
   <map:transformers default="xslt"/>
   <map:readers default="resource"/>
@@ -156,6 +157,22 @@
 
    <map:match pattern="request.html">
     <map:generate type="request"/>
+    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="cal">
+    <map:generate type="calendar" label="content">
+      <!-- Uncomment and set a value for the desired month and year
+      <map:parameter name="month" value="6"/>
+      <map:parameter name="year" value="1998"/>
+      -->
+      <map:parameter name="dateFormat" value="EEEE, d MMMM yyyy"/>
+      <!--
+      <map:parameter name="lang" value="en"/>
+      <map:parameter name="country" value="US"/>
+      -->
+    </map:generate>
     <map:transform src="context://stylesheets/system/xml2html.xslt"/>
     <map:serialize/>
    </map:match>

@@ -72,7 +72,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.2 2004/04/07 23:29:22 ugo Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.3 2004/04/08 20:15:20 ugo Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     
@@ -122,16 +122,16 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
-        if (src == null) {
-            throw new ProcessingException("No src attribute specified.");
-        }
         super.setup(resolver, objectModel, src, par);
         
         this.cacheKeyParList = new ArrayList();
         this.cacheKeyParList.add(src);
         
-        this.year = Integer.parseInt(src.substring(0, src.indexOf('/')));
-        this.month = Integer.parseInt(src.substring(src.indexOf('/') + 1)) - 1;
+        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        this.year = par.getParameterAsInteger("year", now.get(Calendar.YEAR));
+        this.cacheKeyParList.add(String.valueOf(this.year));
+        this.month = par.getParameterAsInteger("month", now.get(Calendar.MONTH) + 1) - 1;
+        this.cacheKeyParList.add(String.valueOf(this.month));
         
         String dateFormatString = par.getParameter("dateFormat", null);
         this.cacheKeyParList.add(dateFormatString);
