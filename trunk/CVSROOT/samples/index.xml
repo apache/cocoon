@@ -124,13 +124,13 @@
  </group>
 
  <group name="New media for your web site">
-  <sample name="SVG" url="svg/hello.xml?">
+  <sample name="SVG" url="svg/hello.xml?dummy=test.svg">
    In this example, we show how Cocoon is able to generate an SVG image
    out of a dynamically generated page. Database graphs and vector counters
    are just a few tags away.
   </sample>
 
-  <sample name="VRML" url="vrml/hello.xml?">
+  <sample name="VRML" url="vrml/hello.xml?dummy=test.svg">
    In this example, we show how Cocoon is able to generate virtual reality
    models by applying the appropriate stylesheet to an XML page.
   </sample>

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.207 2001-02-07 19:30:54 greenrd Exp $ 
+  $Id: changes.xml,v 1.208 2001-02-07 19:49:23 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="David Cittadini" due-to-email="David.Cittadini@blackmarble.com">
+   Fixed SVG samples for IE5.5.
+  </action>
   <action dev="RDG" type="fix" fixes-bug="541" 
    due-to="Dafang Zhang" due-to-email="dafang.zhang@wcom.com">
    XSLTProcessor checks for null headers which previously caused errors.
