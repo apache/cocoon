@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.59 2003/07/05 16:33:06 joerg Exp $
+    | CVS $Id: jars.xml,v 1.60 2003/07/08 05:48:52 coliver Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -566,6 +566,14 @@
   <used-by>Flow, JXPath logicsheet, and XMLForm</used-by>
   <lib>core/commons-jxpath-1.1.jar</lib>
   <homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
+ </file>
+ <file>
+
+  <title>Jakarta Commons Jexl</title>
+  <description>JSTL Expression Language</description>
+  <used-by>JXTemplateGenerator</used-by>
+  <lib>core/commons-jexl-1.0-beta-1.jar</lib>
+  <homepage>http://jakarta.apache.org/commons/jexl/</homepage>
  </file>
 
  <file>

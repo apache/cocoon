@@ -9,7 +9,7 @@
   </map:components>
 
   <!-- indicates what flowscript to attach to this sitemap -->
-  <map:flow language="FOM_JavaScript">
+  <map:flow language="javascript">
     <map:script src="calc.js"/>
   </map:flow>
 

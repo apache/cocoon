@@ -79,7 +79,15 @@
       |       whether support for the JavaScript debugger should be enabled
       |       in the control flow.
       +-->
-  <flow-interpreters default="JavaScript" logger="flow">
+  <flow-interpreters default="javascript" logger="flow">
+    <!-- FOM (Flow Object Model) -->
+    <component-instance name="javascript" class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter">
+      <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
+      <reload-scripts>true</reload-scripts>
+      <check-time>4000</check-time>
+      <!--  <debugger>enabled</debugger> -->  <!-- JavaScript Debugger support -->
+    </component-instance>
+    <!-- (Deprecated) Original -->
     <component-instance name="JavaScript" class="org.apache.cocoon.components.flow.javascript.JavaScriptInterpreter">
       <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/system.js</load-on-startup>
       <reload-scripts>true</reload-scripts>

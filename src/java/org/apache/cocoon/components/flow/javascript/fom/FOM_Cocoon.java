@@ -85,7 +85,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.12 2003/07/07 06:27:25 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.1 2003/07/08 05:48:52 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -100,6 +100,7 @@ public class FOM_Cocoon extends ScriptableObject {
     private FOM_Response response;
     private FOM_Session session;
     private FOM_Context context;
+    private Scriptable parameters;
     private FOM_Log log;
 
     private WebContinuation lastContinuation;
@@ -120,7 +121,7 @@ public class FOM_Cocoon extends ScriptableObject {
         defineClass(scope, FOM_WebContinuation.class);
     }
 
-    public void setup(FOM_JavaScriptInterpreter interp,
+    void setup(FOM_JavaScriptInterpreter interp,
                       Environment env, 
                       ComponentManager manager,
                       Logger logger) {
@@ -130,7 +131,7 @@ public class FOM_Cocoon extends ScriptableObject {
         this.logger = logger;
     }
 
-    public void invalidate() {
+    void invalidate() {
         this.request = null;
         this.response = null;
         this.session = null;
@@ -807,6 +808,20 @@ public class FOM_Cocoon extends ScriptableObject {
         session.setParentScope(getParentScope());
         session.setPrototype(getClassPrototype(this, "FOM_Session"));
         return session;
+    }
+
+    /**
+     * Get Sitemap parameters
+     *
+     * @return a <code>Scriptable</code> value whose properties represent 
+     * the Sitemap parameters from <map:call>
+     */
+    public Scriptable jsGet_parameters() {
+	return parameters;
+    }
+
+    void setParameters(Scriptable value) {
+	parameters = value;
     }
 
     // unwrap Wrapper's and convert undefined to null
