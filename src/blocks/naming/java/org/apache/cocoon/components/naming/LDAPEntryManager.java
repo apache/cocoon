@@ -281,6 +281,7 @@ public class LDAPEntryManager
             for (Iterator vals = ((List)me.getValue()).iterator(); vals.hasNext(); ) {
                 attr.add(vals.next());
             }
+            attrs.put(attr);
         }
 		return attrs;
 	}
