@@ -50,173 +50,185 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.excalibur.xml.xpath.XPathProcessor;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.dom.DOMParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
 /**
- * Generates an XML directory listing performing XPath queries
- * on XML files. It can be used both as a plain DirectoryGenerator
- * or, using an "xpointerinsh" syntax it will perform an XPath
- * query on every XML resource.
- *
- * Sample usage:
- *
+ * Generates an XML directory listing performing XPath queries on XML files. It
+ * can be used both as a plain DirectoryGenerator or, by specifying a parameter
+ * <code>xpath</code>, it will perform an XPath query on every XML resource.
+ * Therefore an additional parameter <code>xmlFiles</code> can be set in the
+ * sitemap setting the regular expression pattern for determining if a file
+ * should be handled as XML file or not. The default value for this param is
+ * <code>\.xml$</code>, so that it matches all files ending <code>.xml</code>.
+ * <br>
+ * Sample usage:<br>
+ * <br>
  * Sitemap:
+ * <pre>
  * &lt;map:match pattern="documents/**"&gt;
- *   &lt;map:generate type="xpathdirectory"
- *     src="docs/{1}#/article/title|/article/abstract" /&gt;
+ *   &lt;map:generate type="xpathdirectory" src="docs/{1}"&gt;
+ *     &lt;map:parameter name="xpath" value="/article/title|/article/abstract"/&gt;
+ *     &lt;map:parameter name="xmlFiles" value="\.xml$"/&gt;
+ *   &lt;/map:generate&gt;
  *   &lt;map:serialize type="xml" /&gt;
  * &lt;/map:match&gt;
+ * </pre>
  *
- * Request:
- *   http://www.some.host/documents/test
+ * <p>Request:<br>
+ *   http://www.some.host/documents/test</p>
+ *
  * Result:
+ * <pre>
  * &lt;dir:directory
  *   name="test" lastModified="1010400942000"
  *   date="1/7/02 11:55 AM" requested="true"
  *   xmlns:dir="http://apache.org/cocoon/directory/2.0"&gt;
- *   &lt;dir:directory name="subdirectory" lastModified="1010400942000" date="1/7/02 11:55 AM" /&gt;
+ *   &lt;dir:directory name="subdirectory" lastModified="1010400942000" date="1/7/02 11:55 AM"/&gt;
  *   &lt;dir:file name="test.xml" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
- *     &lt;dir:xpath docid="test.xml" query="/article/title"&gt;
+ *     &lt;dir:xpath query="/article/title"&gt;
  *       &lt;title&gt;This is a test document&lt;/title&gt;
  *       &lt;abstract&gt;
  *         &lt;para&gt;Abstract of my test article&lt;/para&gt;
  *       &lt;/abstract&gt;
  *     &lt;/dir:xpath&gt;
  *   &lt;/dir:file&gt;
- *   &lt;dir:file name="test.gif" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
+ *   &lt;dir:file name="test.gif" lastModified="1011011579000" date="1/14/02 1:32 PM"/&gt;
  * &lt;/dir:directory&gt;
+ * </pre>
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.1 2003/05/26 15:10:52 gianugo Exp $
+ * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.2 2003/07/02 23:58:11 joerg Exp $
  */
 public class XPathDirectoryGenerator extends DirectoryGenerator {
 
-    /** Element &lt;result&gt; */
-    protected static final String RESULT = "xpath";
-    protected static final String QRESULT = PREFIX + ":" + RESULT;
-    protected static final String RESULT_DOCID_ATTR = "docid";
-    protected static final String QUERY_ATTR = "query";
+    /** Local name for the element that contains the included XML snippet. */
+    protected static final String XPATH_NODE_NAME = "xpath";
+    /** Attribute for the XPath query. */
+    protected static final String QUERY_ATTR_NAME = "query";
 
-    protected static final String CDATA  = "CDATA";
-    protected String XPathQuery = null;
+    /** The regular expression for the XML files pattern. */
+    protected RE xmlRE = null;
+    /** The document that should be parsed and (partly) included. */
+    protected Document doc = null;
+    /** The XPath. */
+    protected String xpath = null;
+    /** The XPath processor. */
     protected XPathProcessor processor = null;
-    protected DOMParser parser;
-    protected Document doc;
+    /** The parser for the XML snippets to be included. */
+    protected DOMParser parser = null;
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
+            throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         // See if an XPath was specified
-        int pointer;
-        if ((pointer = this.source.indexOf("#")) != -1) {
-          this.XPathQuery = source.substring(pointer + 1);
-          this.source = source.substring(0, pointer);
-          if (this.getLogger().isDebugEnabled())
-            this.getLogger().debug("Applying XPath: " + XPathQuery
-              + " to directory " + source);
+        this.xpath = par.getParameter("xpath", null);
+        this.cacheKeyParList.add(this.xpath);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Applying XPath: " + this.xpath
+                                   + " to directory " + this.source);
+        }
+        String xmlFilesPattern = null;
+        try {
+            xmlFilesPattern = par.getParameter("xmlFiles", "\\.xml$");
+            this.cacheKeyParList.add(xmlFilesPattern);
+            this.xmlRE = new RE(xmlFilesPattern);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("pattern for XML files: " + xmlFilesPattern);
+            }
+        } catch (RESyntaxException rese) {
+            throw new ProcessingException("Syntax error in regexp pattern '"
+                                          + xmlFilesPattern + "'", rese);
         }
     }
 
-    public void compose(ComponentManager manager) {
-      try {
+    public void compose(ComponentManager manager) throws ComponentException {
         super.compose(manager);
-        processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
-        parser = (DOMParser)manager.lookup(DOMParser.ROLE);
-      } catch (Exception e) {
-        this.getLogger().error("Could not obtain a required component", e);
-      }
+        this.processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
+        this.parser = (DOMParser)manager.lookup(DOMParser.ROLE);
     }
 
     /**
-     * Adds a single node to the generated document. If the path is a
-     * directory, and depth is greater than zero, then recursive calls
-     * are made to add nodes for the directory's children. Moreover,
-     * if the file is an XML file (ends with .xml), the XPath query
-     * is performed and results returned.
-     *
-     * @param   path
-     *      the file/directory to process
-     * @param   depth
-     *      how deep to scan the directory
-     *
-     * @throws  SAXException
-     *      if an error occurs while constructing nodes
+     * Extends the startNode() method of the DirectoryGenerator by starting
+     * a possible XPath query on a file.
      */
-    protected void addPath(File path, int depth)
-    throws SAXException {
-        if (path.isDirectory()) {
-            startNode(DIR_NODE_NAME, path);
-            if (depth>0) {
-                File contents[] = path.listFiles();
-                for (int i=0; i<contents.length; i++) {
-                    if (isIncluded(contents[i]) && !isExcluded(contents[i])) {
-                        addPath(contents[i], depth-1);
-                    }
-                }
-            }
-            endNode(DIR_NODE_NAME);
-        } else {
-            if (isIncluded(path) && !isExcluded(path)) {
-                startNode(FILE_NODE_NAME, path);
-                if (path.getName().endsWith(".xml") && XPathQuery != null)
-                  performXPathQuery(path);
-                endNode(FILE_NODE_NAME);
-            }
+    protected void startNode(String nodeName, File path) throws SAXException {
+        super.startNode(nodeName, path);
+        if (this.xpath != null && path.isFile() && this.isXML(path)) {
+            this.performXPathQuery(path);
         }
     }
 
-    protected void performXPathQuery(File in)
-      throws SAXException {
-      doc = null;
-      try {
-        doc = parser.parseDocument(
-          SourceUtil.getInputSource(resolver.resolveURI(in.toURL().toExternalForm())));
-      } catch (SAXException se) {
-         this.getLogger().error("Warning:" + in.getName()
-          + " is not a valid XML file. Ignoring");
-      } catch (Exception e) {
-         this.getLogger().error("Unable to resolve and parse file" + e);
-       }
-       if (doc != null) {
-         NodeList nl = processor.selectNodeList(doc.getDocumentElement(), XPathQuery);
-         final String id = in.getName();
-         AttributesImpl attributes = new AttributesImpl();
-         attributes.addAttribute("", RESULT_DOCID_ATTR, RESULT_DOCID_ATTR,
-           CDATA, id);
-         attributes.addAttribute("", QUERY_ATTR, QUERY_ATTR, CDATA,
-           XPathQuery);
-         super.contentHandler.startElement(URI, RESULT, QRESULT, attributes);
-         DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
-         for (int i = 0; i < nl.getLength(); i++)
-           ds.stream(nl.item(i));
-         super.contentHandler.endElement(URI, RESULT, QRESULT);
-      }
+    /**
+     * Determines if a given File shall be handled as XML.
+     *
+     * @param path  the File to check
+     * @return true  if the given File shall handled as XML, false otherwise.
+     */
+    protected boolean isXML(File path) {
+        return this.xmlRE.match(path.getName());
+    }
+
+    /**
+     * Performs an XPath query on the file.
+     * @param xmlFile  the File the XPath is performed on.
+     * @throws SAXException  if something goes wrong while adding the XML snippet.
+     */
+    protected void performXPathQuery(File xmlFile) throws SAXException {
+        this.doc = null;
+        try {
+            Source source = resolver.resolveURI(xmlFile.toURL().toExternalForm());
+            this.doc = this.parser.parseDocument(SourceUtil.getInputSource(source));
+        } catch (SAXException e) {
+            this.getLogger().error("Warning:" + xmlFile.getName()
+                                   + " is not a valid XML file. Ignoring.", e);
+        } catch (ProcessingException e) {
+            this.getLogger().error("Warning: Problem while reading the file "
+                                   + xmlFile.getName() + ". Ignoring.", e);
+        } catch (IOException e) {
+            this.getLogger().error("Warning: Problem while reading the file "
+                                   + xmlFile.getName() + ". Ignoring.", e);
+        }
+        if (doc != null) {
+            NodeList nl = this.processor.selectNodeList(this.doc.getDocumentElement(), this.xpath);
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA", xpath);
+            super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
+            DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
+            for (int i = 0; i < nl.getLength(); i++) {
+                ds.stream(nl.item(i));
+            }
+            super.contentHandler.endElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME);
+        }
     }
 
     /**
      * Recycle resources
-     *
      */
-   public void recycle() {
-      super.recycle();
-      this.XPathQuery = null;
-      this.attributes = null;
-      this.doc = null;
+    public void recycle() {
+        this.xpath = null;
+        this.doc = null;
+        //this.parser = null;
+        //this.processor = null;
+        super.recycle();
     }
 }
-
