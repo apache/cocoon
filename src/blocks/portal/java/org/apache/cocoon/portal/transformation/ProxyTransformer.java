@@ -71,7 +71,7 @@ public class ProxyTransformer
     /**
      * Parameter for specifying the envelope tag
      */
-    public static String ENVELOPE_TAG_PARAMETER = "envelope-tag";
+    public static final String ENVELOPE_TAG_PARAMETER = "envelope-tag";
 
     public static final String PORTALNAME = "cocoon-portal-portalname";
     public static final String COPLETID = "cocoon-portal-copletid";
@@ -90,7 +90,7 @@ public class ProxyTransformer
     /**
      * Parameter for specifying the java protocol handler (used for https)
      */
-    public static String PROTOCOL_HANDLER_PARAMETER = "protocol-handler";
+    public static final String PROTOCOL_HANDLER_PARAMETER = "protocol-handler";
 
     /**
      * The document base uri
@@ -173,7 +173,7 @@ public class ProxyTransformer
         this.copletInstanceData = getInstanceData(this.manager, objectModel, parameters);
 
         final CopletData copletData = this.copletInstanceData.getCopletData();
-        
+
         final String startURI = (String)copletData.getAttribute(START_URI);
 
         this.link = (String) this.copletInstanceData.getTemporaryAttribute(LINK);
@@ -209,7 +209,7 @@ public class ProxyTransformer
         this.link = null;
         this.request = null;
     }
-    
+
     /**
      * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)
      */
@@ -239,13 +239,20 @@ public class ProxyTransformer
             } catch (MalformedURLException ex) {
                 throw new SAXException(ex);
             }
-
-            StringBuffer query = new StringBuffer();
-
             boolean firstparameter = true;
-            Enumeration enumeration = request.getParameterNames();
-
             boolean post = ("POST".equals(request.getMethod()));
+            int pos = remoteURI.indexOf('?');
+            final StringBuffer query = new StringBuffer();
+            if ( pos != -1 ) {
+                if ( !post ) {
+                    query.append('?');                    
+                }
+                query.append(remoteURI.substring(pos+1));
+                firstparameter = true;
+                remoteURI = remoteURI.substring(0, pos);
+            }
+
+            Enumeration enumeration = request.getParameterNames();
 
             while (enumeration.hasMoreElements()) {
                 String paramName = (String) enumeration.nextElement();
@@ -274,6 +281,9 @@ public class ProxyTransformer
             Document result = null;
             try {
                 do {
+                    if ( this.getLogger().isDebugEnabled() ) {
+                        this.getLogger().debug("Invoking '" + remoteURI + query.toString() +"', post="+post);
+                    }
                     HttpURLConnection connection =
                         connect(request, remoteURI, query.toString(), post);
                     remoteURI = checkForRedirect(connection, documentBase);
@@ -339,7 +349,6 @@ public class ProxyTransformer
                 newURI = resolveURI(newURI, documentBase);
             }
             return newURI;
-
         }
         return null;
     }
@@ -557,14 +566,14 @@ public class ProxyTransformer
     * @throws MalformedURLException if uri or document base is malformed.
     */
     public static String resolveURI(String uri, String documentBase)
-        throws MalformedURLException {
-
-        if (uri.indexOf("://") > -1) {
-            return uri;
-        }
+    throws MalformedURLException {
 
         if (uri == null) {
             throw new IllegalArgumentException("URI to be resolved must not be null!");
+        }
+
+        if (uri.indexOf("://") > -1) {
+            return uri;
         }
 
         if (documentBase == null) {
