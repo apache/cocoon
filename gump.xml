@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.70 2003/07/14 02:52:25 ghoward Exp $
+  CVS $Id: gump.xml,v 1.71 2003/07/26 13:26:47 cziegeler Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -984,7 +984,7 @@
       Java Indexed Serialization Package
     </description>
     <home nested="lib/core"/>
-    <jar name="jisp-2.0.1.jar"/>
+    <jar name="jisp-2.5.1.jar"/>
   </project>
 
   <project name="jing">

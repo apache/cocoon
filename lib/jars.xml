@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.69 2003/07/25 16:20:30 bruno Exp $
+    | CVS $Id: jars.xml,v 1.70 2003/07/26 13:26:47 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -206,7 +206,7 @@
    support high level server development.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>core/excalibur-store-20030317.jar</lib>
+  <lib>core/excalibur-store-20030726.jar</lib>
   <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
 
@@ -479,7 +479,7 @@
   <title>JISP</title>
   <description></description>
   <used-by>JISP file storage</used-by>
-  <lib>core/jisp-2.0.1.jar</lib>
+  <lib>core/jisp-2.5.1.jar</lib>
   <homepage>http://www.coyotegulch.com/algorithm/jisp/index.html</homepage>
  </file>
 

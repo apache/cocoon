@@ -60,8 +60,9 @@ import java.io.ObjectOutput;
  * Wrapper class for String Keys to be compatible with the
  * Jisp KeyObject.
  *
+ * @deprecated Use the Avalon Excalibur Store instead.
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: JispStringKey.java,v 1.1 2003/03/09 00:07:06 pier Exp $
+ * @version CVS $Id: JispStringKey.java,v 1.2 2003/07/26 13:26:47 cziegeler Exp $
  */
 final class JispStringKey extends KeyObject {
     final static long serialVersionUID = -6894793231339165076L;
