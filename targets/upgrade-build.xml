@@ -150,7 +150,10 @@
       <!-- Java packages -->    
       <replacefilter
         token="resource://org/apache/cocoon/woody/flow/javascript/woody2.js"
-        value="resource://org/apache/cocoon/forms/flow/javascript/Form.js"/>                              
+        value="resource://org/apache/cocoon/forms/flow/javascript/Form.js"/>   
+      <replacefilter 
+        token="org.apache.cocoon.woody.datatype.ValidationError" 
+        value="org.apache.forms.validation.ValidationError"/>                                   
       <replacefilter 
         token="org/apache/cocoon/woody" 
         value="org/apache/cocoon/forms"/>  
