@@ -103,7 +103,9 @@
     <!-- now build the .classpath file -->
     <xslt in="${build.temp}/classpath-temp.xml" out="${basedir}/.classpath"
           processor="trax"
-          style="${tools}/ide/eclipse/make-classpath.xsl"/>
+          style="${tools}/ide/eclipse/make-classpath.xsl">
+       <param name="exportlib" expression="${ide.eclipse.export.libs}"/>
+    </xslt>
 
     <!-- copy the project file (expand version) -->
     <copy file="${tools}/ide/eclipse/project"
