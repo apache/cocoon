@@ -84,7 +84,7 @@ import java.net.MalformedURLException;
  *
  * @deprecated by the Avalon Excalibur Source Resolving
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.4 2003/07/06 11:48:48 sylvain Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.5 2003/10/08 20:18:34 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractXMLConsumer
@@ -240,10 +240,10 @@ implements ModifiableSource {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
+            CocoonComponentManager.enterEnvironment(this.environment,
+                                                    this.manager,
+                                                    this.pipelineProcessor);
             try {
-                CocoonComponentManager.enterEnvironment(this.environment,
-                                                        this.manager,
-                                                        this.pipelineProcessor);
                 this.processingPipeline.process(this.environment);
             } finally {
                 CocoonComponentManager.leaveEnvironment();
@@ -337,10 +337,10 @@ implements ModifiableSource {
                 // clean environment stack handling.
                 XMLSerializer xmls = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
                 Object fragment;
+                CocoonComponentManager.enterEnvironment(this.environment,
+                                                        this.manager,
+                                                        this.pipelineProcessor);
                 try {
-                    CocoonComponentManager.enterEnvironment(this.environment,
-                                                            this.manager,
-                                                            this.pipelineProcessor);
                     this.processingPipeline.process(this.environment, xmls);
                     fragment = xmls.getSAXFragment();
                 } finally {

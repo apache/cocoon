@@ -83,7 +83,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ComponentContext;
-import org.apache.cocoon.components.EnvironmentStack;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -114,7 +113,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.16 2003/10/06 15:59:52 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.17 2003/10/08 20:18:34 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -626,10 +625,10 @@ public class Cocoon
         }
 
         Object key = CocoonComponentManager.startProcessing(environment);
+        CocoonComponentManager.enterEnvironment(environment,
+                                                this.componentManager,
+                                                this);
         try {
-            CocoonComponentManager.enterEnvironment(environment,
-                                                    this.componentManager,
-                                                    this);
             boolean result;
             if (this.getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
@@ -661,11 +660,9 @@ public class Cocoon
             if (this.getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
+            
             // TODO (CZ): This is only for testing - remove it later on
-            EnvironmentStack stack = CocoonComponentManager.getCurrentEnvironmentStack();
-            if (stack != null && !stack.isEmpty() ) {
-                this.getLogger().error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");        
-            }
+            CocoonComponentManager.checkEnvironment(this.getLogger());
         }
     }
 
