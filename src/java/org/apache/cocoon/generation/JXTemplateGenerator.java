@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Stack;
 import java.util.TimeZone;
 
@@ -55,6 +56,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.ServiceableTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.jexl.Expression;
@@ -115,7 +117,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.47 2004/06/26 08:41:18 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.48 2004/06/27 17:40:10 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -132,6 +134,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 return null;
             }
             public void remove() {
+                // EMPTY
             }
         };
 
@@ -143,6 +146,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 return null;
             }
             public void remove() {
+                // EMPTY
             }
     };
 
@@ -537,8 +541,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
     }
 
-    static class MyJexlContext
-        extends HashMap implements JexlContext {
+    static class MyJexlContext extends HashMap implements JexlContext {
 
         private MyJexlContext closure;
 
@@ -560,16 +563,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
         public boolean containsKey(Object key) {
             return this.get(key) !=null;
-            /* if (key.equals("this")) {
-                return true;
-            }
-            boolean result = super.containsKey(key);
-            if (!result) {
-                if (closure != null) {
-                    result = closure.containsKey(key);
-                }
-            }
-            return result; */
         }
 
         public Object get(Object key) {
@@ -577,10 +570,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 return this;
             }
             Object result = super.get(key);
-            if (result == null) {
-                if (closure != null) {
-                    result = closure.get(key);
-                }
+            if (result == null && closure != null) {
+                result = closure.get(key);
             }
             return result;
         }
@@ -713,6 +704,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     final static String PARAMETER = "parameter";
     final static String FORMAT_NUMBER = "formatNumber";
     final static String FORMAT_DATE = "formatDate";
+    final static String COMMENT = "comment";
     final static String CACHE_KEY = "cache-key";
     final static String VALIDITY = "cache-validity";
 
@@ -973,8 +965,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         final Locator location;
         Event next; // in document order
         Event(Locator locator) {
-            this.location =
-                locator == null ? NULL_LOCATOR : new LocatorImpl(locator);
+            if (locator != null) {
+                this.location = new LocatorImpl(locator);
+            } else {
+                this.location = NULL_LOCATOR;
+            }
         }
 
         public String locationString() {
@@ -991,7 +986,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             return result;
         }
     }
-
 
     static class TextEvent extends Event {
         TextEvent(Locator location, char[] chars, int start, int length)
@@ -1364,13 +1358,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         final String uri;
     }
 
-    static class Comment extends TextEvent {
-        Comment(Locator location, char[] chars, int start, int length)
-                    throws SAXException {
-            super(location, chars, start, length);
-        }
-    }
-
     static class EndCDATA extends Event {
         EndCDATA(Locator location) {
             super(location);
@@ -1606,6 +1593,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
         final JXTExpression var;
         final JXTExpression value;
+    }
+
+    
+     static class StartComment extends StartInstruction {
+        StartComment(StartElement raw) {
+            super(raw);
+        }
     }
 
     // formatNumber tag (borrows from Jakarta taglibs JSTL)
@@ -2064,24 +2058,24 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         private void addEvent(Event ev) throws SAXException {
-            if (ev == null) {
+            if (ev != null) {
+                if (lastEvent == null) {
+                    lastEvent = startEvent = new StartDocument(locator);
+                } else {
+                    flushChars();
+                }
+                lastEvent.next = ev;
+                lastEvent = ev;    
+            } else {
                 throw new NullPointerException("null event");
             }
-            if (lastEvent == null) {
-                lastEvent = startEvent = new StartDocument(locator);
-            } else {
-                flushChars();
-            }
-            lastEvent.next = ev;
-            lastEvent = ev;
         }
 
         void flushChars() throws SAXException {
             if (charBuf != null) {
                 char[] chars = new char[charBuf.length()];
                 charBuf.getChars(0, charBuf.length(), chars, 0);
-                Characters ev = new Characters(charLocation,
-                                               chars, 0, chars.length);
+                Characters ev = new Characters(charLocation, chars, 0, chars.length);
                 lastEvent.next = ev;
                 lastEvent = ev;
                 charLocation = null;
@@ -2092,7 +2086,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         public void characters(char[] ch, int start, int length)
             throws SAXException {
             if (charBuf == null) {
-                charBuf = new StringBuffer();
+                charBuf = new StringBuffer(length);
                 if (locator != null) {
                     charLocation = new LocatorImpl(locator);
                 } else {
@@ -2450,6 +2444,10 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     StartTemplate startTemplate =
                         new StartTemplate(startElement);
                     newEvent = startTemplate;
+                } else if (localName.equals(COMMENT)) {
+                    // <jx:comment>This will be parsed</jx:comment>
+                    StartComment startJXComment = new StartComment(startElement);
+                    newEvent = startJXComment;
                 } else {
                     throw new SAXParseException("unrecognized tag: " + localName, locator, null);
                 }
@@ -2467,7 +2465,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
         public void comment(char ch[], int start, int length)
             throws SAXException {
-            addEvent(new Comment(locator, ch, start, length));
+            // DO NOTHING
         }
 
         public void endCDATA() throws SAXException {
@@ -2804,95 +2802,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
     }
 
-/*    private void executeRaw(final XMLConsumer consumer,
-                            Event startEvent, Event endEvent)
-    throws SAXException {
-        Event ev = startEvent;
-        LocatorFacade loc = new LocatorFacade(ev.location);
-        consumer.setDocumentLocator(loc);
-        while (ev != endEvent) {
-            loc.setDocumentLocator(ev.location);
-            if (ev instanceof Characters) {
-                TextEvent text = (TextEvent)ev;
-                consumer.characters(text.raw, 0, text.raw.length);
-            } else if (ev instanceof EndDocument) {
-                consumer.endDocument();
-            } else if (ev instanceof StartElement) {
-                StartElement startElement =
-                    (StartElement)ev;
-                consumer.startElement(startElement.namespaceURI,
-                                      startElement.localName,
-                                      startElement.raw,
-                                      startElement.attributes);
-            } else if (ev instanceof EndElement) {
-                EndElement endElement = (EndElement)ev;
-                StartElement startElement = endElement.startElement;
-                consumer.endElement(startElement.namespaceURI,
-                                    startElement.localName,
-                                    startElement.raw);
-            } else if (ev instanceof EndPrefixMapping) {
-                EndPrefixMapping endPrefixMapping =
-                    (EndPrefixMapping)ev;
-                consumer.endPrefixMapping(endPrefixMapping.prefix);
-            } else if (ev instanceof IgnorableWhitespace) {
-                TextEvent text = (TextEvent)ev;
-                consumer.ignorableWhitespace(text.raw, 0, text.raw.length);
-            } else if (ev instanceof ProcessingInstruction) {
-                ProcessingInstruction pi = (ProcessingInstruction)ev;
-                consumer.processingInstruction(pi.target, pi.data);
-            } else if (ev instanceof SkippedEntity) {
-                SkippedEntity skippedEntity = (SkippedEntity)ev;
-                consumer.skippedEntity(skippedEntity.name);
-            } else if (ev instanceof StartDocument) {
-                StartDocument startDoc = (StartDocument)ev;
-                if (startDoc.endDocument != null) {
-                    // if this isn't a document fragment
-                    consumer.startDocument();
-                }
-            } else if (ev instanceof StartPrefixMapping) {
-                StartPrefixMapping startPrefixMapping =
-                    (StartPrefixMapping)ev;
-                consumer.startPrefixMapping(startPrefixMapping.prefix,
-                                            startPrefixMapping.uri);
-            } else if (ev instanceof Comment) {
-                TextEvent text = (TextEvent)ev;
-                consumer.comment(text.raw, 0, text.raw.length);
-            } else if (ev instanceof EndCDATA) {
-                consumer.endCDATA();
-            } else if (ev instanceof EndDTD) {
-                consumer.endDTD();
-            } else if (ev instanceof EndEntity) {
-                consumer.endEntity(((EndEntity)ev).name);
-            } else if (ev instanceof StartCDATA) {
-                consumer.startCDATA();
-            } else if (ev instanceof StartDTD) {
-                StartDTD startDTD = (StartDTD)ev;
-                consumer.startDTD(startDTD.name,
-                                  startDTD.publicId,
-                                  startDTD.systemId);
-            } else if (ev instanceof StartEntity) {
-                consumer.startEntity(((StartEntity)ev).name);
-            } else if (ev instanceof StartInstruction) {
-                StartInstruction startInstruction = (StartInstruction)ev;
-                StartElement startElement = startInstruction.startElement;
-                consumer.startElement(startElement.namespaceURI,
-                                      startElement.localName,
-                                      startElement.raw,
-                                      startElement.attributes);
-            } else if (ev instanceof EndInstruction) {
-                EndInstruction endInstruction = (EndInstruction)ev;
-                StartInstruction startInstruction =
-                    endInstruction.startInstruction;
-                StartElement startElement = startInstruction.startElement;
-                consumer.endElement(startElement.namespaceURI,
-                                    startElement.localName,
-                                    startElement.raw);
-            }
-            ev = ev.next;
-        }
-    }
-*/
-
     private void executeDOM(final XMLConsumer consumer,
                             MyJexlContext jexlContext,
                             JXPathContext jxpathContext,
@@ -3032,9 +2941,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                    consumer.ignorableWhitespace(ch, offset, len);
                                }
                            });
-            } else if (ev instanceof ProcessingInstruction) {
-                ProcessingInstruction pi = (ProcessingInstruction)ev;
-                consumer.processingInstruction(pi.target, pi.data);
             } else if (ev instanceof SkippedEntity) {
                 SkippedEntity skippedEntity = (SkippedEntity)ev;
                 consumer.skippedEntity(skippedEntity.name);
@@ -3192,12 +3098,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     execute(consumer, localJexlContext, localJXPathContext,
                             macroCall, startForEach.next,
                             startForEach.endInstruction);
-                    /* Skip rows */
+                    // Skip rows
                     skipCounter = step;
                     while (--skipCounter > 0 && iter.hasNext()) {
                         iter.next();
                     }
-                    /* Increase index */
+                    // Increase index
                     i += step;
                     count++;
                 }
@@ -3264,9 +3170,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     builder.endDocument();
                     Node node = builder.getDocument().getDocumentElement();
                     NodeList nodeList = node.getChildNodes();
+                    // JXPath doesn't handle NodeList, so convert it to an array
                     int len = nodeList.getLength();
-                    // JXPath doesn't handle NodeList, so convert
-                    // it to an array
                     Node[] nodeArr = new Node[len];
                     for (int i = 0; i < len; i++) {
                         nodeArr[i] = nodeList.item(i);
@@ -3476,19 +3381,36 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 StartPrefixMapping startPrefixMapping = (StartPrefixMapping)ev;
                 consumer.startPrefixMapping(startPrefixMapping.prefix,
                                             startPrefixMapping.uri);
-            } else if (ev instanceof Comment) {
-                TextEvent text = (TextEvent)ev;
+            } else if (ev instanceof StartComment) {
+                StartComment startJXComment = (StartComment)ev;
+                // Parse the body of the comment
+                DOMBuilder builder = new DOMBuilder();
+                builder.startDocument();
+                builder.startElement(NS, "comment", "comment", EMPTY_ATTRS);
+                execute(builder, jexlContext, jxpathContext, macroCall,
+                        startJXComment.next, startJXComment.endInstruction);
+                builder.endElement(NS, "comment", "comment");
+                builder.endDocument();
+                Node node = builder.getDocument().getDocumentElement();
+                NodeList nodeList = node.getChildNodes();
+                // JXPath doesn't handle NodeList, so convert
+                // it to an array
+                int len = nodeList.getLength();
                 final StringBuffer buf = new StringBuffer();
-                characters(jexlContext, jxpathContext, text,
-                           new CharHandler() {
-                               public void characters(char[] ch, int offset,
-                                              int len) throws SAXException {
-                                   buf.append(ch, offset, len);
-                               }
-                           });
+                Properties omit = XMLUtils.createPropertiesForXML(true);
+                for (int i = 0; i < len; i++) {
+                    try {
+                        String str = XMLUtils.serializeNode(nodeList.item(i), omit);  
+                        buf.append(StringUtils.substringAfter(str, ">")); // cut the XML header
+                    } catch (ProcessingException e) {
+                        throw new SAXParseException(e.getMessage(), startJXComment.location, e);
+                    }
+                }
                 char[] chars = new char[buf.length()];
                 buf.getChars(0, chars.length, chars, 0);
                 consumer.comment(chars, 0, chars.length);
+                ev = startJXComment.endInstruction.next;
+                continue;
             } else if (ev instanceof EndCDATA) {
                 consumer.endCDATA();
             } else if (ev instanceof EndDTD) {
@@ -3652,7 +3574,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     if (doc == null) {
                         Parser parser = new Parser();
                         // call getValidity before using the stream is faster if the source is a SitemapSource
-                        if ( validity == null ) {
+                        if (validity == null) {
                             validity = input.getValidity();
                         }
                         SourceUtil.parse(this.manager, input, parser);
@@ -3674,10 +3596,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 MyJexlContext selectJexl = jexlContext;
                 if (startImport.select != null) {
                     try {
-                        Object obj = getValue(startImport.select,
-                                              jexlContext, jxpathContext);
-                        selectJXPath =
-                            jxpathContextFactory.newContext(null, obj);
+                        Object obj = getValue(startImport.select, jexlContext, jxpathContext);
+                        selectJXPath = jxpathContextFactory.newContext(null, obj);
                         selectJXPath.setVariables(variables);
                         selectJexl = new MyJexlContext(jexlContext);
                         fillContext(obj, selectJexl);
@@ -3691,8 +3611,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     }
                 }
                 try {
-                    execute(consumer, selectJexl, selectJXPath, macroCall,
-                            doc.next, doc.endDocument);
+                    execute(consumer, selectJexl, selectJXPath, macroCall, doc.next, doc.endDocument);
                 } catch (Exception exc) {
                         throw new SAXParseException(
                                 "Exception occurred in imported template "
@@ -3702,13 +3621,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 ev = startImport.endInstruction.next;
                 continue;
             } else if (ev instanceof StartDocument) {
-                StartDocument startDoc = (StartDocument)ev;
-                if (startDoc.endDocument != null) {
+                if (((StartDocument)ev).endDocument != null) {
                     // if this isn't a document fragment
                     consumer.startDocument();
                 }
             } else if (ev instanceof EndDocument) {
                 consumer.endDocument();
+            } else if (ev instanceof ProcessingInstruction) {
+                ProcessingInstruction pi = (ProcessingInstruction)ev;
+                consumer.processingInstruction(pi.target, pi.data);
             }
             ev = ev.next;
         }
