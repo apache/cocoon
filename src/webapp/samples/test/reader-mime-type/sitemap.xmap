@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+    <map:pipelines>
+        <map:pipeline>
+            <map:match pattern="test10.html">
+              <map:read src="test10.html"/>
+            </map:match>
+            <map:match pattern="test20.html">
+              <map:read src="cocoon:/test10.html"/>
+            </map:match>
+            <map:match pattern="test30">
+              <map:read src="test10.html"/>
+            </map:match>
+        </map:pipeline>
+
+        <map:pipeline>
+            <map:match pattern="test40.html">
+              <map:read src="cocoon:/test10.html"/>
+            </map:match>
+        </map:pipeline>
+
+        <map:pipeline>
+            <map:match pattern="test50.html">
+              <map:read src="cocoon:/test30"/>
+            </map:match>
+        </map:pipeline>
+
+        <map:pipeline>
+            <map:match pattern="test60.html">
+              <map:read src="cocoon:/test10.html" mime-type="text/html"/>
+            </map:match>
+        </map:pipeline>
+
+        <map:pipeline>
+            <map:match pattern="test70.html">
+              <map:read src="cocoon:/test30" mime-type="text/html"/>
+            </map:match>
+        </map:pipeline>
+    </map:pipelines>
+
+</map:sitemap>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<!-- CVS $Id: index.xml,v 1.1 2004/02/06 10:35:36 bdelacretaz Exp $ -->
+
+<page>
+    <title>Test pages</title>
+    <content>
+        <para>The pages found in and under this directory are meant for automated anteater tests.</para>
+    </content>
+</page>

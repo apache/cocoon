@@ -1,27 +1,61 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:components>
-    <map:generators default="file"/>
-    <map:transformers default="xslt"/>
-    <map:readers default="resource"/>
-    <map:serializers default="html"/>
-    <map:selectors default="browser"/>
-    <map:matchers default="wildcard"/>
-  </map:components>
-  <map:pipelines>
-    <map:pipeline>
-      <map:match pattern="simpletest-content/**">
-        <map:generate src="{1}"/>
-        <map:serialize type="xml"/>
-      </map:match>
-      <map:match pattern="simpletest-mounted/**">
-        <map:mount src="simpletest-mounted/" uri-prefix="simpletest-mounted"/>
-      </map:match>
-      <map:match pattern="simpletest">
-        <map:generate src="cocoon:/simpletest-content/a.xml"/>
-        <map:transform type="cinclude"/>
-        <map:serialize type="xml"/>
-      </map:match>
-    </map:pipeline>
-  </map:pipelines>
+
+    <map:pipelines>
+
+        <!-- used by the internalRequest anteater test -->
+        <map:pipeline>
+            <map:match pattern="simpletest-content/**">
+                <map:generate src="{1}"/>
+                <map:serialize type="xml"/>
+            </map:match>
+            <map:match pattern="simpletest-mounted/**">
+                <map:mount src="simpletest-mounted/" uri-prefix="simpletest-mounted"/>
+            </map:match>
+            <map:match pattern="simpletest">
+                <map:generate src="cocoon:/simpletest-content/a.xml"/>
+                <map:transform type="cinclude"/>
+                <map:serialize type="xml"/>
+            </map:match>
+        </map:pipeline>
+
+        <!-- explain what this is -->
+        <map:pipeline>
+            <map:match pattern="">
+                <map:redirect-to uri="index.html"/>
+            </map:match>
+
+            <map:match pattern="*.html">
+                <map:generate src="{1}.xml"/>
+                <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+                    <map:parameter name="servletPath" value="{request:servletPath}"/>
+                    <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+                    <map:parameter name="contextPath" value="{request:contextPath}"/>
+                    <map:parameter name="file" value="{1}/{2}.xml"/>
+                    <map:parameter name="remove" value="{0}"/>
+                </map:transform>
+                <map:serialize type="html"/>
+            </map:match>
+
+            <!-- process the explain-test page for subdirectories -->
+            <map:match pattern="**/explain-test.html">
+                <map:generate src="{1}/explain-test.xml"/>
+                <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+                    <map:parameter name="servletPath" value="{request:servletPath}"/>
+                    <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+                    <map:parameter name="contextPath" value="{request:contextPath}"/>
+                    <map:parameter name="file" value="{1}/{2}.xml"/>
+                    <map:parameter name="remove" value="{0}"/>
+                </map:transform>
+                <map:serialize type="html"/>
+            </map:match>
+
+            <!-- mount subdirectories to contain tests -->
+            <map:match pattern="*/**">
+              <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+            </map:match>
+
+        </map:pipeline>
+
+    </map:pipelines>
 </map:sitemap>
