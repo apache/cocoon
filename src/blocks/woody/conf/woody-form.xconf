@@ -18,6 +18,7 @@
       <widget name="button" src="org.apache.cocoon.woody.formmodel.ButtonDefinitionBuilder"/>
       <widget name="aggregatefield" src="org.apache.cocoon.woody.formmodel.AggregateFieldDefinitionBuilder"/>
       <widget name="output" src="org.apache.cocoon.woody.formmodel.OutputDefinitionBuilder"/>
+      <widget name="upload" src="org.apache.cocoon.woody.formmodel.UploadDefinitionBuilder"/>
     </widgets>
   </woody-formmanager>
 </xconf>

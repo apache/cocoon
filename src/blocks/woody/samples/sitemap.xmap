@@ -54,6 +54,7 @@
   <map:flow language="javascript">
     <map:script src="flow/woody_flow_example.js"/>
     <map:script src="flow/binding_example.js"/>
+    <map:script src="flow/upload_example.js"/>
     <map:script src="flow/registration.js"/>
   </map:flow>
 
@@ -173,6 +174,48 @@
        <map:serialize/>
      </map:match>
 
+
+    <!-- Upload Widget Sample -->
+
+     <map:match pattern="upload">
+       <map:call function="upload"/>
+     </map:match>
+
+     <map:match pattern="*.continue">
+       <map:call continuation="{1}"/>
+     </map:match>
+
+     <map:match pattern="upload-display-pipeline">
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/upload_template.xml"/>
+       <map:transform type="woody"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_template_flow.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform> 
+       <map:transform src="resources/woody-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="upload-success-pipeline">
+       <map:generate type="jx" src="forms/upload_success_jx.xml"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_success.xsp"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
 
      <!--
         | Binding form sample, using flowscript

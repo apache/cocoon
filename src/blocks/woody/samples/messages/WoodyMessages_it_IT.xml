@@ -30,5 +30,5 @@
 
 
   <message key="aggregatedfield.split-failed">Il valore non corrisponde alla seguente espressione regolare: {0}</message>
-
+  <message key="upload.invalid-type">(TODO)Invalid content type.</message>
 </catalogue>

@@ -30,5 +30,5 @@
 
 
   <message key="aggregatedfield.split-failed">Content of this field does not match the following regular expression: {0}</message>
-
+  <message key="upload.invalid-type">Invalid content type.</message>
 </catalogue>
