@@ -129,10 +129,17 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             } catch (NumberFormatException exc) {
                 // do nothing
             }
-            for (int i = 0; i < size; i++) {
-                // TODO: a person with bad intents could pass a very large size parameter, maybe we should
-                // check for a built-in limit or something.
-                addRow();
+            int currentSize = getSize();
+            if (currentSize < size) {
+                for (int i = currentSize; i < size; i++) {
+                    // TODO: a person with bad intents could pass a very large size parameter, maybe we should
+                    // check for a built-in limit or something.
+                    addRow();
+                }
+            } else if (currentSize > size) {
+                for (int i = currentSize - 1; i >= size; i--) {
+                    removeRow(i);
+                }
             }
         } else {
             rows.clear();
