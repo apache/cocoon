@@ -17,8 +17,10 @@ package org.apache.cocoon.portal.profile.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.service.ServiceException;
@@ -29,10 +31,27 @@ import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
- * The profile manager using the authentication framework
+ * The profile manager using the authentication framework.
+ * This profile manager uses a group based approach:
+ * The coplet-base-data and the coplet-data are global, these are shared
+ * between all users.
+ * If the user has is own set of coplet-instance-datas/layouts these are
+ * loaded.
+ * If the user has not an own set, the group set is loaded - therefore
+ * each user has belong to exactly one group.
+ * In the case that the user does not belong to a group, a global
+ * profile is loaded.
+ * 
+ * This profile manager does not check for changes of the profile,
+ * which means for example once a global profile is loaded, it is
+ * used until Cocoon is restarted. (This will be changed later on)
+ * 
+ * THIS IS A WORK IN PROGRESS - IT'S NOT FINISHED/WORKING YET
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
@@ -41,7 +60,14 @@ import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 public class GroupBasedProfileManager 
     extends AbstractProfileManager { 
 
+    public static final String CATEGORY_GLOBAL = "global";
+    public static final String CATEGORY_GROUP  = "group";
+    public static final String CATEGORY_USER   = "user";
+    
     protected static final String KEY_PREFIX = GroupBasedProfileManager.class.getName() + ':';
+    
+    protected Map copletBaseDatas;
+    protected Map copletDatas;
     
     protected UserProfile getUserProfile(String layoutKey) {
         if ( layoutKey == null ) {
@@ -257,11 +283,11 @@ public class GroupBasedProfileManager
      * want to use a different authentication method just overwrite this
      * method.
      */
-    protected UserInfo getUserInfo() {
+    protected UserInfo getUserInfo(String portalName, String layoutKey) {
         AuthenticationManager authManager = null;
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            final UserInfo info = new UserInfo();
+            final UserInfo info = new UserInfo(portalName, layoutKey);
             info.setUserName(authManager.getState().getHandler().getUserId());
             try {
                 info.setGroup((String)authManager.getState().getHandler().getContext().getContextInfo().get("group"));
@@ -280,9 +306,102 @@ public class GroupBasedProfileManager
     /**
      * Load the profile
      */
-    protected UserProfile loadProfile(final String layoutKey, final PortalService service) {
-        final UserProfile profile = new UserProfile();
+    protected UserProfile loadProfile(final String layoutKey, final PortalService service) 
+    throws Exception {
+        final UserInfo info = this.getUserInfo(service.getPortalName(), layoutKey);
+        ProfileLS loader = null;
+        try {
+            loader = (ProfileLS)this.manager.lookup( ProfileLS.ROLE );
+            final UserProfile profile = new UserProfile();
         
-        return profile;
+            // first "load" the global data
+            profile.setCopletBaseDatas( this.getGlobalBaseDatas(loader, info) );
+            profile.setCopletDatas( this.getGlobalDatas(loader, info) );
+            
+            // now load the user/group specific data
+            return profile;
+        } catch (ServiceException se) {
+            throw new CascadingRuntimeException("Unable to get component profilels.", se);
+        } finally {
+            this.manager.release( loader );
+        }
     }
+    
+    protected Map getGlobalBaseDatas(final ProfileLS     loader,
+                                     final UserInfo      info) 
+    throws Exception {
+        if ( this.copletBaseDatas == null ) {
+            synchronized ( this ) {
+                if ( this.copletBaseDatas == null ) {
+                    final Map key = this.buildKey(CATEGORY_GLOBAL, 
+                            ProfileLS.PROFILETYPE_COPLETBASEDATA, 
+                            info, 
+                            true);
+                    final Map parameters = new HashMap();
+                    parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                                   ProfileLS.PROFILETYPE_COPLETBASEDATA);        
+
+                    this.copletBaseDatas = (Map)loader.loadProfile(key, parameters);                    
+                }
+            }
+        }
+        return this.copletBaseDatas;
+    }
+    
+    protected Map getGlobalDatas(final ProfileLS     loader,
+                                 final UserInfo      info) 
+    throws Exception {
+        if ( this.copletDatas == null ) {
+            synchronized ( this ) {
+                if ( this.copletDatas == null ) {
+                    final Map key = this.buildKey(CATEGORY_GLOBAL, 
+                                                  ProfileLS.PROFILETYPE_COPLETDATA, 
+                                                  info, 
+                                                  true);
+                    final Map parameters = new HashMap();
+                    parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                                   ProfileLS.PROFILETYPE_COPLETDATA);        
+                    parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
+                                   this.copletBaseDatas);
+                    
+                    this.copletDatas = (Map)loader.loadProfile(key, parameters);                    
+                }
+            }
+        }
+        return this.copletDatas;
+    }
+
+    // Type: global, group or user
+    // ProfileType: layout, copletbasedata, copletdata or copletinstance-data
+    protected Map buildKey(String        category,
+                           String        profileType,
+                           UserInfo      info,
+                           boolean       load) {
+        final StringBuffer config = new StringBuffer(profileType);
+        config.append('-');
+        config.append(category);
+        config.append('-');
+        if ( load ) {
+            config.append("load");
+        } else {
+            config.append("save");            
+        }
+        final String uri = (String)info.getConfigurations().get(config.toString());
+
+        final Map key = new LinkedMap();
+        key.put("baseuri", uri);
+        key.put("separator", "?");
+        key.put("portal", info.getPortalName());
+        key.put("layout", info.getLayoutKey());
+        key.put("type", category);
+        if ( "group".equals(category) ) {
+            key.put("group", info.getGroup());
+        }
+        if ( "user".equals(category) ) {
+            key.put("user", info.getUserName());
+        }
+        
+        return key;
+    }
+    
 }

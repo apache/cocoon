@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.util.Map;
+
 /**
  * Information about the current user.
  * This data object is used for loading the profile. It decouples the
@@ -28,6 +30,17 @@ public class UserInfo {
     protected String userName;
     
     protected String group;
+    
+    protected String portalName;
+
+    protected String layoutKey;
+
+    protected Map    configurations;
+    
+    public UserInfo(String portalName, String layoutKey) {
+        this.portalName = portalName;
+        this.layoutKey = layoutKey;
+    }
     
     /**
      * @return Returns the group.
@@ -55,5 +68,33 @@ public class UserInfo {
      */
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+    
+    /**
+     * @return Returns the configurations.
+     */
+    public Map getConfigurations() {
+        return configurations;
+    }
+    
+    /**
+     * @param configurations The configurations to set.
+     */
+    public void setConfigurations(Map configurations) {
+        this.configurations = configurations;
+    }
+    
+    /**
+     * @return Returns the layoutKey.
+     */
+    public String getLayoutKey() {
+        return layoutKey;
+    }
+    
+    /**
+     * @return Returns the portalName.
+     */
+    public String getPortalName() {
+        return portalName;
     }
 }
