@@ -7,7 +7,7 @@
    <card id="index" title="{title}">
     <xsl:apply-templates select="content"/>
     <do type="accept" label="About">
-     <go href="#About"/>
+     <go href="#about"/>
     </do>
    </card>
 
