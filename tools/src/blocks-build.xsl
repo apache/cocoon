@@ -66,13 +66,13 @@
       <target name="init">
         <xsl:for-each select="module/project[starts-with(@name, 'cocoon-block-')]">
           <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <condition property="exclude.block.{$block-name}">
+          <condition property="include.block.{$block-name}">
             <not>
-              <istrue value="${{include.block.{$block-name}}}"/>
+              <istrue value="${{exclude.block.{$block-name}}}"/>
             </not>
           </condition>
           <condition property="internal.exclude.block.{$block-name}">
-            <istrue value="${{exclude.block.{$block-name}}}"/>
+            <isfalse value="${{include.block.{$block-name}}}"/>
           </condition>
         </xsl:for-each>
       </target>
