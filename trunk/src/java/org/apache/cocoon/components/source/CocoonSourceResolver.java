@@ -69,12 +69,13 @@ import org.apache.excalibur.source.impl.SourceResolverImpl;
  * Cocoon.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonSourceResolver.java,v 1.5 2003/10/30 13:03:19 cziegeler Exp $
+ * @version CVS $Id: CocoonSourceResolver.java,v 1.6 2003/12/27 15:10:22 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="SourceResolver"
- * @x-avalon.lifestyle="singleton"
- * @x-avalon.info="source-resolver"
+ * @avalon.service type=SourceResolver
+ * @avalon.service type=org.apache.excalibur.source.SourceResolver
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=source-resolver
 */
 public class CocoonSourceResolver 
 extends SourceResolverImpl
@@ -113,8 +114,6 @@ implements SourceResolver {
      * Obtain a reference to the SourceResolver with "/Cocoon" hint
      * 
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     * 
-     * @avalon.dependency type="SourceResolver"
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
