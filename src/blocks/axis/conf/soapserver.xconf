@@ -23,7 +23,6 @@
      <descriptor src="resource://org/apache/cocoon/webservices/memory/DeploymentDescriptor.wsdd"/>
      <descriptor src="resource://org/apache/cocoon/webservices/system/DeploymentDescriptor.wsdd"/>
      <descriptor src="resource://org/apache/cocoon/webservices/cache/DeploymentDescriptor.wsdd"/>
-     <descriptor src="resource://org/apache/cocoon/webservices/instrument/DeploymentDescriptor.wsdd"/>     
    </managed-services>
  </component>
 </xconf>
