@@ -85,14 +85,14 @@ import org.mozilla.javascript.*;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
-import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_WebContinuation;
+
 /**
  * Interface with the JavaScript interpreter.
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.3 2003/07/17 17:12:52 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.4 2003/07/19 20:16:27 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -344,7 +344,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         org.mozilla.javascript.Context context = 
             org.mozilla.javascript.Context.getCurrentContext();
 
-        Scriptable thrScope = new ThreadScope();
+        ThreadScope thrScope = new ThreadScope();
 
         thrScope.setPrototype(scope);
         // We want 'thrScope' to be a new top-level scope, so set its
@@ -365,6 +365,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                                                     ScriptableObject.DONTENUM |
                                                     ScriptableObject.PERMANENT);
         
+        thrScope.reset();
         return thrScope;
     }
 
@@ -400,15 +401,15 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
 
         FOM_Cocoon cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
         long lastExecTime = ((Long)thrScope.get(LAST_EXEC_TIME,
-                                           thrScope)).longValue();
+                                                thrScope)).longValue();
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
         cocoon.setup(this, environment, manager, getLogger());
-
+        
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
             List execList = new ArrayList();
-            boolean needsRefresh = false;
+            boolean needsRefresh = lastExecTime == 0;
             if (reloadScripts) {
                 long now = System.currentTimeMillis();
                 if (now >= lastTimeCheck + checkTime) {
@@ -468,9 +469,9 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @param fileName resource uri
      * @return compiled script
      */
-    public Script compileScript(Context cx,
-                                Environment environment,
-                                String fileName) throws Exception {
+    Script compileScript(Context cx,
+                         Environment environment,
+                         String fileName) throws Exception {
         Source src = environment.resolveURI(fileName);
         if (src == null) {
             throw new ResourceNotFoundException(fileName + ": not found");
@@ -621,8 +622,14 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
             }
             cocoon.setParameters(parameters);
-            Object[] args = new Object[] {k, 
-                                          cocoon.makeWebContinuation(wk)};
+            FOM_WebContinuation fom_wk = 
+                new FOM_WebContinuation(wk);
+            fom_wk.setParentScope(kScope);
+            fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope, 
+                                                                   fom_wk.getClassName()));
+                                  
+            Object[] args = new Object[] {k, fom_wk};
+
             try {
                 ScriptableObject.callMethod(cocoon, 
                                             "handleContinuation", 
@@ -670,12 +677,14 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
 
     public void forwardTo(Scriptable scope, FOM_Cocoon cocoon,
                           String uri, Object bizData,
-                          WebContinuation continuation,
+                          FOM_WebContinuation fom_wk,
                           Environment environment)
         throws Exception {
-        setupView(scope, cocoon , environment, 
-                  cocoon.makeWebContinuation(continuation));
-        super.forwardTo(uri, bizData, continuation, environment);
+        setupView(scope, cocoon, environment, fom_wk);
+        super.forwardTo(uri, bizData, 
+                        fom_wk == null ? null :
+                           fom_wk.getWebContinuation(), 
+                        environment);
     }
 
     // package access as this is called by FOM_Cocoon
@@ -704,8 +713,13 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                                             cocoon.jsGet_request());
         FOM_JavaScriptFlowHelper.setFOM_Response(objectModel,
                                              cocoon.jsGet_response());
-        FOM_JavaScriptFlowHelper.setFOM_Session(objectModel,
-                                            cocoon.jsGet_session());
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        Scriptable session = null;
+        if (request.getSession(false) != null) {
+            session = cocoon.jsGet_session();
+        }
+        FOM_JavaScriptFlowHelper.setFOM_Session(objectModel, session);
+
         FOM_JavaScriptFlowHelper.setFOM_Context(objectModel,
                                                 cocoon.jsGet_context());
         if (kont != null) {
