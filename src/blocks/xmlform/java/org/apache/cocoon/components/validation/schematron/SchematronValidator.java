@@ -72,11 +72,11 @@ import java.util.Map;
  * See http://jakarta.apache.org/commons/
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: SchematronValidator.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
+ * @version CVS $Id: SchematronValidator.java,v 1.3 2003/06/28 12:06:11 joerg Exp $
  */
 public class SchematronValidator implements Validator {
 
-    /** 
+    /**
      * The schema instance for this Validator.
      * It is initialized once when a new Validator instance
      * is created and used multiple times for validating
@@ -100,9 +100,7 @@ public class SchematronValidator implements Validator {
      */
     private Logger logger = setupLogger();
 
-    // 
     // Constructors
-    // 
 
     /**
      * Constructs a new Validator object for a given Schematron schema.
@@ -115,16 +113,13 @@ public class SchematronValidator implements Validator {
         preparePhaseMap();
     }
 
-    // 
     // helper methods for the constructors
-    // 
 
     /**
      * Initialize logger.
      */
     protected Logger setupLogger() {
         Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor("XmlForm");
-
         logger.setPriority(Priority.ERROR);
         return logger;
     }
@@ -133,35 +128,27 @@ public class SchematronValidator implements Validator {
         Map patternMap = new HashMap();
 
         Iterator ptiter = schema_.getPattern().iterator();
-
         while (ptiter.hasNext()) {
-            Pattern pattern = (Pattern) ptiter.next();
-
+            Pattern pattern = (Pattern)ptiter.next();
             patternMap.put(pattern.getId(), pattern);
         }
 
         Iterator phiter = schema_.getPhase().iterator();
-
         while (phiter.hasNext()) {
-            Phase phase = (Phase) phiter.next();
+            Phase phase = (Phase)phiter.next();
             List activePatterns = new ArrayList();
-
             phaseMap_.put(phase.getId(), activePatterns);
 
             Iterator activeIter = phase.getActive().iterator();
-
             while (activeIter.hasNext()) {
-                ActivePattern active = (ActivePattern) activeIter.next();
-
+                ActivePattern active = (ActivePattern)activeIter.next();
                 activePatterns.add(patternMap.get(active.getPattern()));
             }
         }
 
     }
 
-    // 
     // public methods
-    // 
 
     /**
      * Performs validation of the passed JavaBean or DOM object.
@@ -179,9 +166,9 @@ public class SchematronValidator implements Validator {
     public List validate(Object jbean) {
         List patterns = null;
 
-        if (phaseProperty_!=null) {
+        if (phaseProperty_ != null) {
             patterns = getPatternsForPhase(phaseProperty_);
-            logger.debug(" Validating for phase: "+phaseProperty_);
+            logger.debug(" Validating for phase: " + phaseProperty_);
         } else {
             patterns = schema_.getPattern();
             logger.debug(" Validating all patterns. No phase provided ");
@@ -189,7 +176,7 @@ public class SchematronValidator implements Validator {
 
         ValidationResult vres = new ValidationResult();
 
-        if (patterns!=null) {
+        if (patterns != null) {
             // create the JXPathContext
             // which will be used to validate each rule
             JXPathContext jxpContext = JXPathContext.newContext(jbean);
@@ -197,12 +184,11 @@ public class SchematronValidator implements Validator {
             Iterator iter = patterns.iterator();
 
             while (iter.hasNext()) {
-                Pattern resultPattern = evalPattern(jxpContext,
-                                                    (Pattern) iter.next());
+                Pattern resultPattern = evalPattern(jxpContext, (Pattern)iter.next());
 
                 // if the resultPattern is null,
                 // then it passed successfully
-                if (resultPattern!=null) {
+                if (resultPattern != null) {
                     vres.addPattern(resultPattern);
                 }
             }
@@ -219,7 +205,7 @@ public class SchematronValidator implements Validator {
      * @return List of patterns
      */
     protected List getPatternsForPhase(String phase) {
-        return (List) phaseMap_.get(phase);
+        return (List)phaseMap_.get(phase);
     }
 
     /**
@@ -244,18 +230,18 @@ public class SchematronValidator implements Validator {
         Iterator iter = pattern.getRule().iterator();
 
         while (iter.hasNext()) {
-            List failedRules = evalRule(jxpContext, (Rule) iter.next());
+            List failedRules = evalRule(jxpContext, (Rule)iter.next());
 
             // if there were failed rules
             // add them to the list of other failed rules
-            if (failedRules.size()>0) {
+            if (failedRules.size() > 0) {
                 failedRules.addAll(resultPattern.getRule());
                 resultPattern.setRule(failedRules);
             }
         }
 
         // if there are no failed rules return null
-        if (resultPattern.getRule().size()==0) {
+        if (resultPattern.getRule().size() == 0) {
             return null;
         } else {
             return resultPattern;
@@ -264,14 +250,13 @@ public class SchematronValidator implements Validator {
 
     /**
      * Returns rules with asserts or reports which failed during validation.
-     * The context attribute of each rule in the result pattern
-     * contains the exact location of the failed element
-     * unlike the context attribute of the original pattern which
-     * is an XSLT production pattern.
+     * The context attribute of each rule in the result pattern contains the
+     * exact location of the failed element unlike the context attribute of the
+     * original pattern which is an XSLT production pattern.
      *
      * @param jxpContext The JXPath context being validated.
      * @param rule The original pattern rule to be evaluated.
-     * @return Pattern with rules wich failed during validation.
+     * @return Pattern with rules which failed during validation.
      */
     protected List evalRule(JXPathContext jxpContext, Rule rule) {
         List failedRules = new ArrayList();
@@ -279,7 +264,7 @@ public class SchematronValidator implements Validator {
         Iterator pointerIter = jxpContext.iteratePointers(rule.getContext());
 
         while (pointerIter.hasNext()) {
-            Pointer ptr = (Pointer) pointerIter.next();
+            Pointer ptr = (Pointer)pointerIter.next();
 
             // prepare result Rule
             Rule nextFailedRule = new Rule();
@@ -287,20 +272,18 @@ public class SchematronValidator implements Validator {
             nextFailedRule.setContext(ptr.asPath());
 
             // switch to the context of the rule
-            JXPathContext localJxpContext = JXPathContext.newContext(jxpContext,
-                                                ptr.getValue());
+            JXPathContext localJxpContext = jxpContext.getRelativeContext(ptr);
 
             // evaluate asserts
             Iterator assertIter = rule.getAssert().iterator();
 
             while (assertIter.hasNext()) {
-                Assert assertion = (Assert) assertIter.next();
+                Assert assertion = (Assert)assertIter.next();
                 // if an assert test fails, then it should be added
                 // to the result
-                boolean passed = evalTest(localJxpContext,
-                                          assertion.getTest());
+                boolean passed = evalTest(localJxpContext, assertion.getTest());
 
-                if ( !passed) {
+                if (!passed) {
                     nextFailedRule.addAssert(assertion);
                 }
             }
@@ -309,7 +292,7 @@ public class SchematronValidator implements Validator {
             Iterator reportIter = rule.getReport().iterator();
 
             while (reportIter.hasNext()) {
-                Report report = (Report) reportIter.next();
+                Report report = (Report)reportIter.next();
                 // if a report test passes, then it should be added
                 // to the result
                 boolean passed = evalTest(localJxpContext, report.getTest());
@@ -321,8 +304,8 @@ public class SchematronValidator implements Validator {
 
             // if the nextFailedRule is non empty,
             // then add it to the list of failed rules
-            if ((nextFailedRule.getAssert().size()>0) ||
-                (nextFailedRule.getReport().size()>0)) {
+            if ((nextFailedRule.getAssert().size() > 0)
+                || (nextFailedRule.getReport().size() > 0)) {
                 failedRules.add(nextFailedRule);
             }
         }
@@ -334,11 +317,11 @@ public class SchematronValidator implements Validator {
      * Test an XPath expression in a context.
      *
      * @param jxpContext The JXPath context being validated
-     * @param test       
+     * @param test
      * @return boolean result of evaluation
      */
     protected boolean evalTest(JXPathContext jxpContext, String test) {
-        Boolean passed = (Boolean) jxpContext.getValue(test, Boolean.class);
+        Boolean passed = (Boolean)jxpContext.getValue(test, Boolean.class);
 
         return passed.booleanValue();
     }
@@ -348,13 +331,11 @@ public class SchematronValidator implements Validator {
      * @return The property value.
      * @throws IllegalArgumentException When the property is not supported.
      */
-    public Object getProperty(String property)
-      throws IllegalArgumentException {
+    public Object getProperty(String property) throws IllegalArgumentException {
         if (property.equals(Validator.PROPERTY_PHASE)) {
             return phaseProperty_;
         } else {
-            throw new IllegalArgumentException(" Property "+property+
-                                               " is not supported");
+            throw new IllegalArgumentException(" Property " + property + " is not supported");
         }
     }
 
@@ -363,14 +344,13 @@ public class SchematronValidator implements Validator {
      * @param value Property value.
      * @throws IllegalArgumentException When the property is not supported
      */
-    public void setProperty(String property,
-                            Object value) throws IllegalArgumentException {
-        if (property.equals(Validator.PROPERTY_PHASE) &&
-            ((value==null) || (value instanceof String))) {
-            phaseProperty_ = (String) value;
+    public void setProperty(String property, Object value) throws IllegalArgumentException {
+        if (property.equals(Validator.PROPERTY_PHASE)
+            && ((value == null) || (value instanceof String))) {
+            phaseProperty_ = (String)value;
         } else {
-            throw new IllegalArgumentException(" Property "+property+
-                                               " is not supported or value is invalid");
+            throw new IllegalArgumentException(
+                " Property " + property + " is not supported or value is invalid");
         }
     }
 }
