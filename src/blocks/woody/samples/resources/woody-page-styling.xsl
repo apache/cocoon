@@ -158,7 +158,7 @@
   <xsl:template match="wi:group[wi:styling/@type='fieldset']">
     <fieldset>
       <xsl:copy-of select="wi:styling/@*[name() != 'type' and name() != 'layout']"/>
-      <legend title="{wi:help}"><xsl:copy-of select="wi:label/node()"/></legend>
+      <legend title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></legend>
       <xsl:apply-templates mode="group-layout" select="."/>
     </fieldset>
   </xsl:template>
