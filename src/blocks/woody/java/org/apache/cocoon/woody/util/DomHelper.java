@@ -50,19 +50,29 @@
 */
 package org.apache.cocoon.woody.util;
 
-import org.apache.xerces.parsers.DOMParser;
-import org.apache.xerces.xni.*;
-import org.apache.xerces.dom.NodeImpl;
-import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.cocoon.xml.SaxBuffer;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.apache.cocoon.xml.SaxBuffer;
+import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.xerces.dom.NodeImpl;
+import org.apache.xerces.parsers.DOMParser;
+import org.apache.xerces.xni.Augmentations;
+import org.apache.xerces.xni.NamespaceContext;
+import org.apache.xerces.xni.QName;
+import org.apache.xerces.xni.XMLAttributes;
+import org.apache.xerces.xni.XMLLocator;
+import org.apache.xerces.xni.XNIException;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotSupportedException;
 
 /**
  * Helper class to create and retrieve information from DOM-trees. It provides
@@ -81,13 +91,14 @@ public class DomHelper {
      */
     public static String getLocation(Element element) {
         String location = null;
-        if (element instanceof NodeImpl)
+        if (element instanceof NodeImpl) {
             location = (String)((NodeImpl)element).getUserData("location");
+        }
 
-        if (location != null)
+        if (location != null) {
             return location;
-        else
-            return "(location unknown)";
+        }
+        return "(location unknown)";
     }
     
     public static String getSystemIdLocation(Element element) {
@@ -101,7 +112,6 @@ public class DomHelper {
                 }
             }
         }
-        
         return null;
     }
     
@@ -118,7 +128,7 @@ public class DomHelper {
         }
         return -1;
     }
-    
+
     public static int getColumnLocation(Element element) {
         String loc = getLocation(element);
         if (loc.charAt(0) != '(') {
@@ -159,19 +169,17 @@ public class DomHelper {
     }
 
     /**
-     * Returns the first child element with the given namespace and localName, or null
-     * if there is no such element.
+     * Returns the first child element with the given namespace and localName,
+     * or null if there is no such element.
      */
     public static Element getChildElement(Element element, String namespace, String localName) {
-        // note: instead of calling getChildElement(element, namespace, localName, false),
-        // the code is duplicated here because this method does not throw an exception
-        NodeList nodeList = element.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-            if (node instanceof Element && namespace.equals(node.getNamespaceURI()) && localName.equals(node.getLocalName()))
-                return (Element)node;
+        Element node = null;
+        try {
+            node = getChildElement(element, namespace, localName, false);
+        } catch (Exception e) {
+            node = null;
         }
-        return null;
+        return node;
     }
 
     public static Element getChildElement(Element element, String namespace, String localName, boolean required) throws Exception {
@@ -193,8 +201,9 @@ public class DomHelper {
      */
     public static String getAttribute(Element element, String attributeName) throws Exception {
         String attrValue = element.getAttribute(attributeName);
-        if (attrValue.equals(""))
+        if (attrValue.equals("")) {
             throw new Exception("Missing attribute \"" + attributeName + "\" on element \"" + element.getTagName() + "\" at " + getLocation(element));
+        }
         return attrValue;
     }
 
@@ -205,9 +214,8 @@ public class DomHelper {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.equals("")) {
             return defaultValue;
-        } else {
-            return attrValue;
         }
+        return attrValue;
     }
 
     public static int getAttributeAsInteger(Element element, String attributeName) throws Exception {
@@ -234,14 +242,15 @@ public class DomHelper {
 
     public static boolean getAttributeAsBoolean(Element element, String attributeName, boolean defaultValue) throws Exception {
         String attrValue = element.getAttribute(attributeName);
-        if (attrValue.equals(""))
+        if (attrValue.equals("")) {
             return defaultValue;
-        else if (attrValue.equalsIgnoreCase("true") || attrValue.equalsIgnoreCase("yes"))
+        } else if (attrValue.equalsIgnoreCase("true") || attrValue.equalsIgnoreCase("yes")) {
             return true;
-        else if (attrValue.equalsIgnoreCase("false") || attrValue.equalsIgnoreCase("no"))
+        } else if (attrValue.equalsIgnoreCase("false") || attrValue.equalsIgnoreCase("no")) {
             return false;
-        else
+        } else {
             throw new Exception("Cannot parse the value \"" + attrValue + "\" as a boolean in the attribute \"" + attributeName + "\" on the element \"" + element.getTagName() + "\" at " + getLocation(element));
+        }
     }
 
     public static String getElementText(Element element) {
