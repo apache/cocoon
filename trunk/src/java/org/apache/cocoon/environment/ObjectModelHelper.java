@@ -66,7 +66,7 @@ import java.util.Map;
  * environment.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ObjectModelHelper.java,v 1.2 2003/03/17 02:28:12 vgritsenko Exp $
+ * @version CVS $Id: ObjectModelHelper.java,v 1.3 2003/04/01 21:25:09 sylvain Exp $
  */
 
 public final class ObjectModelHelper {
@@ -85,6 +85,9 @@ public final class ObjectModelHelper {
 
     /** Key for the expiration value (Long) in the object model. */
     public final static String EXPIRES_OBJECT  = "expires";
+    
+    /** Key for the throwable object, only available within a &lt;map:handle-errors>. */
+    public final static String THROWABLE_OBJECT = "throwable";
 
     /**
      * Key for a {@link Map} containing information from
@@ -111,5 +114,9 @@ public final class ObjectModelHelper {
 
     public static final Long getExpires(Map objectModel) {
         return (Long)objectModel.get(EXPIRES_OBJECT);
+    }
+    
+    public static final Throwable getThrowable(Map objectModel) {
+        return (Throwable)objectModel.get(THROWABLE_OBJECT);
     }
 }
