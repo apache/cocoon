@@ -134,7 +134,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Felix Knecht
  * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
  * @author <a href="mailto:yuryx@mobicomk.donpac.ru">Yury Mikhienko</a>
- * @version CVS $Id: LDAPTransformer.java,v 1.5 2003/08/07 00:46:25 joerg Exp $
+ * @version CVS $Id: LDAPTransformer.java,v 1.6 2003/09/20 17:13:33 cziegeler Exp $
  */
 public class LDAPTransformer extends AbstractTransformer {
 
@@ -1433,22 +1433,19 @@ public class LDAPTransformer extends AbstractTransformer {
         current_value.append(ary, start, length);
     }
 
-    private void attribute(AttributesImpl attr, String name, String value) {
-        attr.addAttribute("", name, name, "CDATA", value);
-    }
-
-    private void start(String name, AttributesImpl attr) throws SAXException {
+    protected void start(String name, AttributesImpl attr) throws SAXException {
         super.contentHandler.startElement("", name, name, attr);
         attr.clear();
     }
 
-    private void end(String name) throws SAXException {
+    protected void end(String name) throws SAXException {
         super.contentHandler.endElement("", name, name);
     }
 
-    private void data(String data) throws SAXException {
-        if (data != null)
+    protected void data(String data) throws SAXException {
+        if (data != null) {
             super.contentHandler.characters(data.toCharArray(), 0, data.length());
+        }
     }
 
     protected static String getStringValue(Object object) {
