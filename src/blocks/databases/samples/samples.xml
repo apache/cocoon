@@ -15,12 +15,13 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.6 2004/04/01 19:01:03 vgritsenko Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.7 2004/04/03 08:17:41 crossley Exp $ -->
 
-<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="database block">
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Databases Block Samples">
 
-  <group name="Main examples page.">
-    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
     <note>
       For the examples of this block to work, either the HSQLDB block
       needs to be present as well or another RDBMS backend needs to

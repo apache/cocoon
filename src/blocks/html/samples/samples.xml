@@ -15,12 +15,13 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.3 2004/03/06 02:25:56 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.4 2004/04/03 08:17:42 crossley Exp $ -->
 
 <samples name="HTML Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <group name="Main examples page.">
-    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
   <group name="HTMLGenerator">

@@ -15,13 +15,14 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.10 2004/03/06 02:26:16 antonio Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.11 2004/04/03 08:17:42 crossley Exp $ -->
 
-<samples>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Scratchpad Samples">
 
- <group name="Main examples page">
-  <sample name="Back" href="../../samples/">to Cocoon examples main page</sample>
- </group>
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
 
  <group name="Garbage">
     <sample name="Garbage" href="garbage/">

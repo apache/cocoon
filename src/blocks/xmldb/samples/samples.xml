@@ -18,13 +18,14 @@
 <!--+
     | XMLDB Samples
     |
-    | CVS $Id: samples.xml,v 1.6 2004/03/06 02:26:11 antonio Exp $
+    | CVS $Id: samples.xml,v 1.7 2004/04/03 08:17:43 crossley Exp $
     +-->
 
-<samples name="XMLDB Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+<samples name="XMLDB Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <group name="Main examples page.">
-    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
   <group name="Init Database">
