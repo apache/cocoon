@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.181 2003/11/05 21:01:06 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.182 2003/11/06 09:01:35 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="24409" due-to-email="holz@fiz-chemie.de" due-to="Martin Holz">
+      Fixing namespace handling in the send-mail transformer (Patch submitted by Martin Holz).
+   </action>
    <action dev="CZ" type="fix" due-to="Andrea Poeschl" due-to-email="poeschel@aidossoftware.com">
       Fixing precompilation of the XSPs for the CLI.
    </action>
