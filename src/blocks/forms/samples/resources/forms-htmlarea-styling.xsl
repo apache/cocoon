@@ -24,11 +24,12 @@
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
+  <xsl:param name="htmlarea-lang">en</xsl:param>
 
   <xsl:template match="head" mode="forms-htmlarea">
     <script type="text/javascript">
       _editor_url = "<xsl:value-of select="concat($resources-uri, '/htmlarea/')"/>";
-      _editor_lang = "en";
+      _editor_lang = "<xsl:value-of select="$htmlarea-lang"/>";
     </script>
     <script type="text/javascript" src="{$resources-uri}/htmlarea/htmlarea.js"></script>
   </xsl:template>
