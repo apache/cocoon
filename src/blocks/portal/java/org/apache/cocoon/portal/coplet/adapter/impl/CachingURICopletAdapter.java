@@ -26,12 +26,12 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This is the adapter to use pipelines as coplets. The result of the called pipeline is cached until
- * the coplet gets a new CopletLinkEvent.
+ * This is the adapter to use pipelines as coplets. The result of the called 
+ * pipeline is cached until the coplet gets a new CopletLinkEvent.
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: CachingURICopletAdapter.java,v 1.3 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id: CachingURICopletAdapter.java,v 1.4 2004/03/31 09:32:24 cziegeler Exp $
  */
 public class CachingURICopletAdapter
     extends URICopletAdapter
@@ -40,27 +40,32 @@ public class CachingURICopletAdapter
     /**
      * The cache for saving the coplet data
      */
-    private static final String CACHE = "cacheData";
+    public static final String CACHE = "cacheData";
 
     /**
      * Marks the validity of the cached data
      */
-    private static final String CACHE_VALIDITY = "cacheValidity";
+    public static final String CACHE_VALIDITY = "cacheValidity";
 
+    /**
+     * Tells the adapter to not cache the current response
+     */
+    public static final String DO_NOT_CACHE = "doNotCache";
+    
     /**
      * Marks cache valid.
      */
-    private static final String CACHE_VALID = "1";
+    public static final String CACHE_VALID = "1";
 
     /**
      * Marks cache invalid
      */
-    private static final String CACHE_INVALID = "0";
+    public static final String CACHE_INVALID = "0";
 
     /**
      * Caching can be basically disabled with this parameter
      */
-    private static final String PARAMETER_DISABLE_CACHING = "disable_caching";
+    public static final String PARAMETER_DISABLE_CACHING = "disable_caching";
 
     /**
      * instance variable, that shows, if caching is disabled
@@ -73,7 +78,7 @@ public class CachingURICopletAdapter
     public void parameterize(Parameters parameters) {
         if (parameters != null) {
             this.disableCaching = parameters.getParameterAsBoolean(PARAMETER_DISABLE_CACHING, false);
-            if (disableCaching) {
+            if (this.disableCaching) {
                 getLogger().info(this.getClass().getName() + " Caching is disabled.");
             } else {
                 getLogger().info(this.getClass().getName() + " Caching is enabled.");
@@ -103,9 +108,18 @@ public class CachingURICopletAdapter
 
             super.streamContent(coplet, uri, bc);
 
-            this.toCache(coplet, bc.getSAXFragment());
+            if ( coplet.getAttribute(DO_NOT_CACHE) != null ) {
+                coplet.removeAttribute(DO_NOT_CACHE);
+                this.setCacheInvalid(coplet);
+                XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
+                bi.setContentHandler(contentHandler);
 
-            this.toSAXFromCache(coplet, contentHandler);
+                bi.deserialize(bc.getSAXFragment());
+            } else {
+                this.toCache(coplet, bc.getSAXFragment());
+
+                this.toSAXFromCache(coplet, contentHandler);
+            }
         }
     }
 
