@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.124 2004/03/11 00:12:11 joerg Exp $
+    | CVS $Id: gump.xml,v 1.125 2004/03/11 16:25:46 stephan Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -695,6 +695,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-asciiart"/>
+    <depend project="cocoon-block-scratchpad"/>
     <depend project="javamail"/>
     <depend project="jaf"/>
 

@@ -14,11 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='html']">
-
-    <map:generator name="html" logger="sitemap.generator.html"
-                   src="org.apache.cocoon.generation.HTMLGenerator"
-                   label="content"/>
+<xmap xpath="/sitemap/components/matchers" unless="matcher[@name='regexp-defaults']">
+    <map:matcher logger="sitemap.matcher.regexp" name="regexp-defaults"
+                 src="org.apache.cocoon.matching.RegexpURIDefaultsMatcher"/>
 </xmap>

@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
   <map:components>
     <map:transformers>
       <map:transformer name="betwixt" src="org.apache.cocoon.transformation.BetwixtTransformer" logger="sitemap.transfomer.betwixt">
@@ -22,9 +23,11 @@
       </map:transformer>
     </map:transformers>
   </map:components>
+
   <map:flow language="javascript">
     <map:script src="flow.js"/>
   </map:flow>
+
   <map:pipelines>
     <map:pipeline>
       <map:match pattern="">
@@ -37,4 +40,5 @@
       </map:match>
     </map:pipeline>
   </map:pipelines>
+
 </map:sitemap>

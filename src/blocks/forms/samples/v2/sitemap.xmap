@@ -16,9 +16,6 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:components>
-    <map:generators default="file">
-      <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
-    </map:generators>
     <map:transformers default="xalan">
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="other">
@@ -28,11 +25,6 @@
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
-    <map:selectors default="browser">
-      <map:selector name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
-    </map:selectors>
-    <map:pipes default="caching">
-  </map:pipes>
   </map:components>
   <map:views>
     <map:view name="content" from-label="content">

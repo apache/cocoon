@@ -17,16 +17,9 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
  <map:components>
-  <map:generators default="file">
-    <map:generator label="content" logger="sitemap.generator.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.generation.ServerPagesGenerator"/>
-  </map:generators>
-  <map:transformers default="xslt"/>
-  <map:readers default="resource"/>
   <map:serializers default="html">
     <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer"/>
   </map:serializers>
-  <map:matchers default="wildcard"/>
-  <map:selectors default="browser"/>
  </map:components>
 
  <map:pipelines>

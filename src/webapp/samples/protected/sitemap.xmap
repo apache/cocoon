@@ -15,19 +15,13 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: sitemap.xmap,v 1.7 2004/03/10 16:16:12 unico Exp $ -->
+<!-- CVS: $Id: sitemap.xmap,v 1.8 2004/03/11 16:25:50 stephan Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- ========================= Components ============================== -->
   <map:components>
     <map:actions>
-      <map:action name="session-validator"
-                  src="org.apache.cocoon.acting.SessionValidatorAction"/>
-      <map:action name="session-invalidator"
-                  src="org.apache.cocoon.acting.SessionInvalidatorAction"/>
-      <map:action name="form-validator"
-                  src="org.apache.cocoon.acting.FormValidatorAction"/>
       <map:action name="db-authenticator"
                   src="org.apache.cocoon.acting.DatabaseAuthenticatorAction"/>
     </map:actions>
@@ -72,7 +66,7 @@
           <map:parameter name="contextPath" value="{request:contextPath}"/>
           <map:parameter name="file" value="docs/login.xml"/>
           <map:parameter name="remove" value="{0}"/>
-     	</map:transform>
+        </map:transform>
         <map:serialize/>
       </map:match>
 

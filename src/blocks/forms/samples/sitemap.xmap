@@ -29,10 +29,6 @@
     </map:transformer>
   </map:transformers>
 
-  <map:selectors default="browser">
-    <map:selector name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
-  </map:selectors>
-
   <map:actions>
     <map:action name="make-form" src="org.apache.cocoon.forms.acting.MakeFormAction" logger="forms"/>
     <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms"/>

@@ -20,7 +20,6 @@
 <!-- =========================== Components ================================ -->
 
  <map:components>
-  <map:generators default="file"/>
   <map:transformers default="xslt">
     <map:transformer name="linkrewriter"
       src="org.apache.cocoon.transformation.LinkRewriterTransformer">
@@ -36,10 +35,6 @@
       </input-module>
     </map:transformer>
   </map:transformers>
-  <map:readers default="resource"/>
-  <map:serializers default="html"/>
-  <map:matchers default="wildcard"/>
-  <map:selectors default="browser"/>
  </map:components>
 
 <!-- =========================== Pipelines ================================= -->

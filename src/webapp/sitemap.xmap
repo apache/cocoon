@@ -27,7 +27,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.48 2004/03/10 12:58:13 stephan Exp $
+    | CVS $Id: sitemap.xmap,v 1.49 2004/03/11 16:25:49 stephan Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -127,6 +127,7 @@
     <map:transformer logger="sitemap.transformer.readDOMsession" name="readDOMsession" src="org.apache.cocoon.transformation.ReadDOMSessionTransformer"/>
     <map:transformer logger="sitemap.transformer.log" name="log" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.LogTransformer"/>
     <map:transformer logger="sitemap.transformer.jx" name="jx" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.JXTemplateTransformer"/>
+    <map:transformer logger="sitemap.transformer.paginate" name="paginate" src="org.apache.cocoon.transformation.pagination.Paginator"/>
   </map:transformers>
 
   <!--+
@@ -198,6 +199,7 @@
       +-->
   <map:readers default="resource">
     <map:reader logger="sitemap.reader.resource" name="resource" pool-max="32" src="org.apache.cocoon.reading.ResourceReader"/>
+    <map:reader logger="sitemap.reader.image" name="image" src="org.apache.cocoon.reading.ImageReader"/>
   </map:readers>
 
   <!--+
@@ -268,6 +270,7 @@
      <exception class="java.lang.Throwable" unroll="true"/>
    </map:selector>
 
+   <map:selector logger="sitemap.selector.request-method" name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
    <map:selector logger="sitemap.selector.resource-exists" name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"/>
    <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
     <!-- Define now which request parameter to use; or do it later,
@@ -286,6 +289,7 @@
     <!-- <header-name>myparam</header-name> -->
    </map:selector>
    <map:selector logger="sitemap.selector.host" name="host" src="org.apache.cocoon.selection.HostSelector"/>
+   <map:selector logger="sitemap.selector.simple" name="simple" src="org.apache.cocoon.selection.SimpleSelector"/>
   </map:selectors>
 
   <!--+
@@ -299,13 +303,17 @@
       +-->
   <map:actions>
    <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
+   <map:action logger="sitemap.action.requestParamExists" name="req-params" src="org.apache.cocoon.acting.RequestParameterExistsAction"/>
    <map:action logger="sitemap.action.form-validator" name="form-validator" src="org.apache.cocoon.acting.FormValidatorAction"/>
    <map:action logger="sitemap.action.session-state" name="session-state" src="org.apache.cocoon.acting.SessionStateAction"/>
    <map:action logger="sitemap.action.session-isvalid" name="session-isvalid" src="org.apache.cocoon.acting.SessionIsValidAction"/>
+   <map:action logger="sitemap.action.session-validator" name="session-validator" src="org.apache.cocoon.acting.SessionValidatorAction"/>
+   <map:action logger="sitemap.action.session-invalidator" name="session-invalidator" src="org.apache.cocoon.acting.SessionInvalidatorAction"/>
    <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
    <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
    <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
    <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
+   <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction"/>
   </map:actions>
 
   <!--+

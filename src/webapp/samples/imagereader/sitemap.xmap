@@ -16,22 +16,12 @@
 -->
 
 <!--
-  CVS $Id: sitemap.xmap,v 1.4 2004/03/08 23:32:50 joerg Exp $
+  CVS $Id: sitemap.xmap,v 1.5 2004/03/11 16:25:50 stephan Exp $
   
   Image Reader Sample
 -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:components>
-    <map:generators default="file"/>
-    <map:transformers default="xslt"/>
-    <map:readers default="resource">
-      <map:reader name="image" src="org.apache.cocoon.reading.ImageReader" logger="sitemap.reader.image" pool-max="32" pool-min="1" pool-grow="4"/>
-    </map:readers>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
-    <map:selectors default="browser"/>
-  </map:components>
 
   <map:pipelines>
     <map:pipeline>

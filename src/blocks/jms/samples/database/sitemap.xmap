@@ -16,17 +16,13 @@
 -->
 
 <!--
-  CVS $Id: sitemap.xmap,v 1.2 2004/03/06 02:25:38 antonio Exp $
+  CVS $Id: sitemap.xmap,v 1.3 2004/03/11 16:25:48 stephan Exp $
 
   Event Cache Sample
 -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:components>
-    <map:generators default="file"/>
-    <map:transformers default="xslt"/>
-    <map:readers default="resource"/>
-    <map:serializers default="html"/>
     <map:matchers default="wildcard">
         <map:matcher name="host-matcher"
                      logger="sitemap.matcher.wildcard"
@@ -35,16 +31,15 @@
             <parameter-name>serverName</parameter-name>
         </map:matcher>
     </map:matchers>
-    <map:selectors default="browser"/>
     <map:actions>
-    	<map:action name="cacheevent" src="org.apache.cocoon.acting.CacheEventAction"/>
-    	<map:action name="jmsevent" src="org.apache.cocoon.components.jms.JMSPublisherAction">
+      <map:action name="cacheevent" src="org.apache.cocoon.acting.CacheEventAction"/>
+      <map:action name="jmsevent" src="org.apache.cocoon.components.jms.JMSPublisherAction">
           <parameter name="connection" value="OpenJMS-demo"/>
-        </map:action>
+      </map:action>
     </map:actions>
 
     <map:pipes default="caching">
-	  <!-- A pipe must be defined configured to use the EventAware cache. -->
+    <!-- A pipe must be defined configured to use the EventAware cache. -->
       <map:pipe name="event-aware" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
         <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
       </map:pipe>
@@ -63,13 +58,13 @@
     <map:pipeline type="event-aware">
       <map:match pattern="eventcache">
         <map:generate type="serverpages" src="{0}.xsp"/>
-	    <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-	        <map:parameter name="servletPath" value="{request:servletPath}"/>
-	        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-	        <map:parameter name="contextPath" value="{request:contextPath}"/>
-	        <map:parameter name="file" value="{0}.xsp"/>
-	        <map:parameter name="remove" value="{0}"/>
-	    </map:transform>
+      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+          <map:parameter name="file" value="{0}.xsp"/>
+          <map:parameter name="remove" value="{0}"/>
+      </map:transform>
         <map:serialize/>
       </map:match>
     </map:pipeline>
@@ -80,7 +75,7 @@
         <map:redirect-to uri="eventcache"/>
       </map:match>
 
-	  <map:match pattern="invalidate">
+    <map:match pattern="invalidate">
         <map:match type="host-matcher" pattern="localhost">
             <map:act type="cacheevent">
                 <map:parameter name="event" value="{request-param:table}"/>
@@ -88,9 +83,9 @@
             <map:read src="invalidated.xml"/>
         </map:match>
         <map:read src="access-error.xml"/>
-	  </map:match>
+    </map:match>
 
-	  <map:match pattern="jms-invalidate">
+    <map:match pattern="jms-invalidate">
         <map:match type="host-matcher" pattern="localhost">
             <map:act type="jmsevent">
                 <map:parameter name="event" value="action|{request-param:table}"/>
@@ -98,17 +93,17 @@
             <map:read src="invalidated.xml"/>
         </map:match>
         <map:read src="access-error.xml"/>
-	  </map:match>
+    </map:match>
 
       <map:match pattern="*">
         <map:generate type="serverpages" src="{1}.xsp"/>
-	    <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-	        <map:parameter name="servletPath" value="{request:servletPath}"/>
-	        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-	        <map:parameter name="contextPath" value="{request:contextPath}"/>
-	        <map:parameter name="file" value="{1}.xsp"/>
-	        <map:parameter name="remove" value="{0}"/>
-	    </map:transform>
+      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+          <map:parameter name="file" value="{1}.xsp"/>
+          <map:parameter name="remove" value="{0}"/>
+      </map:transform>
         <map:serialize/>
       </map:match>
     </map:pipeline>

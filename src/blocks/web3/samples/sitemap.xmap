@@ -17,7 +17,6 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 	<!-- =========================== Components ================================ -->
 	<map:components>
-		<map:generators default="file"/>
 		<map:transformers default="xslt">
 			<!-- include the transformer like this: 
  			 -->
@@ -25,10 +24,6 @@
 				<system>indy</system>
 			</map:transformer>
 		</map:transformers>
-		<map:readers default="resource"/>
-		<map:serializers default="html"/>
-		<map:selectors default="browser"/>
-		<map:matchers default="wildcard"/>
 	</map:components>
 
    <!-- =========================== Views =================================== -->

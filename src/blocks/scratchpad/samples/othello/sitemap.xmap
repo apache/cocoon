@@ -17,7 +17,6 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 	<!-- =========================== Components ================================ -->
   <map:components>
-    <map:generators default="file"/>
     <map:transformers default="xslt">
       <!-- Configure i18n transformer -->
       <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
@@ -32,12 +31,6 @@
         <cache-at-startup>true</cache-at-startup> -->
       </map:transformer>
     </map:transformers>
-    <map:readers default="resource"/>
-    <map:serializers default="html">
-      <map:serializer name="html" mime-type="text/html" src="org.apache.cocoon.serialization.HTMLSerializer"/>
-      <map:serializer name="xml" mime-type="text/xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    </map:serializers>
-    <map:selectors default="browser"/>
     <!-- =========================== Actions ================================= -->
     <map:actions>
       <!-- LocaleAction is used to set/get current users locale. See Javadocs for details. -->

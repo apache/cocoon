@@ -25,7 +25,6 @@
       <map:generator logger="sitemap.generator.jsp" name="jsp"
                      src="org.apache.cocoon.generation.JSPGenerator"/>
     </map:generators>
-    <map:transformers default="xslt"/>
     <map:readers default="resource">
       <!-- JSPReader is used to serve direct output from 
            a JSP page. Note, that JSP result can be non XML  -->
@@ -37,9 +36,6 @@
       -->
       </map:reader>
     </map:readers>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
-    <map:selectors default="browser"/>
   </map:components>
 
   <!-- =========================== Pipelines ================================= -->

@@ -21,33 +21,18 @@
 
  <map:components>
    <map:generators default="file">
-     <map:generator name="search"
-        src="org.apache.cocoon.generation.SearchGenerator"
-        label="content"/>
+     <map:generator name="search" logger="sitemap.generator.search" label="content"
+                    src="org.apache.cocoon.generation.SearchGenerator"/>
    </map:generators>
    <map:transformers default="xslt">
-     <map:transformer name="log"
-       src="org.apache.cocoon.transformation.LogTransformer"/>
-     <map:transformer name="index" 
-       logger="sitemap.transformer.luceneindextransformer" 
-       src="org.apache.cocoon.transformation.LuceneIndexTransformer"/>
+     <map:transformer name="index" logger="sitemap.transformer.luceneindextransformer"
+                      src="org.apache.cocoon.transformation.LuceneIndexTransformer"/>
    </map:transformers>
 
-   <map:readers default="resource"/>
-   <map:serializers default="html"/>
-   <map:matchers default="wildcard"/>
-   <map:selectors default="browser"/>
    <map:actions>
 <!-- FIXME: Has this action moved somewhere else?
      <map:action name="lang-select" src="org.apache.cocoon.acting.LangSelect"/>
 -->
-     <map:action name="locale" src="org.apache.cocoon.acting.LocaleAction"/>
-     <map:action name="request"
-        src="org.apache.cocoon.acting.RequestParamAction"/>
-     <map:action name="form-validator"
-        src="org.apache.cocoon.acting.FormValidatorAction"/>
-     <map:action name="resource-exists"
-        src="org.apache.cocoon.acting.ResourceExistsAction"/>
    </map:actions>
 </map:components>
 

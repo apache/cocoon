@@ -19,16 +19,11 @@
 
   <!-- =========================== Components ================================ -->
   <map:components>
-    <map:generators default="file"/>
     <map:transformers default="xslt">
       <map:transformer name="castor" src="org.apache.cocoon.transformation.CastorTransformer">
         <mapping>castor-mappings/test-mapping.xml</mapping>
       </map:transformer>
     </map:transformers>
-    <map:readers default="resource"/>
-    <map:serializers default="xml"/>
-    <map:matchers default="wildcard"/>
-    <map:selectors default="browser"/>
     <map:actions>
       <map:action name="TestBeanAction" src="org.apache.cocoon.samples.castor.TestBeanAction"/>
     </map:actions>

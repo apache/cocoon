@@ -23,18 +23,6 @@
     <!-- most components are inherited from parent sitemap -->
     <!-- just make sure that defaults suit our needs -->
 
-    <map:generators default="file"/>
-
-    <map:transformers default="xslt"/>
-
-    <map:readers default="resource"/>
-
-    <map:serializers default="html"/>
-
-    <map:matchers default="wildcard"/>
-
-    <map:selectors default="browser"/>
-
     <map:actions>
        <!-- these action are in addition to the ones inherited -->
 
@@ -67,11 +55,6 @@
           <descriptor>database.xml</descriptor>
           <throw-exception>false</throw-exception>
        </map:action>
-
-
-       <!-- a real world application would use the form validation here -->
-       <!-- this action just checks for existence of request parameters -->
-       <map:action name="req-params" src="org.apache.cocoon.acting.RequestParameterExistsAction"/>
 
     </map:actions>
 

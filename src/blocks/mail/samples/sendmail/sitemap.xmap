@@ -19,15 +19,6 @@
 <!-- ========================= Components ================================ -->
 
  <map:components>
-  <map:generators default="file"/>
-  <map:transformers default="xslt">
-    <map:transformer name="simpleform" 
-                     logger="sitemap.transformer.simpleform"
-                     src="org.apache.cocoon.transformation.SimpleFormTransformer"/>
-  </map:transformers>
-  <map:readers default="resource"/>
-  <map:serializers default="html"/>
-
   <map:matchers default="wildcard">
     <map:matcher name="host-matcher"
                  logger="sitemap.matcher.wildcard"
@@ -45,9 +36,6 @@
      <map:action name="old-sendmail" 
                  logger="sitemap.action.sendmail"
                  src="org.apache.cocoon.acting.SendmailAction"/>
-     <map:action name="req-params" 
-                 logger="sitemap.action.requestParamExists"
-                 src="org.apache.cocoon.acting.RequestParameterExistsAction"/>
   </map:actions>
  </map:components>
 
