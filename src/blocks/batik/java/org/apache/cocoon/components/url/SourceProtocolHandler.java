@@ -42,7 +42,7 @@ public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
     protected final static InheritableThreadLocal localResolver = new InheritableThreadLocal();
 
     /** Batik's original default handler */        
-    protected final static ParsedURLProtocolHandler defaultHandler = ParsedURL.getHandler(null); // Keep the default handler, if any
+    protected final static ParsedURLProtocolHandler defaultHandler;
 
     /**
      * Change the default handler used by Batik to resolve URLs to a handler
@@ -56,6 +56,9 @@ public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
      * @param logger the logger for logging.
      */
     static {        
+        // Keep the default handler, if any
+        defaultHandler = ParsedURL.getHandler(null);
+        
         // Set the default handler to our handler
         ParsedURL.registerHandler(new SourceProtocolHandler(null));
 
