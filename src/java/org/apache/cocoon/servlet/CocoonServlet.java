@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,6 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.output.ServletOutputLogTarget;
@@ -122,56 +121,15 @@ public class CocoonServlet extends HttpServlet {
      */
     protected DefaultContext appContext = new DefaultContext();
 
-
-    /**
-     * Default value for {@link #allowReload} parameter (false)
-     */
-    protected static final boolean ALLOW_RELOAD = false;
-
-    /**
-     * Allow reloading of cocoon by specifying the <code>cocoon-reload=true</code> parameter with a request
-     */
-    protected boolean allowReload;
-
-
-    /**
-     * Allow adding processing time to the response
-     */
-    protected boolean showTime;
-
-    /**
-     * If true, processing time will be added as an HTML comment
-     */
-    protected boolean hiddenShowTime;
-
-
-    /**
-     * Default value for {@link #enableUploads} parameter (false)
-     */
-    private static final boolean ENABLE_UPLOADS = false;
-    private static final boolean SAVE_UPLOADS_TO_DISK = true;
-    private static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
-
-    /**
-     * Allow processing of upload requests (mime/multipart)
-     */
-    private boolean enableUploads;
-    private boolean autoSaveUploads;
-    private boolean allowOverwrite;
-    private boolean silentlyRename;
-    private int maxUploadSize;
-
     private File uploadDir;
     private File workDir;
     private File cacheDir;
     private String containerEncoding;
-    private String defaultFormEncoding;
 
     protected ServletContext servletContext;
 
     /** The classloader that will be set as the context classloader if init-classloader is true */
     protected ClassLoader classLoader = this.getClass().getClassLoader();
-    protected boolean initClassLoader = false;
 
     private String parentServiceManagerClass;
     private String parentServiceManagerInitParam;
@@ -181,12 +139,6 @@ public class CocoonServlet extends HttpServlet {
 
     protected String forceLoadParameter;
     protected String forceSystemProperty;
-
-    /**
-     * If true or not set, this class will try to catch and handle all Cocoon exceptions.
-     * If false, it will rethrow them to the servlet container.
-     */
-    private boolean manageExceptions;
 
     /**
      * This is the path to the servlet context (or the result
@@ -210,6 +162,15 @@ public class CocoonServlet extends HttpServlet {
     protected Settings settings;
     
     /**
+     * Get the settings for Cocoon
+     * If a subclass uses different default values for settings, this method
+     * can be overwritten
+     */
+    protected Settings getSettings() {
+        return SettingsHelper.getSettings(this.getServletConfig());        
+    }
+    
+    /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
      * notice that I have broken the init into sub methods to make it
      * easier to maintain (BL).  The context is passed to a couple of
@@ -226,14 +187,10 @@ public class CocoonServlet extends HttpServlet {
 
         super.init(conf);
 
-        // Check the init-classloader parameter only if it's not already true.
-        // This is useful for subclasses of this servlet that override the value
-        // initially set by this class (i.e. false).
-        if (!this.initClassLoader) {
-            this.initClassLoader = getInitParameterAsBoolean("init-classloader", false);
-        }
-
-        if (this.initClassLoader) {
+        // initialize settings
+        this.settings = this.getSettings();
+        
+        if (this.settings.isInitClassloader()) {
             // Force context classloader so that JAXP can work correctly
             // (see javax.xml.parsers.FactoryFinder.findClassLoader())
             try {
@@ -260,7 +217,7 @@ public class CocoonServlet extends HttpServlet {
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
-        final String workDirParam = getInitParameter("work-directory");
+        final String workDirParam = this.settings.getWorkDirectory();
         if (workDirParam != null) {
             if (this.servletContextPath == null) {
                 // No context path : consider work-directory as absolute
@@ -317,8 +274,6 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.servletContextURL);
 
         // Init logger
-        this.settings = SettingsHelper.getSettings(this.getServletConfig());
-        
         initLogger();
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug(this.settings.toString());
@@ -341,7 +296,7 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        final String uploadDirParam = conf.getInitParameter("upload-directory");
+        final String uploadDirParam = this.settings.getUploadDirectory();
         if (uploadDirParam != null) {
             if (this.servletContextPath == null) {
                 this.uploadDir = new File(uploadDirParam);
@@ -368,27 +323,7 @@ public class CocoonServlet extends HttpServlet {
         this.uploadDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
 
-        this.enableUploads = getInitParameterAsBoolean("enable-uploads", ENABLE_UPLOADS);
-
-        this.autoSaveUploads = getInitParameterAsBoolean("autosave-uploads", SAVE_UPLOADS_TO_DISK);
-
-        String overwriteParam = getInitParameter("overwrite-uploads", "rename");
-        // accepted values are deny|allow|rename - rename is default.
-        if ("deny".equalsIgnoreCase(overwriteParam)) {
-            this.allowOverwrite = false;
-            this.silentlyRename = false;
-        } else if ("allow".equalsIgnoreCase(overwriteParam)) {
-            this.allowOverwrite = true;
-            this.silentlyRename = false; // ignored in this case
-        } else {
-            // either rename is specified or unsupported value - default to rename.
-            this.allowOverwrite = false;
-            this.silentlyRename = true;
-        }
-
-        this.maxUploadSize = getInitParameterAsInteger("upload-max-size", MAX_UPLOAD_SIZE);
-
-        String cacheDirParam = conf.getInitParameter("cache-directory");
+        String cacheDirParam = this.settings.getCacheDirectory();
         if (cacheDirParam != null) {
             if (this.servletContextPath == null) {
                 this.cacheDir = new File(cacheDirParam);
@@ -423,17 +358,6 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        // get allow reload parameter, default is true
-        this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
-
-        value = conf.getInitParameter("show-time");
-        this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
-        if (value == null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("show-time was not set - defaulting to false");
-            }
-        }
-
         parentServiceManagerClass = getInitParameter("parent-service-manager", null);
         if (parentServiceManagerClass != null) {
             int dividerPos = parentServiceManagerClass.indexOf('/');
@@ -444,16 +368,13 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
-        this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
-        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
+        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
 
-        this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
-
-        this.requestFactory = new RequestFactory(this.autoSaveUploads,
+        this.requestFactory = new RequestFactory(settings.isAutosaveUploads(),
                                                  this.uploadDir,
-                                                 this.allowOverwrite,
-                                                 this.silentlyRename,
-                                                 this.maxUploadSize,
+                                                 settings.isAllowOverwrite(),
+                                                 settings.isSilentlyRename(),
+                                                 settings.getMaxUploadSize(),
                                                  this.containerEncoding);
         // Add the servlet configuration
         this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
@@ -464,7 +385,7 @@ public class CocoonServlet extends HttpServlet {
      * Dispose Cocoon when servlet is destroyed
      */
     public void destroy() {
-        if (this.initClassLoader) {
+        if (this.settings.isInitClassloader()) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
@@ -887,7 +808,7 @@ public class CocoonServlet extends HttpServlet {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
-        if (this.initClassLoader) {
+        if (this.settings.isInitClassloader()) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
@@ -903,7 +824,7 @@ public class CocoonServlet extends HttpServlet {
         // get the request (wrapped if contains multipart-form data)
         HttpServletRequest request;
         try{
-            if (this.enableUploads) {
+            if (this.settings.isEnableUploads()) {
                 request = requestFactory.getServletRequest(req);
             } else {
                 request = req;
@@ -1059,12 +980,12 @@ public class CocoonServlet extends HttpServlet {
 
             if (contentType != null && contentType.equals("text/html")) {
                 String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
-                boolean show = this.showTime;
+                boolean show = this.settings.isShowTime();
                 if (showTime != null) {
                     show = !showTime.equalsIgnoreCase("no");
                 }
                 if (show) {
-                    boolean hide = this.hiddenShowTime;
+                    boolean hide = this.settings.isHideShowTime();
                     if (showTime != null) {
                         hide = showTime.equalsIgnoreCase("hide");
                     }
@@ -1115,8 +1036,8 @@ public class CocoonServlet extends HttpServlet {
                                    String uri, int errorStatus,
                                    String title, String message, String description,
                                    Exception e)
-            throws IOException {
-        if (this.manageExceptions) {
+    throws IOException {
+        if (this.settings.isManageExceptions()) {
             if (env != null) {
                 env.tryResetResponse();
             } else {
@@ -1174,7 +1095,7 @@ public class CocoonServlet extends HttpServlet {
 
         String formEncoding = req.getParameter("cocoon-form-encoding");
         if (formEncoding == null) {
-            formEncoding = this.defaultFormEncoding;
+            formEncoding = this.settings.getFormEncoding();
         }
         env = new HttpEnvironment(uri,
                                   this.servletContextURL,
@@ -1226,7 +1147,7 @@ public class CocoonServlet extends HttpServlet {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
-        if (this.initClassLoader) {
+        if (this.settings.isInitClassloader()) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
@@ -1309,7 +1230,7 @@ public class CocoonServlet extends HttpServlet {
      */
     private void getCocoon(final String pathInfo, final String reloadParam)
     throws ServletException {
-        if (this.allowReload) {
+        if (this.settings.isAllowReload()) {
             boolean reload = false;
 
             if (this.cocoon != null) {
@@ -1374,31 +1295,6 @@ public class CocoonServlet extends HttpServlet {
             return defaultValue;
         } else {
             return result;
-        }
-    }
-
-    /** Convenience method to access boolean servlet parameters */
-    protected boolean getInitParameterAsBoolean(String name, boolean defaultValue) {
-        String value = getInitParameter(name);
-        if (value == null) {
-            if (getLogger() != null && getLogger().isDebugEnabled()) {
-                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-            }
-            return defaultValue;
-        }
-
-        return BooleanUtils.toBoolean(value);
-    }
-
-    protected int getInitParameterAsInteger(String name, int defaultValue) {
-        String value = getInitParameter(name);
-        if (value == null) {
-            if (getLogger() != null && getLogger().isDebugEnabled()) {
-                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-            }
-            return defaultValue;
-        } else {
-            return Integer.parseInt(value);
         }
     }
 

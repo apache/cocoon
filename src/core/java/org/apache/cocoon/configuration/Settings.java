@@ -26,8 +26,19 @@ import java.util.Properties;
  */
 public class Settings {
 
-    protected String classloaderClassName;
-    protected boolean initClassloader;
+    /**
+     * Default value for {@link #isAllowReload()} parameter (false)
+     */
+    public static final boolean ALLOW_RELOAD = false;
+
+    /**
+     * Default value for {@link #isEnableUploads()} parameter (false)
+     */
+    public static final boolean ENABLE_UPLOADS = false;
+    public static final boolean SAVE_UPLOADS_TO_DISK = true;
+    public static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
+
+    protected boolean initClassloader = false;
     protected String[] forceProperties;
     protected String configuration;    
     protected String loggingConfiguration;
@@ -35,19 +46,41 @@ public class Settings {
     protected String accessLogger;
     protected String bootstrapLogLevel;
     protected String loggerClassName;
-    protected boolean allowReload;
-    protected String[] loadClasses;    
-    protected boolean enableUploads;
+
+    /**
+     * Allow reloading of cocoon by specifying the <code>cocoon-reload=true</code> parameter with a request
+     */
+    protected boolean allowReload = ALLOW_RELOAD;
+
+    protected String[] loadClasses;
+
+    /**
+     * Allow processing of upload requests (mime/multipart)
+     */
+    protected boolean enableUploads = ENABLE_UPLOADS;
     protected String uploadDirectory;    
-    protected boolean autosaveUploads;
+    protected boolean autosaveUploads = SAVE_UPLOADS_TO_DISK;
+    // accepted values are deny|allow|rename - rename is default.
     protected String overwriteUploads;
-    protected int maxUploadSize;
+    protected int maxUploadSize = MAX_UPLOAD_SIZE;
     protected String cacheDirectory;
     protected String workDirectory;
     protected String[] extraClasspaths;
     protected String parentServiceManagerClassName;
-    protected boolean showTime;
-    protected boolean manageExceptions;
+
+    /**
+     * Allow adding processing time to the response
+     */
+    protected boolean showTime = false;
+    /**
+     * If true, processing time will be added as an HTML comment
+     */
+    protected boolean hideShowTime = false;
+    /**
+     * If true or not set, this class will try to catch and handle all Cocoon exceptions.
+     * If false, it will rethrow them to the servlet container.
+     */
+    protected boolean manageExceptions = true;
     protected String formEncoding;
     protected String log4jConfiguration;
     protected String overrideLogLevel;
@@ -78,6 +111,18 @@ public class Settings {
         }
     }
     
+    /**
+     * @return Returns the hideShowTime.
+     */
+    public boolean isHideShowTime() {
+        return this.hideShowTime;
+    }
+    /**
+     * @param hideShowTime The hideShowTime to set.
+     */
+    public void setHideShowTime(boolean hideShowTime) {
+        this.hideShowTime = hideShowTime;
+    }
     /**
      * @return Returns the allowReload.
      */
@@ -113,18 +158,6 @@ public class Settings {
      */
     public void setCacheDirectory(String cacheDirectory) {
         this.cacheDirectory = cacheDirectory;
-    }
-    /**
-     * @return Returns the classloaderClassName.
-     */
-    public String getClassloaderClassName() {
-        return this.classloaderClassName;
-    }
-    /**
-     * @param classloaderClassName The classloaderClassName to set.
-     */
-    public void setClassloaderClassName(String classloaderClassName) {
-        this.classloaderClassName = classloaderClassName;
     }
     /**
      * @return Returns the cocoonLogger.
@@ -389,14 +422,35 @@ public class Settings {
     public void setOverrideLogLevel(String overrideLogLevel) {
         this.overrideLogLevel = overrideLogLevel;
     }
+
+    public boolean isAllowOverwrite() {
+        if ("deny".equalsIgnoreCase(this.overwriteUploads)) {
+            return false;
+        } else if ("allow".equalsIgnoreCase(this.overwriteUploads)) {
+            return true;
+        } else {
+            // either rename is specified or unsupported value - default to rename.
+            return false;
+        }        
+    }
     
+    public boolean isSilentlyRename() {
+        if ("deny".equalsIgnoreCase(this.overwriteUploads)) {
+            return false;
+        } else if ("allow".equalsIgnoreCase(this.overwriteUploads)) {
+            return false; // ignored in this case
+        } else {
+            // either rename is specified or unsupported value - default to rename.
+            return true;
+        }                
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public String toString() {
         return "Settings:\n"+
                "- Configuration: " + this.configuration + "\n" + 
-               "- Classloader: " + ( this.classloaderClassName == null ? "-" : this.classloaderClassName ) + "\n" + 
                "- InitClassloader: " + this.initClassloader + "\n" + 
                "- ForceProperties: " + ( this.forceProperties == null ? "-" : this.forceProperties.toString() ) + "\n" +
                "- Logging-Configuration: " + this.loggingConfiguration + "\n" +

@@ -52,21 +52,27 @@ public class SettingsHelper {
             s.setLog4jConfiguration("context:/" + value);
         }
         
-        s.setClassloaderClassName(config.getInitParameter("classloader-class"));
         s.setInitClassloader(getInitParameterAsBoolean(config, "init-classloader", false));
         s.setForceProperties(getInitParameterAsArray(config, "force-property"));
         s.setConfiguration(config.getInitParameter("configurations"));
-        s.setInitClassloader(getInitParameterAsBoolean(config, "allow-reload", false));
+        s.setAllowReload(getInitParameterAsBoolean(config, "allow-reload", Settings.ALLOW_RELOAD));
         s.setLoadClasses(getInitParameterAsArray(config, "load-class"));
-        s.setEnableUploads(getInitParameterAsBoolean(config, "init-classloader", false));
+        s.setEnableUploads(getInitParameterAsBoolean(config, "enable-uploads", Settings.ENABLE_UPLOADS));
         s.setUploadDirectory(config.getInitParameter("upload-directory"));
-        s.setAutosaveUploads(getInitParameterAsBoolean(config, "autosave-uploads", true));
+        s.setAutosaveUploads(getInitParameterAsBoolean(config, "autosave-uploads", Settings.SAVE_UPLOADS_TO_DISK));
         s.setOverwriteUploads(config.getInitParameter("overwrite-uploads"));
-        s.setMaxUploadSize(getInitParameterAsInteger(config, "upload-max-size", 10000000));
+        s.setMaxUploadSize(getInitParameterAsInteger(config, "upload-max-size", Settings.MAX_UPLOAD_SIZE));
         s.setCacheDirectory(config.getInitParameter("cache-directory"));
         s.setWorkDirectory(config.getInitParameter("work-directory"));
         s.setParentServiceManagerClassName(config.getInitParameter("parent-service-manager"));
-        s.setShowTime(getInitParameterAsBoolean(config, "show-time", false));
+        value = config.getInitParameter("show-time");
+        if ( value != null && value.equalsIgnoreCase("hide") ) {
+            s.setShowTime(true);
+            s.setHideShowTime(true);
+        } else {
+            s.setShowTime(getInitParameterAsBoolean(config, "show-time", false));
+            s.setHideShowTime(false);
+        }
         s.setManageExceptions(getInitParameterAsBoolean(config, "manage-exceptions", true));
         s.setFormEncoding(config.getInitParameter("form-encoding"));
         
