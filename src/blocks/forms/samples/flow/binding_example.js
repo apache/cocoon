@@ -46,6 +46,26 @@ function form2xml(form) {
     cocoon.sendPage("form2-success-pipeline");
 }
 
+function form2simpleXML(form) {
+    // get the documentURI parameter from the sitemap which contains the
+    // location of the file to be edited
+    var documentURI = cocoon.parameters["documentURI"];
+
+    // get the XML adapter
+    var xmlAdapter = form.getXML();
+
+    // parse the document to a widget tree
+    var pipeUtil = 
+        cocoon.createObject(Packages.org.apache.cocoon.components.flow.util.PipelineUtil);
+    pipeUtil.processToSAX(documentURI, null, xmlAdapter);
+
+    // show the form to the user until it is validated successfully
+    form.showForm("form2-display-pipeline");
+
+    // show the xml generated from the form
+    cocoon.sendPage("form2simpleXML-success-pipeline", xmlAdapter);
+}
+
 // bean variant of the binding sample
 function form2bean(form) {
     var bean = new Packages.org.apache.cocoon.forms.samples.Form2Bean();

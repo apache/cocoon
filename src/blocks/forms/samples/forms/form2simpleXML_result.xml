@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:out value="#{.}"/>
+</jx:template>

@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.15 2004/06/01 14:32:31 cziegeler Exp $
+ * @version CVS $Id: Form.js,v 1.16 2004/06/08 15:40:08 danielf Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -58,8 +58,8 @@ Form.prototype.getModel = function() {
  */
 Form.prototype.getWidget = function(name) {
     if (name != undefined) {
-    	throw "getWidget(id) has been deprecated.\n" +
-    	      "Consider using getChild(id) or lookupWidget(path) instead."
+        throw "getWidget(id) has been deprecated.\n" +
+              "Consider using getChild(id) or lookupWidget(path) instead."
     }
     return this.form;
 }
@@ -181,6 +181,10 @@ Form.prototype.getAttribute = function(name) {
 
 Form.prototype.removeAttribute = function(name) {
     this.form.removeAttribute(name);
+}
+
+Form.prototype.getXML = function() {
+    return new Packages.org.apache.cocoon.forms.util.XMLAdapter(this.form);
 }
 
 function handleForm() {
