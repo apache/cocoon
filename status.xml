@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.263 2004/03/08 06:07:14 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.264 2004/03/08 21:21:19 joerg Exp $:-->
 
 <status>
  <developers>
@@ -211,6 +211,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="26851" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
+     LinkStatusGenerator now handles also links with a specified charset.
+   </action>
    <action dev="JH" type="fix" fixes-bug="25934" due-to="Philipp Matthias Hahn" due-to-email="pmhahn@titan.lahn.de">
      Avoid "CLOBs" when indexing XML without superfluous whitespace (Lucene).
    </action>

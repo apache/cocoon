@@ -50,7 +50,7 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.7 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.8 2004/03/08 21:21:19 joerg Exp $
  */
 public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */
@@ -447,7 +447,8 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
                 getLogger().debug("Content-type: " + content_type);
             }
 
-            if (content_type.equals(linkContentType)) {
+            if (content_type.equals(linkContentType) ||
+                content_type.startsWith(linkContentType + ";")) {
                 url_links = new ArrayList();
 
                 InputStream is = conn.getInputStream();
