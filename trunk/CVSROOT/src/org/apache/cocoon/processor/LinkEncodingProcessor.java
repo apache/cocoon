@@ -1,4 +1,4 @@
-/*-- $Id: LinkEncodingProcessor.java,v 1.2 2000-12-09 00:09:44 greenrd Exp $ --
+/*-- $Id: LinkEncodingProcessor.java,v 1.3 2000-12-09 00:14:11 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * Xalan-specific features in your stylesheet.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.2 $ $Date: 2000-12-09 00:09:44 $
+ * @version $Revision: 1.3 $ $Date: 2000-12-09 00:14:11 $
  */
 
 public class LinkEncodingProcessor implements Processor, Status {
@@ -90,7 +90,7 @@ public class LinkEncodingProcessor implements Processor, Status {
         for (int j = 0; j < n; j++) {
             NamedNodeMap atts = e.getAttributes ();
             int m = atts.getLength ();
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < m; i++) {
                 Attr att = (Attr) atts.item (i);
                 if (linkPredicate.matches (att)) {
                     // Have to use deprecated method for servlet-2.1 API compatibility
