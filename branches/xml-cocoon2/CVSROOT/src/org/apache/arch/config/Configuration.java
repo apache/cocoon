@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.arch.config;
 
 import java.util.Enumeration;
@@ -15,108 +14,207 @@ import java.util.Enumeration;
  * configuration repository used by <code>Configurable</code> classes.
  *
  * @author <a href="mailto:scoobie@betaversion.org">Federico Barbieri</a>
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
+ *         (Betaversion Productions)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 1999-12-11 23:28:48 $
+ *         (Apache Software Foundation)
+ * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
+ *         (Apache Software Foundation, Exoffice Technologies)
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:19:57 $
  */
- 
 public interface Configuration {
 
-    /*
-     * Returns the name of the root configuration element.
+    /**
+     * Returns the name of this configuration element.
      */
-	String getName();
+	public String getName();
+
+    /**
+     * Returns the value of the configuration element as a <code>String</code>.
+     *
+     * @exception ConfigurationException If the value is not present.
+     */
+	public String getValue()
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the configuration element as an <code>int</code>.
+     *
+     * @exception ConfigurationException If the value is not present or it
+     *                                   cannot be represented as an
+     *                                   <code>int</code>.
+     */
+    public int getValueAsInt()
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the configuration element as a <code>long</code>.
+     *
+     * @exception ConfigurationException If the value is not present or it
+     *                                   cannot be represented as a
+     *                                   <code>long</code>.
+     */
+    public long getValueAsLong()
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the configuration element as a <code>float</code>.
+     *
+     * @exception ConfigurationException If the value is not present or it
+     *                                   cannot be represented as a
+     *                                   <code>float</code>.
+     */
+    public float getValueAsFloat()
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the configuration element as a <code>boolean</code>.
+     * <br>
+     * This method returns <b>true</b> if the value of the this configuration
+     * element equals the lowered-case <code>String</code> &quot;true&quot;,
+     * <b>false</b> if it equals the lowered-case <code>String</code>
+     * &quot;false&quot;, or it throws a <code>ConfigurationException</code>.
+     *
+     * @exception ConfigurationException If the value is not present or it
+     *                                   cannot be represented as a
+     *                                   <code>boolean</code>.
+     */
+    public boolean getValueAsBoolean()
+	throws ConfigurationException;
+    
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>String</code>.
+     *
+     * @exception ConfigurationException If the attribute is not present.
+     */
+	public String getAttribute(String name)
+	throws ConfigurationException;
+    
+    /**
+     * Returns the value of the attribute specified by its name as an
+     * <code>int</code>.
+     *
+     * @exception ConfigurationException If the attribute is not present or
+     *                                   its value cannot be represented as an
+     *                                   <code>int</code>.
+     */
+    public int getAttributeAsInt(String name)
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>long</code>.
+     *
+     * @exception ConfigurationException If the attribute is not present or
+     *                                   its value cannot be represented as a
+     *                                   <code>long</code>.
+     */
+    public long getAttributeAsLong(String name)
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>float</code>.
+     *
+     * @exception ConfigurationException If the attribute is not present or
+     *                                   its value cannot be represented as a
+     *                                   <code>float</code>.
+     */
+    public float getAttributeAsFloat(String name)
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>boolean</code>.
+     * <br>
+     * This method returns <b>true</b> if the value of the the specified
+     * attribute equals the lowered-case <code>String</code> &quot;true&quot;,
+     * <b>false</b> if it equals the lowered-case <code>String</code>
+     * &quot;false&quot;, or it throws a <code>ConfigurationException</code>.
+     *
+     * @exception ConfigurationException If the attribute is not present or
+     *                                   its value cannot be represented as a
+     *                                   <code>boolean</code>.
+     */
+    public boolean getAttributeAsBoolean(String name)
+	throws ConfigurationException;
+
+    /**
+     * Returns the value of the configuration element as a <code>String</code>.
+     */
+	public String getValue(String defaultValue);
+
+    /**
+     * Returns the value of the configuration element as an <code>int</code>.
+     */
+    public int getValueAsInt(int defaultValue);
+
+    /**
+     * Returns the value of the configuration element as a <code>long</code>.
+     */
+    public long getValueAsLong(long defaultValue);
+
+    /**
+     * Returns the value of the configuration element as a <code>float</code>.
+     */
+    public float getValueAsFloat(float defaultValue);
+
+    /**
+     * Returns the value of the configuration element as a <code>boolean</code>.
+     */
+    public boolean getValueAsBoolean(boolean defaultValue);
+    
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>String</code>.
+     */
+	public String getAttribute(String name, String defaultValue);
+    
+    /**
+     * Returns the value of the attribute specified by its name as an
+     * <code>int</code>.
+     */
+    public int getAttributeAsInt(String name, int defaultValue);
+
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>long</code>.
+     */
+    public long getAttributeAsLong(String name, long defaultValue);
+
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>float</code>.
+     */
+    public float getAttributeAsFloat(String name, float defaultValue);
+
+    /**
+     * Returns the value of the attribute specified by its name as a
+     * <code>boolean</code>.
+     */
+    public boolean getAttributeAsBoolean(String name, boolean defaultValue);
+
+    /**
+     * Return the first <code>Configuration</code> object child of this
+     * associated with the given name or <b>null</b>.
+     *
+     * @param name The name of the required child <code>Configuration</code>.
+     */
+    public Configuration getConfiguration(String name);
+
+    /**
+     * Return an <code>Enumeration</code> of <code>Configuration</code> objects
+     * children of this associated with the given name.
+     * <br>
+     * The returned <code>Enumeration</code> may be empty.
+     *
+     * @param name The name of the required children <code>Configuration</code>.
+     */
+	public Enumeration getConfigurations(String name);
 	
-    /*
-     * Returns the value of the configuration element as String.
-     * @exception IllegalStateException if value is not present.
-     */
-	String getValue();
-
-    /*
-     * Returns the value of the configuration element as int.
-     * @exception IllegalStateException if value is not present.
-     * @excpetion NumberFormatException if the value cannot be parsed as int.
-     */
-    int getValueAsInt();
-
-    /*
-     * Returns the value of the configuration element as long.
-     * @exception IllegalStateException if value is not present.
-     * @excpetion NumberFormatException if the value cannot be parsed as long.
-     */
-    long getValueAsLong();
-
-    /*
-     * Returns the value of the configuration element as float.
-     * @exception IllegalStateException if value is not present.
-     * @excpetion NumberFormatException if the value cannot be parsed as float.
-     */
-    float getValueAsFloat();
-
-    /*
-     * Returns the value of the configuration element as boolean,
-     * returning "true" if the lowered-cased value is the string "true", false
-     * otherwise.
-     * @exception IllegalStateException if value is not present.
-     */
-    boolean getValueAsBoolean();
-    
-    /*
-     * Returns the value of the attribute with the given name as String.
-     * @exception IllegalStateException if value is not present.
-     */
-	String getAttribute(String name);
-    
-    /*
-     * Returns the value of the attribute with the given name as int.
-     * @exception IllegalStateException if value is not present.
-     * @excpetion NumberFormatException if the value cannot be parsed as int.
-     */
-    int getAttributeAsInt(String name);
-
-    /*
-     * Returns the value of the attribute with the given name as long.
-     * @exception IllegalStateException if value is not present.
-     * @excpetion NumberFormatException if the value cannot be parsed as long.
-     */
-    long getAttributeAsLong(String name);
-
-    /*
-     * Returns the value of the attribute with the given name as float.
-     * @exception IllegalStateException if value is not present.
-     * @excpetion NumberFormatException if the value cannot be parsed as float.
-     */
-    float getAttributeAsFloat(String name);
-
-    /*
-     * Returns the value of the attribute with the given name as boolean, 
-     * returning "true" if the lowered-cased value is the string "true", false
-     * otherwise.
-     * @exception IllegalStateException if value is not present.
-     */
-    boolean getAttributeAsBoolean(String name);
-
-    /*
-     * Return the Configuration object associated with the given
-     * name.
-     * @param name the name of the required configuration using the 
-     * absolute path of the format "/path/name".
-     * @exception IllegalArgumentException no configuration is found
-     * for the given name.
-     * @exception IllegalStateException more than one configuration is found
-     * for the given name. (in this case, the method getConfigurations() should
-     * be called instead)
-     */
-    Configuration getConfiguration(String name);
-
-    /*
-     * Return an Enumeration of <code>Configuration</code> objects
-     * associated with the given name.
-     * @param name the name of the required configurations using the 
-     * absolute path of the format "/path/name".
-     * @exception IllegalArgumentException no configuration is found
-     * for the given name.
-     */
-	Enumeration getConfigurations(String name);
+	/**
+	 * Return a <code>String</code> indicating the position of this
+	 * configuration element in a source file or URI or <b>null</b>.
+	 */
+	public String getLocation();
 }

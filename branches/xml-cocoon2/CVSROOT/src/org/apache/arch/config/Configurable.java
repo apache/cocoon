@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.arch.config;
 
 /**
@@ -13,23 +12,25 @@ package org.apache.arch.config;
  * configured with custom parameters before initialization. 
  *
  * @author <a href="mailto:scoobie@betaversion.org">Federico Barbieri</a>
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
+ *         (Betaversion Productions)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.1 $ $Date: 1999-12-11 23:28:47 $
+ *         (Apache Software Foundation)
+ * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
+ *         (Apache Software Foundation, Exoffice Technologies)
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:19:57 $
  */
-
 public interface Configurable {
     
     /**
-     * Pass the configurations to the configurable class. This method
-     * is always called after the constructor and before any other
-     * method.
+     * Pass a <code>Configuration</code> instance to this
+     * <code>Configurable</code> class. This method is always called after the
+     * constructor and before any other method.
      *
-     * @param conf the class configurations.
-     * @exception if a required Configuration is not found, this method
-     * should throw an <code>IllegalArgumentException</code> indicating
-     * the cause of such failure.
+     * @param conf The <code>Configuration</code> instance.
+     * @exception ConfigurationException If the given <code>Configuration</code>
+     *                                   is not valid or doesn't contain the
+     *                                   proper configuration data.
      */
-     void setConfiguration(Configuration conf);
-    
+     public void setConfiguration(Configuration conf)
+     throws ConfigurationException;
 }
