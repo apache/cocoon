@@ -978,6 +978,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="quartz"/>
     <depend project="concurrent"/>
+    <depend project="excalibur-datasource"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
