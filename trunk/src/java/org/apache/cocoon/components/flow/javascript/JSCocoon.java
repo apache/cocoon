@@ -84,7 +84,7 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.7 2003/03/20 02:46:32 vgritsenko Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.8 2003/03/20 04:18:51 coliver Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -198,7 +198,7 @@ public class JSCocoon extends ScriptableObject
             org.mozilla.javascript.Context.getCurrentContext();
         try {
             Scriptable scope = getParentScope();
-            Script script = interpreter.compileScript(cx, scope, environment, filename);
+            Script script = interpreter.compileScript(cx, environment, filename);
             return script.exec(cx, scope);
         } catch (JavaScriptException e) {
             throw e;
