@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>The Sitemap</title>
+  <authors>
+   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+
+  <s1 title="The Sitemap">
+   <p>
+    This document is used as a working draft for 
+    Cocoon architects to understand the issues associated with 
+    sitemaps and XML publishing in general. It must be considered as a working 
+    draft and may be updated at any time.
+   </p>
+
+   <p>
+    This document is based on ideas and design patterns inspired by Stefano 
+    Mazzocchi (stefano@apache.org) and Pierpaolo Fumagalli (pier@apache.org)
+    but grew as a collaborative effort to provide a solid foundation of
+    design patterns and usability guidelines to create a solid foundation
+    of sitemap programmability and usability to the Cocoon Publishing 
+    Framework.
+   </p>
+
+   <p>
+    This is one of the few examples where open source is transformed into
+    "open development" leading both the implementation and the pure research
+    around software development and usability.
+   </p>
+
+   <p>
+    The goal of the sitemap is to allow non-programmers to create web sites
+    and web applications built from logic components and XML documents.
+   </p>
+
+   <p>
+    It finds inspiration from both Apache's httpd.conf/.htaccess files as well
+    as from Servlet API 2.2 WAR archives. It uses concepts such as Cascading
+    from W3C CSS, as well as declarative approaches integrated into the W3C 
+    XSLT language. It also uses some element/attribute equivalence patterns 
+    used in W3C RDF.
+   </p>
+
+   <p>
+    The following goals were identified as engineering constraints:
+   </p>
+
+   <ol>
+    <li>minimal verbosity is of maximum importance.</li>
+    <li>the schema should be sufficiently expressive to allow learning by
+     examples.</li>
+    <li>sitemap authoring should not require assistive tools, but be
+     sufficiently future-compatible to allow them.</li>
+    <li>sitemaps must scale along with the site and should not impose growth
+     limitation to the site as a whole nor limit its administration with size
+     increase.</li>
+    <li>sitemaps should contain all the information required to Cocoon to
+     generate all the requests it receives.</li>
+    <li>sitemaps should contain information for both dynamic operation as
+     well as offline generation.</li>
+    <li>uri mapping should be powerful enough to allow every possible mapping
+     need.</li>
+    <li>basic web-serving functionalities (redirection, error pages,
+     resource authorisation) should be provided.</li>
+    <li>sitemaps should not limit Cocoon's intrinsic modular extensibility.</li>
+    <li>resources must be matched with all possible state variables, not
+     only with URI (http parameters, enviornment variables, server
+     parameters, time, etc...).</li>
+    <li>sitemaps should embed the notion of "semantic resources" to be
+     future-compatible with sematic crawling and indexing.</li>
+    <li>sitemaps should be flexible enough to allow a complete web site to
+     be built with Cocoon.</li>
+   </ol>
+
+   <s2 title="The Structure">
+    <p>
+     The Sitemap has the following general structure:
+    </p>
+  
+    <source>
+     <![CDATA[
+      <map:sitemap xmlns:map="http://xml.apache.org/cocoon/sitemap/1.0">
+       <map:components/>
+       <map:resources/>
+       <map:match/>
+       <map:match/>
+        ...
+       <map:match/>
+      </map:sitemap>
+     ]]>
+    </source>
+   </s2>
+
+   <s2 title="The &lt;map:sitemap&gt;">
+    <source>
+     <![CDATA[
+      <map:sitemap xmlns:map="http://xml.apache.org/cocoon/sitemap/1.0">
+     ]]>
+    </source>
+
+    <p>
+     The default namespaces are used mainly for versioning, instead of using 
+     attributes such as version="1.0" which could create confusion. People are 
+     used to writing URIs with no spelling mistakes, while versioning could be 
+     used for their own sitemap versions and this might break operation.
+    </p>
+
+    <p>  
+     The versioning schema will be "major.minor" where major will be increased
+     by one each time a new release breaks back compatibility, while minor
+     is increased each time a change has been made that doesn't create
+     back incompatible problems.
+    </p>
+   </s2>
+
+   <s2 title="The &lt;map:components&gt;">
+    <source>
+     <![CDATA[
+      <map:components">
+       <map:generators/>
+       <map:filters/>
+       <map:serializers/>
+       <map:choosers/>
+       <map:matchers/>
+      </map:components">
+     ]]>
+    </source>
+
+    <s3 title="Common Attributes of Components">
+     <p>
+      All components have some common attributes. The list below will shows and explain them:
+     </p>
+
+     <dl>
+      <dt>type</dt>
+      <dd>The type attribute gives the component a reference which can be used to point to them in the pipeline section.</dd>
+      <dt>src</dt>
+      <dd>Specifies where Cocoon finds the class representing this component. Note that the content of 
+       the src attribute must be specified as an URI</dd>
+     </dl>
+    </s3>
+
+    <s3 title="Component Parameters">
+     <p>
+      All components will be configured with parameters specified from their child elements at component instantiation time. 
+      The name of the parameters is dependant of the component. The following example shows how to specify a
+      <code>&lt;compile-stylesheet&gt;</code> parameters to a component:
+     </p>
+  
+     <source>
+      <![CDATA[
+       <map:components>
+        <map:filter type="xslt" src="class:///org.apache.cocoon.filter.XSLTFilter">
+         <compile-stylesheets value="true"/>  <!-- This is a parameter to the filter component -->
+        </map:filter>
+       </map:components>
+      ]]>
+     </source>
+ 
+     <note>
+      The syntax <br/> <br/>
+       <strong><code>&lt;xxx map:value="yyy"&gt;</code></strong> <br/> <br/>
+      is completely equivalent to <br/> <br/>
+       <strong><code>&lt;xxx&gt;yyy&lt;/xxx&gt;</code></strong> <br/> <br/>
+       throughout the entire sitemap.. the "value" attribute is a reserved one.
+     </note>
+  
+     <p>
+      There is no given set of predefined parameters.
+     </p>
+    </s3>
+
+    <s3 title="Generators">
+     <p>
+      Generators generate XML content as SAX events and initialize the 
+      pipeline processing. 
+     </p>
+
+     <source>
+      <![CDATA[
+       <map:generators default="parser">
+        <map:generator type="parser" src="class:///org.apache.cocoon.generator.FileGenerator"/>
+        <map:generator type="dir"    src="file:///home/mystuff/java/MyDirGenerator.class"/>
+        <map:generator type="xsp"    src="class:///org.apache.cocoon.generators.XSPGenerator">
+         ...
+        </map:generator>
+       </map:generators>
+      ]]>
+     </source>
+
+     <p>
+      The <code>default</code> attribute specifies the type of generator to use if none is specified in a pipeline.
+     </p>
+   
+    </s3>
+
+    <s3 title="Filters">
+     <p>
+      Filters transform SAX events in SAX events.
+     </p>
+
+     <source>
+      <![CDATA[
+       <map:filters default="xslt">
+        <map:filter type="xslt" src="class:///org.apache.cocoon.filter.XSLTFilter">
+         <compile-stylesheets value="true"/>
+        </map:filter>
+        <map:filter type="xinclude" src="class:///org.apache.cocoon.filter.XIncludeFilter"/>
+       </map:filters>
+      ]]>
+     </source>
+
+     <p>
+      The <code>default</code> attribute specifies the type of generator to use if none is specified in a pipeline.
+     </p>
+    </s3>
+
+    <s3 title="Serializers">
+     <p>
+      Serializers transform SAX events in binary or char streams for 
+      final client consumption.
+     </p>
+
+     <source>
+      <![CDATA[
+       <map:serializers default="html">
+        <map:serializer type="html" mime-type="text/html" src="class:///org.apache.cocoon.serializer.HTMLSerializer">
+         <doctype-public value="-//W3C//DTD HTML 4.0 Transitional//EN"/>
+         <doctype-system value="http://www.w3.org/TR/REC-html40/loose.dtd"/>
+         <preserve-space value="true"/>
+         <encoding value="UTF-8"/>
+         <indent value="1"/>
+         <line-width value="120"/>
+        </map:serializer>
+
+        <map:serializer type="wap" mime-type="text/vnd.wap.wml" src="class:///org.apache.cocoon.serializer.XMLSerializer">
+         <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
+         <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
+         <encoding>UTF-8</encoding>
+        </map:serializer>
+
+        <map:serializer type="svg2jpg" mime-type="image/jpg" src="class:///org.apache.cocoon.serializer.SVGSerializer">
+         <format value="jpg"/>
+         <compression-level>80%</compression-level>
+        </map:serializer>
+
+        <map:serializer type="svg2png" mime-type="image/png" src="class:///org.apache.cocoon.serializer.SVGSerializer">
+         <format>png</format>
+         <color-depth value="24"/>
+        </map:serializer>
+       </map:serializers>
+      ]]>
+     </source>
+
+     <p>
+      The <code>default</code> attribute specifies the type of generator to use if none is specified in a pipeline.
+     </p>
+    </s3>
+   </s2>
+  </s1>
+ 
+ </body>
+</document>
