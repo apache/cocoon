@@ -29,9 +29,9 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
@@ -60,7 +60,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSource.java,v 1.5 2004/03/05 13:01:55 bdelacretaz Exp $
+ * @version CVS $Id: BlobSource.java,v 1.6 2004/03/11 15:34:30 sylvain Exp $
  */
 public class BlobSource extends AbstractLogEnabled implements Source, Serviceable {
 
@@ -311,12 +311,12 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
 
     private Connection getConnection() throws SourceException {
 
-        ComponentSelector selector = null;
+        ServiceSelector selector = null;
         DataSourceComponent datasource = null;
 
         try {
             try {
-                selector = (ComponentSelector)this.manager.lookup(DataSourceComponent.ROLE + "Selector");
+                selector = (ServiceSelector)this.manager.lookup(DataSourceComponent.ROLE + "Selector");
 
                 datasource = (DataSourceComponent)selector.select(this.datasourceName);
 
