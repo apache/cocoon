@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.124 2000-10-16 16:45:29 greenrd Exp $ 
+  $Id: changes.xml,v 1.125 2000-10-16 23:43:51 balld Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix">
+   fixed esql logicsheet - stack and session should only declare once now even when interacting with other logicsheets
+  </action>
   <action dev="DB" type="update" due-to="Ugo Cei" due-to-email="ugo@fuoriorario.it">
    updates to mail logicsheet - get flags, better parsed email address info, bug fixes
   </action>
