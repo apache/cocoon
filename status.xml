@@ -91,12 +91,6 @@
       as a NotifyingBuilder.
     </action>
 
-    <action context="code" assigned-to="SW">
-      Change the handle-errors to enable use of any Generator.
-      DOUBLE CHECK THAT REDIRECTS ARE FORBIDDEN.
-      http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=102633389301850&amp;w=2
-    </action>
-
     <action context="code" assigned-to="open">
       Finish the design and contracts of flow. Add more tests and samples and
       documentation.
@@ -186,6 +180,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="SW" type="update">
+    The DirectoryGenerator is now cacheable. A new "refreshDelay" parameter defines the delay between two checks
+    on the filesystem for modified files.
+  </action>
   <action dev="TC" type="add" fixes-bug="19772" due-to="Daniel Fagerstrom" due-to-email="danielf@nada.kth.se">
    Added STX block. (alternative to XSLT)
   </action>
