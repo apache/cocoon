@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.104 2000-08-27 16:48:21 balld Exp $
+  $Id: changes.xml,v 1.105 2000-09-14 14:02:52 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Kevin Sonney" due-to-email="kevin@webslingerz.com">
+   Fixed problem with XSP and namespaces (now follows the correct name="xml-stylesheet" syntax)
+  </action>
   <action dev="DB" type="add">
    Added esql logicsheet
   </action>
