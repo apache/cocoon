@@ -34,7 +34,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
- * @version CVS $Id: WebContinuation.java,v 1.8 2004/04/09 19:52:54 vgritsenko Exp $
+ * @version CVS $Id: WebContinuation.java,v 1.9 2004/05/17 18:50:53 vgritsenko Exp $
  */
 public class WebContinuation extends AbstractLogEnabled
                              implements Comparable {
@@ -350,7 +350,7 @@ public class WebContinuation extends AbstractLogEnabled
      * Dispose this continuation. Should be called on invalidation.
      */
     public void dispose() {
-        // Call specific possible implementation-specific clean-up on this continuation.
+        // Call possible implementation-specific clean-up on this continuation.
         if (this.disposer != null) {
             this.disposer.disposeContinuation(this);
         }

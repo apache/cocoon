@@ -45,7 +45,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.10 2004/04/09 19:52:54 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.11 2004/05/17 18:50:53 vgritsenko Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
@@ -97,6 +97,13 @@ public class ContinuationsManagerImpl
         bytes = new byte[CONTINUATION_ID_LENGTH];
     }
 
+    /**
+     * Get the command sink so that we can be notified of changes
+     */
+    public void contextualize(Context context) throws ContextException {
+        m_commandSink = (Sink) context.get(Queue.ROLE);
+    }
+
     public void configure(Configuration config) {
         defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
         Configuration expireConf = config.getChild("expirations-check");
@@ -122,13 +129,11 @@ public class ContinuationsManagerImpl
 
         if (parent == null) {
             forrest.add(wk);
-        }
-
-        // REVISIT: This Places only the "leaf" nodes in the expirations Sorted Set.
-        // do we really want to do this?
-        if (parent != null) {
-            if (wk.getParentContinuation().getChildren().size() < 2) {
-                expirations.remove(wk.getParentContinuation());
+        } else {
+            // REVISIT: This places only the "leaf" nodes in the expirations Sorted Set.
+            // do we really want to do this?
+            if (parent.getChildren().size() < 2) {
+                expirations.remove(parent);
             }
         }
 
@@ -312,13 +317,12 @@ public class ContinuationsManagerImpl
             getLogger().debug("WK: Forrest size: " + forrest.size());
             displayAllContinuations();
             displayExpireSet();
-        }
 
-        // clean up
-        if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK CurrentSystemTime[" + System.currentTimeMillis() +
                               "]: Cleaning up expired Continuations....");
         }
+
+        // clean up
         WebContinuation wk;
         Iterator iter = expirations.iterator();
         while (iter.hasNext() && ((wk = (WebContinuation) iter.next()).hasExpired())) {
@@ -332,13 +336,6 @@ public class ContinuationsManagerImpl
             displayAllContinuations();
             displayExpireSet();
         }
-    }
-
-    /**
-     * Get the command sink so that we can be notified of changes
-     */
-    public void contextualize(Context context) throws ContextException {
-        m_commandSink = (Sink) context.get(Queue.ROLE);
     }
 
 
