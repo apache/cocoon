@@ -121,8 +121,6 @@ public class JXForm extends ScriptableObject {
         context = JXPathContext.newContext(model);
         form.setAutoValidate(false);
         if (validatorNamespace != null && validatorDocument != null) {
-            System.out.println("validatorNS="+validatorNamespace);
-            System.out.println("validatorDoc="+validatorDocument);
             SourceResolver resolver = 
                 getCocoon().getEnvironment();
             Source schemaSrc = resolver.resolveURI(validatorDocument);
@@ -154,12 +152,12 @@ public class JXForm extends ScriptableObject {
             (FOM_WebContinuation)unwrap(continuation);
         String redUri = "cocoon://" + 
             cocoon.getEnvironment().getURIPrefix() + uri;
-         cocoon.getInterpreter().forwardTo(getTopLevelScope(cocoon),
-                                           cocoon,
-                                           redUri, 
-                                           unwrap(bizData),
-                                           fom_wk.getWebContinuation(),
-                                           cocoon.getEnvironment());
+        cocoon.getInterpreter().forwardTo(getTopLevelScope(cocoon),
+                                          cocoon,
+                                          redUri, 
+                                          unwrap(bizData),
+                                          fom_wk == null ? null: fom_wk.getWebContinuation(),
+                                          cocoon.getEnvironment());
     }
 
     public void jsFunction_addViolation(String xpath, String message) 

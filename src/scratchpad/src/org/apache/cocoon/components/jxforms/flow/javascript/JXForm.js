@@ -124,7 +124,7 @@ JXForm.prototype.sendView = function(uri, validator) {
         // will return right here: it is used to implement 
         // <xf:submit continuation="forward">
         this.populateForm();
-	var phase = cocoon.request.getAttribute("jxform-submit-phase");
+        var phase = cocoon.request.getAttribute("jxform-submit-phase");
         if (validator != undefined) {
             validator(this);
         }
@@ -139,11 +139,9 @@ JXForm.prototype.sendView = function(uri, validator) {
 
 JXForm.prototype.finish = function(uri) {
     if (uri != undefined) {
-        this.form.remove(cocoon.environment.objectModel, this.id);
-        this.form.save(cocoon.environment.objectModel, "request");
-        this.forwardTo(uri,
-                       this.getModel(), 
-                       null);
+        this.removeForm();
+        this.saveForm();
+        this.forwardTo(uri, this.getModel(), null);
     }
     if (this.rootContinuation != null) {
         this.rootContinuation.invalidate();
