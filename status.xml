@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.326 2004/05/17 08:40:02 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.327 2004/05/17 15:12:40 antonio Exp $:-->
 
 <status>
  <developers>
@@ -212,7 +212,7 @@
 
  <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Updated Apache JCS to 1.0 dev 20040516
+     Updated Apache JCS to 1.0 dev 20040516 and util.concurrent to 1.3.3
    </action>
    <action dev="JH" type="add" fixes-bug="28860" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
      Extended CocoonServlet to allow any
