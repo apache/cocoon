@@ -115,4 +115,11 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
+
+    public void testJXSet() throws Exception {
+        String inputURI = docBase + "jxSet.xml";
+        String outputURI = docBase + "jxSet-output.xml";
+
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+    }
 }
