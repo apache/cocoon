@@ -154,7 +154,6 @@
     <component-instance logger="core.modules.input" name="xmlmeta"      class="org.apache.cocoon.components.modules.input.XMLMetaModule"/>
     <component-instance logger="core.modules.input" name="mapmeta"      class="org.apache.cocoon.components.modules.input.MapMetaModule"/>
     <component-instance logger="core.modules.input" name="datemeta"     class="org.apache.cocoon.components.modules.input.DateMetaInputModule"/>
-    <component-instance logger="core.modules.input" name="xmlform"      class="org.apache.cocoon.components.modules.input.XMLFormInput"/>
     <component-instance logger="core.modules.input" name="jxpath"       class="org.apache.cocoon.components.modules.input.JXPathMetaModule"/>
     <component-instance logger="core.modules.input" name="simplemap"    class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"/>
     <component-instance logger="core.modules.input" name="chain"    class="org.apache.cocoon.components.modules.input.ChainMetaModule">

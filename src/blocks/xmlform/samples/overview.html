@@ -1,0 +1,60 @@
+<html>
+<head>
+ <title>Demonstration of XMLForm</title>
+</head>
+<body bgcolor="#FFFFFF">
+<h1>Demonstration of XMLForm</h1>
+
+<p>
+See the Apache Cocoon documentation for an overview: 
+<a href="../../docs/howto/xmlform-wizard/howto-xmlform-wizard.html">Cocoon XMLForm How-To</a>
+</p>
+
+<p>
+The Cocoon XMLForm handling framework provides
+<a href="http://www.w3.org/MarkUp/Forms/">W3C XForms</a> based markup,
+<a href="http://www.ascc.net/xml/resource/schematron/schematron.html">Schematron</a>
+instance validation, and automated binding to
+<a href="http://java.sun.com/products/javabeans/">JavaBeans</a> and
+<a href="http://www.w3.org/DOM/">DOM</a> instances.
+<br/>
+It also allows easy deployment of 
+<a href="http://www.xfront.com/REST.html">REST</a>
+style 
+<a href="http://www.w3.org/2002/ws/">Web Services</a>
+, with maximum code reuse between human facing and machine interface.
+</p>
+
+
+<p>
+<b><u>Application</u></b>
+<br>
+Here is the <a href="wizard">XMLForm Cocoon Usage Feedback Wizard Demonstration</a>
+</p>
+
+<p>
+<b><u>Flow-based Application</u></b>
+<br>
+Here is the <a href="flow">Flow-based XMLForm Cocoon Usage Feedback Wizard Demonstration</a>
+</p>
+
+<p>
+<b><u>Web Service</u></b>
+<br>
+Here is the 
+<a  href="UsageFeedbackService/WSDL">
+  WSDL descriptor
+</a> 
+for the same application, exposed as a Web Service (REST style).
+<br/>
+
+Click 
+<a href="UsageFeedbackService?firstName=good&amp;publish=false">here for a valid sample request</a>
+ <br/>
+
+Click 
+<a href="UsageFeedbackService?firstName=bad&amp;publish=false">here for an invalid sample request</a>.
+</p>
+
+</body>
+</html>
