@@ -51,7 +51,7 @@
 package org.apache.cocoon.woody.event.impl;
 
 import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.event.ValueChangedEvent;
+import org.apache.cocoon.woody.event.ValueChangedListener;
 import org.apache.cocoon.woody.event.WidgetListener;
 import org.apache.cocoon.woody.event.WidgetListenerBuilder;
 import org.apache.cocoon.woody.util.JavaScriptHelper;
@@ -81,7 +81,7 @@ public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
         
         if (listenerClass == ActionListener.class) {
             return new JavaScriptWidgetListener.JSActionListener(script);
-        } else if (listenerClass == ValueChangedEvent.class) {
+        } else if (listenerClass == ValueChangedListener.class) {
             return new JavaScriptWidgetListener.JSValueChangedListener(script);
         } else {
             throw new Exception("Unkonwn event class: " + listenerClass);

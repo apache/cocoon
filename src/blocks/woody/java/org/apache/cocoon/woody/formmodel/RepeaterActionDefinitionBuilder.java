@@ -52,7 +52,6 @@ package org.apache.cocoon.woody.formmodel;
 
 import java.util.Iterator;
 
-import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.event.ActionListener;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
@@ -71,7 +70,7 @@ import org.w3c.dom.Element;
  * </ul>
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RepeaterActionDefinitionBuilder.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
+ * @version CVS $Id: RepeaterActionDefinitionBuilder.java,v 1.2 2003/10/08 09:13:05 sylvain Exp $
  */
 public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     
@@ -84,7 +83,7 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
 
         definition.setActionCommand(actionCommand);
 
-        Iterator iter = buildEventListeners(widgetElement, "on-activate", ActionEvent.class).iterator();
+        Iterator iter = buildEventListeners(widgetElement, "on-activate", ActionListener.class).iterator();
         while (iter.hasNext()) {
             definition.addActionListener((ActionListener)iter.next());
         }
