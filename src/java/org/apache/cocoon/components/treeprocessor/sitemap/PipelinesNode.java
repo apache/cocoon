@@ -22,9 +22,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
-import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
 
 /**
  * Handles &lt;map:pipelines&gt;
@@ -33,7 +31,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.10 2004/05/25 13:48:12 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.11 2004/05/25 14:27:32 cziegeler Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
