@@ -66,12 +66,12 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Notifier.java,v 1.1 2003/03/09 00:09:07 pier Exp $
+ * @version CVS $Id: Notifier.java,v 1.2 2003/03/16 11:20:54 stefano Exp $
  */
 
 public class Notifier {
 
-  /**
+  /*
    * Generate notification information as a response.
    * The notification is directly written to the OutputStream.
    * @param  n The <code>Notifying</code> object
@@ -111,19 +111,23 @@ public class Notifier {
     StringBuffer sb = new StringBuffer();
 
     sb.append("<html><head><title>").append(n.getTitle()).append("</title>");
-    sb.append("<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
-    sb.append("BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
-    sb.append("B{color : white;background-color : #0086b2;} ");
-    sb.append("HR{color : #0086b2;} ");
-    sb.append("--></STYLE> ");
+    sb.append("<style><!--");
+	sb.append("body { background-color: white; color: black; font-family: verdana, helvetica, sanf serif;}");
+	sb.append("h1 {color: #336699; margin: 0px 0px 20px 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}");
+	sb.append("p.footer { color: #336699; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }");
+	sb.append("span {color: #336699;}");
+	sb.append("pre {padding-left: 20px;}");
+	sb.append("a:link {font-weight: bold; color: #336699;}");
+	sb.append("a:visited {color: #336699; }");
+	sb.append("a:hover {color: #800000; background-color: #ffff80;}");
+	sb.append("a:active {color: #006666;}");
+    sb.append("--></style>");
     sb.append("</head><body>");
-    sb.append("<h1>Cocoon 2 - ").append(n.getTitle()).append("</h1>");
-    sb.append("<hr size=\"1\" noshade=\"noshade\"/>");
-    sb.append("<p><b>type</b> ").append(n.getType()).append("</p>");
-    sb.append("<p><b>message</b> <u>").append(n.getMessage()).append("</u></p>");
-    sb.append("<p><b>description</b> <u>").append(n.getDescription()).append("</u></p>");
-    sb.append("<p><b>sender</b> ").append(n.getSender()).append("</p>");
-    sb.append("<p><b>source</b> ").append(n.getSource()).append("</p>");
+    sb.append("<h1>").append(n.getTitle()).append("</h1>");
+    sb.append("<p><span>Message:</span> ").append(n.getMessage()).append("</p>");
+    sb.append("<p><span>Description:</span> ").append(n.getDescription()).append("</p>");
+    sb.append("<p><span>Sender:</span> ").append(n.getSender()).append("</p>");
+    sb.append("<p><span>Source:</span> ").append(n.getSource()).append("</p>");
 
     Map extraDescriptions = n.getExtraDescriptions();
     Iterator keyIter = extraDescriptions.keySet().iterator();
@@ -131,18 +135,18 @@ public class Notifier {
     while (keyIter.hasNext()) {
       String key = (String) keyIter.next();
 
-      sb.append("<p><b>").append(key).append("</b><pre>").append(
+      sb.append("<p><span>").append(key).append("</span><pre>").append(
               extraDescriptions.get(key)).append("</pre></p>");
     }
 
-    sb.append("<hr size=\"1\" noshade=\"true\"/>");
+    sb.append("<p class='footer'><a href='http://cocoon.apache.org/'>").append(Constants.COMPLETE_NAME).append("</p>");
     sb.append("</body></html>");
 
     if (outputStream != null)
       outputStream.write(sb.toString().getBytes());
   }
 
-  /**
+  /*
    * Generate notification information in XML format.
    * @deprecated Using a ContentHandler doesn't mean that a mimetype cannot be specified; it could be svg or
    * @see #notify(Notifying, ContentHandler, String)
