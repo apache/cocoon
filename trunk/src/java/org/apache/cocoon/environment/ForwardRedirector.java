@@ -56,6 +56,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
@@ -67,7 +68,7 @@ import java.net.MalformedURLException;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.2 2003/03/10 14:23:00 cziegeler Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector {
 
@@ -197,13 +198,20 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
             boolean processingResult;
 
             // FIXME - What to do here?
-            if ( !this.internal ) {
-                processingResult = actualProcessor.process(newEnv);
-            } else {
-                ProcessingPipeline pp = actualProcessor.processInternal(newEnv);
-                if (pp != null) pp.release();
-                processingResult = pp != null;
+            Object processKey = CocoonComponentManager.startProcessing(newEnv);
+            try {
+                
+                if ( !this.internal ) {
+                    processingResult = actualProcessor.process(newEnv);
+                } else {
+                    ProcessingPipeline pp = actualProcessor.processInternal(newEnv);
+                    if (pp != null) pp.release();
+                    processingResult = pp != null;
+                }
+            } finally {
+                CocoonComponentManager.endProcessing(newEnv, processKey);
             }
+
 
             if (!processingResult) {
                 throw new ProcessingException("Couldn't process URI " + requestURI);
