@@ -85,7 +85,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.7 2003/05/22 15:19:42 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.8 2003/05/23 09:42:50 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -147,7 +147,7 @@ public class SimpleProfileManager
 				// load coplet base data
 				map.put("profile", "copletbasedata");
 				map.put("objectmap", null);
-				Object[] result = this.getProfile(keyMap, map, portalPrefix+"/CopletBaseData", null);
+				Object[] result = this.getProfile(keyMap, map, portalPrefix+"/CopletBaseData", null, null);
 				if (result[0] == null) {
 					throw new SourceNotFoundException("Could not find coplet base data profile.");
 				}
@@ -157,7 +157,7 @@ public class SimpleProfileManager
 				// load coplet data
 				map.put("profile", "copletdata");
 				map.put("objectmap", copletBaseDataManager.getCopletBaseData());
-				result = this.getDeltaProfile(keyMap, map, portalPrefix+"/CopletData", service, lastLoaded);
+				result = this.getDeltaProfile(keyMap, map, portalPrefix+"/CopletData", service, copletFactory, lastLoaded);
 				if (result[0] == null) {
 					throw new SourceNotFoundException("Could not find coplet data profile.");
 				}
@@ -173,7 +173,7 @@ public class SimpleProfileManager
 				// load coplet instance data
 				map.put("profile", "copletinstancedata");
 				map.put("objectmap", copletDataManager.getCopletData());
-				result = this.getOrCreateProfile(keyMap, map, portalPrefix+"/CopletInstanceData", service);
+				result = this.getOrCreateProfile(keyMap, map, portalPrefix+"/CopletInstanceData", service, copletFactory);
 				CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)result[0];
 				boolean loaded = ((Boolean)result[1]).booleanValue();
 				if (lastLoaded && !loaded) {
@@ -190,7 +190,7 @@ public class SimpleProfileManager
 				// load layout
 				map.put("profile", "layout");
 				map.put("objectmap", ((CopletInstanceDataManager)result[0]).getCopletInstanceData());
-				result = this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service);
+				result = this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service, factory);
 				layout = (Layout)result[0];
 				loaded = ((Boolean)result[1]).booleanValue();
 				if (lastLoaded && !loaded) {
@@ -210,12 +210,50 @@ public class SimpleProfileManager
         }
     }
     
+    public void saveUserProfiles() {
+		MapSourceAdapter adapter = null;
+		PortalService service = null;
+		try {
+			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
+			service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            
+			String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+
+			HashMap map = new HashMap();
+			map.put("portalname", service.getPortalName());
+			map.put("type", "user");
+				
+			// TODO Change to KeyManager usage
+			UserHandler handler = RequestState.getState().getHandler();
+			HashMap key = new HashMap();
+			key.put("user", handler.getUserId());
+			key.put("role", handler.getContext().getContextInfo().get("role"));
+			key.put("config", RequestState.getState().getApplicationConfiguration().getConfiguration("portal"));
+	
+			// save coplet instance data
+			map.put("profile", "copletinstancedata");
+			Object profile = ((Object[])service.getAttribute(portalPrefix+"/CopletInstanceData"))[0];
+			adapter.saveProfile(key, map, profile);
+
+			// save coplet instance data
+			map.put("profile", "layout");
+			profile = ((Object[])service.getAttribute(portalPrefix+"/Layout"))[0];
+			adapter.saveProfile(key, map, profile);
+		} catch (Exception e) {
+			// TODO
+			throw new CascadingRuntimeException("Arg", e);
+		} finally {
+			this.manager.release(adapter);
+			this.manager.release(service);
+		}
+    }
+    
     /**
      * Gets a profile and applies possible user and role deltas to it.
      * @return result[0] is the profile, result[1] is a Boolean, 
      * which signals whether the profile has been loaded or reused.
      */
-    private Object[] getDeltaProfile(Object key, Map map, String location, PortalService service, boolean forcedLoad) 
+    private Object[] getDeltaProfile(Object key, Map map, String location, PortalService service, Object factory, boolean forcedLoad) 
     throws Exception {
     	Object[] result;
     	
@@ -240,19 +278,19 @@ public class SimpleProfileManager
 		} else {
 			// load global profile
 			map.put("type", "global");
-			Object global = this.getProfile(key, map, location, globalValidity, null, forcedLoad)[0];
-			DeltaApplicableReferencesAdjustable object = (DeltaApplicableReferencesAdjustable)this.loadProfile(key, map, location, (SourceValidity)globalValidity[1], service);
+			Object global = this.getProfile(key, map, location, globalValidity, null, factory, forcedLoad)[0];
+			DeltaApplicableReferencesAdjustable object = (DeltaApplicableReferencesAdjustable)this.loadProfile(key, map, location, (SourceValidity)globalValidity[1], service, factory);
 			result = new Object[] {object, Boolean.TRUE};
 		
 			// load role delta
 			map.put("type", "role");
-			result = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), roleValidity, null, forcedLoad);
+			result = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), roleValidity, null, factory, forcedLoad);
 			if (((Boolean)result[1]).booleanValue())
 				object.applyDelta(result[0]); 		
 
 			// load user delta
 			map.put("type", "user");
-			result = this.getProfile(key, map, location+"-user", userValidity, service, forcedLoad);
+			result = this.getProfile(key, map, location+"-user", userValidity, service, factory, forcedLoad);
 			if (((Boolean)result[1]).booleanValue())
 				object.applyDelta(result[0]);
 				
@@ -270,7 +308,7 @@ public class SimpleProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getOrCreateProfile(Object key, Map map, String location, PortalService service) 
+	private Object[] getOrCreateProfile(Object key, Map map, String location, PortalService service, Object factory) 
 	throws Exception {
 		Object[] result;
     	
@@ -279,17 +317,17 @@ public class SimpleProfileManager
 
 		// load user profile
 		map.put("type", "user");
-		result = this.getProfile(key, map, location, service);
+		result = this.getProfile(key, map, location, service, factory);
 
 		if (result[0] == null) {
 			// load role profile
 			map.put("type", "role");
-			result = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), null);
+			result = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), service, factory);
 
 			if (result[0] == null) {
 				// load global profile
 				map.put("type", "global");
-				result = this.getProfile(key, map, location, null);
+				result = this.getProfile(key, map, location+"-global", service, factory);
 
 				if (result[0] == null) {
 					throw new SourceNotFoundException("Could not find global or role profile to create user profile.");
@@ -327,7 +365,7 @@ public class SimpleProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getProfile(Object key, Map map, String location, PortalService service) 
+	private Object[] getProfile(Object key, Map map, String location, PortalService service, Object factory) 
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
@@ -351,6 +389,8 @@ public class SimpleProfileManager
 			// load profile
 			SourceValidity newValidity = (SourceValidity)validity[1];
 			Object object = adapter.loadProfile(key, map);
+			if (object != null)
+				this.prepareObject(object, factory);
 			if (newValidity != null) {
 				objects = new Object[] { object, newValidity };
 				this.setAttribute(location, objects, service);
@@ -367,11 +407,11 @@ public class SimpleProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getProfile(Object key, Map map, String location, Object[] validity, PortalService service, boolean forcedLoad) 
+	private Object[] getProfile(Object key, Map map, String location, Object[] validity, PortalService service, Object factory, boolean forcedLoad) 
 	throws Exception {
 		if (forcedLoad) {
 			try {
-				return new Object[] {this.loadProfile(key, map, location, (SourceValidity)validity[1], service), Boolean.TRUE};
+				return new Object[] {this.loadProfile(key, map, location, (SourceValidity)validity[1], service, factory), Boolean.TRUE};
 			} catch (SourceNotFoundException e) {
 				return new Object[] {null, Boolean.FALSE};
 			}
@@ -393,6 +433,8 @@ public class SimpleProfileManager
 				// load profile
 				SourceValidity newValidity = (SourceValidity)validity[1];
 				Object object = adapter.loadProfile(key, map);
+				if (object != null)
+					this.prepareObject(object, factory);
 				if (newValidity != null) {
 					objects = new Object[] { object, newValidity };
 					this.setAttribute(location, objects, service);
@@ -408,7 +450,7 @@ public class SimpleProfileManager
 	/**
 	 * Loads a profile and reuses the specified validity for storing if it is not null.
 	 */
-	private Object loadProfile(Object key, Map map, String location, SourceValidity newValidity, PortalService service) 
+	private Object loadProfile(Object key, Map map, String location, SourceValidity newValidity, PortalService service, Object factory) 
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
@@ -417,6 +459,8 @@ public class SimpleProfileManager
 			if (newValidity == null)
 				newValidity = adapter.getValidity(key, map);
 			Object object = adapter.loadProfile(key, map);
+			if (object != null)
+				this.prepareObject(object, factory);
 			if (newValidity != null) {
 				Object[] objects = new Object[] { object, newValidity };
 				this.setAttribute(location, objects, service);
@@ -480,6 +524,32 @@ public class SimpleProfileManager
 	}
 	
 	/**
+	 * Prepares the object by using the specified factory.
+	 */
+	private void prepareObject(Object object, Object factory)
+	throws ProcessingException {
+		if (factory != null) {
+			if (object instanceof Layout) {
+				((LayoutFactory)factory).prepareLayout((Layout)object);
+			} else if (object instanceof CopletDataManager) {
+				CopletFactory copletFactory = (CopletFactory)factory;
+				Iterator iterator = ((CopletDataManager)object).getCopletData().values().iterator();
+				while (iterator.hasNext()) {
+					CopletData cd = (CopletData)iterator.next();
+					copletFactory.prepare(cd);
+				}
+			} else if (object instanceof CopletInstanceDataManager) {
+				CopletFactory copletFactory = (CopletFactory)factory;
+				Iterator iterator = ((CopletInstanceDataManager)object).getCopletInstanceData().values().iterator();
+				while (iterator.hasNext()) {
+					CopletInstanceData cid = (CopletInstanceData)iterator.next();
+					copletFactory.prepare(cid);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * If service is null the value is stored in this.attributes otherwise it is stored via the service.
 	 */
 	private void setAttribute(String key, Object value, PortalService service) {
@@ -508,7 +578,7 @@ public class SimpleProfileManager
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
 			attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
-			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)((Object[])this.attributes.get(attribute))[0];
+			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)((Object[])service.getAttribute(attribute))[0];
 
             return copletInstanceDataManager.getCopletInstanceData(copletID);
         } catch (ComponentException e) {
