@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.13 2004/05/07 16:43:43 mpo Exp $
+ * @version CVS $Id: Widget.java,v 1.14 2004/05/11 09:30:24 mpo Exp $
  */
 public interface Widget {
     
@@ -95,6 +95,13 @@ public interface Widget {
      */
     public String getRequestParameterName();
 
+    /**
+     * @deprecated getWidget got removed, use lookupWidget or getChild in stead.
+     * @throws UnsupportedOperationException indicating this method has been 
+     * deprecated from the API, and will be removed from future releases.  
+     */
+    public Widget getWidget(String id);
+    
     /**
      * Finds a widget relative to this one based on a path-like
      * string (/-delimted) into the widget-tree structure.
