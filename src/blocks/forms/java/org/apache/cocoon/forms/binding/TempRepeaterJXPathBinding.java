@@ -87,7 +87,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
  
         // Start by clearing the repeater, if necessary.
         if (this.clearOnLoad) {
-            repeater.removeRows();
+            repeater.clear();
         }
 
         // Find the location of the repeater data.
