@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.32 2001-04-17 10:41:32 cziegeler Exp $
+  $Id: changes.xml,v 1.9.2.33 2001-04-18 06:13:55 cziegeler Exp $
 -->
 
 <changes title="History of Changes">
@@ -24,6 +24,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    Added reload-method and check-reload configuration attributes for
+    the sitemap to allow asynchron/synchron sitemap reloading.
+  </action>
   <action dev="CZ" type="add">
     Added initial caching algorithm for StreamPipelines. The caching system
     is pluggable and offers caching of the whole response.

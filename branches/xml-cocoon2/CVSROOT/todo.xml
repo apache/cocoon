@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.25 2001-04-17 10:41:33 cziegeler Exp $
+  $Id: todo.xml,v 1.6.2.26 2001-04-18 06:13:55 cziegeler Exp $
 -->
 
 
@@ -35,14 +35,6 @@
   <action context="code" assigned-to="CZ">
    Cleaning up the environment object like Request, Response for the
    different environments.
-  </action>
-
-  <action context="code" assigned-to="CZ">
-   Synchron sitemap reloading.
-   The asynchron reloading of the
-   sitemap is a nice feature but not suitable for development.
-   Adding a configuration parameter for cocoon to
-   specify if the reloding is asynchron or synchron.
   </action>
 
   <action context="code" assigned-to="open">
