@@ -464,6 +464,9 @@
    <action dev="CZ" type="fix" fixes-bug="10277">
      Change the mime-type setting of a reader.
    </action>
+   <action dev="VG" type="add">
+     Added instrumentation support to ContinuationsManager.
+   </action>
  </release>
  <release version="2.1.5.1" date="July 9 2004">
    <action dev="CZ" type="update">

@@ -226,7 +226,7 @@ public class FOM_WebContinuation extends ScriptableObject {
     }
 
     /**
-     * Return text representation of the WebContinuation. 
+     * Return text representation of the WebContinuation.
      */
     public String toString() {
         return "WC" + wk.getId();
