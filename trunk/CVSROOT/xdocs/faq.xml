@@ -82,10 +82,8 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
  <answer>
   <p>This happens because Cocoon needs a DOM-leve2 implementation and you
   probably have a DOM-level1 included in your classpath _before_ <code>xerces.jar</code>.</p>
-  <p>So, either remove the instances of your DOM-level1 packages (normally included
-  in <code>xml.jar</code> or <code>jtidy.jar</code>) or place the <code>xerces.jar</code>
-  archive that comes with Cocoon <em>before</em> all the other jar packages
-  in your classpath. This should fix your problem.</p>
+  <p>So, place the <code>xerces.jar</code> archive that comes with Cocoon 
+  <em>before</em> all the other jar packages in your classpath.</p>
  </answer>
 </faq>
 

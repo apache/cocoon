@@ -1,0 +1,519 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon Installation Case</title>
+  <authors>
+   <person name="Mark Evans" email="mark.evans@dsto.defence.gov.au"/>
+  </authors>
+ </header>
+
+ <body>
+
+  <s1 title="Introduction">
+   <p>
+    I have successfully been able to get <strong>Cocoon V1.7.4</strong> to work with the following combination
+    of software :
+   </p> 
+ 
+   <ul>
+    <li><strong>Jakarta-Tomcat V3.1</strong></li>
+    <li><strong>Apache Web Server V1.3.12</strong></li>
+    <li><strong>Sun Java SDK SE V1.3</strong></li>
+    <li><strong>Windows 2000 Professional</strong></li>
+    <li><strong>Microsoft Internet Explorer V5.00.2920.0000</strong></li>
+   </ul>
+  
+   <p> 
+    This information could be added to the <strong>Working Systems</strong> table within the
+    Cocoon installation document at <code>http://xml.apache.org/cocoon/install.html</code>.
+   </p>  
+ 
+   <p>
+    What follows is some step by step info on how I got it all working. I am submitting this
+    for two reasons: one, as a reference for me for installations on other machines at a later
+    date and two, to provide some help to poor (hardware) engineers like myself who expect install 
+    instructions to include <strong>every</strong> step to actually get the product working !!
+   </p>
+ 
+   <p>
+    Hope this is useful to someone.
+   </p>
+  </s1> 	 
+
+  <s1 title="How to do it !"> 
+   <p>
+    I followed the standard Cocoon install instructions but without success. (Most of it is
+    there but it could be a bit clearer.)
+   </p>
+   
+   <p>
+    I have listed below the <strong>key</strong> steps that actually got the combination shown 
+    above to work.
+   </p>
+
+   <p>
+    I have included sections on installing Java SDK, Apache and Jakarta-Tomcat to avoid
+    any possible ambiguity. So, there may be more detail than is actually required but
+    why not - as long as it all works in the end !
+   </p>
+ 
+   <p>
+    The relevant sections of the modified files mentioned have been partially listed. 
+   </p>
+ 
+   <p>
+    The steps listed below mention my own machine name and my own specific paths. Substitute
+    your own naturally. I thought it was better to leave them in to avoid the "path to your..."
+    directives which can sometimes be ambiguous when it comes to how paths are specified within
+    the Windows environment i.e forward ("/") and backward slashes ("\") etc ..
+   </p>
+ 
+   <note>
+    Warning : This is long and verbose !
+   </note>
+ 
+   <note>
+    Before I started this setup on my machine, I did not have any pre-existing
+    Java SDK, Apache Web Server, Jakarta-Tomcat, Cocoon,  or even anything in the
+    <code>CLASSPATH </code> env variable. It was a completely new install on a fresh Windows
+    2000 Professional machine. 
+   </note>
+ 
+   <p>
+    OK lets go....
+   </p>
+  </s1>
+   
+ 
+  <s1 title="Java SDK SE V1.3">
+   <ul>
+    <li>Install Sun Java SDK SE V1.3 via the standard install procedure i.e execute the <code>.exe</code> file.</li>
+  
+    <li>I chose to install at path <code>C:\Program_Files\jdk1.3</code> - Note the underscore in <code>Program_Files</code>.</li>
+  
+    <li>No worries !</li>
+   </ul>
+  </s1>
+ 
+  <s1 title="Apache V1.3.12">
+   <ul>
+    <li>Install Apache V1.3.12 via the standard install procedure i.e execute the <code>.exe</code> file.</li>
+  
+    <li>I chose to install at path <code>C:\Program_Files\Apache Group</code></li>
+  
+    <li>Modify the <code>C:\Program_Files\Apache Group\Apache\conf\httpd.conf</code> file to
+        include your machine DNS name. See code segment below.</li>
+  
+    <li>Run the <strong>Install Apache as a Service</strong> program from the <strong>Apache Web Server</strong> menu of the
+        Windows 2000 Start Menu.</li>
+  
+    <li>Ensure Apache is actually running by opening up the Windows 2000 <strong>Control panel</strong>,
+        double-left-clicking on <strong>Administrative Tools</strong> and through the <strong>Services</strong> program,
+        highlight the <strong>Apache</strong> service and menu select <code>Action|Start</code> i.e start Apache.</li>
+  
+    <li>Try and access <code>http://shaggy.blimp.au</code>. You should get the
+        standard <strong>"If you can see this, it means that the installation of the Apache
+        web server software on this system was successful"</strong> page.</li>
+  
+    <li>No worries !</li>
+   </ul>
+     
+   <p><code>C:\Program_Files\Apache Group\Apache\conf\httpd.conf</code></p>
+
+     <source>
+     ....................
+     #
+     # ServerName allows you to set a host name which is sent back to clients for
+     # your server if it's different than the one the program would get (i.e., use
+     # "www" instead of the host's real name).
+     #
+     # Note: You cannot just invent host names and hope they work. The name you 
+     # define here must be a valid DNS name for your host. If you don't understand
+     # this, ask your network administrator.
+     # If your host doesn't have a registered DNS name, enter its IP address here.
+     # You will have to access it by its address (e.g., http://123.45.67.89/)
+     # anyway, and this will make redirections work in a sensible way.
+     #
+     ServerName shaggy.blimp.au
+     ....................
+     </source>
+      
+  </s1>
+
+  <s1 title="Jakarta-Tomcat V3.1">
+   <ul> 
+    <li>Install Jakarta-Tomcat via the standard install procedure.</li>
+
+    <li>I chose to install (i.e unpack the zip) at path <code>C:\Program_Files\jakarta-tomcat</code> - Note
+        the underscore in <code>Program_Files</code>.</li>
+
+    <li>Go back to the Apache web site and grab the <code>ApacheModuleJServ.dll</code> file within the 
+        <code>http://jakarta.apache.org/builds/tomcat/release/v3.1/bin/win32/i386/</code> directory.</li>
+
+    <li>Copy this file into the <code>C:\Program_Files\Apache Group\Apache\modules</code> directory.</li>
+
+    <li>Modify the Apache <code>httpd.conf</code> file to add the line <code>include C:/Program_Files/jakarta-tomcat/conf/tomcat-apache.conf</code>
+        to the end of <code>httpd.conf</code>. See code segment below. Note the forward "<code>/</code>" slashes in the path name. Note that the 
+	<code>tomcat-apache</code> file is automatically created when Jakarta-Tomcat starts.</li>
+  
+    <li>Modify <code>C:\Program_Files\jakarta-tomcat\bin\tomcat.bat</code> to add env variables <code>TOMCAT_HOME</code> 
+        and <code>JAVA_HOME</code>. See code segment below.</li>
+
+    <li>Open up the Windows 2000 <strong>Control Panel</strong>, double-left-click <strong>Administrative Tools</strong>
+        and execute the <strong>Services</strong> program.</li>
+	
+    <li>Kill Apache - highlight the <strong>Apache</strong> service and menu select <code>Action|Stop</code> i.e stop Apache.</li> 
+        
+    <li>Now open up a Windows 2000 <strong>Command Prompt</strong> and cd to directory - <code>C:\Program_Files\jakarta-tomcat\bin</code></li>
+
+    <li>Type <code>tomcat start</code>. Jakarta-Tomcat should start up in another Command Prompt window.</li>
+
+    <li>Go back to the Windows 2000 <strong>Services</strong> program and start the <strong>Apache</strong> service i.e <code>Action|Start</code>.</li>
+
+    <li>Execute Internet Explorer.</li>
+
+    <li>Try and access the Jakarta-Tomcat JSP test page <code>http://shaggy.blimp.au:8080/examples/jsp/</code>
+        - Note the <code>8080</code> port in the address.</li>
+
+    <li>Click on any of the JSP examples to test.</li>
+
+    <li>Try and access the Jakarta-Tomcat servlet test page <code>http://shaggy.blimp.au:8080/examples/servlets/</code>
+        - Note the <code>8080</code> port in the address.</li>
+
+    <li>Click on any of the servlet examples to test.</li>
+
+    <li>Note: You <strong>don't</strong> have to copy the Jakarta-Tomcat <code>C:\Program_Files\jakarta-tomcat\webapps\examples</code> directory to the
+        Apache <code>C:\Program_Files\Apache Group\Apache\htdocs</code> directory. Due to the <code>8080</code> port in the
+        web addresses shown above, the files in directory <code>C:\Program_Files\jakarta-tomcat\webapps\examples</code>
+        are actually referenced automatically by Jakarta-Tomcat.</li>
+
+    <li>No worries !</li>
+   </ul>
+
+   <p><code>C:\Program_Files\Apache Group\Apache\conf\httpd.conf</code></p>
+   
+    <source><![CDATA[
+     ...........
+     #
+     # VirtualHost example:
+     # Almost any Apache directive may go into a VirtualHost container.
+     #
+     #<VirtualHost ip.address.of.host.some_domain.com>
+     #    ServerAdmin webmaster@host.some_domain.com
+     #    DocumentRoot /www/docs/host.some_domain.com
+     #    ServerName host.some_domain.com
+     #    ErrorLog logs/host.some_domain.com-error_log
+     #    CustomLog logs/host.some_domain.com-access_log common
+     #</VirtualHost>
+     
+     #<VirtualHost _default_:*>
+     #</VirtualHost>
+     
+     #
+     # Jakarta-Tomcat conf file
+     #
+     include C:/Program_Files/jakarta-tomcat/conf/tomcat-apache.conf
+     ]]></source>
+   
+   <p><code>C:\Program_Files\jakarta-tomcat\bin\tomcat.bat</code></p>
+
+    <source>
+    @echo off
+    rem A batch file to start/stop tomcat server.
+
+    rem This batch file written and tested under Windows NT
+    rem Improvements to this file are welcome
+
+    rem Guess TOMCAT_HOME if it is not present
+
+
+    set TOMCAT_HOME=C:\Program_Files\jakarta-tomcat
+
+    set JAVA_HOME=C:\Program_Files\jdk1.3
+
+    .........
+    </source>
+   
+  </s1>
+
+  <s1 title="Cocoon V1.7.4">
+   <ul>
+    <li>Install Cocoon via the standard install procedure.</li>
+
+    <li>I chose to install (i.e unpack the zip) at path <code>C:\Program_Files\cocoon-1.7.4</code> - Note
+        the underscore in <code>Program_Files.</code>
+        (Actually the important files in the Cocoon distribution all end up being copied
+        into the working Jakarta-Tomcat directories, so the unzipped Cocoon can be either
+        deleted or left where it is after the files have been copied.)</li>
+        
+    <li>Copy the <code>xerces_1_0_3.jar</code>, <code>xalan_1_0_1.jar</code>, <code>fop_0_12_1.jar</code> and <code>servlet_2_2.jar</code>
+        files, found in the <code>C:\Program_Files\cocoon-1.7.4\lib</code> to the 
+        <code>C:\Program_Files\jakarta-tomcat\lib</code> directory.</li>
+        
+    <li>Copy the <code>C:\Program_Files\cocoon-1.7.4\bin\cocoon.jar</code> file to the
+        <code>C:\Program_Files\jakarta-tomcat\lib</code> directory.</li>
+        
+    <li>Modify <code>C:\Program_Files\jakarta-tomcat\bin\tomcat.bat</code> to add the five Cocoon <code>.jar</code>
+        files to the Jakarta-Tomcat <code>CLASSPATH</code> env variable. See code segment below.</li>
+        
+    <li>Note the "<code>remed</code>" out <code>set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet.jar</code> line.</li>
+        
+    <li>Modify the <code>C:\Program_Files\jakarta-tomcat\conf\web.xml</code> file to add the Cocoon
+        specific configuration directives. See code segment below.</li>
+        
+    <li>And now for the <strong>really really</strong> important step, copy the
+        <code>C:\Program_Files\cocoon-1.7.4\conf\cocoon.properties</code> file to the
+        <code>C:\Program_Files\jakarta-tomcat\webapps\ROOT</code> directory.</li>
+        
+    <li>Now, if everything has been performed as specified above and if the gods
+        are smiling on you today, then (and you'll hate me if it doesn't) it should
+        all work now.</li>
+        
+    <li>OK. To test it all, do the following :</li>
+        
+    <li>If Jakarta-Tomcat is still running, then kill it by typing <code>tomcat stop</code> in a
+        Windows 2000 <strong>Command Prompt</strong> window which has been cded to <code>C:\Program_Files\jakarta-tomcat\bin</code>.</li>
+        
+    <li>If Apache is still running, then kill it by menu selecting <code>Action|Stop</code> 
+        through the Windows 2000 <strong>Services</strong> program.</li>
+        
+    <li>Now, start up Jakarta-Tomcat as detailed in the <strong>Jakarta-Tomcat V3.1</strong> section shown above.</li>
+        
+    <li>Now, start up Apache as detailed in the <strong>Apache V1.3.12</strong> section shown above.</li>
+        
+    <li>Execute Internet Explorer.</li>
+        
+    <li>The big test - try and access <code>http://shaggy.blimp.au:8080/Cocoon.xml</code> - You
+        should see the Cocoon V1.7.4 status page containing all of the internal configuration
+        information and settings specific to Cocoon. Note the <code>8080</code> port number.</li>
+        
+    <li>Note the uppercase "<code>C</code>" in <code>Cocoon.xml</code>. Also, you won't find this file on the
+        hard disk, it is an internal page and its name is set in the <code>cocoon.properties</code>
+        file.</li>
+        
+    <li>OK, if the internal Cocoon status page is working then you can try and access the
+        Cocoon examples as follows :</li>
+ 
+    <li>Copy the <code>C:\Program_Files\cocoon-1.7.4\samples</code> directory to the
+        <code>C:\Program_Files\jakarta-tomcat\webapps</code> directory.</li>
+        
+    <li>Copy the <code>cocoon.properties</code> file to the new <code>C:\Program_Files\jakarta-tomcat\webapps\samples</code>
+        directory - again this is a <strong>really</strong> important step.</li>
+ 
+    <li>Kill Jakarta-Tomcat.</li>
+        
+    <li>Kill Apache.</li>
+        
+    <li>Restart Jakarta-Tomcat.</li>
+        
+    <li>Restart Apache.</li>
+        
+    <li>Try and access <code>http://shaggy.blimp.au:8080/samples/index.xml</code>. Note the <code>8080</code> port number.</li>
+        
+    <li>You should see the Cocoon samples page.</li>
+        
+    <li>Thats it.</li>
+        
+    <li>Again, note that no files were copied into the <code>C:\Program_Files\Apache Group\Apache\htdocs</code>
+        directory. The Cocoon samples are found via Jakarta-Tomcat and port <code>8080</code>.</li>
+	
+    <li>One last thing to try. Create a directory called <code>C:\Program_Files\jakarta-tomcat\webapps\gogo</code>.</li>
+        
+    <li>Copy the Cocoon <code>hello-page.xml</code> and <code>hello-page-html.xsl</code> files found in the  
+       <code>C:\Program_Files\cocoon-1.7.4\samples\hello</code> directory into the new <code>gogo</code> directory.</li>
+        
+    <li>And again the <strong>really</strong> important step, copy the <code>cocoon.properties</code> file into the
+        new <code>gogo</code> directory.</li>
+        
+    <li>Kill Jakarta-Tomcat.</li>
+        
+    <li>Kill Apache.</li>
+        
+    <li>Restart Jakarta-Tomcat.</li>
+        
+    <li>Restart Apache.</li>
+        
+    <li>Execute Internet Explorer.</li>
+        
+    <li>Try and access <code>http://shaggy.blimp.au:8080/gogo/hello.xml</code>.</li>
+        
+    <li>You should see the Hello Page.</li>
+        
+    <li>The purpose of the last few steps was to show how a new auto context can be
+        setup in the Jakarta-Tomcat <code>webapps</code> directory.
+        As I see it, put your own custom XML/XSL files in a directory that lives within the Jakarta-Tomcat
+        <code>webapps</code> directory. Make sure <code>cocoon.properites</code> is also in there.</li>
+        
+    <li>You could also put your custom XML/XSL work into just the Jakarta-Tomcat <code>webapps/ROOT</code> directory and
+        as long as <code>cocoon.properties</code> is also in there (which it should be or else you won't be able
+        to see the internal <code>Cocoon.xml</code> status page) then it should all work from that <code>ROOT</code> directory.</li>
+        
+        
+    <li>Well, thats how I got it to work</li>
+        
+    <li>Works for me and I hope for you too.</li>
+        
+    <li>No worries !</li>
+
+   </ul>
+
+
+   <p><code>C:\Program_Files\jakarta-tomcat\bin\tomcat.bat</code></p>
+   
+    <source>
+     .................
+
+     set cp=%CLASSPATH%
+
+     set CLASSPATH=.
+     set CLASSPATH=%TOMCAT_HOME%\classes
+          
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_0_3.jar
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\fop_0_12_1.jar
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet_2_2.jar
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\cocoon.jar
+          
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\webserver.jar
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jasper.jar
+     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xml.jar
+     rem set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet.jar
+     set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
+
+     .................
+    </source>
+  
+   <p><code>C:\Program_Files\jakarta-tomcat\conf\web.xml</code></p>
+
+    <source><![CDATA[
+     <?xml version="1.0" encoding="ISO-8859-1"?>
+     
+     <!DOCTYPE web-app
+         PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+         "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+     
+     <web-app>
+         <servlet>
+             <servlet-name>
+                 default
+             </servlet-name>
+             <servlet-class>
+                 org.apache.tomcat.servlets.DefaultServlet
+             </servlet-class>
+     	<load-on-startup>
+                 -2147483646
+     	</load-on-startup>
+         </servlet>
+         <servlet>
+             <servlet-name>
+                 invoker
+             </servlet-name>
+     <!--
+                 org.apache.tomcat.servlets.NoInvokerServlet
+     -->
+             <servlet-class>
+                 org.apache.tomcat.servlets.InvokerServlet
+             </servlet-class>
+         </servlet>
+         <servlet>
+             <servlet-name>
+                 jsp
+             </servlet-name>
+             <servlet-class>
+                 org.apache.jasper.runtime.JspServlet
+             </servlet-class>
+     
+     <!-- uncomment the following to use Jikes for JSP compilation
+     
+             <init-param>
+                 <param-name>jspCompilerPlugin</param-name>
+                 <param-value>org.apache.jasper.compiler.JikesJavaCompiler</param-value>
+             </init-param>
+     
+     -->
+     
+     	<load-on-startup>
+                 -2147483646
+     	</load-on-startup>
+         </servlet>
+         <servlet-mapping>
+             <servlet-name>
+                 invoker
+             </servlet-name>
+             <url-pattern>
+                 /servlet/*
+             </url-pattern>
+         </servlet-mapping>
+         <servlet-mapping>
+             <servlet-name>
+                 jsp
+             </servlet-name>
+             <url-pattern>
+                 *.jsp
+             </url-pattern>
+         </servlet-mapping>
+         <session-config>
+             <session-timeout>
+                 30
+             </session-timeout>
+         </session-config>
+     
+
+<!-- Start Cocoon Section -->
+
+         <servlet>
+          <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
+          <servlet-class>org.apache.cocoon.Cocoon</servlet-class>
+          <init-param>
+           <param-name>properties</param-name>
+           <param-value>
+            cocoon.properties 
+           </param-value>
+          </init-param>
+         </servlet>
+         
+         
+         <servlet-mapping>
+          <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
+          <url-pattern>*.xml</url-pattern>
+         </servlet-mapping>
+
+<!-- End Cocoon Section -->
+
+     
+         <mime-mapping>
+             <extension>
+                 txt
+             </extension>
+             <mime-type>
+                 text/plain
+             </mime-type>
+         </mime-mapping>
+     
+     ..........
+     
+    ]]></source>
+
+  </s1>
+
+  <s1 title="Hints and Tips">
+   <ul>
+    <li>Being bit of a XML/XSL/JAVA etc novice, here are some hints that I now know but it would have
+        made life a lot easier if I knew them before I attempted Cocoon/Jakarta-Tomcat/Apache etc..</li>
+
+    <li>Don't be fooled...use the refresh button on the web browser when fiddling about. The cache is 
+        your enemy in the early days !</li>
+
+    <li>Always stop/start Jakarta-Tomcat and Apache if you are adding/deleting files from the Jakarta-Tomcat <code>webapps</code> directory.</li>
+
+    <li>Understanding how Cocoon finds the <code>cocoon.properties</code> file is the key.</li>
+
+    <li>No worries !</li>
+   </ul>
+  </s1>
+
+ </body>
+
+</document>

@@ -8,6 +8,7 @@
   <page id="index" label="Index" source="index.xml"/>
   <page id="license" label="License" source="license.xml"/>
   <page id="install" label="Install" source="installing.xml"/>
+  <page id="install-case" label="Install Case" source="installation-case.xml"/>
 <separator/>
   <page id="infrastracture" label="Infrastructure" source="infrastructure.xml"/>
   <page id="technologies" label="Technologies" source="technologies.xml"/>
