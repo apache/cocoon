@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.3 2003/06/11 23:15:26 joerg Exp $-->
+<!-- $Id: esql.xsl,v 1.4 2003/08/04 13:41:46 haul Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.3 $ $Date: 2003/06/11 23:15:26 $
+ * @version CVS $Revision: 1.4 $ $Date: 2003/08/04 13:41:46 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -552,6 +552,8 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
           throw new RuntimeException("Error executing statement: " + _esql_query.getQueryString() + ": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
           </xsl:otherwise>
         </xsl:choose>
+    } finally {
+        _esql_query.cleanUp();
     }
     if (_esql_queries.empty()) {
       _esql_query = null;
