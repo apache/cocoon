@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * 
  * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.4 2003/12/10 23:34:11 ugo Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -136,27 +136,32 @@ public class FlowJXPathSelectionList implements SelectionList {
         contentHandler.startElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
         
         while(iter.hasNext()) {
-            
+
+            String stringValue = "";
+            String stringLabel = null;
             // Get a context on the current item
             Pointer ptr = (Pointer)iter.next();
-            JXPathContext itemCtx = ctx.getRelativeContext(ptr);
-            
-            // Get the value as a string
-            Object value = itemCtx.getValue(this.valuePath);
-            String stringValue = this.datatype.convertToString(value, locale);
-            
-            // Get the label (can be ommitted)
-            itemCtx.setLenient(true);
-            Object label = itemCtx.getValue(this.labelPath);
-            String stringLabel = (label == null) ? stringValue : label.toString();
-            
+            if (ptr.getValue() != null) {
+                JXPathContext itemCtx = ctx.getRelativeContext(ptr);
+                
+                // Get the value as a string
+                Object value = itemCtx.getValue(this.valuePath);
+                stringValue = this.datatype.convertToString(value, locale);
+                
+                // Get the label (can be ommitted)
+                itemCtx.setLenient(true);
+                Object label = itemCtx.getValue(this.labelPath);
+                stringLabel = (label == null) ? stringValue : label.toString();
+            }
             // Output this item
             AttributesImpl itemAttrs = new AttributesImpl();
             itemAttrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
-            contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-            contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
-            contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+            if (stringLabel != null) {
+                contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+                contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
+                contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+            }
             contentHandler.endElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL);
         }
         
