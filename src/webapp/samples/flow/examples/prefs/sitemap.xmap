@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: sitemap.xmap,v 1.2 2003/03/20 02:42:57 vgritsenko Exp $ -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:components>
@@ -10,15 +12,16 @@
     <map:matchers default="wildcard"/>
   </map:components>
 
-  <!-- Sitemap for handling the calculator control flow. The parent sitemap
-  (defined in ../..) handles the HTML page generation -->
+  <!--+
+      | Sitemap for handling the calculator control flow. The parent sitemap
+      | (defined in ../..) handles the HTML page generation
+      +-->
 
   <map:flow language="JavaScript">
-      <map:script src="prefs.js"/>
+    <map:script src="prefs.js"/>
   </map:flow>
 
   <map:pipelines>
-
     <map:pipeline>
       <map:match pattern="kont/*">
         <map:call continuation="{1}"/>
@@ -43,9 +46,7 @@
       <map:match pattern="logout/">
         <map:call function="logout"/>
       </map:match>
-
     </map:pipeline>
-
   </map:pipelines>
 
 </map:sitemap>
