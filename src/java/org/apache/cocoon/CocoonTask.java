@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
  * Ant task for running Cocoon. Allows for the embedding of Cocoon into 
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonTask.java,v 1.4 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.5 2004/05/04 14:19:05 cziegeler Exp $
  */
 public class CocoonTask extends Task implements DynamicConfigurator {
 
@@ -241,12 +241,12 @@ public class CocoonTask extends Task implements DynamicConfigurator {
             if (command.getClasspath() == null) {
                 target = Class.forName(classname);
             } else {
-                loader = new AntClassLoader(getProject().getCoreLoader(), project, 
+                loader = new AntClassLoader(getProject().getCoreLoader(), getProject(), 
                                             command.getClasspath(), false);
                 loader.setIsolated(true);
                 loader.setThreadContextLoader();
                 target = loader.forceLoadClass(classname);
-                AntClassLoader.initializeClass(target);
+                Class.forName(classname, true, loader);
             }
             Method method = target.getMethod("process", param);
             if (method == null) {
