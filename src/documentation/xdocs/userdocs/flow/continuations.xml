@@ -34,29 +34,29 @@ function calculator()
 {
   var a, b, operator;
 
-  sendPageAndWait("getA.html");
+  cocoon.sendPageAndWait("getA.html");
   a = cocoon.request.get("a");
 
-  sendPageAndWait("getB.html");
+  cocoon.sendPageAndWait("getB.html");
   b = cocoon.request.get("b");
 
-  sendPageAndWait("getOperator.html");
+  cocoon.sendPageAndWait("getOperator.html");
   operator = cocoon.request.get("op");
 
   try {
     if (operator == "plus")
-      sendPage("result.html", {result: a + b});
+      cocoon.sendPage("result.html", {result: a + b});
     else if (operator == "minus")
-      sendPage("result.html", {result: a - b});
+      cocoon.sendPage("result.html", {result: a - b});
     else if (operator == "multiply")
-      sendPage("result.html", {result: a * b});
+      cocoon.sendPage("result.html", {result: a * b});
     else if (operator == "divide")
-      sendPage("result.html", {result: a / b});
+      cocoon.sendPage("result.html", {result: a / b});
     else
-      sendPage("invalidOperator.html", {operator: operator});
+      cocoon.sendPage("invalidOperator.html", {operator: operator});
   }
   catch (exception) {
-    sendPage("error.html", {message: "Operation failed: " + exception.toString()});
+    cocoon.sendPage("error.html", {message: "Operation failed: " + exception.toString()});
   }
 }
 ]]></source>
