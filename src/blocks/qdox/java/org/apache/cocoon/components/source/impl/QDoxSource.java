@@ -60,7 +60,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Id: QDoxSource.java,v 1.9 2004/04/29 11:26:42 cziegeler Exp $ $Date: 2004/04/29 11:26:42 $
+ * @version CVS $Id: QDoxSource.java,v 1.10 2004/04/30 22:50:39 joerg Exp $ $Date: 2004/04/30 22:50:39 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -148,7 +148,7 @@ public final class QDoxSource
      *   and 'indexOf(&hellip;)' with <code>reLink.getParen(5)</code>.</li>
      * </ul>
      * <p>The regexp is as follows:</p>
-     * <code>\{@link\s+((([\w.#,$&amp;;\s]+)|([\w.#,$&amp;;(\s]+[\w.#,$&amp;;)\s]+))\s+([\w()#.,$&amp;;\s]+)|([\w.#,$&amp;;\s()]+))\s*\}</code>
+     * <code>\{\@link\s+((([\w.#,$&amp;;\s]+)|([\w.#,$&amp;;(\s]+[\w.#,$&amp;;)\s]+))\s+([\w()#.,$&amp;;\s]+)|([\w.#,$&amp;;\s()]+))\s*\}</code>
      *
      * @see #reLink
      */
