@@ -31,6 +31,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.AbstractComplementaryConfigurableAction;
@@ -85,13 +87,13 @@ import org.apache.commons.lang.BooleanUtils;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.7 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: DatabaseAction.java,v 1.8 2004/04/27 22:23:08 haul Exp $
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
  * @see org.apache.cocoon.util.JDBCTypeConversions
  */
-public abstract class DatabaseAction  extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
+public abstract class DatabaseAction  extends AbstractComplementaryConfigurableAction implements Configurable, Disposable, ThreadSafe {
 
     // ========================================================================
     // constants
@@ -186,6 +188,32 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
             this.tableConf = tableConf;
             this.modeTypes = modeTypes;
         }
+        
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		public boolean equals(Object obj) {
+            boolean result = false;
+            if (obj != null && obj instanceof LookUpKey) {
+                LookUpKey luk = (LookUpKey) obj;
+                result = true;
+                result = result && (luk.tableConf == null ? 
+                            this.tableConf == null : luk.tableConf.equals(this.tableConf));
+                result = result && (luk.modeTypes == null ?
+                            this.modeTypes == null : luk.modeTypes.equals(this.modeTypes));
+            }
+            
+			return result;
+		}
+        
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		public int hashCode() {
+			return (this.tableConf != null ? 
+                    this.tableConf.hashCode() : 
+                        (this.modeTypes != null ? this.modeTypes.hashCode() : super.hashCode()));
+		}
     }
 
 
