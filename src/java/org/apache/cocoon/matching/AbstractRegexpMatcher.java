@@ -52,6 +52,7 @@ package org.apache.cocoon.matching;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
@@ -67,7 +68,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractRegexpMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: AbstractRegexpMatcher.java,v 1.2 2004/02/06 15:41:21 sylvain Exp $
  */
 
 public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher implements ThreadSafe {
@@ -76,13 +77,12 @@ public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher im
      * Compile the pattern in a <code>org.apache.regexp.REProgram</code>.
      */
     public Object preparePattern(String pattern) throws PatternException {
-        if (pattern == null)
-        {
-            throw new PatternException("null passed as a pattern", null);
+        // if pattern is null, return null to allow throwing a located exception in preparedMatch()
+        if (pattern == null) {
+            return null;
         }
 
-        if (pattern.length() == 0)
-        {
+        if (pattern.length() == 0) {
             pattern = "^$";
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("The empty pattern string was rewritten to '^$'"
@@ -106,7 +106,12 @@ public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher im
     /**
      * Match the prepared pattern against the value returned by {@link #getMatchString(Map, Parameters)}.
      */
-    public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) {
+    public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
+
+        if(preparedPattern == null) {
+            throw new PatternException("A pattern is needed at " +
+                parameters.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "unknown location"));
+        }
 
         RE re = new RE((REProgram)preparedPattern);
         String match = getMatchString(objectModel, parameters);
