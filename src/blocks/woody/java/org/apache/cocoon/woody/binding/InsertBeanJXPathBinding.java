@@ -65,7 +65,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
  *
- * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.7 2004/01/27 11:43:29 joerg Exp $
+ * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
@@ -75,7 +75,7 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertBeanJXPathBinding
      */
-    public InsertBeanJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String className, String addMethod) {
+    public InsertBeanJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String className, String addMethod) {
         super(commonAtts);
         this.className = className;
         this.addMethodName = addMethod;

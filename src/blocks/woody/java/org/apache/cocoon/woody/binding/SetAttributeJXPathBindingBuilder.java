@@ -63,10 +63,10 @@ import org.w3c.dom.Element;
  *                      value="<i>attribute-value</i>"/&gt;
  * </code></pre>
  *
- * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class SetAttributeJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
 
     /**
@@ -78,7 +78,7 @@ public class SetAttributeJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             String attName = DomHelper.getAttribute(bindingElm, "name");
             String attValue = DomHelper.getAttribute(bindingElm, "value");

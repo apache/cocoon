@@ -64,15 +64,15 @@ import org.w3c.dom.Element;
  * &lt;/wb:aggregate&gt;
  * </code></pre>
  *
- * @version CVS $Id: AggregateJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:15 vgritsenko Exp $
+ * @version CVS $Id: AggregateJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class AggregateJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
             throws BindingException {
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 

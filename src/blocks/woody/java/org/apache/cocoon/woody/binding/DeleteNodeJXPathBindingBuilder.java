@@ -62,16 +62,16 @@ import org.w3c.dom.Element;
  * &lt;wb:delete-node /&gt;
  * </code></pre>
  *
- * @version CVS $Id: DeleteNodeJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: DeleteNodeJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class DeleteNodeJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link DeleteNodeJXPathBinding}.
      */
     public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
-        CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+        CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
         return new DeleteNodeJXPathBinding(commonAtts);
     }

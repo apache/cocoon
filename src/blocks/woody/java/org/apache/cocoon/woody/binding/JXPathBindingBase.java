@@ -65,7 +65,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.11 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.12 2004/02/03 12:26:21 joerg Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -77,7 +77,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     /**
      * Object holding the values of the common objects on all Bindings.
      */
-    private final JXpathBindingBuilderBase.CommonAttributes commonAtts;
+    private final JXPathBindingBuilderBase.CommonAttributes commonAtts;
 
     /**
      * Parent binding of this binding.
@@ -90,10 +90,10 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     protected Map classes;
 
     private JXPathBindingBase() {
-        this(JXpathBindingBuilderBase.CommonAttributes.DEFAULT);
+        this(JXPathBindingBuilderBase.CommonAttributes.DEFAULT);
     }
 
-    protected JXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts) {
+    protected JXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes commonAtts) {
         this.commonAtts = commonAtts;
     }
 

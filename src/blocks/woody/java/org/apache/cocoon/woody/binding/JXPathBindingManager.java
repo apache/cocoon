@@ -76,7 +76,7 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingManager.java,v 1.16 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.17 2004/02/03 12:26:21 joerg Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled
         implements BindingManager, Serviceable, Disposable,
@@ -100,7 +100,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     public void initialize() throws Exception {
-        bindingBuilderSelector = new SimpleServiceSelector("binding", JXpathBindingBuilderBase.class);
+        bindingBuilderSelector = new SimpleServiceSelector("binding", JXPathBindingBuilderBase.class);
         bindingBuilderSelector.enableLogging(getLogger());
         bindingBuilderSelector.configure(configuration.getChild("bindings"));
     }
@@ -207,9 +207,9 @@ public class JXPathBindingManager extends AbstractLogEnabled
      */
     public class Assistant {
 
-        private JXpathBindingBuilderBase getBindingBuilder(String bindingType) throws BindingException {
+        private JXPathBindingBuilderBase getBindingBuilder(String bindingType) throws BindingException {
             try {
-                return (JXpathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
+                return (JXPathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
             } catch (ServiceException e) {
                 throw new BindingException("Cannot handle binding element with name \"" + bindingType + "\".", e);
             }
@@ -221,7 +221,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
          */
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
-            JXpathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
+            JXPathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
             JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
             return childBinding;
         }

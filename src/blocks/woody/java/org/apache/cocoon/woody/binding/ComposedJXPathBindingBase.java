@@ -61,7 +61,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * into specific {@link JXPathBindingBase} implementations that have nested
  * child-bindings.
  *
- * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.7 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
  */
 public class ComposedJXPathBindingBase extends JXPathBindingBase {
     private final JXPathBindingBase[] subBindings;
@@ -71,7 +71,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      *
      * @param childBindings sets the array of childBindings
      */
-    protected ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts, JXPathBindingBase[] childBindings) {
+    protected ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes commonAtts, JXPathBindingBase[] childBindings) {
         super(commonAtts);
         this.subBindings = childBindings;
         if (this.subBindings != null) {

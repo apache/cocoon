@@ -86,10 +86,10 @@ import org.w3c.dom.Element;
  * &lt;/wb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.10 2004/01/13 01:40:46 vgritsenko Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.11 2004/02/03 12:26:21 joerg Exp $
  */
 public class RepeaterJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link RepeaterJXPathBinding} according to the
@@ -104,7 +104,7 @@ public class RepeaterJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             String repeaterId = DomHelper.getAttribute(bindingElm, "id");
             String parentPath =

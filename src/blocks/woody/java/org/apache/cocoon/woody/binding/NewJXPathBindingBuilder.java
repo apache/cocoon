@@ -66,16 +66,16 @@ import org.w3c.dom.Element;
  * </code></pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: NewJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: NewJXPathBindingBuilder.java,v 1.3 2004/02/03 12:26:21 joerg Exp $
  */
 public class NewJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
             throws BindingException {
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
