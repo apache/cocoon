@@ -244,6 +244,28 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
     }
 
     /* (non-Javadoc)
+     * @see org.apache.cocoon.components.repository.Repository#createResource(java.lang.String, java.lang.String)
+     */
+    public boolean createResource(String uri, String content) {
+
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("creating new resource " + uri);
+        }
+
+        try {
+            WebDAVUtil.createResource(uri, content);
+            return true;
+            
+        } catch (HttpException he) {
+            this.getLogger().error("Error creating resource: " + this.repoBaseUrl + uri, he);
+        } catch (IOException ioe) {
+            this.getLogger().error("Error creating resource: " + this.repoBaseUrl + uri, ioe);
+        }
+
+        return false;
+    }
+
+    /* (non-Javadoc)
      * @see org.apache.cocoon.components.repository.Repository#exists(java.lang.String)
      */
     public boolean exists(String uri) {

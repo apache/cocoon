@@ -90,6 +90,16 @@ public interface Repository {
     boolean saveContent(String uri, Source source) throws ProcessingException;
 
     /**
+     * create a new resource
+     * 
+     * @param uri  the uri of the resource.
+     * @param content  the content to initialize the resource with.
+     * @return  a boolean indicating success.
+     * @throws ProcessingException
+     */
+    boolean createResource(String uri, String content) throws ProcessingException;
+
+    /**
      * copy a resource
      * 
      * @param uri  the uri of the resource.
