@@ -2,6 +2,7 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -15,12 +16,16 @@ import java.util.Locale;
  *
  * <p>An Output widget is always valid and never required.
  */
-public class Output extends AbstractWidget {
+public class Output extends AbstractWidget implements DataWidget {
     private OutputDefinition definition;
     private Object value;
 
     public OutputDefinition getOutputDefinition() {
         return definition;
+    }
+
+    public Datatype getDatatype() {
+        return definition.getDatatype();
     }
 
     protected Output(OutputDefinition definition) {

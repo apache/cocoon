@@ -77,9 +77,9 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.22 2004/02/04 17:25:57 sylvain Exp $
+ * @version CVS $Id: Field.java,v 1.23 2004/02/10 23:35:32 coliver Exp $
  */
-public class Field extends AbstractWidget implements ValidationErrorAware {
+public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     private SelectionList selectionList;
     private FieldDefinition fieldDefinition;
     

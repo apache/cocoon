@@ -79,7 +79,7 @@ import java.util.Locale;
  * can be used with the Datatype (see {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
  * description for more information).
  */
-public class MultiValueField extends AbstractWidget implements ValidationErrorAware {
+public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private SelectionList selectionList;
     private MultiValueFieldDefinition fieldDefinition;
     private String[] enteredValues;

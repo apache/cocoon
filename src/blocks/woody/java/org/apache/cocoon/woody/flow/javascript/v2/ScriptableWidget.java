@@ -60,8 +60,11 @@ import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Submit;
 import org.apache.cocoon.woody.formmodel.Upload;
 import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.formmodel.DataWidget;
+import org.apache.cocoon.woody.formmodel.SelectableWidget;
 import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.event.FormHandler;
 import org.apache.cocoon.woody.event.ActionEvent;
@@ -83,6 +86,8 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class ScriptableWidget extends ScriptableObject {
+
+    final static String WIDGETS_PROPERTY = "__widgets__";
 
     Widget delegate;
     ScriptableWidget formWidget;
@@ -110,7 +115,7 @@ public class ScriptableWidget extends ScriptableObject {
             formWidget = this;
             Map widgetMap = new HashMap();
             widgetMap.put(delegate, this);
-            put("__widgets__", this, widgetMap);
+            defineProperty(WIDGETS_PROPERTY, widgetMap, DONTENUM|PERMANENT);
         }
     }
 
@@ -126,7 +131,7 @@ public class ScriptableWidget extends ScriptableObject {
 
     private void deleteWrapper(Widget w) {
         if (delegate instanceof Form) {
-            Map widgetMap = (Map)super.get("__widgets__", this);
+            Map widgetMap = (Map)super.get(WIDGETS_PROPERTY, this);
             widgetMap.remove(w);
         }
     }
@@ -134,13 +139,13 @@ public class ScriptableWidget extends ScriptableObject {
     private ScriptableWidget wrap(Widget w) {
         if (w == null) return null;
         if (delegate instanceof Form) {
-            Map widgetMap = (Map)super.get("__widgets__", this);
+            Map widgetMap = (Map)super.get(WIDGETS_PROPERTY, this);
             ScriptableWidget result = null;
             result = (ScriptableWidget)widgetMap.get(w);
             if (result == null) {
                 result = new ScriptableWidget(w);
                 result.formWidget = this;
-                result.setPrototype(getClassPrototype(this, "Widget"));
+                result.setPrototype(getClassPrototype(this, getClassName()));
                 result.setParentScope(getParentScope());
                 widgetMap.put(w, result);
             }
@@ -246,7 +251,7 @@ public class ScriptableWidget extends ScriptableObject {
                     newValues[i] = values[i];
                 }
                 i++;
-                for (;i < values.length;i++) {
+                for (;i < values.length; i++) {
                     newValues[i-1] = values[i];
                 }
                 field.setValues(newValues);
@@ -284,25 +289,19 @@ public class ScriptableWidget extends ScriptableObject {
         }
     }
 
-    public Integer jsGet_length() {
+    public Object jsGet_length() {
         if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             return new Integer(repeater.getSize());
         }
-        return null;
+        return Undefined.instance;
     }
 
     public void jsSet_value(Object value) throws JavaScriptException {
-        if (delegate instanceof Field || delegate instanceof Output) {
-            // fix me: Unify Field and Output with a "DataTypeWidget" interface
+        if (delegate instanceof DataWidget) {
             value = unwrap(value);
             if (value != null) {
-                Datatype datatype;
-                if (delegate instanceof Field) {
-                    datatype = ((Field)delegate).getFieldDefinition().getDatatype();
-                } else {
-                    datatype = ((Output)delegate).getOutputDefinition().getDatatype();
-                }
+                Datatype datatype = ((DataWidget)delegate).getDatatype();
                 Class typeClass = datatype.getTypeClass();
                 if (typeClass == String.class) {
                     value = Context.toString(value);
@@ -419,7 +418,6 @@ public class ScriptableWidget extends ScriptableObject {
             }
             field.setValues(values);
         } else {
-            System.out.println("setting value of " + delegate.getClass());
             delegate.setValue(value);
         }
     }
@@ -468,40 +466,30 @@ public class ScriptableWidget extends ScriptableObject {
         return wrap(sub);
     }
 
-    public void jsFunction_setValidationError(String message,
-                                              boolean i18n,
+    public void jsFunction_setValidationError(String message, 
                                               Object parameters) {
-        if (delegate instanceof Field || 
-            delegate instanceof Upload) {
+        if (delegate instanceof ValidationErrorAware) {
             String[] parms = null;
             if (parameters != null && parameters != Undefined.instance) {
                 Scriptable obj = Context.toObject(parameters, this);
                 int len = (int)
                     Context.toNumber(getProperty(obj, "length"));
-                if (len > 0) {
-                    parms = new String[len];
-                    for (int i = 0; i < len; i++) {
-                        parms[i] = Context.toString(getProperty(obj, i));
-                    }
+                parms = new String[len];
+                for (int i = 0; i < len; i++) {
+                    parms[i] = Context.toString(getProperty(obj, i));
                 }
             }
             ValidationError validationError = null;
             if (message != null) {
-                if (parms != null) {
+                if (parms != null && parms.length > 0) {
                     validationError = 
                         new ValidationError(message, parms);
                 } else {
                     validationError = 
-                        new ValidationError(message, i18n);
+                        new ValidationError(message, parms != null);
                 }
             }
-            // fix me: unify Upload and Field into one interface:
-            // Validatable or whatever
-            if (delegate instanceof Upload) {
-                ((Upload)delegate).setValidationError(validationError);
-            } else {
-                ((Field)delegate).setValidationError(validationError);
-            }
+            ((ValidationErrorAware)delegate).setValidationError(validationError);
             formWidget.notifyValidationErrorListener(this, validationError);
         }
     }
@@ -523,8 +511,6 @@ public class ScriptableWidget extends ScriptableObject {
             }
         }
     }
-
-
 
     public Widget jsFunction_unwrap() {
         return delegate;
@@ -580,7 +566,7 @@ public class ScriptableWidget extends ScriptableObject {
             }
         }
     }
-    
+
     private void handleEvent(WidgetEvent e) {
         if (e instanceof ActionEvent) {
             Object obj = super.get("onClick", this);
@@ -608,7 +594,7 @@ public class ScriptableWidget extends ScriptableObject {
                     Scriptable thisObj = scope;
                     Context cx = Context.getCurrentContext();
                     args[0] = vce.getOldValue();
-                    args[1] = vce.getNewValue();
+                    args[0] = vce.getNewValue();
                     fun.call(cx, scope, thisObj, args);
                 } catch (Exception exc) {
                     throw Context.reportRuntimeError(exc.getMessage());
@@ -617,33 +603,23 @@ public class ScriptableWidget extends ScriptableObject {
         }
     }
 
-    public void jsFunction_setSelectionList(Object arg, Object valuePathArg, Object labelPathArg) throws Exception {
-        if (delegate instanceof Field ||
-            delegate instanceof MultiValueField) {
+    public void jsFunction_setSelectionList(Object arg, 
+                                            Object valuePathArg, 
+                                            Object labelPathArg) 
+        throws Exception {
+        if (delegate instanceof SelectableWidget) {
             arg = unwrap(arg);
             if (valuePathArg != Undefined.instance && labelPathArg != Undefined.instance) {
                 String valuePath = Context.toString(valuePathArg);
                 String labelPath = Context.toString(labelPathArg);
-                if (delegate instanceof Field) {
-                    ((Field)delegate).setSelectionList(arg, valuePath, labelPath);
-                } else {
-                    ((MultiValueField)delegate).setSelectionList(arg, valuePath, labelPath);
-                }
+                ((SelectableWidget)delegate).setSelectionList(arg, valuePath, labelPath);
             } else {
                 if (arg instanceof SelectionList) {
                     SelectionList selectionList = (SelectionList)arg;
-                    if (delegate instanceof Field) {
-                        ((Field)delegate).setSelectionList(selectionList);
-                    } else {
-                        ((MultiValueField)delegate).setSelectionList(selectionList);
-                    }
+                    ((SelectableWidget)delegate).setSelectionList(selectionList);
                 } else {
                     String str = Context.toString(arg);
-                    if (delegate instanceof Field) {
-                        ((Field)delegate).setSelectionList(str);
-                    } else {
-                        ((MultiValueField)delegate).setSelectionList(str);
-                    }
+                    ((SelectableWidget)delegate).setSelectionList(str);
                 }
             }
         }
