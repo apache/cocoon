@@ -17,13 +17,11 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-04 21:11:17 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-31 16:41:58 $
  */
 public abstract class XSPGenerator extends AbstractServerPage {
-  /** The XSP Object Model */
-  //protected Cocoon cocoon;
+
   protected Parser parser;
-  // Request and Response are inherited from AbstractGenerator 
 
   /**
    * Set the current <code>ComponentManager</code> instance used by this
@@ -34,7 +32,6 @@ public abstract class XSPGenerator extends AbstractServerPage {
   public void setComponentManager(ComponentManager manager) {
     super.setComponentManager(manager);
 
-    //this.cocoon = (Cocoon) this.manager.getComponent("cocoon");
     this.parser = (Parser) this.manager.getComponent("parser");
   }
 }

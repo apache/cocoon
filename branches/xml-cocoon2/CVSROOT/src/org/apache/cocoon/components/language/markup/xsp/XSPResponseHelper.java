@@ -13,22 +13,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
-
 import org.xml.sax.SAXException;
+
+import org.apache.cocoon.Cocoon;
 
 /**
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:21 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-31 16:42:00 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
    * Assign values to the object's namespace uri and prefix
    */
   static {
-    URI = XSP_RESPONSE_URI;
-    PREFIX = XSP_RESPONSE_PREFIX;
+    URI = Cocoon.XSP_RESPONSE_URI;
+    PREFIX = Cocoon.XSP_RESPONSE_PREFIX;
   }
 
   /**
