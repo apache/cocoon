@@ -94,6 +94,19 @@
      <map:serialize type="xml"/>
     </map:match>
     
+   <!-- =============  Source description ============= -->
+   <map:match pattern="description/*/**">
+    <map:generate type="traverse" src="slide://{1}@{global:namespace}/{2}">
+     <map:parameter name="properties" value="true"/>
+     <map:parameter name="permissions" value="false"/>
+     <map:parameter name="locks" value="true"/>
+     <map:parameter name="version" value="false"/>
+     <map:parameter name="depth" value="1"/>
+    </map:generate>
+    <map:serialize type="xml"/>
+   </map:match>
+
+  
   </map:pipeline>
 
 
