@@ -68,7 +68,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.w3c.tidy.Tidy;
 import org.xml.sax.Attributes;
@@ -147,8 +147,8 @@ public class HTMLTransformer
             org.apache.excalibur.source.SourceResolver resolver = null;
             Source configSource = null;
             try {
-                resolver =
-                    (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                resolver = (org.apache.excalibur.source.SourceResolver)
+                           this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
                 configSource = resolver.resolveURI(configUrl);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug(
@@ -214,12 +214,10 @@ public class HTMLTransformer
                 getLogger().warn(stringWriter.toString());
             }
 
-            DOMStreamer streamer =
-                new DOMStreamer(this.contentHandler, this.lexicalHandler);
-            streamer.stream(doc);
+            IncludeXMLConsumer.includeNode(doc, this.contentHandler, this.lexicalHandler);
         } catch (Exception e) {
             throw new ProcessingException(
-                "Exception in NormalizerTransformer.normalize()",
+                "Exception in HTMLTransformer.normalize()",
                 e);
         }
     }
