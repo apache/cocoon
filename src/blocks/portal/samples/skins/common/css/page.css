@@ -1,5 +1,5 @@
 /*
-* Copyright 1999-2004 The Apache Software Foundation
+* Copyright 1999-2005 The Apache Software Foundation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,3 +19,10 @@ body { background-color: #FFFFFF; margin: 0px 0px 0px 0px; font-family: Verdana,
 .tab a:link {   text-decoration : none; color: #000066;  }
 .tab a:visited { text-decoration : none; color: #2A4A6D }
 .tab a:hover { color: #0000FF; }
+
+p,li  { font-size:10pt;
+        line-height:12pt;
+        font-family:Verdana, Helvetica, sans-serif;
+        letter-spacing:0.2mm;
+        word-spacing:0.8mm;
+        color:black; }
