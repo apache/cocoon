@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<xlog xpath="/logkit/targets" 
+      remove="/logkit/targets/cocoon[@id='miles']">
+    
+    <cocoon id="apples">
+      <filename>${context-root}/WEB-INF/logs/apples.log</filename>
+
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+    
+</xlog>
