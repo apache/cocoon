@@ -93,9 +93,9 @@ public class ConvertNumberTag extends ConverterTag {
         return super.doStartTag(namespaceURI, localName, qName, atts);
     }
 
-    protected Converter getConverter() {
+    protected Converter createConverter() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
-        NumberConverter converter = (NumberConverter) super.getConverter();
+        NumberConverter converter = (NumberConverter) super.createConverter();
 
         converter.setCurrencyCode((String) tag.evaluate(currencyCode));
         converter.setCurrencySymbol((String) tag.evaluate(currencySymbol));

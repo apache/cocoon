@@ -44,9 +44,9 @@ public class ValidateLongRangeTag extends ValidatorTag {
         return super.doStartTag(namespaceURI, localName, qName, atts);
     }
 
-    protected Validator getValidator() {
+    protected Validator createValidator() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
-        LongRangeValidator validator = (LongRangeValidator) super.getValidator();
+        LongRangeValidator validator = (LongRangeValidator) super.createValidator();
 
         if (maximum != null) {
             validator.setMaximum(tag.evaluateInteger(maximum));

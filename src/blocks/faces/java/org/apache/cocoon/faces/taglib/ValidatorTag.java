@@ -25,6 +25,9 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.validator.Validator;
 
 /**
+ * Base class for validator tags.
+ * Can be extended to implement custom validators.
+ * 
  * @version CVS $Id$
  */
 public class ValidatorTag extends TagSupport {
@@ -50,13 +53,16 @@ public class ValidatorTag extends TagSupport {
             return 0;
         }
 
-        Validator validator = getValidator();
+        Validator validator = createValidator();
         ((EditableValueHolder)tag.getComponentInstance()).addValidator(validator);
 
         return SKIP_BODY;
     }
 
-    protected Validator getValidator() {
+    /**
+     * Override to create custom validator
+     */
+    protected Validator createValidator() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
         String validatorIdVal = (String) tag.evaluate(validatorId);
         return tag.getApplication().createValidator(validatorIdVal);

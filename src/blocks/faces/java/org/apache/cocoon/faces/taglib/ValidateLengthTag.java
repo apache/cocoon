@@ -45,9 +45,9 @@ public class ValidateLengthTag extends ValidatorTag {
         return super.doStartTag(namespaceURI, localName, qName, atts);
     }
 
-    protected Validator getValidator() {
+    protected Validator createValidator() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
-        LengthValidator validator = (LengthValidator) super.getValidator();
+        LengthValidator validator = (LengthValidator) super.createValidator();
 
         if (maximum != null) {
             validator.setMaximum(tag.evaluateInteger(maximum));

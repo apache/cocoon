@@ -44,9 +44,9 @@ public class ValidateDoubleRangeTag extends ValidatorTag {
         return super.doStartTag(namespaceURI, localName, qName, atts);
     }
 
-    protected Validator getValidator() {
+    protected Validator createValidator() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
-        DoubleRangeValidator validator = (DoubleRangeValidator) super.getValidator();
+        DoubleRangeValidator validator = (DoubleRangeValidator) super.createValidator();
 
         if (maximum != null) {
             validator.setMaximum(tag.evaluateInteger(maximum));
