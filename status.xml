@@ -181,6 +181,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    Adding concept of parent-aware components, making e.g. the usage of 
+    selectors with a component manager hierarchy much easier.
+  </action>
   <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="	maciejka@tiger.com.pl">
     Added/fixed internationalization support for HSSFSerializer by setting the output encoding
     hardcoded to UTF-16. It's obviously only a hack, but so it's at least usable for more people.

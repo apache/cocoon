@@ -51,11 +51,13 @@
 package org.apache.cocoon.components;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.component.Component;
@@ -63,12 +65,11 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Recomposable;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
-
-import java.net.MalformedURLException;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -84,7 +85,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.11 2003/04/29 10:45:22 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.12 2003/06/18 11:06:31 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -108,6 +109,9 @@ implements SourceResolver
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
     
+    /** The parent component manager for implementing parent aware components */
+    private ComponentManager parentManager;
+    
     /** Create the ComponentManager */
     public CocoonComponentManager() {
         super( null, Thread.currentThread().getContextClassLoader() );
@@ -121,11 +125,13 @@ implements SourceResolver
     /** Create the ComponentManager with a Classloader and parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager, final ClassLoader loader) {
         super( manager, loader );
+        this.parentManager = manager;
     }
 
     /** Create the ComponentManager with a parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager) {
         super( manager);
+        this.parentManager = manager;
     }
 
     /**
@@ -455,6 +461,29 @@ implements SourceResolver
      */
     public void release( final Source source ) {
         this.sourceResolver.release( source );
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#addComponent(java.lang.String, java.lang.Class, org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void addComponent(String role, Class clazz, Configuration conf)
+    throws ComponentException {
+        super.addComponent(role, clazz, conf);
+        if ( ParentAware.class.isAssignableFrom( clazz ) ) {
+            if ( parentManager != null && parentManager.hasComponent( role ) ) {
+                // lookup new component
+                Component component = null;
+                try {
+                    component = this.lookup( role );
+                    ((ParentAware)component).setParentLocator( new ComponentLocatorImpl(this.parentManager, role ));
+                } catch (ComponentException ignore) {
+                    // we don't set the parent then
+                } finally {
+                    this.release( component );
+                }
+                
+            }
+        }
     }
 
 }
