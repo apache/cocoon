@@ -175,6 +175,7 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="site" value="../xml-site/targets/cocoon"/>
 
     <available property="xt.present" classname="com.jclark.xsl.sax.XSLProcessor"/>
+    <available property="saxon.present" classname="com.icl.saxon.Stylesheet"/>
     <available property="fesi.present" classname="FESI.jslib.JSGlobalObject"/>
     <available property="jndi.present" classname="javax.naming.Name"/>
     <available property="projectx.present" classname="com.sun.xml.parser.Parser"/>
@@ -237,6 +238,13 @@ a Java 1.2 compatible JVM is required for this target.
              filtering="on"/>
   </target>
 
+  <target name="prepare-saxon" depends="init" if="saxon.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/SAXON*"
+             filtering="on"/>
+  </target>
+
   <target name="prepare-ldap" depends="init" if="jndi.present">
     <copydir src="${src.dir}"
              dest="${build.src}"
@@ -254,7 +262,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-ecma, prepare-ldap">
+  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-saxon, prepare-ecma, prepare-ldap">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
@@ -262,7 +270,7 @@ a Java 1.2 compatible JVM is required for this target.
     <!-- copy src files -->
     <copydir src="${src.dir}"
              dest="${build.src}"
-             excludes="**/parser/Sun*, **/XT*, **/ldap/**, **/ecmascript/**"
+             excludes="**/parser/Sun*, **/XT*, **/SAXON*, **/ldap/**, **/ecmascript/**"
              filtering="on"/>
   </target>
 

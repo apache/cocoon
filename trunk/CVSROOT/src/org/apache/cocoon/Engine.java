@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.50 2001-01-24 15:52:22 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.51 2001-01-26 21:07:41 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.50 $ $Date: 2001-01-24 15:52:22 $
+ * @version $Revision: 1.51 $ $Date: 2001-01-26 21:07:41 $
  */
 
 public class Engine implements Defaults {
@@ -143,16 +143,6 @@ public class Engine implements Defaults {
         // Register the logger
         manager.setRole("logger", logger);
 
-        // Create the parser and register it
-        parser = (Parser) manager.create(getConfigTr(PARSER_PROP,
-            PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
-        manager.setRole("parser", parser);
-
-        // Create the transformer and register it
-        transformer = (Transformer) manager.create(getConfigTr(TRANSFORMER_PROP,
-            TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
-        manager.setRole("transformer", transformer);
-
         // Create the store and register it
         store = (Store) manager.create(getConfigTr(STORE_PROP,
             STORE_DEFAULT), configurations.getConfigurations(STORE_PROP));
@@ -162,6 +152,15 @@ public class Engine implements Defaults {
         cache = (Cache) manager.create(getConfigTr(CACHE_PROP,
             CACHE_DEFAULT), configurations.getConfigurations(CACHE_PROP));
         manager.setRole("cache", cache);
+        // Create the parser and register it
+        parser = (Parser) manager.create(getConfigTr(PARSER_PROP,
+            PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
+        manager.setRole("parser", parser);
+
+        // Create the transformer and register it
+        transformer = (Transformer) manager.create(getConfigTr(TRANSFORMER_PROP,
+            TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
+        manager.setRole("transformer", transformer);
 
         // Create the interpreter factory and register it
         interpreters = (InterpreterFactory) manager.create(
