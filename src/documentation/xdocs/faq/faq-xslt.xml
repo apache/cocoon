@@ -205,7 +205,9 @@ first one perform inclusion and the second one perform transformation. However,
 be mindful of some unresolved caching issues in Cocoon related to the document() function.
 At this time, Cocoon is unable to check validity of content included via the document()
 function. In addition, the document() function implemented by Xalan is inefficient. See:
-  http://issues.apache.org/bugzilla/show_bug.cgi?id=4257
+  <link href="http://issues.apache.org/bugzilla/show_bug.cgi?id=4257">Issue 4257</link>
+  and
+  <link href="http://issues.apache.org/bugzilla/show_bug.cgi?id=28341">Issue 28341</link>
 Until this bug is fixed, consider using Saxon instead for document() function-related parsing
 needs.
   </p>
