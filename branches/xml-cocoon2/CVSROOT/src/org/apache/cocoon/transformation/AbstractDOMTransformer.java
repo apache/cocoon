@@ -57,7 +57,7 @@ public abstract class AbstractDOMTransformer extends DOMBuilder
 	/**
 	 * Set the component manager.
 	 */
-	public void setComponentManager(ComponentManager manager) {
+	public void compose(ComponentManager manager) {
 		this.manager = manager;
 		// Get a parser and use it as a DOM factory
 		Parser p = (Parser)manager.lookup(Roles.PARSER);
