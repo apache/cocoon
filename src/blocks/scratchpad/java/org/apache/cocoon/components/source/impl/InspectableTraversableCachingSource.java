@@ -58,6 +58,13 @@ implements InspectableSource {
         final InspectableSourceMeta imeta = ((InspectableSourceMeta) super.response.getExtra());
         SourceProperty property = imeta.getSourceProperty(namespace, name);
         if (property == null) {
+            // In the case of webdav the source cannot
+            // determine all available properties beforehand.
+            // Therefore, although we initialized the cached
+            // response by calling getSourceProperties(),
+            // this does not mean this particular property
+            // was returned and cached. Hence we try to 
+            // get it here still and remember if it was null.
             property = isource.getSourceProperty(namespace, name);
             if (property == null) {
                 // remember that this property is null
@@ -96,12 +103,7 @@ implements InspectableSource {
             return null;
         }
         final InspectableSourceMeta imeta = ((InspectableSourceMeta) super.response.getExtra());
-        SourceProperty[] properties = imeta.getSourceProperties();
-        if (properties == null) {
-            properties = isource.getSourceProperties();
-            imeta.setSourceProperties(properties);
-        }
-        return properties;
+        return imeta.getSourceProperties();
     }
 
     public void removeSourceProperty(String namespace, String name) throws SourceException {
@@ -121,7 +123,13 @@ implements InspectableSource {
     protected SourceMeta createMeta() {
         return new InspectableSourceMeta();
     }
-    
+
+    protected void initMeta(SourceMeta meta, Source source) throws IOException {
+        super.initMeta(meta, source);
+        final InspectableSourceMeta imeta = ((InspectableSourceMeta) super.response.getExtra());
+        imeta.setSourceProperties(isource.getSourceProperties());
+    }
+
     protected TraversableCachingSource newSource(String uri, Source wrapped) {
         return  new InspectableTraversableCachingSource(super.protocol,
                                                         uri,
@@ -133,12 +141,9 @@ implements InspectableSource {
     
     protected static class InspectableSourceMeta extends TraversableSourceMeta {
         
-        protected static final SourceProperty NULL_PROPERTY = new SourceProperty("cocoon","isnull");
+        protected static final SourceProperty NULL_PROPERTY = new SourceProperty("cocoon", "isnull");
         
         private Map properties;
-        
-        /* flag for determining whether we have all properties */
-        private boolean all;
         
         protected SourceProperty getSourceProperty(String namespace, String name) {
             if (properties == null) return null;
@@ -155,7 +160,7 @@ implements InspectableSource {
         }
 
         protected SourceProperty[] getSourceProperties() {
-            if (this.properties == null || !all) return null;
+            if (this.properties == null) return null;
             final Collection values = this.properties.values();
             return (SourceProperty[]) values.toArray(new SourceProperty[values.size()]);
         }
@@ -167,7 +172,6 @@ implements InspectableSource {
             for (int i = 0; i < props.length; i++) {
                 setSourceProperty(props[i]);
             }
-            all = true;
         }
         
         protected void removeSourceProperty(String namespace, String name) {
