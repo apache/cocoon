@@ -25,13 +25,13 @@ import org.apache.cocoon.components.elementprocessor.types.Attribute;
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
-
+import org.apache.poi.hssf.util.Region;
 /**
  * Implementation of ElementProcessor to handle the "Cell" tag.
  * This element has several attributes and may contain other elements.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPCell.java,v 1.5 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id: EPCell.java,v 1.6 2004/07/05 18:38:03 tcurdt Exp $
  */
 public class EPCell extends BaseElementProcessor implements LocaleAware {
 
@@ -129,15 +129,16 @@ public class EPCell extends BaseElementProcessor implements LocaleAware {
      * @exception IOException
      * @exception NullPointerException
      */
-    public int getColumns() throws IOException, NullPointerException {
-        if (!_cols_fetched) {
-            String valueString = getValue(_cols_attribute);
-            if (valueString != null) {
-                _cols = NumericConverter.extractPositiveInteger(valueString);
+     public int getColumns() throws IOException, NullPointerException {
+       if (!_cols_fetched) {
+           String valueString = getValue(_cols_attribute);
+           if (valueString != null) {
+               _cols = NumericConverter.extractPositiveInteger(valueString);
+				_cols_fetched = true;
             }
-            _cols_fetched = true;
+            
         }
-        return _cols.intValue();
+        return _cols_fetched ?_cols.intValue() : -1;
     }
 
     /**
@@ -146,15 +147,16 @@ public class EPCell extends BaseElementProcessor implements LocaleAware {
      * @exception IOException
      * @exception NullPointerException
      */
-    public int getRows() throws IOException, NullPointerException {
-        if (!_rows_fetched) {
-            String valueString = getValue(_rows_attribute);
-            if (valueString != null) {
-                _rows = NumericConverter.extractPositiveInteger(valueString);
-            }
-            _rows_fetched = true;
+     public int getRows() throws IOException, NullPointerException {
+      if (!_rows_fetched) {
+           String valueString = getValue(_rows_attribute);
+           if (valueString != null) {
+               _rows = NumericConverter.extractPositiveInteger(valueString);
+			   _rows_fetched = true;
+           }
+           
         }
-        return _rows.intValue();
+        return _rows_fetched ? _rows.intValue() : -1 ;
     }
 
     /**
@@ -227,6 +229,11 @@ public class EPCell extends BaseElementProcessor implements LocaleAware {
         if (content != null && !content.trim().equals("")) {
             getCell().setContent(getContent());
         }
+        
+        if(getColumns() != -1 && getRows() != -1) {
+            getSheet().addMergedRegion(new Region(getRow(),(short)getColumn(),getRow() + getRows() - 1,(short)(getColumn() + getColumns() - 1)));
+        }
+
     }
 
     /**
