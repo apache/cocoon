@@ -62,13 +62,13 @@ import org.apache.avalon.framework.context.DefaultContext;
  * getting objects from the object model.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.1 2003/05/23 09:18:48 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.2 2003/05/23 12:14:04 cziegeler Exp $
  */
 
 public class ComponentContext 
     extends DefaultContext {
 
-    protected static final String OBJECT_MODEL_KEY_PREFIX = ContextHelper.CONTEXT_OBJECT_MODEL + '/';
+    protected static final String OBJECT_MODEL_KEY_PREFIX = ContextHelper.CONTEXT_OBJECT_MODEL + '.';
     
     /**
      * Create a Context with specified data and parent.
