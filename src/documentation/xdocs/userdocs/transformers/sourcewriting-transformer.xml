@@ -21,8 +21,6 @@
 				<li>Class: org.apache.cocoon.transformation.SourceWritingTransformer</li>
 				<li>Cacheable: no.</li>
 			</ul>
-			<p>If you have built Cocoon with the ScratchPad included (using: <code>./build.sh -Dinclude.scratchpad.libs=yes webapp</code>), there is a set of samples set up, including tests at <code>http://localhost:8080/cocoon/mount/editor/tests</code> and a demonstration editor at <code>http://localhost:8080/cocoon/mount/editor/edit/</code></p>
-			<note>Please beware of putting these samples on a public-facing server.</note>
 		</s1>
 		<s1 title="The Tags">
 				<source>
