@@ -18,7 +18,7 @@
       <!-- for non-string datatypes, a convertor must be specified. These are
       the same convertors as can be used in form definitions, but require an
       extra datatype attribute. Here we use the default convertor for longs. -->
-      <wd:convertor datatype="long"/>
+      <wd:convertor datatype="integer"/>
     </wb:value>
 
     <wb:value id="choose" path="choose/@value">
