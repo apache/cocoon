@@ -56,8 +56,9 @@ import org.apache.cocoon.components.validation.Validator;
 import org.apache.cocoon.components.validation.Violation;
 import org.xml.sax.InputSource;
 
-import java.io.File;
-import java.io.FileInputStream;
+//import java.io.File;
+//import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ import junit.swingui.TestRunner;
  *
  * <p>Uses file src/test/org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml.
  *
- * @version CVS $Id: ZValidationTest.java,v 1.3 2003/03/18 01:01:27 vgritsenko Exp $
+ * @version CVS $Id: ZValidationTest.java,v 1.4 2003/04/25 08:34:59 stephan Exp $
  */
 public class ZValidationTest extends TestCase {
 
@@ -82,13 +83,15 @@ public class ZValidationTest extends TestCase {
 
     private void testSchema(String schema, String phase, List violations) {
         // use custom schema
-        File file = new File(schema);
-        if (!file.exists()) {
+        //File file = new File(schema);
+        InputStream in = getClass().getClassLoader().getResourceAsStream(schema);
+        
+        if (in==null) {
             fail("Error: schema file " + schema + " not found");
         }
 
         try {
-            InputSource is = new InputSource(new FileInputStream(file));
+            InputSource is = new InputSource(in);
             SchemaFactory schf =
                 SchemaFactory.lookup(SchemaFactory.NAMESPACE_SCHEMATRON);
             Schema sch = schf.compileSchema(is);
@@ -168,8 +171,7 @@ public class ZValidationTest extends TestCase {
         violation.setMessage("The counter should be > 0.");
         violations.add(violation);
 
-        testSchema("src/test/org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml",
-                   null, violations);
+        testSchema("org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml", null, violations);
     }
 
     public void testSchema_PhaseNew() {
@@ -186,15 +188,6 @@ public class ZValidationTest extends TestCase {
         violation.setMessage("Animal name should be at least 4 characters.");
         violations.add(violation);
 
-        testSchema("src/test/org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml",
-                   "New", violations);
-    }
-
-    /**
-     * The main program for this test.
-     */
-    public static void main(final String[] args) throws Exception {
-        final String[] testCaseName = { ZValidationTest.class.getName() };
-        TestRunner.main(testCaseName);
+        testSchema("org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml", "New", violations);
     }
 }
