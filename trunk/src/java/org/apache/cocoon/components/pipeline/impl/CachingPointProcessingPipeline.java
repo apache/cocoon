@@ -50,11 +50,11 @@
 */
 package org.apache.cocoon.components.pipeline.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
@@ -78,7 +78,7 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.4 2003/08/28 06:09:29 cziegeler Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.5 2003/10/27 08:09:36 cziegeler Exp $
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline implements Configurable {
@@ -425,7 +425,7 @@ public class CachingPointProcessingPipeline
                     this.connect(environment, prev, next);
                 }
 
-            } catch ( ComponentException e ) {
+            } catch ( ServiceException e ) {
                 throw new ProcessingException("Could not connect pipeline.", e);
             }
     }
@@ -434,12 +434,12 @@ public class CachingPointProcessingPipeline
     /**
      * Recyclable Interface
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
 
         Iterator itt = this.xmlSerializerArray.iterator();
         while (itt.hasNext()) {
-            this.manager.release((XMLSerializer) itt.next());
+            this.manager.release(itt.next());
         }
         this.isCachePoint.clear();
         this.xmlSerializerArray.clear();

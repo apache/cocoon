@@ -51,9 +51,9 @@
 package org.apache.cocoon.components.pipeline.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.components.pipeline.AbstractProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLDeserializer;
@@ -66,7 +66,7 @@ import org.apache.cocoon.components.sax.XMLSerializer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.1 2003/07/31 12:39:04 cziegeler Exp $
+ * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.2 2003/10/27 08:09:36 cziegeler Exp $
  */
 public abstract class BaseCachingProcessingPipeline
     extends AbstractProcessingPipeline
@@ -94,7 +94,7 @@ public abstract class BaseCachingProcessingPipeline
         
         try {
             this.cache = (Cache)this.manager.lookup(cacheRole);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ParameterException("Unable to lookup cache: " + cacheRole, ce);
         }
     }
@@ -102,14 +102,14 @@ public abstract class BaseCachingProcessingPipeline
     /**
      * Recyclable Interface
      */
-    public void recycle() {
+    public void reset() {
         this.manager.release( this.xmlDeserializer );
         this.xmlDeserializer = null;
 
         this.manager.release( this.xmlSerializer );
         this.xmlSerializer = null;
 
-        super.recycle();
+        super.reset();
     }
 
     /**

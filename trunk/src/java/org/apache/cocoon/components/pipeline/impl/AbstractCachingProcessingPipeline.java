@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.15 2003/10/15 18:03:53 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.16 2003/10/27 08:09:36 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -896,7 +896,7 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Recyclable Interface
      */
-    public void recycle() {
+    public void reset() {
 
         this.generatorRole = null;
         this.transformerRoles.clear();
@@ -909,7 +909,7 @@ public abstract class AbstractCachingProcessingPipeline
         this.toCacheKey = null;
         this.toCacheSourceValidities = null;
 
-        super.recycle();
+        super.reset();
     }
 
 }

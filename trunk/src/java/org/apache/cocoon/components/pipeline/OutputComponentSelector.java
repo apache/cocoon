@@ -50,17 +50,17 @@
 */
 package org.apache.cocoon.components.pipeline;
 
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 /**
  * A <code>ComponentSelector</code> for output components used by a {@link ProcessingPipeline}.
  * This selector is able to associate a MIME type to a hint.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: OutputComponentSelector.java,v 1.1 2003/03/09 00:09:07 pier Exp $
+ * @version CVS $Id: OutputComponentSelector.java,v 1.2 2003/10/27 08:09:36 cziegeler Exp $
  */
 
-public interface OutputComponentSelector extends ComponentSelector {
+public interface OutputComponentSelector extends ServiceSelector {
 
     /**
      * Get the MIME type for a given hint.

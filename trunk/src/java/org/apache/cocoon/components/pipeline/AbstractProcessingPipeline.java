@@ -58,15 +58,16 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -80,6 +81,7 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.excalibur.mpool.Resettable;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
@@ -88,17 +90,17 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.10 2003/10/19 16:12:54 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.11 2003/10/27 08:09:36 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Recyclable {
+  implements ProcessingPipeline, Parameterizable, Resettable, Serviceable {
 
     // Generator stuff
     protected Generator generator;
     protected Parameters generatorParam;
     protected String generatorSource;
-    protected ComponentSelector generatorSelector;
+    protected ServiceSelector generatorSelector;
 
     // Transformer stuff
     protected ArrayList transformers = new ArrayList();
@@ -127,11 +129,11 @@ public abstract class AbstractProcessingPipeline
      */
     protected XMLConsumer lastConsumer;
 
-    /** the component manager set with compose() */
-    protected ComponentManager manager;
+    /** the component manager set with service() */
+    protected ServiceManager manager;
 
-    /** the component manager set with compose() and recompose() */
-    protected ComponentManager newManager;
+    /** the component manager set with service() and recompose() */
+    protected ServiceManager newManager;
 
     /** The configuration */
     protected Parameters configuration;
@@ -155,10 +157,10 @@ public abstract class AbstractProcessingPipeline
     protected Processor processor;
     
     /**
-     * Composable Interface
+     * Serviceable Interface
      */
-    public void compose (ComponentManager manager)
-    throws ComponentException {
+    public void service(ServiceManager manager)
+    throws ServiceException {
         this.manager = manager;
         this.newManager = manager;
     }
@@ -248,13 +250,13 @@ public abstract class AbstractProcessingPipeline
             throw new ProcessingException ("Reader already set. You cannot use a reader and a generator for one pipeline.");
         }
         try {
-            this.generatorSelector = (ComponentSelector) this.newManager.lookup(Generator.ROLE + "Selector");
-        } catch (ComponentException ce) {
+            this.generatorSelector = (ServiceSelector) this.newManager.lookup(Generator.ROLE + "Selector");
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of generator selector failed.", ce);
         }
         try {
             this.generator = (Generator) this.generatorSelector.select(role);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of generator for role '"+role+"' failed.", ce);
         }
         this.generatorSource = source;
@@ -281,16 +283,16 @@ public abstract class AbstractProcessingPipeline
         if (this.generator == null) {
             throw new ProcessingException ("You must set a generator first before you can use a transformer.");
         }
-        ComponentSelector selector = null;
+        ServiceSelector selector = null;
         try {
-            selector = (ComponentSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
-        } catch (ComponentException ce) {
+            selector = (ServiceSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of transformer selector failed.", ce);
         }
         try {
             this.transformers.add(selector.select(role));
             this.transformerSelectors.add(selector);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of transformer for role '"+role+"' failed.", ce);
         }
         this.transformerSources.add(source);
@@ -315,12 +317,12 @@ public abstract class AbstractProcessingPipeline
 
         try {
             this.serializerSelector = (OutputComponentSelector) this.newManager.lookup(Serializer.ROLE + "Selector");
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of serializer selector failed.", ce);
         }
         try {
             this.serializer = (Serializer)serializerSelector.select(role);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of serializer for role '"+role+"' failed.", ce);
         }
         this.serializerSource = source;
@@ -345,12 +347,12 @@ public abstract class AbstractProcessingPipeline
 
         try {
             this.readerSelector = (OutputComponentSelector) this.newManager.lookup(Reader.ROLE + "Selector");
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of reader selector failed.", ce);
         }
         try {
             this.reader = (Reader)readerSelector.select(role);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of reader for role '"+role+"' failed.", ce);
         }
         this.readerSource = source;
@@ -632,7 +634,7 @@ public abstract class AbstractProcessingPipeline
         return true;
     }
 
-    public void recycle() {
+    public void reset() {
         // release reader.
         if ( this.readerSelector != null) {
             this.readerSelector.release(this.reader);
@@ -654,9 +656,9 @@ public abstract class AbstractProcessingPipeline
         // Release transformers
         int size = this.transformerSelectors.size();
         for (int i = 0; i < size; i++) {
-            final ComponentSelector selector =
-                (ComponentSelector)this.transformerSelectors.get(i);
-            selector.release( (Component)this.transformers.get(i) );
+            final ServiceSelector selector =
+                (ServiceSelector)this.transformerSelectors.get(i);
+            selector.release( this.transformers.get(i) );
             this.newManager.release( selector );
         }
         this.transformerSelectors.clear();

@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.components.pipeline.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
@@ -72,7 +72,7 @@ import java.util.Iterator;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.3 2003/08/07 08:52:15 cziegeler Exp $
+ * @version CVS $Id: CachingProcessingPipeline.java,v 1.4 2003/10/27 08:09:36 cziegeler Exp $
  */
 public class CachingProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -173,7 +173,7 @@ public class CachingProcessingPipeline
                     this.connect(environment, prev, next);
                 }
 
-            } catch ( ComponentException e ) {
+            } catch ( ServiceException e ) {
                 throw new ProcessingException("Could not connect pipeline.", e);
             }
     }

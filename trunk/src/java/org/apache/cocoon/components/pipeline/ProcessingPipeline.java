@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.pipeline;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -79,10 +78,10 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.3 2003/05/30 09:23:14 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.4 2003/10/27 08:09:36 cziegeler Exp $
  */
 public interface ProcessingPipeline
-       extends   Component, Recomposable {
+       extends   Recomposable {
 
     String ROLE = ProcessingPipeline.class.getName();
 
