@@ -25,6 +25,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * This class acts like a Factory to instantiate the correct version
@@ -72,16 +73,29 @@ implements ComponentHandler {
     throws Exception {
         int numInterfaces = 0;
 
+        final ServiceInfo info = new ServiceInfo();
+        info.setServiceClass(componentClass);
+        info.setConfiguration(configuration);
+        
+        // Early check for Composable
+        if ( Composable.class.isAssignableFrom( componentClass ) ) {
+            throw new Exception("Interface Composable is not supported anymore. Please change class "
+                                + componentClass.getName() + " to use Serviceable instead.");
+        }
+
         if( SingleThreaded.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
+            info.setModel(ServiceInfo.MODEL_PRIMITIVE);
         }
 
         if( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
+            info.setModel(ServiceInfo.MODEL_SINGLETON);
         }
 
         if( Poolable.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
+            info.setModel(ServiceInfo.MODEL_POOLED);
         }
 
         if( numInterfaces > 1 ) {
@@ -90,27 +104,30 @@ implements ComponentHandler {
                                  + "SingleThreaded, ThreadSafe, or Poolable" );
         }
 
-        // Early check for Composable
-        if ( Composable.class.isAssignableFrom( componentClass ) ) {
-            throw new Exception("Interface Composable is not supported anymore. Please change class "
-                                + componentClass.getName() + " to use Serviceable instead.");
+        if ( numInterfaces == 0 ) {
+            // test configuration
+            final String model = configuration.getAttribute("model", null);
+            if ( "pooled".equals(model) ) {
+                info.setModel(ServiceInfo.MODEL_POOLED);
+            } else if ( "singleton".equals(model) ) {
+                info.setModel(ServiceInfo.MODEL_SINGLETON);
+            }
         }
         
         // Create the factory to use to create the instances of the Component.
         ComponentFactory factory = new ComponentFactory( 
-                                         componentClass,
-                                         configuration,
                                          serviceManager,
                                          context,
                                          logger,
                                          loggerManager,
-                                         roleManager);
+                                         roleManager,
+                                         info);
 
         AbstractComponentHandler handler;
         
-        if( Poolable.class.isAssignableFrom( componentClass ) )  {
+        if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
             handler = new PoolableComponentHandler( logger, factory, configuration );
-        } else if( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
+        } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
             handler = new ThreadSafeComponentHandler( logger, factory );
         } else {
             // This is a SingleThreaded component

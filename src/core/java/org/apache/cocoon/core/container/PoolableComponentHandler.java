@@ -19,7 +19,6 @@ package org.apache.cocoon.core.container;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
 
@@ -114,7 +113,7 @@ extends AbstractComponentHandler {
         synchronized( this.semaphore ) {
             // Remove objects in the ready list.
             for( Iterator iter = this.ready.iterator(); iter.hasNext(); ) {
-                Object poolable = (Object)iter.next();
+                Object poolable = iter.next();
                 iter.remove();
                 this.readySize--;
                 this.permanentlyRemovePoolable( poolable );
@@ -169,6 +168,8 @@ extends AbstractComponentHandler {
             }
         }
 
+        this.factory.exitingPool(poolable);
+        
         if( this.logger.isDebugEnabled() ) {
             this.logger.debug( "Got a " + poolable.getClass().getName() + " from the pool." );
         }
@@ -182,14 +183,14 @@ extends AbstractComponentHandler {
      * @param poolable Poolable to return to the pool.
      */
     protected void doPut( final Object poolable ) {
-        // Handle Recyclable objects
-        if( poolable instanceof Recyclable ) {
-            ( (Recyclable)poolable ).recycle();
+        try {
+            this.factory.enteringPool(poolable);
+        } catch (Exception ignore) {
+            this.logger.warn("Exception during putting component back into the pool.", ignore);
         }
 
         synchronized( this.semaphore ) {
-            if( this.size <= this.max )
-            {
+            if( this.size <= this.max ) {
                 if( this.disposed ) {
                     // The pool has already been disposed.
                     if( this.logger.isDebugEnabled() ) {

@@ -48,9 +48,9 @@ public class Configurator  {
             //
             DefaultConfiguration config = new DefaultConfiguration("roles", "");
             DefaultConfiguration timeComponent = new DefaultConfiguration("role", "roles");
-            timeComponent.addAttribute("name", Time.ROLE);
-            timeComponent.addAttribute("default-class", TimeComponent.class.getName());
-            timeComponent.addAttribute("shorthand", "samples-parentcm-time");
+            timeComponent.setAttribute("name", Time.ROLE);
+            timeComponent.setAttribute("default-class", TimeComponent.class.getName());
+            timeComponent.setAttribute("shorthand", "samples-parentcm-time");
             config.addChild(timeComponent);
 
             //
