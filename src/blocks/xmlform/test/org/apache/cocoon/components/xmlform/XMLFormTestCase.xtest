@@ -40,11 +40,11 @@
 
   <role name="org.apache.cocoon.acting.ActionSelector"
         shorthand="actions"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
 
   <role name="org.apache.cocoon.transformation.TransformerSelector"
         shorthand="transformers"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
  </roles>
 
  <components>
