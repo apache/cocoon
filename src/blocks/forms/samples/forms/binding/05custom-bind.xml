@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fb:context 
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	path="/" >
+
+<!-- 
+   | This file shows a sample of using the javascript binding. 
+   -->
+  <fb:javascript id="jswrap" path="jswrap-value" >
+    <fb:save-form>
+      var formValue = widget.getValue();
+      // you can call a function from anywhere in the flowscript
+      var appValue = doSaveConversion(formValue, "-");
+      jxpathPointer.setValue(appValue);   
+    </fb:save-form>
+    <fb:load-form>
+      var appValue = jxpathPointer.getValue();
+      // you can call a function from anywhere in the flowscript
+      var formValue = doLoadConversion(appValue, "-");
+      widget.setValue(formValue);
+    </fb:load-form>
+  </fb:javascript>
+
+  <fb:custom id="custom" path="custom-value" 
+      class="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"/>
+  
+  <fb:custom id="config" path="config-value" 
+      builderclass="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"
+      factorymethod="createBinding" >
+      <fb:config prefixchar="[" suffixchar="]" />      
+  </fb:custom>
+
+</fb:context>
