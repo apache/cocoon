@@ -25,7 +25,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: ClassUtils.java,v 1.3 2004/06/20 23:46:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class ClassUtils {
 
