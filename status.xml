@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.214 2003/12/18 08:02:31 mpo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.215 2003/12/18 13:17:51 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -190,6 +190,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+      Portal-Engine: Added some new samples (for inter-coplet communication,
+      cleaned up the sample, fixed some bugs and added some new components
+      for developing own coplets.
+   </action> 
    <action dev="MPO" type="add" >
      Changed semantics on the cforms binding. Added a @direction (which replaces 
      the @read-only) and a @lenient attribute on all binding implementations in 
