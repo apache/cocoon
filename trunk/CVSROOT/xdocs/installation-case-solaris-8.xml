@@ -1,0 +1,983 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon Installation Case</title>
+  <authors>
+   <person name="Mark Evans" email="mark.evans@dsto.defence.gov.au"/>
+  </authors>
+ </header>
+
+ <body>
+
+  <s1 title="Introduction - Cocoon Installation Case (Solaris 8)">
+   <p>
+    I have successfully been able to get <strong>Cocoon V1.7.4</strong> to work with the following combination
+    of software :
+   </p> 
+ 
+   <ul>
+    <li><strong>Jakarta-Tomcat V3.1</strong></li>
+    <li><strong>Apache HTTP Server V1.3.12</strong></li>
+    <li><strong>Sun Java SDK SE V1.3 Beta Refresh</strong></li>
+    <li><strong>Solaris 8 (SPARC)</strong></li>
+    <li><strong>Netscape Navigator V4.7</strong></li>
+   </ul>
+
+   <p>
+    The additional tools listed below are required to perform this installation :
+   </p> 
+ 
+   <ul>
+    <li><strong>gcc V2.95.2</strong></li>
+    <li><strong>make V3.79</strong></li>
+    <li><strong>perl V5.005_03</strong></li>
+    <li><strong>Jakarta-Ant V1.0.8 - 2000/03/04</strong></li>
+    <li><strong>Jakarta-Tools</strong></li>
+   </ul>
+  
+   <p> 
+    This information could be added to the <strong>Working Systems</strong> table within the
+    Cocoon installation document at <code>http://xml.apache.org/cocoon/install.html</code>.
+   </p>  
+ 
+   <p>
+    What follows is some step by step info on how I got it all working. I am submitting this
+    for two reasons: one, as a reference for me for installations on other machines at a later
+    date and two, to provide some help to poor (hardware) engineers like myself who expect install 
+    instructions to include <strong>every</strong> step to actually get the product working !!
+   </p>
+ 
+   <p>
+    Hope this is useful to someone.
+   </p>
+  </s1> 	 
+
+  <s1 title="How to do it !"> 
+   <p>
+    I followed the standard Cocoon install instructions but without success. (Most of it is
+    there but it could be a bit clearer.)
+   </p>
+   
+   <p>
+    I have listed below the <strong>key</strong> steps that actually got the combination shown 
+    above to work.
+   </p>
+
+   <p>
+    I have included sections on installing Java SDK, Apache and Jakarta-Tomcat to avoid
+    any possible ambiguity. So, there may be more detail than is actually required - but
+    why not - as long as it all works in the end !
+   </p>
+ 
+   <p>
+    The relevant sections of the modified files mentioned have been partially listed. 
+   </p>
+ 
+   <p>
+    The steps listed below mention my own machine name and my own specific paths. Substitute
+    your own naturally. I thought it was better to leave them in to avoid the "path to your..."
+    directives which can sometimes be ambiguous when it comes to how paths are specified within
+    the Windows and Solaris environments i.e forward ("/") and backward slashes ("\") etc ..
+   </p>
+ 
+   <note>
+    Warning : This is long and verbose ! The steps and file listings should be read in the order given i.e top
+    down to bottom.
+   </note>
+ 
+   <note>
+    Before I started this setup on my machine, I did not have any pre-existing
+    Jakarta-Tomcat, Cocoon, or even anything in the <code>CLASSPATH </code> env variable. It was a
+    completely new install on a fresh Solaris 8 SPARC machine. 
+   </note>
+ 
+   <p>
+    OK lets go....
+   </p>
+  </s1>
+    
+  <s1 title="Java SDK SE V1.3 Beta Refresh">
+   <ul>
+    <li>A typical Solaris 8 install will install Java 1.1 and Java 1.2 by default in the
+        <code>/usr/java1.1</code> and <code>/usr/java1.2</code> directories. I, however, still
+	chose to install the latest Java SDK which was <em>"V1.3 Beta Refresh"</em> at the time of
+	writing.</li>
+
+    <li>Install Sun Java SDK SE V1.3 Beta Refresh via the standard install procedure i.e unpack the archive or
+        <code>pkgadd</code> the downloaded distribution. Install any required patches.</li>
+  
+    <li>I chose to install at path <code>/usr/local/j2sdk1_3_0beta_refresh</code>. Installing Java at this
+        location avoids disturbing the existing Java 1.1 and 1.2 environments mentioned above.</li>
+  
+    <li>No worries !</li>
+   </ul>
+  </s1>
+
+  <s1 title="Apache V1.3.12 HTTP Server">
+  <ul>
+   <li>A typical Solaris 8 install will install Apache V1.3.9 by default in the
+       <code>/usr/apache</code> and <code>/etc/apache</code> directories.
+	   You may also find other Apache installations to support Sun's SunSolve CD
+	   or Sun's StorEdge LibMON programs. I, however, still chose to install the
+	   latest Apache HTTP server which was <em>"V1.3.12"</em> at the time of writing.</li>
+
+   <li>Download the SOURCE for Apache V1.3.12 from the Apache web site - 
+       <code>http://www.apache.org/dist/apache_1.3.12.tar.gz</code> and unpack it in an area
+       where it can be compiled from e.g <code>/work/test/apache</code>.</li>
+
+   <li><strong>Note:</strong> I initially downloaded a pre-compiled binary of Apache for Solaris 8 but
+       it did not have shared module (DSO) support enabled when it was compiled, which
+       meant <code>mod_jserv.so</code> (needed for the  Apache - Jakarta-Tomcat combination) could not
+       be built (see Jakarta-Tomcat section for more details).</li> 
+ 
+   <li>So, I had to compile Apache. This meant I needed a C compiler and Perl.</li>
+
+   <li>Perl (V5.005_003) came with Solaris 8 as standard - <code>/bin/perl</code>.</li>
+
+   <li>I downloaded a pre-compiled version of GNU gcc V2.95.2 for Solaris 8 from the web -
+       <code>ftp://nce.sun.ca/pub/freeware/sparc/8/gcc-2.95.2-sol8-sparc-local.gz</code>.</li>
+
+   <li>OK, to compile Apache with DSO support I used the following commands:</li>
+
+   <li><code>cd /work/test/apache</code></li>
+   
+   <li><code>./configure --prefix=/usr/local/apache --enable-module=all --enable-shared=max --disable-module=auth_db</code></li>
+   
+   <li><code>make</code></li>
+   
+   <li><code>make install</code></li>
+
+   <li>This will compile Apache and install it in <code>/usr/local/apache</code>.</li>
+
+   <li>Now, in order to build <code>mod_jserv.so</code> there is still one more Apache related step,
+       which is to modify file <code>/usr/local/apache/bin/apxs</code>. Modify the two lines as shown in 
+       the code segment below.</li>
+	      
+   <li>If this is not done then the linker (<code>ld</code>) command is not found and
+       dynamic shared objects (<code>-G</code>) are not produced. <strong>This is important!</strong></li>
+
+   <li>I won't tell you how long it took me to work this out!</li>
+
+   <li>Modify the <code>/usr/local/apache/conf/httpd.conf</code> file to include your machine DNS name and
+       that port <code>80</code> is assigned to this HTTP server. See code segment below.</li>
+       
+   <li><strong>Note:</strong> As was mentioned before, your system may already have a number of <code>http</code> servers running. This
+       is OK as long as there isn't a port clash. Ensure other httpd servers are <strong>not</strong>
+       also using port <code>80</code>.</li>     
+  
+   <li>Ensure Apache is actually working by starting it with - <code>/usr/local/apache/bin/httpd -d /usr/local/apache</code></li> 
+    
+   <li>Try and access <code>http://shaggy.blimp.au</code>. You should get the
+       standard <strong>"If you can see this, it means that the installation of the Apache
+       web server software on this system was successful"</strong> page.</li>
+                               
+   <li>No worries!</li>
+  </ul>    
+
+  <p><code>/usr/local/apache/bin/apxs</code></p>
+
+    <source><![CDATA[
+     ....................
+     my $CFG_LD_SHLIB      = q(ld);    # substituted via Makefile.tmpl
+     my $CFG_LDFLAGS_SHLIB = q(-G);    # substituted via Makefile.tmpl  
+     ....................
+    ]]></source>
+
+  <p><code>/usr/local/apache/conf/httpd.conf</code></p>
+
+    <source><![CDATA[
+     ....................
+     #
+     # ServerName allows you to set a host name which is sent back to clients for
+     # your server if it's different than the one the program would get (i.e., use
+     # "www" instead of the host's real name).
+     #
+     # Note: You cannot just invent host names and hope they work. The name you 
+     # define here must be a valid DNS name for your host. If you don't understand
+     # this, ask your network administrator.
+     # If your host doesn't have a registered DNS name, enter its IP address here.
+     # You will have to access it by its address (e.g., http://123.45.67.89/)
+     # anyway, and this will make redirections work in a sensible way.
+     #
+     ServerName shaggy.blimp.au
+     ....................
+     #
+     # Port: The port to which the standalone server listens. For
+     # ports < 1023, you will need httpd to be run as root initially.
+     #
+     Port 80
+     ....................
+     ]]></source>
+
+  </s1>
+
+  <s1 title="Jakarta-Tomcat V3.1">
+   <ul> 
+
+    <li>Download the BINARY and SOURCE distributions of Jakarta-Tomcat from the Jakarta web site.</li>
+
+    <li><strong>Note: </strong> Although the BINARY download of Jakarta-Tomcat has a SRC 
+        directory it does not contain ALL of the source files i.e the "<code>native</code>"
+        directory is missing.</li>
+   
+    <li><strong>You MUST download the SOURCE distribution for Jakarta-Tomcat as a very
+        minimum in order to build </strong><code>mod_jserv.so</code>.</li>
+   
+    <li>I did not have to <strong>actually</strong> compile Jakarta-Tomcat itself since the <code>.jar</code>
+        files contained within the BINARY Jakarta-Tomcat distribution work OK. So, I unpacked the BINARY
+	Jakarta-Tomcat distribution into directory <code>/usr/local/jakarta-tomcat</code>.</li>
+       
+    <li>But, since I had the Jakarta-Tomcat source, I had a go at building it anyway. This worked
+        OK but I had to download the BINARY distributions of Jakarta-Ant and Jakarta-Tools. <em>(You
+	may now realise why I said to download both the BINARY and SOURCE distributions of Jakarta-Tomcat since
+	with the BINARY distribution of Jakarta-Tomcat you don't have to worry about getting Jakarta-Ant
+	and Jakarta-Tools since you don't need to compile Jakarta-Tomcat unless you are doing something
+	special with it.)</em></li>
+   
+   <li>The BINARY distributions for Jakarta-Ant and Jakarta-Tools can be found on the BINARY download page
+       for Jakarta-Tomcat. (<strong>Note:</strong> You cannot use the latest Jakarta-Ant V1.1 from its download page. Only use the 
+       Jakarta-Ant/Jakarta-Tools that can be downloaded on the very SAME download page as Jakarta-Tomcat.)</li>
+
+   <li>OK, lets build <code>mod_jserv.so</code></li>
+   
+   <li>Unpack the SOURCE distribution of Jakarta-Tomcat in a directory where you can compile from e.g
+       <code>/work/test/jakarta-tomcat</code>. Now, <code>cd</code> into the
+       <code>/work/test/jakarta-tomcat/src/native/apache/jserv</code> directory.</li>
+
+   <li>Execute : <code>/usr/local/apache/bin/apxs -c *.c</code></li>
+
+   <li>Execute : <code>cp autochange.so /usr/local/apache/libexec/mod_jserv.so</code>. <em>(Yea, I know it
+       looks strange but just do it !</em>)</li>
+   
+   <li>Add the following line "<code>include /usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code>" to 
+       the Apache configuration file <code>/usr/local/apache/conf/httpd.conf</code>. See code segment below.</li>
+
+   <li>File <code>/usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code> contains the reference
+       to <code>mod_jserv.so</code>.</li>
+   
+   <li>Obviously, you can see that I unpacked all of the BINARY Jakarta-Tomcat distribution into
+       <code>/usr/local/jakarta-tomcat</code>. i.e I did not actually compile Jakarta-Tomcat.</li>
+
+   <li>Now, if you want or need to actually compile Jakarta-Tomcat then this is how I did it.</li>
+
+   <li>Assuming the SOURCE distribution of Jakarta-Tomcat has been unpacked.</li> 
+ 
+   <li>Unpack the BINARY distribution of Jakarta-Ant.</li>
+ 
+   <li>Unpack the BINARY distribution of Jakarta-Tools.</li>
+
+   <li>My directory structure for building was : <code>/work/test/jakarta-tomcat</code>, 
+       <code>/work/test/jakarta-tools</code>, <code>/work/test/jakarta-ant</code></li>
+
+   <li>Add the line "<code>JAVA_HOME=/usr/local/j2sdk1_3_0beta_refresh</code>" to your Jakarta-Tomcat
+       <code>/work/test/jakarta-tomcat/build.sh</code> file. See code segment below.</li>
+
+   <li>Execute : <code>/work/test/jakarta-tomcat/build.sh dist</code></li>
+
+   <li>This will build ALL the files needed for Jakarta-Tomcat</li>
+
+   <li>After executing Jakarta-Tomcat's <code>build.sh</code> program the resultant binary distribution is
+       put in directory : <code>/work/dist</code></li>
+
+   <li>To use your newly compiled Jakarta-Tomcat distribution you can copy this to your Jakarta-Tomcat executing
+       directory (in my case <code>/usr/local/jakarta-tomcat</code>). (I didn't need to build Jakarta-Tomcat,
+       so I'd already filled <code>/usr/local/jakarta-tomcat</code> with the unpacked BINARY distribution of Jakarta-Tomcat.)</li>
+
+    <li>Modify <code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code> to add env variables <code>TOMCAT_HOME</code> 
+        and <code>JAVA_HOME</code>. See code segment below.</li>
+
+    <li>Kill Apache - Execute : <code>kill -TERM `cat /usr/local/apache/logs/httpd.pid`</code></li> 
+        
+    <li>Start Jakarta-Tomcat - Execute : <code>/usr/local/jakarta-tomcat/tomcat.sh start</code></li>
+
+    <li>Start Apache - Execute : <code>/usr/local/apache/bin/httpd -d /usr/local/apache</code></li> 
+
+    <li>Start Netscape.</li>
+
+    <li>Try and access the Jakarta-Tomcat <em>JSP</em> test page <code>http://shaggy.blimp.au:8080/examples/jsp/</code>
+        - Note the <code>8080</code> port in the address.</li>
+
+    <li>Click on any of the JSP examples to test.</li>
+
+    <li>Try and access the Jakarta-Tomcat <em>Servlet</em> test page <code>http://shaggy.blimp.au:8080/examples/servlets/</code>
+        - Note the <code>8080</code> port in the address.</li>
+
+    <li>Click on any of the servlet examples to test.</li>
+
+    <li><strong>Note: </strong>You <strong>don't</strong> have to copy the Jakarta-Tomcat <code>/usr/local/jakarta-tomcat/webapps/examples</code> directory to the
+        Apache <code>/usr/local/apache/htdocs</code> directory. Due to the <code>8080</code> port in the
+        web addresses shown above, the files in directory <code>/usr/local/jakarta-tomcat/webapps/examples</code>
+        are actually referenced automatically by Jakarta-Tomcat.</li>
+
+    <li>No worries !</li>
+   </ul>
+
+   <p><code>/usr/local/apache/conf/httpd.conf</code></p>
+   
+    <source><![CDATA[
+     ...........
+     #
+     # VirtualHost example:
+     # Almost any Apache directive may go into a VirtualHost container.
+     #
+     #<VirtualHost ip.address.of.host.some_domain.com>
+     #    ServerAdmin webmaster@host.some_domain.com
+     #    DocumentRoot /www/docs/host.some_domain.com
+     #    ServerName host.some_domain.com
+     #    ErrorLog logs/host.some_domain.com-error_log
+     #    CustomLog logs/host.some_domain.com-access_log common
+     #</VirtualHost>
+     
+     #<VirtualHost _default_:*>
+     #</VirtualHost>
+     
+     include /usr/local/jakarta-tomcat/conf/tomcat-apache.conf
+ 
+    ]]></source>
+   
+   <p><code>/work/test/jakarta-tomcat/build.sh</code></p>
+
+    <source><![CDATA[
+
+     #! /bin/sh
+
+     # $Id: installation-case-solaris-8.xml,v 1.1 2000-08-17 22:33:15 stefano Exp $
+     
+     JAVA_HOME=/usr/local/j2sdk1_3_0beta_refresh 
+     
+     if [ -z "$JAVA_HOME" ]
+     then
+     JAVACMD=`which java`
+     if [ -z "$JAVACMD" ]
+     then
+     echo "Cannot find JAVA. Please set your PATH."
+     exit 1
+     fi
+     JAVA_BINDIR=`dirname $JAVACMD`
+     JAVA_HOME=$JAVA_BINDIR/..
+     fi
+     
+     JAVACMD=$JAVA_HOME/bin/java
+     
+     cp=../jakarta-ant/lib/ant.jar:../jakarta-tools/moo.jar:../jakarta-ant/lib/xml.jar:../build/tomcat/classes:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dev.jar
+     
+     $JAVACMD -classpath $cp:$CLASSPATH org.apache.tools.ant.Main "$@"
+
+    ]]></source>
+
+
+
+   <p><code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code></p>
+
+    <source><![CDATA[
+     #!/bin/sh
+     #
+     # $Id: installation-case-solaris-8.xml,v 1.1 2000-08-17 22:33:15 stefano Exp $
+     
+     # Shell script to start and stop the server
+     
+     # There are other, simpler commands to startup the runner. The two
+     # commented commands good replacements. The first works well with
+     # Java Platform 1.1 based runtimes. The second works well with
+     # Java2 Platform based runtimes.
+     
+     TOMCAT_HOME=/usr/local/jakarta-tomcat
+     
+     JAVA_HOME=/usr/local/j2sdk1_3_0beta_refresh
+
+     .........
+    ]]></source>
+   
+  </s1>
+
+  <s1 title="Cocoon V1.7.4">
+   <ul>
+    <li>I chose to install (i.e unpack the zip) at path <code>/usr/local/cocoon-1.7.4</code>
+        <em>(Actually the important files in the Cocoon distribution all end up being copied
+        into the working Jakarta-Tomcat directories, so the unpacked Cocoon can be either
+        deleted or left where it is after the files have been copied.)</em></li>
+        
+    <li>Copy the <code>xerces_1_0_3.jar</code>, <code>xalan_1_0_1.jar</code>, <code>fop_0_12_1.jar</code> and <code>servlet_2_2.jar</code>
+        files, found in the <code>/usr/local/cocoon-1.7.4/lib</code> to the 
+        <code>/usr/local/jakarta-tomcat/lib</code> directory.</li>
+        
+    <li>Copy the <code>/usr/local/cocoon-1.7.4/bin/cocoon.jar</code> file to the
+        <code>/usr/local/jakarta-tomcat/lib</code> directory.</li>
+        
+    <li>Modify <code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code> to add the five Cocoon <code>.jar</code>
+        files to the Jakarta-Tomcat <code>CLASSPATH</code> env variable. See code segment below.</li>
+        
+    <li>Note the commented out "<code>#CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/servlet.jar</code>" line.</li>
+        
+    <li>Modify the <code>/usr/local/jakarta-tomcat/conf/web.xml</code> file to add the Cocoon
+        specific configuration directives. See code segment below.</li>
+        
+    <li>And now for the <strong>really really</strong> important step, copy the
+        <code>/usr/local/cocoon-1.7.4/conf/cocoon.properties</code> file to the
+        <code>/usr/local/jakarta-tomcat/webapps/ROOT</code> directory.</li>
+        
+    <li>Now, if everything has been performed as specified above and if the gods
+        are smiling on you today, then (and you'll hate me if it doesn't) it should
+        all work now.</li>
+        
+    <li>OK. To test it all, do the following :</li>
+        
+    <li>If Jakarta-Tomcat is still running, then kill it by typing : <code>/usr/local/jakarta-tomcat/bin/tomcat.sh stop</code></li>
+        
+    <li>If Apache is still running, then kill it by typing : <code>kill -TERM `cat /usr/local/apache/logs/httpd.pid`</code></li> 
+        
+    <li>Now, start up Jakarta-Tomcat as detailed in the <strong>Jakarta-Tomcat V3.1</strong> section shown above.</li>
+        
+    <li>Now, start up Apache as detailed in the <strong>Apache V1.3.12 HTTP Server</strong> section shown above.</li>
+        
+    <li>Start Netscape.</li>
+        
+    <li>The big test - try and access <code>http://shaggy.blimp.au:8080/Cocoon.xml</code> - You
+        should see the Cocoon V1.7.4 status page containing all of the internal configuration
+        information and settings specific to Cocoon. Note the <code>8080</code> port number.</li>
+        
+    <li>Note the uppercase "<code>C</code>" in <code>Cocoon.xml</code>. Also, you won't find this file on the
+        hard disk, it is an internal page and its name is set in the <code>cocoon.properties</code>
+        file.</li>
+        
+    <li>OK, if the internal Cocoon status page is working then you can try and access the
+        Cocoon examples as follows :</li>
+ 
+    <li>Copy the <code>/usr/local/cocoon-1.7.4/samples</code> directory to the
+        <code>/usr/local/jakarta-tomcat/webapps</code> directory.</li>
+        
+    <li>Copy the <code>cocoon.properties</code> file to the new <code>/usr/local/jakarta-tomcat/webapps/samples</code>
+        directory - again this is a <strong>really</strong> important step.</li>
+ 
+    <li>Kill Jakarta-Tomcat.</li>
+        
+    <li>Kill Apache.</li>
+        
+    <li>Restart Jakarta-Tomcat.</li>
+        
+    <li>Restart Apache.</li>
+        
+    <li>Try and access <code>http://shaggy.blimp.au:8080/samples/index.xml</code>. Note the <code>8080</code> port number.</li>
+        
+    <li>You should see the Cocoon samples page.</li>
+        
+    <li>Thats it.</li>
+        
+    <li>Again, note that no files were copied into the <code>/usr/local/apache/htdocs</code>
+        directory. The Cocoon samples are found via Jakarta-Tomcat and port <code>8080</code>.</li>
+	
+    <li>One last thing to try. Create a directory called <code>/usr/local/jakarta-tomcat/webapps/gogo</code>.</li>
+        
+    <li>Copy the Cocoon <code>hello-page.xml</code> and <code>hello-page-html.xsl</code> files found in the  
+       <code>/usr/local/cocoon-1.7.4/samples/hello</code> directory into the new <code>gogo</code> directory.</li>
+        
+    <li>And again the <strong>really</strong> important step, copy the <code>cocoon.properties</code> file into the
+        new <code>gogo</code> directory.</li>
+
+    <li>Kill Jakarta-Tomcat.</li>
+        
+    <li>Kill Apache.</li>
+        
+    <li>Restart Jakarta-Tomcat.</li>
+        
+    <li>Restart Apache.</li>
+        
+    <li>Start Netscape.</li>
+        
+    <li>Try and access <code>http://shaggy.blimp.au:8080/gogo/hello.xml</code>.</li>
+        
+    <li>You should see the Hello Page.</li>
+        
+    <li>The purpose of the last few steps was to show how a new auto context can be
+        setup in the Jakarta-Tomcat <code>webapps</code> directory.
+        As I see it, put your own custom XML/XSL files in a directory that lives within the Jakarta-Tomcat
+        <code>/usr/local/jakarta-tomcat/webapps</code> directory. Make sure <code>cocoon.properites</code> is also in there.</li>
+        
+    <li>You could also put your custom XML/XSL work into just the Jakarta-Tomcat <code>/usr/local/jakarta-tomcat/webapps/ROOT</code> directory and
+        as long as <code>cocoon.properties</code> is also in there (which it should be or else you won't be able
+        to see the internal <code>Cocoon.xml</code> status page) then it should all work from that <code>ROOT</code> directory.</li>
+        
+    <li>In order to avoid Jakarta-Tomcat having to serve up everything on port <code>8080</code>, the  
+	<code>/usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code> file can be modified by adding 
+	the line "<code>AddHandler jserv-servlet .xml</code>". (Refer to the start of the listing for
+	<code>/usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code> below to see where the line should be.)</li>
+ 
+    <li>After starting/stopping Jakarta-Tomcat and Apache in the same manner as described above you should now
+        be able to access XML files without specifying port <code>8080</code>. e.g <code>http://shaggy.blimp.au/samples/index.xml</code>.
+	<strong>Note :</strong> If your browser cannot find the file then make sure your <code>/usr/local/jakarta-tomcat/conf/server.xml</code>
+	file has alias directives for the <code>samples</code> directory or follow the procedure in the next few steps.</li>	
+
+    <li><strong>Note :</strong> You must be careful when making modifications to <code>/usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code>
+        because this file is automatically generated each time Jakarta-Tomcat starts and will therefore overwrite any
+	modifications you have made. To complicate matters, the contents of <code>/usr/local/jakarta-tomcat/conf/server.xml</code>,
+	where you might specify some context "AutoSetup actions", determines some of the content of
+	<code>/usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code>, so simply making a once off copy of
+	<code>/usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code> and adding the "<code>AddHandler jserv-servlet .xml</code>"
+	line and referencing the copied <code>.conf</code> file with the <code>include</code> statement in
+	<code>/usr/local/Apache Group/Apache/conf/httpd.conf</code> may also lead to problems.</li>
+
+    <li>My solution was to eliminate all context AutoSetup actions in <code>/usr/local/jakarta-tomcat/conf/server.xml</code>, then copy 
+        a freshly generated version of <code>/usr/local/jakarta-tomcat/conf/tomcat-apache.conf</code> to <code>/usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code>, then
+	add the line "<code>AddHandler jserv-servlet .xml</code>" to <code>/usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code>, then
+	modify the include statement in <code>/usr/local/apache/conf/httpd.conf</code> to read
+	"<code>include /usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code>". This method places the onus on the webmaster
+	to make sure the copied and modified version of <code>/usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code> is always
+	up to date. See code segment below.</li>
+	
+    <li>I have listed my much simplified <code>/usr/local/jakarta-tomcat/conf/server.xml</code> file. Note the references to my test <code>gogo</code>
+        directory in file <code>/usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code> which are
+	needed in order to get the <code>hello-page.xml</code> example working without using port <code>8080</code> in the
+	address. See code segment below.</li>  	
+        
+    <li>Well, thats how I got it to work.</li>
+        
+    <li>Works for me and I hope for you too.</li>
+        
+    <li>Sorry for all the completely specified file and directory paths, but it should at least be unambiguous. No worries !</li>
+
+   </ul>
+
+   <p><code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code></p>
+   
+    <source><![CDATA[
+     .................
+     CLASSPATH=$TOMCAT_HOME/classes
+
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/xerces_1_0_3.jar
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/xalan_1_0_1.jar
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/fop_0_12_1.jar
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/servlet_2_2.jar
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/cocoon.jar
+     
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/webserver.jar
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/jasper.jar
+     CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/xml.jar
+     #CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/servlet.jar
+     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
+
+     .................
+    ]]></source>
+  
+   <p><code>/usr/local/jakarta-tomcat/conf/web.xml</code></p>
+
+    <source><![CDATA[
+     <?xml version="1.0" encoding="ISO-8859-1"?>
+     
+     <!DOCTYPE web-app
+         PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+         "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+     
+     <web-app>
+         <servlet>
+             <servlet-name>
+                 default
+             </servlet-name>
+             <servlet-class>
+                 org.apache.tomcat.servlets.DefaultServlet
+             </servlet-class>
+     	<load-on-startup>
+                 -2147483646
+     	</load-on-startup>
+         </servlet>
+         <servlet>
+             <servlet-name>
+                 invoker
+             </servlet-name>
+     <!--
+                 org.apache.tomcat.servlets.NoInvokerServlet
+     -->
+             <servlet-class>
+                 org.apache.tomcat.servlets.InvokerServlet
+             </servlet-class>
+         </servlet>
+         <servlet>
+             <servlet-name>
+                 jsp
+             </servlet-name>
+             <servlet-class>
+                 org.apache.jasper.runtime.JspServlet
+             </servlet-class>
+     
+     <!-- uncomment the following to use Jikes for JSP compilation
+     
+             <init-param>
+                 <param-name>jspCompilerPlugin</param-name>
+                 <param-value>org.apache.jasper.compiler.JikesJavaCompiler</param-value>
+             </init-param>
+     
+     -->
+     
+     	<load-on-startup>
+                 -2147483646
+     	</load-on-startup>
+         </servlet>
+         <servlet-mapping>
+             <servlet-name>
+                 invoker
+             </servlet-name>
+             <url-pattern>
+                 /servlet/*
+             </url-pattern>
+         </servlet-mapping>
+         <servlet-mapping>
+             <servlet-name>
+                 jsp
+             </servlet-name>
+             <url-pattern>
+                 *.jsp
+             </url-pattern>
+         </servlet-mapping>
+         <session-config>
+             <session-timeout>
+                 30
+             </session-timeout>
+         </session-config>
+     
+
+<!-- Start Cocoon Section -->
+
+         <servlet>
+          <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
+          <servlet-class>org.apache.cocoon.Cocoon</servlet-class>
+          <init-param>
+           <param-name>properties</param-name>
+           <param-value>
+            cocoon.properties 
+           </param-value>
+          </init-param>
+         </servlet>
+         
+         
+         <servlet-mapping>
+          <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
+          <url-pattern>*.xml</url-pattern>
+         </servlet-mapping>
+
+<!-- End Cocoon Section -->
+
+     
+         <mime-mapping>
+             <extension>
+                 txt
+             </extension>
+             <mime-type>
+                 text/plain
+             </mime-type>
+         </mime-mapping>
+     
+     ..........
+     
+    ]]></source>
+
+
+   <p><code>/usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf</code></p>
+
+    <source><![CDATA[
+      LoadModule jserv_module libexec/mod_jserv.so
+      ApJServManual on
+      ApJServDefaultProtocol ajpv12
+      ApJServSecretKey DISABLED
+      ApJServMountCopy on
+      ApJServLogLevel notice
+      
+      ApJServDefaultPort 8007
+      
+      AddHandler jserv-servlet .xml
+      
+      AddType test/jsp .jsp
+      AddHandler jserv-servlet .jsp
+      Alias /examples /usr/local/jakarta-tomcat/webapps/examples
+      <Directory "/usr/local/jakarta-tomcat/webapps/examples">
+          Options Indexes FollowSymLinks
+      </Directory>
+      ApJServMount /examples/servlet /examples
+      <Location /examples/WEB-INF/ >
+          AllowOverride None
+          deny from all
+      </Location>
+      
+      Alias /test /usr/local/jakarta-tomcat/webapps/test
+      <Directory "/usr/local/jakarta-tomcat/webapps/test">
+          Options Indexes FollowSymLinks
+      </Directory>
+      ApJServMount /test/servlet /test
+      <Location /test/WEB-INF/ >
+          AllowOverride None
+          deny from all
+      </Location>
+      
+      Alias /admin /usr/local/jakarta-tomcat/webapps/admin
+      <Directory "/usr/local/jakarta-tomcat/webapps/admin">
+          Options Indexes FollowSymLinks
+      </Directory>
+      ApJServMount /admin/servlet /admin
+      <Location /admin/WEB-INF/ >
+          AllowOverride None
+          deny from all
+      </Location>
+      
+      Alias /samples /usr/local/jakarta-tomcat/webapps/samples
+      <Directory "/usr/local/jakarta-tomcat/webapps/samples">
+          Options Indexes FollowSymLinks
+      </Directory>
+      ApJServMount /samples/servlet /samples
+      <Location /samples/WEB-INF/ >
+          AllowOverride None
+          deny from all
+      </Location>
+      
+      Alias /gogo /usr/local/jakarta-tomcat/webapps/gogo
+      <Directory "/usr/local/jakarta-tomcat/webapps/gogo">
+          Options Indexes FollowSymLinks
+      </Directory>
+      ApJServMount /gogo/servlet /gogo
+      <Location /gogo/WEB-INF/ >
+          AllowOverride None
+          deny from all
+      </Location>
+      
+      ApJServMount /servlet /ROOT
+ 
+    ]]></source>
+
+   <p><code>/usr/local/jakarta-tomcat/conf/server.xml</code></p>
+
+    <source><![CDATA[
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      
+      <Server>
+          <!-- Debug low-level events in XmlMapper startup -->
+          <xmlmapper:debug level="0" />
+      
+          <!-- This is quite flexible; we can either have a log file per
+               module in Tomcat (example: ContextManager) or we can have
+               one for Servlets and one for Jasper, or we can just have
+      	 one tomcat.log for both Servlet and Jasper.
+      
+      	 If you omit "path" there, then stderr should be used.
+      
+      	 verbosityLevel values can be: 
+      	    FATAL
+      	    ERROR
+      	    WARNING 
+                  INFORMATION
+                  DEBUG
+               -->
+      
+          <Logger name="tc_log" 
+                  path="logs/tomcat.log"
+                  customOutput="yes" />
+      
+          <Logger name="servlet_log" 
+                  path="logs/servlet.log"
+                  customOutput="yes" />
+      
+          <Logger name="JASPER_LOG" 
+      	    path="logs/jasper.log"
+                  verbosityLevel = "INFORMATION" />
+      
+          <!-- Add "home" attribute if you want tomcat to be based on a different directory
+               "home" is used to create work and to read webapps, but not for libs or CLASSPATH.
+               Note that TOMCAT_HOME is where tomcat is installed, while ContextManager home is the
+               base directory for contexts, webapps/ and work/
+            -->
+          <ContextManager debug="0" workDir="work" >
+              <!-- ContextInterceptor className="org.apache.tomcat.context.LogEvents" / -->
+              <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
+              <ContextInterceptor className="org.apache.tomcat.context.DefaultCMSetter" />
+              <ContextInterceptor className="org.apache.tomcat.context.WorkDirInterceptor" />
+              <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />
+              <ContextInterceptor className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
+              <!-- Request processing -->
+              <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" debug="0" />
+              <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
+              <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
+              <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
+      
+              <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
+                  <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
+                  <Parameter name="port" value="8080"/>
+              </Connector>
+      
+              <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
+                  <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
+                  <Parameter name="port" value="8007"/>
+              </Connector>
+      
+          </ContextManager>
+      </Server>
+
+    ]]></source>
+
+   <p><code>/usr/local/apache/conf/httpd.conf</code></p>
+   
+    <source><![CDATA[
+     ...........
+     #
+     # VirtualHost example:
+     # Almost any Apache directive may go into a VirtualHost container.
+     #
+     #<VirtualHost ip.address.of.host.some_domain.com>
+     #    ServerAdmin webmaster@host.some_domain.com
+     #    DocumentRoot /www/docs/host.some_domain.com
+     #    ServerName host.some_domain.com
+     #    ErrorLog logs/host.some_domain.com-error_log
+     #    CustomLog logs/host.some_domain.com-access_log common
+     #</VirtualHost>
+     
+     #<VirtualHost _default_:*>
+     #</VirtualHost>
+     
+     include /usr/local/jakarta-tomcat/conf/tomcat-apache-cocoon.conf
+     ]]></source>
+
+  </s1>
+
+  <s1 title="Hints and Tips">
+    <p>Being bit of a XML/XSL/JAVA etc novice, here are some hints that I now know but it would have
+        made life a lot easier if I knew them before I attempted Cocoon/Jakarta-Tomcat/Apache etc..</p>
+
+   <ul>
+    <li>Don't be fooled...use the refresh button on the web browser when fiddling about. The cache is 
+        your enemy in the early days !</li>
+
+    <li>Always stop/start Jakarta-Tomcat and Apache if you are adding/deleting files from the Jakarta-Tomcat <code>webapps</code> directory.</li>
+
+    <li>Understanding how Cocoon finds the <code>cocoon.properties</code> file is the key.</li>
+
+    <li>In order to make the starting and stopping of Apache/Jakarta-Tomcat/Cocoon a bit easier on my machine, I modified 
+        <code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code>. The complete file listing for  
+	<code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code> is shown below. The script starts and stops the Apache server and
+	Jakarta-Tomcat in the correct order and generally just makes life a little easier.</li> 
+   </ul>
+
+   <p>Regards - mark.evans@dsto.defence.gov.au</p>
+
+
+   <p><code>/usr/local/jakarta-tomcat/bin/tomcat.sh</code></p>
+   
+    <source><![CDATA[
+      #!/bin/sh
+      #
+      # $Id: installation-case-solaris-8.xml,v 1.1 2000-08-17 22:33:15 stefano Exp $
+      
+      # Shell script to start and stop the server
+      
+      # There are other, simpler commands to startup the runner. The two
+      # commented commands good replacements. The first works well with
+      # Java Platform 1.1 based runtimes. The second works well with
+      # Java2 Platform based runtimes.
+      
+      TOMCAT_HOME=/usr/local/jakarta-tomcat
+      
+      JAVA_HOME=/usr/local/j2sdk1_3_0beta_refresh
+      
+      JAVACMD=/usr/local/j2sdk1_3_0beta_refresh/bin/java
+      
+      oldCP=$CLASSPATH
+      
+      CLASSPATH=$TOMCAT_HOME/classes
+      
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/xerces_1_0_3.jar
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/xalan_1_0_1.jar
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/fop_0_12_1.jar
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/servlet_2_2.jar
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/cocoon.jar
+      
+      
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/webserver.jar
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/jasper.jar
+      CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/xml.jar
+      #CLASSPATH=$CLASSPATH:$TOMCAT_HOME/lib/servlet.jar
+      CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
+      
+      
+      export CLASSPATH
+      
+      # We start the server up in the background for a couple of reasons:
+      #   1) It frees up your command window
+      #   2) You should use `stop` option instead of ^C to bring down the server
+      if [ "$1" = "start" ] ; then
+        shift
+      #  echo Using classpath: ${CLASSPATH}
+         
+        echo __________________________
+        echo Stopping Apache Web Server
+        echo __________________________
+        kill -TERM `cat /usr/local/apache/logs/httpd.pid` >/dev/null
+      
+        echo ______________________________________
+        echo Starting Jakarta-Tomcat in a new shell
+        echo ______________________________________
+      
+        $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
+      #   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
+      
+        echo __________________________
+        echo Starting Apache Web Server
+        echo __________________________
+        /usr/local/apache/bin/httpd -d /usr/local/apache 
+      
+      elif [ "$1" = "stop" ] ; then
+        shift
+      #  echo Using classpath: ${CLASSPATH}
+      
+        echo _______________________
+        echo Stopping Jakarta-Tomcat
+        echo _______________________
+        $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat -stop "$@"
+      #   $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
+      
+      elif [ "$1" = "run" ] ; then
+        shift
+        echo Using classpath: ${CLASSPATH}
+        $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@"
+      #  $JAVACMD org.apache.tomcat.shell.Startup "$@"
+        # no &
+      
+      elif [ "$1" = "ant" ] ; then
+        shift
+      
+        $JAVACMD $ANT_OPTS -Dant.home=${TOMCAT_HOME} -Dtomcat.home=${TOMCAT_HOME} org.apache.tools.ant.Main $@
+      
+      elif [ "$1" = "jspc" ] ; then
+        shift
+      
+        $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC "$@"
+      
+      elif [ "$1" = "env" ] ; then
+        ## Call it with source tomcat.sh to set the env for tomcat
+        shift
+        echo Setting classpath to: ${CLASSPATH}
+        oldCP=$CLASSPATH
+      
+      else
+        echo "Usage:"
+        echo "tomcat (start|env|run|stop|ant)"
+        echo "	start - start tomcat in the background"
+        echo "	run   - start tomcat in the foreground"
+        echo "	stop  - stop tomcat"
+        echo "	env  -	set CLASSPATH and TOMCAT_HOME env. variables"
+        echo "	ant  - run ant script in tomcat context ( classes, directories, etc)"
+        echo "	jspc - run jsp pre compiler"
+      
+        exit 0
+      fi
+
+
+      if [ "$oldCP" != "" ]; then
+          CLASSPATH=${oldCP}
+          export CLASSPATH
+      else
+          unset CLASSPATH
+      fi
+
+    ]]></source>
+
+  </s1>
+
+ </body>
+
+</document>
