@@ -447,6 +447,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="SW" type="fix" fixes-bug="31668">
+     CForms: the parser used to read form files now uses the EntityResolver defined in cocoon.xconf.
+   </action>
    <action dev="AG" type="fix" fixes-bug="32620" due-to="Micah Dubinko" due-to-email="mdubinko@snapbridge.com">
      Tiny typo in AbstractTextSerializer
    </action>
