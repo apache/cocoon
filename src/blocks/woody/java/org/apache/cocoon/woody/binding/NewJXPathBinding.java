@@ -62,7 +62,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * class that contains other widgets.</li>
  * </ol>
  *
- * CVS $Id: NewJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * CVS $Id: NewJXPathBinding.java,v 1.2 2003/12/31 05:50:12 antonio Exp $
  * @author Timothy Larson
  */
 public class NewJXPathBinding extends ComposedJXPathBindingBase {
@@ -75,7 +75,6 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
      * Constructs NewJXPathBinding
      * @param commonAtts 
      * @param widgetId
-     * @param xpath
      * @param childBindings
      */
     public NewJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, JXPathBindingBase[] childBindings) {

@@ -70,6 +70,10 @@ import org.tempuri.javac.JavaSourceReader;
 import org.tempuri.javac.JavaSourceReaderFactory;
 import org.tempuri.javacImpl.eclipse.JavaCompilerImpl;
 
+/*
+ * CompilingClassLoader
+ * CVS $Id: CompilingClassLoader.java,v 1.5 2003/12/31 05:50:12 antonio Exp $
+ */
 public class CompilingClassLoader extends ClassLoader {
 
     SourceResolver sourceResolver;
@@ -209,7 +213,7 @@ public class CompilingClassLoader extends ClassLoader {
                 }
                 baos.flush();
                 final Reader reader = 
-                    new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));;
+                    new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
                 return new JavaSourceReader() {
                         public Reader getReader() {
                             return reader;
@@ -241,8 +245,7 @@ public class CompilingClassLoader extends ClassLoader {
         public JavaClassReader 
             getClassReader(final String className) 
 		throws IOException {
-		final byte[] bytes = 
-		    (byte[])classRepository.getCompiledClass(className);
+		final byte[] bytes = classRepository.getCompiledClass(className);
 		if (bytes != null) {
 		    return new JavaClassReader() {
 			    public String getClassName() {
@@ -341,8 +344,7 @@ public class CompilingClassLoader extends ClassLoader {
 
 	private byte[] compile(String className) 
             throws ClassNotFoundException {
-	    byte[] result = (byte[])
-                classRepository.getCompiledClass(className);
+	    byte[] result = classRepository.getCompiledClass(className);
 	    if (result != null) {
 		return result;
 	    }
@@ -370,7 +372,7 @@ public class CompilingClassLoader extends ClassLoader {
                     throw new ClassCompilationException(msg);
                     
                 }
-                return (byte[])classRepository.getCompiledClass(className);
+                return classRepository.getCompiledClass(className);
             } finally {
                 releaseSource(src);
             }
