@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.treeprocessor;
+package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.environment.Environment;
 
 /**
- * A no-op node to stub not yet implemented features.
+ * This context contains information about the current statement that should
+ * be executed like the location in the sitemap etc.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NullNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
+ * TODO - This is not finished yet!
+ * 
+ * @since 2.2
+ * @version CVS $Id: ExecutionContext.java,v 1.1 2004/06/09 11:59:23 cziegeler Exp $
  */
-
-public class NullNode extends AbstractProcessingNode {
-
-    public NullNode() {
-        super(null);
-    }
+public interface ExecutionContext {
     
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-
-        getLogger().warn("Invoke on NullNode at " + getLocation());
-        return false;
-
-    }
+    /**
+     * Return the location of the statement in the sitemap.
+     */
+    String getLocation();
+    
+    /**
+     * Return the component type
+     */
+    String getType();
 }

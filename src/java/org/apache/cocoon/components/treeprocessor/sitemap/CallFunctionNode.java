@@ -41,7 +41,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.10 2004/05/25 13:48:12 cziegeler Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.11 2004/06/09 11:59:23 cziegeler Exp $
  */
 public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
     protected List parameters;
@@ -68,6 +68,7 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
     }
 
     public CallFunctionNode(VariableResolver functionName, VariableResolver continuationId) {
+        super(null);
         this.functionName = functionName;
         this.continuationId = continuationId;
     }

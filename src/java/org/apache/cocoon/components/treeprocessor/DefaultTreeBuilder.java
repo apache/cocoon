@@ -53,7 +53,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.10 2004/06/09 09:41:15 cziegeler Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.11 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
@@ -467,6 +467,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
       throws Exception {
         if (node instanceof AbstractProcessingNode) {
             ((AbstractProcessingNode)node).setLocation(config.getLocation());
+            ((AbstractProcessingNode)node).setSitemapExecutor(this.processor.getSitemapExecutor());
         }
 
         this.lifecycle.setupComponent(node, false);

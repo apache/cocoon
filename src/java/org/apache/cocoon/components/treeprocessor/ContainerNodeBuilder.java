@@ -23,7 +23,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Builds a generic container node.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNodeBuilder.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ContainerNodeBuilder.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class ContainerNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
@@ -35,7 +35,7 @@ public class ContainerNodeBuilder extends AbstractParentProcessingNodeBuilder im
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        ContainerNode node = new ContainerNode();
+        ContainerNode node = new ContainerNode(null);
         setupNode(node, config);
 
         return node;

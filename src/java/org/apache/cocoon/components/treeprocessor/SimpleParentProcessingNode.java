@@ -23,7 +23,7 @@ import org.apache.cocoon.environment.Environment;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleParentProcessingNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: SimpleParentProcessingNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public abstract class SimpleParentProcessingNode extends AbstractParentProcessingNode {
@@ -31,6 +31,10 @@ public abstract class SimpleParentProcessingNode extends AbstractParentProcessin
     /** The childrens of this matcher */
     protected ProcessingNode[] children;
 
+    public SimpleParentProcessingNode(String type) {
+        super(type);
+    }
+    
     public void setChildren(ProcessingNode[] children) {
         this.children = children;
     }

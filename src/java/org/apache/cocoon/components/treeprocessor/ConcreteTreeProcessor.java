@@ -22,7 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -39,13 +42,15 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.sitemap.impl.DefaultExecutor;
 
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
  * 
- * @version CVS $Id: ConcreteTreeProcessor.java,v 1.1 2004/06/05 08:18:50 sylvain Exp $
+ * @version CVS $Id: ConcreteTreeProcessor.java,v 1.2 2004/06/09 11:59:23 cziegeler Exp $
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
 
@@ -70,9 +75,46 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
     private int requestCount;
     
+    /** The sitemap executor */
+    private SitemapExecutor sitemapExecutor;
+    
+    /** Release the executor */
+    private boolean releaseSitemapExecutor;
+    
 	/** Builds a concrete processig, given the wrapping processor */
 	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor) {
 		this.wrappingProcessor = wrappingProcessor;
+        // get the sitemap executor - we use the same executor for each sitemap
+        this.releaseSitemapExecutor = false;
+        if ( this.wrappingProcessor.parent == null ) {
+            final ComponentManager manager = this.wrappingProcessor.manager;
+            if ( manager.hasComponent(SitemapExecutor.ROLE) ) {
+                try {
+                    this.sitemapExecutor = (SitemapExecutor) manager.lookup(SitemapExecutor.ROLE);
+                    this.releaseSitemapExecutor = true;
+                } catch (ComponentException ce) {
+                    // this should not happen as we called hasComponent first
+                    // but we ignore it
+                    this.getLogger().error("Unable to lookup sitemap executor.", ce);
+                }
+            }
+            if ( this.sitemapExecutor == null ) {                
+                try {
+                    this.sitemapExecutor = (SitemapExecutor) this.getClass()
+                                 .getClassLoader()
+                                 .loadClass(DefaultExecutor.class.getName())
+                                 .newInstance();
+                } catch (InstantiationException e) {
+                    throw new CascadingRuntimeException("Unable to create default sitemap executor.", e);
+                } catch (IllegalAccessException e) {
+                    throw new CascadingRuntimeException("Unable to create default sitemap executor.", e);
+                } catch (ClassNotFoundException e) {
+                    throw new CascadingRuntimeException("Unable to create default sitemap executor.", e);
+                }
+            }
+        } else {
+            this.sitemapExecutor = this.wrappingProcessor.parent.concreteProcessor.sitemapExecutor;
+        }
 	}
 	
 	/** Set the processor data, result of the treebuilder job */
@@ -85,7 +127,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 		this.serviceManager = new ComponentManagerWrapper(manager);
 		this.rootNode = rootNode;
 		this.disposableNodes = disposableNodes;
-	}
+   	}
 	
 	/** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
@@ -261,7 +303,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     }
         
     
-    private boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
+    protected boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
         
         // Build an environment wrapper
         // If the current env is a facade, change the delegate and continue processing the facade, since
@@ -314,6 +356,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         
         // Ensure it won't be used anymore
         this.rootNode = null;
+        if ( this.releaseSitemapExecutor ) {
+            this.wrappingProcessor.manager.release( (Component)this.sitemapExecutor );
+            this.sitemapExecutor = null;
+        }
 	}
     
     private class TreeProcessorRedirector extends ForwardRedirector {
@@ -382,4 +428,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 	public String getContext() {
 		return wrappingProcessor.getContext();
 	}
+    
+    /**
+     * Return the sitemap executor
+     */
+    public SitemapExecutor getSitemapExecutor() {
+        return this.sitemapExecutor;
+    }
 }

@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.11 2004/05/25 14:27:32 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.12 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
@@ -47,6 +47,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      * Constructor
      */
     public PipelinesNode() {
+        super(null);
     }
 
     /**

@@ -20,12 +20,16 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
  */
 public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode {
 
     protected Map views;
     protected Map pipelineHints;
+
+    public PipelineEventComponentProcessingNode() {
+        super(null);
+    }
 
     public void setViews(Map views) {
         this.views = views;

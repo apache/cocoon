@@ -19,7 +19,7 @@ package org.apache.cocoon.components.treeprocessor;
  * A named container node that just invokes its children.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NamedContainerNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: NamedContainerNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
  */
 
 public class NamedContainerNode extends ContainerNode implements NamedProcessingNode {
@@ -27,6 +27,7 @@ public class NamedContainerNode extends ContainerNode implements NamedProcessing
     private String name;
 
     public NamedContainerNode(String name) {
+        super(name);
         this.name = name;
     }
 
