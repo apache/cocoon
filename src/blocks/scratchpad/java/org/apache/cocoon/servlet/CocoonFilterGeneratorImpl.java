@@ -115,9 +115,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonFilterGeneratorImpl.java,v 1.3 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id: CocoonFilterGeneratorImpl.java,v 1.4 2004/05/07 17:32:58 joerg Exp $
  *
- * @servlet:filter-name    CocoonFilterGeneratorImpl
  */
 public class CocoonFilterGeneratorImpl implements Filter {
 
@@ -176,7 +175,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
     }
     
     /**
-     * Sets the filterConfig attribute of the JSPFilterImpl object
+     * Sets the filterConfig attribute of the CocoonFilterGeneratorImpl object
      *
      * @param  cfg  The new filterConfig value
      * @since 1.0
@@ -197,7 +196,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
 
 
     /**
-     * Gets the filterConfig attribute of the JSPFilterImpl object
+     * Gets the filterConfig attribute of the CocoonFilterGeneratorImpl object
      *
      * @return    The filterConfig value
      * @since 1.0
@@ -473,7 +472,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
          * @since 1.0
          */
         public String getServletName() {
-            return "JSPEngineImpl";
+            return "CocoonFilterGeneratorImpl";
         }
 
 

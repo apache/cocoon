@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField} for more information.
  *
- * @version $Id: AggregateFieldDefinition.java,v 1.2 2004/04/21 20:30:49 mpo Exp $
+ * @version $Id: AggregateFieldDefinition.java,v 1.3 2004/05/07 17:32:58 joerg Exp $
  */
 public class AggregateFieldDefinition extends FieldDefinition {
 
@@ -54,7 +54,7 @@ public class AggregateFieldDefinition extends FieldDefinition {
     protected XMLizable splitFailMessage;
 
     /**
-     * List containing instances of {@link #splitMappings}, i.e. the mapping between
+     * List containing instances of {@link SplitMapping}, i.e. the mapping between
      * a group (paren) from the regular expression and corresponding field id.
      */
     private List splitMappings = new ArrayList();
