@@ -16,12 +16,22 @@
 
 package org.apache.cocoon.forms.flow.java;
 
+import java.io.OutputStream;
 import java.util.Locale;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.java.AbstractContinuable;
 import org.apache.cocoon.components.flow.java.VarMap;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormManager;
 import org.apache.cocoon.forms.binding.Binding;
@@ -29,275 +39,290 @@ import org.apache.cocoon.forms.binding.BindingManager;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
+import org.apache.cocoon.forms.util.XMLAdapter;
+import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
 
 /**
  * Implementation of the Cocoon Forms/Java Flow integration.
- *
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.10 2004/05/07 17:47:55 joerg Exp $
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez </a>
+ * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
+ * @version CVS $Id: FormInstance.java,v 1.11 2004/06/23 10:53:41 stephan Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
-    private Form form;
-    private Binding binding;
-    private Locale locale;
-    private boolean isValid;
-    private Object validator; // Used?
-  
-    /**
-     * Create a form, given the URI of its definition file
-     */
-    public FormInstance(String uri) {
-        FormManager formMgr = null;
-        SourceResolver resolver = null;
-        Source src = null;
-        try {
-            formMgr = (FormManager)getComponent(FormManager.ROLE);
-            resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
-            src = resolver.resolveURI(uri);
-            this.form = formMgr.createForm(src);
-            this.binding = null;
-            // this.validator = null;
-            // TODO : do we keep this ?
-            // this.formWidget = new Widget(this.form); could not create instance
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not create form instance", e);
-        } finally {
-            releaseComponent(formMgr);
-            if (src != null) resolver.release(src);
-            releaseComponent(resolver);
-        }
-    }
+	private Form form;
+	private Binding binding;
+	private Locale locale;
+	private boolean isValid;
+	private XMLAdapter xmlAdapter;
 
-    /**
-     * Create a form, given the URI of its definition file, the
-     * binding file.
-     */
-    public FormInstance(String definitionFile, String bindingFile) {
-        this(definitionFile);
-        createBinding(bindingFile);
-    }
-
-    /**
-     * Create a form of an fd:form element in the form of a org.w3c.dom.Element
-     */
-    public FormInstance(Element formDefinition) {
-        FormManager formMgr = null;
-        SourceResolver resolver = null;
-        Source src = null;
-        try {
-            formMgr = (FormManager)getComponent(FormManager.ROLE);
-            resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
-            this.form = formMgr.createForm(formDefinition);
-            this.binding = null;
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not create form instance", e);
-        } finally {
-            releaseComponent(formMgr);
-            if (src != null) resolver.release(src);
-            releaseComponent(resolver);
-        }
-    }
-
-    public Widget getModel() {
-        return this.form;
-    }
-
-    /**
-     * Get a Widget (the java object) from the form.
-     * If <code>name</code> is undefined, the form widget itself is returned.
-     * Otherwise, the form's child widget of name <code>name</code> is returned.
-     */
-    public Widget getChild(String name) {
-        if (name == null) {
-            return this.form;
-        } else {
-            return this.form.getChild(name);
-        }
-    }
-
-		public String getSubmitId() {
-			
-		    Widget widget = this.form.getSubmitWidget();
-  	    // Can be null on "normal" submit
-				return  widget == null ? null : widget.getId();
+	/**
+	 * Create a form, given the URI of its definition file
+	 */
+	public FormInstance(String uri) {
+		FormManager formMgr = null;
+		SourceResolver resolver = null;
+		Source src = null;
+		try {
+			formMgr = (FormManager) getComponent(FormManager.ROLE);
+			resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
+			src = resolver.resolveURI(uri);
+			this.form = formMgr.createForm(src);
+			this.binding = null;
+		} catch (Exception e) {
+			throw new CascadingRuntimeException(
+					"Could not create form instance", e);
+		} finally {
+			releaseComponent(formMgr);
+			if (src != null)
+				resolver.release(src);
+			releaseComponent(resolver);
 		}
+	}
 
-    /**
-     * Sets the point in your script that will be returned to when the form is
-     * redisplayed. If setBookmark() is not called, this is implicitly set to
-     * the beginning of showForm().
-     */
-/*    public WebContinuation setBookmark() {
-          return (this.local_.webContinuation = cocoon.createWebContinuation());
-    }*/
+	/**
+	 * Create a form, given the URI of its definition file, the binding file.
+	 */
+	public FormInstance(String definitionFile, String bindingFile) {
+		this(definitionFile);
+		createBinding(bindingFile);
+	}
 
-    /**
-     * Returns the bookmark continuation associated with this form, or undefined
-     * if setBookmark() has not been called.
-     *
-     */
-/*    public WebContinuation getBookmark() {
-        return this.local_.webContinuation;
-    }  */
+	/**
+	 * Create a form of an fd:form element in the form of a org.w3c.dom.Element
+	 */
+	public FormInstance(Element formDefinition) {
+		FormManager formMgr = null;
+		SourceResolver resolver = null;
+		Source src = null;
+		try {
+			formMgr = (FormManager) getComponent(FormManager.ROLE);
+			resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
+			this.form = formMgr.createForm(formDefinition);
+			this.binding = null;
+		} catch (Exception e) {
+			throw new CascadingRuntimeException(
+					"Could not create form instance", e);
+		} finally {
+			releaseComponent(formMgr);
+			if (src != null)
+				resolver.release(src);
+			releaseComponent(resolver);
+		}
+	}
 
-    public void show(String uri) {
-        show(uri, new VarMap());
-    }
-    
-    /**
-     * Manages the display of a form and its validation.
-     *
-     * This uses some additionnal propertied on the form object :
-     * - "locale" : the form locale (default locale is used if not set)
-     * - "validator" : additional validation function. This function receives
-     *   the form object as parameter and should return a boolean indicating
-     *   if the form handling is finished (true) or if the form should be
-     *   redisplayed again (false)
-     *
-     * On return, the calling code can check some properties to know the form result :
-     * - "isValid" : true if the form was sucessfully validated
-     * - "submitId" : the id of the widget that triggered the form submit (can be null)
-     *
-     * @param uri the page uri (like in cocoon.sendPageAndWait())
-     * @param bizData some business data for the view (like in cocoon.sendPageAndWait()).
-     *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
-     */
-    public void show(String uri, Object bizData) {
+	public Widget getModel() {
+		return this.form;
+	}
 
-        if (bizData==null) bizData = new VarMap();
-        ((VarMap)bizData).add(FormsPipelineConfig.CFORMSKEY, this.form);
+	/**
+	 * Get a Widget (the java object) from the form. If <code>name</code> is
+	 * undefined, the form widget itself is returned. Otherwise, the form's
+	 * child widget of name <code>name</code> is returned.
+	 */
+	public Widget getChild(String name) {
+		if (name == null) {
+			return this.form;
+		} else {
+			return this.form.getChild(name);
+		}
+	}
 
-        if (this.locale == null)
-            this.locale = java.util.Locale.getDefault();
-        ((VarMap)bizData).add("locale", this.locale);
-    
-        // Keep the first continuation that will be created as the result of this function
-        //var result = null;
+	/**
+	 * Get a Widget (the java object) from the form via its <code>path</code>.
+	 */
+	public Widget lookupWidget(String path) {
+	    return this.form.lookupWidget(path);
+	}
 
-        boolean finished = false;
-        this.isValid = false;
+	public void show(String uri) {
+		show(uri, new VarMap());
+	}
 
-        do {
-            sendPageAndWait(uri, bizData);
-        
-            FormContext formContext = new FormContext(getRequest(), locale);
+	/**
+	 * Manages the display of a form and its validation.
+	 *
+	 * This uses some additionnal propertied on the form object :
+	 * - "locale" : the form locale (default locale is used if not set)
+	 *
+	 * On return, the calling code can check some properties to know the form result :
+	 * - "isValid" : true if the form was sucessfully validated
+	 * - "submitId" : the id of the widget that triggered the form submit (can be null)
+	 *
+	 * @parameter uri the page uri (like in cocoon.sendPageAndWait())
+	 * @parameter bizdata some business data for the view (like in cocoon.sendPageAndWait()).
+	 *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
+	 */
+	public String show(String uri, Object bizData) {
 
-            // Prematurely add the bizData as a request attribute so that event listeners can use it
-            // (the same is done by cocoon.sendPage())
-            FlowHelper.setContextObject(this.getObjectModel(), bizData);
+		if (bizData == null)
+			bizData = new VarMap();
+		((VarMap) bizData).add(FormsPipelineConfig.CFORMSKEY, this.form);
 
-            finished = this.form.process(formContext);
-          
-            // Additional flow-level validation
-            if (finished) {
-                if (this.validator == null) {
-                    this.isValid = this.form.isValid();
-                } else {
-                    this.isValid = this.form.isValid() /*& this.validator(this.form, bizData)*/;
-                }
-                finished = this.isValid;
-            }
-        
-            // FIXME: Theoretically, we should clone the form widget (this.form) to ensure it keeps its
-            // value with the continuation. We don't do it since there should me not much pratical consequences
-            // except a sudden change of repeaters whose size changed from a continuation to another.
-        
-        } while(!finished);
-    }
-    /*
-    /**
-     * Manages the display of a form and its validation.
-     * @param uri the page uri (like in cocoon.sendPageAndWait())
-     * @param fun optional function which will be executed after pipeline
-     *  processing. Useful for releasing resources needed during pipeline
-     *  processing but which should not become part of the continuation
-     * @param ttl Time to live (in milliseconds) for the continuation
-     *  created
-     * @return The web continuation associated with submitting this form
-     *
-    public showForm(String uri, Object fun, ttl) {
-        if (!this.getBookmark()) {
-            this.setBookmark();
-        }
-        FormContext formContext = FormsFlowHelper.getFormContext(cocoon, this.locale);
-        // this is needed by the FormTemplateTransformer:
-        //var javaWidget = this.formWidget_.unwrap();;
-        //this.formWidget_["CocoonFormsInstance"] = javaWidget;
-        getRequest().setAttribute(Packages.org.apache.cocoon.forms.transformation.CFORMSKEY, this.formWidget);
-        WebContinuation wk = sendPageAndWait(uri, this.formWidget, fun, ttl);
-        var formContext = new FormContext(cocoon.request, javaWidget.getLocale());
-        var userErrors = 0;
-        this.formWidget_.validationErrorListener = function(widget, error) {
-            if (error != null) {
-                userErrors++;
-            }
-        }
-        var finished = javaWidget.process(formContext);
-        if (this.onValidate) {
-            this.onValidate(this);
-        }
-        if (!finished || userErrors > 0) {
-            cocoon.continuation = this.local_.webContinuation;
-            this.local_.webContinuation.continuation(this.local_.webContinuation);
-        }
-        return wk;
-    }*/
+		if (this.locale == null)
+			this.locale = java.util.Locale.getDefault();
+		((VarMap) bizData).add("locale", this.locale);
 
-    public void createBinding(String bindingURI) {
-        BindingManager bindingManager = null;
-        Source source = null;
-        SourceResolver resolver = null;
-        try {
-            bindingManager = (BindingManager)getComponent(BindingManager.ROLE);
-            resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
-            source = resolver.resolveURI(bindingURI);
-            this.binding = bindingManager.createBinding(source);
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not create bindinh", e);
-        } finally {
-            if (source != null)
-                resolver.release(source);
-            releaseComponent(bindingManager);
-            releaseComponent(resolver);
-        }
-    }
+		// Keep the first continuation that will be created as the result of
+		// this function
+		//var result = null;
 
-    public void load(Object object) {
-        if (this.binding == null)
-            throw new Error("Binding not configured for this form.");
+		boolean finished = false;
+		this.isValid = false;
 
-        try {
-            this.binding.loadFormFromModel(this.form, object);
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not load form from model", e);
-        }
-    }
+		do {
+			sendPageAndWait(uri, bizData);
 
-    public void save(Object object) {
-        if (this.binding == null)
-            throw new Error("Binding not configured for this form.");
+			FormContext formContext = new FormContext(getRequest(), locale);
 
-        try {
-            this.binding.saveFormToModel(this.form, object);
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not save form into model", e);
-        }
-    }
+			// Prematurely add the bizData as a request attribute so that event
+			// listeners can use it
+			// (the same is done by cocoon.sendPage())
+			FlowHelper.setContextObject(this.getObjectModel(), bizData);
 
-    public void setAttribute(String name, Object value) {
-        this.form.setAttribute(name, value);
-    }
+			finished = this.form.process(formContext);
 
-    public Object getAttribute(String name) {
-        return this.form.getAttribute(name);
-    }
+			// Additional flow-level validation
+			if (finished) {
+				this.isValid = this.form.isValid();
+			}
 
-    public void removeAttribute(String name) {
-        this.form.removeAttribute(name);
-    }
+			// FIXME: Theoretically, we should clone the form widget (this.form)
+			// to ensure it keeps its
+			// value with the continuation. We don't do it since there should me
+			// not much pratical consequences
+			// except a sudden change of repeaters whose size changed from a
+			// continuation to another.
+
+		} while (!finished);
+		
+		Widget widget = this.form.getSubmitWidget();
+		// Can be null on "normal" submit
+		return widget == null ? null : widget.getId();
+	}
+
+	public void createBinding(String bindingURI) {
+		BindingManager bindingManager = null;
+		Source source = null;
+		SourceResolver resolver = null;
+		try {
+			bindingManager = (BindingManager) getComponent(BindingManager.ROLE);
+			resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
+			source = resolver.resolveURI(bindingURI);
+			this.binding = bindingManager.createBinding(source);
+		} catch (Exception e) {
+			throw new CascadingRuntimeException("Could not create bindinh", e);
+		} finally {
+			if (source != null)
+				resolver.release(source);
+			releaseComponent(bindingManager);
+			releaseComponent(resolver);
+		}
+	}
+
+	public void load(Object object) {
+		if (this.binding == null)
+			throw new Error("Binding not configured for this form.");
+
+		try {
+			this.binding.loadFormFromModel(this.form, object);
+		} catch (Exception e) {
+			throw new CascadingRuntimeException(
+					"Could not load form from model", e);
+		}
+	}
+
+	public void save(Object object) {
+		if (this.binding == null)
+			throw new Error("Binding not configured for this form.");
+
+		try {
+			this.binding.saveFormToModel(this.form, object);
+		} catch (Exception e) {
+			throw new CascadingRuntimeException(
+					"Could not save form into model", e);
+		}
+	}
+
+	public void setAttribute(String name, Object value) {
+		this.form.setAttribute(name, value);
+	}
+
+	public Object getAttribute(String name) {
+		return this.form.getAttribute(name);
+	}
+
+	public void removeAttribute(String name) {
+		this.form.removeAttribute(name);
+	}
+
+	public XMLAdapter getXML() {
+		if (this.xmlAdapter == null)
+			this.xmlAdapter = new XMLAdapter(this.form);
+		return this.xmlAdapter;
+	}
+
+	public void loadXML(String uri) {
+		Source source = null;
+		SourceResolver resolver = null;
+		try {
+			resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
+			source = resolver.resolveURI(uri);
+			SourceUtil.toSAX(source, this.getXML());
+		} catch (Exception e) {
+			throw new CascadingRuntimeException("Could not load XML", e);
+		} finally {
+			if (source != null)
+				resolver.release(source);
+			releaseComponent(resolver);
+		}
+	}
+
+	public void saveXML(String uri) {
+		Source source = null;
+		SourceResolver resolver = null;
+		OutputStream outputStream = null;
+		try {
+			resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
+			source = resolver.resolveURI(uri);
+
+			TransformerFactory tf = TransformerFactory.newInstance();
+
+			if (source instanceof ModifiableSource
+					&& tf.getFeature(SAXTransformerFactory.FEATURE)) {
+
+				ModifiableSource msource = (ModifiableSource) source;
+
+				outputStream = msource.getOutputStream();
+				TransformerHandler transformerHandler = (TransformerHandler) tf
+						.newTransformer();
+				Transformer transformer = transformerHandler.getTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "true");
+				transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+				transformerHandler.setResult(new StreamResult(outputStream));
+				this.getXML().toSAX(transformerHandler);
+			} else {
+				throw new ProcessingException("Cannot write to source " + uri);
+			}
+		} catch (Exception e) {
+			throw new CascadingRuntimeException("Could not save XML", e);
+		} finally {
+			if (source != null)
+				resolver.release(source);
+			releaseComponent(resolver);
+			if (outputStream != null) {
+				try {
+					outputStream.flush();
+					outputStream.close();
+				} catch (Exception e) {
+					throw new CascadingRuntimeException(
+							"Could not flush/close outputstream", e);
+				}
+			}
+		}
+	}
 }
