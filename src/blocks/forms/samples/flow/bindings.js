@@ -52,37 +52,37 @@ cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
  *   and specific backend-model to use.
  */
 function bindingSample(sampleCode, backendType) {
-	// sample-code holds the number-and-name of this binding sample in the tutorial
-	if (cocoon.parameters["sample-code"] != undefined) {
-	  sampleCode = cocoon.parameters["sample-code"];
-	}
+    // sample-code holds the number-and-name of this binding sample in the tutorial
+    if (cocoon.parameters["sample-code"] != undefined) {
+        sampleCode = cocoon.parameters["sample-code"];
+    }
 	
-	// backend-type holds one of 'JS', 'Java' or 'XML' to indicate 
-	// the type of backend to use.
-	if (cocoon.parameters["backend-type"] != undefined) {
-	  backendType = cocoon.parameters["backend-type"];
-	}
-	
-	// all back-end models are bound to essentially the same form, using the same binding!
-	var form = createFormForSample(sampleCode);
+    // backend-type holds one of 'JS', 'Java' or 'XML' to indicate 
+    // the type of backend to use.
+    if (cocoon.parameters["backend-type"] != undefined) {
+        backendType = cocoon.parameters["backend-type"];
+    }
 
-	// the beack-end model itself however depends on sample and type. 
-	var bean = createBeanForSample(backendType, sampleCode);
-	
-	// loads the backend-bean into the form
-	form.load(bean);
+    // all back-end models are bound to essentially the same form, using the same binding!
+    var form = createFormForSample(sampleCode);
 
-	// wait for user to submit the form correctly	
-	form.showForm("binding.form");
+    // the beack-end model itself however depends on sample and type. 
+    var bean = createBeanForSample(backendType, sampleCode);
 	
-	// saves the form into the backend-bean
-	form.save(bean);
-	var bizData = new Object();
-	bizData["bean"] = bean;
-	bizData["backendType"] = backendType;
-	bizData["sampleCode"] = sampleCode;
+    // loads the backend-bean into the form
+    form.load(bean);
 
-	cocoon.sendPage("binding.done", bizData);
+    // wait for user to submit the form correctly	
+    form.showForm("binding.form");
+	
+    // saves the form into the backend-bean
+    form.save(bean);
+    var bizData = new Object();
+    bizData["bean"] = bean;
+    bizData["backendType"] = backendType;
+    bizData["sampleCode"] = sampleCode;
+
+    cocoon.sendPage("binding.done", bizData);
 }
 
 /** 
@@ -90,33 +90,33 @@ function bindingSample(sampleCode, backendType) {
  * binding.
  */
 function createFormForSample(sampleCode) {
-	var form = new Form("forms/binding/" + sampleCode + "-def.xml");
-	form.createBinding("forms/binding/" + sampleCode +"-bind.xml");
-	return form;
+    var form = new Form("forms/binding/" + sampleCode + "-def.xml");
+    form.createBinding("forms/binding/" + sampleCode +"-bind.xml");
+    return form;
 }
 
 /** 
  * Creates the Bean of the desired type for this sample.
  */
 function createBeanForSample(backendType, sampleCode) {
-	if (backendType.equals("XML")) {
-	    return createXMLBean(sampleCode);
-	} else {
-    	var factoryFunction = "create" + backendType + "BeanFor" + sampleCode;
-	    print("Using the bean returned by function " + factoryFunction + "()");
-	    return this[factoryFunction].apply();
-	}
+    if (backendType.equals("XML")) {
+        return createXMLBean(sampleCode);
+    } else {
+        var factoryFunction = "create" + backendType + "BeanFor" + sampleCode;
+        print("Using the bean returned by function " + factoryFunction + "()");
+        return this[factoryFunction].apply();
+    }
 }
 
 /** 
  * Finds the sample specific XML file to bind to and parses it into a DOM Document.
  */
 function createXMLBean(sampleCode) {
-	// note if you want to toss around with the XML model (e.g. sample 02lenient)
-	// then you should do that by editing the files: ../forms/binding/*-data.xml
+    // note if you want to toss around with the XML model (e.g. sample 02lenient)
+    // then you should do that by editing the files: ../forms/binding/*-data.xml
 
-	var uri = "forms/binding/" + sampleCode +"-data.xml";
-	print("Using the XML data file at " + uri);
+    var uri = "forms/binding/" + sampleCode +"-data.xml";
+    print("Using the XML data file at " + uri);
 
     var parser = null;
     var source = null;
@@ -142,60 +142,60 @@ function createXMLBean(sampleCode) {
  * Creates the JS Bean for sample '01value'
  */ 
 function createJSBeanFor01value() {
-	var bean;
-	bean = new Object();
-	bean.simple = "Simple";
-	bean.readOnly = "Read-Only";
-	bean.writeOnly = "Write-Only";
-	bean.diffIn = "Diff-in/out";
-	// diffOut doesn't need to exist, binding will create it.
-	bean.onUpdate = "On Update";
-	bean.updateCount = 0;
-	bean.bool = true;
-	bean.date = "19700605";
-	bean.other = "This field is not involved in the form.";
-	return bean;
+    var bean;
+    bean = new Object();
+    bean.simple = "Simple";
+    bean.readOnly = "Read-Only";
+    bean.writeOnly = "Write-Only";
+    bean.diffIn = "Diff-in/out";
+    // diffOut doesn't need to exist, binding will create it.
+    bean.onUpdate = "On Update";
+    bean.updateCount = 0;
+    bean.bool = true;
+    bean.date = "19700605";
+    bean.other = "This field is not involved in the form.";
+    return bean;
 }
 
 /**
  * Creates the Java Bean for sample '01value'
  */ 
 function createJavaBeanFor01value() {
-	return new Packages.org.apache.cocoon.forms.samples.bindings.ValuesBean();
+    return new Packages.org.apache.cocoon.forms.samples.bindings.ValuesBean();
 }
 
 /**
  * Creates the JS Bean for sample '02lenient'
  */ 
 function createJSBeanFor02lenient() {
-	var bean = new Object();
+    var bean = new Object();
     var contexts = ["one","two","three"];	  
-	for(var i=0; i<contexts.length; i++) {
-	    bean[contexts[i]] = new Object();
+    for(var i=0; i<contexts.length; i++) {
+        bean[contexts[i]] = new Object();
         // using javascript beans seem to survive even non lenient binding
         // so you can do here what you want, the bean itself seems to be leninet?
         //bean[contexts[i]]["breakingField"] = "present";
     }
-	return bean;
+    return bean;
 }
 
 /**
  * Creates the Java Bean for sample '02lenient'
  */ 
 function createJavaBeanFor02lenient() {
-	var bean = new Packages.java.util.HashMap();
-	// to see the runtime effect of non-lenient binding
-	// remove/replace the 'one' in the following list:
+    var bean = new Packages.java.util.HashMap();
+    // to see the runtime effect of non-lenient binding
+    // remove/replace the 'one' in the following list:
     var contexts = ["one","two","three"];	  // only the 'one' context is required by non-lenient binding
-	for(var i=0; i<contexts.length; i++) {
+        for(var i=0; i<contexts.length; i++) {
         // to see the runtime effect of non-lenient binding
         // swap the following 2 lines from comment to code 
-	    var subBean = new Packages.org.apache.cocoon.forms.samples.bindings.LenientOKBean("init");
-//	    var subBean = new Packages.org.apache.cocoon.forms.samples.bindings.LenientNotOKBean("init");
+            var subBean = new Packages.org.apache.cocoon.forms.samples.bindings.LenientOKBean("init");
+//            var subBean = new Packages.org.apache.cocoon.forms.samples.bindings.LenientNotOKBean("init");
 	    
-	    // the NotOkBean does not have a getBreakingField() required by the non-lenient binding
+            // the NotOkBean does not have a getBreakingField() required by the non-lenient binding
 
-	    bean.put(contexts[i], subBean);
+            bean.put(contexts[i], subBean);
     }
-	return bean;
+    return bean;
 }
