@@ -179,7 +179,7 @@
 <!-- === Clean Targets ========================================================= -->
 
   <!-- Clean -->
-  <target name="clean" depends="clean-cocoon,clean-webapp" description="Cleans the cocoon build and the webapp"/>
+  <target name="clean" depends="clean-cocoon,clean-webapp,clean-standalone-demo" description="Cleans the cocoon build, webapp and standalone-demo"/>
 
   <!-- Clean the cocoon build directory -->
   <target name="clean-cocoon" depends="init" description="Cleans the cocoon build">
@@ -190,5 +190,11 @@
   <target name="clean-webapp" depends="init" description="Cleans the webapp">
     <delete dir="${build.webapp}"/>
   </target>
+
+  <!-- Clean the standalone demo -->
+  <target name="clean-standalone-demo" depends="init" description="Cleans the standalone-demo">
+    <delete dir="${build.standalone.demo}"/>
+  </target>
+
 
 
