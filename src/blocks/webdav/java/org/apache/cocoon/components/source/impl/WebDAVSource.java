@@ -103,7 +103,7 @@ import org.w3c.dom.Document;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.5 2003/08/22 12:23:41 gcasper Exp $
+ *  @version $Id: WebDAVSource.java,v 1.6 2003/08/22 21:33:56 joerg Exp $
 */
 public class WebDAVSource implements Composable, Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -765,7 +765,6 @@ public class WebDAVSource implements Composable, Source,
     public SourceProperty getSourceProperty (String namespace, String name)
     throws SourceException {
 
-          Vector sourceproperties = new Vector();
           DOMParser parser = null;
           String xml = "";
           Enumeration props= null;
