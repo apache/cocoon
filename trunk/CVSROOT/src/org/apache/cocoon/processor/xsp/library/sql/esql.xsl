@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.15 2000-09-15 05:07:35 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.16 2000-09-28 01:52:35 balld Exp $-->
 <!--
 
  ============================================================================
@@ -96,6 +96,7 @@
 			<xsp:include>java.sql.DriverManager</xsp:include>
 			<xsp:include>java.sql.Connection</xsp:include>
 			<xsp:include>java.sql.Statement</xsp:include>
+			<xsp:include>java.sql.PreparedStatement</xsp:include>
 			<xsp:include>java.sql.ResultSet</xsp:include>
 			<xsp:include>java.sql.ResultSetMetaData</xsp:include>
 			<xsp:include>java.sql.SQLException</xsp:include>
@@ -112,6 +113,7 @@
                   boolean close_connection = true;
 		  String query;
                   Statement statement;
+		  PreparedStatement prepared_statement;
                   ResultSet resultset;
                   ResultSetMetaData resultset_metadata;
                   int count;
@@ -187,6 +189,11 @@
 			<xsl:with-param name="content" select="esql:query"/>
 		</xsl:call-template>
 	</xsl:variable>
+	<xsl:variable name="statement">
+		<xsl:call-template name="get-nested-string">
+			<xsl:with-param name="content" select="esql:statement"/>
+		</xsl:call-template>
+	</xsl:variable>
 	<xsp:logic>
 	 void _esql_execute_query_<xsl:value-of select="generate-id(.)"/>(
 	 HttpServletRequest request,
@@ -240,9 +247,20 @@
 		  </xsl:choose>
 		 </xsl:otherwise>
 	        </xsl:choose>
-	       _esql_session.statement = _esql_session.connection.createStatement();
-	       _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
-	       _esql_session.resultset = _esql_session.statement.executeQuery(_esql_session.query);
+	       <xsl:choose>
+	        <xsl:when test="esql:query">
+	         _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
+	         _esql_session.statement = _esql_session.connection.createStatement();
+	         _esql_session.resultset = _esql_session.statement.executeQuery(_esql_session.query);
+		</xsl:when>
+		<xsl:when test="esql:statement">
+		 _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
+		 <xsl:for-each select=".//esql:parameter">
+		  _esql_session.prepared_statement.setString(<xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+		 </xsl:for-each>
+	         _esql_session.resultset = _esql_session.prepared_statement.executeQuery();
+		</xsl:when>
+	       </xsl:choose>
 	       _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
 	       _esql_session.count = 0;
 	       if (_esql_session.skip_rows &gt; 0) {
@@ -263,7 +281,11 @@
 		_esql_session.count++;
 	       }
 	       _esql_session.resultset.close();
-	       _esql_session.statement.close();
+	       if (_esql_session.statement != null) {
+	         _esql_session.statement.close();
+	       } else if (_esql_session.prepared_statement != null) {
+	         _esql_session.prepared_statement.close();
+	       }
 	       if (!_esql_results) {
                 <xsl:apply-templates select="esql:no-results/*"/>
 	       }
@@ -289,6 +311,8 @@
 	     }
 	</xsp:logic>
 </xsl:template>
+
+<xsl:template match="esql:statement//esql:parameter">"?"</xsl:template>
 
 <xspdoc:desc>if the query has results, this element's children will be instantiated for each row in the result set</xspdoc:desc>
 <xsl:template match="esql:execute-query/esql:results">
@@ -427,19 +451,19 @@
  <xsp:expr>_esql_session.count</xsp:expr>
 </xsl:template>
 
- <xspdoc:desc>returns the name of the given column</xspdoc:desc>
+ <xspdoc:desc>returns the name of the given column. the column mus tbe specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-column-name">
- <xsp:expr>_esql_session.resultset_metadata.getColumnName(<xsl:call-template name="get-column"/>)</xsp:expr>
+ <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnName(<xsl:value-of select="@column"/>)</xsp:expr>
 </xsl:template>
 
- <xspdoc:desc>returns the label of the given column</xspdoc:desc>
+ <xspdoc:desc>returns the label of the given column. the column mus tbe specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-column-label">
- <xsp:expr>_esql_session.resultset_metadata.getColumnLabel(<xsl:call-template name="get-column"/>)</xsp:expr>
+ <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnLabel(<xsl:value-of select="@column"/>)</xsp:expr>
 </xsl:template>
 
- <xspdoc:desc>returns the name of the type of the given column</xspdoc:desc>
+ <xspdoc:desc>returns the name of the type of the given column. the column must be specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-column-type-name">
- <xsp:expr>_esql_session.resultset_metadata.getColumnTypeName(<xsl:call-template name="get-column"/>)</xsp:expr>
+ <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnTypeName(<xsl:value-of select="@column"/>)</xsp:expr>
 </xsl:template>
 
  <xspdoc:desc>returns the message of the current exception</xspdoc:desc>
