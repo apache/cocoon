@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Hashtable;
 import java.text.StringCharacterIterator;
 
+import java.lang.reflect.Method;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.avalon.Component;
@@ -24,6 +26,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Recyclable;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Loggable;
 
@@ -55,10 +58,10 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-08 14:57:56 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-09 13:17:35 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
-implements Transformer, Composer, Poolable, Configurable {
+implements Transformer, Composer, Poolable, Recyclable, Configurable {
     private static String FILE = "file:/";
 
     /** The store service instance */
@@ -142,11 +145,11 @@ implements Transformer, Composer, Poolable, Configurable {
      */
     public void compose(ComponentManager manager) {
         try {
-        log.debug("Looking up " + Roles.STORE);
+            log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
-    } catch (Exception e) {
-        log.error("Could not find component", e);
-    }
+        } catch (Exception e) {
+            log.error("Could not find component", e);
+        }
     }
 
     /**
@@ -170,7 +173,7 @@ implements Transformer, Composer, Poolable, Configurable {
         try {
             transformerHandler = getTransformerHandler(resolver,xsluri);
         } catch (TransformerConfigurationException e){
-        log.error("Problem in getTransformer:", e);
+            log.error("Problem in getTransformer:", e);
             throw new ProcessingException("Problem in getTransformer:");
         }
 
@@ -263,5 +266,26 @@ implements Transformer, Composer, Poolable, Configurable {
         }
 
         return true;
+    }
+
+    public void recycle()
+    {
+        //FIXME: Patch for Xalan2J, to stop transform threads if 
+        //       there is a failure in the pipeline. 
+        try {
+            Class clazz = 
+                Class.forName("org.apache.xalan.stree.SourceTreeHandler");
+            Class  paramTypes[] = 
+                    new Class[]{ Exception.class };
+            Object params[] = 
+                    new Object[] { new SAXException("Dummy Exception") };
+            if(clazz.isInstance(transformerHandler)) {
+                Method method = clazz.getMethod("setExceptionThrown",paramTypes);
+                method.invoke(transformerHandler,params);
+            }
+        } catch (Exception e){
+            log.debug("Exception in recycle:", e);
+        }
+        super.recycle();    
     }
 }
