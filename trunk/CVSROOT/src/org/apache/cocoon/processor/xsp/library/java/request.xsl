@@ -84,8 +84,7 @@
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          XSPRequestLibrary.getAttribute(
-            request,
+          request.getAttribute(
             String.valueOf(<xsl:copy-of select="$name"/>)
           )
         </xsl:when>

@@ -84,8 +84,7 @@
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          XSPGlobalLibrary.getAttribute(
-            global,
+          global.getAttribute(
             String.valueOf(<xsl:copy-of select="$name"/>)
           )
         </xsl:when>
