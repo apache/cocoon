@@ -146,7 +146,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getAuthType()
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: RequestSessionContext.java,v 1.3 2003/10/21 12:39:15 cziegeler Exp $
+ * @version CVS $Id: RequestSessionContext.java,v 1.4 2003/10/22 14:24:39 cziegeler Exp $
 */
 public final class RequestSessionContext
 implements SessionContext {
@@ -381,9 +381,13 @@ implements SessionContext {
         Enumeration all = this.request.getHeaderNames();
         while (all.hasMoreElements() == true) {
             headerName = (String) all.nextElement();
-            header = doc.createElementNS(null, headerName);
-            headersElement.appendChild(header);
-            header.appendChild(this.createTextNode(doc, this.request.getHeader(headerName)));
+            try {
+                header = doc.createElementNS(null, headerName);
+                headersElement.appendChild(header);
+                header.appendChild(this.createTextNode(doc, this.request.getHeader(headerName)));
+            } catch (Exception ignore) {
+                // if the header name is not a valid element name, we simply ignore it
+            }
         }
     }
 
