@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.86 2001-07-17 18:46:54 dims Exp $-->
+<!-- $Id: esql.xsl,v 1.87 2001-07-24 11:38:33 dims Exp $-->
 <!--
 
  ============================================================================
@@ -528,6 +528,9 @@
         _esql_query.position = _esql_query.statement.getUpdateCount();
         if (_esql_query.position &gt;= 0) {
           <xsl:apply-templates select="esql:update-results/*"/>
+        }
+        else{
+          <xsl:apply-templates select="esql:no-results"/>
         }
       }
       _esql_query.statement.close();
