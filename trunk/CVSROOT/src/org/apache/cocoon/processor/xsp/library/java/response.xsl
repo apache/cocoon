@@ -268,20 +268,20 @@
         <xsl:when test="$as = 'node'">
           XSPResponseLibrary.containsHeader(
             response,
-            String.valueOf(<xsl:copy-of select="$value"/>),
+            String.valueOf(<xsl:copy-of select="$name"/>),
             document
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
           String.valueOf(
             response.containsHeader(
-              String.valueOf(<xsl:copy-of select="$value"/>),
+              String.valueOf(<xsl:copy-of select="$name"/>),
             )
           )
         </xsl:when>
         <xsl:when test="$as = 'boolean'">
           response.containsHeader(
-            String.valueOf(<xsl:copy-of select="$value"/>),
+            String.valueOf(<xsl:copy-of select="$name"/>),
           )
         </xsl:when>
       </xsl:choose>

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.190 2001-01-23 16:44:51 greenrd Exp $ 
+  $Id: changes.xml,v 1.191 2001-01-23 18:29:58 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Steffen Stundzig" due-to-email="steffen@smb-tec.com">
+   Fixed &lt;response:contains-header&gt;.
+  </action>
   <action dev="RDG" type="add">
    Added notes on each jar, with details of which are required, to Installing documentation.
   </action>
