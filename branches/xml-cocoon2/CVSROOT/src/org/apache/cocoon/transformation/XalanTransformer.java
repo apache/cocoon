@@ -8,6 +8,7 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Map;
@@ -53,7 +54,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2000-11-10 22:38:55 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2000-11-11 13:46:09 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -183,6 +184,19 @@ implements Transformer, Composer, Poolable, Configurable {
                 if (isValidXSLTParameterName(name)) {
                     String value = request.getParameter(name);
                     transformerHandler.getTransformer().setParameter(name,value);
+                }
+            }
+        }
+
+        if (par != null) {
+            Iterator params = par.getParameterNames();
+            while (params.hasNext()) {
+                String name = (String) params.next();
+                if (isValidXSLTParameterName(name)) {
+                    String value = par.getParameter(name,null);
+                    if (value != null) {
+                        transformerHandler.getTransformer().setParameter(name,value);
+                    }
                 }
             }
         }
