@@ -54,12 +54,13 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
  * Objects implementing this marker interface can get a configuration
- * from the map:pipelines section of the sitemap each time they
- * are looked up.
+ * from the map:pipelines section of the sitemap when they are created.
+ * Due to a problem in the component handling the {@link #configure}
+ * method is actually called each time the component is looked up!
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurable.java,v 1.3 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: SitemapConfigurable.java,v 1.4 2004/01/07 15:08:42 cziegeler Exp $
  */
 public interface SitemapConfigurable {
 
