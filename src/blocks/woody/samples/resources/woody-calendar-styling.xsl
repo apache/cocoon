@@ -59,10 +59,7 @@
     
     <!-- regular input -->
     <input id="{@id}" name="{@id}" value="{wi:value}">
-      <xsl:if test="wi:styling/@submit-on-change='true'">
-        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-      </xsl:if>
-      <xsl:copy-of select="wi:styling/@*[not(name() = 'type' or name() = 'submit-on-change')]"/>
+      <xsl:apply-templates select="." mode="styling"/>
     </input>
     
     <!-- calendar popup -->
