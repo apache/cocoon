@@ -38,7 +38,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.application.PortalApplicationConfig;
+import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.transformation.AbstractTransformer;
@@ -85,7 +85,6 @@ public class ProxyTransformer
     public static final String COOKIE = "cookie";
     public static final String START_URI = "start-uri";
     public static final String LINK = "link";
-    public static final String CONFIG = "config";
     public static final String DOCUMENT_BASE = "documentbase";
 
     /**
@@ -103,6 +102,11 @@ public class ProxyTransformer
      */
     protected String link;
 
+    /** 
+     * The default value for the envelope Tag 
+     */
+    protected String defaultEnvelopeTag;
+    
     /** 
      * This tag will include the external XHMTL 
      */
@@ -131,7 +135,7 @@ public class ProxyTransformer
     /**
      * The user agent identification string if confiugured
      */
-    protected String userAgent = null;
+    protected String userAgent;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -146,16 +150,11 @@ public class ProxyTransformer
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(Parameters)
      */
     public void parameterize(Parameters parameters) {
-        if (parameters != null) {
-            envelopeTag = parameters.getParameter(ENVELOPE_TAG_PARAMETER, null);
-            String protocolHandler =
-                parameters.getParameter(PROTOCOL_HANDLER_PARAMETER, null);
-            if (protocolHandler != null) {
-                if (System.getProperty("java.protocol.handler.pkgs") == null) {
-                    System.setProperty(
-                        "java.protocol.handler.pkgs",
-                        protocolHandler);
-                }
+        this.defaultEnvelopeTag = parameters.getParameter(ENVELOPE_TAG_PARAMETER, null);
+        String protocolHandler = parameters.getParameter(PROTOCOL_HANDLER_PARAMETER, null);
+        if (protocolHandler != null) {
+            if (System.getProperty("java.protocol.handler.pkgs") == null) {
+                System.setProperty("java.protocol.handler.pkgs", protocolHandler);
             }
         }
     }
@@ -163,50 +162,52 @@ public class ProxyTransformer
     /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters parameters)
-        throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver,
+                      Map objectModel,
+                      String src,
+                      Parameters parameters)
+    throws ProcessingException, SAXException, IOException {
 
-        request = ObjectModelHelper.getRequest(objectModel);
+        this.request = ObjectModelHelper.getRequest(objectModel);
 
-        copletInstanceData =
-            getInstanceData(this.manager, objectModel, parameters);
+        this.copletInstanceData = getInstanceData(this.manager, objectModel, parameters);
 
-        PortalApplicationConfig pac =
-            (PortalApplicationConfig) copletInstanceData.getAttribute(CONFIG);
+        final CopletData copletData = this.copletInstanceData.getCopletData();
 
-        String startURI = pac.getAttribute(START_URI);
+        final String startURI = (String)copletData.getAttribute(START_URI);
 
-        link = (String) copletInstanceData.getAttribute(LINK);
+        this.link = (String) this.copletInstanceData.getAttribute(LINK);
 
-        documentBase = (String) copletInstanceData.getAttribute(DOCUMENT_BASE);
+        this.documentBase = (String) this.copletInstanceData.getAttribute(DOCUMENT_BASE);
 
-        if (link == null) {
-            link = startURI;
+        if (this.link == null) {
+            this.link = startURI;
         }
 
         if (documentBase == null) {
-            documentBase = link.substring(0, link.lastIndexOf('/') + 1);
-            copletInstanceData.setAttribute(DOCUMENT_BASE, documentBase);
+            this.documentBase = this.link.substring(0, this.link.lastIndexOf('/') + 1);
+            copletInstanceData.setAttribute(DOCUMENT_BASE, this.documentBase);
         }
 
-        String encodingString = pac.getAttribute("encoding");
-        configuredEncoding = encodingConstantFromString(encodingString);
-        userAgent = pac.getAttribute("user-agent");
-        envelopeTag = parameters.getParameter("envelope-tag", envelopeTag);
+        this.configuredEncoding = encodingConstantFromString((String)copletData.getAttribute("encoding"));
+        this.userAgent = (String)copletData.getAttribute("user-agent");
+        this.envelopeTag = parameters.getParameter(ENVELOPE_TAG_PARAMETER, this.defaultEnvelopeTag);
 
         if (envelopeTag == null) {
-            throw new ProcessingException("Can not initialize RSFHtmlTransformer - sitemap parameter envelope-tag missing");
+            throw new ProcessingException("Can not initialize ProxyTransformer - sitemap parameter 'envelope-tag' missing");
         }
+    }
 
-        String protocolHandler =
-            parameters.getParameter(PROTOCOL_HANDLER_PARAMETER, null);
-        if (protocolHandler != null) {
-            System.setProperty("java.protocol.handler.pkgs", protocolHandler);
-        }
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
+    public void recycle() {
+        super.recycle();
+        this.envelopeTag = null;
+        this.userAgent = null;
+        this.documentBase = null;
+        this.link = null;
+        this.request = null;
     }
 
     /**
@@ -584,9 +585,7 @@ public class ProxyTransformer
                 + documentBaseURL.getAuthority()
                 + uri;
         }
-        else {
-            return documentBaseURL.toExternalForm() + uri;
-        }
+        return documentBaseURL.toExternalForm() + uri;
     }
 
     public static CopletInstanceData getInstanceData(ServiceManager manager,

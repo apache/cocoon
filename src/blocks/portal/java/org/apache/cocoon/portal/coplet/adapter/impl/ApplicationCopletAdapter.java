@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.portal.application.PortalApplicationConfigFactory;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -40,7 +39,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: ApplicationCopletAdapter.java,v 1.5 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 
@@ -153,45 +152,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
         if (selectedItem instanceof NamedItem) {
             return ((NamedItem) selectedItem).getName();
         }
-        else {
-            return ("New");
-        }
-    }
-
-    /**
-     * Sets the application configuration in the coplet instance data.
-     * @param	coplet the coplet instance data
-     */
-    private void setApplicationConfig(CopletInstanceData coplet) {
-        try {
-            PortalApplicationConfigFactory factory =
-                PortalApplicationConfigFactory.getInstance(resolver);
-
-            coplet.setAttribute(
-                ProxyTransformer.CONFIG,
-                factory.getConfig(coplet.getCopletData().getId()));
-        }
-        catch (ProcessingException pe) {
-            getLogger().error(
-                "Error while getting portal application configuration for coplet "
-                    + coplet.getId(),
-                pe);
-        }
-    }
-
-    /**
-     * Called when user logs in to the portal.
-     */
-    public void login(CopletInstanceData coplet) {
-        getLogger().info("ApplicationCopletAdapter:login");
-        setApplicationConfig(coplet);
-    }
-
-    /**
-     * Called when user logs out from the portal.
-     */
-    public void logout(CopletInstanceData coplet) {
-        getLogger().info("ApplicationCopletAdapter:logout");
+        return ("New");
     }
 
     /**
