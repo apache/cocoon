@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: welcome.xml,v 1.15 2004/02/29 05:58:11 antonio Exp $-->
+<!-- $Id: welcome.xml,v 1.16 2004/02/29 06:19:29 vgritsenko Exp $-->
 <samples>
 
  <group name="Main examples page.">
@@ -24,6 +24,7 @@
   <sample name="Custom validation" href="customvalidationdemo">Shows custom validation and messages widget.</sample>
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
   <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget.</sample>
+  <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>
  </group>
 
  <group name="Binding Samples">
