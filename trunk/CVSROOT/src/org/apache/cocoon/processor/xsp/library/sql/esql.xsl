@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.19 2000-10-04 20:04:56 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.20 2000-10-05 17:51:14 balld Exp $-->
 <!--
 
  ============================================================================
@@ -281,7 +281,8 @@
 		  <xsl:choose>
 		   <xsl:when test="@type">
 		    <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,0,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,1))"/></xsl:variable>
-                    <xsl:text>set<xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);</xsl:text>
+                    <xsl:text>set</xsl:text><xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);<xsl:text>
+		    </xsl:text>
 		   </xsl:when>
 		   <xsl:otherwise>
 		  <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
