@@ -146,26 +146,6 @@
         shorthand="cache"
         default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
 
-  <!-- REVISIT: Commet out below when excalibur-component.jar is updated to handle non component classes -->
-  <role name="org.apache.avalon.cornerstone.services.threads.ThreadManager"
-	shorthand="cornerstone-threadmanager"
-	default-class="org.apache.cocoon.components.flow.schedulerwrapper.ThreadManagerComponent"/>
-
-  <!-- REVISIT: Uncommet below when excalibur-component.jar is updated to handle non-component classes -->
-  <!-- role name="org.apache.avalon.cornerstone.services.threads.ThreadManager"
-	shorthand="cornerstone-threadmanager"
-	default-class="org.apache.avalon.cornerstone.blocks.threads.DefaultThreadManager"/ -->
-
-  <!-- REVISIT: Commet out below when excalibur-component.jar is updated to handle non component classes -->
-  <role name="org.apache.avalon.cornerstone.services.scheduler.TimeScheduler"
-        shorthand="cornerstone-scheduler"
-        default-class="org.apache.cocoon.components.flow.schedulerwrapper.TimeSchedulerComponent"/>
-
-  <!-- REVISIT: Un-commet below when excalibur-component.jar is updated to handle non-component classes -->
-  <!-- role name="org.apache.avalon.cornerstone.services.scheduler.TimeScheduler"
-        shorthand="cornerstone-scheduler"
-        default-class="org.apache.avalon.cornerstone.blocks.scheduler.DefaultTimeScheduler"/ -->
-
   <!-- Sitemap Roles -->
   <role name="org.apache.cocoon.acting.ActionSelector"
         shorthand="actions"

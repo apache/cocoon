@@ -654,18 +654,6 @@
   </monitor>
 
   <!--+
-      | The Thread Scheduler (used by the flow to invalidate continuations) 
-      +-->
-  <cornerstone-threadmanager logger="core.scheduler">
-    <thread-group>
-       <name>default</name>
-    </thread-group>
-  </cornerstone-threadmanager>
-
-  <!-- cornerstone-scheduler -->
-  <cornerstone-scheduler logger="core.scheduler"/>
-
-  <!--+
       | The Cache Manager is a component that can be used to cache content.
       | It is currently used by the cinclude transformer
       +-->
