@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 public final class DocumentCache {
 
     /** Cache the read configuration files (Documents) */
-    protected static Map fileCache = new HashMap();
+    protected final static Map fileCache = new HashMap();
     
     /** The document builder */
     private static DocumentBuilder builder;
