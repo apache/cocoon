@@ -178,16 +178,25 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
 
         // 1. Request parameter 'locale'
         String locale = request.getParameter(localeAttribute);
-        if (locale != null && isValidResource(pattern, new Locale(locale, ""), map)) {
-             return map;
+        if (locale != null) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Testing locale from request: '" + locale + "'");
+            }
+            if (isValidResource(pattern, new Locale(locale, ""), map)) {
+                return map;
+            }
         }
 
         // 2. Session attribute 'locale'
         Session session = request.getSession(false);
         if (session != null &&
-            ((locale = (String) session.getAttribute(localeAttribute)) != null) &&
-                isValidResource(pattern, new Locale(locale, ""), map)) {
-            return map;
+                ((locale = (String) session.getAttribute(localeAttribute)) != null)) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Testing locale from session: '" + locale + "'");
+            }
+            if (isValidResource(pattern, new Locale(locale, ""), map)) {
+                return map;
+            }
         }
 
         // 3. First matching cookie parameter 'locale' within each cookie sent
@@ -196,6 +205,10 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
             for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];
                 if (cookie.getName().equals(localeAttribute)) {
+                    locale = cookie.getValue();
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Testing locale from cookie: '" + locale + "'");
+                    }
                     if (isValidResource(pattern, new Locale(locale, ""), map)) {
                         return map;
                     }
@@ -206,13 +219,21 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
 
         // 4. Sitemap parameter "locale"
         locale = parameters.getParameter("locale", null);
-        if (locale != null && isValidResource(pattern, new Locale(locale, ""), map)) {
-              return map;
+        if (locale != null) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Testing locale from sitemap: '" + locale + "'");
+            }
+            if (isValidResource(pattern, new Locale(locale, ""), map)) {
+                return map;
+            }
         }
 
         // 5. Locale setting of the requesting browser or server default
         if (useLocale && !useLocales) {
             Locale l = request.getLocale();
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Testing locale from request: '" + l + "'");
+            }
             if(isValidResource(pattern, l, map)) {
                 return map;
             }
@@ -222,6 +243,9 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
             Enumeration locales = request.getLocales();
             while (locales.hasMoreElements()) {
                 Locale l = (Locale)locales.nextElement();
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Testing locale from request: '" + l + "'");
+                }
                 if (isValidResource(pattern, l, map)) {
                     return map;
                 }
@@ -229,13 +253,27 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
         }
 
         // 6. Default
-        if (defaultLocale != null && isValidResource(pattern, defaultLocale, map)) {
-            return map;
+        if (defaultLocale != null) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Testing default locale: '" + defaultLocale + "'");
+            }
+            if (isValidResource(pattern, defaultLocale, map)) {
+                return map;
+            }
         }
 
         // 7. Blank
-        if (testBlankLocale && isValidResource(pattern, null, map)) {
-            return map;
+        if (testBlankLocale) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Testing blank locale");
+            }
+            if (isValidResource(pattern, null, map)) {
+                return map;
+            }
+        }
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("No locale found for resource: " + pattern);
         }
         return null;
     }
