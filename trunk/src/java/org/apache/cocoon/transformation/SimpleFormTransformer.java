@@ -75,8 +75,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Stack;
 
-/** Eliminates the need for XSP to use FormValidatorAction. Caveat:
- * Select options need a value attribute to work correctly.
+/** 
+ * Eliminates the need for XSP to use FormValidatorAction. 
+ * Caveat: Select options need a value attribute to work correctly.
  *
  * <p>This transformer fills all HTML 4 form elements with values from
  * an InputModule, e.g. request, with the same name. It handles select
@@ -150,7 +151,7 @@ import java.util.Stack;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.2 2003/07/01 11:39:12 haul Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.3 2003/07/18 20:55:01 stephan Exp $
  */
 public class SimpleFormTransformer
     extends AbstractTransformer
