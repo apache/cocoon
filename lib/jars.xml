@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.203 2004/04/11 09:27:09 gcasper Exp $
+    | CVS $Id: jars.xml,v 1.204 2004/04/13 01:34:08 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -645,7 +645,7 @@
     <title>XML DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
-    <lib>xmldb/lib/xmldb-api-20021118.jar</lib>
+    <lib>xmldb/lib/xmldb-api-20030701.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
@@ -653,7 +653,7 @@
     <title>XML DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
-    <lib>xmldb/lib/xmldb-common-20021220.jar</lib>
+    <lib>xmldb/lib/xmldb-common-20030701.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
@@ -661,7 +661,7 @@
     <title>XML DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
-    <lib>xmldb/lib/xmldb-xupdate-20021220.jar</lib>
+    <lib>xmldb/lib/xmldb-xupdate-20040205.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
@@ -669,7 +669,7 @@
     <title>XML Xindice</title>
     <description>Native XML Database by Apache XML project</description>
     <used-by>xmldb block</used-by>
-    <lib>xmldb/lib/xindice-1.1b3.jar</lib>
+    <lib>xmldb/lib/xindice-1.1b4.jar</lib>
     <homepage>http://xml.apache.org/xindice/</homepage>
   </file>
 
