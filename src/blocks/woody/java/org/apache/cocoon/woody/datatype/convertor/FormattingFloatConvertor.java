@@ -38,7 +38,7 @@ import java.math.BigInteger;
  * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingFloatConvertor.java,v 1.4 2004/03/09 13:54:15 reinhard Exp $
+ * @version CVS $Id: FormattingFloatConvertor.java,v 1.5 2004/05/26 01:41:21 joerg Exp $
  */
 public class FormattingFloatConvertor implements Convertor {
     private int variant;
@@ -63,25 +63,28 @@ public class FormattingFloatConvertor implements Convertor {
 
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
+        Number decimalValue;
         try {
-            Number decimalValue = decimalFormat.parse(value);
-            if (decimalValue instanceof BigDecimal)
-                ;
-			else if (decimalValue instanceof Integer)
-				decimalValue = new BigDecimal(decimalValue .intValue());
-            else if (decimalValue instanceof Long)
-                decimalValue = new BigDecimal(decimalValue.longValue());
-            else if (decimalValue instanceof Double)
-                decimalValue = new BigDecimal(decimalValue.doubleValue());
-            else if (decimalValue instanceof BigInteger)
-                decimalValue = new BigDecimal((BigInteger)decimalValue);
-            else
-                return null;
-
-            return decimalValue;
+            decimalValue = decimalFormat.parse(value);
         } catch (ParseException e) {
             return null;
         }
+
+        if (decimalValue instanceof BigDecimal) {
+            // no need for conversion
+        } else if (decimalValue instanceof Integer) {
+            decimalValue = new BigDecimal(decimalValue .intValue());
+        } else if (decimalValue instanceof Long) {
+            decimalValue = new BigDecimal(decimalValue.longValue());
+        } else if (decimalValue instanceof Double) {
+            decimalValue = new BigDecimal(decimalValue.doubleValue());
+        } else if (decimalValue instanceof BigInteger) {
+            decimalValue = new BigDecimal((BigInteger)decimalValue);
+        } else {
+            return null;
+        }
+
+        return decimalValue;
     }
 
     public String convertToString(Object value, Locale locale, Convertor.FormatCache formatCache) {
