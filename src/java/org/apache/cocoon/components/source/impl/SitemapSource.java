@@ -89,7 +89,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.14 2003/10/29 14:45:53 vgritsenko Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.15 2003/12/10 15:55:08 vgritsenko Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -284,7 +284,7 @@ implements Source, XMLizable {
      * Return an <code>InputStream</code> object to read from the source.
      */
     public InputStream getInputStream()
-      throws IOException, SourceException {
+    throws IOException, SourceException {
 
         if (this.needsRefresh) {
             this.refresh();
@@ -305,7 +305,6 @@ implements Source, XMLizable {
                                                     this.manager,
                                                     this.pipelineProcessor);
             try {
-                
                 this.processingPipeline.process(this.environment);
             } finally {
                 CocoonComponentManager.leaveEnvironment();
@@ -368,8 +367,8 @@ implements Source, XMLizable {
      * and content length.
      */
     public void refresh() {
-        this.reset();
-        this.init();
+        reset();
+        init();
     }
 
     /**
@@ -437,7 +436,7 @@ implements Source, XMLizable {
         throws SAXException
     {
         if (this.needsRefresh) {
-            this.refresh();
+            refresh();
         }
         if (this.exception != null) {
             throw this.exception;
@@ -481,7 +480,9 @@ implements Source, XMLizable {
      * Reset everything
      */
     private void reset() {
-        if (this.processingPipeline != null) this.processingPipeline.release();
+        if (this.processingPipeline != null) {
+            this.processingPipeline.release();
+        }
         if (this.processKey != null) {
             CocoonComponentManager.endProcessing(this.environment, this.processKey);
             this.processKey = null;
@@ -503,9 +504,9 @@ implements Source, XMLizable {
      * Recyclable
      */
     public void recycle() {
-        this.reset();
-        if ( this.sourceResolver != null ) {
-            this.manager.release( this.sourceResolver );
+        reset();
+        if (this.sourceResolver != null) {
+            this.manager.release(this.sourceResolver);
         }
     }
 
@@ -535,6 +536,4 @@ implements Source, XMLizable {
     public Iterator getParameterNames() {
         return java.util.Collections.EMPTY_LIST.iterator();
     }
-
-
 }
