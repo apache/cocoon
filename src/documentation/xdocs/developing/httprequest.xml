@@ -6,7 +6,7 @@
 	 <title>Request Processing</title>
 	 <version>0.1</version> 
 	 <type>Technical Document</type> 
-	 <authors><person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
+	 <authors><person name="Tom Klaasen" email="tom.klaasen@pandora.be"/> 
 	 </authors> 
 	 <abstract>This document tries to explain Cocoon technically. We do this by
             describing what happens if somebody types in the URL of a simple Cocoon page.</abstract>

@@ -8,7 +8,7 @@
     <authors>
       <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
       <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
-      <person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/>
+      <person name="Tom Klaasen" email="tom.klaasen@pandora.be"/>
       <person name="Chris Stevenson" email="zhcchz@mail.on.net"/>
       <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
       <person name="Vadim Gritsenko" email="vgritsenko@apache.org"/>
@@ -41,7 +41,7 @@
 
       <p>When the time comes to run your Cocoon application in a full featured 
       servlet container, you may want to consider the following Open Source 
-      options: 
+      options:</p> 
       <ol> 
       	<li>The Apache Tomcat project
       		<link href="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</link>
@@ -50,7 +50,6 @@
       		<link href="http://jetty.mortbay.org/">http://jetty.mortbay.org/</link>
       	</li>
       </ol>
-      </p>
     </s1>
 
     <s1 title="Getting Apache Cocoon">
@@ -167,7 +166,7 @@
         </note>
       </s2>
 
-	  <fixme>Is this still an issue?</fixme>
+	  <fixme author="ghoward">Is this still an issue?</fixme>
       <s2 title="UNIX with X server">
         <p>Cocoon is bundled with the <link href="http://xml.apache.org/batik/">Batik</link>
           (SVG rasterization toolkit) to deliver SVG imaging capabilities. Batik uses Java
@@ -187,7 +186,7 @@
           and X libraries still must be installed.</note>
       </s2>
 
-	  <fixme>Is this still an issue?</fixme>
+	  <fixme author="ghoward">Is this still an issue?</fixme>
       <s2 title="Headless UNIX and PJA">
         <p>If you are using unix with the Sun JDK 1.4, it can run in the
           headless environment (but you still must have X libraries installed!)
