@@ -22,9 +22,9 @@
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
-    used to  endorse or promote  products derived from  this software without
-    prior written permission. For written permission, please contact
+ 4. The names "Jakarta", "Avalon", "Excalibur" and "Apache Software Foundation"
+    must not be used to endorse or promote products derived from this  software
+    without  prior written permission. For written permission, please contact
     apache@apache.org.
 
  5. Products  derived from this software may not  be called "Apache", nor may
@@ -43,26 +43,49 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
- Software Foundation, please see <http://www.apache.org/>.
+ on  behalf of the Apache Software  Foundation. For more  information on the
+ Apache Software Foundation, please see <http://www.apache.org/>.
 
 */
 package org.apache.cocoon.components;
 
-import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.lifecycle.Accessor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * This object is set to a {@link ParentAware} component and allows
- * access to the parent component.
+ * SitemapConfigurableAccessor does XYZ
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocator.java,v 1.5 2003/10/22 15:37:50 bloritsch Exp $
+ * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
+ * @version CVS $ Revision: 1.1 $
  */
-public interface ComponentLocator {
+public class SitemapConfigurableAccessor implements Accessor
+{
+    /** The {@link SitemapConfigurationHolder}s */
+    private Map m_sitemapConfigurationHolders = new HashMap( 15 );
 
-    Object lookup()
-    throws ServiceException;
+    public void access( Object object, Context context ) throws Exception
+    {
+        if ( object instanceof SitemapConfigurable )
+        {
+            String role = (String) context.get( "component.name" );
+            // FIXME: how can we prevent that this is called over and over again?
+            SitemapConfigurationHolder holder;
 
-    void release(Object parent);
+            holder = (SitemapConfigurationHolder) m_sitemapConfigurationHolders.get( role );
+            if ( null == holder )
+            {
+                // create new holder
+                holder = new DefaultSitemapConfigurationHolder( role );
+                m_sitemapConfigurationHolders.put( role, holder );
+            }
+
+            ( (SitemapConfigurable) object ).configure( holder );
+        }
+    }
+
+    public void release( Object object, Context context )
+    {}
 }

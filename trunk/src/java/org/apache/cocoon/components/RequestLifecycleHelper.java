@@ -118,7 +118,7 @@ class RequestLifecycleHelper
                 while ( iter.hasNext() ) {
                     final Object[] o = (Object[])iter.next();
                     final Object c = o[0];
-                    ((CocoonComponentManager)o[1]).releaseRLComponent( c );
+                    ((RequestLifestyleComponentHandler)o[1]).release( c );
                 }
             }
             env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());

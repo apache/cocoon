@@ -59,7 +59,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurable.java,v 1.3 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: SitemapConfigurable.java,v 1.4 2003/10/22 15:37:50 bloritsch Exp $
  */
 public interface SitemapConfigurable {
 

@@ -64,7 +64,7 @@ import java.util.Map;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.6 2003/10/22 15:13:55 bloritsch Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.7 2003/10/22 15:37:50 bloritsch Exp $
  */
 
 public final class ContextHelper {

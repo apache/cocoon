@@ -62,7 +62,7 @@ import java.util.Map;
  * getting objects from the object model.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.4 2003/10/22 15:13:55 bloritsch Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.5 2003/10/22 15:37:50 bloritsch Exp $
  */
 
 public class ComponentContext

@@ -216,6 +216,9 @@ public class RequestLifestyleComponentHandler extends AbstractComponentHandler i
      * @param component the component to return to the handler
      */
     protected void doPut( final Object component )
+    {}
+
+    void release( final Object component )
     {
         m_pool.release( component );
     }

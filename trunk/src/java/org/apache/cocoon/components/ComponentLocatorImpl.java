@@ -58,7 +58,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  * access to the parent component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocatorImpl.java,v 1.4 2003/10/22 15:13:55 bloritsch Exp $
+ * @version CVS $Id: ComponentLocatorImpl.java,v 1.5 2003/10/22 15:37:50 bloritsch Exp $
  */
 public class ComponentLocatorImpl
     implements ComponentLocator {

@@ -72,7 +72,7 @@ import java.util.Map;
  * TODO: POOLABLE
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.7 2003/10/22 15:13:55 bloritsch Exp $
+ * @version CVS $Id: RequestLifecycleComponent.java,v 1.8 2003/10/22 15:37:50 bloritsch Exp $
  */
 public interface RequestLifecycleComponent {
 

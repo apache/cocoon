@@ -70,7 +70,7 @@ import java.util.Map;
  * @see org.apache.cocoon.components.RequestLifecycleComponent
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.6 2003/10/22 15:13:55 bloritsch Exp $
+ * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.7 2003/10/22 15:37:50 bloritsch Exp $
  */
 public interface GlobalRequestLifecycleComponent {
 

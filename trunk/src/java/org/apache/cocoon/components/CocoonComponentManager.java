@@ -51,15 +51,12 @@
 package org.apache.cocoon.components;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.SourceResolver;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Cocoon Component Manager.
@@ -72,7 +69,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.24 2003/10/22 15:13:55 bloritsch Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.25 2003/10/22 15:37:50 bloritsch Exp $
  */
 public final class CocoonComponentManager
 implements SourceResolver, ServiceManager
@@ -81,9 +78,6 @@ implements SourceResolver, ServiceManager
 
     /** The configured {@link SourceResolver} */
     private SourceResolver sourceResolver;
-
-    /** The {@link SitemapConfigurationHolder}s */
-    private Map sitemapConfigurationHolders = new HashMap(15);
 
     /** The parent component manager for implementing parent aware components */
     private ServiceManager parentManager;
@@ -127,24 +121,6 @@ implements SourceResolver, ServiceManager
         }
 
 
-        if ( null != component && component instanceof SitemapConfigurable) {
-
-            // FIXME: how can we prevent that this is called over and over again?
-            SitemapConfigurationHolder holder;
-
-            holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
-            if ( null == holder ) {
-                // create new holder
-                holder = new DefaultSitemapConfigurationHolder( role );
-                this.sitemapConfigurationHolders.put( role, holder );
-            }
-
-            try {
-                ((SitemapConfigurable)component).configure(holder);
-            } catch (ConfigurationException ce) {
-                throw new ServiceException(role, "Exception during setup of SitemapConfigurable.", ce);
-            }
-        }
         return component;
     }
 
@@ -157,21 +133,10 @@ implements SourceResolver, ServiceManager
             return;
         }
 
-        if ( component instanceof RequestLifecycleComponent
-             || component instanceof GlobalRequestLifecycleComponent) {
-            return;
-        }
         if ( component == this ) {
             return;
         }
         parentManager.release( component);
-    }
-
-    /**
-     * Release a RequestLifecycleComponent
-     */
-    protected void releaseRLComponent( final Object component ) {
-        parentManager.release( component );
     }
 
     /**
