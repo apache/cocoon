@@ -22,7 +22,7 @@
   </xsl:template>
 
   <xsl:template match="para">
-   <p align="center">
+   <p align="left">
     <i><xsl:apply-templates/></i>
    </p>
   </xsl:template>

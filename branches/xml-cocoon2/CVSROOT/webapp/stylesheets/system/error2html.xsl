@@ -7,92 +7,117 @@
 <xsl:template match="notify">
 <html>
  <head>
-  <title><xsl:value-of select="@type"/>:<xsl:value-of select="title"/></title>
+  <title>
+   <xsl:value-of select="@type"/>:<xsl:value-of select="title"/></title>
  </head>
  <body bgcolor="#ffffff">
-  <table border="0" bgcolor="#0086b2" cellpadding="2" cellspacing="2">
-   <tr>
-    <td colspan="2">
-     <font color="#ffffff" face="arial,helvetica,sanserif" size="+2">
-      <xsl:value-of select="title"/>
-     </font>
-    </td>
-   </tr>
+ <TABLE border="0" bgcolor="#000000" cellpadding="2" cellspacing="2">
+  <TBODY>
+ <TR>
+      <TD bgcolor="#0086b2" colspan="2">
+       <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+2">
+       <xsl:value-of select="title"/>
+       </FONT>
+     </TD>
+    </TR>
 
-   <tr>
-    <td valign="top">
-     <font color="#ffffff" face="arial,helvetica,sanserif" size="+1">
-      <xsl:value-of select="@type"/>
-     </font>
-    </td>
-    <td bgcolor="#ffffff">
-     <xsl:apply-templates select="message"/>
-    </td>
-   </tr>
+    <TR>
+      <TD bgcolor="#0086b2" valign="top">
+       <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+1">
+         <xsl:value-of select="@type"/>
+       </FONT>
+     </TD>
+      <TD bgcolor="#ffffff" >
+        <xsl:apply-templates select="message"/>
+      </TD>
+    </TR>
 
-   <tr>
-    <td valign="top" colspan="2">
-     <font color="#ffffff" face="arial,helvetica,sanserif" size="+1">Details</font>
-     </td>
-    </tr>
+   <TR>
+      <TD bgcolor="#0086b2" valign="top" colspan="2">
+       <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+1">
+       details
+       </FONT>
+     </TD>
+    </TR>
 
-    <tr>
-     <td valign="top">
-      <font face="arial,helvetica,sanserif" color="#ffffff">from</font>
-     </td>
-     <td bgcolor="#ffffff">
-      <font face="arial,helvetica,sanserif">
-       <xsl:value-of select="@sender"/>
-      </font>
-     </td>
-    </tr>
+      <TR>
+      <TD bgcolor="#0086b2" valign="top">
+       <FONT face="arial,helvetica,sanserif" color="#ffffff">
+       from
+       </FONT>
+      </TD>
+      <TD bgcolor="#ffffff">
+       <FONT face="arial,helvetica,sanserif">
+        <xsl:value-of select="@sender"/>
+       </FONT>
+     </TD>
+    </TR>
 
-    <xsl:apply-templates select="description"/>
+      <TR>
+      <TD bgcolor="#0086b2" valign="top">
+       <FONT face="arial,helvetica,sanserif" color="#ffffff">
+       source
+       </FONT>
+      </TD>
+      <TD bgcolor="#ffffff">
+       <FONT face="arial,helvetica,sanserif">
+        <xsl:value-of select="source"/>
+       </FONT>
+     </TD>
+    </TR>
+   <xsl:apply-templates select="description"/>
 
-    <tr>
-     <td valign="top" colspan="2">
-      <font color="#ffffff" face="arial,helvetica,sanserif" size="+1">extra info</font>
-     </td>
-    </tr>
+ <TR>
+      <TD bgcolor="#0086b2" valign="top" colspan="2">
+       <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+1">
+       extra info
+       </FONT>
+     </TD>
+    </TR>
 
-    <xsl:apply-templates select="extra"/>
+   <xsl:apply-templates select="extra"/>
 
-  </table> 
+   </TBODY>
+  </TABLE> 
  </body>
 </html>
-</xsl:template>
 
-
-  <xsl:template match="message">
-   <font face="arial,helvetica,sanserif"><xsl:value-of select="."/></font>
   </xsl:template>
 
   <xsl:template match="description">
-   <tr>
-     <td valign="top">
-       <font color="#ffffff" face="arial,helvetica,sanserif">Description</font>
-     </td>
-     <td bgcolor="#ffffff">
-      <font face="arial,helvetica,sanserif"><xsl:value-of select="."/></font>
-    </td>
-   </tr>
+    <TR>
+      <TD bgcolor="#0086b2" valign="top">
+        <FONT color="#ffffff" face="arial,helvetica,sanserif">
+	description
+        </FONT></TD>
+      <TD bgcolor="#ffffff">
+      <FONT face="arial,helvetica,sanserif">
+         <xsl:value-of select="."/>
+      </FONT>
+     </TD>
+    </TR>
   </xsl:template>
 
   <xsl:template match="message">
-   <font face="arial,helvetica,sanserif"><xsl:value-of select="."/></font>
+      <FONT face="arial,helvetica,sanserif">
+         <xsl:value-of select="."/>
+      </FONT>
   </xsl:template>
 
   <xsl:template match="extra">
-   <tr>
-    <td valign="top">
-     <font color="#ffffff" face="arial,helvetica,sanserif"><xsl:value-of select="@description"/></font>
-    </td>
-    <td bgcolor="#ffffff">
-     <pre>
-      <xsl:apply-templates/>
-     </pre>
-    </td>
-   </tr>
+    <TR>
+      <TD bgcolor="#0086b2" valign="top">
+        <FONT color="#ffffff" face="arial,helvetica,sanserif">
+          <xsl:value-of select="@description"/>
+        </FONT></TD>
+      <TD bgcolor="#ffffff">
+        <PRE>
+         <xsl:value-of select="."/>
+       </PRE>
+     </TD>
+    </TR>
   </xsl:template>
+ 
+  <xsl:template match="*"/>
 
 </xsl:stylesheet>

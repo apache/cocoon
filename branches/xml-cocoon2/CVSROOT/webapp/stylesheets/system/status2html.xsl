@@ -10,67 +10,80 @@
         <title>Cocoon2 status [<xsl:value-of select="@host"/>]</title>
       </head>
       <body bgcolor="white">
-  
-      <table bgcolor="#ffffff" noshade="noshade" border="0" cellspacing="0" cellpadding="6" width="100%">
-       <tr>
-        <td bgcolor="#0086b2" valign="top" align="left">
-         <img src="images/cocoon.gif" border="0"/>
-        </td>
-        <td bgcolor="#0086b2" valign="top" align="right">
-         <font face="arial,helvetica,sanserif" color="#ffffff">   
-	      [<xsl:value-of select="@host"/>] <xsl:value-of select="@date"/>
-         </font>
-        </td>
-       </tr>
-       <tr>
-        <td bgcolor="#ffffff" valign="top" align="left" colspan="2" height="8">
-        </td>
-       </tr>
-      </table>
 
-      <xsl:apply-templates/>
-      
+  <table bgcolor="#000000" cellspacing="0" cellpadding="2" width="100%">
+    <tr>
+      <td>
+  
+  <table bgcolor="#ffffff" noshade="noshade" cellspacing="0" cellpadding="6" width="100%">
+    <tr>
+      <td bgcolor="#0086b2" valign="top" align="left">
+        <img src="images/cocoon.png" border="0"/>
+      </td>
+      <td bgcolor="#0086b2" valign="top" align="right">
+       <FONT face="arial,helvetica,sanserif" color="#ffffff">   
+	[<xsl:value-of select="@host"/>] <xsl:value-of select="@date"/>
+       </FONT>
+      </td>
+    </tr>
+        </table>
+
+      </td>
+    </tr>
+        </table>
+
+  <table bgcolor="#000000" cellspacing="0" cellpadding="2" width="100%">
+    <tr>
+      <td bgcolor="#ffffff" valign="top" align="left" colspan="2" height="12">
+      </td>
+    </tr>
+  </table>
+
+          <xsl:apply-templates />
       </body>
     </html>
   </xsl:template>
 
   <xsl:template match="group">
-   <table bgcolor="#0086b2" noshade="noshade" border="0" cellspacing="2" cellpadding="6" width="100%">
+   <table bgcolor="#000000" noshade="noshade" border="0" cellspacing="2" cellpadding="6" width="100%">
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left" colspan="2">
-       <font color="#ffffff" face="arial,helvetica,sanserif" size="+1">
-        <xsl:value-of select="@name"/>
-       </font>
+       <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+1">
+        -<xsl:value-of select="@name"/>
+       </FONT>
       </td>
     </tr>
     <tr>
       <td bgcolor="ffffff" width="100%" colspan="2">
-        <table bgcolor="#0086b2" noshade="noshade" border="0" cellspacing="2" cellpadding="6" bordercolor="black" width="100%">
+        <table bgcolor="#000000" noshade="noshade" border="0" cellspacing="2" cellpadding="6" bordercolor="black" width="100%">
           <xsl:apply-templates />
         </table>
       </td>
     </tr>
    </table>
+
+  <table bgcolor="#000000" cellspacing="0" cellpadding="2" width="100%">
+    <tr>
+      <td bgcolor="#ffffff" valign="top" align="left" colspan="2" height="8">
+      </td>
+    </tr>
+  </table>
+
   </xsl:template>
 
   <xsl:template match="value">
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left">
-       <font face="arial,helvetica,sanserif" color="#ffffff">      
+       <FONT face="arial,helvetica,sanserif" color="#ffffff">      
         <xsl:value-of select="@name"/>
-       </font>
+       </FONT>
       </td>
       <td bgcolor="ffffff" width="100%">
-       <font face="arial,helvetica,sanserif">
-         <xsl:apply-templates />
-       </font>
+       <FONT face="arial,helvetica,sanserif">
+        <xsl:value-of select="." />
+       </FONT>
       </td>
     </tr>
-  </xsl:template>
 
-  <xsl:template match="line">
-   <xsl:apply-templates/>
-   <xsl:if test="../line"><br/></xsl:if>
   </xsl:template>
-  
 </xsl:stylesheet>
