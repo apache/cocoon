@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.257 2004/03/05 01:58:31 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.258 2004/03/05 02:24:26 joerg Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="27254" due-to="Georg Ragaller" due-to-email="georg.ragaller@nse.de">
+     Fixed path separator handling in cocoon.bat/.sh and Loader.java.
+   </action>
    <action dev="JH" type="fix" fixes-bug="27456" due-to="Oscar Picasso" due-to-email="oscpro@yahoo.com">
      Fixed duplicate startDocument event in BetwixtTransformer.
    </action>
