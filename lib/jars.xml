@@ -829,14 +829,6 @@
   </file>
 
   <file>
-    <title>Excalibur Util</title>
-    <description>???</description>
-    <used-by>Axis block</used-by>
-    <lib>axis/lib/excalibur-util-1.0.jar</lib>
-    <homepage>http://excalibur.apache.org/</homepage>
-  </file>
-
-  <file>
     <title>Commons Discovery</title>
     <description>
       The Discovery Component is about discovering, or finding, implementations
