@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.13 2003/07/31 03:19:10 vgritsenko Exp $
+:: $Id: cocoon.bat,v 1.14 2003/10/03 12:59:34 joerg Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -113,31 +113,31 @@ goto cliLoop
 
 :cliLoopEnd
 
-%JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=lib\endorsed -Dloader.jar.repositories=%COCOON_LIB% -Dloader.main.class=org.apache.cocoon.Main Loader %param%
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=lib\endorsed -Dloader.jar.repositories=%COCOON_LIB% -Dloader.main.class=org.apache.cocoon.Main Loader %param%
 goto end
 
 :: ----- Servlet ---------------------------------------------------------------
 
 :doServlet
-%EXEC% %JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dhome=%COCOON_HOME% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dhome=%COCOON_HOME% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
 goto end
 
 :: ----- Servlet with Administration Web Interface -----------------------------
 
 :doAdmin
-%EXEC% %JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dhome=%COCOON_HOME% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml %COCOON_HOME%\tools\jetty\conf\admin.xml
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dhome=%COCOON_HOME% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml %COCOON_HOME%\tools\jetty\conf\admin.xml
 goto end
 
 :: ----- Servlet Debug ---------------------------------------------------------
 
 :doDebug
-%EXEC% %JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -Xdebug -Xrunjdwp:transport=dt_socket,address=%JAVA_DEBUG_PORT%,server=y,suspend=n  -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dhome=%COCOON_HOME% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -Xdebug -Xrunjdwp:transport=dt_socket,address=%JAVA_DEBUG_PORT%,server=y,suspend=n  -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dhome=%COCOON_HOME% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
 goto end
 
 :: ----- Servlet Profile ---------------------------------------------------------
 
 :doProfile
-%EXEC% %JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -Xrunhprof:heap=all,cpu=samples,thread=y,depth=3 -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dhome=%COCOON_HOME% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -Xrunhprof:heap=all,cpu=samples,thread=y,depth=3 -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dhome=%COCOON_HOME% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
 
 :: ----- End -------------------------------------------------------------------
 
