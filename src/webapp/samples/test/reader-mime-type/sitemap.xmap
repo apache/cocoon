@@ -31,9 +31,6 @@
       <map:match pattern="test40.html">
         <map:read src="cocoon:/test10.html"/>
       </map:match>
-      <map:match pattern="test50.html">
-        <map:read src="cocoon:/test30"/>
-      </map:match>
       <map:match pattern="test60.html">
         <map:read src="cocoon:/test10.html" mime-type="text/html"/>
       </map:match>
