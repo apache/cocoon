@@ -31,6 +31,7 @@ import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 
 /**
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' 
@@ -119,7 +120,8 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         Request cocoonRequest = ContextHelper.getRequest(this.avalonContext);
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
-        DefaultAppleResponse res = new DefaultAppleResponse();
+        Response cocoonResponse = ContextHelper.getResponse(this.avalonContext);
+        DefaultAppleResponse res = new DefaultAppleResponse(cocoonResponse);
 
         try {
             app.process(req, res);

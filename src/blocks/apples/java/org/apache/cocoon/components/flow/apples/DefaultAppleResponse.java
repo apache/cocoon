@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.flow.apples;
 
+import org.apache.cocoon.environment.Response;
+
 
 /**
  * DefaultAppleResponse provides a default implementation for the 
@@ -25,6 +27,11 @@ public class DefaultAppleResponse implements AppleResponse {
     private String uri;
     private Object data;
     private boolean redirect = false;
+    private Response cocoonResponse;
+
+    public DefaultAppleResponse(Response cocoonResponse) {
+        this.cocoonResponse = cocoonResponse;
+    }
 
     public void sendPage(String uri, Object bizData) {
         this.uri = uri;
@@ -47,5 +54,9 @@ public class DefaultAppleResponse implements AppleResponse {
 
     protected Object getData() {
         return data;
+    }
+
+    public Response getCocoonResponse() {
+        return cocoonResponse;
     }
 }
