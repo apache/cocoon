@@ -32,7 +32,7 @@
 
  <group name="Juicy Examples of XSLT Usage">
   <sample name="RSS Example" url="rss/publishing-rss.xml">
-   This page shows the use of <a href="http://my.nescape.com/publish/">Netscape RSS format</a>
+   This page shows the use of <a href="http://my.netscape.com/publish/">Netscape RSS format</a>
    for site description. This creates a simple way for one site to have 
    headlines for news or items on other sites. Checkout the <a href="http://java.apache.org/jetspeed/">
    JetSpeed project</a> for more information on this technology.
