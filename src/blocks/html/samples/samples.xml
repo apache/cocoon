@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.1 2003/06/11 00:00:45 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.2 2003/08/16 15:17:10 joerg Exp $ -->
 
 <samples name="HTML Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -9,8 +9,8 @@
   </group>
 
   <group name="HTMLGenerator">
-    <sample name="Yahoo Screen Scrape" href="yahoo">
-      Shows how to get remote resource and convert it to valid HTML using HTMLGenerator
+    <sample name="Google News Sci/Tech" href="googlenews">
+      Shows how to get remote resource and convert it to valid XHTML using HTMLGenerator.
     </sample>
   </group>
 </samples>
