@@ -50,11 +50,10 @@
 */
 package org.apache.cocoon.caching;
 
+import java.io.Serializable;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
-
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * This is the Cocoon cache. This component is responsible for storing
@@ -64,7 +63,7 @@ import java.util.Map;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cache.java,v 1.3 2003/07/31 14:28:18 cziegeler Exp $
+ * @version CVS $Id: Cache.java,v 1.4 2003/08/07 08:52:15 cziegeler Exp $
  */
 public interface Cache
 extends Component {
@@ -74,13 +73,11 @@ extends Component {
 
     /**
      * Store a cached response
-     * @param objectModel all information about the request
      * @param key         the key used by the caching algorithm to identify the
      *                    request
      * @param response    the cached response
      */
-    void store(Map              objectModel,
-               Serializable     key,
+    void store(Serializable     key,
                CachedResponse   response)
     throws ProcessingException;
 
