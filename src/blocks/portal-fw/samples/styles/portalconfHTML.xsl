@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: portalconfHTML.xsl,v 1.2 2003/05/06 14:12:55 vgritsenko Exp $ 
+<!-- $Id: portalconfHTML.xsl,v 1.3 2003/06/01 15:50:18 vgritsenko Exp $ 
 
  Description: Portal Configuration to HTML
 

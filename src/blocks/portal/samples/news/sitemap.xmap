@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
- <map:pipelines>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:pipelines>
     
     <map:pipeline>	
 
@@ -27,11 +27,9 @@
         <map:serialize type="xml"/>
     </map:match>
 
-  </map:pipeline>
+    </map:pipeline>
 
-
- </map:pipelines>
-
+  </map:pipelines>
 </map:sitemap>
 
 <!-- end of file -->
