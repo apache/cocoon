@@ -171,6 +171,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="TC" type="update">
+    EsqlConnection no longer implements java.sql.Connection.
+    No jvm dependency any more.
+  </action>
   <action dev="CZ" type="update">
     Refactored SitemapConfigurable. A sitemap configurable component can
     now be ThreadSafe and has access to the sitemap configuration at any time
