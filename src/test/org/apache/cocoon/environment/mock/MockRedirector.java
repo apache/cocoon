@@ -78,5 +78,10 @@ public class MockRedirector implements Redirector {
     public boolean hasRedirected() {
         return this.hasRedirected;
     }
+
+    public void reset() {
+        redirect = null;
+        hasRedirected = false;
+    }
 }
 
