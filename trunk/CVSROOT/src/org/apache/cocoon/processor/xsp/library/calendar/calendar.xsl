@@ -96,7 +96,7 @@
 	<xsp:page>
 		<xsl:apply-templates select="@*"/>
 		<xsp:structure>
-			<xsp:include>org.apache.cocoon.contrib.calendar.XSPCalendar</xsp:include>
+			<xsp:include>org.apache.cocoon.processor.xsp.library.calendar.XSPCalendar</xsp:include>
 		</xsp:structure>
 		<xsl:apply-templates/>
 	</xsp:page>
