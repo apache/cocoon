@@ -42,6 +42,9 @@ import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.source.Source;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 
 /**
@@ -50,7 +53,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.2 2004/06/22 02:41:15 crossley Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.3 2004/07/12 13:29:57 antonio Exp $
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -457,9 +460,26 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
         if (sourceDir != null) {
             sourceDir.mkdirs();
         }
-        IOUtils.serializeString(sourceFile, code);
+        serializeString(sourceFile, code);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Successfully created sourcecode for [" + source.getURI() + "]");
+        }
+    }
+
+    /**
+     * Dump a <code>String</code> to a text file.
+     *
+     * @param file The output file
+     * @param string The string to be dumped
+     * @exception IOException IO Error
+     */
+    private static void serializeString(File file, String string) throws IOException {
+        final Writer fw = new FileWriter(file);
+        try {
+            fw.write(string);
+            fw.flush();
+        } finally {
+            if (fw != null) fw.close();
         }
     }
 

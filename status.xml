@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.398 2004/07/12 13:04:55 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.399 2004/07/12 13:29:56 antonio Exp $:-->
 
 <status>
  <developers>
@@ -210,9 +210,13 @@
      <ul>
        <li>String baseName(String filename)</li>
        <li>Object bytesToObject(byte[] bytes)</li>
+       <li>Object deserializeObject(File file)</li>
        <li>String fileComponent(String filename)</li>
        <li>byte[] objectToBytes(Object object)</li>
        <li>String pathComponent(String filename)</li>
+       <li>void serializeObject(File file, Object object)</li>
+       <li>void serializeString(File file, String string)</li>
+       <li>void serializeString(File file, String string, String encoding)</li>
      </ul>
    </action>
   <action dev="AG" type="update">
