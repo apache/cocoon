@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.sitemap.ComponentLocator;
 
 /**
  *
@@ -104,4 +105,22 @@ public interface TreeBuilder {
      * Get the value of an attribute.
      */
     Object getAttribute(String name);
+
+    /**
+     * Return the sitemap component locator - if available.
+     */
+    ComponentLocator getComponentLocator();
+
+    /**
+     * Return all event listers that are registered for the
+     * {@link org.apache.cocoon.sitemap.EnterSitemapEvent}.
+     */
+    List getEnterSitemapEventListeners();
+    
+    /**
+     * Return all event listers that are registered for the
+     * {@link org.apache.cocoon.sitemap.LeaveSitemapEvent}.
+     */
+    List getLeaveSitemapEventListeners();
+    
 }
