@@ -83,7 +83,7 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.2 2003/09/23 22:46:44 vgritsenko Exp $
+ * @version    CVS $Id: Paginator.java,v 1.3 2003/10/22 12:41:23 cziegeler Exp $
  */
 public class Paginator extends AbstractTransformer
   implements Composable, Disposable, CacheableProcessingComponent {
@@ -326,24 +326,24 @@ public class Paginator extends AbstractTransformer
                     int totalItems = pagesheet.getTotalItems(itemGroup);
                     AttributesImpl atts = new AttributesImpl();
 
-                    atts.addAttribute(null, "current", "current", "CDATA",
+                    atts.addAttribute("", "current", "current", "CDATA",
                                       String.valueOf(item));
-                    atts.addAttribute(null, "total", "total", "CDATA",
+                    atts.addAttribute("", "total", "total", "CDATA",
                                       String.valueOf(totalItems));
-                    atts.addAttribute(null, "current-uri", "current-uri",
+                    atts.addAttribute("", "current-uri", "current-uri",
                                       "CDATA", requestURI);
-                    atts.addAttribute(null, "clean-uri", "clean-uri",
+                    atts.addAttribute("", "clean-uri", "clean-uri",
                                       "CDATA", cleanURI(requestURI, item));
-                    atts.addAttribute(null, "page", "page", "CDATA",
+                    atts.addAttribute("", "page", "page", "CDATA",
                                       String.valueOf(pagesheet.getPageForItem(item,
                                           itemGroup)));
                     super.startElement(PAGINATE_URI, "item",
                                        PAGINATE_PREFIX_TOKEN+"item", atts);
                     if (item>1) {
                         atts.clear();
-                        atts.addAttribute(null, "type", "type", "CDATA",
+                        atts.addAttribute("", "type", "type", "CDATA",
                                           "prev");
-                        atts.addAttribute(null, "uri", "uri", "CDATA",
+                        atts.addAttribute("", "uri", "uri", "CDATA",
                                           encodeURI(requestURI, item,
                                                     item-1));
                         super.startElement(PAGINATE_URI, "link",
@@ -354,9 +354,9 @@ public class Paginator extends AbstractTransformer
                     }
                     if (item<=totalItems) {
                         atts.clear();
-                        atts.addAttribute(null, "type", "type", "CDATA",
+                        atts.addAttribute("", "type", "type", "CDATA",
                                           "next");
-                        atts.addAttribute(null, "uri", "uri", "CDATA",
+                        atts.addAttribute("", "uri", "uri", "CDATA",
                                           encodeURI(requestURI, item,
                                                     item+1));
                         super.startElement(PAGINATE_URI, "link",
@@ -385,13 +385,13 @@ public class Paginator extends AbstractTransformer
                                          throws SAXException {
         AttributesImpl atts = new AttributesImpl();
 
-        atts.addAttribute(null, "current", "current", "CDATA",
+        atts.addAttribute("", "current", "current", "CDATA",
                           String.valueOf(currentPage));
-        atts.addAttribute(null, "total", "total", "CDATA",
+        atts.addAttribute("", "total", "total", "CDATA",
                           String.valueOf(totalPages));
-        atts.addAttribute(null, "current-uri", "current-uri", "CDATA",
+        atts.addAttribute("", "current-uri", "current-uri", "CDATA",
                           requestURI);
-        atts.addAttribute(null, "clean-uri", "clean-uri", "CDATA",
+        atts.addAttribute("", "clean-uri", "clean-uri", "CDATA",
                           Paginator.cleanURI(requestURI, currentPage));
         saxTransformer.startElement(Paginator.PAGINATE_URI, "page",
                                     Paginator.PAGINATE_PREFIX_TOKEN+"page",
@@ -402,14 +402,14 @@ public class Paginator extends AbstractTransformer
 
             if ((rangeLink>0) && (currentPage-rangeLink>=1)) {
                 atts.clear();
-                atts.addAttribute(null, "type", "type", "CDATA", "prev");
-                atts.addAttribute(null, "range", "range", "CDATA",
+                atts.addAttribute("", "type", "type", "CDATA", "prev");
+                atts.addAttribute("", "range", "range", "CDATA",
                                   rangeLinks[i].toString());
-                atts.addAttribute(null, "uri", "uri", "CDATA",
+                atts.addAttribute("", "uri", "uri", "CDATA",
                                   Paginator.encodeURI(requestURI,
                                                       currentPage,
                                                       currentPage-rangeLink));
-                atts.addAttribute(null, "page", "page", "CDATA",
+                atts.addAttribute("", "page", "page", "CDATA",
                                   String.valueOf(currentPage-rangeLink));
                 saxTransformer.startElement(Paginator.PAGINATE_URI,
                                             "range-link",
@@ -425,11 +425,11 @@ public class Paginator extends AbstractTransformer
         for (int i = currentPage-unitLinks; i<currentPage; i++) {
             if (i>0) {
                 atts.clear();
-                atts.addAttribute(null, "type", "type", "CDATA", "prev");
-                atts.addAttribute(null, "uri", "uri", "CDATA",
+                atts.addAttribute("", "type", "type", "CDATA", "prev");
+                atts.addAttribute("", "uri", "uri", "CDATA",
                                   Paginator.encodeURI(requestURI,
                                                       currentPage, i));
-                atts.addAttribute(null, "page", "page", "CDATA",
+                atts.addAttribute("", "page", "page", "CDATA",
                                   String.valueOf(i));
                 saxTransformer.startElement(Paginator.PAGINATE_URI, "link",
                                             Paginator.PAGINATE_PREFIX_TOKEN+
@@ -442,11 +442,11 @@ public class Paginator extends AbstractTransformer
         for (int i = currentPage+1; i<=currentPage+unitLinks; i++) {
             if (i<=totalPages) {
                 atts.clear();
-                atts.addAttribute(null, "type", "type", "CDATA", "next");
-                atts.addAttribute(null, "uri", "uri", "CDATA",
+                atts.addAttribute("", "type", "type", "CDATA", "next");
+                atts.addAttribute("", "uri", "uri", "CDATA",
                                   Paginator.encodeURI(requestURI,
                                                       currentPage, i));
-                atts.addAttribute(null, "page", "page", "CDATA",
+                atts.addAttribute("", "page", "page", "CDATA",
                                   String.valueOf(i));
                 saxTransformer.startElement(Paginator.PAGINATE_URI, "link",
                                             Paginator.PAGINATE_PREFIX_TOKEN+
@@ -462,14 +462,14 @@ public class Paginator extends AbstractTransformer
 
             if ((rangeLink>0) && (currentPage+rangeLink<=totalPages)) {
                 atts.clear();
-                atts.addAttribute(null, "type", "type", "CDATA", "next");
-                atts.addAttribute(null, "range", "range", "CDATA",
+                atts.addAttribute("", "type", "type", "CDATA", "next");
+                atts.addAttribute("", "range", "range", "CDATA",
                                   rangeLinks[i].toString());
-                atts.addAttribute(null, "uri", "uri", "CDATA",
+                atts.addAttribute("", "uri", "uri", "CDATA",
                                   Paginator.encodeURI(requestURI,
                                                       currentPage,
                                                       currentPage+rangeLink));
-                atts.addAttribute(null, "page", "page", "CDATA",
+                atts.addAttribute("", "page", "page", "CDATA",
                                   String.valueOf(currentPage+rangeLink));
                 saxTransformer.startElement(Paginator.PAGINATE_URI,
                                             "range-link",
