@@ -7,6 +7,7 @@
   <page id="install" label="Install" source="installing.xml"/>
   <page id="xsp-internals" label="XSP Internals" source="xsp-internals.xml"/>
   <page id="logicsheet-concepts" label="XSP Logicsheets" source="logicsheet-concepts.xml"/>
+  <page id="sitemap" label="Sitemap" source="sitemap.xml"/>
 <separator/>
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
