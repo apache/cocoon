@@ -213,9 +213,6 @@
    <action dev="AG" type="fix" fixes-bug="30065" due-to="Johnson Hsu" due-to-email="johnson@soho.club.tw">
      GetInstance don't work with upgrade from db-ojb-1.0rc6.
    </action>
-   <action dev="AG" type="fix" fixes-bug="30038" due-to="Jorg Heymans" due-to-email="jh@domek.be">
-     Fixing lucene-block samples dependencies.
-   </action>
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232,
      xreporter-expression to 20040701, ehcache to 0.9,
@@ -258,6 +255,9 @@
    <action dev="AG" type="update">
      Update qdox to 1.5 and jdt-core to 3.0.0.
    </action>
+   <action dev="AG" type="fix" fixes-bug="30038" due-to="Jorg Heymans" due-to-email="jh@domek.be">
+     Fixing lucene-block samples dependencies.
+   </action>
    <action dev="AG" type="update">
      Update lucene to 1.4.
    </action>
@@ -287,6 +287,15 @@
      POI block: processing of tags "grid", "orientation and "paper" in
      "gmr:PrintInformation".
    </action>
+   <action dev="AG" type="fix" fixes-bug="24433">
+     Fix JXTemplate generator does not handle format-number(number, '$#,##0.00').
+   </action>
+   <action dev="JH" type="add">
+     Forms block: Implement setValue method for the upload widget.
+   </action>
+   <action dev="JH" type="fix" fixes-bug="29881" due-to="Colin Adams" due-to-email="colin@colina.demon.co.uk">
+     Forms block: Handle variants of datatype date correctly (i18n, styling).
+   </action>
    <action dev="AG" type="update">
      Update commons-digester to 1.5, commons-betwixt to 0.5, commons-pool to 1.2,
      commons-dbcp to 1.2.1 and db-ojb to 1.0.0.
@@ -294,8 +303,18 @@
    <action dev="AG" type="update">
      Update commons-collections to 3.1.
    </action>
+   <action dev="AG" type="fix" fixes-bug="27133">
+     Fix JXTemplateGenerator eating backslash characters.
+   </action>
+   <action dev="AG" type="fix" fixes-bug="25083">
+     Add new &lt;jx:comment&gt; tag to the JXTemplate. XML comments are not
+     parsed anymore. See the bug description for a sample.
+   </action>
    <action dev="AG" type="fix" fixes-bug="29369" due-to="Juan Jose Pablos">
      Move commons-logging-1.0.4.jar to lib/core as jcs.jar depends on it.
+   </action>
+   <action dev="AG" type="fix" fixes-bug="29752" due-to="Leszek Gawron">
+     Apply patch: Caching JXTemplateGenerator.
    </action>
    <action dev="VG" type="update">
      ResourceReader can now take configuration elements, parameters
@@ -311,11 +330,17 @@
    <action dev="AG" type="update">
      Updated commons-logging to 1.0.4
    </action>
-  <action dev="AG" type="update">
+   <action dev="VG" type="add">
+     NamingInputModule provides access to the JNDI context.
+   </action>
+   <action dev="AG" type="update">
      Updated quartz to 1.4
-  </action>
+   </action>
    <action dev="CZ" type="add">
      Add configuration support for log4j.
+   </action>
+   <action dev="ATC" type="add" due-to="Leszek Gawron">
+     New Input modules: URLEncodeModule and URLDecodeModule
    </action>
    <action dev="CZ" type="fix" fixes-bug="27066">
      Apply patch to fix some memory leaks in the tree processor.
