@@ -18,7 +18,7 @@
 <!--+
     | Batik block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.8 2004/03/06 02:25:32 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.9 2004/05/23 07:17:29 antonio Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -81,6 +81,11 @@
       <map:match pattern="hello.png">
         <map:generate src="cocoon://samples/hello-world/hello.svg"/>
         <map:serialize type="svg2png"/>
+      </map:match>
+      
+      <map:match pattern="hello.svg">
+        <map:generate src="cocoon://samples/hello-world/hello.svg"/>
+        <map:serialize type="svgxml"/>
       </map:match>
 
       <map:match pattern="*.svg">
