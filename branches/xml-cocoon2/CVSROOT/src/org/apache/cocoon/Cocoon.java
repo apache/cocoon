@@ -49,7 +49,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.59 $ $Date: 2001-02-24 15:58:04 $
+ * @version CVS $Revision: 1.4.2.60 $ $Date: 2001-02-26 17:41:48 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -133,18 +133,21 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
 
     /** Configure this <code>Cocoon</code> instance. */
     public void configure() throws ConfigurationException {
+        Parser p = null;
+
         try {
-            Parser p = (Parser)this.componentManager.lookup(Roles.PARSER);
+            p = (Parser)this.componentManager.lookup(Roles.PARSER);
             SAXConfigurationHandler b = new SAXConfigurationHandler();
             InputSource is = new InputSource(this.configurationFile.openStream());
             p.setContentHandler(b);
             is.setSystemId(this.configurationFile.toExternalForm());
             p.parse(is);
             this.configuration = b.getConfiguration();
-            this.componentManager.release((Component) p);
         } catch (Exception e) {
             getLogger().error("Could not configure Cocoon environment", e);
             throw new ConfigurationException("Error trying to load configurations");
+        } finally {
+            if (p != null) this.componentManager.release((Component) p);
         }
 
         Configuration conf = this.configuration;
