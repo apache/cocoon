@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.68 2001-02-22 19:03:02 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.69 2001-03-14 21:02:54 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -170,10 +170,13 @@
       <xsp:include>java.sql.ResultSet</xsp:include>
       <xsp:include>java.sql.ResultSetMetaData</xsp:include>
       <xsp:include>java.sql.SQLException</xsp:include>
+      <xsp:include>java.sql.Clob</xsp:include>
       <xsp:include>java.text.SimpleDateFormat</xsp:include>
       <xsp:include>java.text.DecimalFormat</xsp:include>
       <xsp:include>java.io.StringWriter</xsp:include>
       <xsp:include>java.io.PrintWriter</xsp:include>
+      <xsp:include>java.io.BufferedInputStream</xsp:include>
+      <xsp:include>java.io.InputStream</xsp:include>
       <xsl:if test="$environment = 'cocoon2'">
           <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
       </xsl:if>
@@ -240,6 +243,28 @@
         int max_rows = -1;
         int skip_rows = 0;
         boolean results;
+      }
+
+      private final String getAscii(ResultSet set, String column) {
+        InputStream asciiStream = null;
+        byte[] buffer = null;
+
+        try {
+            Clob dbClob = set.getClob(column);
+            int length = (int) dbClob.length();
+            asciiStream = new BufferedInputStream(dbClob.getAsciiStream());
+            buffer = new byte[length];
+            asciiStream.read(buffer);
+            asciiStream.close();
+        } catch (Exception e) {
+            // ignore exception
+        } finally {
+            if (asciiStream != null) try {asciiStream.close();} catch (Exception ase) {/*ignore*/}
+        }
+
+        if (buffer == null) return "";
+
+        return new String(buffer);
       }
     </xsp:logic>
     <xsl:apply-templates/>
@@ -707,6 +732,11 @@
 <xspdoc:desc>returns the value of the given column as a short</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-short">
   <xsp:expr><xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+<xspdoc:desc>returns the value of the given column as a clob</xspdoc:desc>
+<xsl:template match="esql:row-results//esql:get-ascii">
+  <xsp:expr>this.getAscii(<xsl:call-template name="get-resultset"/>, <xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column interpeted as an xml fragment.
