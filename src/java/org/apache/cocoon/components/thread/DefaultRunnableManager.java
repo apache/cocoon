@@ -203,7 +203,7 @@ public class DefaultRunnableManager
         if( null != m_pools.get( name ) )
         {
             throw new IllegalArgumentException( "ThreadPool \"" + name +
-                                                "\" alrady exists" );
+                                                "\" already exists" );
         }
 
         createPool( new DefaultThreadPool(  ), name, queueSize, maxPoolSize,
