@@ -73,7 +73,7 @@
   FAQ
   ---
   
-  1) Why nothing happens when I access 'http://localhost/cocoon/'?
+  1) Why does nothing happen when I access 'http://localhost/cocoon/'?
 
   You might want to check a few things:
   
@@ -88,7 +88,7 @@
    - did you restart the servlet engine? if not, do it.
    
    
-  2) Why does Cocoon takes so long to start?
+  2) Why does Cocoon take so long to start?
   
   Cocoon compiles sitemaps into java classes to increase runtime performance,
   this is done only at startup and only if the sitemap file is modified, for 
@@ -104,10 +104,10 @@
   classloading problems.
 
   
-  4) I get a java.lang.VerifyError when accessing http://localhost/cocoon/'.
+  4) I get a java.lang.VerifyError when accessing 'http://localhost/cocoon/'.
      What's wrong?
 
-  Make sure you have not got a Cocoon 1.x jar in your servlet container lib/
+  Make sure you do not have a Cocoon 1.x jar in your servlet container lib/
   directory.
 
 
