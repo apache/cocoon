@@ -8,7 +8,7 @@
                                      by
 
                      Stefano Mazzocchi <stefano@apache.org>
-                     
+
 
 Installing the build tools
 ==========================
@@ -38,8 +38,8 @@ where this very file is located. Then type
   .\build.bat (win32)
 
 if everything is right and all the required packages are visible, this action
-will generate a file called "cocoon.jar" in the "./build/cocoon" directory. 
-Note, that if you do further development, compilation time is reduced since 
+will generate a file called "cocoon.jar" in the "./build/cocoon" directory.
+Note, that if you do further development, compilation time is reduced since
 Ant is able of detecting which files have changed an to recompile them at need.
 
 Also, you'll note that reusing a single JVM instance for each task, increases
@@ -69,7 +69,7 @@ These are the meaningful targets for this build file:
  - clean -> cleans the distribution after builds
  - distclean -> restores the distribution to its original and clean state
  - site -> generates the web site in ../xml-site/targets/cocoon
- 
+
 NOTE: the "site" target is only useful for site mantainers.
 
 ============================================================================ -->
@@ -130,7 +130,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <filter token="date"    value="${TODAY}"/>
     <filter token="log"     value="true"/>
     <filter token="verbose" value="true"/>
- 
+
     <available property="servlet.present" classname="javax.servlet.http.HttpServlet"/>
     <available property="php.present"     classname="net.php.servlet"/>
     <available property="xt.present"      classname="com.jclark.xsl.sax.XMLProcessorImpl"/>
@@ -141,6 +141,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <available property="jpeg.present"    classname="com.sun.image.codec.jpeg.JPEGCodec"/>
     <available property="png.present"     classname="com.keypoint.PngEncoder"/>
     <available property="jai.present"     classname="com.sun.media.jai.codec.ImageCodec"/>
+    <available property="action.present"  file="action.inc"/>
   </target>
 
   <!-- =================================================================== -->
@@ -197,6 +198,15 @@ NOTE: the "site" target is only useful for site mantainers.
       <include name="**/*.xsl"/>
     </copydir>
 
+    <copydir src="proposals/actions" dest="${build.src}/org/apache/cocoon/acting">
+      <include name="*.java" if="action.present"/>
+    </copydir>
+    <copydir src="proposals/actions"
+        dest="${build.src}/org/apache/cocoon/components/language/makeup/sitemap/java">
+      <include name="sitemap.xsl" if="action.present"/>
+    </copydir>
+
+
     <javac srcdir="${build.src}"
            destdir="${build.dest}"
            debug="${debug}"
@@ -243,6 +253,11 @@ NOTE: the "site" target is only useful for site mantainers.
       <include name="**/*.jpg"/>
       <include name="**/*.png"/>
     </copydir>
+
+    <copydir src="proposals/actions"
+             dest="${build.war}">
+      <include name="sitemap.xmap" if="action.present"/>
+    </copydir>
   </target>
 
   <!-- =================================================================== -->
@@ -264,7 +279,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <copyfile src="${build.dir}/${name}.jar" dest="${build.war}/WEB-INF/lib/${name}.jar"/>
     <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
@@ -282,8 +297,8 @@ NOTE: the "site" target is only useful for site mantainers.
   <target name="docs" depends="prepare-docs">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes" 
-          classpath="${java.class.path}:${doc.generator.package}" 
+    <java fork="yes"
+          classpath="${java.class.path}:${doc.generator.package}"
           classname="${doc.generator}">
      <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
     </java>
@@ -295,8 +310,8 @@ NOTE: the "site" target is only useful for site mantainers.
   <target name="printer-docs" depends="prepare-docs">
     <mkdir dir="${build.docs.printer}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes" 
-          classpath="${java.class.path}:${doc.generator.package}" 
+    <java fork="yes"
+          classpath="${java.class.path}:${doc.generator.package}"
           classname="${doc.generator}">
      <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${printer.skin}"/>
     </java>
@@ -308,8 +323,8 @@ NOTE: the "site" target is only useful for site mantainers.
   <target name="site" depends="prepare-docs">
     <mkdir dir="${site}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes" 
-          classpath="${java.class.path}:${doc.generator.package}" 
+    <java fork="yes"
+          classpath="${java.class.path}:${doc.generator.package}"
           classname="${doc.generator}">
      <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
     </java>
