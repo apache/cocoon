@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-01 21:16:48 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-08 21:04:22 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable, ThreadSafe, Loggable
@@ -181,7 +181,7 @@ public class ProgramGeneratorImpl
         if (programInstance instanceof Loggable) {
             ((Loggable)programInstance).setLogger(this.log);
         }
-      } catch (LanguageException e) { log.warn("Language Exception", e); }
+      } catch (LanguageException e) { log.debug("Language Exception", e); }
 
       /*
          FIXME: It's the program (not the instance) that must
