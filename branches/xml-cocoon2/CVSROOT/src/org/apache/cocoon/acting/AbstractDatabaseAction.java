@@ -18,7 +18,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.net.URL;
 import java.io.File;
+import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.StringBufferInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -166,7 +168,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-06 21:17:23 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-07 15:52:51 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -235,9 +237,21 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
 
         switch (typeObject.intValue()) {
             case Types.CLOB:
-                File asciiFile = (File) request.get(attribute);
-                FileInputStream asciiStream = new FileInputStream(asciiFile);
-                statement.setAsciiStream(position, asciiStream, (int) asciiFile.length());
+                Object attr = request.get(attribute);
+                int length = -1;
+                InputStream asciiStream = null;
+
+                if (attr instanceof File) {
+                    File asciiFile = (File) attr;
+                    asciiStream = new FileInputStream(asciiFile);
+                    length = (int) asciiFile.length();
+                } else {
+                    String asciiText = (String) attr;
+                    asciiStream = new StringBufferInputStream(asciiText);
+                    length = asciiText.length();
+                }
+
+                statement.setAsciiStream(position, asciiStream, length);
                 break;
             case Types.BIGINT:
                 statement.setBigDecimal(position, new BigDecimal((String) value));
