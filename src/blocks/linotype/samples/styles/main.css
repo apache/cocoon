@@ -43,13 +43,16 @@
  
 /* ----------------------------- Global Definitions -------------------- */
 
+@media screen
+  {
+  
 body {
     margin: 0px;
     padding: 0px;
 	font-family: "georgia", "times", "times new roman", serif;
     color: #222;
     background-color: #fff;
-    font-size: 12px;
+    /* font-size: 12px; */
     quotes: "\201C" "\201E" "\2018" "\2019";
 }
 
@@ -83,6 +86,16 @@ h1 {
     margin: 5px 0px 0px 0px;
     color: #000;
     font-weight: normal;
+}
+
+h1 a:link, h1 a:visited {
+    text-decoration:none;
+    color: #000;
+}
+
+h1 a:hover {
+    text-decoration:none;
+    color: #555;
 }
 
 h2 {
@@ -438,3 +451,24 @@ input[type="submit"] {
 .body q:after {
 	content: close-quote;
 }
+
+ /* 
+  * Workaround for missing suppport of position:fixed in IE6
+  * From http://devnull.tagsoup.com/fixed/
+  */
+  * html
+    {
+    overflow-y: hidden;
+    }
+  * html body
+    {
+    overflow-y: auto;
+    height: 100%;
+    font-size: 100%;
+    }
+  * html #sidebar
+    {
+    position: absolute;  
+    }
+  /* All done. */
+  }
