@@ -49,6 +49,7 @@ CHANGE HISTORY:
   19991215 Changed "img-block" in more friendly "figure" (SM)
   20000125 Added the "icon" image (SM)
   20000126 Allowed "anchor" in all levels (SM)
+  20000404 Removed the "role" attribute from common-xxx.att (SM)
 
 COPYRIGHT:
   Copyright (c) 1999-2000 The Apache Software Foundation.
@@ -88,21 +89,17 @@ COPYRIGHT:
 
 <!-- Common attributes
         Every element has an ID attribute (sometimes required,
-        but usually optional) for links, and a Role attribute
-        for extending the useful life of the DTD by allowing
-        authors to make subclasses for any element. %common.att;
+        but usually optional) for links. %common.att;
         is for common attributes where the ID is optional, and
         %common-idreq.att; is for common attributes where the
         ID is required.
 -->
 <!ENTITY % common.att
         'id                     ID              #IMPLIED
-         xml:lang               NMTOKEN         #IMPLIED
-         role                   NMTOKEN         #IMPLIED'>
+         xml:lang               NMTOKEN         #IMPLIED'>
 <!ENTITY % common-idreq.att
         'id                     ID              #REQUIRED
-         xml:lang               NMTOKEN         #IMPLIED
-         role                   NMTOKEN         #IMPLIED'>
+         xml:lang               NMTOKEN         #IMPLIED'>
 
 
 <!-- xml:space attribute ===============================================
