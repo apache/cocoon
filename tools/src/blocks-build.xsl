@@ -193,6 +193,13 @@
                <include name="{$block-name}/conf/**/*.samplesxpipe" unless="unless.exclude.block.{$block-name}"/>
             </xsl:for-each>
          </xpatch>
+         <xpatch file="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.samplesxconf" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
       </target>
 
    </xsl:template>
