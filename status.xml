@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.173 2003/10/10 12:06:22 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.174 2003/10/14 13:14:59 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="22377" due-to="Sam Coward" due-to-email="samc@atnet.net.au">
+     Cocoon Protocol: Fixed a bug that broke the environment handling in some cases for internal pipeline calls.
+   </action>
    <action dev="BRD" type="fix" fixes-bug="23648" due-to="Alfred Fuchs" due-to-email="email@alfred-fuchs.de">
      HTMLGenerator: fixed NullPointerException in case the "HTML" file contained an XML declaration.
    </action>
