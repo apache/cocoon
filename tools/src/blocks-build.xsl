@@ -99,6 +99,36 @@
       </xsl:attribute>
     </target>
 
+    <target name="patch">
+      <xsl:attribute name="depends">
+        <xsl:text>init</xsl:text>
+        <xsl:for-each select="$cocoon-blocks">
+          <xsl:text>,</xsl:text>
+          <xsl:value-of select="concat(@name, '-patch')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </target>
+                                                                                                                                                                               
+    <target name="roles">
+      <xsl:attribute name="depends">
+        <xsl:text>init</xsl:text>
+        <xsl:for-each select="$cocoon-blocks">
+          <xsl:text>,</xsl:text>
+          <xsl:value-of select="concat(@name, '-roles')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </target>
+
+    <target name="patch-samples">
+      <xsl:attribute name="depends">
+        <xsl:text>init</xsl:text>
+        <xsl:for-each select="$cocoon-blocks">
+          <xsl:text>,</xsl:text>
+          <xsl:value-of select="concat(@name, '-patch-samples')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </target>
+
     <target name="samples">
       <xsl:attribute name="depends">
         <xsl:text>init,patch-samples</xsl:text>
@@ -226,64 +256,6 @@
     </target>
 
     <xsl:apply-templates select="$cocoon-blocks"/>
-
-    <target name="patch-roles" depends="init">
-      <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.xroles" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-    </target>
-
-    <target name="patch-conf" depends="init">
-      <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.xmap" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.xconf" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.xlog" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.xweb" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-    </target>
-
-    <target name="patch-samples" depends="init">
-      <xpatch file="${{build.webapp}}/samples/block-samples.xml" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.xsamples" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/samples/sitemap.xmap" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.samplesxpipe" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}">
-        <xsl:for-each select="$cocoon-blocks">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <include name="{$block-name}/conf/*.samplesxconf" unless="unless.exclude.block.{$block-name}"/>
-        </xsl:for-each>
-      </xpatch>
-    </target>
-
   </xsl:template>
 
   <xsl:template match="project">
@@ -323,6 +295,34 @@
       </xsl:if>
 
       <antcall target="{$block-name}-compile"/>
+    </target>
+
+    <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
+      <xsl:if test="depend">
+        <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:attribute>
+      </xsl:if>
+                                                                                                                                                                               
+      <antcall target="{$block-name}-patches"/>
+    </target>
+                                                                                                                                                                               
+    <target name="{@name}-roles" unless="unless.exclude.block.{$block-name}">
+      <xsl:if test="depend">
+        <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
+      </xsl:if>
+                                                                                                                                                                               
+      <antcall target="{$block-name}-roles"/>
+    </target>
+
+    <target name="{@name}-patch-samples" unless="unless.exclude.block.{$block-name}">
+      <xpatch file="${{build.webapp}}/samples/block-samples.xml" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xsamples"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/samples/sitemap.xmap" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.samplesxpipe"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.samplesxconf"/>
+      </xpatch>
     </target>
 
     <target name="{@name}-samples" unless="unless.exclude.block.{$block-name}">
@@ -490,6 +490,27 @@
           <include name="**"/>
         </fileset>
       </copy>
+    </target>
+
+    <target name="{$block-name}-roles" unless="unless.exclude.block.{$block-name}">
+      <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xroles"/>
+      </xpatch>
+    </target>
+                                                                                                                                                                               
+    <target name="{$block-name}-patches" depends="{$block-name}-prepare" unless="unless.exclude.block.{$block-name}">
+      <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xmap"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
+        <include name="{$block-name}/conf/*.xconf"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xlog"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xweb"/>
+      </xpatch>
     </target>
 
     <target name="{$block-name}-samples" if="{$block-name}.has.samples">

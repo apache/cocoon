@@ -87,7 +87,7 @@
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="patch-conf"/>
+         target="patch"/>
   </target>
 
   <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="unless.exclude.webapp.samples"/>
