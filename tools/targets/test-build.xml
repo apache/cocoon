@@ -31,7 +31,15 @@
   <!-- Runs JUnit tests -->
   <target name="junit-tests" depends="compile-tests, junit-prepare">
     <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
-      <classpath refid="test.classpath"/>
+      <classpath>
+        <path refid="test.classpath"/>
+	      <fileset dir="${build.blocks}">
+	        <include name="*.jar"/>
+	      </fileset>
+	      <fileset dir="${blocks}">
+	        <include name="*/lib/*.jar"/>
+	      </fileset>
+      </classpath>
       <formatter type="plain"/>
       <formatter type="xml"/>
       <batchtest todir="${build.test.output}">
@@ -39,7 +47,6 @@
           <include name="**/*TestCase.class"/>
           <include name="**/*Test.class" />
           <exclude name="**/AllTest.class" />
-          <exclude name="**/CocoonBeanTestCase.class" />
           <exclude name="**/*$$*Test.class" />
           <exclude name="**/Abstract*.class" />
           <exclude name="**/SitemapComponentTestCase*"/>
