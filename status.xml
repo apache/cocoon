@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.231 2004/01/29 10:41:12 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.232 2004/01/30 09:45:39 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="26186" due-to-email="michael.gerzabek@gmx.net" due-to="Michael Gerzabek">
+     Fixing memory leak in the cocoon protocol.
+   </action>
    <action dev="JH" type="add" fixes-bug="14327" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
      JSPReader: The output encoding of the reader is now configurable.
    </action>

@@ -88,7 +88,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.10 2003/10/31 10:31:28 sylvain Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.11 2004/01/30 09:45:39 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -475,8 +475,9 @@ public abstract class AbstractProcessingPipeline
         // If this is an internal request, lastConsumer was reset!
         if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
+        } else {
+            this.preparePipeline(environment);
         }
-        this.preparePipeline(environment);
 
         // See if we need to set an "Expires:" header
         if (this.expires != 0) {
