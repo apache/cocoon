@@ -11,15 +11,15 @@ import org.apache.cocoon.Cocoon;
 import org.apache.arch.ComponentManager;
 import org.apache.cocoon.components.parser.Parser;
 
-import org.apache.cocoon.generators.AbstractServerPagesGenerator;
+import org.apache.cocoon.generators.AbstractServerPage;
 
 /**
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:57 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-25 14:27:47 $
  */
-public abstract class XSPGenerator extends AbstractServerPagesGenerator {
+public abstract class XSPGenerator extends AbstractServerPage {
   /** The XSP Object Model */
   protected Cocoon cocoon;
   protected Parser parser;
