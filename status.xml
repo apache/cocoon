@@ -170,12 +170,6 @@
     </action>
 
     <action context="code">
-      EventRecorder classes in o.a.c.transformation.helpers package are similar
-      to SaxBuffer. SaxBuffer should be extended (if it misses some functionality),
-      and EventRecorder deprecated and removed.
-    </action>
-
-    <action context="code">
       XMLize exception handling so that error pages can become more
       semantically meaningful. Currently all XSP compilation errors are
       stored in a single string. With XMLized exceptions we could display
@@ -202,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="update">
+      Deprecate EventRecorder (in o.a.c.t.helpers package). It will be
+      removed starting with Cocoon 2.2.
+    </action>
     <action dev="VG" type="fix" fixes-bug="26107">
       XSP Block: Note in the documentation that XSP namespace must be declared
       on the <code>xsp:page</code> element.
@@ -266,7 +264,7 @@
      <code>java.text.SimpleDateFormat</code> and <code>Icu4jDateFormatter</code>
      that uses ICU4J. There was previously an automatic switch to ICU4J if the
      library was present in the classpath, which sometimes caused some strange
-     results are it behaves a bit differently.
+     results as it behaves a bit differently.
    </action>
    <action dev="BD" type="fix">
      Tour block: fix "shapes" sample using if/else in flowscript
