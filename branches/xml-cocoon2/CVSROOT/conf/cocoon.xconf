@@ -1,80 +1,55 @@
 <?xml version="1.0"?>
 <cocoon version="2.0">
 
-<!-- ===================== Cocoon Configurations =========================== -->
+<!-- ===================== General Components =========================== -->
 
-  <component  role="parser"    class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component  role="store"     class="org.apache.cocoon.components.store.MemoryStore"/>
+  <component role="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
+  <component role="store" class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <!-- Start XSP -->
-  <component role="factory"
-    class="org.apache.arch.named.NamedComponentManagerImpl">
+  <component role="factory" class="org.apache.arch.named.NamedComponentManagerImpl">
+    <component-type name="programming-language">
+      <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
+        <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
+        <parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
+        <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+      </component-instance>
+    </component-type>
 
-      <component-type name="programming-language">
+    <component-type name="markup-language">
+      <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
+        <parameter name="prefix" value="xsp"/>
+        <parameter name="uri" value="http://xml.apache.org/cocoon/xsp"/>
+  
+        <target-language name="java">
+          <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
 
-        <component-instance name="java"
-          class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
-            <parameter name="compiler"
-              value="org.apache.cocoon.components.language.programming.java.Javac"/>
-            <parameter name="code-formatter"
-               value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
-            <parameter name="class-loader"
-               value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
-        </component-instance>
+          <builtin-logicsheet>
+            <parameter name="prefix" value="xsp-request"/>
+            <parameter name="uri" value="http://xml.apache.org/cocoon/xsp/request"/>
+            <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+          </builtin-logicsheet>
 
-      </component-type>
-
-      <component-type name="markup-language">
-
-        <component-instance name="xsp"
-          class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
-            <parameter name="prefix" value="xsp"/>
-            <parameter name="uri" value="http://xml.apache.org/xsp"/>
-
-            <target-language name="java">
-              <parameter name="core-logicsheet"
-	        value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
-
-              <builtin-logicsheet>
-                 <parameter name="prefix" value="xsp-request"/>
-                 <parameter name="uri" value="http://xml.apache.org/xsp/request"/>
-                 <parameter name="href"
-		   value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
-              </builtin-logicsheet>
-
-              <builtin-logicsheet>
-                 <parameter name="prefix" value="xsp-response"/>
-                 <parameter name="uri"
-		   value="http://xml.apache.org/xsp/response"/>
-                 <parameter name="href"
-		   value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
-              </builtin-logicsheet>
-            </target-language>
-        </component-instance>
-      </component-type>
+          <builtin-logicsheet>
+            <parameter name="prefix" value="xsp-response"/>
+            <parameter name="uri" value="http://xml.apache.org/cocoon/xsp/response"/>
+            <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+          </builtin-logicsheet>
+        </target-language>
+      </component-instance>
+    </component-type>
   </component>
 
-  <component
-    role="program-generator"
-    class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
-      <parameter name="repository" value="/tmp/repository"/>
-      <parameter name="auto-reload" value="true"/>
+  <component role="program-generator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
+    <parameter name="repository" value="/tmp/repository"/>
+    <parameter name="auto-reload" value="true"/>
   </component>
 
-  <generator  name="serverpages" class="org.apache.cocoon.generators.ServerPagesGenerator"/>
-
-  <!--
-  <component
-    role="class-loader"
-    class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"
-  />
-  -->
-
-  <!-- End XSP -->
+<!-- ===================== Pipeline Components =========================== -->
 
   <generator  name="file"      class="org.apache.cocoon.generators.FileGenerator"/>
   <generator  name="request"   class="org.apache.cocoon.generators.RequestGenerator"/>
   <generator  name="directory" class="org.apache.cocoon.generators.DirectoryGenerator"/>
+  <generator  name="serverpages" class="org.apache.cocoon.generators.ServerPagesGenerator"/>
   
   <filter     name="xslt"      class="org.apache.cocoon.filters.XalanFilter"/>
   <filter     name="log"       class="org.apache.cocoon.filters.LogFilter"/>
@@ -91,37 +66,61 @@
   
   <sitemap>
     <partition>
-      <process uri="hello" source="samples/documents/hello-page.xml">
+
+      <process uri="welcome" source="documents/welcome.xml">
         <generator name="file"/>
         <filter name="xslt">
-          <parameter name="stylesheet" value="samples/stylesheets/simple-page2html.xsl"/>
+          <parameter name="stylesheet" value="stylesheets/simple-welcome2html.xsl"/>
         </filter>
         <serializer name="html">
           <parameter name="contentType" value="text/html"/>
         </serializer>
       </process>
 
-      <!-- Start XSP -->
-      <process uri="simple-page.xsp" source="samples/documents/simple-page.xsp">
-        <generator name="serverpages">
-          <!--
-          <parameter name="markup-language" value="xsp"/>
-          <parameter name="programming-language" value="java"/>
-          -->
-        </generator>
+      <process uri="hello" source="documents/hello-page.xml">
+        <generator name="file"/>
         <filter name="xslt">
-          <parameter name="stylesheet" value="samples/documents/simple-page.xsl"/>
+          <parameter name="stylesheet" value="stylesheets/simple-page2html.xsl"/>
         </filter>
         <serializer name="html">
           <parameter name="contentType" value="text/html"/>
         </serializer>
       </process>
-      <!-- End XSP -->
+
+      <process uri="java.apache.org" source="documents/java_apache_org.xml">
+        <generator name="file"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="stylesheets/java_apache_org-html.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
+
+      <process uri="jakarta.apache.org" source="documents/jakarta_apache_org.xml">
+        <generator name="file"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="stylesheets/jakarta_apache_org-html.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
+
+      <process uri="simple_dynamic_page" source="documents/simple-dynamic-page.xsp">
+        <generator name="serverpages"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="stylesheets/dynamic-page2html.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
       
       <process uri="**/" source="**/">
         <generator name="directory"/>
         <filter name="xslt">
-          <parameter name="stylesheet" value="samples/stylesheets/simple-directory2html.xsl"/>
+          <parameter name="stylesheet" value="stylesheets/simple-directory2html.xsl"/>
         </filter>
         <serializer name="html">
           <parameter name="contentType" value="text/html"/>
@@ -130,5 +129,4 @@
 
     </partition>
   </sitemap>
-  
 </cocoon>
