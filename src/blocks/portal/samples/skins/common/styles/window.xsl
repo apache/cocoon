@@ -68,11 +68,11 @@
 		<td width="5" style="background-color:#294563;" valign="top"><img src="images/window-top-right.gif" border="0" width="5" height="5" alt="top-right"/></td>
 	</tr>
 	<tr>
-		<td width="5" style="background-image:url(window-border-left.gif);"><img src="images/space.gif" border="0" width="5" height="5" alt="space"/></td>
+		<td width="5" style="background-image:url(images/window-border-left.gif);"><img src="images/space.gif" border="0" width="5" height="5" alt="space"/></td>
 		<td colSpan="2">
                <xsl:apply-templates select="content"/>
 		</td>
-		<td width="5" style="background-image:url(window-border-right.gif);"><img src="images/space.gif" border="0" width="5" height="5" alt="space"/></td>
+		<td width="5" style="background-image:url(images/window-border-right.gif);"><img src="images/space.gif" border="0" width="5" height="5" alt="space"/></td>
 	</tr>
 	<tr>
 		<td width="5"><img src="images/window-bottom-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
