@@ -18,11 +18,13 @@
     <item>
         <composite-layout name="column">
             <item>
+		    <parameter name="width" value="60%"/>
 		        <coplet-layout name="coplet">
 		            <coplet-instance-data>Portal-Intro-1</coplet-instance-data>
 		        </coplet-layout>
             </item>
             <item>
+		    <parameter name="width" value="40%"/>
 		        <coplet-layout name="coplet" layout-renderer-name="nowindow">
 		            <coplet-instance-data>Login-1</coplet-instance-data>
 		        </coplet-layout>
@@ -30,13 +32,16 @@
         </composite-layout>
     </item>
     <item>
+    <parameter name="height" value="500"/>
         <composite-layout name="column">
             <item>
+		    <parameter name="width" value="25%"/>
                 <coplet-layout name="coplet">
                     <coplet-instance-data>Portal-Left-1</coplet-instance-data>
                 </coplet-layout>
             </item>
             <item>
+		    <parameter name="width" value="75%"/>
                 <coplet-layout name="coplet">
   	                <coplet-instance-data>Portal-Right-1</coplet-instance-data>
                 </coplet-layout>
@@ -44,6 +49,7 @@
         </composite-layout>
     </item>
     <item>
+    <parameter name="height" value="500"/>
         <coplet-layout name="coplet">
   	   	    <coplet-instance-data>Portal-Bottom-1</coplet-instance-data>
         </coplet-layout>

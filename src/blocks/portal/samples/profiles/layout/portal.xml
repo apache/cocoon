@@ -22,24 +22,38 @@
     </named-item>
     <named-item name="News">
         <composite-layout name="column">
+            <parameter name="border" value="0" />
+            <parameter name="border-color" value="#225599" />
             <item>
+	            <parameter name="width" value="50%" />
                 <composite-layout name="row">
+		            <parameter name="border" value="0" />
+		            <parameter name="border-color" value="#AACCFF" />
                     <item>
 		                <coplet-layout name="coplet">
+				            <parameter name="border" value="0" />
+				            <parameter name="border-color" value="#AA0000" />
 		                    <coplet-instance-data>Newsweek-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
 		                <coplet-layout name="coplet">
+				            <parameter name="border" value="0"/>
+				            <parameter name="border-color" value="#AA0000" />
 		                    <coplet-instance-data>NYTBusiness-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                 </composite-layout>
             </item>
             <item>
+	            <parameter name="width" value="25%" />
                 <composite-layout name="row">
+		            <parameter name="border" value="0" />
+		            <parameter name="border-color" value="#AACCFF" />
                     <item>
 		                <coplet-layout name="coplet">
+				            <parameter name="border" value="0" />
+				            <parameter name="border-color" value="#AA0000" />
 		                    <coplet-instance-data>BBCNews-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
@@ -52,6 +66,8 @@
                             </item>
                             <item>
                                 <coplet-layout name="coplet">
+						            <parameter name="border" value="0" />
+						            <parameter name="border-color" value="#AA0000" />
 				                    <coplet-instance-data>CNET News-1</coplet-instance-data>
                                 </coplet-layout>
                             </item>
@@ -60,14 +76,22 @@
                 </composite-layout>
             </item> 
             <item>
+	            <parameter name="width" value="25%" />
                 <composite-layout name="row">
+		            <parameter name="border" value="0" />
+		            <parameter name="border-color" value="#AACCFF" />
                     <item>
+			            <parameter name="bgcolor" value="#CCCCCC" />
 		                <coplet-layout name="coplet">
+				            <parameter name="border" value="0" />
+				            <parameter name="border-color" value="#AA0000" />
 		                    <coplet-instance-data>CSTNews-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
 		                <coplet-layout name="coplet">
+				            <parameter name="border" value="0" />
+				            <parameter name="border-color" value="#AA0000" />
 		                    <coplet-instance-data>CNNEurope-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
@@ -80,13 +104,13 @@
             <item>
                 <composite-layout name="row">
                     <item>
-                        <parameter name="width" value="50%" />
+                        <parameter name="width" value="20%" />
 		                <coplet-layout name="coplet">
 		                    <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
-                        <parameter name="width" value="50%" />
+                        <parameter name="width" value="80%" />
 		                <coplet-layout name="coplet">
 		                    <coplet-instance-data>ML Weblog-1</coplet-instance-data>
 		                </coplet-layout>
@@ -243,11 +267,13 @@
             <item>
                 <composite-layout name="column">  
                     <item>
+	            	<parameter name="width" value="50%" />
                         <coplet-layout name="coplet" >
                             <coplet-instance-data>app-test-1</coplet-instance-data>
                         </coplet-layout>
                     </item> 
                     <item>
+	            	<parameter name="width" value="50%" />
                         <coplet-layout name="coplet" >
                             <coplet-instance-data>app-test-2</coplet-instance-data>
                         </coplet-layout>
@@ -257,11 +283,13 @@
             <item>
                 <composite-layout name="column">  
                     <item>
+	            	<parameter name="width" value="50%" />
                         <coplet-layout name="coplet" >
                             <coplet-instance-data>app-test-3</coplet-instance-data>
                         </coplet-layout>
                     </item> 
                     <item>
+	            	<parameter name="width" value="50%" />
                         <coplet-layout name="coplet" >
                             <coplet-instance-data>app-test-4</coplet-instance-data>
                         </coplet-layout>
