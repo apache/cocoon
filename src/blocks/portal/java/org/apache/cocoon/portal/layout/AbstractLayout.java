@@ -16,9 +16,15 @@
 package org.apache.cocoon.portal.layout;
 
 import java.util.Map;
+import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.cocoon.portal.factory.impl.AbstractProducible;
+import org.apache.cocoon.portal.pluto.om.common.ParameterImpl;
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.pluto.om.common.Parameter;
 
 /**
  *
@@ -27,7 +33,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * 
  * @version CVS $Id$
  */
-public abstract class AbstractLayout 
+public abstract class AbstractLayout
     extends AbstractProducible 
     implements Layout, Parameters {
     
@@ -42,6 +48,27 @@ public abstract class AbstractLayout
      */
     public final Map getParameters() {
         return parameters;
+    }
+
+    public final Set getCastorParameters()
+    {
+        Set set = new HashSet(this.parameters.size());
+        Iterator iterator = this.parameters.entrySet().iterator();
+        Map.Entry entry;
+        while (iterator.hasNext())
+        {
+            entry = (Map.Entry) iterator.next();
+            ParameterImpl param = new ParameterImpl();
+            param.setName((String) entry.getKey());
+            param.setValue((String) entry.getValue());
+            set.add(param);
+        }
+        return set;
+    }
+
+    public void addParameter(Parameter parameter)
+    {
+        parameters.put(parameter.getName(), parameter.getValue());
     }
 
     /**

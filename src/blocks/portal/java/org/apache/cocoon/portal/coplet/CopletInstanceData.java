@@ -17,8 +17,16 @@ package org.apache.cocoon.portal.coplet;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.cocoon.portal.factory.impl.AbstractProducible;
+import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
+import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.util.AttributedMapItem;
+import org.apache.pluto.om.common.PreferenceSet;
 
 
 /**
@@ -38,6 +46,11 @@ public final class CopletInstanceData
 
     /** Temporary attributes are not persisted */
     protected Map temporaryAttributes = new HashMap();
+
+    /** Portlet preferences */
+    protected PreferenceSetImpl preferences = new PreferenceSetImpl();
+
+    protected ProfileManager profileManager;
 
     private String title = null;
 
@@ -79,6 +92,24 @@ public final class CopletInstanceData
         return this.attributes;
     }
 
+    public final Collection getCastorAttributes() {
+        Set set = new HashSet(this.attributes.size());
+        Iterator iterator = this.attributes.entrySet().iterator();
+        Map.Entry entry;
+        while (iterator.hasNext()) {
+            entry = (Map.Entry) iterator.next();
+            AttributedMapItem item = new AttributedMapItem();
+            item.setKey((String) entry.getKey());
+            item.setValue((String) entry.getValue());
+            set.add(item);
+        }
+        return set;
+    }
+
+    public void addAttribute(AttributedMapItem item) {
+        this.attributes.put(item.getKey(), item.getValue());
+    }
+
     public Object getTemporaryAttribute(String key) {
         return this.temporaryAttributes.get(key);
     }
@@ -110,6 +141,31 @@ public final class CopletInstanceData
         this.title = title;
     }
 
+    public void setPreferences(PreferenceSetImpl preferences) {
+        this.preferences = preferences;
+    }
+
+    public PreferenceSet getPreferences() {
+        return this.preferences;
+    }
+
+    public PreferenceSet getCastorPreferences() {
+        return getPreferences();
+    }
+
+    public void setCastorPreferences(PreferenceSet castorPreferences) {
+        setPreferences((PreferenceSetImpl)castorPreferences);
+    }
+
+    public void setProfileManager(ProfileManager manager) {
+        this.profileManager = manager;
+    }
+
+    public ProfileManager getProfileManager() {
+        return this.profileManager;
+    }
+
+
     /* (non-Javadoc)
      * @see java.lang.Object#clone()
      */
@@ -119,7 +175,9 @@ public final class CopletInstanceData
         clone.copletData = this.copletData;
         clone.attributes = new HashMap(this.attributes);
         clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
-        
+        clone.preferences = new PreferenceSetImpl();
+        clone.preferences.addAll(this.preferences.getPreferences());
+
         return clone;
     }
     

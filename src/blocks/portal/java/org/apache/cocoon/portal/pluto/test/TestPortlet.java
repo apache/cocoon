@@ -17,6 +17,8 @@ package org.apache.cocoon.portal.pluto.test;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
+import java.util.Iterator;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -28,13 +30,14 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
+import javax.portlet.PortletPreferences;
 
 /**
  * This is a very simple test portlet
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: TestPortlet.java,v 1.6 2004/03/16 15:56:43 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class TestPortlet implements Portlet  {
     
@@ -57,7 +60,19 @@ public class TestPortlet implements Portlet  {
      */
     public void processAction(ActionRequest req, ActionResponse res)
     throws PortletException, IOException {
-        // nothing to do
+
+        PortletPreferences prefs = req.getPreferences();
+        String key = req.getParameter("name");
+        String value = req.getParameter("value");
+        if (key != null && value != null) {
+            prefs.setValue(key, value);
+            try {
+              prefs.store();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+         // nothing to do
     }
 
     /* (non-Javadoc)
@@ -72,12 +87,46 @@ public class TestPortlet implements Portlet  {
         writer.write("<p>I'm running in: " + req.getPortalContext().getPortalInfo());
         writer.write("<p>Current portlet mode: " + req.getPortletMode() + "</p>");
         writer.write("<p>Current window state: " + req.getWindowState() + "</p>");
-        writer.write("<table><tr><td>Change Portlet Mode:</td>");
+        writer.write("<p>Portlet Preferences:</p>");
+        PortletPreferences prefs = req.getPreferences();
+        Map map = prefs.getMap();
+        Iterator iter = map.keySet().iterator();
+        while (iter.hasNext()) {
+            String key = (String)iter.next();
+            String[] values = (String [])map.get(key);
+            if (values.length == 1) {
+                writer.write("    Key: " + key + " Value: " + values[0] + "<br />");
+            } else if (values.length > 1) {
+                writer.write("    Key: " + key + " Value: " + values[0] + "<br />");
+                for (int i=1; i < values.length; ++i) {
+                    writer.write("       ");
+                    for (int j=0; j < key.length(); ++j) {
+                        writer.write(" ");
+                    }
+                    writer.write(" Value: " + values[i] + "<br />");
+                }
+            } else {
+                writer.write("    Key: " + key + " Value: <br />");
+            }
+        }
+
         PortletURL url;
+        url = res.createActionURL();
+        url.setPortletMode(PortletMode.EDIT);
+
+        writer.write("<form method=\"POST\" action=\"" + url.toString() + "\"><br />");
+        writer.write("Update Preferences: <br />");
+        writer.write("  Key: <input type=\"text\" name=\"name\" size=\"16\" maxlength=\"16\">");
+        writer.write("  Value: <input type=\"text\" name=\"value\" size=\"32\" maxlength=\"32\">");
+        writer.write("<br /><input type=\"submit\" value=\"Update Preferences\"/>");
+        writer.write("</form>");
+        writer.write("<table><tr><td>Change Portlet Mode:</td>");
+
         url = res.createRenderURL();
         url.setPortletMode(PortletMode.EDIT);
         this.writeLink(writer, url, "Edit");
-        
+
+
         url = res.createRenderURL();
         url.setPortletMode(PortletMode.HELP);
         this.writeLink(writer, url, "Help");
