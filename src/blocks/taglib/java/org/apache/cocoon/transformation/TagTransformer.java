@@ -28,6 +28,7 @@ import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -52,7 +53,7 @@ import org.xml.sax.SAXException;
  * Transformer which implements the dynamic Tag functionalty.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: TagTransformer.java,v 1.6 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id: TagTransformer.java,v 1.7 2004/06/24 13:45:29 cziegeler Exp $
  */
 public class TagTransformer
     extends AbstractXMLProducer
@@ -194,7 +195,7 @@ public class TagTransformer
 
         Tag tag = (Tag) tagStack.pop();
         if (tag != null) {
-            ServiceSelector tagSelector = (ServiceSelector)tagSelectorStack.pop();
+            ComponentSelector tagSelector = (ComponentSelector)tagSelectorStack.pop();
             try {
                 if (saxFragment != null) {
                     //start Iteration
@@ -315,7 +316,7 @@ public class TagTransformer
             Tag tag = (Tag) tagStack.pop();
             if (tag == null)
                 continue;
-            ServiceSelector tagSelector = (ServiceSelector)tagSelectorStack.pop();
+            ComponentSelector tagSelector = (ComponentSelector)tagSelectorStack.pop();
             tagSelector.release(tag);
 
             tagNamespaceSelector.release(tagSelector);
@@ -424,10 +425,10 @@ public class TagTransformer
 
         Tag tag = null;
         if (namespaceURI != null && namespaceURI.length() > 0) {
-            ServiceSelector tagSelector = null;
+            ComponentSelector tagSelector = null;
             Transformer tagTransformer = null;
             try {
-                tagSelector = (ServiceSelector) tagNamespaceSelector.select(namespaceURI);
+                tagSelector = (ComponentSelector) tagNamespaceSelector.select(namespaceURI);
                 tagSelectorStack.push(tagSelector);
 
                 // namespace matches tag library, lookup tag now.
