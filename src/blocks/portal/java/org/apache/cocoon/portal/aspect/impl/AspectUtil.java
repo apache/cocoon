@@ -62,7 +62,7 @@ import org.apache.cocoon.util.ClassUtils;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AspectUtil.java,v 1.3 2003/06/17 19:59:32 cziegeler Exp $
+ * @version CVS $Id: AspectUtil.java,v 1.4 2003/12/11 09:56:58 cziegeler Exp $
  */
 public class AspectUtil { 
 
@@ -88,4 +88,26 @@ public class AspectUtil {
         }
     }
     
+    public static Object convert(AspectDescription desc, Object value) {
+        try {
+            Class clazz = ClassUtils.loadClass(desc.getClassName());
+            if ( clazz.getName().startsWith("java.lang.")) {
+                if ( !clazz.equals(value.getClass())) {
+                    Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                    return constructor.newInstance(new String[] {value.toString()});
+                } else {
+                    return value;
+                }
+            } else {
+                if ( !value.getClass().equals(clazz) ) {
+                    // FIXME - this is catch by "ignore"
+                    throw new RuntimeException("Class of aspect doesn't match description.");
+                }
+                return value;
+            }
+        } catch (Exception ignore) {
+            // if we can't convert, well we don't do it :)
+            return value;
+        }        
+    }
 }
