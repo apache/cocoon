@@ -37,6 +37,7 @@ import org.apache.cocoon.framework.AbstractActor;
 import org.apache.cocoon.framework.Director;
 import org.apache.cocoon.framework.Monitor;
 import org.apache.cocoon.processor.Processor;
+import org.apache.cocoon.processor.ProcessorException;
 import org.apache.cocoon.Utils;
 
 /**
@@ -44,7 +45,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.8 $ $Date: 2000-06-29 06:17:49 $ $Author: balld $
+ * @version CVS $Revision: 1.9 $ $Date: 2000-07-05 03:51:51 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -116,11 +117,13 @@ class XIncludeProcessorWorker {
 
 	Object monitor_key;
 
+	HttpServletRequest request;
+
 	XIncludeProcessorWorker(XIncludeProcessor processor, Document document, Dictionary parameters) throws Exception {
 		this.processor = processor;
 		debug = processor.debug;
 		this.document = document;
-		HttpServletRequest request = (HttpServletRequest)parameters.get("request");
+		request = (HttpServletRequest)parameters.get("request");
 		monitor_key = Utils.encode(request);
 		String basename = Utils.getBasename(request,context);
 		base_file = new File((new File(basename)).getParent());
@@ -216,33 +219,36 @@ class XIncludeProcessorWorker {
 			suffix = href.substring(index+1);
 			href = href.substring(0,index);
 		}
-		Object object;
+		Object content;
 		String system_id;
+		Object local;
 		try {
-			URL url = new URL(href);
-			system_id = url.toString();
-			processor.monitored_table.put(monitor_key,"");
-			processor.monitor.watch(monitor_key,url);
-			object = url.getContent();
-		} catch (MalformedURLException e) {
-			if (current_xmlbase_uri != null) {
-				URL url = new URL(current_xmlbase_uri,href);
-				system_id = url.toString();
-				processor.monitored_table.put(monitor_key,"");
-				processor.monitor.watch(monitor_key,url);
-				object = url.getContent();
+			if (href.charAt(0) == '/') {
+				local = new File(Utils.getRootpath(request,context)+href);
+				system_id = ((File)local).getAbsolutePath();
+				content = new FileReader((File)local);
+			} else if (href.indexOf("://") >= 0) {
+				local = new URL(href);
+				system_id = local.toString();
+				content = ((URL)local).getContent();
+			} else if (current_xmlbase_uri != null) {
+				local = new URL(current_xmlbase_uri,href);
+				system_id = local.toString();
+				content = ((URL)local).getContent();
 			} else {
-				File file = new File(base_file,href);
-				system_id = file.getAbsolutePath();
-				processor.monitored_table.put(monitor_key,"");
-				processor.monitor.watch(monitor_key,file);
-				object = new FileReader(file);
+				local = new File(Utils.getBasepath(request,context)+href);
+				system_id = local.toString();
+				content = ((URL)local).getContent();
 			}
+			processor.monitored_table.put(monitor_key,"");
+			processor.monitor.watch(monitor_key,local);
+		} catch (MalformedURLException e) {
+			throw new ProcessorException("Could not include document: "+href+" is a malformed URL.");
 		}
 		Object result = null;
 		if (parse.equals("text")) {
-			if (object instanceof Reader) {
-				Reader reader = (Reader)object;
+			if (content instanceof Reader) {
+				Reader reader = (Reader)content;
 				int read;
 				char ary[] = new char[1024];
 				StringBuffer sb = new StringBuffer();
@@ -253,8 +259,8 @@ class XIncludeProcessorWorker {
 					reader.close();
 				}
 				result = document.createTextNode(sb.toString());
-			} else if (object instanceof InputStream) {
-				InputStream input = (InputStream)object;
+			} else if (content instanceof InputStream) {
+				InputStream input = (InputStream)content;
 				InputStreamReader reader = new InputStreamReader(input);
 				int read;
 				char ary[] = new char[1024];
@@ -269,12 +275,12 @@ class XIncludeProcessorWorker {
 			}
 		} else if (parse.equals("xml")) {
 			InputSource input;
-			if (object instanceof Reader) {
-				input = new InputSource((Reader)object);
-			} else if (object instanceof InputStream) {
-				input = new InputSource((InputStream)object);
+			if (content instanceof Reader) {
+				input = new InputSource((Reader)content);
+			} else if (content instanceof InputStream) {
+				input = new InputSource((InputStream)content);
 			} else {
-				throw new Exception("Unknown object type: "+object);
+				throw new Exception("Unknown object type: "+content);
 			}
 			input.setSystemId(system_id);
 			Document included_document = null;
