@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.woody.binding;
 
+import java.io.IOException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -63,7 +64,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
+import org.apache.commons.collections.FastHashMap;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -73,18 +76,19 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingManager.java,v 1.14 2004/01/28 12:55:25 joerg Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.15 2004/02/02 21:29:54 tim Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled
         implements BindingManager, Serviceable, Disposable,
                    Initializable, Configurable, ThreadSafe {
 
-    // TODO caching of the Bindings.
-
     private ServiceManager serviceManager;
     private DatatypeManager datatypeManager;
     private Configuration configuration;
     private SimpleServiceSelector bindingBuilderSelector;
+
+    protected static final String bindingKeyPrefix = "WoodyBinding:";
+    protected FastHashMap definitionCache = new FastHashMap();
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
@@ -101,27 +105,79 @@ public class JXPathBindingManager extends AbstractLogEnabled
         bindingBuilderSelector.configure(configuration.getChild("bindings"));
     }
 
-    public Binding createBinding(Source bindSrc)
-        throws BindingException {
-        try {
-            InputSource is = new InputSource(bindSrc.getInputStream());
-            is.setSystemId(bindSrc.getURI());
+    public Binding createBinding(Source source) throws BindingException {
+        return getBindingDefinition(source);
+    }
 
-            Document doc = DomHelper.parse(is);
-            Element rootElm = doc.getDocumentElement();
-            JXPathBindingBase newBinding = null;
-            if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
-                newBinding = getBuilderAssistant().getBindingForConfigurationElement(rootElm);
-                newBinding.enableLogging(getLogger());
-                getLogger().debug("Creation of new Binding finished. " + newBinding);
-            } else {
-                getLogger().debug("Root Element of said binding file is in wrong namespace.");
+    public Binding getBindingDefinition(Source source) throws BindingException {
+        Binding bindingDefinition = getStoredBindingDefinition(source);
+        if (bindingDefinition == null) {
+            try {
+                InputSource is = new InputSource(source.getInputStream());
+                is.setSystemId(source.getURI());
+
+                Document doc = DomHelper.parse(is);
+                Element rootElm = doc.getDocumentElement();
+                if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
+                    bindingDefinition = getBuilderAssistant().getBindingForConfigurationElement(rootElm);
+                    ((JXPathBindingBase)bindingDefinition).enableLogging(getLogger());
+                    getLogger().debug("Creation of new Binding finished. " + bindingDefinition);
+                } else {
+                    getLogger().debug("Root Element of said binding file is in wrong namespace.");
+                }
+                storeBindingDefinition(bindingDefinition, source);
+            } catch (BindingException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new BindingException("Error creating binding from " + source.getURI(), e);
             }
-            return newBinding;
-        } catch (BindingException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BindingException("Error creating binding from " + bindSrc.getURI(), e);
+        }
+        return bindingDefinition;
+    }
+
+    protected Binding getStoredBindingDefinition(Source source) {
+        return (Binding)getStoredDefinition(source, bindingKeyPrefix + source.getURI());
+    }
+
+    protected void storeBindingDefinition(Binding bindingDefinition, Source source) throws IOException {
+        storeDefinition(bindingDefinition, source, bindingKeyPrefix + source.getURI());
+    }
+
+    protected Binding getStoredDefinition(Source source, String key) {
+        SourceValidity newValidity = source.getValidity();
+
+        if (newValidity == null) {
+            definitionCache.remove(key);
+            return null;
+        }
+
+        Object[] definitionAndValidity = (Object[])definitionCache.get(key);
+        if (definitionAndValidity == null)
+            return null;
+
+        SourceValidity storedValidity = (SourceValidity)definitionAndValidity[1];
+        int valid = storedValidity.isValid();
+        boolean isValid;
+        if (valid == 0) {
+            valid = storedValidity.isValid(newValidity);
+            isValid = (valid == 1);
+        } else {
+            isValid = (valid == 1);
+        }
+
+        if (!isValid) {
+            definitionCache.remove(key);
+            return null;
+        }
+
+        return (Binding)definitionAndValidity[0];
+    }
+
+    protected void storeDefinition(Object definition, Source source, String key) throws IOException {
+        SourceValidity validity = source.getValidity();
+        if (validity != null) {
+            Object[] definitionAndValidity = {definition,  validity};
+            definitionCache.put(key, definitionAndValidity);
         }
     }
 
@@ -130,10 +186,11 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     public void dispose() {
-        bindingBuilderSelector.dispose();
-        bindingBuilderSelector = null;
-        serviceManager.release(datatypeManager);
-        datatypeManager = null;
+        this.bindingBuilderSelector.dispose();
+        this.bindingBuilderSelector = null;
+        this.serviceManager.release(this.datatypeManager);
+        this.datatypeManager = null;
+        this.definitionCache = null;
     }
 
     /**
