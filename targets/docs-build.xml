@@ -236,7 +236,8 @@ Not rebuilding docs, as they are up-to-date:
   <!-- Creates Javadocs -->
   <target name="javadocs" 
           depends="prepare-blocks"
-          description="Builds the API documentation (javadocs)">
+          description="Builds the API documentation (javadocs)"
+          unless="internal.exclude.javadocs">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"

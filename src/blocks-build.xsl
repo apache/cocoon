@@ -86,15 +86,15 @@
       </xsl:for-each>
     </target>
 
-    <target name="warning" depends="init">
+    <target name="unstable" depends="init">
       <xsl:for-each select="$cocoon-blocks[@status='unstable']">
         <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-        <condition property="unstable.blocks.included">
+        <condition property="unstable.blocks.present">
           <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
         </condition>
       </xsl:for-each>
       <if>
-        <istrue value="${{unstable.blocks.included}}"/>
+        <istrue value="${{unstable.blocks.present}}"/>
         <then>
           <echo message="==================== WARNING ======================="/>
           <xsl:for-each select="$cocoon-blocks[@status='unstable']">
@@ -109,9 +109,34 @@
       </if>
     </target>
 
+    <target name="excluded" depends="init">
+      <xsl:for-each select="$cocoon-blocks">
+        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+        <condition property="excluded.blocks.present">
+          <istrue value="${{internal.exclude.block.{$block-name}}}"/>
+        </condition>
+      </xsl:for-each>
+      <if>
+        <istrue value="${{excluded.blocks.present}}"/>
+        <then>
+          <echo message="==================== NOTICE ========================"/>
+          <xsl:for-each select="$cocoon-blocks">
+            <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+            <if>
+              <istrue value="${{internal.exclude.block.{$block-name}}}"/>
+              <then>
+                <echo message=" Block '{$block-name}' is excluded from the build."/>
+              </then>
+            </if>
+          </xsl:for-each>
+          <echo message="===================================================="/>
+        </then>
+      </if>
+    </target>
+
     <target name="compile">
       <xsl:attribute name="depends">
-        <xsl:text>warning</xsl:text>
+        <xsl:text>unstable,excluded</xsl:text>
         <xsl:for-each select="$cocoon-blocks">
           <xsl:text>,</xsl:text>
           <xsl:value-of select="concat(@name, '-compile')"/>
@@ -212,7 +237,7 @@
         <xsl:text>init, javadocs-check</xsl:text>
         <xsl:for-each select="$cocoon-blocks">
           <xsl:text>,</xsl:text>
-          <xsl:value-of select="concat(substring-after(@name, 'cocoon-block-'), '-prepare')"/>
+          <xsl:value-of select="concat(@name, '-prepare')"/>
         </xsl:for-each>
       </xsl:attribute>
 
@@ -305,17 +330,13 @@
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
 
-    <target name="{@name}-excluded" if="internal.exclude.block.{$block-name}">
-      <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
-    </target>
-
     <target name="{@name}" unless="internal.exclude.block.{$block-name}"/>
 
     <target name="{@name}-compile" unless="internal.exclude.block.{$block-name}">
       <xsl:attribute name="depends">
         <xsl:if test="depend">
-          <xsl:value-of select="$block-name"/><xsl:text>-prepare,</xsl:text>
-          <xsl:value-of select="@name"/>,<xsl:value-of select="@name"/>-excluded<xsl:text/>
+          <xsl:value-of select="concat(@name, '-prepare,')"/>
+          <xsl:value-of select="@name"/>
           <xsl:for-each select="$cocoon-block-dependencies">
             <xsl:text>,</xsl:text>
             <xsl:value-of select="concat(@project, '-compile')"/>
@@ -437,7 +458,7 @@
 
     <target name="{@name}-patch" unless="internal.exclude.block.{$block-name}">
       <xsl:attribute name="depends">
-        <xsl:value-of select="$block-name"/><xsl:text>-prepare</xsl:text>
+        <xsl:value-of select="concat(@name, '-prepare')"/>
         <xsl:if test="depend">
           <xsl:text>,</xsl:text>
           <xsl:value-of select="@name"/>
@@ -581,13 +602,13 @@
       </if>
     </target>
 
-    <target name="{$block-name}-prepare" unless="internal.exclude.block.{$block-name}">
+    <target name="{@name}-prepare" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
           <xsl:value-of select="@name"/>
           <xsl:for-each select="$cocoon-block-dependencies">
             <xsl:text>,</xsl:text>
-            <xsl:value-of select="concat(substring-after(@project,'cocoon-block-'), '-prepare')"/>
+            <xsl:value-of select="concat(@project, '-prepare')"/>
           </xsl:for-each>
         </xsl:attribute>
       </xsl:if>
