@@ -75,7 +75,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplWLS.java,v 1.4 2004/01/16 13:49:32 unico Exp $
+ * @version CVS $Id: JSPEngineImplWLS.java,v 1.5 2004/01/19 14:55:58 joerg Exp $
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -108,10 +108,12 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
     /**
      * execute the JSP and return the output
      *
-     * @param context The Servlet Context
+     * @param url
+     * @param servletRequest
+     * @param servletResponse
+     * @param servletContext
      * @exception IOException
      * @exception ServletException
-     * @exception SAXException
      * @exception Exception
      */
     public byte[] executeJSP(String url,
