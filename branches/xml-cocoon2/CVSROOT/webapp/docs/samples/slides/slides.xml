@@ -274,7 +274,7 @@
  <page>
   <p>Current time is <xsp:expr>new Date()</xsp:expr></p>
  </page>
-</xsp:page
+</xsp:page>
     ]]></source>     
    </slide>
 
