@@ -76,9 +76,9 @@ import java.lang.reflect.Method;
  * will call the method "doSave" of the MultiAction
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: AbstractMultiAction.java,v 1.6 2003/09/24 21:26:51 cziegeler Exp $
+ * @version CVS $Id: AbstractMultiAction.java,v 1.7 2003/10/15 20:47:14 cziegeler Exp $
  */
-public abstract class AbstractMultiAction extends ConfigurableComposerAction {
+public abstract class AbstractMultiAction extends ConfigurableServiceableAction {
 
     private static final String ACTION_METHOD_PREFIX = "do";
     private static final String ACTION_METHOD_PARAMETER = "method";

@@ -76,10 +76,10 @@ import org.apache.cocoon.environment.SourceResolver;
  *  variable in the Map.
  *
  * @author     <a href="mailto:sergio.carvalho@acm.org">Sergio Carvalho</a>
- * @version CVS $Id: SectionCutterAction.java,v 1.1 2003/09/04 12:42:42 cziegeler Exp $
+ * @version CVS $Id: SectionCutterAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
  */
 
-public class SectionCutterAction extends ConfigurableComposerAction implements ThreadSafe {
+public class SectionCutterAction extends ConfigurableServiceableAction implements ThreadSafe {
 
     Vector sections = new Vector();
 

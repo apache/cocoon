@@ -91,10 +91,10 @@ import java.util.Map;
  * Torsten Curdt.
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
- * @version CVS $Id: AbstractXMLFormAction.java,v 1.4 2003/07/03 09:26:03 cziegeler Exp $
+ * @version CVS $Id: AbstractXMLFormAction.java,v 1.5 2003/10/15 20:47:15 cziegeler Exp $
  */
 public abstract class AbstractXMLFormAction
-  extends ConfigurableComposerAction
+  extends ConfigurableServiceableAction
   implements Poolable, Recyclable, FormListener {
 
     public static final String OBJECT_MAP_NEXT_PAGE = "page";

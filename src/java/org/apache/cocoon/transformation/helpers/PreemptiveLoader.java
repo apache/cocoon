@@ -55,8 +55,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -70,7 +70,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * and loads content into the cache.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoader.java,v 1.4 2003/07/27 11:09:17 cziegeler Exp $
+ *  @version CVS $Id: PreemptiveLoader.java,v 1.5 2003/10/15 20:47:14 cziegeler Exp $
  *  @since   2.1
  */
 public final class PreemptiveLoader {
@@ -128,7 +128,7 @@ public final class PreemptiveLoader {
      * @param resolver  A source resolver
      * @param logger    A logger
      */
-    public void process(ComponentManager manager,
+    public void process(ServiceManager manager,
                          SourceResolver  resolver,
                          Logger          logger) {
         this.alive = true;

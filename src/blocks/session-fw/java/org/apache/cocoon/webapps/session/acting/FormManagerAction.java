@@ -52,12 +52,11 @@ package org.apache.cocoon.webapps.session.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.session.FormManager;
@@ -66,10 +65,10 @@ import org.apache.cocoon.webapps.session.FormManager;
  * This action invokes the form manager to process incomming form values
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FormManagerAction.java,v 1.1 2003/05/06 17:08:25 cziegeler Exp $
+ * @version CVS $Id: FormManagerAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
 */
 public final class FormManagerAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
     public Map act(Redirector redirector,
@@ -82,10 +81,10 @@ implements ThreadSafe {
         try {
             formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
             formManager.processInputFields();
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Error during lookup of formManager component.", ce);
         } finally {
-            this.manager.release( (Component)formManager );
+            this.manager.release( formManager );
         }
 
         return EMPTY_MAP;

@@ -52,11 +52,10 @@ package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
@@ -71,10 +70,10 @@ import org.apache.excalibur.source.SourceParameters;
  *  into the temporary context.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LoginAction.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: LoginAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
 */
 public final class LoginAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
     public Map act(Redirector redirector,
@@ -124,7 +123,7 @@ implements ThreadSafe {
 
             }
         } finally {
-            this.manager.release( (Component)authManager);
+            this.manager.release( authManager);
         }
 
         if (this.getLogger().isDebugEnabled() ) {

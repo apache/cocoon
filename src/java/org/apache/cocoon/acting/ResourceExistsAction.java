@@ -70,9 +70,9 @@ import java.util.Map;
  * match the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.2 2003/03/19 06:19:38 jefft Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
  */
-public class ResourceExistsAction extends ComposerAction implements ThreadSafe {
+public class ResourceExistsAction extends ServiceableAction implements ThreadSafe {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
         String urlstring = parameters.getParameter("url", source);

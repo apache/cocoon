@@ -145,9 +145,9 @@ import org.apache.cocoon.i18n.I18nUtils;
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
- * @version CVS $Id: LocaleAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: LocaleAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
  */
-public class LocaleAction extends ComposerAction implements ThreadSafe, Configurable {
+public class LocaleAction extends ServiceableAction implements ThreadSafe, Configurable {
 
     /**
      * Constant representing the language parameter

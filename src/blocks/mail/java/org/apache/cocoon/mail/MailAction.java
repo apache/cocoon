@@ -68,7 +68,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -87,10 +87,10 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  * @see MailContext
  *
  * @author Bernhard Huber
- * @version CVS $Id: MailAction.java,v 1.4 2003/09/05 07:21:48 cziegeler Exp $
+ * @version CVS $Id: MailAction.java,v 1.5 2003/10/15 20:47:15 cziegeler Exp $
  * @since Cocoon 2.1, 16 December 2002
  */
-public class MailAction extends ComposerAction implements ThreadSafe {
+public class MailAction extends ServiceableAction implements ThreadSafe {
 
     /**
      *  Request attribute name of a XMLizable folder

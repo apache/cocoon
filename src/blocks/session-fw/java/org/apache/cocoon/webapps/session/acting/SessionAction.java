@@ -52,12 +52,11 @@ package org.apache.cocoon.webapps.session.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.session.SessionManager;
@@ -75,10 +74,10 @@ import org.apache.cocoon.webapps.session.SessionManager;
  * the uthentication framework.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionAction.java,v 1.3 2003/07/18 08:37:15 cziegeler Exp $
+ * @version CVS $Id: SessionAction.java,v 1.4 2003/10/15 20:47:14 cziegeler Exp $
 */
 public final class SessionAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
     public Map act(Redirector redirector,
@@ -112,10 +111,10 @@ implements ThreadSafe {
             } else {
                 throw new ProcessingException("Unknown action: " + action);
             }
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Error during lookup of sessionManager component.", ce);
         } finally {
-            this.manager.release( (Component)sessionManager );
+            this.manager.release( sessionManager );
         }
 
         return EMPTY_MAP;
