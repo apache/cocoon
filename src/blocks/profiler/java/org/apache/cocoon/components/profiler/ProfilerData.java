@@ -60,17 +60,18 @@ import java.util.ArrayList;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerData.java,v 1.1 2003/03/09 00:05:52 pier Exp $
+ * @version CVS $Id: ProfilerData.java,v 1.2 2003/03/20 15:04:14 stephan Exp $
  */
-public class ProfilerData
-{
+public class ProfilerData {
+
     /**
      * Entry, which stores the role and source of a component from a pipeline.
      */
-    public class Entry
-    {
+    public class Entry {
+
         public String role;
         public String source;
+        public long setup;
         public long time;
         public Object fragment;
 
@@ -89,19 +90,24 @@ public class ProfilerData
     // Measured total time
     private long totaltime = 0;
 
+    /**
+     * Create a new profiler dataset.
+     */
     public ProfilerData() {
         entries = new ArrayList();
     }
 
     /**
      * Add new component from the pipeling, which should be measured.
-     * 
+     *
      * @param component Component of the pipeline.
      * @param role Role of the component.
      * @param source Source attribute of the component.
      */
     public void addComponent(Object component, String role, String source) {
-        entries.add(new Entry(role!=null?role:component.getClass().getName(), source));
+        entries.add(new Entry((role!=null)
+                              ? role
+                              : component.getClass().getName(), source));
     }
 
     /**
@@ -150,22 +156,43 @@ public class ProfilerData
     }
 
     /**
-     * Set measured time of the i-th component of the pipeline.
+     * Set measured setup time of the i-th component of the pipeline.
      *
      * @param index Index of the component.
-     * @param time Measured time of the component.
+     * @param time Measured setup time of the component.
      */
-    public void setTime(int index, long time) {
-        ((Entry)entries.get(index)).time = time;
+    public void setSetupTime(int index, long time) {
+        ((Entry) entries.get(index)).setup = time;
     }
 
     /**
-     * Get measured time of the i-th component of the pipeline.
+     * Get measured setup time of the i-th component of the pipeline.
      *
-     * @return Measured time of the component.
+     * @param index Index of the component.
+     * @return Measured setup time of the component.
      */
-    public long getTime(int index) {
-        return ((Entry)entries.get(index)).time;
+    public long getSetupTime(int index) {
+        return ((Entry) entries.get(index)).setup;
+    }
+
+    /**
+     * Set measured processing time of the i-th component of the pipeline.
+     *
+     * @param index Index of the component.
+     * @param time Measured processing time of the component.
+     */
+    public void setProcessingTime(int index, long time) {
+        ((Entry) entries.get(index)).time = time;
+    }
+
+    /**
+     * Get measured processing time of the i-th component of the pipeline.
+     *
+     * @param index Index of the component.
+     * @return Measured processing time of the component.
+     */
+    public long getProcessingTime(int index) {
+        return ((Entry) entries.get(index)).time;
     }
 
     /**
@@ -174,9 +201,8 @@ public class ProfilerData
      * @param index Index of the component.
      * @param fragment SAX fragment of the component.
      */
-    public void setSAXFragment(int index, Object fragment)
-    {
-        ((Entry)entries.get(index)).fragment = fragment;
+    public void setSAXFragment(int index, Object fragment) {
+        ((Entry) entries.get(index)).fragment = fragment;
     }
 
     /**
@@ -185,19 +211,20 @@ public class ProfilerData
      * @return Array of all entries.
      */
     public Entry[] getEntries() {
-        return (Entry[])entries.toArray(new Entry[entries.size()]);
+        return (Entry[]) entries.toArray(new Entry[entries.size()]);
     }
 
     /**
      * Generate a key for a given URI for this pipeline
-     * 
+     *
+     * @param uri URI
      * @return Hash key.
      */
-    public long getKey(String uri)
-    {
+    public long getKey(String uri) {
         StringBuffer key = new StringBuffer(uri);
-        for(int i=0; i<entries.size(); i++){
-            Entry entry = (Entry)entries.get(i);
+
+        for (int i = 0; i<entries.size(); i++) {
+            Entry entry = (Entry) entries.get(i);
 
             key.append(':');
             key.append(entry.role);
@@ -206,26 +233,4 @@ public class ProfilerData
         }
         return HashUtil.hash(key);
     }
-
-/*
-    public void report(String uri)
-    {
-        System.err.println("-------------------------------------------------------------------------------");
-        System.err.println("PROFILER DATA FOR: " + uri);
-
-        Entry[] entries = getEntries();
-        for(int i=0; i<entries.length; i++){
-            long time = entries[i].time;
-            if(i < entries.length - 1)
-                time -= entries[i+1].time;
-            if(entries[i].role == null || entries[i].role.length() == 0)
-                System.err.println("PROFILER DATA: " + time
-                    + "\tFOR " + entries[i].component);
-            else
-                System.err.println("PROFILER DATA: " + time
-                    + "\tFOR " + entries[i].role + "\t" + entries[i].source);
-        }
-        System.err.println("PROFILER DATA: " + entries[0].time + " TOTAL");
-    }
-*/
 }

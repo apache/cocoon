@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingXMLPipe.java,v 1.1 2003/03/09 00:05:52 pier Exp $
+ * @version CVS $Id: ProfilingXMLPipe.java,v 1.2 2003/03/20 15:04:14 stephan Exp $
  */
 public class ProfilingXMLPipe implements XMLPipe {
 
@@ -122,7 +122,7 @@ public class ProfilingXMLPipe implements XMLPipe {
 
         this.serializer.endDocument();
         if (this.index != -1)
-            this.data.setTime(this.index, this.total);
+            this.data.setProcessingTime(this.index, this.total);
 
         // push the content of the buffer through the next component
         Object fragment = this.serializer.getSAXFragment();
@@ -137,7 +137,7 @@ public class ProfilingXMLPipe implements XMLPipe {
         this.total = System.currentTimeMillis() - this.time;
 
         if ((this.index != -1) && (this.index==(this.data.getCount()-2)))
-            this.data.setTime(this.index+1, this.total);
+            this.data.setProcessingTime(this.index+1, this.total);
     }
 
     public void setDocumentLocator(Locator locator) {
