@@ -80,6 +80,40 @@
 </faq>
 
 <faq>
+ <question>How come Cocoon doesn't work on Tomcat 3.0?</question>
+ <answer>
+  <p>You must apply this patch to Tomcat 3.0 and recompile it or it won't work.
+  This patch is already present in latest CVS code but in case you don't want
+  to download the latest code you can apply this:</p>
+  
+  <source> Index: RequestMapper.java
+   ===================================================================
+   RCS file: /home/cvs/jakarta-tomcat/src/share/org/apache/tomcat/core/RequestMapper.java,v
+ 
+   retrieving revision 1.5
+   retrieving revision 1.6
+   diff -u -r1.5 -r1.6
+   --- RequestMapper.java 1999/11/05 18:36:33  1.5
+   +++ RequestMapper.java 1999/12/17 18:59:14  1.6
+   @@ -285,13 +285,7 @@
+                mapPath = "/" + s;
+            } else if (mapPath == null &&
+                this.resourceName != null) {
+   -            // XXX
+   -            // hack to differentiate amongst a mapped servlet and a jsp
+   -      if (! wrapper.getServletClass().equals(Constants.JSP.CLASSNAME)) {
+   -                mapPath = "/" + wrapper.getServletClass();
+   -            } else {
+   -                mapPath = this.resourceName;
+   -            }
+   +            mapPath = this.resourceName;
+            }
+ 
+            return mapPath;</source>
+ </answer>
+</faq>
+ 
+<faq>
  <question>The XSL book I read says the correct way of indicating the XSL stylesheet is by
     using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
     using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?
