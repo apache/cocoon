@@ -23,28 +23,32 @@ import java.util.Locale;
 import java.util.Stack;
 
 import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartFormatNumber extends StartInstruction {
 
-    JXTExpression value;
-    JXTExpression type;
-    JXTExpression pattern;
-    JXTExpression currencyCode;
-    JXTExpression currencySymbol;
-    JXTExpression isGroupingUsed;
-    JXTExpression maxIntegerDigits;
-    JXTExpression minIntegerDigits;
-    JXTExpression maxFractionDigits;
-    JXTExpression minFractionDigits;
-    JXTExpression locale;
+    private JXTExpression value;
+    private JXTExpression type;
+    private JXTExpression pattern;
+    private JXTExpression currencyCode;
+    private JXTExpression currencySymbol;
+    private JXTExpression isGroupingUsed;
+    private JXTExpression maxIntegerDigits;
+    private JXTExpression minIntegerDigits;
+    private JXTExpression maxFractionDigits;
+    private JXTExpression minFractionDigits;
+    private JXTExpression locale;
 
-    JXTExpression var;
+    private JXTExpression var;
 
     private static Class currencyClass;
     private static final String NUMBER = "number";
@@ -88,7 +92,26 @@ public class StartFormatNumber extends StartInstruction {
         this.var = JXTExpression.compileExpr(attrs.getValue("var"), null, locator);
     }
 
-    public String format(ExpressionContext expressionContext) throws Exception {
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        try {
+            String result = format(expressionContext);
+            if (result != null) {
+                char[] chars = result.toCharArray();
+                consumer.characters(chars, 0, chars.length);
+            }
+        } catch (Exception e) {
+            throw new SAXParseException(e.getMessage(), getLocation(), e);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(), getLocation(),
+                                        new ErrorHolder(err));
+        }
+        return getNext();
+    }
+
+    private String format(ExpressionContext expressionContext) throws Exception {
         // Determine formatting locale
         String var = this.var.getStringValue(expressionContext);
         Number input = this.value.getNumberValue(expressionContext);

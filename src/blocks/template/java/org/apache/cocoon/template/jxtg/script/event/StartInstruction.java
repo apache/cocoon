@@ -15,9 +15,14 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.xml.sax.SAXException;
 
-public class StartInstruction extends Event {
-    StartInstruction(StartElement startElement) {
+public abstract class StartInstruction extends Event {
+
+    public StartInstruction(StartElement startElement) {
         super(startElement.getLocation());
         this.startElement = startElement;
     }
@@ -31,5 +36,13 @@ public class StartInstruction extends Event {
 
     public void setEndInstruction(EndInstruction endInstruction) {
         this.endInstruction = endInstruction;
+    }
+
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext,
+                         ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        return getNext();
     }
 }

@@ -22,11 +22,15 @@ import java.util.Stack;
 import java.util.TimeZone;
 
 import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartFormatDate extends StartInstruction {
 
@@ -34,14 +38,14 @@ public class StartFormatDate extends StartInstruction {
     private static final String TIME = "time";
     private static final String DATETIME = "both";
 
-    JXTExpression var;
-    JXTExpression value;
-    JXTExpression type;
-    JXTExpression pattern;
-    JXTExpression timeZone;
-    JXTExpression dateStyle;
-    JXTExpression timeStyle;
-    JXTExpression locale;
+    private JXTExpression var;
+    private JXTExpression value;
+    private JXTExpression type;
+    private JXTExpression pattern;
+    private JXTExpression timeZone;
+    private JXTExpression dateStyle;
+    private JXTExpression timeStyle;
+    private JXTExpression locale;
 
     public StartFormatDate(StartElement raw, Attributes attrs, Stack stack) 
         throws SAXException{
@@ -60,7 +64,25 @@ public class StartFormatDate extends StartInstruction {
         this.locale = JXTExpression.compileExpr(attrs.getValue("locale"), null, locator);
     }
 
-    public String format(ExpressionContext expressionContext) throws Exception {
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        try {
+            String result = format(expressionContext);
+            if (result != null) {
+                char[] chars = result.toCharArray();
+                consumer.characters(chars, 0, chars.length);
+            }
+        } catch (Exception e) {
+            throw new SAXParseException(e.getMessage(), getLocation(), e);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(), getLocation(), new ErrorHolder(err));
+        }
+        return getNext();
+    }
+
+    private String format(ExpressionContext expressionContext) throws Exception {
         String var = this.var.getStringValue(expressionContext);
         Object value = this.value.getValue(expressionContext);
         Object locVal = this.locale.getValue(expressionContext);
@@ -77,7 +99,7 @@ public class StartFormatDate extends StartInstruction {
         Locale locale;
         if (locVal != null) {
             locale = locVal instanceof Locale ? (Locale) locVal
-                    : ValueHelper.parseLocale(locVal.toString(), null);
+                : ValueHelper.parseLocale(locVal.toString(), null);
         } else {
             locale = Locale.getDefault();
         }

@@ -17,14 +17,18 @@ package org.apache.cocoon.template.jxtg.script.event;
 
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class StartIf extends StartInstruction {
-    final JXTExpression test;
+    private final JXTExpression test;
 
     public StartIf(StartElement raw, Attributes attrs, Stack stack) 
         throws SAXException {
@@ -42,7 +46,29 @@ public class StartIf extends StartInstruction {
         }
     }
 
-    public JXTExpression getTest() {
-        return test;
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+
+        Object val;
+        try {
+            val = this.test.getValue(expressionContext);
+        } catch (Exception e) {
+            throw new SAXParseException(e.getMessage(), getLocation(), e);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(), getLocation(),
+                                        new ErrorHolder(err));
+        }
+        boolean result = false;
+        if (val instanceof Boolean) {
+            result = ((Boolean) val).booleanValue();
+        } else {
+            result = (val != null);
+        }
+        if (!result) {
+            return getEndInstruction().getNext();
+        }
+        return getNext();
     }
 }

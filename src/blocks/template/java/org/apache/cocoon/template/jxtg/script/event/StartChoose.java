@@ -17,7 +17,13 @@ package org.apache.cocoon.template.jxtg.script.event;
 
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.template.jxtg.script.Invoker;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartChoose extends StartInstruction {
 
@@ -26,6 +32,40 @@ public class StartChoose extends StartInstruction {
 
     public StartChoose(StartElement raw, Attributes attrs, Stack stack) {
         super(raw);
+    }
+
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        StartWhen startWhen = this.firstChoice;
+        while (startWhen != null) {
+            Object val;
+            try {
+                val = startWhen.getTest().getValue(expressionContext);
+            } catch (Exception e) {
+                throw new SAXParseException(e.getMessage(), getLocation(), e);
+            }
+            boolean result;
+            if (val instanceof Boolean) {
+                result = ((Boolean) val).booleanValue();
+            } else {
+                result = (val != null);
+            }
+            if (result) {
+                Invoker.execute(consumer, expressionContext, executionContext,
+                                macroCall, startWhen.getNext(),
+                                startWhen.getEndInstruction());
+                break;
+            }
+            startWhen = startWhen.getNextChoice();
+        }
+        if (startWhen == null && this.otherwise != null) {
+            Invoker.execute(consumer, expressionContext, executionContext,
+                            macroCall, this.otherwise.getNext(),
+                            this.otherwise.getEndInstruction());
+        }
+        return getEndInstruction().getNext();
     }
 
     public void setFirstChoice(StartWhen firstChoice) {

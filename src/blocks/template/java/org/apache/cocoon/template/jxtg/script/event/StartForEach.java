@@ -15,9 +15,15 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Iterator;
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Invoker;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -25,13 +31,13 @@ import org.xml.sax.SAXParseException;
 
 public class StartForEach extends StartInstruction {
 
-    final JXTExpression items;
-    final JXTExpression var;
-    final JXTExpression varStatus;
-    final JXTExpression begin;
-    final JXTExpression end;
-    final JXTExpression step;
-    final Boolean lenient;
+    private final JXTExpression items;
+    private final JXTExpression var;
+    private final JXTExpression varStatus;
+    private final JXTExpression begin;
+    private final JXTExpression end;
+    private final JXTExpression step;
+    private final Boolean lenient;
 
     public StartForEach(StartElement raw, Attributes attrs, Stack stack)
         throws SAXException {
@@ -63,31 +69,75 @@ public class StartForEach extends StartInstruction {
         this.items = JXTExpression.compileExpr(items == null ? select : items, null, locator);
     }
 
-    public JXTExpression getBegin() {
-        return begin;
-    }
-
-    public JXTExpression getEnd() {
-        return end;
-    }
-
-    public JXTExpression getItems() {
-        return items;
-    }
-
-    public Boolean getLenient() {
-        return lenient;
-    }
-
-    public JXTExpression getStep() {
-        return step;
-    }
-
-    public JXTExpression getVar() {
-        return var;
-    }
-
-    public JXTExpression getVarStatus() {
-        return varStatus;
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        Iterator iter = null;
+        int begin, end, step;
+        String var, varStatus;
+        try {
+            iter = this.items.getIterator(expressionContext);
+            begin = this.begin == null
+                ? 0
+                : this.begin.getIntValue(expressionContext);
+            end = this.end == null
+                ? Integer.MAX_VALUE
+                : this.end.getIntValue(expressionContext);
+            step = this.step == null
+                ? 1
+                : this.step.getIntValue(expressionContext);
+            var = this.var.getStringValue(expressionContext);
+            varStatus = this.varStatus.getStringValue(expressionContext);
+        } catch (Exception exc) {
+            throw new SAXParseException(exc.getMessage(),
+                                        getLocation(), exc);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(),
+                                        getLocation(), new ErrorHolder(err));
+        }
+        ExpressionContext localExpressionContext =
+            new ExpressionContext(expressionContext);
+        int i = 0;
+        // Move to the begin row
+        while (i < begin && iter.hasNext()) {
+            iter.next();
+            i++;
+        }
+        LoopTagStatus status = null;
+        if (varStatus != null) {
+            status = new LoopTagStatus();
+            status.setBegin(begin);
+            status.setEnd(end);
+            status.setStep(step);
+            status.setFirst(true);
+            localExpressionContext.put(varStatus, status);
+        }
+        int skipCounter, count = 1;
+        while (i <= end && iter.hasNext()) {
+            Object value = iter.next();
+            localExpressionContext.setContextBean(value);
+            if (var != null) {
+                localExpressionContext.put(var, value);
+            }
+            if (status != null) {
+                status.setIndex(i);
+                status.setCount(count);
+                status.setFirst(i == begin);
+                status.setCurrent(value);
+                status.setLast((i == end || !iter.hasNext()));
+            }
+            Invoker.execute(consumer, localExpressionContext, executionContext,
+                            macroCall, getNext(), getEndInstruction());
+            // Skip rows
+            skipCounter = step;
+            while (--skipCounter > 0 && iter.hasNext()) {
+                iter.next();
+            }
+            // Increase index
+            i += step;
+            count++;
+        }
+        return getEndInstruction().getNext();
     }
 }

@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -26,8 +29,8 @@ import org.xml.sax.SAXParseException;
 
 public class StartDefine extends StartInstruction {
 
-    final String name;
-    final String namespace;
+    private final String name;
+    private final String namespace;
     private final String qname;
     private final Map parameters;
     private Event body;
@@ -52,6 +55,14 @@ public class StartDefine extends StartInstruction {
         this.parameters = new HashMap();
     }
 
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        executionContext.getDefinitions().put(this.qname, this);
+        return getEndInstruction().getNext();
+    }
+
     public void finish() throws SAXException {
         Event e = next;
         boolean params = true;
@@ -64,7 +75,7 @@ public class StartDefine extends StartInstruction {
                                     + startParam.name + "\"", startParam
                                     .getLocation(), null);
                 }
-                Object prev = getParameters().put(startParam.name, startParam);
+                Object prev = this.parameters.put(startParam.name, startParam);
                 if (prev != null) {
                     throw new SAXParseException("duplicate parameter: \""
                             + startParam.name + "\"", location, null);
@@ -80,7 +91,7 @@ public class StartDefine extends StartInstruction {
                     if (!Character.isWhitespace(ch[i])) {
                         if (params) {
                             params = false;
-                            setBody(e);
+                            this.body = e;
                         }
                         break;
                     }
@@ -88,13 +99,13 @@ public class StartDefine extends StartInstruction {
             } else {
                 if (params) {
                     params = false;
-                    setBody(e);
+                    this.body = e;
                 }
             }
             e = e.getNext();
         }
-        if (this.getBody() == null) {
-            this.setBody(this.getEndInstruction());
+        if (this.body == null) {
+            this.body = this.getEndInstruction();
         }
     }
 
@@ -102,7 +113,7 @@ public class StartDefine extends StartInstruction {
         return parameters;
     }
 
-    void setBody(Event body) {
+    private void setBody(Event body) {
         this.body = body;
     }
 
@@ -110,7 +121,7 @@ public class StartDefine extends StartInstruction {
         return body;
     }
 
-    public String getQname() {
+    private String getQname() {
         return qname;
     }
 }

@@ -17,10 +17,33 @@ package org.apache.cocoon.template.jxtg.script.event;
 
 import java.util.Stack;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.template.jxtg.script.Invoker;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartEvalBody extends StartInstruction {
     public StartEvalBody(StartElement raw, Attributes attrs, Stack stack) {
         super(raw);
+    }
+
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext, ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        try {
+            Invoker.execute(consumer, expressionContext, executionContext,
+                            null, macroCall.getNext(), macroCall.getEndElement());
+        } catch (Exception exc) {
+            throw new SAXParseException(exc.getMessage(), getLocation(), exc);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(), getLocation(),
+                                        new ErrorHolder(err));
+        }
+        return getEndInstruction().getNext();
     }
 }
