@@ -140,6 +140,19 @@
     -->
 
     <!--
+      If you want to configure log4j using Cocoon, then you can define
+      an XML configuration file here. You can use the usual log4j property
+      substituation mechanism, e.g. ${context-root} is replaced by the
+      context root of this web application etc.
+      You can configure the log4j configuration even if you use LogKit 
+      for Cocoon logging. You can use this to configure third party code
+      for example.
+      <init-param>
+        <param-name>log4j-config</param-name>
+        <param-value>/WEB-INF/log4j.xconf</param-value>
+      </init-param>
+    -->
+    <!--
       Allow reinstantiating (reloading) of the cocoon instance. If this is
       set to "yes" or "true", a new cocoon instance can be created using
       the request parameter "cocoon-reload". Default is no for security reasons.
