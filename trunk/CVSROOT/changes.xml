@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.215 2001-03-01 16:24:16 greenrd Exp $ 
+  $Id: changes.xml,v 1.216 2001-03-07 23:33:12 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="update" due-to="Phillipe Lavoie" 
+  due-to-email="philippe.lavoie@cactus.ca">
+   Upgraded Ant from version 1.1 to version 1.3 and rewrote build.xml to use new syntax.
+  </action>
   <action dev="RDG" type="add" due-to="Donald Ball" due-to-email="balld@webslingerZ.com">
    Added "fastcutoff" setting to cocoon.properties to control sendRedirect,
    getOutputStream and getWriter behaviour for maximum flexibility and backward compatibility.
