@@ -54,6 +54,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.mozilla.javascript.Context;
@@ -67,7 +68,7 @@ import org.mozilla.javascript.continuations.Continuation;
 
 /**
  *
- * @version CVS $Id: FOM_WebContinuation.java,v 1.5 2004/01/28 15:33:21 vgritsenko Exp $
+ * @version CVS $Id: FOM_WebContinuation.java,v 1.6 2004/02/20 18:48:23 sylvain Exp $
  */
 public class FOM_WebContinuation extends ScriptableObject {
 
@@ -119,7 +120,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         WebContinuation wk;
         Scriptable scope = getTopLevelScope(c);
         FOM_Cocoon cocoon = (FOM_Cocoon)getProperty(scope, "cocoon");
-        ComponentManager componentManager =  cocoon.getComponentManager();
+        ServiceManager componentManager =  cocoon.getServiceManager();
         ContinuationsManager contMgr = (ContinuationsManager)
             componentManager.lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(c,
@@ -178,8 +179,8 @@ public class FOM_WebContinuation extends ScriptableObject {
         FOM_Cocoon cocoon =
             (FOM_Cocoon)getProperty(getTopLevelScope(this),
                                     "cocoon");
-        ComponentManager componentManager =
-            cocoon.getComponentManager();
+        ServiceManager componentManager =
+            cocoon.getServiceManager();
         contMgr = (ContinuationsManager)
             componentManager.lookup(ContinuationsManager.ROLE);
         contMgr.invalidateWebContinuation(wk);

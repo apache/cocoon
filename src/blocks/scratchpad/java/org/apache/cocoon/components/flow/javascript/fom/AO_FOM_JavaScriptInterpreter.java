@@ -65,8 +65,12 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
@@ -74,14 +78,23 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JSErrorReporter;
 import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
 import org.apache.cocoon.components.flow.javascript.ScriptablePropertyHandler;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
-import org.mozilla.javascript.*;
+import org.apache.excalibur.source.SourceResolver;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
@@ -107,11 +120,13 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.6 2003/09/24 22:00:34 cziegeler Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.7 2004/02/20 18:48:23 sylvain Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
-    implements Configurable, Initializable
+    implements Serviceable, Configurable, Initializable
 {
+
+    private SourceResolver sourceResolver;
 
     /**
      * LAST_EXEC_TIME
@@ -244,6 +259,11 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     Configuration stopExecutionFunctionsConf = null;
     boolean serializeResultScript = false;
     // --end
+    
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+    }
 
     public void configure(Configuration config) 
         throws ConfigurationException {
@@ -312,16 +332,18 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @param environment an <code>Environment</code> value
      * @return a <code>Scriptable</code> value
      */
-    private Scriptable getSessionScope(Environment environment)
+    private Scriptable getSessionScope()
         throws Exception {
-        Map objectModel = environment.getObjectModel();
-        Request request = ObjectModelHelper.getRequest(objectModel);
+        Request request = ContextHelper.getRequest(avalonContext);
         Scriptable scope = null;
         Session session = request.getSession(false);
         if (session != null) {
             HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
             if (userScopes != null) {
-                String uriPrefix = environment.getURIPrefix();
+                // Get context prefix
+                Source src = this.sourceResolver.resolveURI(".");
+                String uriPrefix = src.getURI();
+                this.sourceResolver.release(src);
                 scope = (Scriptable)userScopes.get(uriPrefix);
             }
         }
@@ -331,10 +353,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         return scope;
     }
 
-    void updateSession(Environment env, Scriptable scope) throws Exception {
+    void updateSession(Scriptable scope) throws Exception {
         ThreadScope thrScope = (ThreadScope)scope;
         if (thrScope.useSession) {
-            setSessionScope(env, scope);
+            setSessionScope(scope);
         }
     }
 
@@ -346,10 +368,9 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @param environment an <code>Environment</code> value
      * @param scope a <code>Scriptable</code> value
      */
-    private Scriptable setSessionScope(Environment environment, Scriptable scope)
+    private Scriptable setSessionScope(Scriptable scope)
         throws Exception {
-        Map objectModel = environment.getObjectModel();
-        Request request = ObjectModelHelper.getRequest(objectModel);
+        Request request = ContextHelper.getRequest(this.avalonContext);
         Session session = request.getSession(true);
 
         HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
@@ -357,7 +378,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
-        String uriPrefix = environment.getURIPrefix();
+        // Get context prefix
+        Source src = this.sourceResolver.resolveURI(".");
+        String uriPrefix = src.getURI();
+        this.sourceResolver.release(src);
         userScopes.put(uriPrefix, scope);
         return scope;
     }
@@ -436,7 +460,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @param environment an <code>Environment</code> value
      * @exception Exception if an error occurs
      */
-    private void setupContext(Environment environment,
+    private void setupContext(Redirector redirector,
                               org.mozilla.javascript.Context context,
                               Scriptable thrScope)
         throws Exception {
@@ -455,7 +479,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                                                 thrScope)).longValue();
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        cocoon.setup( this, environment, manager, getLogger());
+        cocoon.setup( this, redirector, avalonContext, manager, getLogger());
         
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
@@ -488,7 +512,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                 ScriptSourceEntry entry =
                     (ScriptSourceEntry)compiledScripts.get(sourceURI);
                 if (entry == null) {
-                    Source src = environment.resolveURI(sourceURI);
+                    Source src = this.sourceResolver.resolveURI(sourceURI);
                     entry = new ScriptSourceEntry(src);
                     compiledScripts.put(sourceURI, entry);
                 }
@@ -496,8 +520,8 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                 // add interception support
                 if( isInterceptionEnabled ) {
                     JavaScriptAspectWeaver aspectWeaver = new JavaScriptAspectWeaver();
-                    aspectWeaver.setEnvironment( environment );
                     aspectWeaver.enableLogging( this.getLogger() );
+                    aspectWeaver.service(this.manager);
                     aspectWeaver.setSerializeResultScriptParam( this.serializeResultScript );
                     aspectWeaver.setStopExecutionFunctionsConf( this.stopExecutionFunctionsConf );
                     entry.setAspectWeaver( aspectWeaver );
@@ -532,9 +556,8 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @return compiled script
      */
     Script compileScript(Context cx,
-                         Environment environment,
                          String fileName) throws Exception {
-        Source src = environment.resolveURI(fileName);
+        Source src = sourceResolver.resolveURI(fileName);
         if (src == null) {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
@@ -596,7 +619,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @exception Exception if an error occurs
      */
     public void callFunction(String funName, List params,
-                             Environment environment)
+                             Redirector redirector)
         throws Exception
     {
         Context context = Context.enter();
@@ -605,10 +628,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
         AO_FOM_Cocoon cocoon = null;
-        Scriptable thrScope = getSessionScope(environment);
+        Scriptable thrScope = getSessionScope();
         synchronized (thrScope) {
             try {
-                setupContext(environment, context, thrScope);
+                setupContext(redirector, context, thrScope);
                 cocoon = (AO_FOM_Cocoon)thrScope.get("cocoon", thrScope);
                 if (enableDebugger) {
                     if (!getDebugger().isVisible()) {
@@ -657,7 +680,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
-                updateSession(environment, thrScope);
+                updateSession(thrScope);
                 if (cocoon != null) cocoon.invalidate();
                 Context.exit();
             }
@@ -665,7 +688,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     }
 
     public void handleContinuation(String id, List params,
-                                   Environment environment)
+                                   Redirector redirector)
         throws Exception
     {
         WebContinuation wk = continuationsMgr.lookupWebContinuation(id);
@@ -691,7 +714,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             AO_FOM_Cocoon cocoon = (AO_FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, environment, manager, getLogger());
+            cocoon.setup(this, redirector, avalonContext, manager, getLogger());
             if (enableDebugger) {
                 getDebugger().setVisible(true);
             }
@@ -739,7 +762,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
-                updateSession(environment, kScope);
+                updateSession(kScope);
                 cocoon.invalidate();
                 Context.exit();
             }
@@ -760,29 +783,28 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     public void forwardTo(Scriptable scope, AO_FOM_Cocoon cocoon,
                           String uri, Object bizData,
                           FOM_WebContinuation fom_wk,
-                          Environment environment)
+                          Redirector redirector)
         throws Exception {
-        setupView(scope, cocoon, environment, fom_wk);
+        setupView(scope, cocoon, fom_wk);
         super.forwardTo(uri, bizData, 
                         fom_wk == null ? null :
                            fom_wk.getWebContinuation(), 
-                        environment);
+                        redirector);
     }
 
     // package access as this is called by FOM_Cocoon
-    boolean process(Scriptable scope, AO_FOM_Cocoon cocoon,
+    void process(Scriptable scope, AO_FOM_Cocoon cocoon,
                     String uri, Object bizData, 
-                    OutputStream out, Environment environment)
+                    OutputStream out)
         throws Exception {
-        setupView(scope, cocoon, environment, null);
-        return super.process(uri, bizData, out, environment);
+        setupView(scope, cocoon, null);
+        super.process(uri, bizData, out);
     }
     
     private void setupView(Scriptable scope,
                            AO_FOM_Cocoon cocoon,
-                           Environment environment,
                            FOM_WebContinuation kont) {
-        Map objectModel = environment.getObjectModel();
+        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
         // Make the JS live-connect objects available to the view layer
         FOM_JavaScriptFlowHelper.setPackages(objectModel,
                                    (Scriptable)ScriptableObject.getProperty(scope,

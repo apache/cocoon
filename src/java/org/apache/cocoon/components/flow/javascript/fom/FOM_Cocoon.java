@@ -52,8 +52,8 @@ package org.apache.cocoon.components.flow.javascript.fom;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -62,19 +62,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
-import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
@@ -95,7 +94,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.29 2004/02/10 23:18:32 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.30 2004/02/20 18:48:23 sylvain Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -104,8 +103,7 @@ public class FOM_Cocoon extends ScriptableObject {
         Context avalonContext;
         ServiceManager serviceManager;
         FOM_JavaScriptInterpreter interpreter;
-        Environment environment;
-        ComponentManager componentManager;
+        Redirector redirector;
         Logger logger;
         FOM_Request request;
         FOM_Response response;
@@ -119,17 +117,15 @@ public class FOM_Cocoon extends ScriptableObject {
 
         public CallContext(CallContext caller,
                            FOM_JavaScriptInterpreter interp,
-                           Environment env,
-                           ComponentManager manager,
-                           ServiceManager serviceManager,
+                           Redirector redirector,
+                           ServiceManager manager,
                            Context avalonContext,
                            Logger logger,
                            WebContinuation lastContinuation) {
             this.caller = caller;
             this.interpreter = interp;
-            this.environment = env;
-            this.componentManager = manager;
-            this.serviceManager = serviceManager;
+            this.redirector = redirector;
+            this.serviceManager = manager;
             this.avalonContext = avalonContext;
             this.logger = logger;
             this.lastContinuation = lastContinuation;
@@ -167,7 +163,7 @@ public class FOM_Cocoon extends ScriptableObject {
             if (session != null) {
                 return session;
             }
-            Map objectModel = environment.getObjectModel();
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             session =
                 new FOM_Session(ObjectModelHelper.getRequest(objectModel).getSession(true));
             session.setParentScope(getParentScope());
@@ -180,7 +176,7 @@ public class FOM_Cocoon extends ScriptableObject {
             if (request != null) {
                 return request;
             }
-            Map objectModel = environment.getObjectModel();
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             request = new FOM_Request(ObjectModelHelper.getRequest(objectModel));
             request.setParentScope(getParentScope());
             request.setPrototype(getClassPrototype(getParentScope(),
@@ -192,7 +188,7 @@ public class FOM_Cocoon extends ScriptableObject {
             if (context != null) {
                 return context;
             }
-            Map objectModel = getEnvironment().getObjectModel();
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             context =
                 new FOM_Context(ObjectModelHelper.getContext(objectModel));
             context.setParentScope(getParentScope());
@@ -205,7 +201,7 @@ public class FOM_Cocoon extends ScriptableObject {
             if (response != null) {
                 return response;
             }
-            Map objectModel = environment.getObjectModel();
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             response =
                 new FOM_Response(ObjectModelHelper.getResponse(objectModel));
             response.setParentScope(getParentScope());
@@ -255,17 +251,16 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     void pushCallContext(FOM_JavaScriptInterpreter interp,
-                         Environment env,
-                         ComponentManager manager,
-                         ServiceManager serviceManager,
+                         Redirector redirector,
+                         ServiceManager manager,
                          Context avalonContext,
                          Logger logger,
                          WebContinuation lastContinuation) {
         if (pageLocal == null) {
             pageLocal = new PageLocalScopeHolder(getTopLevelScope(this));
         }
-        this.currentCall = new CallContext(currentCall, interp, env, manager,
-                                           serviceManager, avalonContext,
+        this.currentCall = new CallContext(currentCall, interp, redirector, manager,
+                                           avalonContext,
                                            logger, lastContinuation);
     }
 
@@ -319,18 +314,15 @@ public class FOM_Cocoon extends ScriptableObject {
             throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
         }
         getInterpreter().process(getParentScope(), this, uri, map,
-                                 (OutputStream)unwrap(outputStream),
-                                 getEnvironment());
+                                 (OutputStream)unwrap(outputStream));
     }
 
     public void jsFunction_redirectTo(String uri) throws Exception {
-        // Cannot use environment directly as TreeProcessor uses own version of redirector
-        // environment.redirect(false, uri);
-        PipelinesNode.getRedirector(getEnvironment()).redirect(false, uri);
+        this.currentCall.redirector.redirect(false, uri);
     }
 
     public void jsFunction_sendStatus(int sc) {
-        PipelinesNode.getRedirector(getEnvironment()).sendStatus(sc);
+        this.currentCall.redirector.sendStatus(sc);
     }
 
 /*
@@ -360,21 +352,16 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public Object jsFunction_getComponent(String id)
         throws Exception {
-        return getComponentManager().lookup(id);
+        return getServiceManager().lookup(id);
     }
 
     /**
      * Release pooled components.
      *
-     * @param component - an <code>Object</code> that is an instance
-     * of <code>org.apache.avalon.framework.component.Component</code>
+     * @param component a component
      */
     public void jsFunction_releaseComponent( Object component ) throws Exception {
-        try {
-            this.getComponentManager().release( (Component) unwrap(component) );
-        } catch( ClassCastException cce ) {
-            throw new JavaScriptException( "Only components can be released!" );
-        }
+        this.getServiceManager().release( unwrap(component) );
     }
 
     /**
@@ -389,9 +376,7 @@ public class FOM_Cocoon extends ScriptableObject {
         org.mozilla.javascript.Context cx =
             org.mozilla.javascript.Context.getCurrentContext();
         Scriptable scope = getParentScope();
-        Script script = getInterpreter().compileScript( cx,
-                                                        getEnvironment(),
-                                                        filename );
+        Script script = getInterpreter().compileScript(cx, filename);
         return script.exec( cx, scope );
     }
 
@@ -417,7 +402,7 @@ public class FOM_Cocoon extends ScriptableObject {
              this.getLogger(),
              this.getAvalonContext(),
              this.getServiceManager(),
-             this.getComponentManager(),
+             new WrapperComponentManager(this.getServiceManager()),
              null,// roleManager
              null,// configuration
              true);
@@ -1487,7 +1472,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The object model
      */
     public Map getObjectModel() {
-        return getEnvironment().getObjectModel();
+        return ContextHelper.getObjectModel(currentCall.avalonContext);
     }
 
     /**
@@ -1495,14 +1480,9 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The component manager
      */
 
-    public ComponentManager getComponentManager() {
-        return currentCall.componentManager;
-    }
-
-
-    private Environment getEnvironment() {
-        return currentCall.environment;
-    }
+//    public ComponentManager getComponentManager() {
+//        return currentCall.componentManager;
+//    }
 
     private Context getAvalonContext() {
         return currentCall.avalonContext;
@@ -1512,7 +1492,7 @@ public class FOM_Cocoon extends ScriptableObject {
         return currentCall.logger;
     }
 
-    private ServiceManager getServiceManager() {
+    public ServiceManager getServiceManager() {
         return currentCall.serviceManager;
     }
 
@@ -1536,7 +1516,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                    uri,
                                    bean,
                                    fom_wk,
-                                   getEnvironment());
+                                   this.currentCall.redirector);
     }
 
     /**
@@ -1562,7 +1542,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                         org.mozilla.javascript.Context.toString(getProperty(parameters, name)));
             list.add(arg);
         }
-        getInterpreter().handleContinuation(kontId, list, getEnvironment());
+        getInterpreter().handleContinuation(kontId, list, this.currentCall.redirector);
     }
 
     /**
@@ -1602,7 +1582,7 @@ public class FOM_Cocoon extends ScriptableObject {
         WebContinuation wk;
         ContinuationsManager contMgr;
         contMgr = (ContinuationsManager)
-            getComponentManager().lookup(ContinuationsManager.ROLE);
+            getServiceManager().lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,

@@ -67,8 +67,11 @@ import java.util.StringTokenizer;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.environment.Environment;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 
 
@@ -114,15 +117,15 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.9 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.10 2004/02/20 18:48:23 sylvain Exp $
  */
-public class JavaScriptAspectWeaver extends AbstractLogEnabled {
+public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Serviceable {
     
     /** All Interceptors in the right order */
     ArrayList interceptorGroups = new ArrayList();
     
-    /** The Cocoon environment needed for SourceResolving */
-    Environment environement = null;
+    /** The service manager */
+    ServiceManager manager = null;
     
     /** If debugging is true, the intercepted script is writen to filesystem */
     boolean serializeResultScript = false;
@@ -144,7 +147,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      * intercepting scripts) and if scripts are applied those are
      * scanned the code is added to <code>interceptorGroups</code>
      */
-    public void setBaseScript( Source source ) throws IOException {
+    public void setBaseScript( Source source ) throws Exception {
         
         this.source = source;
         
@@ -202,11 +205,19 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      * script is added first, ...)
      */
     protected void addInterceptorGroup( String source  ) 
-        throws IOException {
+        throws Exception {
         
-        this.getLogger().info( "applied script: " + source );        
-        JSTokenList interceptorsTokensList = JSParser.parse( 
-            readSourceIntoCharArray( this.environement.resolveURI(source).getInputStream() ) );
+        this.getLogger().info( "applied script: " + source );
+        SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        Source src = resolver.resolveURI(source);
+        JSTokenList interceptorsTokensList;
+        try {
+            interceptorsTokensList = JSParser.parse( 
+                readSourceIntoCharArray( src.getInputStream() ) );
+        } finally {
+            resolver.release(src);
+            this.manager.release(resolver);
+        }
 
         InterceptionList interceptors = interceptorsTokensList.readInterceptionTokens();
         interceptors.setSourceScript( source );
@@ -219,13 +230,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         interceptorGroups.add( interceptors );
     }
     
-    /**
-     * The access to the Cocoon environemnt 
-     */
-    public void setEnvironment( Environment env ) {
-        this.environement = env;
-    }
-
     /**
      * Should the JavaScriptAspectWeaver write the result script
      * into separate file in the same directory as the basescript?
@@ -1412,5 +1416,12 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         }
 
      }
-        
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException
+    {
+        this.manager = manager;
+    }
 }

@@ -71,7 +71,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.7 2004/01/15 00:36:18 joerg Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.8 2004/02/20 18:48:23 sylvain Exp $
  */
 public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
     protected List parameters;
@@ -147,7 +147,7 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         // If the continuation id is not null, it takes precedence over
         // the function call, so we invoke it here.
         if (continuation != null && continuation.length() > 0) {
-            interpreter.handleContinuation(continuation, params, env);
+            interpreter.handleContinuation(continuation, params, PipelinesNode.getRedirector(env));
             return true;
         }
 
@@ -157,7 +157,7 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         String name = functionName.resolve(context, env.getObjectModel());
 
         if (name != null && name.length() > 0) {
-            interpreter.callFunction(name, params, env);
+            interpreter.callFunction(name, params, PipelinesNode.getRedirector(env));
             return true;
         }
         

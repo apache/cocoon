@@ -47,18 +47,19 @@ package org.apache.cocoon.components.flow.apples;
 
 import java.util.List;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.WrapperComponentManager;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.ContinuationsDisposer;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 
 /**
@@ -74,7 +75,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
     public void callFunction(
         String className,
         List params,
-        Environment env)
+        Redirector redirector)
         throws Exception {
 
         AppleController app = instantiateController(className);
@@ -87,10 +88,10 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         getLogger().debug("Pulling fresh apple through the lifecycle... | continuationid=" + wk.getId());
         
         LifecycleHelper.setupComponent( app, getLogger(), appleContext, 
-                                        this.serviceManager, super.manager,  
+                                        this.serviceManager, new WrapperComponentManager(this.serviceManager),  
                                         null, null, true);
         
-        processApple(params, env, app, wk);
+        processApple(params, redirector, app, wk);
     }
 
 
@@ -98,7 +99,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
     public void handleContinuation(
         String continuationId,
         List params,
-        Environment env)
+        Redirector redirector)
         throws Exception {
 
         WebContinuation wk =
@@ -116,7 +117,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         getLogger().debug("found apple from continuation: " + app);
 
         // TODO access control checks? exception to be thrown for illegal access?
-        processApple(params, env, app, wk);
+        processApple(params, redirector, app, wk);
 
     }
 
@@ -136,22 +137,22 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
     private void processApple(
         List params,
-        Environment env,
+        Redirector redirector,
         AppleController app,
         WebContinuation wk)
         throws Exception {
 
-        Request cocoonRequest = ObjectModelHelper.getRequest(env.getObjectModel());
+        Request cocoonRequest = ContextHelper.getRequest(this.avalonContext);
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
         DefaultAppleResponse res = new DefaultAppleResponse();
         app.process(req, res);
 
         if (res.isRedirect()) {
-            env.redirect(false, res.getURI());
+            redirector.redirect(false, res.getURI());
         } else {
             String uri = res.getURI();
             getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData() + " and continuationid= " + wk.getId());
-            this.forwardTo(uri, res.getData(), wk, env);
+            this.forwardTo(uri, res.getData(), wk, redirector);
         }
 
         //TODO allow for AppleResponse to set some boolean saying the use case
