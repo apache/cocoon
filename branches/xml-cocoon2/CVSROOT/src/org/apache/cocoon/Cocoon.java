@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.6 $ $Date: 2000-05-24 23:15:01 $
+ * @version CVS $Revision: 1.4.2.7 $ $Date: 2000-07-02 20:59:13 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -53,6 +53,8 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
     private Sitemap sitemap=null;
     /** The root uri/path */
     private URL root=null;
+        
+    private org.apache.cocoon.sitemap.SitemapProcessor processor = null;
 
     /**
      * Create a new <code>Cocoon</code> instance.
@@ -84,6 +86,12 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         p.parse(new InputSource(this.configurationFile.getPath()));
         this.setConfiguration(b.getConfiguration());
         this.root=this.configurationFile.getParentFile().toURL();
+/*
+        try {
+            generateSitemap ("/opt/giacomo/java/CVS/xml-cocoon2/test/xdocs/drafts/sitemap.xmap"); 
+        } catch (org.apache.cocoon.ProcessingException pe) {
+            throw new IOException (pe.getMessage());
+        } */
     }
 
     /**
@@ -177,6 +185,7 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
     public boolean process(Request req, Response res, OutputStream out)
     throws SAXException, IOException, ProcessingException {
         return(this.sitemap.process(req,res,out));
+//        return(this.processor.process(req,res,out));
     }
 
     /**
@@ -214,6 +223,44 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         } catch (ClassNotFoundException e) {
             throw new ConfigurationException("Cannot load class "+className,
                 conf);
+        }
+    }
+
+    /** Generate the Sitemap class */
+    private void generateSitemap (String sitemapName) 
+            throws java.net.MalformedURLException, IOException, 
+                   org.apache.cocoon.ProcessingException {
+
+        InputSource inputSource = new InputSource (sitemapName);
+        String systemId = inputSource.getSystemId();
+        System.out.println ("C2 generateSitemap: "+systemId);
+
+        File file = new File(systemId);
+
+        if (!file.canRead()) {
+            throw new IOException("Can't read file: " + systemId);
+        }
+
+        String markupLanguage = "sitemap";
+        String programmingLanguage = "java";
+
+        org.apache.cocoon.components.language.generator.ProgramGenerator programGenerator = null;
+
+        System.out.println ("C2 generateSitemap: obtaining programGenerator");
+        programGenerator = 
+            (org.apache.cocoon.components.language.generator.ProgramGenerator) getComponent("program-generator");
+        System.out.println ("C2 generateSitemap: programGenerator obtained");
+
+        System.out.println ("C2 generateSitemap: obtaining generator");
+        try {
+            processor = (org.apache.cocoon.sitemap.SitemapProcessor)
+                programGenerator.load(file, markupLanguage, programmingLanguage);
+            System.out.println ("C2 generateSitemap: generator obtained");
+            processor.setComponentManager(this);
+            System.out.println ("C2 generateSitemap: generator called");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new org.apache.cocoon.ProcessingException (e.getMessage());    
         }
     }
 }

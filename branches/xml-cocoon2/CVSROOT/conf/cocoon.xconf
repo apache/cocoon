@@ -36,6 +36,15 @@
           </builtin-logicsheet>
         </target-language>
       </component-instance>
+
+      <component-instance name="sitemap" class="org.apache.cocoon.components.language.markup.xsp.SitemapMarkupLanguage">
+        <parameter name="prefix" value="map"/>
+        <parameter name="uri" value="http://xml.apache.org/cocoon/sitemap"/>
+  
+        <target-language name="java">
+          <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
+        </target-language>
+      </component-instance>
     </component-type>
   </component>
 
