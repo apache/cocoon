@@ -48,14 +48,15 @@ public class PortalManagerImpl
      */
     public void process()
     throws ProcessingException {
-        EventManager eventManager = null;
+        PortalService service = null;
         try {
-            eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            EventManager eventManager = service.getComponentManager().getEventManager();
             eventManager.processEvents();
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
-            this.manager.release(eventManager);
+            this.manager.release(service);
         }
     }
 
@@ -80,13 +81,6 @@ public class PortalManagerImpl
             contentHandler.endDocument();
         } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup portal service.", ce);
-        } catch (Exception e) {
-            getLogger().error("Caught exception", e);
-            throw new SAXException(e);
-        } catch (Error e) {
-            getLogger().error("Caught error", e);
-            e.printStackTrace();
-            throw e;
         } finally {
             this.manager.release(service);
         }

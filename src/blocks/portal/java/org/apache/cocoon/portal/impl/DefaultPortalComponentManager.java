@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalComponentManager;
+import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.LayoutFactory;
@@ -55,29 +56,28 @@ public class DefaultPortalComponentManager
 
     protected ServiceManager manager;
 
-    protected LinkService linkService;
-
+    protected String profileManagerRole;
     protected ProfileManager profileManager;
 
-    protected String profileManagerRole;
-
     protected String linkServiceRole;
+    protected LinkService linkService;
 
     protected String rendererSelectorRole;
-
     protected ServiceSelector rendererSelector;
 
     protected Map renderers;
 
     protected String copletFactoryRole;
-
-    protected String layoutFactoryRole;
-
     protected CopletFactory copletFactory;
 
+    protected String layoutFactoryRole;
     protected LayoutFactory layoutFactory;
 
+    protected String eventManagerRole;
     protected EventManager eventManager;
+
+    protected String portalManagerRole;
+    protected PortalManager portalManager;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -120,7 +120,7 @@ public class DefaultPortalComponentManager
     public EventManager getEventManager() {
         if ( null == this.eventManager ) {
             try {
-                this.eventManager = (EventManager)this.manager.lookup( EventManager.ROLE );
+                this.eventManager = (EventManager)this.manager.lookup( this.eventManagerRole );
             } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup event manager with role " + EventManager.ROLE, e);
             }
@@ -152,6 +152,8 @@ public class DefaultPortalComponentManager
             this.layoutFactory = null;
             this.manager.release(this.eventManager);
             this.eventManager = null;
+            this.manager.release(this.portalManager);
+            this.portalManager = null;
             this.manager = null;
         }
     }
@@ -165,6 +167,8 @@ public class DefaultPortalComponentManager
         this.rendererSelectorRole = config.getChild("renderer-selector").getValue(Renderer.ROLE+"Selector");
         this.copletFactoryRole = config.getChild("coplet-factory").getValue(CopletFactory.ROLE);
         this.layoutFactoryRole = config.getChild("layout-factory").getValue(LayoutFactory.ROLE);
+        this.eventManagerRole = config.getChild("event-manager").getValue(EventManager.ROLE);
+        this.portalManagerRole = config.getChild("portal-manager").getValue(PortalManager.ROLE);
     }
 
     /* (non-Javadoc)
@@ -219,4 +223,18 @@ public class DefaultPortalComponentManager
         return this.layoutFactory;
     }
 
+
+    /**
+     * @see org.apache.cocoon.portal.PortalComponentManager#getPortalManager()
+     */
+    public PortalManager getPortalManager() {
+        if ( null == this.portalManager ) {
+            try {
+                this.portalManager = (PortalManager)this.manager.lookup( this.portalManagerRole);
+            } catch (ServiceException e) {
+                throw new CascadingRuntimeException("Unable to lookup portal manager with role " + this.copletFactoryRole, e);
+            }
+        }
+        return this.portalManager;
+    }
 }

@@ -39,7 +39,6 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.acting.helpers.CopletMapping;
 import org.apache.cocoon.portal.acting.helpers.FullScreenMapping;
@@ -193,13 +192,7 @@ implements ThreadSafe, Parameterizable {
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            PortalManager portalManager = null;
-            try {
-                portalManager = (PortalManager) this.manager.lookup(PortalManager.ROLE);
-                portalManager.process();
-            } finally {
-                this.manager.release(portalManager);
-            }
+            service.getComponentManager().getPortalManager().process();
             
             final Request request = ObjectModelHelper.getRequest(objectModel);
             final Session session = request.getSession(false);
