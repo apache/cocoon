@@ -428,7 +428,7 @@
   
   <!--+
       | Store: generic store. The default implementation is an in-memory store
-      | backed by a disk store (based on JCS). This forms a two-stage
+      | backed by a disk store (based on EHCache). This forms a two-stage
       | cache composed of a fast in-memory MRU front-end and a persistent
       | back-end which stores the less-used objects.
       |
