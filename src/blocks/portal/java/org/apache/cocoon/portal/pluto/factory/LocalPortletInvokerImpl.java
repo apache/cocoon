@@ -77,7 +77,7 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LocalPortletInvokerImpl.java,v 1.2 2004/01/27 09:56:38 cziegeler Exp $
+ * @version CVS $Id: LocalPortletInvokerImpl.java,v 1.3 2004/02/02 08:39:37 cziegeler Exp $
  */
 public class LocalPortletInvokerImpl
 extends AbstractLogEnabled
@@ -188,4 +188,13 @@ implements PortletInvoker, Contextualizable, Serviceable, Initializable {
         this.portlet.init(portletConfig);
     }
 
+    /**
+     * Destroy the associated portlet
+     */
+    public void destroy() {
+        if (this.portlet != null ) {
+            this.portlet.destroy();
+            this.portlet = null;
+        }
+    }
 }
