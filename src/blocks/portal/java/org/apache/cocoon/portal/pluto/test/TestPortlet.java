@@ -61,7 +61,7 @@ import javax.portlet.RenderResponse;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: TestPortlet.java,v 1.2 2004/02/10 08:42:45 cziegeler Exp $
+ * @version CVS $Id: TestPortlet.java,v 1.3 2004/03/04 09:17:04 cziegeler Exp $
  */
 public class TestPortlet implements Portlet  {
     
@@ -92,7 +92,6 @@ public class TestPortlet implements Portlet  {
      */
     public void render(RenderRequest req, RenderResponse res)
     throws PortletException, IOException {
-        System.out.println("Rendering TestPortlet");
         res.setContentType("text/html");
         Writer writer = res.getWriter();
         writer.write("<h1>Simple TestPortlet</h1>\n");
