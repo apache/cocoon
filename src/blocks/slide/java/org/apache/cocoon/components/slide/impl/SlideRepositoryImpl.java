@@ -45,8 +45,7 @@ import org.xml.sax.InputSource;
 /**
  * The class represent a manger for slide repositories
  * 
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepositoryImpl.java,v 1.6 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.7 2004/04/13 15:16:37 unico Exp $
  */
 public class SlideRepositoryImpl extends AbstractLogEnabled
 implements SlideRepository, Contextualizable, Serviceable, Configurable, 

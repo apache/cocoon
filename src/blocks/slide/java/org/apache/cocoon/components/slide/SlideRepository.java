@@ -20,8 +20,7 @@ import org.apache.slide.common.NamespaceAccessToken;
 /**
  * This interface represents a repository from a CMS.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepository.java,v 1.2 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SlideRepository.java,v 1.3 2004/04/13 15:16:38 unico Exp $
  */
 public interface SlideRepository {
 

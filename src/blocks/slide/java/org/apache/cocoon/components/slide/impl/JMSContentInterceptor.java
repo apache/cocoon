@@ -49,8 +49,6 @@ import org.apache.slide.util.logger.Logger;
 /**
  * A ContentInterceptor for Slide that publishes 
  * invalidation events to a JMS topic.
- * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
 public class JMSContentInterceptor extends AbstractContentInterceptor {
 

@@ -20,8 +20,7 @@ import org.apache.avalon.framework.logger.Logger;
 /**
  * The class represent an adapter for the logger for jakarta slide
  *
- * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideLoggerAdapter.java,v 1.3 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SlideLoggerAdapter.java,v 1.4 2004/04/13 15:16:37 unico Exp $
  */
 public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     private Logger logger;

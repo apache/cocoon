@@ -25,8 +25,7 @@ import org.apache.slide.util.conf.ConfigurationException;
 /**
  * The class represent an adapter for the configuration class from jakarta slide
  *
- * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideConfigurationAdapter.java,v 1.3 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SlideConfigurationAdapter.java,v 1.4 2004/04/13 15:16:37 unico Exp $
  */
 public class SlideConfigurationAdapter implements Configuration {
 
