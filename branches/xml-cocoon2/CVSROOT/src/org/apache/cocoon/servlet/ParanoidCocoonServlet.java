@@ -60,10 +60,10 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.58 $ $Date: 2001-02-15 20:50:07 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-15 20:50:14 $
  */
 
-public class CocoonServlet extends HttpServlet {
+public class ParanoidCocoonServlet extends HttpServlet {
 
     private Logger log;
 
@@ -92,7 +92,7 @@ public class CocoonServlet extends HttpServlet {
     throws ServletException {
 
         super.init(conf);
-        ClassLoader classloader = this.getClass().getClassLoader();
+        RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
         ServletContext context = conf.getServletContext();
 
         ClassUtils.setClassLoader(classloader);
@@ -100,9 +100,9 @@ public class CocoonServlet extends HttpServlet {
 
         this.appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, context);
 
-        this.initLogger(conf.getInitParameter("log-level"), context);
+        this.initLogger(conf.getInitParameter("log-level"), context, classloader);
 
-        this.appContext.put(Constants.CONTEXT_CLASSPATH, this.getClassPath(context));
+        this.appContext.put(Constants.CONTEXT_CLASSPATH, this.getClassPath(context, classloader));
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
@@ -133,11 +133,17 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     private String getClassPath(final ServletContext context)
+     private String getClassPath(final ServletContext context, RepositoryClassLoader classloader)
      throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
         String classDir = context.getRealPath("/WEB-INF/classes");
         File root = new File(context.getRealPath("/WEB-INF/lib"));
+
+        try {
+            classloader.addDirectory(new File(classDir));
+        } catch (Exception e) {
+            log.debug("Could not add directory" + classDir, e);
+        }
 
         buildClassPath.append(classDir);
 
@@ -147,6 +153,12 @@ public class CocoonServlet extends HttpServlet {
             for (int i = 0; i < libraries.length; i++) {
                 buildClassPath.append(File.pathSeparatorChar)
                               .append(IOUtils.getFullFilename(libraries[i]));
+
+                try {
+                    classloader.addDirectory(libraries[i]);
+                } catch (Exception e) {
+                    log.debug("Could not add file" + IOUtils.getFullFilename(libraries[i]));
+                }
             }
         }
 
@@ -171,7 +183,7 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-    private void initLogger(final String logLevel, final ServletContext context)
+    private void initLogger(final String logLevel, final ServletContext context, final RepositoryClassLoader classloader)
     throws ServletException {
         final Priority.Enum logPriority;
 
@@ -190,6 +202,8 @@ public class CocoonServlet extends HttpServlet {
                        new FileOutputLogTarget(path),
                        new ServletLogTarget(context, Priority.ERROR)
                 });
+
+            classloader.setLogger(this.log);
         } catch (Exception e) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
