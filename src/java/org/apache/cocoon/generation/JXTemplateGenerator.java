@@ -117,34 +117,37 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.49 2004/06/28 02:40:10 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.50 2004/06/28 09:25:39 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
-    private static final JXPathContextFactory
-        jxpathContextFactory = JXPathContextFactory.newInstance();
+    private static final JXPathContextFactory jxpathContextFactory = JXPathContextFactory.newInstance();
 
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     private static final Iterator EMPTY_ITER = new Iterator() {
-            public boolean hasNext() {
-                return false;
-            }
-            public Object next() {
-                return null;
-            }
-            public void remove() {
-                // EMPTY
-            }
-        };
+        public boolean hasNext() {
+            return false;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
 
     private static final Iterator NULL_ITER = new Iterator() {
             public boolean hasNext() {
                 return true;
             }
+
             public Object next() {
                 return null;
             }
+
             public void remove() {
                 // EMPTY
             }
@@ -231,17 +234,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 this.name = name;
             }
 
-            public Object invoke(Object thisArg, Object[] args)
-                throws Exception {
+            public Object invoke(Object thisArg, Object[] args) throws Exception {
                 Context cx = Context.enter();
                 try {
                     Object result;
-                    Scriptable thisObj;
-                    if (!(thisArg instanceof Scriptable)) {
-                        thisObj = Context.toObject(thisArg, scope);
-                    } else {
-                        thisObj = (Scriptable)thisArg;
-                    }
+                    Scriptable thisObj = !(thisArg instanceof Scriptable) ?
+                            Context.toObject(thisArg, scope) : (Scriptable)thisArg;
                     result = ScriptableObject.getProperty(thisObj, name);
                     Object[] newArgs = null;
                     if (args != null) {
@@ -258,17 +256,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             }
                         }
                     }
-                    result = ScriptRuntime.call(cx, result, thisObj,
-                                                newArgs, scope);
-                    if (result == Undefined.instance ||
-                        result == Scriptable.NOT_FOUND) {
+                    result = ScriptRuntime.call(cx, result, thisObj, newArgs, scope);
+                    if (result == Undefined.instance || result == Scriptable.NOT_FOUND) {
                         result = null;
-
-                    } else {
-                        if (!(result instanceof NativeJavaClass)) {
-                            while (result instanceof Wrapper) {
-                                result = ((Wrapper)result).unwrap();
-                            }
+                    } else if (!(result instanceof NativeJavaClass)) {
+                        while (result instanceof Wrapper) {
+                            result = ((Wrapper)result).unwrap();
                         }
                     }
                     return result;
@@ -304,35 +297,27 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
 
             public Object invoke(Object thisArg) throws Exception {
-                org.mozilla.javascript.Context cx = Context.enter();
+                Context cx = Context.enter();
                 try {
-                    Scriptable thisObj;
-                    if (!(thisArg instanceof Scriptable)) {
-                        thisObj = Context.toObject(thisArg, scope);
-                    } else {
-                        thisObj = (Scriptable)thisArg;
-                    }
+                    Scriptable thisObj = !(thisArg instanceof Scriptable) ?
+                            Context.toObject(thisArg, scope) : (Scriptable)thisArg;
                     Object result = ScriptableObject.getProperty(thisObj, name);
                     if (result == Scriptable.NOT_FOUND) {
                         result = ScriptableObject.getProperty(thisObj, "get" + StringUtils.capitalize(name));
-                        if (result != Scriptable.NOT_FOUND &&
-                            result instanceof Function) {
+                        if (result != Scriptable.NOT_FOUND && result instanceof Function) {
                             try {
-                                result = ((Function)result).call(cx,
-                                                                 ScriptableObject.getTopLevelScope(thisObj), thisObj, new Object[] {});
+                                result = ((Function)result).call(
+                                        cx, ScriptableObject.getTopLevelScope(thisObj), thisObj, new Object[] {});
                             } catch (JavaScriptException exc) {
                                 exc.printStackTrace();
                                 result = null;
                             }
                         }
                     }
-                    if (result == Scriptable.NOT_FOUND ||
-                        result == Undefined.instance) {
+                    if (result == Scriptable.NOT_FOUND || result == Undefined.instance) {
                         result = null;
-                    } else if (result instanceof Wrapper) {
-                        if (!(result instanceof NativeJavaClass)) {
-                            result = ((Wrapper)result).unwrap();
-                        }
+                    } else if (result instanceof Wrapper && !(result instanceof NativeJavaClass)) {
+                        result = ((Wrapper)result).unwrap();
                     }
                     return result;
                 } finally {
@@ -347,7 +332,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             public String getMethodName() {
                 return name;
             }
-
         }
 
         static class JSPropertySet implements VelPropertySet {
@@ -451,17 +435,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             public Object next() {
                 Context.enter();
                 try {
-                    Object result =
-                        ScriptableObject.getProperty(scope,
-                                                     ids[index++].toString());
-                    if (result == Undefined.instance ||
-                        result == Scriptable.NOT_FOUND) {
+                    Object result = ScriptableObject.getProperty(scope, ids[index++].toString());
+                    if (result == Undefined.instance || result == Scriptable.NOT_FOUND) {
                         result = null;
-                    } else {
-                        if (!(result instanceof NativeJavaClass)) {
-                            while (result instanceof Wrapper) {
-                                result = ((Wrapper)result).unwrap();
-                            }
+                    } else if (!(result instanceof NativeJavaClass)) {
+                        while (result instanceof Wrapper) {
+                            result = ((Wrapper)result).unwrap();
                         }
                     }
                     return result;
@@ -480,8 +459,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
         }
 
-        public Iterator getIterator(Object obj, Info i)
-            throws Exception {
+        public Iterator getIterator(Object obj, Info i) throws Exception {
             if (!(obj instanceof Scriptable)) {
                 // support Enumeration
                 if (obj instanceof Enumeration) {
@@ -501,7 +479,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             }
 
                         };
-                } else if (obj instanceof Iterator) {
+                }
+                if (obj instanceof Iterator) {
                     // support Iterator
                     return (Iterator)obj;
                 }
@@ -513,31 +492,19 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             return new ScriptableIterator((Scriptable)obj);
         }
 
-        public VelMethod getMethod(Object obj, String methodName,
-                                   Object[] args, Info i)
-            throws Exception {
-            if (!(obj instanceof Scriptable)) {
-                return super.getMethod(obj, methodName, args, i);
-            }
-            return new JSMethod((Scriptable)obj, methodName);
+        public VelMethod getMethod(Object obj, String methodName, Object[] args, Info i) throws Exception {
+            return !(obj instanceof Scriptable) ?
+                    super.getMethod(obj, methodName, args, i) : new JSMethod((Scriptable)obj, methodName);
         }
 
-        public VelPropertyGet getPropertyGet(Object obj, String identifier,
-                                             Info i)
-            throws Exception {
-            if (!(obj instanceof Scriptable)) {
-                return super.getPropertyGet(obj, identifier, i);
-            }
-            return new JSPropertyGet((Scriptable)obj, identifier);
+        public VelPropertyGet getPropertyGet(Object obj, String identifier, Info i) throws Exception {
+            return !(obj instanceof Scriptable) ?
+                    super.getPropertyGet(obj, identifier, i) : new JSPropertyGet((Scriptable)obj, identifier);
         }
 
-        public VelPropertySet getPropertySet(Object obj, String identifier,
-                                             Object arg, Info i)
-            throws Exception {
-            if (!(obj instanceof Scriptable)) {
-                return super.getPropertySet(obj, identifier, arg, i);
-            }
-            return new JSPropertySet((Scriptable)obj, identifier);
+        public VelPropertySet getPropertySet(Object obj, String identifier, Object arg, Info i) throws Exception {
+            return !(obj instanceof Scriptable) ?
+                    super.getPropertySet(obj, identifier, arg, i) : new JSPropertySet((Scriptable)obj, identifier);
         }
     }
 
@@ -676,8 +643,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     static {
         // Hack: there's no _nice_ way to add my introspector to Jexl right now
         try {
-            Field field =
-                org.apache.commons.jexl.util.Introspector.class.getDeclaredField("uberSpect");
+            Field field = Introspector.class.getDeclaredField("uberSpect");
             field.setAccessible(true);
             field.set(null, new JSIntrospector());
         } catch (Exception e) {
@@ -713,17 +679,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
      * (contained in #{})
      */
 
-    private static JXTExpression compileExpr(String expr, String errorPrefix,
-                                   Locator location) throws SAXParseException {
+    private static JXTExpression compileExpr(String expr, String errorPrefix, Locator location) throws SAXParseException {
         try {
             return compileExpr(expr);
         } catch (Exception exc) {
-            throw new SAXParseException(errorPrefix + exc.getMessage(),
-                                                            location, exc);
+            throw new SAXParseException(errorPrefix + exc.getMessage(), location, exc);
         } catch (Error err) {
-            throw new SAXParseException(errorPrefix + err.getMessage(),
-                                                            location,
-                                        new ErrorHolder(err));
+            throw new SAXParseException(errorPrefix + err.getMessage(), location, new ErrorHolder(err));
         }
     }
 
@@ -742,14 +704,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 if (inExpr) {
                     if (c == '\\') {
                         ch = in.read();
-                        if (ch == -1) {
-                            expr.append('\\');
-                        } else {
-                            expr.append((char)ch);
-                        }
+                        expr.append((ch == -1) ? '\\' : (char)ch);
                     } else if (c == '}') {
-                        String str = expr.toString();
-                        return compile(str, xpath);
+                        return compile(expr.toString(), xpath);
                     } else {
                         expr.append(c);
                     }
@@ -769,13 +726,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
             if (inExpr) {
                 // unclosed #{} or ${}
-                String msg;
-                if (xpath) {
-                    msg = "Unterminated #{";
-                } else {
-                    msg = "Unterminated ${";
-                }
-                throw new Exception(msg);
+                throw new Exception("Unterminated " + (xpath ? "#" : "$") + "{");
             }
         } catch (IOException ignored) {
             ignored.printStackTrace();
@@ -787,8 +738,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
      * Compile an integer expression (returns either a Compiled Expression
      * or an Integer literal)
      */
-    private static JXTExpression compileInt(String val, String msg,
-                                        Locator location) throws SAXException {
+    private static JXTExpression compileInt(String val, String msg, Locator location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null) {
             if (res.compiledExpression == null) {
@@ -799,8 +749,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return null;
     }
 
-    private static JXTExpression compileBoolean(String val, String msg,
-                                        Locator location) throws SAXException {
+    private static JXTExpression compileBoolean(String val, String msg, Locator location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null) {
             if (res.compiledExpression == null) {
@@ -811,8 +760,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return null;
     }
 
-    private static JXTExpression compile(final String variable, boolean xpath)
-                throws Exception {
+    private static JXTExpression compile(final String variable, boolean xpath) throws Exception {
         Object compiled;
         if (xpath) {
             compiled = JXPathContext.compile(variable);
@@ -823,8 +771,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static private Object getValue(JXTExpression expr, JexlContext jexlContext,
-                            JXPathContext jxpathContext, Boolean lenient)
-        throws Exception {
+            					JXPathContext jxpathContext, Boolean lenient) throws Exception {
         if (expr != null) {
             Object compiled = expr.compiledExpression;
             try {
@@ -894,13 +841,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static private Boolean getBooleanValue(JXTExpression expr, JexlContext jexlContext,
-                                    JXPathContext jxpathContext)
-        throws Exception {
+                                    JXPathContext jxpathContext) throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
-        if (res instanceof Boolean) {
-            return (Boolean)res;
-        }
-        return null;
+        return res instanceof Boolean ? (Boolean)res : null;
     }
 
     // Hack: try to prevent JXPath from converting result to a String
@@ -914,8 +857,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 boolean oldLenient = jxpathContext.isLenient();
                 if (lenient != null) jxpathContext.setLenient(lenient.booleanValue());
                 try {
-                    Iterator iter = 
-                        e.iteratePointers(jxpathContext);
+                    Iterator iter = e.iteratePointers(jxpathContext);
                     if (!iter.hasNext()) {
                         return null;
                     }
@@ -942,9 +884,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 } finally {
                     jxpathContext.setLenient(oldLenient);
                 }
-            } else if (compiled instanceof org.apache.commons.jexl.Expression) {
-                org.apache.commons.jexl.Expression e =
-                    (org.apache.commons.jexl.Expression)compiled;
+            } else if (compiled instanceof Expression) {
+                Expression e = (Expression)compiled;
                 return e.evaluate(jexlContext);
             }
             return expr.raw;
@@ -965,25 +906,21 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         final Locator location;
         Event next; // in document order
         Event(Locator locator) {
-            if (locator != null) {
-                this.location = new LocatorImpl(locator);
-            } else {
-                this.location = NULL_LOCATOR;
-            }
+            this.location = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
         }
 
         public String locationString() {
-            String result = "";
-            String systemId = location.getSystemId();
-            if (systemId != null) {
-                result += systemId + ", ";
+            StringBuffer buf = new StringBuffer();
+            buf.append(location.getSystemId());
+            if (buf.length() > 0) {
+                buf.append(", ");
             }
-            result += "Line " + location.getLineNumber();
+            buf.append("Line " + location.getLineNumber());
             int col = location.getColumnNumber();
             if (col > 0) {
-                result += "." + col;
+                buf.append("." + col);
             }
-            return result;
+            return buf.toString();
         }
     }
 
@@ -1006,34 +943,23 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         if (inExpr) {
                             if (c == '\\') {
                                 ch = in.read();
-                                if (ch == -1) {
-                                    buf.append('\\');
-                                } else {
-                                    buf.append((char)ch);
-                                }
+                                buf.append(ch == -1 ? '\\' : (char)ch);
                             } else if (c == '}') {
                                 String str = buf.toString();
                                 Object compiledExpression;
                                 try {
                                     if (xpath) {
-                                        compiledExpression =
-                                            JXPathContext.compile(str);
+                                        compiledExpression = JXPathContext.compile(str);
                                     } else {
-                                        compiledExpression =
-                                            ExpressionFactory.createExpression(str);
+                                        compiledExpression = ExpressionFactory.createExpression(str);
                                     }
                                 } catch (Exception exc) {
-                                    throw new SAXParseException(exc.getMessage(),
-                                                                this.location,
-                                                                exc);
+                                    throw new SAXParseException(exc.getMessage(), this.location, exc);
                                 } catch (Error err) {
-                                    throw new SAXParseException(err.getMessage(),
-                                                                this.location,
-                                                                new ErrorHolder(err));
+                                    throw new SAXParseException(err.getMessage(), this.location, new ErrorHolder(err));
 
                                 }
-                                substitutions.add(new JXTExpression(str,
-                                                                 compiledExpression));
+                                substitutions.add(new JXTExpression(str, compiledExpression));
                                 buf.setLength(0);
                                 inExpr = false;
                             } else {
@@ -1045,21 +971,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                 xpath = c == '#';
                                 inExpr = true;
                                 if (buf.length() > 0) {
-                                    char[] charArray =
-                                        new char[buf.length()];
+                                    char[] charArray = new char[buf.length()];
 
-                                    buf.getChars(0, buf.length(),
-                                                 charArray, 0);
+                                    buf.getChars(0, buf.length(), charArray, 0);
                                     substitutions.add(charArray);
                                     buf.setLength(0);
                                 }
                                 continue top;
-                            } else {
-                                buf.append(c);
-                                if (ch != -1) {
-                                    c = (char)ch;
-                                    continue processChar;
-                                }
+                            }
+                            buf.append(c);
+                            if (ch != -1) {
+                                c = (char)ch;
+                                continue processChar;
                             }
                         } else {
                             buf.append(c);
@@ -1073,20 +996,14 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
             if (inExpr) {
                 // unclosed #{} or ${}
-                String str;
-                if (xpath) {
-                    str = "#{";
-                } else {
-                    str = "${";
-                }
-                buf.insert(0, str);
+                buf.insert(0, (xpath ? "#" : "$") + "{");
             }
             if (buf.length() > 0) {
-                char[] charArray =
-                    new char[buf.length()];
+                char[] charArray = new char[buf.length()];
+
                 buf.getChars(0, buf.length(), charArray, 0);
                 substitutions.add(charArray);
-            } else if (substitutions.size() == 0) {
+            } else if (substitutions.isEmpty()) {
                 substitutions.add(ArrayUtils.EMPTY_CHAR_ARRAY);
             }
         }
@@ -1095,8 +1012,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class Characters extends TextEvent {
-        Characters(Locator location, char[] chars, int start, int length)
-                                                          throws SAXException {
+        Characters(Locator location, char[] chars, int start, int length) throws SAXException {
             super(location, chars, start, length);
         }
     }
@@ -1134,8 +1050,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class IgnorableWhitespace extends TextEvent {
-        IgnorableWhitespace(Locator location, char[] chars,
-                                   int start, int length) throws SAXException {
+        IgnorableWhitespace(Locator location, char[] chars, int start, int length) throws SAXException {
             super(location, chars, start, length);
         }
     }
@@ -1159,8 +1074,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     abstract static class AttributeEvent {
-        AttributeEvent(String namespaceURI, String localName,
-                                                     String raw, String type) {
+        AttributeEvent(String namespaceURI, String localName, String raw, String type) {
             this.namespaceURI = namespaceURI;
             this.localName = localName;
             this.raw = raw;
@@ -1173,8 +1087,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class CopyAttribute extends AttributeEvent {
-        CopyAttribute(String namespaceURI, String localName, String raw,
-                                                   String type, String value) {
+        CopyAttribute(String namespaceURI, String localName, String raw, String type, String value) {
             super(namespaceURI, localName, raw, type);
             this.value = value;
         }
@@ -1182,6 +1095,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class Subst {
+        // VOID
     }
 
     static class Literal extends Subst {
@@ -1201,8 +1115,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class SubstituteAttribute extends AttributeEvent {
-        SubstituteAttribute(String namespaceURI, String localName, String raw,
-                                                    String type, List substs) {
+        SubstituteAttribute(String namespaceURI, String localName, String raw, String type, List substs) {
             super(namespaceURI, localName, raw, type);
             this.substitutions = substs;
         }
@@ -1238,25 +1151,16 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             if (inExpr) {
                                 if (c == '\\') {
                                     ch = in.read();
-                                    if (ch == -1) {
-                                        buf.append('\\');
-                                    } else {
-                                        buf.append((char)ch);
-                                    }
+                                    buf.append(ch == -1 ? '\\' : (char)ch);
                                 } else if (c == '}') {
                                     String str = buf.toString();
                                     JXTExpression compiledExpression;
                                     try {
-                                        compiledExpression =
-                                            compile(str, xpath);
+                                        compiledExpression = compile(str, xpath);
                                     } catch (Exception exc) {
-                                        throw new SAXParseException(
-                                                exc.getMessage(), location,
-                                                exc);
+                                        throw new SAXParseException(exc.getMessage(), location, exc);
                                     } catch (Error err) {
-                                        throw new SAXParseException(
-                                                err.getMessage(), location,
-                                                new ErrorHolder(err));
+                                        throw new SAXParseException(err.getMessage(), location, new ErrorHolder(err));
                                     }
                                     substEvents.add(compiledExpression);
                                     buf.setLength(0);
@@ -1274,12 +1178,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                     inExpr = true;
                                     xpath = c == '#';
                                     continue top;
-                                } else {
-                                    buf.append(c);
-                                    if (ch != -1) {
-                                        c = (char)ch;
-                                        continue processChar;
-                                    }
+                                }
+                                buf.append(c);
+                                if (ch != -1) {
+                                    c = (char)ch;
+                                    continue processChar;
                                 }
                             } else {
                                 buf.append(c);
@@ -1292,30 +1195,21 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 }
                 if (inExpr) {
                     // unclosed #{} or ${}
-                    String msg;
-                    if (xpath) {
-                        msg = "Unterminated #{";
-                    } else {
-                        msg = "Unterminated ${";
-                    }
+                    String msg = "Unterminated " + (xpath ? "#" : "$") + "{";
                     throw new SAXParseException(msg, location, null);
                 }
                 if (buf.length() > 0) {
                     if (substEvents.size() == 0) {
-                        attributeEvents.add(new CopyAttribute(uri, local,
-                                                          qname, type, value));
+                        attributeEvents.add(new CopyAttribute(uri, local, qname, type, value));
                     } else {
                         substEvents.add(new Literal(buf.toString()));
-                        attributeEvents.add(new SubstituteAttribute(uri, local,
-                                                    qname, type, substEvents));
+                        attributeEvents.add(new SubstituteAttribute(uri, local, qname, type, substEvents));
                     }
                 } else {
                     if (substEvents.size() > 0) {
-                        attributeEvents.add(new SubstituteAttribute(uri, local,
-                                                     qname, type, substEvents));
+                        attributeEvents.add(new SubstituteAttribute(uri, local, qname, type, substEvents));
                     } else {
-                        attributeEvents.add(new CopyAttribute(uri, local,
-                                                     qname, type, ""));
+                        attributeEvents.add(new CopyAttribute(uri, local, qname, type, ""));
                     }
                 }
             }
@@ -1367,8 +1261,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class StartDTD extends Event {
-        StartDTD(Locator location, String name,
-                 String publicId, String systemId) {
+        StartDTD(Locator location, String name, String publicId, String systemId) {
             super(location);
             this.name = name;
             this.publicId = publicId;
@@ -1503,7 +1396,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             super(raw);
             this.namespace = namespace;
             this.name = name;
-            this.qname = "{"+namespace+"}"+name;
+            this.qname = "{" + namespace + "}" + name;
             this.parameters = new HashMap();
         }
         final String name;
@@ -1518,15 +1411,16 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 if (e instanceof StartParameter) {
                     StartParameter startParam = (StartParameter)e;
                     if (!params) {
-                        throw new SAXParseException("<parameter> not allowed here: \""+startParam.name +"\"", startParam.location, null);
+                        throw new SAXParseException("<parameter> not allowed here: \"" + startParam.name + "\"",
+                                startParam.location, null);
                     }
-                    Object prev =
-                        parameters.put(startParam.name, startParam);
+                    Object prev = parameters.put(startParam.name, startParam);
                     if (prev != null) {
-                        throw new SAXParseException("duplicate parameter: \""+startParam.name +"\"", location, null);
+                        throw new SAXParseException("duplicate parameter: \"" + startParam.name + "\"", location, null);
                     }
                     e = startParam.endInstruction;
                 } else if (e instanceof IgnorableWhitespace) {
+                    // EMPTY
                 } else if (e instanceof Characters) {
                     // check for whitespace
                     char[] ch = ((TextEvent)e).raw;
@@ -1555,8 +1449,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class StartParameter extends StartInstruction {
-        StartParameter(StartElement raw, String name, String optional,
-                       String default_) {
+        StartParameter(StartElement raw, String name, String optional, String default_) {
             super(raw);
             this.name = name;
             this.optional = optional;
@@ -1600,17 +1493,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throw new IllegalArgumentException("No language in locale");
         }
         if (country == null) {
-            if (variant != null) {
-                ret = new Locale(language, "", variant);
-            } else {
-                ret = new Locale(language, "");
-            }
+            ret = variant != null ? new Locale(language, "", variant) : new Locale(language, ""); 
         } else if (country.length() > 0) {
-            if (variant != null) {
-                ret = new Locale(language, country, variant);
-            } else {
-                ret = new Locale(language, country);
-            }
+            ret = variant != null ? new Locale(language, country, variant) : new Locale(language, country); 
         } else {
             throw new IllegalArgumentException("Empty country in locale");
         }
@@ -1684,25 +1569,14 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             String type = getStringValue(this.type, jexl, jxp);
             String pattern = getStringValue(this.pattern, jexl, jxp);
             String currencyCode = getStringValue(this.currencyCode, jexl, jxp);
-            String currencySymbol = getStringValue(this.currencySymbol,
-                                                 jexl, jxp);
-            Boolean isGroupingUsed = getBooleanValue(this.isGroupingUsed,
-                                                     jexl, jxp);
-            Number maxIntegerDigits = getNumberValue(this.maxIntegerDigits,
-                                                     jexl, jxp);
-            Number minIntegerDigits = getNumberValue(this.minIntegerDigits,
-                                                     jexl, jxp);
-            Number maxFractionDigits = getNumberValue(this.maxFractionDigits,
-                                                      jexl, jxp);
-            Number minFractionDigits = getNumberValue(this.minFractionDigits,
-                                                      jexl, jxp);
+            String currencySymbol = getStringValue(this.currencySymbol, jexl, jxp);
+            Boolean isGroupingUsed = getBooleanValue(this.isGroupingUsed, jexl, jxp);
+            Number maxIntegerDigits = getNumberValue(this.maxIntegerDigits, jexl, jxp);
+            Number minIntegerDigits = getNumberValue(this.minIntegerDigits, jexl, jxp);
+            Number maxFractionDigits = getNumberValue(this.maxFractionDigits, jexl, jxp);
+            Number minFractionDigits = getNumberValue(this.minFractionDigits, jexl, jxp);
             String localeStr = getStringValue(this.locale, jexl, jxp);
-            Locale loc;
-            if (localeStr != null) {
-                loc = parseLocale(localeStr, null);
-            } else {
-                loc = Locale.getDefault();
-            }
+            Locale loc = localeStr != null ? parseLocale(localeStr, null) : Locale.getDefault(); 
             String formatted;
             if (loc != null) {
                 // Create formatter
@@ -1714,8 +1588,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 } else {
                     formatter = createFormatter(loc, type);
                 }
-                if (StringUtils.isNotEmpty(pattern)
-                    || CURRENCY.equalsIgnoreCase(type)) {
+                if (StringUtils.isNotEmpty(pattern) || CURRENCY.equalsIgnoreCase(type)) {
                     setCurrency(formatter, currencyCode, currencySymbol);
                 }
                 configureFormatter(formatter,
@@ -1832,8 +1705,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 /*
                  * java.util.Currency.getInstance()
                  */
-                Method m = currencyClass.getMethod("getInstance",
-                                                   new Class[] {String.class});
+                Method m = currencyClass.getMethod("getInstance", new Class[] {String.class});
 
                 methodArgs[0] = code;
                 Object currency = m.invoke(null, methodArgs);
@@ -1901,10 +1773,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throws Exception {
             String var = getStringValue(this.var, jexl, jxp);
             Object value = getValue(this.value, jexl, jxp);
-            Object locVal = getValue(this.locale,
-                                     jexl, jxp);
-            String pattern = getStringValue(this.pattern,
-                                            jexl, jxp);
+            Object locVal = getValue(this.locale, jexl, jxp);
+            String pattern = getStringValue(this.pattern, jexl, jxp);
             Object timeZone = getValue(this.timeZone, jexl, jxp);
 
             String type = getStringValue(this.type, jexl, jxp);
@@ -1916,18 +1786,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             // Create formatter
             Locale locale;
             if (locVal != null) {
-                if (locVal instanceof Locale) {
-                    locale = (Locale)locVal;
-                } else {
-                    locale = parseLocale(locVal.toString(), null);
-                }
+                locale = locVal instanceof Locale ? (Locale)locVal : parseLocale(locVal.toString(), null);  
             } else {
                 locale = Locale.getDefault();
             }
-            DateFormat formatter = createFormatter(locale,
-                                                   type,
-                                                   dateStyle,
-                                                   timeStyle);
+            DateFormat formatter = createFormatter(locale, type, dateStyle, timeStyle);
             // Apply pattern, if present
             if (pattern != null) {
                 try {
@@ -1938,8 +1801,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
             // Set time zone
             TimeZone tz = null;
-            if ((timeZone instanceof String)
-                    && ((String) timeZone).equals("")) {
+            if ((timeZone instanceof String) && ((String) timeZone).equals("")) {
                 timeZone = null;
             }
             if (timeZone != null) {
@@ -1963,22 +1825,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             return formatted;
         }
 
-        private DateFormat createFormatter(Locale loc,
-                                           String type,
-                                           String dateStyle,
-                                           String timeStyle)
+        private DateFormat createFormatter(Locale loc, String type, String dateStyle, String timeStyle)
             throws Exception {
             DateFormat formatter = null;
             if ((type == null) || DATE.equalsIgnoreCase(type)) {
-                formatter = DateFormat.getDateInstance(getStyle(dateStyle),
-                                                       loc);
+                formatter = DateFormat.getDateInstance(getStyle(dateStyle), loc);
             } else if (TIME.equalsIgnoreCase(type)) {
-                formatter = DateFormat.getTimeInstance(getStyle(timeStyle),
-                                                       loc);
+                formatter = DateFormat.getTimeInstance(getStyle(timeStyle), loc);
             } else if (DATETIME.equalsIgnoreCase(type)) {
-                formatter = DateFormat.getDateTimeInstance(getStyle(dateStyle),
-                                                           getStyle(timeStyle),
-                                                           loc);
+                formatter = DateFormat.getDateTimeInstance(getStyle(dateStyle), getStyle(timeStyle), loc);
             } else {
                 throw new IllegalArgumentException("Invalid type: \""+ type+"\"");
             }
@@ -2005,7 +1860,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 } else if (FULL.equalsIgnoreCase(style)) {
                     ret = DateFormat.FULL;
                 } else {
-                    throw new IllegalArgumentException("Invalid style: \"" + style +"\": should be \"default\" or \"short\" or \"medium\" or \"long\" or \"full\"");
+                    throw new IllegalArgumentException("Invalid style: \"" + style + "\": should be \"default\" or \"short\" or \"medium\" or \"long\" or \"full\"");
                 }
             }
             return ret;
@@ -2023,6 +1878,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         StringBuffer charBuf;
 
         public Parser() {
+            // EMPTY
         }
 
         StartDocument getStartEvent() {
@@ -2069,11 +1925,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throws SAXException {
             if (charBuf == null) {
                 charBuf = new StringBuffer(length);
-                if (locator != null) {
-                    charLocation = new LocatorImpl(locator);
-                } else {
-                    charLocation = NULL_LOCATOR;
-                }
+                charLocation = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
             }
             charBuf.append(ch, start, length);
         }
@@ -2085,17 +1937,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             addEvent(endDoc);
         }
 
-        public void endElement(String namespaceURI,
-                               String localName,
-                               String raw)
-            throws SAXException {
+        public void endElement(String namespaceURI, String localName, String raw) throws SAXException {
             Event start = (Event)stack.pop();
             Event newEvent = null;
             if (NS.equals(namespaceURI)) {
-                StartInstruction startInstruction =
-                    (StartInstruction)start;
-                EndInstruction endInstruction =
-                    new EndInstruction(locator, startInstruction);
+                StartInstruction startInstruction = (StartInstruction)start;
+                EndInstruction endInstruction = new EndInstruction(locator, startInstruction);
                 newEvent = endInstruction;
                 if (start instanceof StartWhen) {
                     StartWhen startWhen = (StartWhen)start;
@@ -2110,15 +1957,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         startChoose.firstChoice = startWhen;
                     }
                 } else if (start instanceof StartOtherwise) {
-                    StartOtherwise startOtherwise =
-                        (StartOtherwise)start;
+                    StartOtherwise startOtherwise = (StartOtherwise)start;
                     StartChoose startChoose = (StartChoose)stack.peek();
                     startChoose.otherwise = startOtherwise;
                 }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = startElement.endElement =
-                    new EndElement(locator, startElement);
+                newEvent = startElement.endElement = new EndElement(locator, startElement);
             }
             addEvent(newEvent);
             if (start instanceof StartDefine) {
@@ -2127,21 +1972,17 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
         }
 
-
         public void endPrefixMapping(String prefix) throws SAXException {
-            EndPrefixMapping endPrefixMapping =
-                new EndPrefixMapping(locator, prefix);
+            EndPrefixMapping endPrefixMapping = new EndPrefixMapping(locator, prefix);
             addEvent(endPrefixMapping);
         }
 
-        public void ignorableWhitespace(char[] ch, int start, int length)
-            throws SAXException {
+        public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
             Event ev = new IgnorableWhitespace(locator, ch, start, length);
             addEvent(ev);
         }
 
-        public void processingInstruction(String target, String data)
-            throws SAXException {
+        public void processingInstruction(String target, String data) throws SAXException {
             Event pi = new ProcessingInstruction(locator, target, data);
             addEvent(pi);
         }
@@ -2179,18 +2020,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 if (localName.equals(FOR_EACH)) {
                     String items = attrs.getValue("items");
                     String select = attrs.getValue("select");
-                    JXTExpression begin = compileInt(attrs.getValue("begin"),
-                                                  FOR_EACH, locator);
-                    JXTExpression end = compileInt(attrs.getValue("end"),
-                                                FOR_EACH, locator);
-                    JXTExpression step = compileInt(attrs.getValue("step"),
-                                                 FOR_EACH,
-                                                 locator);
-                    JXTExpression var =
-                        compileExpr(attrs.getValue("var"), null, locator);
-                    JXTExpression varStatus =
-                        compileExpr(attrs.getValue("varStatus"),
-                                null, locator);
+                    JXTExpression begin = compileInt(attrs.getValue("begin"), FOR_EACH, locator);
+                    JXTExpression end = compileInt(attrs.getValue("end"), FOR_EACH, locator);
+                    JXTExpression step = compileInt(attrs.getValue("step"), FOR_EACH, locator);
+                    JXTExpression var = compileExpr(attrs.getValue("var"), null, locator);
+                    JXTExpression varStatus = compileExpr(attrs.getValue("varStatus"), null, locator);
                     if (items == null) {
                         if (select == null && (begin == null || end == null)) {
                             throw new SAXParseException("forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified", locator, null);
@@ -2198,46 +2032,24 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     } else if (select != null) {
                         throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified", locator, null);
                     }
-                    JXTExpression expr =
-                        compileExpr(items == null ? select : items,
-                                null, locator);
+                    JXTExpression expr = compileExpr(items == null ? select : items, null, locator);
                     String lenientValue = attrs.getValue("lenient");
                     Boolean lenient = (lenientValue == null) ? null : Boolean.valueOf(lenientValue);
-                    StartForEach startForEach = new StartForEach(startElement,
-                            expr, var, varStatus, begin, end, step,lenient);
+                    StartForEach startForEach = new StartForEach(startElement, expr, var, varStatus, begin, end, step,lenient);
                     newEvent = startForEach;
                 } else if (localName.equals(FORMAT_NUMBER)) {
-                    JXTExpression value = compileExpr(attrs.getValue("value"),
-                                    null, locator);
-                    JXTExpression type = compileExpr(attrs.getValue("type"),
-                                    null, locator);
-                    JXTExpression pattern = compileExpr(attrs.getValue("pattern"),
-                                    null, locator);
-                    JXTExpression currencyCode =
-                        compileExpr(attrs.getValue("currencyCode"),
-                                    null, locator);
-                    JXTExpression currencySymbol =
-                        compileExpr(attrs.getValue("currencySymbol"),
-                                    null, locator);
-                    JXTExpression isGroupingUsed =
-                        compileBoolean(attrs.getValue("isGroupingUsed"),
-                                       null, locator);
-                    JXTExpression maxIntegerDigits =
-                        compileInt(attrs.getValue("maxIntegerDigits"),
-                                   null, locator);
-                    JXTExpression minIntegerDigits =
-                        compileInt(attrs.getValue("minIntegerDigits"),
-                                   null, locator);
-                    JXTExpression maxFractionDigits =
-                        compileInt(attrs.getValue("maxFractionDigits"),
-                                   null, locator);
-                    JXTExpression minFractionDigits =
-                        compileInt(attrs.getValue("minFractionDigits"),
-                                   null, locator);
-                    JXTExpression var = compileExpr(attrs.getValue("var"),
-                                    null, locator);
-                    JXTExpression locale = compileExpr(attrs.getValue("locale"),
-                                    null, locator);
+                    JXTExpression value = compileExpr(attrs.getValue("value"), null, locator);
+                    JXTExpression type = compileExpr(attrs.getValue("type"), null, locator);
+                    JXTExpression pattern = compileExpr(attrs.getValue("pattern"), null, locator);
+                    JXTExpression currencyCode = compileExpr(attrs.getValue("currencyCode"), null, locator);
+                    JXTExpression currencySymbol = compileExpr(attrs.getValue("currencySymbol"), null, locator);
+                    JXTExpression isGroupingUsed = compileBoolean(attrs.getValue("isGroupingUsed"), null, locator);
+                    JXTExpression maxIntegerDigits = compileInt(attrs.getValue("maxIntegerDigits"), null, locator);
+                    JXTExpression minIntegerDigits = compileInt(attrs.getValue("minIntegerDigits"), null, locator);
+                    JXTExpression maxFractionDigits = compileInt(attrs.getValue("maxFractionDigits"), null, locator);
+                    JXTExpression minFractionDigits = compileInt(attrs.getValue("minFractionDigits"), null, locator);
+                    JXTExpression var = compileExpr(attrs.getValue("var"), null, locator);
+                    JXTExpression locale = compileExpr(attrs.getValue("locale"), null, locator);
                     StartFormatNumber startFormatNumber =
                         new StartFormatNumber(startElement,
                                               var,
@@ -2254,24 +2066,14 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                               locale);
                     newEvent = startFormatNumber;
                 } else if (localName.equals(FORMAT_DATE)) {
-                    JXTExpression var = compileExpr(attrs.getValue("var"),
-                                    null, locator);
-                    JXTExpression value = compileExpr(attrs.getValue("value"),
-                                    null, locator);
-                    JXTExpression type = compileExpr(attrs.getValue("type"),
-                                    null, locator);
-                    JXTExpression pattern = compileExpr(attrs.getValue("pattern"),
-                                    null, locator);
-                    JXTExpression timeZone =
-                        compileExpr(attrs.getValue("timeZone"), null, locator);
-                    JXTExpression dateStyle =
-                        compileExpr(attrs.getValue("dateStyle"),
-                                    null, locator);
-                    JXTExpression timeStyle =
-                        compileExpr(attrs.getValue("timeStyle"),
-                                    null, locator);
-                    JXTExpression locale =
-                        compileExpr(attrs.getValue("locale"), null, locator);
+                    JXTExpression var = compileExpr(attrs.getValue("var"), null, locator);
+                    JXTExpression value = compileExpr(attrs.getValue("value"), null, locator);
+                    JXTExpression type = compileExpr(attrs.getValue("type"), null, locator);
+                    JXTExpression pattern = compileExpr(attrs.getValue("pattern"), null, locator);
+                    JXTExpression timeZone = compileExpr(attrs.getValue("timeZone"), null, locator);
+                    JXTExpression dateStyle = compileExpr(attrs.getValue("dateStyle"), null, locator);
+                    JXTExpression timeStyle = compileExpr(attrs.getValue("timeStyle"), null, locator);
+                    JXTExpression locale = compileExpr(attrs.getValue("locale"), null, locator);
                     StartFormatDate startFormatDate =
                         new StartFormatDate(startElement,
                                             var,
@@ -2287,18 +2089,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     StartChoose startChoose = new StartChoose(startElement);
                     newEvent = startChoose;
                 } else if (localName.equals(WHEN)) {
-                    if (stack.size() == 0 ||
-                            !(stack.peek() instanceof StartChoose)) {
-                        throw new SAXParseException(
-                                "<when> must be within <choose>",
-                                locator, null);
+                    if (stack.size() == 0 || !(stack.peek() instanceof StartChoose)) {
+                        throw new SAXParseException("<when> must be within <choose>", locator, null);
                     }
                     String test = attrs.getValue("test");
                     if (test != null) {
-                        JXTExpression expr =
-                            compileExpr(test, "when: \"test\": ", locator);
-                        StartWhen startWhen =
-                            new StartWhen(startElement, expr);
+                        JXTExpression expr = compileExpr(test, "when: \"test\": ", locator);
+                        StartWhen startWhen = new StartWhen(startElement, expr);
                         newEvent = startWhen;
                     } else {
                         throw new SAXParseException("when: \"test\" is required", locator, null);
@@ -2306,33 +2103,25 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 } else if (localName.equals(OUT)) {
                     String value = attrs.getValue("value");
                     if (value != null) {
-                        JXTExpression expr =
-                            compileExpr(value, "out: \"value\": ", locator);
+                        JXTExpression expr = compileExpr(value, "out: \"value\": ", locator);
                         String lenientValue = attrs.getValue("lenient");
-                        Boolean lenient = lenientValue == null ?
-                                           null : Boolean.valueOf(lenientValue);
+                        Boolean lenient = lenientValue == null ? null : Boolean.valueOf(lenientValue);
                         newEvent = new StartOut(startElement, expr, lenient);
                     } else {
                         throw new SAXParseException("out: \"value\" is required", locator, null);
                     }
                 } else if (localName.equals(OTHERWISE)) {
-                    if (stack.size() != 0 &&
-                            (stack.peek() instanceof StartChoose)) {
-                        StartOtherwise startOtherwise =
-                            new StartOtherwise(startElement);
+                    if (stack.size() != 0 && (stack.peek() instanceof StartChoose)) {
+                        StartOtherwise startOtherwise = new StartOtherwise(startElement);
                         newEvent = startOtherwise;
                     } else {
-                        throw new SAXParseException(
-                                "<otherwise> must be within <choose>",
-                                locator, null);
+                        throw new SAXParseException( "<otherwise> must be within <choose>", locator, null);
                     }
                 } else if (localName.equals(IF)) {
                     String test = attrs.getValue("test");
                     if (test != null) {
-                        JXTExpression expr =
-                            compileExpr(test, "if: \"test\": ", locator);
-                        StartIf startIf =
-                            new StartIf(startElement, expr);
+                        JXTExpression expr = compileExpr(test, "if: \"test\": ", locator);
+                        StartIf startIf = new StartIf(startElement, expr);
                         newEvent = startIf;
                     } else {
                         throw new SAXParseException("if: \"test\" is required", locator, null);
@@ -2345,12 +2134,10 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     String namespace = StringUtils.defaultString(attrs.getValue("targetNamespace"));
                     String name = attrs.getValue("name");
                     if (name != null) {
-                        StartDefine startDefine =
-                            new StartDefine(startElement, namespace, name);
+                        StartDefine startDefine = new StartDefine(startElement, namespace, name);
                         newEvent = startDefine;
                     } else {
-                        throw new SAXParseException(
-                                "macro: \"name\" is required", locator, null);
+                        throw new SAXParseException("macro: \"name\" is required", locator, null);
                     }
                 } else if (localName.equals(PARAMETER)) {
                     boolean syntaxErr = false;
@@ -2362,8 +2149,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         String optional = attrs.getValue("optional");
                         String default_ = attrs.getValue("default");
                         if (name != null) {
-                            StartParameter startParameter = new StartParameter(
-                                    startElement, name, optional, default_);
+                            StartParameter startParameter = new StartParameter(startElement, name, optional, default_);
                             newEvent = startParameter;
                         } else {
                             throw new SAXParseException("parameter: \"name\" is required", locator, null);
@@ -2376,8 +2162,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     newEvent = new StartEvalBody(startElement);
                 } else if (localName.equals(EVAL)) {
                     String value = attrs.getValue("select");
-                    JXTExpression valueExpr =
-                            compileExpr(value, "eval: \"select\":", locator);
+                    JXTExpression valueExpr = compileExpr(value, "eval: \"select\":", locator);
                     newEvent = new StartEval(startElement, valueExpr);
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
@@ -2385,15 +2170,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     JXTExpression varExpr = null;
                     JXTExpression valueExpr = null;
                     if (var != null) {
-                        varExpr =
-                            compileExpr(var, "set: \"var\":", locator);
+                        varExpr = compileExpr(var, "set: \"var\":", locator);
                     }
                     if (value != null) {
-                        valueExpr =
-                            compileExpr(value, "set: \"value\":", locator);
+                        valueExpr = compileExpr(value, "set: \"value\":", locator);
                     }
-                    StartSet startSet = new StartSet(startElement,
-                                                     varExpr, valueExpr);
+                    StartSet startSet = new StartSet(startElement, varExpr, valueExpr);
                     newEvent = startSet;
                 } else if (localName.equals(IMPORT)) {
                     // <import uri="${root}/foo/bar.xml" context="${foo}"/>
@@ -2412,19 +2194,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         String select = attrs.getValue("context");
                         JXTExpression expr = null;
                         if (select != null) {
-                            expr =
-                                compileExpr(select, "import: \"context\": ",
-                                            locator);
+                            expr = compileExpr(select, "import: \"context\": ", locator);
                         }
-                        StartImport startImport =
-                            new StartImport(startElement, uri, expr);
+                        StartImport startImport = new StartImport(startElement, uri, expr);
                         newEvent = startImport;
                     } else {
                         throw new SAXParseException("import: \"uri\" is required", locator, null);
                     }
                 } else if (localName.equals(TEMPLATE)) {
-                    StartTemplate startTemplate =
-                        new StartTemplate(startElement);
+                    StartTemplate startTemplate = new StartTemplate(startElement);
                     newEvent = startTemplate;
                 } else if (localName.equals(COMMENT)) {
                     // <jx:comment>This will be parsed</jx:comment>
@@ -2440,13 +2218,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             addEvent(newEvent);
         }
 
-        public void startPrefixMapping(String prefix, String uri)
-            throws SAXException {
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
             addEvent(new StartPrefixMapping(locator, prefix, uri));
         }
 
-        public void comment(char ch[], int start, int length)
-            throws SAXException {
+        public void comment(char ch[], int start, int length) throws SAXException {
             // DO NOTHING
         }
 
@@ -2466,8 +2242,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             addEvent(new StartCDATA(locator));
         }
 
-        public void startDTD(String name, String publicId, String systemId)
-            throws SAXException {
+        public void startDTD(String name, String publicId, String systemId) throws SAXException {
             addEvent(new StartDTD(locator, name, publicId, systemId));
         }
 
@@ -2489,8 +2264,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 this.gen = new JXTemplateGenerator();
             }
 
-            public void setup(SourceResolver resolver, Map objectModel,
-                              String src, Parameters parameters) 
+            public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) 
                 throws ProcessingException, SAXException, IOException {
                 this.gen.setup(resolver, objectModel, null, parameters);
             }
@@ -2502,8 +2276,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
             public void endDocument() throws SAXException {
                 super.endDocument();
-                gen.performGeneration(gen.getConsumer(), gen.getJexlContext(),
-                          gen.getJXPathContext(), null, getStartEvent(), null);
+                gen.performGeneration(gen.getConsumer(), gen.getJexlContext(), gen.getJXPathContext(), null, getStartEvent(), null);
             }
 
             void setConsumer(XMLConsumer consumer) {
@@ -2525,8 +2298,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             templateConsumer.recycle();
         }
 
-        public void setup(SourceResolver resolver, Map objectModel,
-                          String src, Parameters parameters)
+        public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
             super.setup(resolver, objectModel, src, parameters);
             templateConsumer.setup(resolver, objectModel, src, parameters);
@@ -2578,17 +2350,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     /* (non-Javadoc)
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
-    public void setup(SourceResolver resolver, Map objectModel,
-                      String src, Parameters parameters)
-    throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
+    			throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
         if (src != null) {
             try {
                 this.inputSource = resolver.resolveURI(src);
             } catch (SourceException se) {
-                throw SourceUtil.handle(
-                        "Error during resolving of '" + src + "'.", se);
+                throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
             final String uri = inputSource.getURI();
             boolean regenerate = false;
@@ -2632,13 +2402,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         if (contextObject != null) {
             // Hack: I use jxpath to populate the context object's properties
             // in the jexl context
-            final JXPathBeanInfo bi =
-                JXPathIntrospector.getBeanInfo(contextObject.getClass());
+            final JXPathBeanInfo bi = JXPathIntrospector.getBeanInfo(contextObject.getClass());
             if (bi.isDynamic()) {
                 Class cl = bi.getDynamicPropertyHandlerClass();
                 try {
-                    DynamicPropertyHandler h =
-                        (DynamicPropertyHandler) cl.newInstance();
+                    DynamicPropertyHandler h = (DynamicPropertyHandler)cl.newInstance();
                     String[] result = h.getPropertyNames(contextObject);
                     int len = result.length;
                     for (int i = 0; i < len; i++) {
@@ -2658,8 +2426,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     try {
                         Method read = props[i].getReadMethod();
                         if (read != null) {
-                            map.put(props[i].getName(),
-                                    read.invoke(contextObject, null));
+                            map.put(props[i].getName(), read.invoke(contextObject, null));
                         }
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
@@ -2669,25 +2436,19 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
     }
 
-    private void setContexts(Object contextObject, WebContinuation kont,
-                             Parameters parameters, Map objectModel) {
+    private void setContexts(Object contextObject, WebContinuation kont, Parameters parameters, Map objectModel) {
         final Request request = ObjectModelHelper.getRequest(objectModel);
         final Object session = request.getSession(false);
         final Object app =  ObjectModelHelper.getContext(objectModel);
         cocoon = new HashMap();
-        cocoon.put("request",
-                   FOM_JavaScriptFlowHelper.getFOM_Request(objectModel));
+        cocoon.put("request", FOM_JavaScriptFlowHelper.getFOM_Request(objectModel));
         if (session != null) {
-            cocoon.put("session",
-                       FOM_JavaScriptFlowHelper.getFOM_Session(objectModel));
+            cocoon.put("session", FOM_JavaScriptFlowHelper.getFOM_Session(objectModel));
         }
-        cocoon.put("context",
-                   FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
-        cocoon.put("continuation",
-                   FOM_JavaScriptFlowHelper.getFOM_WebContinuation(objectModel));
+        cocoon.put("context", FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
+        cocoon.put("continuation", FOM_JavaScriptFlowHelper.getFOM_WebContinuation(objectModel));
         cocoon.put("parameters", Parameters.toProperties(parameters));
-        this.variables = new MyVariables(cocoon, contextObject, kont, request,
-                                         session, app, parameters);
+        this.variables = new MyVariables(cocoon, contextObject, kont, request, session, app, parameters);
         Map map;
         if (contextObject instanceof Map) {
             map = (Map)contextObject;
@@ -2697,8 +2458,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
         jxpathContext.setVariables(variables);
-        jxpathContext.setLenient(parameters.getParameterAsBoolean(
-                "lenient-xpath", false));
+        jxpathContext.setLenient(parameters.getParameterAsBoolean("lenient-xpath", false));
         globalJexlContext = new MyJexlContext();
         globalJexlContext.setVars(map);
         map = globalJexlContext.getVars();
@@ -2735,14 +2495,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         synchronized (cache) {
             startEvent = (StartDocument)cache.get(cacheKey);
         }
-        performGeneration(this.xmlConsumer, globalJexlContext, jxpathContext,
-                null, startEvent, null);
+        performGeneration(this.xmlConsumer, globalJexlContext, jxpathContext, null, startEvent, null);
     }
 
-    void performGeneration(final XMLConsumer consumer,
-                MyJexlContext jexlContext, JXPathContext jxpathContext,
-                StartElement macroCall, Event startEvent, Event endEvent)
-                throws SAXException {
+    private void performGeneration(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext,
+                StartElement macroCall, Event startEvent, Event endEvent) throws SAXException {
         cocoon.put("consumer", consumer);
         execute(this.xmlConsumer, globalJexlContext, jxpathContext, null,
                 startEvent, null);
@@ -2753,9 +2510,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throws SAXException;
     }
 
-    private void characters(JexlContext jexlContext,
-                            JXPathContext jxpathContext, TextEvent event,
-                            CharHandler handler) throws SAXException {
+    private void characters(JexlContext jexlContext, JXPathContext jxpathContext, TextEvent event, CharHandler handler)
+    		throws SAXException {
         Iterator iter = event.substitutions.iterator();
         while (iter.hasNext()) {
             Object subst = iter.next();
@@ -2766,42 +2522,29 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 JXTExpression expr = (JXTExpression)subst;
                 try {
                     Object val = getValue(expr, jexlContext, jxpathContext);
-                    if (val != null) {
-                        chars = val.toString().toCharArray();
-                    } else {
-                        chars = ArrayUtils.EMPTY_CHAR_ARRAY;
-                    }
+                    chars = val != null ? val.toString().toCharArray() : ArrayUtils.EMPTY_CHAR_ARRAY;
                 } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(),
-                                                    event.location, e);
+                    throw new SAXParseException(e.getMessage(), event.location, e);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                event.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), event.location, new ErrorHolder(err));
                 }
             }
             handler.characters(chars, 0, chars.length);
         }
     }
 
-    private void executeDOM(final XMLConsumer consumer,
-                            MyJexlContext jexlContext,
-                            JXPathContext jxpathContext,
-                            Node node) throws SAXException {
+    private void executeDOM(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext, Node node)
+    		throws SAXException {
         DOMStreamer streamer = new DOMStreamer(consumer);
         streamer.stream(node);
    }
 
-    private void call(Locator location, StartElement macroCall,
-            final XMLConsumer consumer, MyJexlContext jexlContext,
-            JXPathContext jxpathContext, Event startEvent, Event endEvent)
-            throws SAXException {
+    private void call(Locator location, StartElement macroCall, final XMLConsumer consumer, MyJexlContext jexlContext,
+            JXPathContext jxpathContext, Event startEvent, Event endEvent) throws SAXException {
         try {
-            execute(consumer, jexlContext, jxpathContext, macroCall,
-                    startEvent, endEvent);
+            execute(consumer, jexlContext, jxpathContext, macroCall, startEvent, endEvent);
         } catch (SAXParseException exc) {
-            throw new SAXParseException(macroCall.localName + ": "
-                    + exc.getMessage(), location, exc);
+            throw new SAXParseException(macroCall.localName + ": " + exc.getMessage(), location, exc);
         }
     }
 
@@ -2841,10 +2584,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
     }
 
-    private void execute(final XMLConsumer consumer,
-            MyJexlContext jexlContext, JXPathContext jxpathContext,
-            StartElement macroCall, Event startEvent, Event endEvent)
-            throws SAXException {
+    private void execute(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext,
+            StartElement macroCall, Event startEvent, Event endEvent) throws SAXException {
         Event ev = startEvent;
         LocatorFacade loc = new LocatorFacade(ev.location);
         consumer.setDocumentLocator(loc);
@@ -2861,19 +2602,16 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     } else {
                         JXTExpression expr = (JXTExpression)subst;
                         try {
-                            Object val = getNode(expr, jexlContext,
-                                    jxpathContext);
+                            Object val = getNode(expr, jexlContext, jxpathContext);
                             if (val instanceof Node) {
-                                executeDOM(consumer, jexlContext,
-                                        jxpathContext, (Node)val);
+                                executeDOM(consumer, jexlContext, jxpathContext, (Node)val);
                                 continue;
                             } else if (val instanceof NodeList) {
                                 NodeList nodeList = (NodeList)val;
                                 int len = nodeList.getLength();
                                 for (int i = 0; i < len; i++) {
                                     Node n = nodeList.item(i);
-                                    executeDOM(consumer, jexlContext,
-                                               jxpathContext, n);
+                                    executeDOM(consumer, jexlContext, jxpathContext, n);
                                 }
                                 continue;
                             } else if (val instanceof Node[]) {
@@ -2881,26 +2619,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                 int len = nodeList.length;
                                 for (int i = 0; i < len; i++) {
                                     Node n = nodeList[i];
-                                    executeDOM(consumer, jexlContext,
-                                               jxpathContext, n);
+                                    executeDOM(consumer, jexlContext, jxpathContext, n);
                                 }
                                 continue;
                             } else if (val instanceof XMLizable) {
                                 ((XMLizable)val).toSAX(new IncludeXMLConsumer(consumer));
                                 continue;
                             }
-                            if (val != null) {
-                                chars = val.toString().toCharArray();
-                            } else {
-                                chars = ArrayUtils.EMPTY_CHAR_ARRAY;
-                            }
+                            chars = val != null ? val.toString().toCharArray() : ArrayUtils.EMPTY_CHAR_ARRAY;
                         } catch (Exception e) {
-                            throw new SAXParseException(e.getMessage(),
-                                                        ev.location, e);
+                            throw new SAXParseException(e.getMessage(), ev.location, e);
                         } catch (Error err) {
-                            throw new SAXParseException(err.getMessage(),
-                                                        ev.location,
-                                                        new ErrorHolder(err));
+                            throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                         }
                     }
                     consumer.characters(chars, 0, chars.length);
@@ -2908,21 +2638,17 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
                 StartElement startElement = endElement.startElement;
-                consumer.endElement(startElement.namespaceURI,
-                                    startElement.localName, startElement.raw);
+                consumer.endElement(startElement.namespaceURI, startElement.localName, startElement.raw);
             } else if (ev instanceof EndPrefixMapping) {
                 EndPrefixMapping endPrefixMapping = (EndPrefixMapping)ev;
                 consumer.endPrefixMapping(endPrefixMapping.prefix);
             } else if (ev instanceof IgnorableWhitespace) {
                 TextEvent text = (TextEvent)ev;
-                characters(jexlContext, jxpathContext, text,
-                           new CharHandler() {
-                               public void characters(char[] ch, int offset,
-                                                      int len)
-                                   throws SAXException {
-                                   consumer.ignorableWhitespace(ch, offset, len);
-                               }
-                           });
+                characters(jexlContext, jxpathContext, text, new CharHandler() {
+                       public void characters(char[] ch, int offset, int len) throws SAXException {
+                           consumer.ignorableWhitespace(ch, offset, len);
+                       }
+                   });
             } else if (ev instanceof SkippedEntity) {
                 SkippedEntity skippedEntity = (SkippedEntity)ev;
                 consumer.skippedEntity(skippedEntity.name);
@@ -2930,15 +2656,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 StartIf startIf = (StartIf)ev;
                 Object val;
                 try {
-                    val = getValue(startIf.test, jexlContext,
-                            jxpathContext, Boolean.TRUE);
+                    val = getValue(startIf.test, jexlContext, jxpathContext, Boolean.TRUE);
                 } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(),
-                                                ev.location, e);
+                    throw new SAXParseException(e.getMessage(), ev.location, e);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                 }
                 boolean result = false;
                 if (val instanceof Boolean) {
@@ -2960,27 +2682,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     if (items != null) {
                         JXTExpression expr = (JXTExpression)items;
                         if (expr.compiledExpression instanceof CompiledExpression) {
-                            CompiledExpression compiledExpression =
-                                (CompiledExpression)expr.compiledExpression;
+                            CompiledExpression compiledExpression = (CompiledExpression)expr.compiledExpression;
                             Object val =
-                                compiledExpression.getPointer(jxpathContext,
-                                                              expr.raw).getNode();
+                                compiledExpression.getPointer(jxpathContext, expr.raw).getNode();
                             // FIXME: workaround for JXPath bug
-                            if (val instanceof NativeArray) {
-                                iter = new JSIntrospector.NativeArrayIterator((NativeArray)val);
-                            } else {
-                                iter = compiledExpression.iteratePointers(jxpathContext);
-                            }
-                        } else if (expr.compiledExpression instanceof org.apache.commons.jexl.Expression) {
-                            org.apache.commons.jexl.Expression e =
-                                (org.apache.commons.jexl.Expression)expr.compiledExpression;
+                            iter = val instanceof NativeArray ? new JSIntrospector.NativeArrayIterator((NativeArray)val) :
+                                        compiledExpression.iteratePointers(jxpathContext);
+                        } else if (expr.compiledExpression instanceof Expression) {
+                            Expression e = (Expression)expr.compiledExpression;
                             Object result = e.evaluate(jexlContext);
                             if (result != null) {
-                                iter = Introspector.getUberspect().getIterator(
-                                        result,
-                                        new Info(ev.location.getSystemId(),
-                                                 ev.location.getLineNumber(),
-                                                 ev.location.getColumnNumber()));
+                                iter = Introspector.getUberspect().getIterator(result,
+                                        new Info(ev.location.getSystemId(), ev.location.getLineNumber(), ev.location.getColumnNumber()));
                             }
                             if (iter == null) {
                                 iter = EMPTY_ITER;
@@ -3001,6 +2714,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                 }
 
                                 public void remove() {
+                                    // EMPTY
                                 }
                             };
                         }
@@ -3010,27 +2724,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     begin = startForEach.begin == null ? 0 :
                         getIntValue(startForEach.begin, jexlContext, jxpathContext);
                     end = startForEach.end == null ? Integer.MAX_VALUE :
-                            getIntValue(startForEach.end, jexlContext,
-                                    jxpathContext);
+                            getIntValue(startForEach.end, jexlContext, jxpathContext);
                     step = startForEach.step == null ? 1 :
-                            getIntValue(startForEach.step, jexlContext,
-                                    jxpathContext);
-                    var = getStringValue(startForEach.var, jexlContext,
-                                            jxpathContext);
-                    varStatus = getStringValue(startForEach.varStatus,
-                                               jexlContext, jxpathContext);
+                            getIntValue(startForEach.step, jexlContext, jxpathContext);
+                    var = getStringValue(startForEach.var, jexlContext, jxpathContext);
+                    varStatus = getStringValue(startForEach.varStatus, jexlContext, jxpathContext);
                 } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.location, exc);
+                    throw new SAXParseException(exc.getMessage(), ev.location, exc);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                 }
-                MyJexlContext localJexlContext =
-                    new MyJexlContext(jexlContext);
-                MyVariables localJXPathVariables =
-                    new MyVariables((MyVariables)jxpathContext.getVariables());
+                MyJexlContext localJexlContext = new MyJexlContext(jexlContext);
+                MyVariables localJXPathVariables = new MyVariables((MyVariables)jxpathContext.getVariables());
                 int i = 0;
                 // Move to the begin row
                 while (i < begin && iter.hasNext()) {
@@ -3053,18 +2758,14 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     Object value = iter.next();
                     if (value instanceof Pointer) {
                         Pointer ptr = (Pointer)value;
-                        localJXPathContext =
-                            jxpathContext.getRelativeContext(ptr);
+                        localJXPathContext = jxpathContext.getRelativeContext(ptr);
                         try {
                             value = ptr.getNode();
                         } catch (Exception exc) {
-                            throw new SAXParseException(exc.getMessage(),
-                                                        ev.location, null);
+                            throw new SAXParseException(exc.getMessage(), ev.location, null);
                         }
                     } else {
-                        localJXPathContext =
-                            jxpathContextFactory.newContext(jxpathContext,
-                                                            value);
+                        localJXPathContext = jxpathContextFactory.newContext(jxpathContext, value);
                     }
                     localJXPathContext.setVariables(localJXPathVariables);
                     if (var != null) {
@@ -3077,9 +2778,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         status.current = value;
                         status.last = (i == end || !iter.hasNext());
                     }
-                    execute(consumer, localJexlContext, localJXPathContext,
-                            macroCall, startForEach.next,
-                            startForEach.endInstruction);
+                    execute(consumer, localJexlContext, localJXPathContext, macroCall, startForEach.next, startForEach.endInstruction);
                     // Skip rows
                     skipCounter = step;
                     while (--skipCounter > 0 && iter.hasNext()) {
@@ -3097,11 +2796,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 while (startWhen != null) {
                     Object val;
                     try {
-                        val = getValue(startWhen.test, jexlContext,
-                                       jxpathContext, Boolean.TRUE);
+                        val = getValue(startWhen.test, jexlContext, jxpathContext, Boolean.TRUE);
                     } catch (Exception e) {
-                        throw new SAXParseException(e.getMessage(),
-                                                    ev.location, e);
+                        throw new SAXParseException(e.getMessage(), ev.location, e);
                     }
                     boolean result;
                     if (val instanceof Boolean) {
@@ -3110,18 +2807,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         result = (val != null);
                     }
                     if (result) {
-                        execute(consumer, jexlContext, jxpathContext,
-                                macroCall, startWhen.next,
-                                startWhen.endInstruction);
+                        execute(consumer, jexlContext, jxpathContext, macroCall, startWhen.next, startWhen.endInstruction);
                         break;
                     }
                     startWhen = startWhen.nextChoice;
                 }
                 if (startWhen == null && startChoose.otherwise != null) {
-                    execute(consumer,
-                            jexlContext, jxpathContext, macroCall,
-                            startChoose.otherwise.next,
-                            startChoose.otherwise.endInstruction);
+                    execute(consumer, jexlContext, jxpathContext, macroCall, startChoose.otherwise.next, startChoose.otherwise.endInstruction);
                 }
                 ev = startChoose.endInstruction.next;
                 continue;
@@ -3131,16 +2823,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 String var = null;
                 try {
                     if (startSet.var != null) {
-                        var = getStringValue(startSet.var, jexlContext,
-                                             jxpathContext);
+                        var = getStringValue(startSet.var, jexlContext, jxpathContext);
                     }
                     if (startSet.value != null) {
-                        value = getNode(startSet.value, jexlContext,
-                                            jxpathContext);
+                        value = getNode(startSet.value, jexlContext, jxpathContext);
                     }
                 } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.location, exc);
+                    throw new SAXParseException(exc.getMessage(), ev.location, exc);
                 }
                 if (value == null) {
                     NodeList nodeList = toDOMNodeList("set", startSet, jexlContext, macroCall);
@@ -3173,35 +2862,22 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         if (attrEvent instanceof CopyAttribute) {
                             CopyAttribute copy = (CopyAttribute)attrEvent;
                             attributeValue = copy.value;
-                        } else if (attrEvent instanceof
-                                   SubstituteAttribute) {
-                            SubstituteAttribute substEvent =
-                                (SubstituteAttribute)attrEvent;
-                            if (substEvent.substitutions.size() == 1 &&
-                                    substEvent.substitutions.get(0) instanceof
-                                    JXTExpression) {
-                                JXTExpression expr = (JXTExpression)
-                                    substEvent.substitutions.get(0);
+                        } else if (attrEvent instanceof SubstituteAttribute) {
+                            SubstituteAttribute substEvent = (SubstituteAttribute)attrEvent;
+                            if (substEvent.substitutions.size() == 1 && substEvent.substitutions.get(0) instanceof JXTExpression) {
+                                JXTExpression expr = (JXTExpression)substEvent.substitutions.get(0);
                                 Object val;
                                 try {
-                                    val = getNode(expr, jexlContext,
-                                            jxpathContext);
+                                    val = getNode(expr, jexlContext, jxpathContext);
                                 } catch (Exception e) {
-                                    throw new SAXParseException(e.getMessage(),
-                                                                ev.location, e);
+                                    throw new SAXParseException(e.getMessage(), ev.location, e);
                                 } catch (Error err) {
-                                    throw new SAXParseException(err.getMessage(),
-                                                                ev.location,
-                                                                new ErrorHolder(err));
+                                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                                 }
-                                if (val == null) {
-                                    val = "";
-                                }
-                                attributeValue = val;
+                                attributeValue = val != null ? val : "";
                             } else {
                                 StringBuffer buf = new StringBuffer();
-                                Iterator iterSubst =
-                                    substEvent.substitutions.iterator();
+                                Iterator iterSubst = substEvent.substitutions.iterator();
                                 while (iterSubst.hasNext()) {
                                     Subst subst = (Subst)iterSubst.next();
                                     if (subst instanceof Literal) {
@@ -3211,22 +2887,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                         JXTExpression expr = (JXTExpression)subst;
                                         Object val;
                                         try {
-                                            val = getValue(expr, jexlContext,
-                                                         jxpathContext);
+                                            val = getValue(expr, jexlContext, jxpathContext);
                                         } catch (Exception e) {
-                                            throw new SAXParseException(
-                                                    e.getMessage(),
-                                                    ev.location, e);
+                                            throw new SAXParseException(e.getMessage(), ev.location, e);
                                         } catch (Error err) {
-                                            throw new SAXParseException(
-                                                    err.getMessage(),
-                                                    ev.location,
-                                                    new ErrorHolder(err));
+                                            throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                                         }
-                                        if (val == null) {
-                                            val = "";
-                                        }
-                                        buf.append(val.toString());
+                                        buf.append(val != null ? val.toString() : "");
                                     }
                                 }
                                 attributeValue = buf.toString();
@@ -3236,11 +2903,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         }
                         attributeMap.put(attributeName, attributeValue);
                     }
-                    MyVariables parent =
-                        (MyVariables)jxpathContext.getVariables();
+                    MyVariables parent =(MyVariables)jxpathContext.getVariables();
                     MyVariables vars = new MyVariables(parent);
-                    MyJexlContext localJexlContext =
-                        new MyJexlContext(jexlContext);
+                    MyJexlContext localJexlContext = new MyJexlContext(jexlContext);
                     HashMap macro = new HashMap();
                     macro.put("body", startElement);
                     macro.put("arguments", attributeMap);
@@ -3250,8 +2915,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     while (iter.hasNext()) {
                         Map.Entry e = (Map.Entry)iter.next();
                         String key = (String)e.getKey();
-                        StartParameter startParam =
-                            (StartParameter)e.getValue();
+                        StartParameter startParam = (StartParameter)e.getValue();
                         Object default_ = startParam.default_;
                         Object val = attributeMap.get(key);
                         if (val == null) {
@@ -3260,30 +2924,23 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         localJexlContext.put(key, val);
                         vars.declareVariable(key, val);
                     }
-                    JXPathContext localJXPathContext =
-                            jxpathContextFactory.newContext(null,
-                                jxpathContext.getContextBean());
+                    JXPathContext localJXPathContext = jxpathContextFactory.newContext(null, jxpathContext.getContextBean());
                     localJXPathContext.setVariables(vars);
-                    call(ev.location, startElement, consumer, localJexlContext,
-                            localJXPathContext, def.body, def.endInstruction);
+                    call(ev.location, startElement, consumer, localJexlContext, localJXPathContext, def.body, def.endInstruction);
                     ev = startElement.endElement.next;
                     continue;
                 }
                 Iterator i = startElement.attributeEvents.iterator();
                 AttributesImpl attrs = new AttributesImpl();
                 while (i.hasNext()) {
-                    AttributeEvent attrEvent = (AttributeEvent)
-                        i.next();
+                    AttributeEvent attrEvent = (AttributeEvent)i.next();
                     if (attrEvent instanceof CopyAttribute) {
                         CopyAttribute copy = (CopyAttribute)attrEvent;
-                        attrs.addAttribute(copy.namespaceURI, copy.localName,
-                                           copy.raw, copy.type, copy.value);
+                        attrs.addAttribute(copy.namespaceURI, copy.localName, copy.raw, copy.type, copy.value);
                     } else if (attrEvent instanceof SubstituteAttribute) {
                         StringBuffer buf = new StringBuffer();
-                        SubstituteAttribute substEvent =
-                            (SubstituteAttribute)attrEvent;
-                        Iterator iterSubst =
-                            substEvent.substitutions.iterator();
+                        SubstituteAttribute substEvent = (SubstituteAttribute)attrEvent;
+                        Iterator iterSubst = substEvent.substitutions.iterator();
                         while (iterSubst.hasNext()) {
                             Subst subst = (Subst)iterSubst.next();
                             if (subst instanceof Literal) {
@@ -3293,68 +2950,48 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                 JXTExpression expr = (JXTExpression)subst;
                                 Object val;
                                 try {
-                                    val = getValue(expr, jexlContext,
-                                                 jxpathContext);
+                                    val = getValue(expr, jexlContext, jxpathContext);
                                 } catch (Exception e) {
-                                    throw new SAXParseException(e.getMessage(),
-                                                                ev.location, e);
+                                    throw new SAXParseException(e.getMessage(), ev.location, e);
                                 } catch (Error err) {
-                                    throw new SAXParseException(err.getMessage(),
-                                                                ev.location,
-                                                                new ErrorHolder(err));
+                                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                                }
-                                if (val == null) {
-                                    val = "";
-                                }
-                                buf.append(val.toString());
+                               buf.append(val != null ? val.toString() : "");
                             }
                         }
-                        attrs.addAttribute(attrEvent.namespaceURI,
-                               attrEvent.localName, attrEvent.raw,
-                               attrEvent.type, buf.toString());
+                        attrs.addAttribute(attrEvent.namespaceURI, attrEvent.localName, attrEvent.raw, attrEvent.type, buf.toString());
                     }
                 }
-                consumer.startElement(startElement.namespaceURI,
-                              startElement.localName, startElement.raw, attrs);
-
+                consumer.startElement(startElement.namespaceURI, startElement.localName, startElement.raw, attrs);
             } else if (ev instanceof StartFormatNumber) {
                 StartFormatNumber startFormatNumber = (StartFormatNumber)ev;
                 try {
-                    String result =
-                        startFormatNumber.format(jexlContext, jxpathContext);
+                    String result = startFormatNumber.format(jexlContext, jxpathContext);
                     if (result != null) {
                         char[] chars = result.toCharArray();
                         consumer.characters(chars, 0, chars.length);
                     }
                 } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(),
-                            ev.location, e);
+                    throw new SAXParseException(e.getMessage(), ev.location, e);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                 }
             } else if (ev instanceof StartFormatDate) {
                 StartFormatDate startFormatDate = (StartFormatDate)ev;
                 try {
-                    String result =
-                        startFormatDate.format(jexlContext, jxpathContext);
+                    String result = startFormatDate.format(jexlContext, jxpathContext);
                     if (result != null) {
                         char[] chars = result.toCharArray();
                         consumer.characters(chars, 0, chars.length);
                     }
                 } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(),
-                                                ev.location, e);
+                    throw new SAXParseException(e.getMessage(), ev.location, e);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                 }
             } else if (ev instanceof StartPrefixMapping) {
                 StartPrefixMapping startPrefixMapping = (StartPrefixMapping)ev;
-                consumer.startPrefixMapping(startPrefixMapping.prefix,
-                                            startPrefixMapping.uri);
+                consumer.startPrefixMapping(startPrefixMapping.prefix, startPrefixMapping.uri);
             } else if (ev instanceof StartComment) {
                 StartComment startJXComment = (StartComment)ev;
                 // Parse the body of the comment
@@ -3386,49 +3023,38 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 consumer.startCDATA();
             } else if (ev instanceof StartDTD) {
                 StartDTD startDTD = (StartDTD)ev;
-                consumer.startDTD(startDTD.name, startDTD.publicId,
-                        startDTD.systemId);
+                consumer.startDTD(startDTD.name, startDTD.publicId, startDTD.systemId);
             } else if (ev instanceof StartEntity) {
                 consumer.startEntity(((StartEntity)ev).name);
             } else if (ev instanceof StartOut) {
                 StartOut startOut = (StartOut)ev;
                 Object val;
                 try {
-                    val = getNode(startOut.compiledExpression, jexlContext,
-                                  jxpathContext, startOut.lenient);
+                    val = getNode(startOut.compiledExpression, jexlContext, jxpathContext, startOut.lenient);
                     if (val instanceof Node) {
-                        executeDOM(consumer, jexlContext, jxpathContext,
-                                   (Node)val);
+                        executeDOM(consumer, jexlContext, jxpathContext, (Node)val);
                     } else if (val instanceof NodeList) {
                         NodeList nodeList = (NodeList)val;
                         int len = nodeList.getLength();
                         for (int i = 0; i < len; i++) {
                             Node n = nodeList.item(i);
-                            executeDOM(consumer, jexlContext,
-                                       jxpathContext, n);
+                            executeDOM(consumer, jexlContext, jxpathContext, n);
                         }
                     } else if (val instanceof Node[]) {
                         Node[] nodeList = (Node[])val;
                         int len = nodeList.length;
                         for (int i = 0;i < len; i++) {
                             Node n = nodeList[i];
-                            executeDOM(consumer, jexlContext,
-                                       jxpathContext, n);
+                            executeDOM(consumer, jexlContext, jxpathContext, n);
                         }
                     } else if (val instanceof XMLizable) {
                         ((XMLizable)val).toSAX(new IncludeXMLConsumer(consumer));
                     } else {
-                        char[] ch;
-                        if (val == null) {
-                            ch = ArrayUtils.EMPTY_CHAR_ARRAY;
-                        } else {
-                            ch = val.toString().toCharArray();
-                        }
+                        char[] ch = val == null ? ArrayUtils.EMPTY_CHAR_ARRAY : val.toString().toCharArray(); 
                         consumer.characters(ch, 0, ch.length);
                     }
                 } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(),
-                                                ev.location, e);
+                    throw new SAXParseException(e.getMessage(), ev.location, e);
                 }
             } else if (ev instanceof StartTemplate) {
             } else if (ev instanceof StartEval) {
@@ -3440,30 +3066,22 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         throw new Exception("macro invocation required instead of: " + val);
                     }
                     StartElement call = (StartElement)val;
-                    execute(consumer, jexlContext, jxpathContext, call,
-                            call.next, call.endElement);
+                    execute(consumer, jexlContext, jxpathContext, call, call.next, call.endElement);
                 } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.location, exc);
+                    throw new SAXParseException(exc.getMessage(), ev.location, exc);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                 }
                 ev = startEval.endInstruction.next;
                 continue;
             } else if (ev instanceof StartEvalBody) {
                 StartEvalBody startEval = (StartEvalBody)ev;
                 try {
-                    execute(consumer, jexlContext, jxpathContext, null,
-                            macroCall.next, macroCall.endElement);
+                    execute(consumer, jexlContext, jxpathContext, null, macroCall.next, macroCall.endElement);
                 } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.location, exc);
+                    throw new SAXParseException(exc.getMessage(), ev.location, exc);
                 } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                                                ev.location,
-                                                new ErrorHolder(err));
+                    throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                 }
                 ev = startEval.endInstruction.next;
                 continue;
@@ -3492,20 +3110,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             JXTExpression expr = (JXTExpression)subst;
                             Object val;
                             try {
-                                val = getValue(expr,
-                                        jexlContext, jxpathContext);
+                                val = getValue(expr, jexlContext, jxpathContext);
                             } catch (Exception exc) {
-                                throw new SAXParseException(exc.getMessage(),
-                                                            ev.location, exc);
+                                throw new SAXParseException(exc.getMessage(), ev.location, exc);
                             } catch (Error err) {
-                                throw new SAXParseException(err.getMessage(),
-                                                            ev.location,
-                                                            new ErrorHolder(err));
+                                throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                             }
-                            if (val == null) {
-                                val = "";
-                            }
-                            buf.append(val.toString());
+                            buf.append(val != null ? val.toString() : "");
                         }
                     }
                     uri = buf.toString();
@@ -3519,19 +3130,19 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         doc = (StartDocument)cache.get(input.getURI());
                         if (doc != null) {
                             boolean recompile = false;
-                            if ( doc.compileTime == null) {
+                            if (doc.compileTime == null) {
                                 recompile = true;
                             } else {
                                 int valid = doc.compileTime.isValid();
-                                if ( valid == SourceValidity.UNKNOWN ) {
+                                if (valid == SourceValidity.UNKNOWN) {
                                     validity = input.getValidity();
                                     valid = doc.compileTime.isValid(validity);
                                 }
-                                if ( valid != SourceValidity.VALID ) {
+                                if (valid != SourceValidity.VALID) {
                                     recompile = true;
                                 }
                             }
-                            if ( recompile ) {
+                            if (recompile) {
                                 doc = null; // recompile
                             }
                         }
@@ -3550,9 +3161,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         }
                     }
                 } catch (Exception exc) {
-                    throw new SAXParseException(exc.getMessage(),
-                                                ev.location,
-                                                exc);
+                    throw new SAXParseException(exc.getMessage(), ev.location, exc);
                 }
                 finally {
                     resolver.release(input);
@@ -3567,21 +3176,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         selectJexl = new MyJexlContext(jexlContext);
                         fillContext(obj, selectJexl);
                     } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(),
-                                                    ev.location, exc);
+                        throw new SAXParseException(exc.getMessage(), ev.location, exc);
                     } catch (Error err) {
-                        throw new SAXParseException(err.getMessage(),
-                                                    ev.location,
-                                                    new ErrorHolder(err));
+                        throw new SAXParseException(err.getMessage(), ev.location, new ErrorHolder(err));
                     }
                 }
                 try {
                     execute(consumer, selectJexl, selectJXPath, macroCall, doc.next, doc.endDocument);
                 } catch (Exception exc) {
-                        throw new SAXParseException(
-                                "Exception occurred in imported template "
-                                + uri + ": "+ exc.getMessage(),
-                                ev.location, exc);
+                        throw new SAXParseException("Exception occurred in imported template " + uri + ": "+ exc.getMessage(), ev.location, exc);
                 }
                 ev = startImport.endInstruction.next;
                 continue;
@@ -3618,7 +3221,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 	public SourceValidity getValidity() {
     	JXTExpression validityExpr = (JXTExpression)getCurrentTemplateProperty(VALIDITY);
         try {
-			return (SourceValidity) getValue(validityExpr, globalJexlContext, jxpathContext);
+			return (SourceValidity)getValue(validityExpr, globalJexlContext, jxpathContext);
 		} catch (Exception e) {
 			getLogger().error( "error evaluating cache key", e );
 			return null;
@@ -3631,9 +3234,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         synchronized (cache) {
             startEvent = (StartDocument)cache.get(uri);
         }
-        if (startEvent == null)
-        	return null;
-        return startEvent.templateProperties.get(propertyName);
+        return startEvent != null ? startEvent.templateProperties.get(propertyName) : null;
 	}
 	
 	private NodeList toDOMNodeList(String elementName, StartInstruction si,
