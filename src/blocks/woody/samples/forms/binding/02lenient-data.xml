@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<root>
+  <!-- to see the runtime effect of non-lenient binding
+       comment out one of the 'breakingField' nodes below -->
+  <one>
+    <breakingField>init1</breakingField>
+  </one>
+  <two>
+    <breakingField>init2</breakingField>
+  </two>
+  <three>
+  <!--
+    <breakingField>init3</breakingField>
+    -->
+  </three>
+</root>
