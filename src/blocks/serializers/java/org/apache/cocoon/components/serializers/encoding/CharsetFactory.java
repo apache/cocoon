@@ -32,9 +32,13 @@ import java.util.zip.ZipFile;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: CharsetFactory.java,v 1.1 2004/04/21 09:33:22 pier Exp $
+ * @version CVS $Id: CharsetFactory.java,v 1.2 2004/04/30 19:34:46 pier Exp $
  */
 public final class CharsetFactory {
+
+    /** The lookup class name for the encodings. */
+    private static final String CHARSET_LOOKUP_CLASS =
+        "org/apache/cocoon/components/serializers/encoding/cs_US_ASCII.class";
 
     /** Our private instance. */
     private static CharsetFactory instance = new CharsetFactory();
@@ -55,9 +59,8 @@ public final class CharsetFactory {
         super();
         this.unknownCharset = new UnknownCharset();
 
-        ClassLoader loader = this.getClass().getClassLoader();
-        String file = this.getClass().getName().replace('.','/') + ".class";
-        URL url = loader.getResource(file);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL url = loader.getResource(CHARSET_LOOKUP_CLASS);
 
         if ("jar".equals(url.getProtocol())) {
             this.loadCharsetsFromJar(url);

@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.2 2004/04/27 18:35:21 pier Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.3 2004/04/30 19:34:46 pier Exp $
  */
 public class XMLSerializer extends EncodingSerializer {
 
@@ -211,8 +211,11 @@ public class XMLSerializer extends EncodingSerializer {
             if (public_id != null) {
                 this.write(S_DOCTYPE_2); // [ PUBLIC "]
                 this.write(public_id);
-                this.write(S_DOCTYPE_3); // [" "]
-                this.write(system_id);
+                /* This is wring in XML, but not in SGML/HTML */
+                if (system_id != null) {
+                    this.write(S_DOCTYPE_3); // [" "]
+                    this.write(system_id);
+                }
                 this.write(S_DOCTYPE_5); // [">]
             } else if (system_id != null) {
                 this.write(S_DOCTYPE_4); // [ SYSTEM "]

@@ -17,29 +17,33 @@ package org.apache.cocoon.components.serializers;
 
 import org.apache.cocoon.components.serializers.encoding.HTMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
+import org.apache.cocoon.components.serializers.util.SGMLDocType;
 import org.xml.sax.SAXException;
 
 
 /**
  *
- *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HTMLSerializer.java,v 1.2 2004/04/27 18:35:21 pier Exp $
+ * @version CVS $Id: HTMLSerializer.java,v 1.3 2004/04/30 19:34:46 pier Exp $
  */
 public class HTMLSerializer extends XHTMLSerializer {
 
+    /** A cross-browser compatible very simple document type declaration. */
+    public static final DocType HTML401_DOCTYPE_COMPATIBLE = new SGMLDocType(
+            "HTML", "-//W3C//DTD HTML 4.01 Transitional//EN", null);
+
     /** A representation of the HTML 4.01 strict document type. */
-    public static final DocType HTML401_DOCTYPE_STRICT = new DocType(
+    public static final DocType HTML401_DOCTYPE_STRICT = new SGMLDocType(
             "HTML", "-//W3C//DTD HTML 4.01//EN",
             "http://www.w3.org/TR/html4/strict.dtd");
 
     /** A representation of the HTML 4.01 transitional document type. */
-    public static final DocType HTML401_DOCTYPE_TRANSITIONAL = new DocType(
+    public static final DocType HTML401_DOCTYPE_TRANSITIONAL = new SGMLDocType(
             "HTML", "-//W3C//DTD HTML 4.01 Transitional//EN",
             "http://www.w3.org/TR/html4/loose.dtd");
 
     /** A representation of the HTML 4.01 frameset document type. */
-    public static final DocType HTML401_DOCTYPE_FRAMESET = new DocType(
+    public static final DocType HTML401_DOCTYPE_FRAMESET = new SGMLDocType(
             "HTML", "-//W3C//DTD HTML 4.01 Frameset//EN",
             "http://www.w3.org/TR/html4/frameset.dtd");
 
@@ -96,7 +100,7 @@ public class HTMLSerializer extends XHTMLSerializer {
         }
 
         if (this.doctype == null) {
-            this.doctype = HTML401_DOCTYPE_TRANSITIONAL;
+            this.doctype = HTML401_DOCTYPE_COMPATIBLE;
         } else if (XHTML1_DOCTYPE_STRICT.equals(this.doctype)) {
             this.doctype = HTML401_DOCTYPE_STRICT;
         } else if (XHTML1_DOCTYPE_TRANSITIONAL.equals(this.doctype)) {
