@@ -48,7 +48,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.18 2004/04/03 00:46:33 antonio Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.19 2004/04/26 21:28:39 ugo Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -243,9 +243,8 @@ public abstract class AbstractCachingProcessingPipeline
                         } else {
                             this.generator.generate();
                         }
-                        byte[] data = baos.toByteArray();
-                        environment.setContentLength(data.length);
-                        os.write(data);
+                        environment.setContentLength(baos.size());
+                        baos.writeTo(os);
                     } else {
                         if (os == null) {
                             os = environment.getOutputStream(
@@ -798,12 +797,11 @@ public abstract class AbstractCachingProcessingPipeline
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     this.reader.setOutputStream(os);
                     this.reader.generate();
-                    byte[] data = os.toByteArray();
-                    environment.setContentLength(data.length);
+                    environment.setContentLength(os.size());
                     if (outputStream == null) {
                         outputStream = environment.getOutputStream(0);
                     }
-                    environment.getOutputStream(0).write(data);
+                    os.writeTo(environment.getOutputStream(0));
                 } else {
                     if (outputStream == null) {
                         outputStream = environment.getOutputStream(this.outputBufferSize);

@@ -54,7 +54,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.20 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.21 2004/04/26 21:28:39 ugo Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -536,9 +536,8 @@ public abstract class AbstractProcessingPipeline
     
                     // execute the pipeline:
                     this.generator.generate();
-                    byte[] data = os.toByteArray();
-                    environment.setContentLength(data.length);
-                    environment.getOutputStream(0).write(data);
+                    environment.setContentLength(os.size());
+                    os.writeTo(environment.getOutputStream(0));
                 } else {
                     // set the output stream
                     this.serializer.setOutputStream(environment.getOutputStream(this.outputBufferSize));
@@ -602,9 +601,8 @@ public abstract class AbstractProcessingPipeline
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 this.reader.setOutputStream(os);
                 this.reader.generate();
-                byte[] data = os.toByteArray();
-                environment.setContentLength(data.length);
-                environment.getOutputStream(0).write(data);
+                environment.setContentLength(os.size());
+                os.writeTo(environment.getOutputStream(0));
             } else {
                 this.reader.setOutputStream(environment.getOutputStream(this.outputBufferSize));
                 this.reader.generate();
