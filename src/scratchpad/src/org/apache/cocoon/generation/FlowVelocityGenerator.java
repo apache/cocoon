@@ -50,6 +50,14 @@
 */
 package org.apache.cocoon.generation;
 
+import java.beans.PropertyDescriptor;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.*;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -63,52 +71,32 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.Flow;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Wrapper;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.ScriptRuntime;
+import org.apache.velocity.util.introspection.Info;
 import org.apache.velocity.util.introspection.UberspectImpl;
 import org.apache.velocity.util.introspection.VelMethod;
 import org.apache.velocity.util.introspection.VelPropertyGet;
 import org.apache.velocity.util.introspection.VelPropertySet;
-import org.apache.velocity.util.introspection.Info;
-import java.beans.PropertyDescriptor;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.BufferedReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.mozilla.javascript.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * <p>Cocoon {@link Generator} that produces dynamic XML SAX events
@@ -187,7 +175,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.7 2003/05/07 04:36:33 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.8 2003/05/07 11:36:18 cziegeler Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {

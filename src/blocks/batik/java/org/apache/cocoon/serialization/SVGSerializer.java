@@ -51,7 +51,6 @@
 package org.apache.cocoon.serialization;
 
 import java.awt.Color;
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.apache.avalon.excalibur.pool.Poolable;
@@ -86,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.4 2003/05/06 23:42:21 vgritsenko Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.5 2003/05/07 11:36:30 cziegeler Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {

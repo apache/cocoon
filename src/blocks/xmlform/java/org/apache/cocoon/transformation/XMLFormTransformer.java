@@ -61,6 +61,8 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.validation.Violation;
 import org.apache.cocoon.components.xmlform.Form;
 import org.apache.cocoon.environment.SourceResolver;
@@ -69,9 +71,6 @@ import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.Flow;
-import org.apache.cocoon.environment.Environment;
 
 /**
  * Transforms a document with XMLForm
@@ -84,7 +83,7 @@ import org.apache.cocoon.environment.Environment;
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * @version CVS $Id: XMLFormTransformer.java,v 1.3 2003/05/07 04:36:32 coliver Exp $
+ * @version CVS $Id: XMLFormTransformer.java,v 1.4 2003/05/07 11:36:56 cziegeler Exp $
  */
 public class XMLFormTransformer extends AbstractSAXTransformer {
 
