@@ -65,7 +65,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToNodeBuilder.java,v 1.4 2003/05/13 20:31:31 sylvain Exp $
+ * @version CVS $Id: RedirectToNodeBuilder.java,v 1.5 2003/06/24 15:20:27 upayavira Exp $
  */
 
 public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
@@ -108,7 +108,8 @@ public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
             ProcessingNode URINode = new RedirectToURINode(
                 VariableResolverFactory.getResolver(config.getAttribute("uri"), this.manager),
                 config.getAttributeAsBoolean("session", false),
-                config.getAttributeAsBoolean("global", false)
+                config.getAttributeAsBoolean("global", false),
+                config.getAttributeAsBoolean("permanent", false)
             );
             return this.treeBuilder.setupNode(URINode, config);
 

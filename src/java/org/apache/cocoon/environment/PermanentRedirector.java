@@ -48,65 +48,23 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.treeprocessor.sitemap;
+package org.apache.cocoon.environment;
 
-import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.PermanentRedirector;
-import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.ProcessingException;
+import java.io.IOException;
 
 /**
+ * Interface for a permanent redirector abstraction
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.2 2003/06/24 15:20:27 upayavira Exp $
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
+ * @version CVS $Id: PermanentRedirector.java,v 1.1 2003/06/24 15:20:28 upayavira Exp $
  */
 
-public class RedirectToURINode extends AbstractProcessingNode {
+public interface PermanentRedirector {
 
-    /** The 'uri' attribute */
-    private VariableResolver uri;
+    /**
+     * Redirect to the given URL
+     */
+    void permanentRedirect(boolean sessionmode, String url) throws IOException, ProcessingException;
+ }
 
-    private boolean createSession;
-
-    private boolean global;
-
-    private boolean permanent;
-
-    public RedirectToURINode(VariableResolver uri, boolean createSession, boolean global, boolean permanent )
-        throws PatternException
-    {
-        this.global = global;
-        this.uri = uri;
-        this.createSession = createSession;
-        this.permanent = permanent;
-    }
-
-    public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
-        String resolvedURI = uri.resolve(context, env.getObjectModel());
-
-        if (getLogger().isInfoEnabled()) {
-            getLogger().info("Redirecting to '" + resolvedURI + "' at " + this.getLocation());
-        }
-
-        final Redirector redirector = PipelinesNode.getRedirector(env);
-
-        if( this.global )
-        {
-            redirector.globalRedirect(this.createSession, resolvedURI);
-        }
-        else if (this.permanent && redirector instanceof PermanentRedirector)
-        {
-            ((PermanentRedirector)redirector).permanentRedirect(this.createSession, resolvedURI);
-        }
-        else
-        {
-            redirector.redirect(this.createSession, resolvedURI);
-        }
-
-        return true;
-    }
-}
