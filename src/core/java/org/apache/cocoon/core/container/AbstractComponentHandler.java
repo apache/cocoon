@@ -16,15 +16,12 @@
  */
 package org.apache.cocoon.core.container;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -64,24 +61,23 @@ implements ComponentHandler {
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
     public static ComponentHandler getComponentHandler(
-            String role, String className, Configuration configuration, ComponentEnvironment componentEnv) throws Exception {
+            String role, 
+            ComponentEnvironment componentEnv,
+            ServiceInfo info) 
+    throws Exception {
         
-        // Load the class
+       // Load the class
         Class componentClass;
         
         try {
-            componentClass = componentEnv.loadClass(className);
+            componentClass = componentEnv.loadClass(info.getServiceClassName());
         } catch(ClassNotFoundException cnfe) {
-            throw new ConfigurationException("Cannot find class " + className + " for component at " +
-                    configuration.getLocation(), cnfe);
+            throw new ConfigurationException("Cannot find class " + info.getServiceClassName() + " for component at " +
+                    info.getConfiguration().getLocation(), cnfe);
         }
 
         int numInterfaces = 0;
 
-        final ServiceInfo info = new ServiceInfo();
-        info.setServiceClassName(className);
-        info.setConfiguration(configuration);
-        
         // Early check for Composable
         if ( Composable.class.isAssignableFrom( componentClass ) ) {
             throw new Exception("Interface Composable is not supported anymore. Please change class "
@@ -111,7 +107,7 @@ implements ComponentHandler {
 
         if ( numInterfaces == 0 ) {
             // this component does not use avalon interfaces, so get the info from the configuration
-            info.fill(configuration);
+            info.fill(info.getConfiguration());
         }
         
         // Create the factory to use to create the instances of the Component.
@@ -134,7 +130,7 @@ implements ComponentHandler {
         }
 
         if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
-            handler = new PoolableComponentHandler( info, componentEnv.logger, factory, configuration );
+            handler = new PoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
         } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
             handler = new ThreadSafeComponentHandler( info, componentEnv.logger, factory );
         } else {
@@ -277,7 +273,10 @@ implements ComponentHandler {
      */
     public static ComponentHandler getComponentHandler(Class clazz, Logger logger, Context context, ServiceManager manager, Configuration config) throws Exception {
         ComponentEnvironment env = new ComponentEnvironment(clazz.getClassLoader(), logger, null, null, context, manager);
-        return getComponentHandler(null, clazz.getName(), config, env);
+        ServiceInfo info = new ServiceInfo();
+        info.setServiceClassName(clazz.getName());
+        info.setConfiguration(config);
+        return getComponentHandler(null, env, info);
 
     }
 }

@@ -31,6 +31,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Base class for all service managers: ServiceManager and ServiceSelector
@@ -104,10 +105,13 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
                     this.loggerManager, this.context, serviceManager);
         }
         
+        ServiceInfo info = new ServiceInfo();
+        info.setConfiguration(configuration);
+        info.setServiceClassName(componentClass.getName());
+        
         return AbstractComponentHandler.getComponentHandler(role,
-                                                     componentClass.getName(),
-                                                     configuration,
-                                                     this.componentEnv);
+                                                     this.componentEnv,
+                                                     info);
     }
 
     protected void addComponent(String className,

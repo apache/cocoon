@@ -224,5 +224,7 @@ extends AbstractFactoryHandler {
         }
     }
     
-    protected void doInitialize() {}
+    protected void doInitialize() {
+        // nothing to do here
+    }
 }
