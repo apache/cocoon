@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.7 $ $Date: 2004/05/03 09:14:01 $
+ * @version CVS $Revision: 1.8 $ $Date: 2004/05/03 11:36:06 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -311,7 +311,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             
             // test for logger
             // TODO Default logger?
-            if ( this.javaClass.isA("org.apache.avalon.framework.logger.LogEnabled") ) {
+            if ( this.javaClass.isA(LOG_ENABLED) ) {
                 this.addAttribute(node, LOGGER_TAG, "logger", null);
             }
             
@@ -319,7 +319,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             this.addAttribute(node, LABEL_TAG, "label", null);
 
             // pooling?
-            if ( this.javaClass.isA("org.apache.avalon.excalibur.pool.Poolable") ) {
+            if ( this.javaClass.isA(POOLABLE) ) {
                 // TODO - Think about default values
                 this.addAttribute(node, POOL_MIN_TAG, "pool-min", null);
                 this.addAttribute(node, POOL_MAX_TAG, "pool-max", null);
@@ -327,7 +327,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
             
             // mime-type
-            if ( this.javaClass.isA("org.apache.cocoon.sitemap.SitemapOutputComponent") ) {
+            if ( this.javaClass.isA(OUTPUT_COMPONENT) ) {
                 this.addAttribute(node, MIMETYPE_TAG, "mime-type", null);
             }
             
@@ -413,30 +413,47 @@ public final class SitemapTask extends AbstractQdoxTask {
                 }
             }
             
+            // Info Table
+            final Node tableNode = XPathAPI.selectSingleNode(body, "s1[@title='Info']/table");
+            
             // Info - Name
-            setValue(body, "s1[@title='Info']/table/tr[1]/td[2]", this.name);
+            this.addRow(tableNode, "Name", this.name);
+
             // Info - Class
-            setValue(body, "s1[@title='Info']/table/tr[2]/td[2]", this.javaClass.getFullyQualifiedName());
+            this.addRow(tableNode, "Class", this.javaClass.getFullyQualifiedName());
+
             // Info - Cacheable
-            String cacheInfo;
-            if ( this.javaClass.isA("org.apache.cocoon.caching.CacheableProcessingComponent") ) {
-                cacheInfo = this.getTagValue(CACHING_INFO_TAG, null);
-                if ( cacheInfo != null ) {
-                    cacheInfo = "Yes - " + cacheInfo;
+            if ( this.javaClass.isA(GENERATOR)
+                 || this.javaClass.isA(TRANSFORMER)
+                 || this.javaClass.isA(SERIALIZER)
+                 || this.javaClass.isA(READER)) {
+                
+                String cacheInfo;
+                if ( this.javaClass.isA(CACHEABLE) ) {
+                    cacheInfo = this.getTagValue(CACHING_INFO_TAG, null);
+                    if ( cacheInfo != null ) {
+                        cacheInfo = "Yes - " + cacheInfo;
+                    } else {
+                        cacheInfo = "Yes";
+                    }
+                } else if ( this.javaClass.isA(DEPRECATED_CACHEABLE) ) {
+                    cacheInfo = this.getTagValue(CACHING_INFO_TAG, null);
+                    if ( cacheInfo != null ) {
+                        cacheInfo = "Yes (2.0 Caching) - " + cacheInfo;
+                    } else {
+                        cacheInfo = "Yes (2.0 Caching)";
+                    }
                 } else {
-                    cacheInfo = "Yes";
+                    cacheInfo = "No";
                 }
-            } else if ( this.javaClass.isA("org.apache.cocoon.caching.Cacheable") ) {
-                cacheInfo = this.getTagValue(CACHING_INFO_TAG, null);
-                if ( cacheInfo != null ) {
-                    cacheInfo = "Yes (2.0 Caching) - " + cacheInfo;
-                } else {
-                    cacheInfo = "Yes (2.0 Caching)";
-                }
-            } else {
-                cacheInfo = "No";
+                this.addRow(tableNode, "Cacheable", cacheInfo);
             }
-            setValue(body, "s1[@title='Info']/table/tr[3]/td[2]", cacheInfo);
+            
+            // Info - mime-type
+            if ( this.javaClass.isA(OUTPUT_COMPONENT) ) {
+                final String value = this.getTagValue(MIMETYPE_TAG, "-");
+                this.addRow(tableNode, "Mime-Type", value);
+            }
             
             // merge with old doc
             this.merge(body, docFile);
@@ -490,22 +507,33 @@ public final class SitemapTask extends AbstractQdoxTask {
             return defaultValue;
         }
         
+        private void addRow(Node table, String title, String value) {
+            final Element row = table.getOwnerDocument().createElement("tr");
+            final Element firstColumn = table.getOwnerDocument().createElement("td");
+            firstColumn.appendChild(table.getOwnerDocument().createTextNode(title));
+            final Element secondColumn = table.getOwnerDocument().createElement("td");
+            secondColumn.appendChild(table.getOwnerDocument().createTextNode(value));
+            row.appendChild(firstColumn);
+            row.appendChild(secondColumn);
+            table.appendChild(row);
+        }
+        
         private static String getType(JavaClass clazz) {
-            if ( clazz.isA("org.apache.cocoon.generation.Generator") ) {
+            if ( clazz.isA(GENERATOR) ) {
                 return "generator";
-            } else if ( clazz.isA("org.apache.cocoon.transformation.Transformer") ) {
+            } else if ( clazz.isA(TRANSFORMER) ) {
                 return "transformer";
-            } else if ( clazz.isA("org.apache.cocoon.reading.Reader") ) {
+            } else if ( clazz.isA(READER) ) {
                 return "reader";
-            } else if ( clazz.isA("org.apache.cocoon.serialization.Serializer") ) {
+            } else if ( clazz.isA(SERIALIZER) ) {
                 return "serializer";
-            } else if ( clazz.isA("org.apache.cocoon.acting.Action") ) {
+            } else if ( clazz.isA(ACTION) ) {
                 return "action";
-            } else if ( clazz.isA("org.apache.cocoon.matching.Matcher") ) {
+            } else if ( clazz.isA(MATCHER) ) {
                 return "matcher";
-            } else if ( clazz.isA("org.apache.cocoon.selection.Selector") ) {
+            } else if ( clazz.isA(SELECTOR) ) {
                 return "selector";
-            } else if ( clazz.isA("org.apache.cocoon.components.pipeline.ProcessingPipeline") ) {
+            } else if ( clazz.isA(PIPELINE) ) {
                 return "pipe";
             } else {
                 throw new BuildException("Sitemap component " + clazz.getName() + " does not implement a sitemap component interface.");
@@ -546,4 +574,22 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
         }
     }
+    
+    // Class Constants
+    private static final String LOG_ENABLED = "org.apache.avalon.framework.logger.LogEnabled";
+    private static final String POOLABLE = "org.apache.avalon.excalibur.pool.Poolable";
+
+    private static final String CACHEABLE = "org.apache.cocoon.caching.CacheableProcessingComponent";
+    private static final String DEPRECATED_CACHEABLE = "org.apache.cocoon.caching.Cacheable";
+    
+    private static final String OUTPUT_COMPONENT = "org.apache.cocoon.sitemap.SitemapOutputComponent";
+
+    private static final String GENERATOR = "org.apache.cocoon.generation.Generator";
+    private static final String TRANSFORMER = "org.apache.cocoon.transformation.Transformer";
+    private static final String SERIALIZER = "org.apache.cocoon.serialization.Serializer";
+    private static final String READER = "org.apache.cocoon.reading.Reader";
+    private static final String MATCHER = "org.apache.cocoon.matching.Matcher";
+    private static final String SELECTOR = "org.apache.cocoon.selection.Selector";
+    private static final String ACTION = "org.apache.cocoon.acting.Action";
+    private static final String PIPELINE = "org.apache.cocoon.components.pipeline.ProcessingPipeline";
 }
