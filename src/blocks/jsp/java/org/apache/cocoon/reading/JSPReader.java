@@ -60,6 +60,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.jsp.JSPEngine;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 
 /**
@@ -67,7 +68,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.3 2003/07/10 23:38:04 joerg Exp $
+ * @version CVS $Id: JSPReader.java,v 1.4 2003/08/04 09:44:23 joerg Exp $
  */
 public class JSPReader extends ServiceableReader {
 
@@ -100,8 +101,9 @@ public class JSPReader extends ServiceableReader {
             if (!url.startsWith("/")) {
                 // get current request path
                 String servletPath = httpRequest.getServletPath();
-                // remove file part
-                servletPath = servletPath.substring(0, servletPath.lastIndexOf('/') + 1);
+                // remove sitemap URI part
+                String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
+                servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
                 url = servletPath + url;
             }
 
@@ -124,14 +126,15 @@ public class JSPReader extends ServiceableReader {
             bais.close();
             bais = null;
             out.flush();
+            //this.resolver.release(source);
         } catch (ServletException e) {
-            throw new ProcessingException("ServletException in JSPReader.generate()",e.getRootCause());
+            throw new ProcessingException("ServletException in JSPReader.generate()", e.getRootCause());
         } catch (IOException e) {
-            throw new ProcessingException("IOException JSPReader.generate()",e);
+            throw new ProcessingException("IOException JSPReader.generate()", e);
         } catch (ProcessingException e) {
             throw e;
         } catch (Exception e) {
-            throw new ProcessingException("Exception JSPReader.generate()",e);
+            throw new ProcessingException("Exception JSPReader.generate()", e);
         } finally {
             if (engine != null) this.manager.release(engine);
         }
