@@ -90,8 +90,18 @@ a:focus {
 /** navigation at the bottom of slides */
 #navigation {
     position:fixed;
+    margin: 0;
+    padding: 0;
+    height: 1em;
+    left: 0;
+    top: auto;
+    right: 1em;
     bottom: 0;
     clear: both;
+    font-size: 60%;
+    text-align: right;
+    line-height: 80%;
+    display: inline;
 }
 
 #navigation div {
@@ -99,7 +109,7 @@ a:focus {
 }
 
 #navigation a {
-    font-size: 80%;
+    border-bottom: none;
     color: grey;
 }
 
