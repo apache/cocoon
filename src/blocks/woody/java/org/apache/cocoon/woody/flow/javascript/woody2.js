@@ -53,7 +53,7 @@
  * woody.js in the future.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.3 2003/09/29 12:56:05 sylvain Exp $
+ * @version CVS $Id: woody2.js,v 1.4 2003/12/23 11:06:45 mpo Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -122,7 +122,7 @@ Form.prototype.getWidget = function(name) {
 Form.prototype.showForm = function(uri, bizData) {
 
     if (bizData == undefined) bizData = new Object();
-    bizData["woody-form"] = this.form;
+    bizData[Packages.org.apache.cocoon.woody.transformation.WoodyPipelineConfig.WOODY_FORM] = this.form;
 
     if (this.locale == null)
         this.locale = java.util.Locale.getDefault();
