@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.55 2000-04-14 10:20:55 stefano Exp $
+  $Id: changes.xml,v 1.56 2000-04-14 17:09:07 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,14 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Fixed a problem with the cache monitor that was not updating the timestamp after a change
+   so the cache was disabled after one of multiple stylesheets where updated. Now it works
+   as expected.
+  </action>
+  <action dev="SM" type="fix">
+   Fixed possible encoding problem in stylesheet loading.
+  </action>
   <action dev="SM" type="update">
    Updated Xalan to version 1.0.1.
   </action>
