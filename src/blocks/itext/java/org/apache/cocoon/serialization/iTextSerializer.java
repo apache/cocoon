@@ -71,7 +71,7 @@ import com.lowagie.text.xml.SAXiTextHandler;
 
 /**
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: iTextSerializer.java,v 1.4 2003/05/20 19:22:49 tcurdt Exp $
+ * @version CVS $Id: iTextSerializer.java,v 1.5 2003/05/26 09:55:28 tcurdt Exp $
  */
 final public class iTextSerializer extends AbstractSerializer implements Configurable, CacheableProcessingComponent {
 
@@ -120,7 +120,7 @@ final public class iTextSerializer extends AbstractSerializer implements Configu
         this.pageOrientation = getOrientation(conf.getAttribute("page-orientation","portrait"));
 
         if (pageOrientation == LANDSCAPE) {
-            pageSize.rotate();
+            pageSize = pageSize.rotate();
         }
 
         getLogger().debug("iTextSerializer mime-type:" + mimetype);
