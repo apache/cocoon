@@ -81,7 +81,8 @@ import java.util.Stack;
  * <p>This transformer fills all HTML 4 form elements with values from
  * an InputModule, e.g. request, with the same name. It handles select
  * boxes, textareas, checkboxes, radio buttons, password and text
- * fields, and buttons.</p>
+ * fields, and buttons. Form elements and complete forms can be protected
+ * from substitution by adding an attribute fixed="true" to them.</p>
  *
  * <p>In addition, it handles FormValidatorAction results by
  * selectively omitting &lt;error/&gt; elements. These elements need a
@@ -100,6 +101,9 @@ import java.util.Stack;
  * multiple error elements for the same form element may be
  * present.</p>
  *
+ * <p><em>Names of error elements are never augmented by prefix, suffix or
+ * form name.</em></p>
+ *
  * <p>To use this transformer, add the following to your
  * transformation pipeline: <pre>
  *   &lt;map:transform type="simple-form"/&gt;
@@ -109,6 +113,25 @@ import java.util.Stack;
  * <table>
  *   <tr><td>input-module</td><td>(String) InputModule configuration, 
  *           defaults to an empty configuration and the "request-param" module</td></tr>
+ *   <tr><td>fixed-attribute</td><td>(String) Name of the attribute used to 
+ *           indicate that this element should not be changed. ("fixed")</td></tr>
+ *   <tr><td>use-form-name</td><td>(boolean) Add the name of the form to the
+ *           name of form elements. Uses default Separator , if default separator is null
+ *           or empty, separator is set to "/". ("false")</td></tr>
+ *   <tr><td>use-form-name-twice</td><td>(boolean) Add the name of the form twice to the
+ *           name of form elements. This is useful when the form instance has no
+ *           all enclosing root tag and the form name is used instead <em>and</em> the
+ *           form name needs to be used to find the form data. Uses default Separator , 
+ *           if default separator is null or empty, separator is set to "/".("false")</td></tr>
+ *   <tr><td>separator</td><td>(String) Separator between form name and element name ("/")
+ *           </td></tr>
+ *   <tr><td>prefix</td><td>(String) Prefix to add to element name for value lookup. No
+ *           separator will be added between prefix and rest of the name. Default
+ *           is "", when use-form-name is set, defaults to separator.</td></tr>
+ *   <tr><td>suffix</td><td>(String) Added to the input element's name. No
+ *           separator will be added between rest of the name and suffix. ("")</td></tr>
+ *   <tr><td>ignore-validation</td><td>(boolean) If set to true, all error
+ *           tags are copied as is regardless of the validation results.("false")</td></tr>
  * </table>
  * </p>
  *
@@ -127,9 +150,10 @@ import java.util.Stack;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.2 2003/07/01 11:39:12 haul Exp $
  */
-public class SimpleFormTransformer extends AbstractTransformer 
+public class SimpleFormTransformer
+    extends AbstractTransformer
     implements Composable, Configurable, Recyclable {
 
     /** Symbolic names for elements */
@@ -145,6 +169,8 @@ public class SimpleFormTransformer extends AbstractTransformer
     private static final int ELEMENT_TXTAREA = 4;
     /** error element */
     private static final int ELEMENT_ERROR = 5;
+    /** form element */
+    private static final int ELEMENT_FORM = 6;
     /** default element as Integer (needed as default in org.apache.cocoon.util.HashMap.get()) */
     private static final Integer defaultElement = new Integer(ELEMENT_DEFAULT);
 
@@ -156,9 +182,9 @@ public class SimpleFormTransformer extends AbstractTransformer
     private static final int TYPE_RADIO = 2;
     /** default input type as Integer (needed as default in org.apache.cocoon.util.HashMap.get()) */
     private static final Integer defaultType = new Integer(TYPE_DEFAULT);
-    
+
     protected static final String INPUT_MODULE_ROLE = InputModule.ROLE;
-    protected static final String INPUT_MODULE_SELECTOR = INPUT_MODULE_ROLE+"Selector";
+    protected static final String INPUT_MODULE_SELECTOR = INPUT_MODULE_ROLE + "Selector";
 
     /** map element name string to symbolic name */
     private static final HashMap elementNames;
@@ -177,6 +203,7 @@ public class SimpleFormTransformer extends AbstractTransformer
         names.put("option", new Integer(ELEMENT_OPTION));
         names.put("textarea", new Integer(ELEMENT_TXTAREA));
         names.put("error", new Integer(ELEMENT_ERROR));
+        names.put("form", new Integer(ELEMENT_FORM));
         elementNames = names;
         names = null;
 
@@ -197,13 +224,13 @@ public class SimpleFormTransformer extends AbstractTransformer
         validatorResultLabel = names;
 
         names = new HashMap();
-        names.put(ValidatorActionResult.OK,"ok");
-        names.put(ValidatorActionResult.NOTPRESENT,"not-present");
-        names.put(ValidatorActionResult.ERROR,"error");
-        names.put(ValidatorActionResult.ISNULL,"is-null");
-        names.put(ValidatorActionResult.TOOSMALL,"too-small");
-        names.put(ValidatorActionResult.TOOLARGE,"too-large");
-        names.put(ValidatorActionResult.NOMATCH,"no-match");
+        names.put(ValidatorActionResult.OK, "ok");
+        names.put(ValidatorActionResult.NOTPRESENT, "not-present");
+        names.put(ValidatorActionResult.ERROR, "error");
+        names.put(ValidatorActionResult.ISNULL, "is-null");
+        names.put(ValidatorActionResult.TOOSMALL, "too-small");
+        names.put(ValidatorActionResult.TOOLARGE, "too-large");
+        names.put(ValidatorActionResult.NOMATCH, "no-match");
         validatorResults = names;
         names = null;
     }
@@ -214,28 +241,38 @@ public class SimpleFormTransformer extends AbstractTransformer
     protected boolean ignoreThis = false;
 
     /** stack of ignored element names */
-    protected Stack   stack = new Stack();
+    protected Stack stack = new Stack();
 
     /** current element's request parameter values */
     protected Object[] values = null;
-    
+
     /** current request's validation results (all validated elements) */
     protected Map validationResults = null;
 
     /** The current Request object */
-    protected Request            request;
+    protected Request request;
     /** The current objectModel of the environment */
-    protected Map                objectModel;
+    protected Map objectModel;
     /** The parameters specified in the sitemap */
-    protected Parameters         parameters;
+    protected Parameters parameters;
     /** The Avalon ComponentManager for getting Components */
-    protected ComponentManager   manager;
+    protected ComponentManager manager;
 
     /** Should we skip inserting values? */
     private boolean fixed = false;
+    /** Is the complete document protected? */
+    private boolean documentFixed = false;
 
+    private String fixedName = "fixed";
     private String prefix = null;
-    private String suffix = null; 
+    private String suffix = null;
+    private String defaultPrefix = null;
+    private String defaultSuffix = null;
+    private String separator = null;
+    private String formName = null;
+    private boolean useFormName = false;
+    private boolean useFormNameTwice = false;
+    private boolean ignoreValidation = false;
 
     private String defaultInput = "request-param";
     private Configuration defaultInputConf = null;
@@ -244,7 +281,6 @@ public class SimpleFormTransformer extends AbstractTransformer
     private ComponentSelector inputSelector = null;
     private String inputName = null;
 
-
     /** Empty attributes (for performance). This can be used
      *  do create own attributes, but make sure to clean them
      *  afterwords.
@@ -252,7 +288,7 @@ public class SimpleFormTransformer extends AbstractTransformer
     protected AttributesImpl emptyAttributes = new AttributesImpl();
 
     /** set per instance variables to defaults */
-    private void reset(){
+    private void reset() {
         this.objectModel = null;
         this.request = null;
         this.parameters = null;
@@ -260,6 +296,9 @@ public class SimpleFormTransformer extends AbstractTransformer
         this.ignoreCount = 0;
         this.values = null;
         this.validationResults = null;
+        this.documentFixed = false;
+        this.fixed = false;
+        this.formName = null;
 
         if (this.inputSelector != null) {
             if (this.input != null)
@@ -268,16 +307,28 @@ public class SimpleFormTransformer extends AbstractTransformer
         }
     }
 
-
     /**
      * Avalon Configurable Interface
      */
-    public void configure(Configuration config)
-    throws ConfigurationException {
+    public void configure(Configuration config) throws ConfigurationException {
         this.defaultInputConf = config.getChild("input-module");
-        this.defaultInput = this.defaultInputConf.getAttribute("name",this.defaultInput);
+        this.defaultInput = this.defaultInputConf.getAttribute("name", this.defaultInput);
+        this.separator = config.getChild("separator").getValue(this.separator);
+        this.defaultPrefix = config.getChild("prefix").getValue(this.defaultPrefix);
+        this.defaultSuffix = config.getChild("suffix").getValue(this.defaultSuffix);
+        this.fixedName = config.getChild("fixed-attribute").getValue(this.fixedName);
+        this.useFormName = config.getChild("use-form-name").getValueAsBoolean(this.useFormName);
+        this.useFormNameTwice =
+            config.getChild("use-form-name-twice").getValueAsBoolean(this.useFormNameTwice);
+        this.useFormName = this.useFormName || this.useFormNameTwice;
+        if (this.useFormName) {
+            this.separator =
+                (this.separator == null || this.separator.equals("") ? "/" : this.separator);
+            this.defaultPrefix = this.separator;
+        }
+        this.ignoreValidation =
+            config.getChild("ignore-validation").getValueAsBoolean(this.ignoreValidation);
     }
-
 
     /**
      * Setup the next round.
@@ -288,7 +339,7 @@ public class SimpleFormTransformer extends AbstractTransformer
      * @param par The parameters from the sitemap.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-    throws ProcessingException, SAXException, IOException {
+        throws ProcessingException, SAXException, IOException {
 
         this.reset();
         this.objectModel = objectModel;
@@ -299,27 +350,32 @@ public class SimpleFormTransformer extends AbstractTransformer
             throw new ProcessingException("no request object");
         }
         this.parameters = par;
-        this.fixed = par.getParameterAsBoolean("fixed",false);
-        this.prefix = par.getParameter("prefix",null);
-        this.suffix = par.getParameter("suffix",null);
-        this.inputName = par.getParameter("input",null);
+        this.documentFixed = par.getParameterAsBoolean("fixed", false);
+        this.fixed = this.documentFixed;
+        this.prefix = par.getParameter("prefix", this.defaultPrefix);
+        this.suffix = par.getParameter("suffix", this.defaultSuffix);
+        this.inputName = par.getParameter("input", null);
         this.inputConf = null;
-        this.validationResults = XSPFormValidatorHelper.getResults(objectModel);
+        if (this.ignoreValidation) {
+            this.validationResults = null;
+        } else {
+            this.validationResults = XSPFormValidatorHelper.getResults(objectModel);
+        }
 
         if (this.inputName == null) {
             this.inputName = this.defaultInput;
             this.inputConf = this.defaultInputConf;
         }
-        
+
         try {
             // obtain input module
-            this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (this.inputName != null && 
-                this.inputSelector != null && 
-                this.inputSelector.hasComponent(this.inputName)
-                ){
+            this.inputSelector = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+            if (this.inputName != null
+                && this.inputSelector != null
+                && this.inputSelector.hasComponent(this.inputName)) {
                 this.input = (InputModule) this.inputSelector.select(this.inputName);
-                if (!(this.input instanceof ThreadSafe && this.inputSelector instanceof ThreadSafe) ) {
+                if (!(this.input instanceof ThreadSafe
+                    && this.inputSelector instanceof ThreadSafe)) {
                     this.inputSelector.release(this.input);
                     this.manager.release(this.inputSelector);
                     this.input = null;
@@ -328,16 +384,22 @@ public class SimpleFormTransformer extends AbstractTransformer
             } else {
                 if (this.inputName != null)
                     if (getLogger().isErrorEnabled())
-                        getLogger().error("A problem occurred setting up '" + this.inputName 
-                                          +"': Selector is "+(this.inputSelector!=null?"not ":"")
-                                          +"null, Component is "
-                                          +(this.inputSelector!=null&&this.inputSelector.hasComponent(this.inputName)?"known":"unknown"));
+                        getLogger().error(
+                            "A problem occurred setting up '"
+                                + this.inputName
+                                + "': Selector is "
+                                + (this.inputSelector != null ? "not " : "")
+                                + "null, Component is "
+                                + (this.inputSelector != null
+                                    && this.inputSelector.hasComponent(this.inputName)
+                                        ? "known"
+                                        : "unknown"));
             }
         } catch (Exception e) {
-            if (getLogger().isWarnEnabled()) 
-                getLogger().warn("A problem occurred setting up '" + this.inputName + "': " + e.getMessage());
+            if (getLogger().isWarnEnabled())
+                getLogger().warn(
+                    "A problem occurred setting up '" + this.inputName + "': " + e.getMessage());
         }
-        
 
     }
 
@@ -360,44 +422,48 @@ public class SimpleFormTransformer extends AbstractTransformer
     /** 
      * Generate string representation of attributes. For debug only.
      */
-    protected String printAttributes(Attributes attr){
+    protected String printAttributes(Attributes attr) {
         StringBuffer sb = new StringBuffer();
         sb.append('[');
-        for (int i = 0; i<attr.getLength(); i++) {
-            sb
-                .append('@')
-                .append(attr.getLocalName(i))
-                .append("='")
-                .append(attr.getValue(i))
-                .append("' ");
+        for (int i = 0; i < attr.getLength(); i++) {
+            sb.append('@').append(attr.getLocalName(i)).append("='").append(
+                attr.getValue(i)).append(
+                "' ");
         }
         sb.append(']');
         return sb.toString();
     }
 
-
     /**
      * Handle input elements that may have a "checked" attributes,
      * i.e. checkbox and radio.
      */
-    protected void startCheckableElement(String uri, String name, String raw, AttributesImpl attributes)
+    protected void startCheckableElement(
+        String uri,
+        String name,
+        String raw,
+        AttributesImpl attributes)
         throws SAXException {
 
         // @fixed and this.fixed already considered in startInputElement
         String checked = attributes.getValue("checked");
         String value = attributes.getValue("value");
         boolean found = false;
-                
+
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startCheckableElement "+name+" attributes "+this.printAttributes(attributes));
+            getLogger().debug(
+                "startCheckableElement "
+                    + name
+                    + " attributes "
+                    + this.printAttributes(attributes));
         if (this.values != null) {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
-            for (int i=0; i<this.values.length; i++) {
+            for (int i = 0; i < this.values.length; i++) {
                 if (this.values[i].equals(value)) {
                     found = true;
                     if (checked == null) {
-                        attributes.addAttribute("","checked","checked","CDATA","");
+                        attributes.addAttribute("", "checked", "checked", "CDATA", "");
                     }
                     break;
                 }
@@ -406,31 +472,43 @@ public class SimpleFormTransformer extends AbstractTransformer
                 attributes.removeAttribute(attributes.getIndex("checked"));
             }
         }
-        super.startElement(uri, name, raw, (Attributes)attributes);
+        super.startElement(uri, name, raw, (Attributes) attributes);
     }
-
 
     /**
      * Handle input elements that may don't have a "checked"
      * attributes, e.g. text, password, button.
      */
-    protected void startNonCheckableElement(String uri, String name, String raw, AttributesImpl attributes)
+    protected void startNonCheckableElement(
+        String uri,
+        String name,
+        String raw,
+        AttributesImpl attributes)
         throws SAXException {
 
         // @fixed and this.fixed already considered in startInputElement
         String value = attributes.getValue("value");
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startNonCheckableElement "+name+" attributes "+this.printAttributes(attributes));
+            getLogger().debug(
+                "startNonCheckableElement "
+                    + name
+                    + " attributes "
+                    + this.printAttributes(attributes));
         if (this.values != null) {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
             if (value != null) {
                 attributes.setValue(attributes.getIndex("value"), String.valueOf(this.values[0]));
             } else {
-                attributes.addAttribute("", "value","value","CDATA",String.valueOf(this.values[0]));
+                attributes.addAttribute(
+                    "",
+                    "value",
+                    "value",
+                    "CDATA",
+                    String.valueOf(this.values[0]));
             }
         }
-        super.startElement(uri, name, raw, (Attributes)attributes);
+        super.startElement(uri, name, raw, (Attributes) attributes);
     }
 
     /**
@@ -441,22 +519,21 @@ public class SimpleFormTransformer extends AbstractTransformer
         throws SAXException {
 
         // @value = request.getParameterValues(@name)
-        String aName = attr.getValue("name");
-        String fixed = attr.getValue("fixed");
+        String aName = getName(attr.getValue("name"));
+        String fixed = attr.getValue(this.fixedName);
 
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startInputElement "+name+" attributes "+this.printAttributes(attr));
+            getLogger().debug(
+                "startInputElement " + name + " attributes " + this.printAttributes(attr));
         if (aName == null || this.fixed || (fixed != null && parseBoolean(fixed))) {
             super.startElement(uri, name, raw, attr);
 
         } else {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
-            
-            if (this.prefix != null) aName = this.prefix + aName;
-            if (this.suffix != null) aName = aName + this.suffix;
+
             this.values = this.getValues(aName);
-        
+
             AttributesImpl attributes = null;
             if (attr instanceof AttributesImpl) {
                 attributes = (AttributesImpl) attr;
@@ -464,20 +541,19 @@ public class SimpleFormTransformer extends AbstractTransformer
                 attributes = new AttributesImpl(attr);
             }
             String type = attributes.getValue("type");
-            switch (((Integer)inputTypes.get(type,defaultType)).intValue()) {
-            case TYPE_CHECKBOX:
-            case TYPE_RADIO:
-                this.startCheckableElement(uri, name, raw, attributes);
-                break;
-                
-            case TYPE_DEFAULT:
-                this.startNonCheckableElement(uri, name, raw, attributes);
-                break;
+            switch (((Integer) inputTypes.get(type, defaultType)).intValue()) {
+                case TYPE_CHECKBOX :
+                case TYPE_RADIO :
+                    this.startCheckableElement(uri, name, raw, attributes);
+                    break;
+
+                case TYPE_DEFAULT :
+                    this.startNonCheckableElement(uri, name, raw, attributes);
+                    break;
             }
-            this.values=null;
+            this.values = null;
         }
     }
-
 
     /**
      * Handle select elements. Sets up some instance variables for
@@ -487,19 +563,17 @@ public class SimpleFormTransformer extends AbstractTransformer
         throws SAXException {
 
         // this.values = request.getParameterValues(@name)
-        String aName = attr.getValue("name");
-        String fixed = attr.getValue("fixed");
+        String aName = getName(attr.getValue("name"));
+        String fixed = attr.getValue(this.fixedName);
         this.values = null;
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startSelectElement "+name+" attributes "+this.printAttributes(attr));
+            getLogger().debug(
+                "startSelectElement " + name + " attributes " + this.printAttributes(attr));
         if (aName != null && !(this.fixed || (fixed != null && parseBoolean(fixed)))) {
-            if (this.prefix != null) aName = this.prefix + aName;
-            if (this.suffix != null) aName = aName + this.suffix;
             this.values = this.getValues(aName);
         }
         super.startElement(uri, name, raw, attr);
     }
-
 
     /**
      * Handle option elements. Uses instance variables set up by
@@ -512,7 +586,8 @@ public class SimpleFormTransformer extends AbstractTransformer
 
         // add @selected if @value in request.getParameterValues(@name)
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startOptionElement "+name+" attributes "+this.printAttributes(attr));
+            getLogger().debug(
+                "startOptionElement " + name + " attributes " + this.printAttributes(attr));
         if (this.values == null || this.fixed) {
             super.startElement(uri, name, raw, attr);
         } else {
@@ -527,12 +602,12 @@ public class SimpleFormTransformer extends AbstractTransformer
             String selected = attributes.getValue("selected");
             String value = attributes.getValue("value");
             boolean found = false;
-            
-            for (int i=0; i<this.values.length; i++) {
+
+            for (int i = 0; i < this.values.length; i++) {
                 if (this.values[i].equals(value)) {
                     found = true;
                     if (selected == null) {
-                        attributes.addAttribute("","selected","selected","CDATA","");
+                        attributes.addAttribute("", "selected", "selected", "CDATA", "");
                     }
                     break;
                 }
@@ -540,11 +615,11 @@ public class SimpleFormTransformer extends AbstractTransformer
             if (!found && selected != null) {
                 attributes.removeAttribute(attributes.getIndex("selected"));
             }
-            
-            super.startElement(uri, name, raw, (Attributes)attributes);
+
+            super.startElement(uri, name, raw, (Attributes) attributes);
         }
     }
-        
+
     /**
      * Handles textarea elements. Skips nested events if request
      * parameter with same name exists.
@@ -552,14 +627,13 @@ public class SimpleFormTransformer extends AbstractTransformer
     protected void startTextareaElement(String uri, String name, String raw, Attributes attributes)
         throws SAXException {
 
-        String aName = attributes.getValue("name");
-        String fixed = attributes.getValue("fixed");
+        String aName = getName(attributes.getValue("name"));
+        String fixed = attributes.getValue(this.fixedName);
         Object[] value = null;
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startTextareaElement "+name+" attributes "+this.printAttributes(attributes));
+            getLogger().debug(
+                "startTextareaElement " + name + " attributes " + this.printAttributes(attributes));
         if (aName != null) {
-            if (this.prefix != null) aName = this.prefix + aName;
-            if (this.suffix != null) aName = aName + this.suffix;
             value = this.getValues(aName);
         }
         if (value == null || this.fixed || (fixed != null && parseBoolean(fixed))) {
@@ -576,7 +650,6 @@ public class SimpleFormTransformer extends AbstractTransformer
         }
     }
 
-
     /**
      * Handle error elements. If validation results are available,
      * compares validation result for parameter with the same name as
@@ -586,10 +659,13 @@ public class SimpleFormTransformer extends AbstractTransformer
      */
     protected void startErrorElement(String uri, String name, String raw, Attributes attr)
         throws SAXException {
-        
+
         if (getLogger().isDebugEnabled())
-            getLogger().debug("startErrorElement "+name+" attributes "+this.printAttributes(attr));
-        if (this.validationResults == null || this.fixed) {
+            getLogger().debug(
+                "startErrorElement " + name + " attributes " + this.printAttributes(attr));
+        if (this.ignoreValidation) {
+            super.startElement(uri, name, raw, attr);
+        } else if (this.validationResults == null || this.fixed) {
             this.ignoreCount++;
             this.stack.push(name);
             this.ignoreThis = true;
@@ -598,17 +674,18 @@ public class SimpleFormTransformer extends AbstractTransformer
             if (aName == null) {
                 super.startElement(uri, name, raw, attr);
             } else {
-                if (this.prefix != null) aName = this.prefix + aName;
-                if (this.suffix != null) aName = aName + this.suffix;
-                ValidatorActionResult validation = XSPFormValidatorHelper.getParamResult(this.objectModel, aName);
+                ValidatorActionResult validation =
+                    XSPFormValidatorHelper.getParamResult(this.objectModel, aName);
                 String when = attr.getValue("when");
                 String when_ge = attr.getValue("when-ge");
-                
-                if ((when != null && when.equals((String)validatorResults.get(validation))) ||
-                    (when_ge != null && validation.ge((ValidatorActionResult) 
-                                                      validatorResultLabel.get(when_ge,ValidatorActionResult.MAXERROR)))
-                    ) {
-                    AttributesImpl attributes=null;
+
+                if ((when != null && when.equals((String) validatorResults.get(validation)))
+                    || (when_ge != null
+                        && validation.ge(
+                            (ValidatorActionResult) validatorResultLabel.get(
+                                when_ge,
+                                ValidatorActionResult.MAXERROR)))) {
+                    AttributesImpl attributes = null;
                     if (attr instanceof AttributesImpl) {
                         attributes = (AttributesImpl) attr;
                     } else {
@@ -616,9 +693,11 @@ public class SimpleFormTransformer extends AbstractTransformer
                     }
                     // remove attributes not meant for client
                     attributes.removeAttribute(attributes.getIndex("name"));
-                    if (when != null)    attributes.removeAttribute(attributes.getIndex("when"));
-                    if (when_ge != null) attributes.removeAttribute(attributes.getIndex("when-ge"));
-                    super.startElement(uri, name, raw, (Attributes)attributes);
+                    if (when != null)
+                        attributes.removeAttribute(attributes.getIndex("when"));
+                    if (when_ge != null)
+                        attributes.removeAttribute(attributes.getIndex("when-ge"));
+                    super.startElement(uri, name, raw, (Attributes) attributes);
                 } else {
                     this.ignoreCount++;
                     this.stack.push(name);
@@ -628,7 +707,39 @@ public class SimpleFormTransformer extends AbstractTransformer
         }
     }
 
+    /**
+     * Start processing a form element. Sets protection indicator if attribute
+     * "fixed" is present and either "true" or "yes". Removes attribute "fixed" 
+     * if present. 
+     * @param uri The namespace of the element.
+     * @param name The local name of the element.
+     * @param raw The qualified name of the element.
+     * @param attr The attributes of the element.
+     */
+    protected void startFormElement(String uri, String name, String raw, Attributes attr)
+        throws SAXException {
 
+        String fixed = attr.getValue(this.fixedName);
+        if (this.useFormName) {
+            this.formName = attr.getValue("name");
+        }
+        if (fixed == null) {
+            super.startElement(uri, name, raw, attr);
+        } else {
+            if (!this.fixed && ("true".equals(fixed) || "yes".equals(fixed))) {
+                this.fixed = true;
+            }
+            // remove attributes not meant for client
+            AttributesImpl attributes = null;
+            if (attr instanceof AttributesImpl) {
+                attributes = (AttributesImpl) attr;
+            } else {
+                attributes = new AttributesImpl(attr);
+            }
+            attributes.removeAttribute(attributes.getIndex(this.fixedName));
+            super.startElement(uri, name, raw, (Attributes) attributes);
+        }
+    }
 
     /**
      * Start processing elements of our namespace.
@@ -642,38 +753,41 @@ public class SimpleFormTransformer extends AbstractTransformer
         throws SAXException {
 
         if (this.ignoreCount == 0) {
-            if (uri!="") {
+            if (uri != "") {
                 super.startElement(uri, name, raw, attr);
             } else {
-                switch (((Integer)elementNames.get(name,defaultElement)).intValue()) {
-                case ELEMENT_INPUT:
-                    this.startInputElement(uri,name,raw,attr);
-                    break;
+                switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
+                    case ELEMENT_INPUT :
+                        this.startInputElement(uri, name, raw, attr);
+                        break;
 
-                case ELEMENT_SELECT:
-                    this.startSelectElement(uri,name,raw,attr);
-                    break;
+                    case ELEMENT_SELECT :
+                        this.startSelectElement(uri, name, raw, attr);
+                        break;
 
-                case ELEMENT_OPTION:
-                    this.startOptionElement(uri,name,raw,attr);
-                    break;
+                    case ELEMENT_OPTION :
+                        this.startOptionElement(uri, name, raw, attr);
+                        break;
 
-                case ELEMENT_TXTAREA:
-                    this.startTextareaElement(uri,name,raw,attr);
-                    break;
+                    case ELEMENT_TXTAREA :
+                        this.startTextareaElement(uri, name, raw, attr);
+                        break;
 
-                case ELEMENT_ERROR:
-                    this.startErrorElement(uri,name,raw,attr);
-                    break;
+                    case ELEMENT_ERROR :
+                        this.startErrorElement(uri, name, raw, attr);
+                        break;
+                    case ELEMENT_FORM :
+                        this.startFormElement(uri, name, raw, attr);
+                        break;
 
-                default:
-                    super.startElement(uri, name, raw, attr);
+                    default :
+                        super.startElement(uri, name, raw, attr);
                 }
             }
         } else {
             this.ignoreCount++;
             this.stack.push(name);
-            if (((Integer)elementNames.get(name,defaultElement)).intValue()==ELEMENT_ERROR){
+            if (((Integer) elementNames.get(name, defaultElement)).intValue() == ELEMENT_ERROR) {
             }
         }
     }
@@ -685,43 +799,49 @@ public class SimpleFormTransformer extends AbstractTransformer
      * @param name The local name of the element.
      * @param raw The qualified name of the element.
      */
-    public void endElement(String uri, String name, String raw)
-        throws SAXException {
+    public void endElement(String uri, String name, String raw) throws SAXException {
 
-        if (uri!="") {
-            if (this.ignoreCount == 0) super.endElement(uri, name, raw);
+        if (uri != "") {
+            if (this.ignoreCount == 0)
+                super.endElement(uri, name, raw);
         } else {
-            if (this.ignoreCount>0){
-                if (((String)this.stack.peek()).equals(name)){
+            if (this.ignoreCount > 0) {
+                if (((String) this.stack.peek()).equals(name)) {
                     this.stack.pop();
                     this.ignoreCount--;
                 }
             }
             if (this.ignoreCount == 0 && this.ignoreThis) {
-               this.ignoreThis = false;
-               // skip event 
-            } else if (this.ignoreCount > 0 ) {
-               // skip event 
+                this.ignoreThis = false;
+                // skip event 
+            } else if (this.ignoreCount > 0) {
+                // skip event 
             } else {
-                switch (((Integer)elementNames.get(name,defaultElement)).intValue()) {
-                case ELEMENT_INPUT:
-                    super.endElement(uri, name, raw);
-                    break;
-                case ELEMENT_SELECT:
-                    this.values = null;
-                    super.endElement(uri, name, raw);
-                    break;
-                case ELEMENT_OPTION:
-                    super.endElement(uri, name, raw);
-                    break;
-                case ELEMENT_TXTAREA:
-                    super.endElement(uri, name, raw);
-                    break;
-                case ELEMENT_ERROR:
-                    super.endElement(uri, name, raw);
-                    break;
-                default:
-                    super.endElement(uri, name, raw);
+                switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
+                    case ELEMENT_INPUT :
+                        super.endElement(uri, name, raw);
+                        break;
+                    case ELEMENT_SELECT :
+                        this.values = null;
+                        super.endElement(uri, name, raw);
+                        break;
+                    case ELEMENT_OPTION :
+                        super.endElement(uri, name, raw);
+                        break;
+                    case ELEMENT_TXTAREA :
+                        super.endElement(uri, name, raw);
+                        break;
+                    case ELEMENT_ERROR :
+                        super.endElement(uri, name, raw);
+                        break;
+                    case ELEMENT_FORM :
+                        this.fixed = this.documentFixed;
+                        this.formName = null;
+                        super.endElement(uri, name, raw);
+                        break;
+
+                    default :
+                        super.endElement(uri, name, raw);
                 }
             }
         }
@@ -734,9 +854,9 @@ public class SimpleFormTransformer extends AbstractTransformer
      * @param start The start position in the array.
      * @param len The number of characters to read from the array.
      */
-    public void characters(char c[], int start, int len)
-    throws SAXException {
-        if (this.ignoreCount == 0) super.characters(c, start, len);
+    public void characters(char c[], int start, int len) throws SAXException {
+        if (this.ignoreCount == 0)
+            super.characters(c, start, len);
     }
 
     /**
@@ -746,9 +866,9 @@ public class SimpleFormTransformer extends AbstractTransformer
      * @param start The start position in the array.
      * @param len The number of characters to read from the array.
      */
-    public void ignorableWhitespace(char c[], int start, int len)
-    throws SAXException {
-        if (this.ignoreCount == 0) super.ignorableWhitespace(c, start, len);
+    public void ignorableWhitespace(char c[], int start, int len) throws SAXException {
+        if (this.ignoreCount == 0)
+            super.ignorableWhitespace(c, start, len);
     }
 
     /**
@@ -758,9 +878,9 @@ public class SimpleFormTransformer extends AbstractTransformer
      * @param data The processing instruction data, or null if none was
      *             supplied.
      */
-    public void processingInstruction(String target, String data)
-    throws SAXException {
-        if (this.ignoreCount == 0) super.processingInstruction(target, data);
+    public void processingInstruction(String target, String data) throws SAXException {
+        if (this.ignoreCount == 0)
+            super.processingInstruction(target, data);
     }
 
     /**
@@ -769,13 +889,51 @@ public class SimpleFormTransformer extends AbstractTransformer
      * @param name The name of the skipped entity.  If it is a  parameter
      *             entity, the name will begin with '%'.
      */
-    public void skippedEntity(String name)
-    throws SAXException {
-        if (this.ignoreCount == 0) super.skippedEntity(name);
+    public void skippedEntity(String name) throws SAXException {
+        if (this.ignoreCount == 0)
+            super.skippedEntity(name);
     }
 
-    private static  boolean parseBoolean(String aBoolean){
-        return "true".equalsIgnoreCase(aBoolean);
+    /**
+     * Check if a string is one of "yes", "true" ignoring case.
+     * @param aBoolean
+     * @return true if string is one of "yes", true"
+     */
+    private static boolean parseBoolean(String aBoolean) {
+        return "true".equalsIgnoreCase(aBoolean) || "yes".equalsIgnoreCase(aBoolean);
+    }
+
+    /**
+     * Generate the "real" name of an element for value lookup.
+     * @param name
+     * @return "real" name.
+     */
+    private String getName(String name) {
+        String result = name;
+        if (this.useFormName && this.formName != null) {
+            if (this.separator != null) {
+                if (this.useFormNameTwice) {
+                    result =
+                        this.formName + this.separator + this.formName + this.separator + result;
+                } else {
+                    result = this.formName + this.separator + result;
+                }
+            } else {
+                if (this.useFormNameTwice) {
+                    result = this.formName + result;
+                } else {
+                    // does this make sense ?
+                    result = this.formName + this.formName + result;
+                }
+            }
+        }
+        if (this.prefix != null) {
+            result = this.prefix + result;
+        }
+        if (this.suffix != null) {
+            result = result + this.prefix;
+        }
+        return result;
     }
 
     /**
@@ -789,29 +947,41 @@ public class SimpleFormTransformer extends AbstractTransformer
             if (this.input != null) {
                 // input module is thread safe
                 // thus we still have a reference to it
-                values = input.getAttributeValues(name,this.inputConf,objectModel);
+                values = input.getAttributeValues(name, this.inputConf, objectModel);
                 if (getLogger().isDebugEnabled())
-                    getLogger().debug("cached module "+this.input+" attribute "+name+" returns "+values);
+                    getLogger().debug(
+                        "cached module "
+                            + this.input
+                            + " attribute "
+                            + name
+                            + " returns "
+                            + values);
             } else {
                 // input was not thread safe
                 // so acquire it again
-                iputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (this.inputName != null 
-                    && iputSelector != null 
+                iputSelector = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+                if (this.inputName != null
+                    && iputSelector != null
                     && iputSelector.hasComponent(this.inputName)) {
-                    
+
                     iput = (InputModule) iputSelector.select(this.inputName);
                 }
                 if (iput != null) {
                     values = iput.getAttributeValues(name, this.inputConf, objectModel);
-                }           
+                }
                 if (getLogger().isDebugEnabled())
-                    getLogger().debug("fresh module "+iput+" attribute "+name+" returns "+values);
+                    getLogger().debug(
+                        "fresh module " + iput + " attribute " + name + " returns " + values);
             }
         } catch (Exception e) {
-            if (getLogger().isWarnEnabled()) 
-                getLogger().warn("A problem occurred acquiring a value from '" 
-                                 + this.inputName + "' for '"+name+"': " + e.getMessage());
+            if (getLogger().isWarnEnabled())
+                getLogger().warn(
+                    "A problem occurred acquiring a value from '"
+                        + this.inputName
+                        + "' for '"
+                        + name
+                        + "': "
+                        + e.getMessage());
         } finally {
             // release components if necessary
             if (iputSelector != null) {
