@@ -89,10 +89,20 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Compos
     protected void buildSelectionList(Element datatypeElement, AbstractDatatype datatype) throws Exception {
         Element selectionListElement = DomHelper.getChildElement(datatypeElement, Constants.WD_NS, "selection-list");
         if (selectionListElement != null) {
+            SelectionList selectionList;
             String src = selectionListElement.getAttribute("src");
-            if (src.length() > 0)
-                selectionListElement = readSelectionList(src);
-            SelectionList selectionList = SelectionListBuilder.build(selectionListElement, datatype);
+            if (src.length() > 0) {
+                boolean cache = DomHelper.getAttributeAsBoolean(selectionListElement, "cache", true);
+                if (cache) {
+                    selectionListElement = readSelectionList(src);
+                    selectionList = SelectionListBuilder.build(selectionListElement, datatype);
+                } else {
+                    selectionList = new DynamicSelectionList(datatype, src, componentManager);
+                }
+            } else {
+                // selection list is defined inline
+                selectionList = SelectionListBuilder.build(selectionListElement, datatype);
+            }
             datatype.setSelectionList(selectionList);
         }
     }
