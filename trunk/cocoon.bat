@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.15 2003/10/08 21:40:43 upayavira Exp $
+:: $Id: cocoon.bat,v 1.16 2003/10/19 00:58:07 crossley Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -81,7 +81,7 @@ set JAVA_DEBUG_PORT=8000
 
 :: ----- Set Up The Classpath --------------------------------------------------
 
-set CP=%COCOON_HOME%\tools\loader
+set CP=%COCOON_HOME%\tools\loader;%COCOON_HOME%\build\webapp\WEB-INF\classes
 
 :: ----- Check action ----------------------------------------------------------
 
