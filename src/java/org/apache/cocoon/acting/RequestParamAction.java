@@ -50,19 +50,17 @@
 */
 package org.apache.cocoon.acting;
 
-/*
- * Standard imports
- */
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This action makes some request details available to the sitemap via parameter
@@ -117,7 +115,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: RequestParamAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: RequestParamAction.java,v 1.2 2003/08/07 12:37:04 joerg Exp $
  */
 public class RequestParamAction extends ComposerAction implements ThreadSafe {
 
@@ -125,13 +123,11 @@ public class RequestParamAction extends ComposerAction implements ThreadSafe {
     public final static String MAP_QUERY       = "requestQuery";
     public final static String MAP_CONTEXTPATH = "context";
 
-    public final static String PARAM_PARAMETERS = "parameters";
+    public final static String PARAM_PARAMETERS     = "parameters";
     public final static String PARAM_DEFAULT_PREFIX = "default.";
 
-
-    public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters param )
-        throws Exception
-    {
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel,
+                   String source, Parameters param) throws Exception {
 
         Request request = ObjectModelHelper.getRequest(objectModel);
 
@@ -140,37 +136,35 @@ public class RequestParamAction extends ComposerAction implements ThreadSafe {
         map.put(MAP_URI, request.getRequestURI());
 
         String query = request.getQueryString();
-        if (query != null && query.length() > 0){
-          map.put(MAP_QUERY, "?" + query);
-        }
-        else{
-          map.put(MAP_QUERY, "");
+        if (query != null && query.length() > 0) {
+            map.put(MAP_QUERY, "?" + query);
+        } else {
+            map.put(MAP_QUERY, "");
         }
 
         map.put(MAP_CONTEXTPATH, request.getContextPath());
 
-        if ("true".equalsIgnoreCase(param.getParameter(PARAM_PARAMETERS, null))){
-          Enumeration e = request.getParameterNames();
-          while(e.hasMoreElements()){
-            String name = (String) e.nextElement();
-            String value = request.getParameter(name);
+        if ("true".equalsIgnoreCase(param.getParameter(PARAM_PARAMETERS, null))) {
+            Enumeration e = request.getParameterNames();
+            while (e.hasMoreElements()) {
+                String name = (String)e.nextElement();
+                String value = request.getParameter(name);
 
-            if (value != null && !map.containsKey(name)){
-              map.put(name, value);
+                if (value != null && !map.containsKey(name)) {
+                    map.put(name, value);
+                }
             }
-          }
 
-      String[] paramNames = param.getNames();
-          for (int i=0; i< paramNames.length; i++) {
-          if (paramNames[i].startsWith(PARAM_DEFAULT_PREFIX) &&
-          (request.getParameter(paramNames[i].substring(PARAM_DEFAULT_PREFIX.length())) == null)) {
-          map.put(paramNames[i].substring(PARAM_DEFAULT_PREFIX.length()), param.getParameter(paramNames[i]));
-          }
-      }
-
-
+            String[] paramNames = param.getNames();
+            for (int i = 0; i < paramNames.length; i++) {
+                if (paramNames[i].startsWith(PARAM_DEFAULT_PREFIX)
+                        && (request.getParameter(paramNames[i].substring(PARAM_DEFAULT_PREFIX.length())) == null)) {
+                    map.put(paramNames[i].substring(PARAM_DEFAULT_PREFIX.length()),
+                            param.getParameter(paramNames[i]));
+                }
+            }
         }
-
-        return(map);
+        return (map);
     }
+
 }
