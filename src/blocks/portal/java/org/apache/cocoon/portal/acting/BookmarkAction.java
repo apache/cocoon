@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * </bookmarks>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BookmarkAction.java,v 1.3 2003/12/12 11:53:50 cziegeler Exp $
+ * @version CVS $Id: BookmarkAction.java,v 1.4 2003/12/15 13:24:51 cziegeler Exp $
 */
 public class BookmarkAction
 extends ServiceableAction
@@ -139,7 +139,7 @@ implements ThreadSafe, Parameterizable {
         } finally {
             this.manager.release(resolver);
         }
-        Configuration[] events = config.getChild("bookmarks").getChildren("event");
+        Configuration[] events = config.getChild("events").getChildren("event");
         if ( events != null ) {
             for(int i=0; i<events.length;i++) {
                 try {
