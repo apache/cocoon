@@ -308,6 +308,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="update">
+     Updated xalan to 2.6.1-dev-20041008T0304
+   </action>
    <action dev="VG" type="add">
      Scratchpad block: Implemented support of parallel loading of included
      sources in the IncludeTransformer.
