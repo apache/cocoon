@@ -113,7 +113,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.1 2004/01/09 11:20:22 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.2 2004/02/06 15:13:54 cziegeler Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -1881,13 +1881,16 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 }
 
                 while (keys.hasMoreElements()) {
-                    currentKey = (String)keys.nextElement();
-                    if (deleteGlobal != null && currentKey.equals(deleteGlobal)) {
-                        store.remove(currentKey);
-                    } else if (deleteRole != null && currentKey.startsWith(deleteRole)) {
-                        store.remove(currentKey);
-                    } else if (deleteUser != null && currentKey.startsWith(deleteUser)) {
-                        store.remove(currentKey);
+                    Object k = keys.nextElement();
+                    if ( k instanceof String ) {
+                        currentKey = (String)k;
+                        if (deleteGlobal != null && currentKey.equals(deleteGlobal)) {
+                            store.remove(currentKey);
+                        } else if (deleteRole != null && currentKey.startsWith(deleteRole)) {
+                            store.remove(currentKey);
+                        } else if (deleteUser != null && currentKey.startsWith(deleteUser)) {
+                            store.remove(currentKey);
+                        }
                     }
                 }
             }
