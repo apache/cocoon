@@ -37,7 +37,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -57,10 +56,6 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.lang.SystemUtils;
 
-import org.apache.excalibur.event.Queue;
-import org.apache.excalibur.event.command.CommandManager;
-import org.apache.excalibur.event.command.TPCThreadManager;
-import org.apache.excalibur.event.command.ThreadManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
@@ -87,10 +82,6 @@ public class Cocoon
                    Serviceable {
 
     static Cocoon instance;
-
-    private ThreadManager threads;
-
-    private CommandManager commands;
 
     /** The application context */
     private Context context;
@@ -168,32 +159,7 @@ public class Cocoon
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
             this.context = new ComponentContext(context);
-
-            try {
-                DefaultContext setup = (DefaultContext) this.context;
-                this.threads = new TPCThreadManager();
-
-                Parameters params = new Parameters();
-                params.setParameter("threads-per-processor", "1");
-                params.setParameter("sleep-time", "100");
-                params.setParameter("block-timeout", "1000");
-                params.setParameter("force-shutdown", "true");
-                params.makeReadOnly();
-
-                ContainerUtil.enableLogging(this.threads, getLogger().getChildLogger("thread.manager"));
-                ContainerUtil.parameterize(this.threads, params);
-                ContainerUtil.initialize(this.threads);
-
-                this.commands = new CommandManager();
-                ContainerUtil.enableLogging(this.commands, getLogger().getChildLogger("thread.manager"));
-                this.threads.register(this.commands);
-
-                setup.put(Queue.ROLE, this.commands.getCommandSink());
-
-                setup.makeReadOnly();
-            } catch (Exception e) {
-                getLogger().error("Could not set up the Command Manager", e);
-            }
+            ((DefaultContext)this.context).makeReadOnly();
 
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
             this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
@@ -455,18 +421,10 @@ public class Cocoon
         System.setProperties(systemProps);
     }
 
-    /**
-     * Dispose this instance
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if (this.commands != null && this.threads != null) {
-            this.threads.deregister(this.commands);
-        }
-        ContainerUtil.dispose(this.commands);
-        this.commands = null;
-        ContainerUtil.dispose(this.threads);
-        this.threads = null;
-
         if (this.serviceManager != null) {
             if (this.requestListener != null) {
                 this.serviceManager.release(this.requestListener);
