@@ -75,8 +75,8 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public AggregateJXPathBinding(boolean loadEnabled, boolean saveEnabled, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
-        super(loadEnabled, saveEnabled, childBindings);
+    public AggregateJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+        super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;
     }

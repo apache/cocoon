@@ -70,13 +70,13 @@ public class AggregateJXPathBindingBuilder
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
             throws BindingException {
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
-            AggregateJXPathBinding aggregateBinding = new AggregateJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, widgetId, xpath, childBindings);
+            AggregateJXPathBinding aggregateBinding = new AggregateJXPathBinding(commonAtts, widgetId, xpath, childBindings);
             return aggregateBinding;
         } catch (BindingException e) {
             throw e;

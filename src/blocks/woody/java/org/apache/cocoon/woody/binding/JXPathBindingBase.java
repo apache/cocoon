@@ -52,10 +52,8 @@ package org.apache.cocoon.woody.binding;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
-import org.w3c.dom.Node;
 
 /**
  * Provides a base class for hooking up Binding implementations that use the 
@@ -70,23 +68,17 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     private Logger logger;
     
     /**
-     * Flag indicating if the nested load-binding on this level should be performed.
+     * Object holding the values of the common objects on all Bindings.
      */
-    private final boolean loadEnabled;
+    private final JXpathBindingBuilderBase.CommonAttributes commonAtts;
     
-    /**
-     * Flag indicating if the nested save-binding on this level should be performed.
-     */    
-    private final boolean saveEnabled;
-
 
     private JXPathBindingBase() {
-        this(true, true);
+        this(JXpathBindingBuilderBase.CommonAttributes.DEFAULT);
     }
     
-    protected JXPathBindingBase(boolean loadEnabled, boolean saveEnabled) {
-        this.loadEnabled = loadEnabled;
-        this.saveEnabled = saveEnabled;
+    protected JXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts) {
+        this.commonAtts = commonAtts;
     }
     
     /**
@@ -102,7 +94,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * depending on the value of {@see #loadEnabled}
      */
     public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
-        if (this.loadEnabled) {
+        applyLeniency(jxpc);
+        if (this.commonAtts.loadEnabled) {
             doLoad(frmModel, jxpc);
         }    
     }
@@ -117,16 +110,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             throw new NullPointerException("null object passed to loadFormFromModel() method");
         }
 
-        JXPathContext jxpc;
-        if (!(objModel instanceof JXPathContext)) {
-            jxpc = JXPathContext.newContext(objModel);
-            
-            if (objModel instanceof Node) {
-                jxpc.setFactory(new DOMFactory());
-            }
-        } else {
-            jxpc = (JXPathContext) objModel;
-        }
+        JXPathContext jxpc = makeJXPathContext(objModel);
         loadFormFromModel(frmModel, jxpc);
     }
 
@@ -143,7 +127,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * depending on the value of {@see #saveEnabled}
      */
     public final void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException{
-        if (this.saveEnabled) {
+        applyLeniency(jxpc);
+        if (this.commonAtts.saveEnabled) {
             doSave(frmModel, jxpc);
         }    
     }
@@ -158,13 +143,25 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             throw new NullPointerException("null object passed to saveFormToModel() method");
         }
 
+        JXPathContext jxpc = makeJXPathContext(objModel);
+        saveFormToModel(frmModel, jxpc);
+    }
+
+    private void applyLeniency(JXPathContext jxpc) {
+        if (this.commonAtts.leniency != null) {
+            jxpc.setLenient(this.commonAtts.leniency.booleanValue());
+        }
+    }
+    
+    private JXPathContext makeJXPathContext(Object objModel) {
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
+            jxpc.setLenient(true);
         } else {
-            jxpc = (JXPathContext) objModel;
+            jxpc = (JXPathContext) objModel;            
         }
-        saveFormToModel(frmModel, jxpc);
+        return jxpc;
     }
 
     /**

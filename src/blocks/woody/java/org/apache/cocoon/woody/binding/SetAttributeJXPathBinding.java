@@ -69,8 +69,8 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs SetAttributeJXPathBinding
      */
-    public SetAttributeJXPathBinding(boolean loadEnabled, boolean saveEnabled, String attName, String attValue) {
-        super(loadEnabled, saveEnabled);
+    public SetAttributeJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String attName, String attValue) {
+        super(commonAtts);
         this.name = attName;
         this.value = attValue;
     }

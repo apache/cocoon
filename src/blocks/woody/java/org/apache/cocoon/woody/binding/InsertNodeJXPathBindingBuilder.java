@@ -82,7 +82,7 @@ public class InsertNodeJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
             
             DocumentFragment domTemplate = null;
 
@@ -126,7 +126,7 @@ public class InsertNodeJXPathBindingBuilder
                 }
             }
 
-            return new InsertNodeJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, domTemplate);
+            return new InsertNodeJXPathBinding(commonAtts, domTemplate);
         } catch (Exception e) {
             throw new BindingException("Error building the insert-node binding defined at " + DomHelper.getLocation(bindingElm), e);
         }

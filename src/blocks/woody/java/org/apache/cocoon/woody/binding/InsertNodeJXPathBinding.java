@@ -75,8 +75,8 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertNodeJXPathBinding
      */
-    public InsertNodeJXPathBinding(boolean loadEnabled, boolean saveEnabled, DocumentFragment domTemplate) {
-        super(loadEnabled, saveEnabled);
+    public InsertNodeJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, DocumentFragment domTemplate) {
+        super(commonAtts);
         this.template = domTemplate;
     }
 

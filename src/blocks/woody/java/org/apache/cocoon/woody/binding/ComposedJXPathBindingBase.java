@@ -67,8 +67,8 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      * 
      * @param childBindings sets the array of childBindings
      */
-    protected ComposedJXPathBindingBase(boolean loadEnabled, boolean saveEnabled, JXPathBindingBase[] childBindings) {
-        super(loadEnabled, saveEnabled);
+    protected ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts, JXPathBindingBase[] childBindings) {
+        super(commonAtts);
         this.subBindings = childBindings;
     }
 
