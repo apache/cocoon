@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<site xmlns:xf="http://cocoon.apache.org/jxforms/2002/cr" 
+<site xmlns:xf="http://apache.org/cocoon/jxforms/1.0" 
    signOn="false" view="xsp">
   <editAccountForm>
 	<xf:form id="petstore-edit-account" view="edit-account-info" action="petstore" method="GET" class="petstore-form">

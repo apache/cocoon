@@ -119,7 +119,7 @@ public class JXFormsGenerator extends AbstractGenerator {
         };
 
     final static String NS = 
-        "http://cocoon.apache.org/jxforms/2002/cr";
+        "http://apache.org/cocoon/jxforms/1.0";
 
     // Non XForms elements
     final static String FORM = "form";
@@ -205,7 +205,7 @@ public class JXFormsGenerator extends AbstractGenerator {
             if (absolute) {
                 ctx = root;
             }
-            Pointer ptr = jxpath.getPointer(ctx, "???");
+            Pointer ptr = jxpath.getPointer(ctx, string);
             if (ptr == null) {
                 return null;
             }
@@ -972,7 +972,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                                          localName, raw, attrs, expr);
                     newEvent = startItemSet;
                 } else if (isReadonlyInputControl(localName)) {
-                    String refStr = attrs.getValue("ref");
+                    String refStr = attrs.getValue(REF);
                     XPathExpr ref = 
                         compileExpr(refStr, locator);
                     StartReadonlyInputControl startInputControl = 
@@ -982,7 +982,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                                                                        namespaceURI, localName, raw, attrs));
                     newEvent = startInputControl;
                 } else if (isInputControl(localName)) {
-                    String refStr = attrs.getValue("ref");
+                    String refStr = attrs.getValue(REF);
                     if (refStr == null) {
                         throw new SAXParseException("\""+localName + "\" requires a \"ref\" attribute", locator, null);
                     }
@@ -1387,11 +1387,15 @@ public class JXFormsGenerator extends AbstractGenerator {
                     }
                     JXPathContext localJXPathContext = 
                         jxpathContextFactory.newContext(null, value);
-                    String path = "";
-                    if (contextPath != null) {
-                        path = contextPath + "/.";
-                    } 
-                    path += startElement.attributes.getValue(REF);
+                    String path = contextPath;
+                    if (ref.string != null) {
+                        if (path != null) {
+                            path += "/.";
+                        } else {
+                            path = "";
+                        }
+                        path += ref.string;
+                    }
                     execute(consumer,
                             form,
                             currentView,
@@ -1437,9 +1441,9 @@ public class JXFormsGenerator extends AbstractGenerator {
                     JXPathContext localJXPathContext = 
                         jxpathContextFactory.newContext(null, value);
                     AttributesImpl attrs = new AttributesImpl();
-                    attrs.addAttribute(null, "ref", "ref", "CDATA",
+                    attrs.addAttribute(null, REF, REF, "CDATA",
                                        ptr.asPath());
-                    consumer.startElement(NS, "item", "item",
+                    consumer.startElement(NS, ITEM, ITEM,
                                           attrs);
                     String path = "";
                     if (contextPath != null) {
@@ -1449,12 +1453,12 @@ public class JXFormsGenerator extends AbstractGenerator {
                     execute(consumer,
                             form,
                             currentView,
-                            ptr.asPath(),
+                            path,
                             rootContext,
                             localJXPathContext,
                             startItemSet.next,
                             startItemSet.endItemSet);
-                    consumer.endElement(NS, "item", "item");
+                    consumer.endElement(NS, ITEM, ITEM);
                 }
                 ev = startItemSet.endItemSet.next;
                 continue;

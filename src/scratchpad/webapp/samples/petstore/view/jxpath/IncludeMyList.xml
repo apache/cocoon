@@ -1,4 +1,4 @@
-<t:template xmlns:t="http://cocoon.apache.org/templates/jx/1.0">
+<t:template xmlns:t="http://apache.org/cocoon/templates/jx/1.0">
 <t:if test="#{myList}">
 <p> </p>
 <table align="right" bgcolor="#008800" border="0" cellspacing="2" cellpadding="3">

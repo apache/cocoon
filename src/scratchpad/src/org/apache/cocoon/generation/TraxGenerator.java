@@ -82,7 +82,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 /**
- * <p>XSLT Generator: works by taking java bean as an input "document"</p>
+ * <p>XSLT Generator: works by taking a Java Bean as an input "document"</p>
  */
 
 public class TraxGenerator extends TraxTransformer implements Generator {
