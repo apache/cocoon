@@ -72,7 +72,7 @@ import org.apache.bcel.verifier.structurals.UninitializedObjectType;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.5 2004/04/06 07:31:34 antonio Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.6 2004/04/06 07:40:48 antonio Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -658,6 +658,6 @@ public class ContinuationClassLoader extends ClassLoader {
         else if (type.equals(Type.LONG))
             return "Long";
         // VOID and OBJECT are "Object"
-        return POP_METHOD + "Object";
+        return "Object";
     }
 }
