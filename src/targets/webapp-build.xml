@@ -150,7 +150,7 @@
   
   <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-jars,validate-config" description="Builds web application folder"/>
 
-  <target name="war" depends="webapp" description="Builds web application archieve">
+  <target name="war" depends="webapp" description="Builds web application archive">
     <!-- A task to create manifest for webapp. -->
     <taskdef name="manifest" classname="ManifestToolTask" classpath="${tools.tasks.dest}"/>
     <!-- Create WAR manifest -->
