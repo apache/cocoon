@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.120 2003/11/25 00:33:01 antonio Exp $
+    | CVS $Id: jars.xml,v 1.121 2003/12/25 15:44:31 unico Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -33,16 +33,46 @@
   </file>
 
   <file>
-    <title>Avalon Excalibur Component</title>
+    <title>Avalon Fortress Container</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
-      support high level server development.
+      This is the Avalon container used by Cocoon.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-component-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <lib>core/avalon-fortress-container-1.1-dev-20031225.jar</lib>
+    <homepage>http://avalon.apache.org/excalibur/fortress/</homepage>
+  </file>
+  
+  <file>
+    <title>Avalon Fortress Tools</title>
+    <description>
+      Fortress tools.
+    </description>
+    <used-by>Cocoon</used-by>
+    <lib>core/avalon-fortress-tools-1.1-dev.jar</lib>
+    <homepage>http://avalon.apache.org/excalibur/fortress/</homepage>
+  </file>
+  
+  <file>
+    <title>Byte Code Engineering Library</title>
+    <description>
+      A toolkit for the static analysis and dynamic creation 
+      or transformation of Java class files.
+    </description>
+    <used-by>Fortress</used-by>
+    <lib>core/bcel-5.1.jar</lib>
+    <homepage>http://jakarta.apache.org/bcel/</homepage>
   </file>
 
+  <file>
+    <title>Excalibur Lifecycle</title>
+    <description>
+      Excalibur lifecycle api.
+    </description>
+    <used-by>Fortress</used-by>
+    <lib>core/excalibur-lifecycle-1.0.jar</lib>
+    <homepage>http://avalon.apache.org/excalibur/fortress/</homepage>
+  </file>
+  
   <file>
     <title>Avalon Excalibur Event API</title>
     <description>
@@ -54,7 +84,7 @@
     <lib>core/excalibur-event-api-1.0.4-dev.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
-
+  
   <file>
     <title>Avalon Excalibur Event Impl</title>
     <description>
@@ -128,7 +158,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-logger-1.0.1.jar</lib>
+    <lib>core/excalibur-logger-20030616.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
