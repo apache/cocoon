@@ -10,87 +10,227 @@ package org.apache.cocoon.generators;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.apache.cocoon.Parameters;
+import org.apache.cocoon.Request;
+import org.apache.cocoon.Response;
 
 /**
+ * Generates an XML directory listing.
+ * <p>
+ * The root node of the generated document will normally be a
+ * <code>directory</code> node, and a directory node can contain zero
+ * or more <code>file</code> or directory nodes. A file node has no
+ * children. Each node will contain the following attributes:
+ * <blockquote>
+ *   <dl>
+ *   <dt> name
+ *   <dd> the name of the file or directory
+ *   <dt> lastModified
+ *   <dd> the time the file was last modified, measured as the number of
+ *   milliseconds since the epoch (as in java.io.File.lastModified)
+ *   <dt> date (optional)
+ *   <dd> the time the file was last modified in human-readable form
+ *   </dl>
+ * </blockquote>
+ * <p>
+ * <b>Configuration options:</b>
+ * <dl>
+ * <dt> <i>depth</i> (optional)
+ * <dd> Sets how deep DirectoryGenerator should delve into the
+ * directory structure. If set to 1 (the default), only the starting
+ * directory's immediate contents will be returned.
+ * <dt> <i>dateFormat</i> (optional)
+ * <dd> Sets the format for the date attribute of each node, as
+ * described in java.text.SimpleDateFormat. If unset, the default
+ * format for the current locale will be used.
+ * </dl>
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-03-19 01:08:47 $
- */
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-05-24 22:35:09 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
-    private String URI="http://xml.apache.org/cocoon/2.0/DirectoryGenerator";
+    private static final String URI =
+	"http://xml.apache.org/cocoon/2.0/DirectoryGenerator";
+
+    /* Node and attribute names */
+    private static final String DIR_NODE_NAME		= "directory";
+    private static final String FILE_NODE_NAME		= "file";
+
+    private static final String FILENAME_ATTR_NAME	= "name";
+    private static final String LASTMOD_ATTR_NAME	= "lastModified";
+    private static final String DATE_ATTR_NAME		= "date";
+
+    /*
+     * Variables set per-request
+     * 
+     * FIXME: SimpleDateFormat is not supported by all locales!
+     */
+    private int depth;
+    private AttributesImpl attributes = new AttributesImpl();
+    private SimpleDateFormat dateFormatter;
+
+    /**
+     * Set the request parameters. Must be called before the generate
+     * method.
+     *
+     * @param	req
+     * 		the incoming request object
+     * @param	res
+     * 		the outgoing response object
+     * @param	src
+     * 		the URI for this request (?)
+     * @param	par
+     * 		configuration parameters
+     */
+    public void setup(Request req, Response res, String src, Parameters par) {
+	super.setup(req, res, src, par);
+
+	String dateFormatString = par.getParameter("dateFormat", null);
+
+	if (dateFormatString != null) {
+	    this.dateFormatter = new SimpleDateFormat(dateFormatString);
+	} else {
+	    this.dateFormatter = new SimpleDateFormat();
+	}
+
+	this.depth = par.getParameterAsInteger("depth", 1);
+
+	/* Create a reusable attributes for creating nodes */
+	AttributesImpl attributes = new AttributesImpl();
+    }
+
 
     /**
      * Generate XML data.
+     * 
+     * @throws	SAXException
+     * 		if an error occurs while outputting the document
+     * @throws	IOException
+     * 		if the requsted URI isn't a directory on the local
+     * 		filesystem
      */
     public void generate()
     throws SAXException, IOException {
-        EntityResolver r=(EntityResolver)super.manager.getComponent("cocoon");
-        InputSource i=r.resolveEntity(null,super.source);
-        URL u=new URL(i.getSystemId());
-        if (!u.getProtocol().equals("file"))
-            throw new IOException("Cannot read directory from "+u.toString());
 
-        File d=new File(u.getFile()).getCanonicalFile();
-        if (!d.isDirectory())
-            throw new IOException("Cannot find directory \""+d.getPath()+"\"");
+        EntityResolver resolver;
+        InputSource input;
+
+	URL url;
+	File path;
+
+	resolver = (EntityResolver)super.manager.getComponent("cocoon");
+	input = resolver.resolveEntity(null,super.source);
+        url = new URL(input.getSystemId());
+        path = new File(url.getFile());
+
+        if (!path.isDirectory()) {
+            throw new IOException("Cannot read directory from "
+				  + url.toString() + "\"");
+	}
 
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping("",URI);
-        AttributesImpl attr=new AttributesImpl();
-
-        this.attribute(attr,"name",d.getName()+"/");
-        this.start("directory",attr);
-        this.data("\n");
-
-        String c[]=d.list();
-        for (int x=0; x<c.length; x++) {
-            File f=new File(d,c[x]);
-            this.data("  ");
-            if (f.isDirectory()) {
-                this.attribute(attr,"name",f.getName()+"/");
-                this.start("directory",attr);
-                this.data(f.getName());
-                this.end("directory");
-            } else {
-                this.attribute(attr,"name",f.getName());
-                this.start("file",attr);
-                this.data(f.getName());
-                this.end("file");
-            }
-            this.data("\n");
-        }
-
-        this.end("directory");
-
-        // Finish
+	addPath(path, depth);
         this.contentHandler.endPrefixMapping("");
         this.contentHandler.endDocument();
+
     }
 
-    private void attribute(AttributesImpl attr, String name, String value) {
-        attr.addAttribute("",name,name,"CDATA",value);
-    }
-
-    private void start(String name, AttributesImpl attr)
+    /**
+     * Adds a single node to the generated document. If the path is a
+     * directory, and depth is greater than zero, then recursive calls
+     * are made to add nodes for the directory's children.
+     *
+     * @param	path
+     * 		the file/directory to process
+     * @param	depth
+     * 		how deep to scan the directory
+     *
+     * @throws	SAXException
+     * 		if an error occurs while constructing nodes
+     */
+    private void addPath(File path, int depth)
     throws SAXException {
-        super.contentHandler.startElement(URI,name,name,attr);
-        attr.clear();
+
+	if (path.isDirectory()) {
+
+	    startNode(DIR_NODE_NAME, path);
+
+	    if (depth>0) {
+		File contents[] = path.listFiles();
+
+		for (int i=0; i<contents.length; i++) {
+		    addPath(contents[i], depth-1);
+		}
+	    }
+
+	    endNode(DIR_NODE_NAME);
+
+	} else {
+
+	    startNode(FILE_NODE_NAME, path);
+	    endNode(FILE_NODE_NAME);
+
+	}
+
     }
 
-    private void end(String name)
+    /**
+     * Begins a named node, and sets its attributes based on a given
+     * path. The new node will contain attributes for the name of the
+     * file/directory and for the last modification time of the path.
+     *
+     * @param	nodeName
+     * 		the name of the new node
+     * @param	path
+     * 		the file/directory to use when setting attributes
+     * 
+     * @throws	SAXException
+     * 		if an error occurs while creating the node
+     */
+    private void startNode(String nodeName, File path)
     throws SAXException {
-        super.contentHandler.endElement(URI,name,name);
+	long lastModified = path.lastModified();
+
+	attributes.clear();
+	attributes.addAttribute("", FILENAME_ATTR_NAME,
+				FILENAME_ATTR_NAME, "CDATA",
+				path.getName());
+	attributes.addAttribute("", LASTMOD_ATTR_NAME,
+				LASTMOD_ATTR_NAME, "CDATA",
+				Long.toString(path.lastModified()));
+	attributes.addAttribute("", LASTMOD_ATTR_NAME,
+				LASTMOD_ATTR_NAME, "CDATA",
+				Long.toString(lastModified));
+	attributes.addAttribute("", DATE_ATTR_NAME,
+				DATE_ATTR_NAME, "CDATA",
+				dateFormatter.format(new Date(lastModified)));
+
+	super.contentHandler.startElement(URI, nodeName, nodeName, attributes);
     }
 
-    private void data(String data)
+    /**
+     * Ends the named node.
+     *
+     * @param	nodeName
+     * 		the name of the new node
+     * @param	path
+     * 		the file/directory to use when setting attributes
+     * 
+     * @throws	SAXException
+     * 		if an error occurs while closing the node
+     */
+    private void endNode(String nodeName)
     throws SAXException {
-        super.contentHandler.characters(data.toCharArray(),0,data.length());
+	super.contentHandler.endElement(URI, nodeName, nodeName);
     }
+
 }
