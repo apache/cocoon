@@ -86,10 +86,10 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.5 2003/05/31 00:06:29 joerg Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.6 2003/06/11 23:15:56 joerg Exp $
  */
 public class XSPUtil {
-    
+
     public static String pathComponent(String filename) {
         int i = filename.lastIndexOf(File.separator);
         return (i >= 0) ? filename.substring(0, i) : filename;
@@ -192,12 +192,12 @@ public class XSPUtil {
     }
 
     public static String formEncode(String text) throws Exception {
-    	return URLEncoder.encode (text);
+        return URLEncoder.encode(text);
     }
 
     // Shameless, ain't it?
     public static String formDecode(String s) throws Exception {
-    	return URLDecoder.decode (s);
+        return URLDecoder.decode(s);
     }
 
     /* Logicsheet Utility Methods */
@@ -208,8 +208,7 @@ public class XSPUtil {
             pattern = "yyyy/MM/dd hh:mm:ss aa";
         }
         try {
-            return (
-                new SimpleDateFormat(pattern)).format(date);
+            return (new SimpleDateFormat(pattern)).format(date);
         } catch (Exception e) {
             return date.toString();
         }
@@ -223,14 +222,13 @@ public class XSPUtil {
     }
 
     public static int getSessionCount(Session session) {
-        synchronized(session) {
+        synchronized (session) {
             Integer integer = (Integer)session.getAttribute("util.counter");
             if (integer == null) {
                 integer = new Integer(0);
             }
             int cnt = integer.intValue() + 1;
-            session.setAttribute("util.counter",
-                new Integer(cnt));
+            session.setAttribute("util.counter", new Integer(cnt));
             return cnt;
         }
     }
@@ -295,8 +293,7 @@ public class XSPUtil {
     }
 
     public static void includeSource(String uri, String base, SourceResolver resolver, ContentHandler contentHandler)
-        throws RuntimeException {
-        
+            throws RuntimeException {
         if (base != null && base.length() == 0) {
             base = null;
         }
@@ -313,36 +310,34 @@ public class XSPUtil {
         }
     }
 
-    public static void includeString(String string, ComponentManager manager, ContentHandler contentHandler) 
-        throws RuntimeException {
-
-        XSPUtil.includeInputSource(new InputSource( new StringReader( String.valueOf(string))), manager, contentHandler);
+    public static void includeString(String string, ComponentManager manager, ContentHandler contentHandler)
+            throws RuntimeException {
+        XSPUtil.includeInputSource(new InputSource(new StringReader(String.valueOf(string))), manager,
+                                   contentHandler);
     }
-        
-    public static void includeFile(String name, ComponentManager manager, ContentHandler contentHandler, Map objectModel) 
-        throws RuntimeException {
 
+    public static void includeFile(String name, ComponentManager manager, ContentHandler contentHandler, Map objectModel)
+            throws RuntimeException {
         try {
-            XSPUtil.includeInputSource(new InputSource(new FileReader(XSPUtil.relativeFilename(name,objectModel))), 
+            XSPUtil.includeInputSource(new InputSource(new FileReader(XSPUtil.relativeFilename(name, objectModel))),
                                        manager, contentHandler);
         } catch (IOException e) {
             throw new CascadingRuntimeException("Could not include file " + name, e);
         }
-    }   
+    }
 
-    public static void includeInputSource(InputSource source, ComponentManager manager, ContentHandler contentHandler) 
-        throws RuntimeException {
-        
+    public static void includeInputSource(InputSource source, ComponentManager manager, ContentHandler contentHandler)
+            throws RuntimeException {
         SAXParser parser = null;
         try {
-            parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser)manager.lookup(SAXParser.ROLE);
             IncludeXMLConsumer consumer = new IncludeXMLConsumer(contentHandler);
             parser.parse(source, consumer, consumer);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not include page", e);
         } finally {
             if (parser != null) {
-                manager.release((Component) parser);
+                manager.release((Component)parser);
             }
         }
     }
