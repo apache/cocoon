@@ -60,9 +60,20 @@ import java.math.BigDecimal;
  */
 public class ExpressionContextImpl implements ExpressionContext {
     private Widget widget;
+    private boolean referenceChildren;
 
     public ExpressionContextImpl(Widget widget) {
         this.widget = widget;
+        this.referenceChildren = false;
+    }
+
+    /**
+     * @param referenceChildren if true, variables will be resolved among the children of the given
+     * container widget, rather than among the siblings of the widget.
+     */
+    public ExpressionContextImpl(ContainerWidget widget, boolean referenceChildren) {
+        this.widget = widget;
+        this.referenceChildren = referenceChildren;
     }
 
     /**
@@ -85,7 +96,11 @@ public class ExpressionContextImpl implements ExpressionContext {
      */
     public Object resolveVariable(String name) {
         // TODO allow to access other widgets instead of only siblings (allow going up with ../ notation or something)
-        Widget widget = this.widget.getParent().getWidget(name);
+        Widget widget;
+        if (!referenceChildren)
+            widget = this.widget.getParent().getWidget(name);
+        else
+            widget = ((ContainerWidget)this.widget).getWidget(name);
         if (widget != null) {
             Object value = widget.getValue();
 
