@@ -1070,4 +1070,33 @@
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
+  <file>
+    <title>Java Compilation Interface API</title>
+    <description>
+      API for compiling java
+    </description>
+    <used-by>javaflow</used-by>
+    <lib>optional/jci-20041213.jar</lib>
+    <homepage></homepage>
+  </file>
+
+  <file>
+    <title>Javaflow API</title>
+    <description>
+      API java continuations
+    </description>
+    <used-by>javaflow</used-by>
+    <lib>optional/javaflow-20041213.jar</lib>
+    <homepage></homepage>
+  </file>
+
+  <file>
+    <title>Jakarta Commons io</title>
+    <description>
+    </description>
+    <used-by>jci</used-by>
+    <lib>optional/commons-io-1.0.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/io/</homepage>
+  </file>
+
 </jars>
