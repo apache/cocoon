@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.56 2001-01-30 07:19:20 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.57 2001-01-30 07:23:06 balld Exp $-->
 <!--
 
  ============================================================================
@@ -703,9 +703,7 @@
       <xsl:choose>
         <xsl:when test="../esql:row-results">
           <xsp:logic>
-            xspParentNode = xspCurrentNode;
-            xspNodeStack.push(xspParentNode);
-            xspCurrentNode = this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement();
+            xspCurrentNode.appendChild(this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement();
           </xsp:logic>
         </xsl:when>
         <xsl:otherwise>
