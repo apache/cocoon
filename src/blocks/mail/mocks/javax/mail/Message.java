@@ -6,7 +6,7 @@ import java.util.Date;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: Message.java,v 1.2 2003/03/10 16:35:45 stefano Exp $
+ * @version CVS $Id: Message.java,v 1.3 2003/08/08 11:35:03 cziegeler Exp $
  */
 public abstract class Message implements Part {
 
@@ -77,4 +77,19 @@ public abstract class Message implements Part {
 	public Flags getFlags() throws MessagingException {
 		throw new NoSuchMethodError("This is a mock object");
 	}
+    
+    public void setRecipients(Message.RecipientType type, Address[] addresses) 
+    throws MessagingException {     
+       throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public void setContent(Multipart mp)
+    throws MessagingException {     
+       throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public void saveChanges()
+    throws MessagingException {     
+       throw new NoSuchMethodError("This is a mock object");
+    }
 }
