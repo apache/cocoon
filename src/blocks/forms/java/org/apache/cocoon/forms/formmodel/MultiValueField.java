@@ -20,6 +20,7 @@ import java.util.Locale;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.SelectionList;
+import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
@@ -45,7 +46,7 @@ import org.xml.sax.SAXException;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.11 2004/05/07 13:42:09 mpo Exp $
+ * @version $Id: MultiValueField.java,v 1.12 2004/05/08 11:49:01 bruno Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -233,5 +234,9 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
     public void setValidationError(ValidationError error) {
         this.validationError = error;
+    }
+
+    public Datatype getDatatype() {
+        return definition.getDatatype();
     }
 }
