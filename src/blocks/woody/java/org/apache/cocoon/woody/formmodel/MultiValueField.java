@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.woody.event.ValueChangedEvent;
@@ -78,6 +79,7 @@ import java.util.Locale;
  * description for more information).
  */
 public class MultiValueField extends AbstractWidget {
+    private SelectionList selectionList;
     private MultiValueFieldDefinition definition;
     private String[] enteredValues;
     private Object[] values;
@@ -163,7 +165,11 @@ public class MultiValueField extends AbstractWidget {
         definition.generateDisplayData(contentHandler);
 
         // the selection list (a MultiValueField has per definition always a SelectionList)
-        definition.getSelectionList().generateSaxFragment(contentHandler, locale);
+        if (this.selectionList != null) {
+            this.selectionList.generateSaxFragment(contentHandler, locale);
+        } else {
+            definition.getSelectionList().generateSaxFragment(contentHandler, locale);
+        }
 
         // validation message element
         if (validationError != null) {
@@ -182,6 +188,17 @@ public class MultiValueField extends AbstractWidget {
     public Object getValue() {
         return values;
     }
+    
+    public void setValue(Object value) {
+        if (value == null) {
+            setValues(new Object[0]);
+        }
+        else if (value.getClass().isArray()) {
+            setValues((Object[])values);
+        } else {
+            throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + value.getClass().getName());
+        }
+    }
 
     public void setValues(Object[] values) {
         // check that all the objects in the array correspond to the datatype
@@ -192,6 +209,53 @@ public class MultiValueField extends AbstractWidget {
         this.values = values;
     }
     
+    /**
+     * Set this field's selection list.
+     * @param selectionList The new selection list.
+     */
+    public void setSelectionList(SelectionList selectionList) {
+        if (selectionList != null &&
+            selectionList.getDatatype() != null &&
+            selectionList.getDatatype() != definition.getDatatype()) {
+
+            throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
+        }
+        this.selectionList = selectionList;
+    }
+    
+    /**
+     * Read this field's selection list from an external source.
+     * All Cocoon-supported protocols can be used. 
+     * The format of the XML produced by the source should be the 
+     * same as in case of inline specification of the selection list,
+     * thus the root element should be a <code>wd:selection-list</code>
+     * element.
+     * @param uri The URI of the source. 
+     */
+    public void setSelectionList(String uri) {
+        setSelectionList(this.definition.buildSelectionList(uri));
+    }
+    
+    /**
+     * Set this field's selection list using values from an in-memory
+     * object. The <code>object</code> parameter should point to a collection
+     * (Java collection or array, or Javascript array) of objects. Each object
+     * belonging to the collection should have a <em>value</em> property and a
+     * <em>label</em> property, whose values are used to specify the <code>value</code>
+     * attribute and the contents of the <code>wd:label</code> child element
+     * of every <code>wd:item</code> in the list.
+     * <p>Access to the values of the above mentioned properties is done
+     * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
+     * @param model The collection used as a model for the selection list. 
+     * @param valuePath An XPath expression referring to the attribute used
+     * to populate the values of the list's items. 
+     * @param labelPath An XPath expression referring to the attribute used
+     * to populate the labels of the list's items.
+     */
+    public void setSelectionList(Object model, String valuePath, String labelPath) {
+        setSelectionList(this.definition.buildSelectionListFromModel(model, valuePath, labelPath));
+    }
+
     public void broadcastEvent(WidgetEvent event) {
         this.definition.fireValueChangedEvent((ValueChangedEvent)event);
     }

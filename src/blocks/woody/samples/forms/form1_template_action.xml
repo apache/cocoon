@@ -52,7 +52,10 @@
                   <wi:items>
                     <wt:widget id="somebool"/>
                     <wt:widget id="drinks">
-                      <wi:styling list-type="double-listbox"/>
+                      <wi:styling list-type="double-listbox">
+                        <wi:available-label>Available drinks</wi:available-label>
+                        <wi:selected-label>Your selection</wi:selected-label>
+                      </wi:styling>
                     </wt:widget>
                   </wi:items>
                 </wi:group>
