@@ -36,10 +36,9 @@ extends org.apache.cocoon.core.container.CocoonServiceManager {
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
 
-    /** Create the ServiceManager with a Classloader and parent ServiceManager */
-    public CocoonServiceManager( final ServiceManager parent, 
-                                 final ClassLoader loader ) {
-        super( parent, loader);
+    /** Create the ServiceManager with a parent ServiceManager */
+    public CocoonServiceManager( final ServiceManager parent) {
+        super( parent );
     }
 
     /* (non-Javadoc)

@@ -17,7 +17,6 @@
 package org.apache.cocoon.core.container;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -66,10 +65,8 @@ implements ServiceManager, Configurable {
     /** The resolver used to resolve includes. It is lazily loaded in {@link #getSourceResolver()}. */
     private SourceResolver cachedSourceResolver;
 
-    /** Create the ServiceManager with a Classloader and parent ServiceManager */
-    public CocoonServiceManager( final ServiceManager parent, 
-                                 final ClassLoader loader ) {
-        super(loader);
+    /** Create the ServiceManager with a parent ServiceManager */
+    public CocoonServiceManager( final ServiceManager parent ) {
         this.parentManager = parent;
         
         RoleManager parentRoleManager = null;
@@ -144,7 +141,7 @@ implements ServiceManager, Configurable {
                     }
 
                     try {
-                        final Class componentClass = this.loader.loadClass( info.getServiceClassName() );
+                        final Class componentClass = this.getClass().getClassLoader().loadClass( info.getServiceClassName() );
 
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
 

@@ -197,11 +197,9 @@ public class Cocoon
     public void initialize() throws Exception {
         if (parentServiceManager != null) {
             // TODO: wrap parent component manager
-            this.serviceManager = new CocoonServiceManager(null,
-                                                               (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
+            this.serviceManager = new CocoonServiceManager(null);
         } else {
-            this.serviceManager = new CocoonServiceManager(null, 
-                                                           (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
+            this.serviceManager = new CocoonServiceManager(null);
         }
         ContainerUtil.enableLogging(this.serviceManager, getLogger().getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
@@ -222,7 +220,7 @@ public class Cocoon
             getLogger().debug("Work directory = " + workDir.getCanonicalPath());
         }
 
-        CocoonServiceManager startupManager = new CocoonServiceManager(null,(ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
+        CocoonServiceManager startupManager = new CocoonServiceManager(null);
         ContainerUtil.enableLogging(startupManager, getLogger().getChildLogger("startup"));
         ContainerUtil.contextualize(startupManager, this.context);
         startupManager.setLoggerManager(this.loggerManager);
@@ -639,13 +637,12 @@ public class Cocoon
 
             if (this.threadSafeProcessor != null) {
                 return this.threadSafeProcessor.buildPipeline(environment);
-            } else {
-                Processor processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
-                try {
-                    return processor.buildPipeline(environment);
-                } finally {
-                    this.serviceManager.release(processor);
-                }
+            }
+            Processor processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
+            try {
+                return processor.buildPipeline(environment);
+            } finally {
+                this.serviceManager.release(processor);
             }
 
         } finally {

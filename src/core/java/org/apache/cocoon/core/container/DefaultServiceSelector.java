@@ -52,7 +52,8 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
         try {
             this.manager = (CocoonServiceManager)manager;
         } catch (ClassCastException cce) {
-            throw new ServiceException ("A FlatServiceSelector can only be hosted by a CocoonServiceManager");
+            throw new ServiceException ("DefaultServiceSelector", 
+                                        "A FlatServiceSelector can only be hosted by a CocoonServiceManager");
         }
     }
     

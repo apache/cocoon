@@ -82,7 +82,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             config = new DefaultConfiguration("", "");
         }
 
-        CocoonServiceManager newManager = new CocoonServiceManager(this.parentProcessorManager, null);
+        CocoonServiceManager newManager = new CocoonServiceManager(this.parentProcessorManager);
 
         // Go through the component lifecycle
         newManager.enableLogging(getLogger());
@@ -505,8 +505,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     private static final Collection splitLabels(String labels) {
         if (labels == null) {
             return Collections.EMPTY_SET;
-        } else {
-            return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
         }
+        return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
     }
 }

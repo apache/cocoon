@@ -22,5 +22,7 @@ package org.apache.cocoon.core.container;
  * @version CVS $Id: CocoonServiceSelector.java 55144 2004-10-20 12:26:09Z ugo $
  */
 public class CocoonServiceSelector extends StandaloneServiceSelector {
+    
+    // TODO: Can we remove this?
 
 }

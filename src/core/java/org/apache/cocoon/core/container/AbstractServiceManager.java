@@ -41,9 +41,6 @@ public abstract class AbstractServiceManager
 extends AbstractLogEnabled
 implements Contextualizable, ThreadSafe, Disposable, Initializable {
     
-    /** The classloader used for this system. */
-    protected final ClassLoader loader;
-
     /** The application context for components */
     protected Context context;
 
@@ -66,17 +63,6 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
     protected LoggerManager loggerManager;
 
     
-    /** 
-     * Create the ServiceManager with a Classloader
-     */
-    public AbstractServiceManager( final ClassLoader loader ) {
-        if( null == loader ) {
-            this.loader = Thread.currentThread().getContextClassLoader();
-        } else {
-            this.loader = loader;
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -136,7 +122,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
                 this.getLogger().debug( "Adding component (" + role + " = " + className + ")" );
             }
 
-            final Class clazz = this.loader.loadClass( className );
+            final Class clazz = this.getClass().getClassLoader().loadClass( className );
             this.addComponent( role, clazz, configuration );
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
