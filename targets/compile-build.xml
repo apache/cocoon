@@ -225,7 +225,11 @@
   <target name="prepare-blocks" depends="prepare">
     <mkdir dir="${build.blocks}"/>
 
-    <xslt in="${gump.descriptor}"
+    <copy file="${gump.descriptor}" tofile="${build.temp}/gump.xml" overwrite="true"/>
+    <xpatch file="${build.temp}/gump.xml" srcdir=".">
+       <include name="local.blocks.*.xconf"/>
+    </xpatch>
+    <xslt in="${build.temp}/gump.xml"
           out="${build.temp}/blocks-build.xml"
           style="${tools.src}/blocks-build.xsl"/>
   </target>
