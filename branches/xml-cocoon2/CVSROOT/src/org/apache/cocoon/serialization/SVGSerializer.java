@@ -30,7 +30,7 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-02-22 17:10:45 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-02-23 15:25:07 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, Poolable {
 
@@ -77,6 +77,13 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
             }
         }
         // Now try creating this transcoder
+        if ( transcoderName == null ) {
+            throw new ConfigurationException(
+                "Could not autodetect transcoder for SVGSerializer and "
+                + "no transcoder was specified in the sitemap configuration."
+            );
+        }
+        
         try {
             this.transcoder = (Transcoder)ClassUtils.newInstance(transcoderName);
         } catch (Exception ex) {
