@@ -17,6 +17,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                               xmlns:desc="description">
 
+<!-- generates blocks.properties from gump.xml -->
 <xsl:output method="text"/>
 
 <xsl:key name="status" match="project[starts-with(@name, 'cocoon-block-')]" use="@status"/>
@@ -56,6 +57,10 @@
 # NOTE: "[dependency]" indicates blocks that are required by other blocks.
 # Disabling batik, for example, will result in a RuntimeException when using
 # fop. On the other hand some dependencies come only from the block samples.
+
+# NOTE: (to Cocoon committers): blocks.properties is generated from gump.xml
+# using "build generate-blocks.properties". Any changes to blocks definitions
+# must be made in gump.xml, not here.
 
 </desc:desc>
 
