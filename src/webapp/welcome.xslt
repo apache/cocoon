@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: welcome.xslt,v 1.8 2003/10/20 09:32:20 joerg Exp $ -->
+<!-- CVS $Id: welcome.xslt,v 1.9 2003/10/20 09:37:48 joerg Exp $ -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                              xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:param name="contextPath" select="'/cocoon'"/>
 
   <xsl:template match="welcome">
-    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <html xml:lang="en" lang="en">
       <head>
         <title>Welcome to Apache Cocoon!</title>
         <!-- 
