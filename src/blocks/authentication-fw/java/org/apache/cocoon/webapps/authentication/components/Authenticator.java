@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.5 2003/05/04 20:19:40 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.6 2003/05/04 20:30:56 cziegeler Exp $
 */
 public final class Authenticator 
     extends AbstractLogEnabled
@@ -218,7 +218,7 @@ public final class Authenticator
                 
                 handler = new UserHandler(configuration);
                 
-                AuthenticationContext context = handler.createContext();
+                AuthenticationContext context = handler.getContext();
 
                 MediaManager mediaManager = null;
                 String mediaType;

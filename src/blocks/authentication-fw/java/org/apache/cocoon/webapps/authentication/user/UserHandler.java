@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.4 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.5 2003/05/04 20:30:56 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -91,13 +91,22 @@ implements java.io.Serializable {
     /** Application contexts */
     private List applicationContexts;
      
-   /**
+    /** The unique user ID */
+    private String userID;
+     
+    /**
      * Create a new handler object.
      */
-    public UserHandler(HandlerConfiguration handler) {
+    public UserHandler(HandlerConfiguration handler) 
+    throws ProcessingException {
         this.handler = handler;
+        this.context = new AuthenticationContext(this);
+        this.userID = (String) this.context.getContextInfo().get("ID");
     }
 
+    /**
+     * Are all application contexts already loaded?
+     */
     public boolean getApplicationsLoaded()
     throws ProcessingException {
         if ( this.handler.getApplications().isEmpty() ) {
@@ -114,11 +123,6 @@ implements java.io.Serializable {
         return this.context;
     }
 
-    public AuthenticationContext createContext() {
-        this.context = new AuthenticationContext(this);
-        return this.context;                                                  
-    }
-    
     /**
      * Create Application Context.
      * This context is destroyed when the user logs out of the handler
@@ -168,10 +172,16 @@ implements java.io.Serializable {
         return this.handler;
     }
     
+    /**
+     * Is the named application context already loaded?
+     */
     public boolean isApplicationLoaded(ApplicationConfiguration appConf) {
         return this.loadedApps.contains( appConf );
     }
     
+    /**
+     * Notify that the application context has been loaded
+     */
     public void setApplicationIsLoaded(ApplicationConfiguration appConf) {
         this.loadedApps.add( appConf );
         this.appsLoaded = (this.loadedApps.size() == this.handler.getApplications().size());
@@ -201,5 +211,12 @@ implements java.io.Serializable {
                 manager.release( (Component)contextManager);
             }
         }
+    }
+    
+    /**
+     * Get the unique user id
+     */
+    public String getUserId() {
+        return this.getUserId();
     }
 }
