@@ -65,7 +65,7 @@ import org.apache.excalibur.xml.DefaultEntityResolver;
  * &lt;/entity-resolver&gt;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultResolver.java,v 1.3 2003/03/13 15:13:14 cziegeler Exp $
+ * @version CVS $Id: DefaultResolver.java,v 1.4 2003/03/14 08:39:16 cziegeler Exp $
  * @since 2.1
  */
 public class DefaultResolver
@@ -76,13 +76,8 @@ public class DefaultResolver
      */
     protected void parseCatalog(String file) {
         // relative uri
-        if (file.indexOf(":/") == -1) {
-            StringBuffer bu = new StringBuffer("context:/");
-            if (!file.startsWith("/")) {
-                bu.append('/');
-            }
-            bu.append( file );
-            file = bu.toString();
+        if (file.indexOf(":/") == -1 && !file.startsWith("/") ) {
+            file = "context://" + file;
         }
         super.parseCatalog( file );
     }
@@ -91,6 +86,6 @@ public class DefaultResolver
      * Default catalog path
      */
     protected String defaultCatalog() {
-        return "/WEB-INF/entities/catalog";
+        return "WEB-INF/entities/catalog";
     }
 }
