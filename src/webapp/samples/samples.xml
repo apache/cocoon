@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.24 2003/08/16 01:44:12 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.25 2003/08/16 13:43:36 haul Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -79,21 +79,6 @@
       An example of B2B processing.
     </sample>   
   </group>
-  
-<!-- 
-  FIXME (SM): obsoleted by xmlform?
-    
-  <group name="Sample Forms">
-    <sample name="Simple Form Validation - Transformer" href="simpleform/sform" xlink:role="dynamic">
-      This example demonstrates the use of an action to validate user
-      input and report validation errors to the user through a transfomer.
-    </sample>
-    <sample name="Simple Form Validation - Logicsheet" href="simpleform/formval" xlink:role="dynamic">
-      This example demonstrates the use of an action to validate user
-      input and report validation errors to the user through a taglib.
-    </sample>
-  </group>
--->
   
   <group name="Block Samples">
     <sample name="Blocks with samples" href="blocks">
