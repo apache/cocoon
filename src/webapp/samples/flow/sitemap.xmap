@@ -1,8 +1,23 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.8 2003/05/20 00:54:11 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.9 2003/10/22 13:28:07 joerg Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
 
   <map:pipelines>
     <map:pipeline>
