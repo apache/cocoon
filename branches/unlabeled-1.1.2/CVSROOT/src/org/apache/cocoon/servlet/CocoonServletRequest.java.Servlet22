@@ -27,7 +27,7 @@ import org.apache.cocoon.sitemap.Request;
   *         Exoffice Technologies, INC.</a>
   * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
   *         Software Foundation</a>. All rights reserved.
-  * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-14 13:17:22 $
+  * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-17 08:39:46 $
   */
  public class CocoonServletRequest implements Request, HttpServletRequest {
      /** Deny public construction */
@@ -201,64 +201,62 @@ import org.apache.cocoon.sitemap.Request;
      public boolean isRequestedSessionIdFromCookie() {
 	 return(this.request.isRequestedSessionIdFromCookie());
      }
-
-     public boolean isRequestedSessionIdFromUrl() {
-	 return(this.request.isRequestedSessionIdFromUrl());
-     }
      
      public boolean isRequestedSessionIdFromURL() {
 	 return(this.request.isRequestedSessionIdFromURL());
      }
-     
-     // Methods below are added for servlet api 2.2 compatibility
-     // These are dummy methods
+
+     /** @deprecated use isRequestedSessionIdFromURL() instead */
+     public boolean isRequestedSessionIdFromUrl() {
+	 return(this.request.isRequestedSessionIdFromURL());
+     }     
 
      public HttpSession getSession() {
-	 return null;
+	 return(this.request.getSession());
      }
 
-     public void setAttribute(String name, Object attribute) {}
-
-     public Enumeration getAttributes() {
-	 return null;
+     public void setAttribute(String name, Object attribute) {
+	 this.request.setAttribute(name,attribute);
      }
 
      public Enumeration getAttributeNames() {
-	 return null;
+	 return(this.request.getAttributeNames());
      }
      
-     public void removeAttribute(String name) {}
+     public void removeAttribute(String name) {
+	 this.request.removeAttribute(name);
+     }
 
      public Locale getLocale() {
-	 return null;
+	 return(this.request.getLocale());
      }
 
      public Enumeration getLocales() {
-	 return null;
+	 return(this.request.getLocales());
      }
 
      public boolean isSecure() {
-	 return false;
+	 return(this.request.isSecure());
      }
 
      public RequestDispatcher getRequestDispatcher(String path) {
-	 return null;
+	 return(this.request.getRequestDispatcher(path));
      }
 
      public Enumeration getHeaders(String name) {
-	 return null;
+	 return(this.request.getHeaders(name));
      }
 
      public String getContextPath() {
-	 return null;
+	 return(this.request.getContextPath());
      }
 
      public boolean isUserInRole(String role) {
-	 return false;
+	 return(this.request.isUserInRole(role));
      }
 
      public java.security.Principal getUserPrincipal() {
-	 return null;
+	 return(this.request.getUserPrincipal());
      }
 }
 

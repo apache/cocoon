@@ -20,11 +20,29 @@
         <copydir src="${src}" dest="${build.src}" ignore="package.html"/>
     </target>
 
+    <target name="prepare-with-jsdk2.2" depends="prepare">
+       <delete file="${build.src}/org/apache/cocoon/servlet/CocoonServletRequest.java"/>
+       <delete file="${build.src}/org/apache/cocoon/servlet/CocoonServletResponse.java"/>
+       <copyfile src="${src}/org/apache/cocoon/servlet/CocoonServletRequest.java.Servlet22" 
+                 dest="${build.src}/org/apache/cocoon/servlet/CocoonServletRequest.java"/>
+       <copyfile src="${src}/org/apache/cocoon/servlet/CocoonServletResponse.java.Servlet22" 
+                 dest="${build.src}/org/apache/cocoon/servlet/CocoonServletResponse.java"/>
+    </target>
+
     <target name="compile" depends="prepare">
         <javac srcdir="${build.src}" destdir="${build.bin}"/>
     </target>
 
+    <target name="compile-with-jsdk2.2" depends="prepare-with-jsdk2.2, compile">
+      <echo message="compiled with jsdk2.2"/>
+    </target>
+
     <target name="package" depends="compile">
+        <mkdir dir="${bin}"/>
+        <jar jarfile="${jar}" basedir="${build.bin}" items="org"/>
+    </target>
+
+    <target name="package-with-jsdk2.2" depends="compile-with-jsdk2.2">
         <mkdir dir="${bin}"/>
         <jar jarfile="${jar}" basedir="${build.bin}" items="org"/>
     </target>

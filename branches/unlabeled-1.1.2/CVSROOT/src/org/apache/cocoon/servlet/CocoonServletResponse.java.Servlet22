@@ -24,7 +24,7 @@ import org.apache.cocoon.sitemap.Response;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-14 13:17:22 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-17 08:39:47 $
  */
 public class CocoonServletResponse implements Response, HttpServletResponse {
     /** Deny public construction */
@@ -189,10 +189,21 @@ public class CocoonServletResponse implements Response, HttpServletResponse {
      * Encodes the specified URL by including the session ID in it,
      * or, if encoding is not needed, returns the URL unchanged.
      */
-    public String encodeUrl(String url) {
+    public String encodeURL(String url) {
         return(this.response.encodeUrl(url));
     }
     
+    /**
+     * Encodes the specified URL by including the session ID in it,
+     * or, if encoding is not needed, returns the URL unchanged.
+     *
+     * @deprecated use encodeURL(String url) instead
+     */
+    public String encodeUrl(String url) {
+        return(this.response.encodeUrl(url));
+    }
+
+
     /**
      * Encodes the specified URL for use in the
      * <code>sendRedirect</code> method or, if encoding is not needed,
@@ -201,72 +212,65 @@ public class CocoonServletResponse implements Response, HttpServletResponse {
      * NOTE: (PF) This method calls simply <code>encodeUrl(url)</code> as the
      * complete URL mapping for rediriection is handled by the sitemap exception
      * handler.
+     */
+    public String encodeRedirectURL(String url) {
+        return(this.response.encodeUrl(url));
+    }
+
+    /**
+     * Encodes the specified URL for use in the
+     * <code>sendRedirect</code> method or, if encoding is not needed,
+     * returns the URL unchanged.
+     * <br>
+     * NOTE: (PF) This method calls simply <code>encodeUrl(url)</code> as the
+     * complete URL mapping for rediriection is handled by the sitemap exception
+     * handler.
+     *
+     * @deprecated use encodeRedirectURL(Strin url) instead
      */
     public String encodeRedirectUrl(String url) {
         return(this.response.encodeUrl(url));
     }
 
-    /**
-     * Encodes the specified URL for use in the
-     * <code>sendRedirect</code> method or, if encoding is not needed,
-     * returns the URL unchanged.
-     * <br>
-     * NOTE: (PF) This method calls simply <code>encodeUrl(url)</code> as the
-     * complete URL mapping for rediriection is handled by the sitemap exception
-     * handler.
-     */
-    public String encodeRedirectURL(String url) {
-        return(this.response.encodeUrl(url));
+    public void setBufferSize(int size) {
+	this.response.setBufferSize(size);
     }
-    /**
-     * Encodes the specified URL for use in the
-     * <code>sendRedirect</code> method or, if encoding is not needed,
-     * returns the URL unchanged.
-     * <br>
-     * NOTE: (PF) This method calls simply <code>encodeUrl(url)</code> as the
-     * complete URL mapping for rediriection is handled by the sitemap exception
-     * handler.
-     */
-    public String encodeRedirectURL(String url) {
-        return(this.response.encodeUrl(url));
-    }
-    
-    //added for servlet api 2.2 compatibility
-    
-    public String encodeRedirectURL(String url) {
-        return null;
-    }
-
-    public String encodeURL(String url) {
-        return null;                        ;
-    }
-
-    public void setBufferSize(int size) {}
     
     public int getBufferSize() {
-	return 0;
+	return(this.response.getBufferSize());
     }
     
-    public void reset() {}
+    public void reset() {
+	this.response.reset();
+    }
 
     public boolean isCommitted() {
-	return false;
+	return(this.response.isCommitted());
     }
 
-    public void flushBuffer() {}
+    public void flushBuffer() 
+    throws IOException {
+	this.response.flushBuffer();
+    }
 
-    public void setLocale(Locale locale) {}
+    public void setLocale(Locale locale) {
+	this.response.setLocale(locale);
+    }
     
     public Locale getLocale() {
-    	return null;
+    	return(this.response.getLocale());
     }
 
-    public void addHeader(String headername, String value) {}
+    public void addHeader(String headername, String value) {
+	this.response.addHeader(headername, value);
+    }
     
-    public void addDateHeader(String headername, long date) {}
+    public void addDateHeader(String headername, long date) {
+	this.response.addDateHeader(headername, date);
+    }
 
-    public void addIntHeader(String headername, int value) {}
-    
-    
+    public void addIntHeader(String headername, int value) {
+	this.response.addIntHeader(headername, value);
+    }
 }
 
