@@ -131,7 +131,7 @@ public class fpResource {
 				nodes = XPathAPI.selectNodeList(workDoc.getDocumentElement(), xpath);
 				//System.out.println("XPathAPI.selectNodeList called");
 			} catch (Exception ex) {
-				fpLibrary.reportError(errorNode, errorNode, errors, "Problem using the supplied XPath expression: " + xpath + " : " + ex.getMessage());
+				fpLibrary.reportError(errorNode, errorNode, errors, "Problem using the supplied XPath expression: " + xpath + " : " + ex);
 				ex.printStackTrace();
 			}
 			if (nodes != null && nodes.getLength() == 0) {
@@ -183,7 +183,7 @@ public class fpResource {
 			try {
 				nodes = XPathAPI.selectNodeList(readNode, select, null);
 			} catch (Exception ex) {
-				fpLibrary.reportError(cNode, readNode, errors, "XPath expression error on:" + select + " : " + ex.getMessage());
+				fpLibrary.reportError(cNode, readNode, errors, "XPath expression error on:" + select + " : " + ex);
 				ex.printStackTrace();
 				return null;
 			}
@@ -197,7 +197,6 @@ public class fpResource {
 				//	e.appendChild((Element)XSPUtil.cloneNode(nodes.item(i), outDoc));
 				//}
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
 			ex.printStackTrace();
 		}
 		return fpLibrary.NodeList2Array(nodes);
@@ -216,7 +215,7 @@ public class fpResource {
 				nodes = XPathAPI.selectNodeList(readNode, select, null);
 				//System.out.println("Found " + nodes.getLength() + " nodes");
 			} catch (Exception ex) {
-				fpLibrary.reportError(cNode, readNode, errors, "XPath expression error on:" + select + " : " + ex.getMessage());
+				fpLibrary.reportError(cNode, readNode, errors, "XPath expression error on:" + select + " : " + ex);
 				ex.printStackTrace();
 			}
 			if (nodes == null || nodes.getLength() == 0) {
@@ -373,7 +372,7 @@ public class fpResource {
 		try {
 			nodes = XPathAPI.selectNodeList(writeNode, select);
 		} catch (Exception ex) {
-			//fpLibrary.reportError(currentNode, rootNode, "Cannot construct XPath: " + select + " : " + ex.getMessage());
+			//fpLibrary.reportError(currentNode, rootNode, "Cannot construct XPath: " + select + " : " + ex);
 			//errors = true;
 		}
 		/*if (nodes != null) {
@@ -431,7 +430,7 @@ public class fpResource {
 			//System.out.println("Writing:" + val);
 			p.parse(new InputSource(new StringReader(val)));
 		} catch (Exception ex) {
-			fpLibrary.reportError(cNode, errorNode, errors, "Cannot Parse: "  + ex.getMessage());
+			fpLibrary.reportError(cNode, errorNode, errors, "Cannot Parse: "  + ex);
 			ex.printStackTrace();
 			return null;
 		}
@@ -453,7 +452,7 @@ public class fpResource {
 			//System.out.println("parsed Document");
 		} catch (Exception ex) {
 			//System.out.println("about to call reportError");
-			fpLibrary.reportError(errorNode, errorNode, errors, "Cannot Parse: " + f.toString() + " : " + ex.getMessage());
+			fpLibrary.reportError(errorNode, errorNode, errors, "Cannot Parse: " + f.toString() + " : " + ex);
 			//System.out.println("reportError called");
 			ex.printStackTrace();
 			return null;

@@ -103,10 +103,7 @@
       } catch (Exception e) {
         xspCurrentNode.appendChild(
           document.createTextNode(
-            "{" +
-	      __name + ": \n" +
-	      e.getMessage() +
-	    "}"
+            "{" + __name + ": \n" + e + "}"
           )
         );
       }
