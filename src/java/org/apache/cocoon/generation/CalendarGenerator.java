@@ -18,6 +18,7 @@ package org.apache.cocoon.generation;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +42,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * Here is a sample output:
  * <pre>
  * &lt;calendar:calendar xmlns:calendar="http://apache.org/cocoon/calendar/1.0"
- *     year="2004" month="January"&gt;
+ *     year="2004" month="January" prevMonth="12" prevYear="2003"
+ *     nextMonth="02" nextYear="2004"&gt;
  *   &lt;calendar:week number="1"&gt;
  *     &lt;calendar:day number="1" date="January 1, 2004"/&gt;
  *     &lt;calendar:day number="2" date="January 2, 2004"/&gt;
@@ -72,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.6 2004/04/14 18:53:39 joerg Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.7 2004/04/15 16:15:50 ugo Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     
@@ -83,13 +85,20 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     protected static final String PREFIX = "calendar";
     
     /** Node and attribute names */
-    protected static final String CALENDAR_NODE_NAME = "calendar";
-    protected static final String WEEK_NODE_NAME     = "week";
-    protected static final String DAY_NODE_NAME      = "day";
-    protected static final String MONTH_ATTR_NAME    = "month";
-    protected static final String YEAR_ATTR_NAME     = "year";
-    protected static final String DATE_ATTR_NAME     = "date";
-    protected static final String NUMBER_ATTR_NAME   = "number";
+    protected static final String CALENDAR_NODE_NAME   = "calendar";
+    protected static final String WEEK_NODE_NAME       = "week";
+    protected static final String DAY_NODE_NAME        = "day";
+    protected static final String MONTH_ATTR_NAME      = "month";
+    protected static final String YEAR_ATTR_NAME       = "year";
+    protected static final String DATE_ATTR_NAME       = "date";
+    protected static final String NUMBER_ATTR_NAME     = "number";
+    protected static final String PREV_MONTH_ATTR_NAME = "prevMonth";
+    protected static final String PREV_YEAR_ATTR_NAME  = "prevYear";
+    protected static final String NEXT_MONTH_ATTR_NAME = "nextMonth";
+    protected static final String NEXT_YEAR_ATTR_NAME  = "nextYear";
+    
+    /** Formatter for month number */
+    protected static final DecimalFormat monthNumberFormatter = new DecimalFormat("00");
     
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
@@ -107,13 +116,13 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     protected int month;
     
     /** The format for dates */
-    DateFormat dateFormatter;
+    protected DateFormat dateFormatter;
     
     /** The format for month names */
-    DateFormat monthFormatter;
+    protected DateFormat monthFormatter;
     
     /** The current locale */
-    Locale locale;
+    protected Locale locale;
     
     /**
      * Set the request parameters. Must be called before the generate method.
@@ -177,6 +186,10 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         start.set(Calendar.DAY_OF_MONTH, 1);
         Calendar end = (Calendar) start.clone();
         end.add(Calendar.MONTH, 1);
+
+        // Determine previous and next months
+        Calendar prevMonth = (Calendar) start.clone();
+        prevMonth.add(Calendar.MONTH, -1);
         
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping(PREFIX, URI);
@@ -184,6 +197,17 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         attributes.addAttribute("", YEAR_ATTR_NAME, YEAR_ATTR_NAME, "CDATA", String.valueOf(year));
         attributes.addAttribute("", MONTH_ATTR_NAME, MONTH_ATTR_NAME, "CDATA", 
                 monthFormatter.format(start.getTime()));
+        
+        // Add previous and next month
+        attributes.addAttribute("", PREV_YEAR_ATTR_NAME, PREV_YEAR_ATTR_NAME, "CDATA", 
+                String.valueOf(prevMonth.get(Calendar.YEAR)));
+        attributes.addAttribute("", PREV_MONTH_ATTR_NAME, PREV_MONTH_ATTR_NAME, "CDATA", 
+                monthNumberFormatter.format(prevMonth.get(Calendar.MONTH) + 1));
+        attributes.addAttribute("", NEXT_YEAR_ATTR_NAME, NEXT_YEAR_ATTR_NAME, "CDATA", 
+                String.valueOf(end.get(Calendar.YEAR)));
+        attributes.addAttribute("", NEXT_MONTH_ATTR_NAME, NEXT_MONTH_ATTR_NAME, "CDATA", 
+                monthNumberFormatter.format(end.get(Calendar.MONTH) + 1));
+
         this.contentHandler.startElement(URI, CALENDAR_NODE_NAME,
                 PREFIX + ':' + CALENDAR_NODE_NAME, attributes);
         int weekNo = start.get(Calendar.WEEK_OF_MONTH);
