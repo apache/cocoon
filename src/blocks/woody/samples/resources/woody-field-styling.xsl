@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<xsl:stylesheet
-  version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+                exclude-result-prefixes="wi">
   
   <!-- must be called in <head> to load calendar script and setup the CSS -->
   <xsl:template name="woody-field-head">
@@ -205,6 +206,20 @@
       </xsl:if>
     </input>
     <xsl:call-template name="woody-field-common"/>
+  </xsl:template>
+
+  <!--
+    wi:booleanfield with @type 'output' : rendered as text
+  -->
+  <xsl:template match="wi:booleanfield[wi:styling[@type='output']]">
+    <xsl:choose>
+      <xsl:when test="wi:value = 'true'">
+        yes
+      </xsl:when>
+      <xsl:otherwise>
+        no
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!--
