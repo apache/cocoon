@@ -1,4 +1,4 @@
-/*-- $Id: Monitor.java,v 1.5 2000-02-23 00:49:58 stefano Exp $ --
+/*-- $Id: Monitor.java,v 1.6 2000-03-06 11:46:00 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.util.*;
  * This class watches over the changes of indicated resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-02-23 00:49:58 $
+ * @version $Revision: 1.6 $ $Date: 2000-03-06 11:46:00 $
  */
 
 public class Monitor {
@@ -75,6 +75,23 @@ public class Monitor {
         }
     }
 
+    class MultiContainer {
+        private Vector v = new Vector();
+
+        public MultiContainer(Object o1, Object o2) {
+            this.add(o1);
+            this.add(o2);
+        }
+
+        public void add(Object o) {
+            if (!this.v.contains(o)) this.v.addElement(o);
+        }
+
+        public Enumeration elements() {
+            return this.v.elements();
+        }
+    }
+
     public Monitor(int capacity) {
         this.table = new Hashtable(capacity);
     }
@@ -84,7 +101,17 @@ public class Monitor {
      * and associate it to the given key.
      */
     public void watch(Object key, Object resource) {
-        this.table.put(key, new Container(resource, timestamp(resource)));
+        Object o = table.get(key);
+        if (o == null) {
+            this.table.put(key, new Container(resource, timestamp(resource)));
+        } else {
+            Container c = new Container(resource, timestamp(resource));
+            if (o instanceof MultiContainer) {
+                ((MultiContainer) o).add(c);
+            } else {
+                this.table.put(key, new MultiContainer(o, c));
+            }
+        }
     }
 
     /**
@@ -106,8 +133,17 @@ public class Monitor {
     public boolean hasChanged(Object context) {
         Object o = this.table.get(context);
         if (o != null) {
-            Container c = (Container) o;
-            return c.timestamp != timestamp(c.resource);
+            if (o instanceof Container) {
+                Container c = (Container) o;
+                return c.timestamp != timestamp(c.resource);
+            } else {
+                Enumeration e = ((MultiContainer) o).elements();
+                while (e.hasMoreElements()) {
+                    Container c = (Container) e.nextElement();
+                    if (c.timestamp != timestamp(c.resource)) return true;
+                }
+                return false;
+            }
         } else {
             return true;
         }

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.39 2000-03-04 02:34:57 stefano Exp $
+  $Id: changes.xml,v 1.40 2000-03-06 11:46:39 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Fixed problem with stylesheet reloading when multiple transformations
+   are applied on the same pipeline.
+  </action>
   <action dev="SM" type="add">
    Passed request parameters to Xalan as stylesheet parameters.
   </action>
