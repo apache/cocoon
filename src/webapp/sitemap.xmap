@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.38 2003/10/31 11:30:41 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.39 2003/11/10 08:15:26 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -344,7 +344,7 @@
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
      <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
-       <autoCachingPoint>On</autoCachingPoint>
+       <parameter name="autoCachingPoint" value="On"/>
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">

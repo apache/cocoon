@@ -51,9 +51,7 @@
 package org.apache.cocoon.components.pipeline.impl;
 
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
@@ -78,10 +76,10 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.4 2003/08/28 06:09:29 cziegeler Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.5 2003/11/10 08:15:26 cziegeler Exp $
  */
 public class CachingPointProcessingPipeline
-    extends AbstractCachingProcessingPipeline implements Configurable {
+    extends AbstractCachingProcessingPipeline {
 
     protected ArrayList isCachePoint = new ArrayList();
     protected ArrayList xmlSerializerArray = new ArrayList();
@@ -95,8 +93,9 @@ public class CachingPointProcessingPipeline
     * The autoCachingPoint algorithm can be switced on/off
     * in the sitemap.xmap
     */
-    public void configure(Configuration config) throws ConfigurationException {
-        this.autoCachingPointSwitch = config.getChild("autoCachingPoint").getValue(null);
+    public void parameterize(Parameters config) throws ParameterException {
+        super.parameterize(config);
+        this.autoCachingPointSwitch = config.getParameter("autoCachingPoint", null);
 
         if (this.getLogger().isDebugEnabled()) {
             getLogger().debug("Auto caching-point is set to = '" + this.autoCachingPointSwitch + "'");
@@ -110,8 +109,7 @@ public class CachingPointProcessingPipeline
 
         if (this.autoCachingPointSwitch.toLowerCase().equals("on")) {
             this.autoCachingPoint=true;
-        }
-        else {
+        } else {
             this.autoCachingPoint=false;
         }
     }
