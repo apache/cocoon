@@ -184,6 +184,15 @@
     <map:serialize type="html"/>
    </map:match>
 
+    <map:match pattern="wikitest/*.html">
+    <map:generate src="wikitest/{1}.txt"/>
+    <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
+    <map:transform type="parser"  src="cocoon:/wiki.xgrm"/>
+    <map:transform                src="stylesheets/wiki2xdoc.xsl"/>
+    <map:transform                src="stylesheets/xdoc2html.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
    <map:match pattern="quote.html">
     <map:generate type="text" src="misc/quote.txt"/>
 <!--

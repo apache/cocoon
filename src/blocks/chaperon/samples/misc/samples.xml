@@ -11,10 +11,13 @@
   </sample>
  </group>
 
- <group name="Wiki example">
-  <sample name="Wiki" href="wiki.html">In this example the parser is used
+ <group name="Wiki examples">
+  <sample name="Wiki editor" href="wiki.html">In this example the parser is used
    to build an online editor,
    which is based on the very popular syntax of Wiki.
+  </sample>
+  <sample name="Wiki self-test" href="wikitest/selftest.html">
+  	A self-describing document that demonstrates and tests the Wiki grammar.
   </sample>
  </group>
 
