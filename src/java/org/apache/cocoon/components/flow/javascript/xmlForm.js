@@ -1,5 +1,5 @@
 //
-// CVS $Id: xmlForm.js,v 1.9 2003/04/01 20:02:43 coliver Exp $
+// CVS $Id: xmlForm.js,v 1.10 2003/04/21 16:16:10 coliver Exp $
 //
 // XMLForm Support
 //
@@ -23,6 +23,7 @@ function XForm(id, validatorNS, validatorDoc, scope) {
     this.lastContinuation = null;
     this.validatorNS = validatorNS;
     this.validatorDoc = validatorDoc;
+    this.submitId = undefined;
     this.dead = false;
 }
 
@@ -33,6 +34,14 @@ function XForm(id, validatorNS, validatorDoc, scope) {
  */
 XForm.prototype.getModel = function() {
     return this.form.getModel();
+}
+
+/**
+ * Return the id of the xf:submit element of the current form submission
+ * @return [String] id attribute of the button that caused this from to be submitted
+ */
+XForm.prototype.getSubmitId = function() {
+    return this.submitId;
 }
 
 /**
@@ -157,9 +166,8 @@ XForm.prototype._sendView = function(uri, lastCont, timeToLive) {
  * @param uri [String] presentation pipeline resource identifier of view
  * @param validator [Function] optional function invoked to perform validation
  */
-XForm.prototype.sendView = function(phase, uri, validator) {
+XForm.prototype.sendView = function(view, uri, validator) {
     var lastCont = this.lastContinuation;
-    var view = this.form.getFormView(this.cocoon.environment.objectModel);
     while (true) {
         // create a continuation, the invocation of which will resend
         // the page: this is used to implement <xf:submit continuation="back">
@@ -184,10 +192,12 @@ XForm.prototype.sendView = function(phase, uri, validator) {
             suicide();
         }
         this.form.populate(this.cocoon.environment.objectModel);
+        this.submitId = 
+	  this.cocoon.request.getAttribute("xml-form-submit-id");
         if (validator != undefined) {
-            validator(this);
+	    validator(this);
         }
-        this.form.validate(phase);
+        this.form.validate(view);
         if (!this.hasViolations()) {
             break;
         }
@@ -218,10 +228,10 @@ XForm.prototype._setValidator = function(schNS, schDoc) {
 XForm.prototype.finish = function(uri) {
     this.form.remove( this.cocoon.environment.objectModel, this.id);
     this.form.save( this.cocoon.environment.objectModel, "request");
-     this.cocoon.forwardTo("cocoon://" + 
-                      this.cocoon.environment.getURIPrefix() + uri,
-                      this.form.getModel(), 
-                      null);
+    this.cocoon.forwardTo("cocoon://" + 
+			  this.cocoon.environment.getURIPrefix() + uri,
+			  this.form.getModel(), 
+			  null);
     this.dead = true;
     if (this.lastContinuation != null) {
         this.lastContinuation.invalidate();
@@ -263,7 +273,18 @@ function xmlForm(application, id, validator_ns, validator_doc, scope) {
     var command = getCommand();
     if (command != undefined) {
         // invoke a continuation 
-        cocoon.interpreter.handleContinuation(command, 
+        // command looks like kontId:id
+	var id = "";
+	var kontId = command;
+	var index = command.indexOf(java.lang.String(":").charAt(0));
+	if (index > 0) {
+	    var kontId = command.substring(0, index);
+	    if (index + 1 < command.length()) {
+		id = command.substring(index + 1);
+	    }
+	}
+	cocoon.request.setAttribute("xml-form-submit-id", id);
+        cocoon.interpreter.handleContinuation(kontId, 
                                               null,
                                               cocoon.environment);
         return;
