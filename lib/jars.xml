@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.105 2003/09/25 16:59:19 butlermh Exp $
+    | CVS $Id: jars.xml,v 1.106 2003/09/26 14:04:51 butlermh Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -363,7 +363,7 @@
       delivery context.
     </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/deli-0.9.7.jar</lib>
+    <lib>deli/lib/deli-0.9.8.jar</lib>
     <homepage>http://delicon.sourceforge.net</homepage>
   </file>
 
@@ -449,8 +449,18 @@
     <title>Jena RDF framework</title>
     <description>Jena is a java API for manipulating RDF models.</description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/jena-1.4.0.jar</lib>
+    <lib>deli/lib/jena-2.0.0.jar</lib>
     <homepage>http://www.hpl.hp.com/semweb/jena.htm</homepage>
+  </file>
+
+  <file>
+    <title>ICU4J International Components for Unicode framework</title>
+    <description>The International Components for Unicode (ICU) library 
+    provides robust and full-featured Unicode services on a wide variety 
+    of platforms. </description>
+    <used-by>DELI (deli block)</used-by>
+    <lib>deli/lib/icu4j.jar</lib>
+    <homepage>http://oss.software.ibm.com/icu4j/index.html</homepage>
   </file>
 
   <file>
@@ -500,16 +510,8 @@
   </file>
 
   <file>
-    <title>XML RDF parser</title>
-    <description></description>
-    <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/rdffilter.jar</lib>
-    <homepage>http://sourceforge.net/projects/rdf-filter</homepage>
-  </file>
-
-  <file>
     <title>Log4j</title>
-    <description></description>
+    <description>Logging for java</description>
     <used-by>DELI (deli block)</used-by>
     <lib>deli/lib/log4j-1.2.7.jar</lib>
     <homepage>http://jakarta.apache.org/log4j</homepage>

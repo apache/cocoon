@@ -6,9 +6,9 @@
  </group>
 
  <group name="Deli">
-  <sample name="DELI HTML" href="deli_test.html">DELI test page prints UAProf attributes sent by client device for HTML capable clients.</sample>
+  <sample name="DELI HTML" href="deli.html">DELI test page prints UAProf attributes sent by client device for HTML capable clients.</sample>
 
-  <sample name="DELI WML" href="deli_test.wml">DELI test page prints UAProf attributes sent by client device for WML capable clients.</sample>
+  <sample name="DELI WML" href="deli.wml">DELI test page prints UAProf attributes sent by client device for WML capable clients.</sample>
 
  </group>
 
