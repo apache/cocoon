@@ -68,7 +68,7 @@ import javax.xml.transform.sax.SAXResult;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-23 17:11:59 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-23 22:46:44 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
@@ -102,53 +102,77 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     TransformerHandler getTransformerHandler(EntityResolver resolver)
       throws SAXException, ProcessingException, IOException, TransformerConfigurationException
     {
+        Templates templates = getTemplates(systemID, xsluri);
+        if(templates == null) {
+            getLogger().debug("Creating new Templates in " + this + " for" + systemID + ":" + xsluri);
+            templates = getTransformerFactory().newTemplates(new SAXSource(new InputSource(systemID)));
+            putTemplates (systemID, xsluri, templates);
+        } else {
+            getLogger().debug("Reusing Templates in " + this + " for" + systemID + ":" + xsluri);
+        }
+
+        TransformerHandler handler = getTransformerFactory().newTransformerHandler(templates);
+        if(handler == null) {
+            /* If there is a problem in getting the handler, try using a brand new Templates object */
+            getLogger().debug("Re-creating new Templates in " + this + " for" + systemID + ":" + xsluri);
+            templates = getTransformerFactory().newTemplates(new SAXSource(new InputSource(systemID)));
+            putTemplates (systemID, xsluri, templates);
+            handler = getTransformerFactory().newTransformerHandler(templates);
+        }
+
+        handler.getTransformer().setErrorListener(new TraxErrorHandler(getLogger()));
+        return handler;
+    }
+
+    private Templates getTemplates (String systemID, String xsluri) 
+       throws IOException
+    {
+        Templates templates = null;
+        if (this.useStore == false)
+            return null;
+
         // Only local files are checked for modification for compatibility reasons!
         // Using the entity resolver we get the filename of the current file:
         // The systemID if such a resource starts with file://.
-        Templates templates = null;
 
-        if (this.useStore == true)
-        {
-            // Is this a local file
-            if (systemID.startsWith(FILE) == true) {
-                // Stored is an array of the template and the caching time
-                if (store.containsKey(xsluri) == true) {
-                    Object[] templateAndTime = (Object[])store.get(xsluri);
-                    File xslFile = new File(systemID.substring(FILE.length()));
-                    long storedTime = ((Long)templateAndTime[1]).longValue();
-                    if (storedTime < xslFile.lastModified()) {
-                        templates = null;
-                    } else {
-                        templates = (Templates)templateAndTime[0];
-                    }
-                }
-            } else {
-                // only the template is stored
-                if (store.containsKey(xsluri) == true) {
-                   templates = (Templates)store.get(xsluri);
-                }
-            }
-        }
-        if(templates == null)
-        {
-            templates = getTransformerFactory().newTemplates(new SAXSource(new InputSource(systemID)));
-            if (this.useStore == true)
-            {
-                // Is this a local file
-                if (systemID.startsWith(FILE) == true) {
-                    // Stored is an array of the template and the current time
-                    Object[] templateAndTime = new Object[2];
-                    templateAndTime[0] = templates;
-                    templateAndTime[1] = new Long(System.currentTimeMillis());
-                    store.hold(xsluri, templateAndTime);
+        // Is this a local file
+        if (systemID.startsWith(FILE) == true) {
+            // Stored is an array of the template and the caching time
+            if (store.containsKey(xsluri) == true) {
+                Object[] templateAndTime = (Object[])store.get(xsluri);
+                File xslFile = new File(systemID.substring(FILE.length()));
+                long storedTime = ((Long)templateAndTime[1]).longValue();
+                if (storedTime < xslFile.lastModified()) {
+                    templates = null;
                 } else {
-                    store.hold(xsluri,templates);
+                    templates = (Templates)templateAndTime[0];
                 }
             }
+        } else {
+            // only the template is stored
+            if (store.containsKey(xsluri) == true) {
+               templates = (Templates)store.get(xsluri);
+            }
         }
-        TransformerHandler handler = getTransformerFactory().newTransformerHandler(templates);
-        handler.getTransformer().setErrorListener(new TraxErrorHandler(getLogger()));
-        return handler;
+        return templates;
+    }
+
+    private void putTemplates (String systemID, String xsluri, Templates templates)
+       throws IOException
+    {
+        if (this.useStore == false)
+            return;
+
+        // Is this a local file
+        if (systemID.startsWith(FILE) == true) {
+            // Stored is an array of the template and the current time
+            Object[] templateAndTime = new Object[2];
+            templateAndTime[0] = templates;
+            templateAndTime[1] = new Long(System.currentTimeMillis());
+            store.hold(xsluri, templateAndTime);
+        } else {
+            store.hold(xsluri,templates);
+        }
     }
 
     /**
@@ -171,6 +195,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         if (conf != null) {
             Configuration child = conf.getChild("use-store");
             this.useStore = child.getValueAsBoolean(true);
+            getLogger().debug("Use store is " + this.useStore + " for " + this);
         }
     }
 
@@ -183,6 +208,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
             this.manager = manager;
             getLogger().debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
+            getLogger().debug("Looking up " + Roles.BROWSER);
             this.browser = (Browser) manager.lookup(Roles.BROWSER);
         } catch (Exception e) {
             getLogger().error("Could not find component", e);
