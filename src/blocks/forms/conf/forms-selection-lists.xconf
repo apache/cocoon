@@ -21,6 +21,7 @@
     <selection-list name="default" class="org.apache.cocoon.forms.datatype.DefaultSelectionListBuilder"/>
     <selection-list name="flow-jxpath" class="org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder"/>
     <selection-list name="enum" class="org.apache.cocoon.forms.datatype.EnumSelectionListBuilder"/>
+    <selection-list name="java" class="org.apache.cocoon.forms.datatype.JavaSelectionListBuilder"/>
   </forms-selection-lists>
   
 </xconf>
