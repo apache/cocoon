@@ -35,7 +35,7 @@
             Please choose a datasource type.
           </ft:case>
           <ft:case id="SQL">
-            <ft:struct id="SQL">
+            <ft:group id="SQL">
               <fi:group>
                 <fi:styling layout="columns"/>
                 <fi:items>
@@ -44,12 +44,12 @@
                   <ft:widget id="password"><fi:styling type="password"/></ft:widget>
                 </fi:items>
               </fi:group>
-            </ft:struct>
+            </ft:group>
           </ft:case>
           <ft:case id="file">
-            <ft:struct id="file">
+            <ft:group id="file">
               File name: <ft:widget id="filename"/>
-            </ft:struct>
+            </ft:group>
           </ft:case>
         </ft:union>
       </fieldset>

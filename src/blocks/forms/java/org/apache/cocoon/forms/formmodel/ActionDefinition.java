@@ -41,6 +41,7 @@ public class ActionDefinition extends AbstractWidgetDefinition {
     }
 
     public void addActionListener(ActionListener listener) {
+        checkMutable();
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
     }
     

@@ -40,6 +40,8 @@ public abstract class AbstractContainerDefinition
     }
 
     public void addWidgetDefinition(WidgetDefinition definition) throws Exception, DuplicateIdException {
+        //FIXME: cannot enforce this check here as more children are added in the resolve() phase
+        //checkMutable();
         definition.setParent(this);
         definitions.addWidgetDefinition(definition);
     }

@@ -56,8 +56,28 @@ public class Form extends AbstractContainerWidget {
         super(definition);
         this.definition = definition;
     }
+    
+    /**
+     * Initialize the form by recursively initializing all its children. Any events occuring within the
+     * initialization phase are buffered and fired after initialization is complete, so that any action
+     * from a widget on another one occurs after that other widget has been given the opportunity to
+     * initialize itself.
+     */
+    public void initialize() {
+        try {
+            // Start buffering events
+            this.bufferEvents = true;
+            super.initialize();
+            // Fire events, still buffering them: this ensures they will be handled in the same
+            // order as they were added.
+            fireEvents();
+        } finally {
+            // Stop buffering events
+            this.bufferEvents = false;
+        }
+    }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return this.definition;
     }
 

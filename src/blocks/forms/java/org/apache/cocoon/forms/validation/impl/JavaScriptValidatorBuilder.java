@@ -50,7 +50,7 @@ public class JavaScriptValidatorBuilder implements WidgetValidatorBuilder, Conte
      * @see org.apache.cocoon.forms.validation.ValidatorBuilder#build(org.apache.cocoon.forms.formmodel.WidgetDefinition, org.w3c.dom.Element)
      */
     public WidgetValidator build(Element element, WidgetDefinition definition) throws Exception {
-            Function function = JavaScriptHelper.buildFunction(element, ARG_NAMES);
+            Function function = JavaScriptHelper.buildFunction(element, "validate", ARG_NAMES);
 
             return new JavaScriptValidator(this.avalonContext, function);
     }

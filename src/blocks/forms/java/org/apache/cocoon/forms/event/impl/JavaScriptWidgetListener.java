@@ -56,10 +56,12 @@ public abstract class JavaScriptWidgetListener {
             
             HashMap values = new HashMap(2);
             values.put("event", event);
+            //FIXME(SW) it would be nice to have "this" be the widget, but I don't know how to define
+            //the "this" object for a script (this is easy for a function)
             
             Map objectModel = ContextHelper.getObjectModel(context);
 
-            // Add the biz data that was passed to showForm()
+            // Add the view data that was passed to showForm()
             Object viewData = FlowHelper.getContextObject(objectModel);
             if (viewData != null) {
                 values.put("viewData", viewData);

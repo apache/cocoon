@@ -15,11 +15,18 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Iterator;
+import java.util.Locale;
+
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.datatype.SelectionListBuilder;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
+import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.i18n.I18nUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -29,13 +36,47 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     
-    /**
-     * @return true if a selectionlist has actually been build.
-     */
-    protected boolean buildSelectionList(Element widgetElement, AbstractDatatypeWidgetDefinition widget) throws Exception {
+    protected void setupDefinition(Element widgetElement, AbstractDatatypeWidgetDefinition definition) throws Exception {
+        super.setupDefinition(widgetElement, definition);
+        // parse "label", "hint", etc.
+        setDisplayData(widgetElement, definition);
+
+        // parse "on-value-changed"
+        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
+        while (iter.hasNext()) {
+            definition.addValueChangedListener((ValueChangedListener)iter.next());
+        }
+        
+        //---- parse "datatype"
+        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
+        if (datatypeElement == null) {
+            throw new Exception("A nested datatype element is required for the widget " 
+                                + widgetElement.getTagName() + " at " + DomHelper.getLocation(widgetElement));
+        }
+
+        Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
+        
+        //---- parse "initial-value"
+        Object initialValue = null;
+        Element initialValueElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "initial-value", false);
+        if (initialValueElement != null) {
+            String localeValue = DomHelper.getAttribute(initialValueElement, "locale", null);
+            Locale locale = localeValue == null ? null : I18nUtils.parseLocale(localeValue);
+            String value = DomHelper.getElementText(initialValueElement);
+            ConversionResult result = datatype.convertFromString(value, locale);
+            if (!result.isSuccessful()) {
+                throw new Exception("Cannot parse initial value '" + value + "' at " +
+                        DomHelper.getLocation(initialValueElement));
+            }
+            initialValue = result.getResult();
+        }
+        
+        definition.setDatatype(datatype, initialValue);
+        
+        //---- parse "selection-list"
         // FIXME: pass the manager to the definition as a side effect. Should be removed
         // when definition are managed like components.
-        widget.service(this.serviceManager);
+        definition.service(this.serviceManager);
 
         Element selectionListElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "selection-list");
         if (selectionListElement != null) {
@@ -50,18 +91,14 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
                 }
 
                 builder = (SelectionListBuilder)builderSelector.select(listType);
-                SelectionList list = builder.build(selectionListElement, widget.getDatatype());
-                widget.setSelectionList(list);
+                SelectionList list = builder.build(selectionListElement, definition.getDatatype());
+                definition.setSelectionList(list);
             } finally {
                 if (builder != null) {
                     builderSelector.release(builder);
                 }
                 this.serviceManager.release(builderSelector);
             }
-
-            return true;
-        } else {
-            return false;
         }
     }
 }

@@ -56,7 +56,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         return this.uploadDefinition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return uploadDefinition;
     }
 

@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.event.ActionEvent;
+import org.apache.cocoon.forms.event.ActionListener;
+
 /**
  * Abstract repeater action. Subclasses will typically just self-add an
  * event handler that will act on the repeater.
@@ -56,4 +59,89 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
         return this.name;
     }
     
+    //---------------------------------------------------------------------------------------------
+
+    /**
+     * The definition of a repeater action that deletes the selected rows of a sibling repeater.
+     * <p>
+     * The action listeners attached to this action, if any, are called <em>before</em> the rows
+     * are actually removed
+     */
+    public static class DeleteRowsActionDefinition extends RepeaterActionDefinition {
+
+        private String selectName;
+
+        public DeleteRowsActionDefinition(String repeaterName, String selectName) {
+            super(repeaterName);
+            this.selectName = selectName;
+        }
+
+        public boolean hasActionListeners() {
+            // we always want to be notified
+            return true;
+        }
+
+        public void fireActionEvent(ActionEvent event) {
+            // Call action listeners, if any
+            super.fireActionEvent(event);
+
+            // and actually delete the rows
+            Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+            for (int i = repeater.getSize() - 1; i >= 0; i--) {
+                Repeater.RepeaterRow row = repeater.getRow(i);
+                if (Boolean.TRUE.equals(row.getChild(this.selectName).getValue())) {
+                    repeater.removeRow(i);
+                }
+            }
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+
+    /**
+     * The definition of a repeater action that adds a row to a sibling repeater.
+     */
+    public static class AddRowActionDefinition extends RepeaterActionDefinition {
+        
+        public AddRowActionDefinition(String repeaterName) {
+            super(repeaterName);
+            
+            this.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                    Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+                    repeater.addRow();
+                }
+            });
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+
+    /**
+     * The definition of a repeater action that insert rows before the selected rows in a sibling repeater.
+     */
+    public static class InsertRowsActionDefinition extends RepeaterActionDefinition {
+        
+        private String selectName;
+        
+        public InsertRowsActionDefinition(String repeaterName, String selectWidgetName) {
+            super(repeaterName);
+            this.selectName = selectWidgetName;
+            
+            this.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                    Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+                    for (int i = repeater.getSize() - 1; i >= 0; i--) {
+                        Repeater.RepeaterRow row = repeater.getRow(i);
+                        Widget selectWidget = row.getChild(selectName);
+                        if (Boolean.TRUE.equals(selectWidget.getValue())) {
+                            // Clear selection and add a row
+                            selectWidget.setValue(Boolean.FALSE);
+                            repeater.addRow(i);
+                        }
+                    }
+                }
+            });
+        }
+    }
 }

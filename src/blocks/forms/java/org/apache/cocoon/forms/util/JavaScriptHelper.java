@@ -75,13 +75,14 @@ public class JavaScriptHelper {
      * Build a function with the content of a DOM element.
      * 
      * @param element the element containing the function body
+     * @param name the name of the function
      * @param argumentNames names of the function arguments
      * @return the compiled function
      * @throws IOException
      */
-    public static Function buildFunction(Element element, String[] argumentNames) throws IOException {
+    public static Function buildFunction(Element element, String name, String[] argumentNames) throws IOException {
         // Enclose the script text with a function declaration
-        StringBuffer buffer = new StringBuffer("function foo(");
+        StringBuffer buffer = new StringBuffer("function ").append(name).append("(");
         for (int i = 0; i < argumentNames.length; i++) {
             if (i > 0) {
                 buffer.append(',');

@@ -27,9 +27,11 @@ import org.apache.commons.lang.enums.ValuedEnum;
  */
 public class WidgetState extends ValuedEnum {
 
-    private static final int ACTIVE_VALUE = 3;
+    private static final int ACTIVE_VALUE = 4;
+    
+    private static final int DISABLED_VALUE = 3;
 
-    private static final int DISABLED_VALUE = 2;
+    private static final int OUTPUT_VALUE = 2;
 
     private static final int INVISIBLE_VALUE = 1;
 
@@ -40,9 +42,16 @@ public class WidgetState extends ValuedEnum {
     public static final WidgetState ACTIVE = new WidgetState("active", ACTIVE_VALUE);
 
     /**
-     * Disabled state. Values are displayed, but user input is ignored.
+     * Disabled state, value is displayed but user input is ignored. The widget should be
+     * rendered in a manner that indicates that this widget could be active, but is currently not.
      */
     public static final WidgetState DISABLED = new WidgetState("disabled", DISABLED_VALUE);
+    
+    /**
+     * Output state, value is displayed but user input is ignored. The widget should be rendered
+     * as plain text, giving no indication that it could be input.
+     */
+    public static final WidgetState OUTPUT = new WidgetState("output", OUTPUT_VALUE);
 
     /**
      * Invisible state. Values are not displayed and user input is ignored.

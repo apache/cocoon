@@ -47,7 +47,7 @@ public class Union extends AbstractContainerWidget {
         //item.enteredValue = (String)definition.getDefaultValue();
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return definition;
     }
 

@@ -59,7 +59,7 @@
       <fb:new id="output-class"/>
       <fb:new id="repeater-class"/>
       <fb:new id="row-action-class"/>
-      <fb:new id="struct-class"/>
+      <fb:new id="group-class"/>
       <fb:new id="submit-class"/>
       <fb:new id="union-class"/>
     </fb:union>
@@ -70,10 +70,10 @@
       <fb:insert-node>
         <fd:action/>
       </fb:insert-node>
-      <fb:struct id="action" path="fd:action">
+      <fb:group id="action" path="fd:action">
         <fb:value id="label" path="fd:label"/>
         <fb:value id="id" path="@id"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -82,12 +82,12 @@
       <fb:insert-node>
         <fd:aggregatefield/>
       </fb:insert-node>
-      <fb:struct id="aggregatefield" path="fd:aggregatefield">
+      <fb:group id="aggregatefield" path="fd:aggregatefield">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
         <fb:insert-node><fd:widgets/></fb:insert-node>
         <fb:new id="widgets-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -96,10 +96,10 @@
       <fb:insert-node>
         <fd:booleanfield/>
       </fb:insert-node>
-      <fb:struct id="booleanfield" path="fd:booleanfield">
+      <fb:group id="booleanfield" path="fd:booleanfield">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -108,11 +108,11 @@
       <fb:insert-node>
         <fd:class/>
       </fb:insert-node>
-      <fb:struct id="class" path="fd:class">
+      <fb:group id="class" path="fd:class">
         <fb:value id="id" path="@id"/>
         <fb:insert-node><fd:widgets/></fb:insert-node>
         <fb:new id="widgets-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -121,13 +121,13 @@
       <fb:insert-node>
         <fd:field/>
       </fb:insert-node>
-      <fb:struct id="field" path="fd:field">
+      <fb:group id="field" path="fd:field">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
         <fb:value id="required" path="@required">
           <fd:convertor datatype="boolean"/>
         </fb:value>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -136,9 +136,9 @@
       <fb:insert-node>
         <fd:new/>
       </fb:insert-node>
-      <fb:struct id="new" path="fd:new">
+      <fb:group id="new" path="fd:new">
         <fb:value id="id" path="@id"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -147,10 +147,10 @@
       <fb:insert-node>
         <fd:output/>
       </fb:insert-node>
-      <fb:struct id="output" path="fd:output">
+      <fb:group id="output" path="fd:output">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -159,7 +159,7 @@
       <fb:insert-node>
         <fd:repeater/>
       </fb:insert-node>
-      <fb:struct id="repeater" path="fd:repeater">
+      <fb:group id="repeater" path="fd:repeater">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
         <fb:value id="initial-size" path="@initial-size">
@@ -167,7 +167,7 @@
         </fb:value>
         <fb:insert-node><fd:widgets/></fb:insert-node>
         <fb:new id="widgets-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -176,24 +176,24 @@
       <fb:insert-node>
         <fd:row-action/>
       </fb:insert-node>
-      <fb:struct id="row-action" path="fd:row-action">
+      <fb:group id="row-action" path="fd:row-action">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
-  <fb:class id="struct-class">
-    <fb:case id="struct" path=".">
+  <fb:class id="group-class">
+    <fb:case id="group" path=".">
       <fb:insert-node>
-        <fd:struct/>
+        <fd:group/>
       </fb:insert-node>
-      <fb:struct id="struct" path="fd:struct">
+      <fb:group id="group" path="fd:group">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
         <fb:insert-node><fd:widgets/></fb:insert-node>
         <fb:new id="widgets-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -202,10 +202,10 @@
       <fb:insert-node>
         <fd:submit/>
       </fb:insert-node>
-      <fb:struct id="submit" path="fd:submit">
+      <fb:group id="submit" path="fd:submit">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -214,12 +214,12 @@
       <fb:insert-node>
         <fd:union/>
       </fb:insert-node>
-      <fb:struct id="union" path="fd:union">
+      <fb:group id="union" path="fd:union">
         <fb:value id="id" path="@id"/>
         <fb:value id="label" path="fd:label"/>
         <fb:insert-node><fd:widgets/></fb:insert-node>
         <fb:new id="widgets-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 

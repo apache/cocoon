@@ -17,9 +17,6 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.w3c.dom.Element;
-import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.Datatype;
-import org.apache.cocoon.forms.util.DomHelper;
 
 /**
  * Builds {@link OutputDefinition}s.
@@ -27,22 +24,11 @@ import org.apache.cocoon.forms.util.DomHelper;
  * @version $Id$
  */
 public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
+
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         OutputDefinition definition = new OutputDefinition();
-        setCommonProperties(widgetElement, definition);
-
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
-        if (datatypeElement == null) {
-            throw new Exception("A nested datatype element is required for the widget " 
-                                + widgetElement.getTagName() + " with id \"" + definition.getId()
-                                + "\" at " + DomHelper.getLocation(widgetElement));
-        }
-
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
-        definition.setDatatype(datatype);
-
-        setDisplayData(widgetElement, definition);
-
+        setupDefinition(widgetElement, definition);
+        definition.makeImmutable();
         return definition;
     }
 }

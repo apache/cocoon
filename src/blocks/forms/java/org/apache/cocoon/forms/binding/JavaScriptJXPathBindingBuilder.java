@@ -90,7 +90,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
                     throw new BindingException("Element \"load-form\" is missing (" +
                         DomHelper.getLocation(element) + ")");
                 }
-                loadScript = JavaScriptHelper.buildFunction(loadElem, JavaScriptJXPathBinding.LOAD_PARAMS);
+                loadScript = JavaScriptHelper.buildFunction(loadElem, "loadForm", JavaScriptJXPathBinding.LOAD_PARAMS);
             }
 
             // Build save script
@@ -101,7 +101,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
                     throw new BindingException("Element \"save-form\" is missing (" +
                         DomHelper.getLocation(element) + ")");
                 }
-                saveScript = JavaScriptHelper.buildFunction(saveElem, JavaScriptJXPathBinding.SAVE_PARAMS);
+                saveScript = JavaScriptHelper.buildFunction(saveElem, "saveForm", JavaScriptJXPathBinding.SAVE_PARAMS);
             }
 
             // Build child bindings

@@ -30,6 +30,8 @@
     <!-- The datasource type. This is the union's "case" widget -->
     <fd:field id="sourcetype">
       <fd:datatype base="string"/>
+      <!-- The union will initially be showing the "SQL" choice -->
+      <fd:initial-value>SQL</fd:initial-value>
       <fd:selection-list>
         <fd:item value=""/>
         <fd:item value="SQL"/>
@@ -42,35 +44,38 @@
       <fd:widgets>
         
         <!-- data for an SQL datasource -->
-        <fd:struct id="SQL">
+        <fd:group id="SQL">
           <fd:widgets>
             <fd:field id="jdbc-url">
               <fd:label>JDBC URL</fd:label>
               <fd:datatype base="string"/>
+              <!-- pre-fill with the sample values in cocoon.xconf -->
+              <fd:initial-value>jdbc:hsqldb:hsql://localhost:9002</fd:initial-value>
             </fd:field>
             <fd:field id="login">
               <fd:label>Login</fd:label>
               <fd:datatype base="string"/>
+              <fd:initial-value>sa</fd:initial-value>
             </fd:field>
             <fd:field id="password">
               <fd:label>Password</fd:label>
               <fd:datatype base="string"/>
             </fd:field>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
         
         <!-- data for a file datasource -->
-        <fd:struct id="file">
+        <fd:group id="file">
           <fd:widgets>
             <fd:field id="filename">
               <fd:datatype base="string"/>
             </fd:field>
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:union>
 
-    <fd:submit id="ok" action-command="foo">
+    <fd:submit id="ok">
       <fd:label>OK</fd:label>
     </fd:submit>
     
