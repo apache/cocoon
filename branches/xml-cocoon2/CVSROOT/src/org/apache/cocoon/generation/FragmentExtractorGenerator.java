@@ -11,6 +11,8 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.Constants;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Poolable;
 
@@ -35,12 +37,15 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-23 14:56:59 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-25 00:20:50 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
 
     /** The fragment store. */
     private static Map fragmentStore = new HashMap();
+
+    /** flag for cleanup */
+    boolean cleanupStore = true;
 
     /** Construct a new <code>FragmentExtractorGenerator</code> and ensure that the
      * fragment store is initialized and threadsafe (since it is a global store, not
@@ -52,6 +57,13 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver,objectModel,src,par);
+
+        // Fix for commandline generation. 
+        // Don't cleanup the store if we are in LINK_VIEW
+        AbstractEnvironment env = (AbstractEnvironment) resolver;
+        String view = env.getView();
+        if(view != null && view.equals(Constants.LINK_VIEW))
+            cleanupStore = false;
 
         synchronized (FragmentExtractorGenerator.fragmentStore) {
             if ( FragmentExtractorGenerator.fragmentStore.get(source) == null ) {
@@ -69,7 +81,10 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
 
             streamer.stream(doc);
-            FragmentExtractorGenerator.fragmentStore.remove(source);
+            // Fix for commandline generation. 
+            // Don't cleanup the store if we are in LINK_VIEW
+            if(cleanupStore)
+                FragmentExtractorGenerator.fragmentStore.remove(source);
         }
     }
 
