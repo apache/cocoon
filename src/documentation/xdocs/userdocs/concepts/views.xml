@@ -14,7 +14,7 @@
  <body>
   <s1 title="The Views">
    <p>
-    Apache Cocoon provides "views" to resource.
+    Apache Cocoon provides "views" to a resource.
     Defining a pipeline in a sitemap specifies the different stages
     of processing a resource. 
     A view defines an exit point in the pipeline processing.
@@ -22,7 +22,7 @@
    <p>
     Views are yet another sitemap component. 
     Unlike the rest, they are not inherited by sub-sitemaps and
-    they are othogonal to the resource and pipeline definitions. 
+    they are orthogonal to the resource and pipeline definitions. 
     In the following we will not distinguish between resources and pipelines
     because their differences are not relevant here. So, when we talk
     about pipelines the said is valid for resources as well.
@@ -46,14 +46,14 @@
      Apache Cocoon offers a fairly sophisticated URI space mapping mechanism.
      Defining pipelines in a sitemap you define this mapping.
      It's generally a mistake to map a file system 
-     (or a directory server, or a database repository) one-2-one
+     (or a directory server, or a database repository) one-to-one
      with the URI space, since it leads to easily broken links and potential
      security issues. 
     </p>
     <p>
      Browsers requests resources of this URI space. 
      The response of a browser request is normally intended for presenting
-     to a human being. It may be augmented with navigation controls, and advertisment.
+     to a human being. It may be augmented with navigation controls, and advertisements.
      An indexer of a search engines requests resources of this URI space, too.
      In contrast to a browser an indexer is interested in the
      bare content of a resource.
@@ -63,7 +63,7 @@
      
      For example, you can now index a document resource, 
      requesting the "content" view of the resource lacking the aggregation 
-     with navigation controls, and advertisments.
+     with navigation controls, and advertisements.
      
      You can now index the text inside a logo, if you are given the SVG content 
      that generated the raster image. 
@@ -75,15 +75,15 @@
 
    <s2 title="Defining A View">
     <p>
-     You declare a view in sitemap. The definition of a view
+     You declare a view in the sitemap. The definition of a view
      may define further processing steps. You are not allowed to
      define a generator step for a view, as the content of a view
-     is xml content of a view's exit point.
-     The most simple view just serialzes the xml content to xml.
+     is the xml content from a view's exit point.
+     The most simple view just serializes the xml content to xml.
     </p>
     <p>
      A view element is identified by its name, and its label. You
-     specify the name of a view by the attribute name, and it label either
+     specify the name of a view by the attribute name, and its label either
      by the attribute from-label, or by the attribute from-position.
      The following list explains the attributes in more detail.
     </p>
@@ -122,7 +122,7 @@
     <source><![CDATA[
 <map:views>
  <map:view name="dublin-core" from-label="dublin-core">
- <map:transform src="stylesheets/document2dubline-core.xsl"/>
+ <map:transform src="stylesheets/document2dublin-core.xsl"/>
  <map:serialize type="xml"/>
 </map:view>]]></source>
 
@@ -141,11 +141,11 @@
    <s2 title="Placing Labels">
     <p>
      You place labels to define a pipeline exit point.
-     A pipeline exit point may be shared by more than a single.
+     A pipeline exit point may be shared by more than a single view.
     </p>
     <p>
      Defining a pipeline exit point you have to add an attribute 
-     "label" to an sitemap element. Following sitemap elements are label aware:
+     "label" to a sitemap element. The following sitemap elements are label aware:
     </p>
     <table>
      <tr><th>Sitemap Element</th><th>Description</th></tr>
@@ -214,7 +214,7 @@
      As described above you have a wide range of choice for placing labels.
      You may even place labels to part elements, and to pipelines 
      being the source of a labelled part element. The following paragraphs 
-     summarizes the some of the hot features.
+     summarize some of the hot features.
     </p>
     <p>
      You can use more that one label-value (label="content,link rdf")
@@ -252,7 +252,7 @@
 ...]]></source>
 
     <p>
-     Having this sitemap:
+     ...to this sitemap:
     </p>
     <source><![CDATA[
 ...
@@ -310,7 +310,7 @@
     </p>
   
     <p>
-     This is not limited to generators but every sitemap component can
+     This is not limited to generators - every sitemap component can
      be augmented with a view label.
     </p>
     
