@@ -7,6 +7,8 @@
   <version>1.0</version> 
   <type>Technical document</type> 
   <authors>
+   <person name="Bernhard Huber" email="huber@apache.org"/>
+   <person name="Stephan Michels" email="stephan@apache.org"/>
    <person name="David Crossley" email="crossley@apache.org"/>
   </authors>
  </header>
@@ -18,23 +20,40 @@
    Apache Cocoon can run properly on your particular computing platform.
    (You can build upon this infrastructure to add your own tests.)
   </p>
+ </s1>
 
+ <s1 title="JUnit tests">
+  <p>
+   Run &quot;<code>build test</code>&quot; to conduct an initial set of
+   automated JUnit test cases,
+   e.g. Test various transformers;
+   Test the methods for getting platform-dependent filesystem pathnames; etc.
+  </p>
+
+  <s2 title="How to add more tests">
+   <p>
+    As there is already a nice junit framework available, it is not that
+    difficult to add junit tests for any transformer. In short:
+   </p>
+   <ul>
+    <li>Create XYTransformerTestCase.java</li>
+    <li>Create XYTransformerTestCase.xconf</li>
+    <li>Edit the transformers section in XYTransformerTestCase.xtest
+     for XYTransformerTestCase</li>
+    <li>Add testABC() methods to XYTransformerTestCase.java</li>
+   </ul>
+  </s2>
+ </s1>
+
+ <s1 title="Other tests">
   <ul>
-   <li>
-    Run &quot;<code>build test</code>&quot; to conduct an initial set of
-    automated JUnit test cases,
-    e.g. test the methods for getting platform-dependent filesystem pathnames;
-    e.g. ensure that Catalog Entity Resolver works properly
-   </li>
-  </ul>
-
-  <p>Other tests ...</p>
-
-  <ul>
-   <li>
-    <link href="../catalog-test.html">Testing: Catalog Entity Resolver</link>
-    which conducts some additional tests for resolving external entities.
-   </li>
+    <li>
+      Some Anteater Functional Tests at <code>src/test/anteater</code>
+    </li>
+    <li>
+      <link href="../catalog-test.html">Testing: Catalog Entity Resolver</link>
+      which conducts some additional tests for resolving external entities.
+    </li>
   </ul>
  </s1>
 
