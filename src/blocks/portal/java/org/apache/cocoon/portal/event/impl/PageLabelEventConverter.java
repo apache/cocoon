@@ -104,6 +104,9 @@ public class PageLabelEventConverter extends AbstractLogEnabled
     public void start() {
         String label = this.labelManager.setCurrentLabel();
         Map map = this.labelManager.getPageEventMap();
+        if (label == null) {
+            label = "";
+        }
         String encode = label + ENCODE;
         String decode = label + DECODE;
 
