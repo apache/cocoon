@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.70 2001-03-21 18:51:17 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.71 2001-03-26 20:11:48 balld Exp $-->
 <!--
 
  ============================================================================
@@ -574,7 +574,17 @@
       }
       _esql_query.position++;
     }
+    if (_esql_query.resultset.next()) {
+      <xsl:apply-templates select="following-sibling::esql:more-results" mode="more"/>
+      _esql_query.position++;
+    }
   </xsp:logic>
+</xsl:template>
+
+<xsl:template match="esql:results//esql:more-results"/>
+
+<xsl:template match="esql:results//esql:more-results" mode="more">
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
