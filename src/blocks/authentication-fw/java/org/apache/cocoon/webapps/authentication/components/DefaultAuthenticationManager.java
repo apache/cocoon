@@ -94,7 +94,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.15 2003/07/12 18:39:49 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.16 2003/09/20 21:22:33 upayavira Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -307,18 +307,20 @@ implements AuthenticationManager,
         UserHandler handler = this.getUserHandler( handlerName );
         final boolean authenticated = ( handler != null );
         if ( !authenticated ) {
-            // create parameters
-            SourceParameters parameters = config.getRedirectParameters();
-            if (parameters == null) parameters = new SourceParameters();
-            final Request request = this.getRequest();
-            String resource = request.getRequestURI();
-            if (request.getQueryString() != null) {
-                resource += '?' + request.getQueryString();
+            if (redirector != null) {
+                // create parameters
+                SourceParameters parameters = config.getRedirectParameters();
+                if (parameters == null) parameters = new SourceParameters();
+                final Request request = this.getRequest();
+                String resource = request.getRequestURI();
+                if (request.getQueryString() != null) {
+                    resource += '?' + request.getQueryString();
+                }
+    
+                parameters.setSingleParameterValue("resource", resource);
+                final String redirectURI = config.getRedirectURI();
+                redirector.globalRedirect(false, SourceUtil.appendParameters(redirectURI, parameters));
             }
-
-            parameters.setSingleParameterValue("resource", resource);
-            final String redirectURI = config.getRedirectURI();
-            redirector.globalRedirect(false, SourceUtil.appendParameters(redirectURI, parameters));
         } else {
             // update state
             RequestState state = new RequestState( handler, applicationName );
@@ -329,6 +331,20 @@ implements AuthenticationManager,
 		return authenticated;
 	}
 
+    public String getForwardingURI(String handlerName) throws ProcessingException {
+        HandlerConfiguration config = this.getHandlerConfiguration( handlerName );
+        SourceParameters parameters = config.getRedirectParameters();
+        if (parameters == null) parameters = new SourceParameters();
+        final Request request = this.getRequest();
+        String resource = request.getRequestURI();
+        if (request.getQueryString() != null) {
+            resource += '?' + request.getQueryString();
+        }
+    
+        parameters.setSingleParameterValue("resource", resource);
+        final String redirectURI = config.getRedirectURI();
+        return SourceUtil.appendParameters(redirectURI, parameters);
+    }
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.webapps.authentication.components.Manager#isAuthenticated(java.lang.String)
 	 */
