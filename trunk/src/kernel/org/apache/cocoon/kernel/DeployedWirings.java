@@ -40,7 +40,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.9 $)
+ * @version 1.0 (CVS $Revision: 1.10 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -80,6 +80,7 @@ public class DeployedWirings implements Wirings, Lifecycle {
     throws DeploymentException {
         this.instance = i;
         this.deployer = d;
+        this.logger = l;
 
         /* Retrieve all we need from our instance regarding composers */
         LoadedBlock block = (LoadedBlock) i.block();
