@@ -442,7 +442,7 @@
 
       <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar" index="true">
         <fileset dir="{string('${build.blocks}')}/{$block-name}/dest">
-          <include name="org/**"/>
+          <include name="{translate(package/text(), '.', '/')}/**"/>
           <include name="META-INF/**"/>
         </fileset>
       </jar>
