@@ -62,11 +62,11 @@ import javax.servlet.http.*;
  *  This is a mock object of the class, not the actual class.
  *  It's used to compile the code in absence of the actual class.
  *
- *  This clsss is created by hand, not automatically.
+ *  This class is created by hand, not automatically.
  *
  * **********************************************************************
  * 
- * @version CVS $Id: ServletResponseImpl.java,v 1.1 2003/03/09 00:04:16 pier Exp $
+ * @version CVS $Id: ServletResponseImpl.java,v 1.2 2003/07/11 17:03:27 joerg Exp $
  */
  
 public class ServletResponseImpl implements HttpServletResponse {
@@ -98,6 +98,8 @@ public class ServletResponseImpl implements HttpServletResponse {
         return false;
     }
 
+    /** @deprecated The method ServletResponseImpl.encodeRedirectUrl(String)
+     *              overrides a deprecated method from HttpServletResponse */
     public String encodeRedirectUrl(String arg1) {
         return null;
     }
@@ -106,6 +108,8 @@ public class ServletResponseImpl implements HttpServletResponse {
         return null;
     }
 
+    /** @deprecated The method ServletResponseImpl.encodeUrl(String) overrides
+     *              a deprecated method from HttpServletResponse */
     public String encodeUrl(String arg1) {
         return null;
     }
@@ -207,6 +211,8 @@ public class ServletResponseImpl implements HttpServletResponse {
     public void setStatus(int status) {
     }
 
+    /** @deprecated The method ServletResponseImpl.setStatus(int, String)
+     *              overrides a deprecated method from HttpServletResponse */
     public void setStatus(int arg1, String arg2) {
     }
 
