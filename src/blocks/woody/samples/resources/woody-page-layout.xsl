@@ -13,13 +13,20 @@
       
     <script language="JavaScript">
       function showWoodyTab(tabgroup, idx, length, state) {
+        //alert(tabgroup + " - " + idx);
         for (var i = 0; i &lt; length; i++) {
+          // Change tab status (selected/unselected)
           var tab = document.getElementById(tabgroup + "_tab_" + i);
-          tab.className = (i == idx) ? 'woody-tab woody-activeTab': 'woody-tab';
-           
+          if (tab != null) {
+            tab.className = (i == idx) ? 'woody-tab woody-activeTab': 'woody-tab';
+          }
+          // Change tab content visibilty
           var tabitems = document.getElementById(tabgroup + "_items_" + i);
-          tabitems.style.display = (i == idx) ? '' : 'none';
+          if (tabitems != null) {
+            tabitems.style.display = (i == idx) ? '' : 'none';
+          }
         }
+        // Change state value
         if (state.length > 0) {
           document.forms[0][state].value = idx;
         }
@@ -51,8 +58,8 @@
     -->
     <xsl:variable name="active">
       <xsl:choose>
-        <xsl:when test="@state-widget">
-          <xsl:variable name="value" select="string(//wi:field[@id = current()/@state-widget]/wi:value)"/>
+        <xsl:when test="wi:state">
+          <xsl:variable name="value" select="wi:state/wi:*/wi:value"/>
           <xsl:choose>
             <xsl:when test="string-length($value) > 0"><xsl:value-of select="$value"/></xsl:when>
             <xsl:otherwise>0</xsl:otherwise>
@@ -63,10 +70,15 @@
     </xsl:variable>
     
     <!-- copy the "state-widget" attribute for use in for-each -->
-    <xsl:variable name="state-widget" select="@state-widget"/>
+    <xsl:variable name="state-widget" select="wi:state/wi:*/@id"/>
     
     <xsl:variable name="id" select="generate-id()"/>
     <div id="{$id}">
+    
+      <!-- add an hidden input for the state -->
+      <xsl:if test="$state-widget">
+        <input type="hidden" name="{$state-widget}" value="{$active}"/>
+      </xsl:if>
     
       <!-- div containing the tabs -->
       <div class="woody-tabArea">
@@ -99,6 +111,72 @@
         </div>
       </xsl:for-each>
     </div>
+  </xsl:template>
+  
+  
+  <!--
+    wi:group of type choice : a popup is used instead of tabs
+  -->
+  <xsl:template match="wi:group[wi:styling/@type='choice']">
+    <!-- find the currently selected tab.
+         Thoughts still needed here, such as autogenerating a field in the woodytransformer
+         to hold this state.
+    -->
+    <xsl:variable name="active">
+      <xsl:choose>
+        <xsl:when test="wi:state">
+          <xsl:variable name="value" select="wi:state/wi:*/wi:value"/>
+          <xsl:choose>
+            <xsl:when test="string-length($value) > 0"><xsl:value-of select="$value"/></xsl:when>
+            <xsl:otherwise>0</xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>0</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <!-- copy the "state-widget" attribute for use in for-each -->
+    <xsl:variable name="state-widget" select="wi:state/wi:*/@id"/>
+    
+    <xsl:variable name="id" select="generate-id()"/>
+    <fieldset id="{$id}">
+      <legend>
+        <xsl:apply-templates select="wi:label/node()"/>
+        <select name="{$state-widget}" onchange="showWoodyTab('{$id}', this.selectedIndex, {count(wi:items/*)}, '{$state-widget}')">
+          <xsl:for-each select="wi:items/wi:*">
+            <option>
+              <xsl:attribute name="value">
+                <xsl:choose>
+                  <xsl:when test="wi:value">
+                    <xsl:value-of select="wi:value"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="position() - 1"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:if test="$active = (position() - 1)">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+              </xsl:if>
+              <xsl:copy-of select="wi:label"/>
+            </option>
+          </xsl:for-each>
+        </select>
+        <xsl:if test="wi:items/*//wi:validation-message">
+          <span style="color:red; font-weight: bold">&#160;!&#160;</span>
+        </xsl:if>
+      </legend>
+      
+      <!-- a div for each of the items -->
+      <xsl:for-each select="wi:items/wi:*">
+        <div id="{$id}_items_{position() - 1}">
+          <xsl:if test="$active != position() - 1">
+            <xsl:attribute name="style">display:none</xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates select="."/>
+        </div>
+      </xsl:for-each>
+    </fieldset>
   </xsl:template>
   
   <!--
