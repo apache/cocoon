@@ -51,8 +51,12 @@
 package org.apache.cocoon.woody.datatype.typeimpl;
 
 /**
- * Description of EnumType.
- * @version CVS $Id: EnumType.java,v 1.2 2003/11/06 23:03:50 ugo Exp $
+ * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
+ * types implementing Joshua Bloch's <em>{@link 
+ * http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums
+ * typesafe enum}</em> pattern.
+ * 
+ * @version CVS $Id: EnumType.java,v 1.3 2003/11/15 18:30:03 ugo Exp $
  */
 public class EnumType extends AbstractDatatype {
     
@@ -72,5 +76,4 @@ public class EnumType extends AbstractDatatype {
     public String getDescriptiveName() {
         return this.getConvertor().getTypeClass().getName();
     }
-
 }

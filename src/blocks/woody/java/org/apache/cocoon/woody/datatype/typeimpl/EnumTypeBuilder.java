@@ -55,8 +55,9 @@ import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.w3c.dom.Element;
 
 /**
- * Description of EnumTypeBuilder.
- * @version CVS $Id: EnumTypeBuilder.java,v 1.2 2003/11/06 23:03:50 ugo Exp $
+ * Builds {@link EnumType}s.
+ * 
+ * @version CVS $Id: EnumTypeBuilder.java,v 1.3 2003/11/15 18:30:03 ugo Exp $
  */
 public class EnumTypeBuilder extends AbstractDatatypeBuilder {
 
@@ -75,5 +76,4 @@ public class EnumTypeBuilder extends AbstractDatatypeBuilder {
 
         return type;
     }
-
 }
