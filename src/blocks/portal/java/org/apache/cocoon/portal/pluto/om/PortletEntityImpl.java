@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
 import org.apache.pluto.om.common.Description;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.common.PreferenceSet;
