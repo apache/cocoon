@@ -32,7 +32,7 @@ import org.apache.cocoon.components.classloader.RepositoryClassLoader;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-21 15:08:47 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-22 13:34:35 $
  */
 
 public class ParanoidCocoonServlet extends CocoonServlet {
@@ -53,7 +53,7 @@ public class ParanoidCocoonServlet extends CocoonServlet {
      *
      * @throws ServletException
      */
-     private String getClassPath(final ServletContext context)
+     protected String getClassPath(final ServletContext context)
      throws ServletException {
         RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, (ClassLoader) this.appContext.get(Constants.CONTEXT_CLASS_LOADER));
         StringBuffer buildClassPath = new StringBuffer();

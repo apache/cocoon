@@ -60,7 +60,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.63 $ $Date: 2001-02-21 15:53:37 $
+ * @version CVS $Revision: 1.1.4.64 $ $Date: 2001-02-22 13:34:34 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -133,7 +133,7 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     private String getClassPath(final ServletContext context)
+     protected String getClassPath(final ServletContext context)
      throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
         String classDir = context.getRealPath("/WEB-INF/classes");
