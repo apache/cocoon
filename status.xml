@@ -323,6 +323,13 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="add">
+     Taglib block: Initial implementation of BodyTag.
+   </action>
+   <action dev="VG" type="update">
+     Portal block: Changed pathInfo and servletPath logic. pathInfo always starts
+     with '/', while servletPath always has no '/' at the end.
+   </action>
    <action dev="VG" type="fix">
      Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
    </action>
