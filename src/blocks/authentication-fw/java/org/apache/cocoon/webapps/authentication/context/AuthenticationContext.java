@@ -55,9 +55,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.10 2003/09/25 17:28:38 joerg Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.11 2003/10/21 12:39:16 cziegeler Exp $
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -485,9 +485,9 @@ implements SessionContext {
      */
     public void loadXML(String path,
                         SourceParameters parameters,
-                        Map                objectModel,
-                        SourceResolver     resolver,
-                        ComponentManager   manager)
+                        Map              objectModel,
+                        SourceResolver   resolver,
+                        ServiceManager   manager)
     throws SAXException, ProcessingException, IOException {
         if (!path.startsWith("/") ) path = '/' + path;
 
@@ -540,7 +540,7 @@ implements SessionContext {
                         SourceParameters parameters,
                         Map                objectModel,
                         SourceResolver     resolver,
-                        ComponentManager   manager)
+                        ServiceManager   manager)
     throws SAXException, ProcessingException, IOException {
         if (!path.startsWith("/") ) path = '/' + path;
 
@@ -601,7 +601,7 @@ implements SessionContext {
                                        SourceParameters parameters,
                                        Map                objectModel,
                                        SourceResolver     resolver,
-                                       ComponentManager   manager)
+                                       ServiceManager   manager)
     throws ProcessingException {
         String authSaveResource = this.handler.getHandlerConfiguration().getSaveResource();
         SourceParameters authSaveResourceParameters = this.handler.getHandlerConfiguration().getSaveResourceParameters();
@@ -641,7 +641,7 @@ implements SessionContext {
                                        SourceParameters parameters,
                                        Map                objectModel,
                                        SourceResolver     resolver,
-                                       ComponentManager   manager)
+                                       ServiceManager   manager)
     throws ProcessingException {
         String authLoadResource = this.handler.getHandlerConfiguration().getLoadResource();
         SourceParameters authLoadResourceParameters = this.handler.getHandlerConfiguration().getLoadResourceParameters();
@@ -680,7 +680,7 @@ implements SessionContext {
                                     SourceParameters parameters,
                                     Map                objectModel,
                                     SourceResolver     resolver,
-                                    ComponentManager   manager)
+                                    ServiceManager   manager)
     throws ProcessingException {
         final String applicationName = this.getState().getApplicationName();
 
@@ -720,7 +720,7 @@ implements SessionContext {
                                     SourceParameters parameters,
                                     Map                objectModel,
                                     SourceResolver     resolver,
-                                    ComponentManager   manager)
+                                    ServiceManager   manager)
     throws ProcessingException {
         final String applicationName = this.getState().getApplicationName();
         final ApplicationConfiguration conf = (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get( applicationName );

@@ -52,10 +52,10 @@ package org.apache.cocoon.webapps.session.selection;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.webapps.session.MediaManager;
@@ -64,19 +64,12 @@ import org.apache.cocoon.webapps.session.MediaManager;
  *  This selector uses the media management.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: MediaSelector.java,v 1.1 2003/05/04 20:19:42 cziegeler Exp $
+ * @version CVS $Id: MediaSelector.java,v 1.2 2003/10/21 12:39:17 cziegeler Exp $
 */
 public final class MediaSelector
-implements Composable, Selector, ThreadSafe {
+implements Serviceable, Selector, ThreadSafe {
 
-    private ComponentManager manager;
-
-    /**
-     * Composable
-     */
-    public void compose(ComponentManager manager) {
-        this.manager = manager;
-    }
+    private ServiceManager manager;
 
     /**
      * Selector
@@ -91,10 +84,18 @@ implements Composable, Selector, ThreadSafe {
             // ignore me
             result = false;
         } finally {
-            this.manager.release( (Component)mediaManager );
+            this.manager.release(mediaManager );
         }
         return result;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
 }
 
 

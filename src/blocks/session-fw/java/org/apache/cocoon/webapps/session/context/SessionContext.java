@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceResolver;
  *  As this context is used in a web context, all methods must be synchronized.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContext.java,v 1.1 2003/03/09 00:06:10 pier Exp $
+ * @version CVS $Id: SessionContext.java,v 1.2 2003/10/21 12:39:15 cziegeler Exp $
 */
 public interface SessionContext
 extends Serializable {
@@ -211,9 +211,9 @@ extends Serializable {
      */
     void loadXML(String path,
                  SourceParameters parameters,
-                 Map                objectModel,
-                 SourceResolver     resolver,
-                 ComponentManager   manager)
+                 Map              objectModel,
+                 SourceResolver   resolver,
+                 ServiceManager   manager)
     throws SAXException, ProcessingException, IOException;
 
     /**
@@ -223,8 +223,8 @@ extends Serializable {
      */
     void saveXML(String path,
                  SourceParameters parameters,
-                 Map                objectModel,
-                 SourceResolver     resolver,
-                 ComponentManager   manager)
+                 Map              objectModel,
+                 SourceResolver   resolver,
+                 ServiceManager   manager)
     throws SAXException, ProcessingException, IOException;
 }

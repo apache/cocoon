@@ -50,8 +50,7 @@
 */
 package org.apache.cocoon.webapps.session.transformation;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
@@ -63,7 +62,7 @@ import org.apache.cocoon.webapps.session.SessionManager;
  *  This class is the basis for all session transformers.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSessionTransformer.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: AbstractSessionTransformer.java,v 1.3 2003/10/21 12:39:17 cziegeler Exp $
 */
 public abstract class AbstractSessionTransformer
 extends AbstractSAXTransformer {
@@ -80,7 +79,7 @@ extends AbstractSAXTransformer {
         if (this.sessionManager == null) {
             try {
                 this.sessionManager = (SessionManager)this.manager.lookup(SessionManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of SessionManager component.", ce);
             }
         }
@@ -95,7 +94,7 @@ extends AbstractSAXTransformer {
         if (this.contextManager == null) {
             try {
                 this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of ContextManager component.", ce);
             }
         }
@@ -110,7 +109,7 @@ extends AbstractSAXTransformer {
         if (this.formManager == null) {
             try {
                 this.formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of FormManager component.", ce);
             }
         }
@@ -122,9 +121,9 @@ extends AbstractSAXTransformer {
      */
     public void recycle() {
         super.recycle();
-        this.manager.release( (Component)this.sessionManager);
-        this.manager.release( (Component)this.formManager);
-        this.manager.release( (Component)this.contextManager);
+        this.manager.release( this.sessionManager);
+        this.manager.release( this.formManager);
+        this.manager.release( this.contextManager);
         this.sessionManager = null;
         this.formManager = null;
         this.contextManager = null;

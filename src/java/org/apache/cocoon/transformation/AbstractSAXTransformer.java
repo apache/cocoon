@@ -51,13 +51,13 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -121,11 +121,11 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.5 2003/08/09 19:48:54 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.6 2003/10/21 12:39:16 cziegeler Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
-implements Composable, Configurable, Recyclable {
+implements Serviceable, Configurable, Recyclable {
 
     /** Controlls SAX event handling.
      *  If set to true all whitespace events are ignored.
@@ -183,8 +183,8 @@ implements Composable, Configurable, Recyclable {
     protected Parameters         parameters;
     /** The source attribute specified in the sitemap */
     protected String             source;
-    /** The Avalon ComponentManager for getting Components */
-    protected ComponentManager   manager;
+    /** The Avalon ServiceManager for getting Components */
+    protected ServiceManager   manager;
     /** The SourceResolver for this request */
     protected SourceResolver     resolver;
 
@@ -276,10 +276,10 @@ implements Composable, Configurable, Recyclable {
     }
 
     /**
-     * Avalon Composable Interface
-     * @param manager The Avalon Component Manager
+     * Avalon Serviceable Interface
+     * @param manager The Avalon Service Manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 

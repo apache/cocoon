@@ -55,9 +55,8 @@ import java.io.StringReader;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -147,7 +146,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getAuthType()
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: RequestSessionContext.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
+ * @version CVS $Id: RequestSessionContext.java,v 1.3 2003/10/21 12:39:15 cziegeler Exp $
 */
 public final class RequestSessionContext
 implements SessionContext {
@@ -176,7 +175,7 @@ implements SessionContext {
     /**
      * Set the Request
      */
-    public void setup(Map objectModel, ComponentManager manager)
+    public void setup(Map objectModel, ServiceManager manager)
     throws ProcessingException {
         this.request = ObjectModelHelper.getRequest(objectModel);
 
@@ -189,10 +188,10 @@ implements SessionContext {
         try {
             parser = (SAXParser) manager.lookup( SAXParser.ROLE );
             this.buildParameterXML(root, parser);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup parser.", ce);
         } finally {
-            manager.release( (Component)parser );
+            manager.release(parser );
         }
         this.buildAttributesXML(root);
         this.buildMiscXML(root);
@@ -689,9 +688,9 @@ implements SessionContext {
      */
     public void loadXML(String path,
                         SourceParameters parameters,
-                        Map                objectModel,
-                        SourceResolver     resolver,
-                        ComponentManager   manager)
+                        Map              objectModel,
+                        SourceResolver   resolver,
+                        ServiceManager   manager)
     throws SAXException, ProcessingException, IOException {
         throw new ProcessingException("The context " + this.name + " does not support loading.");
     }
@@ -703,9 +702,9 @@ implements SessionContext {
      */
     public void saveXML(String path,
                         SourceParameters parameters,
-                        Map                objectModel,
-                        SourceResolver     resolver,
-                        ComponentManager   manager)
+                        Map              objectModel,
+                        SourceResolver   resolver,
+                        ServiceManager   manager)
     throws SAXException, ProcessingException, IOException {
         throw new ProcessingException("The context " + this.name + " does not support saving.");
     }

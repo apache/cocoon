@@ -54,7 +54,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -81,7 +81,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.5 2003/05/04 20:19:40 cziegeler Exp $
+ * @version CVS $Id: SimpleSessionContext.java,v 1.6 2003/10/21 12:39:15 cziegeler Exp $
 */
 public final class SimpleSessionContext
 implements SessionContext {
@@ -487,10 +487,10 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void loadXML(String            path,
-                        SourceParameters   parameters,
-                        Map                objectModel,
-                        SourceResolver     resolver,
-                        ComponentManager   manager)
+                        SourceParameters  parameters,
+                        Map               objectModel,
+                        SourceResolver    resolver,
+                        ServiceManager    manager)
     throws SAXException, ProcessingException, IOException {
         if (this.loadResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support loading.");
@@ -516,9 +516,9 @@ implements SessionContext {
      */
     public void saveXML(String path,
                         SourceParameters parameters,
-                        Map                objectModel,
-                        SourceResolver     resolver,
-                        ComponentManager   manager)
+                        Map              objectModel,
+                        SourceResolver   resolver,
+                        ServiceManager   manager)
     throws SAXException, ProcessingException, IOException {
         if (this.saveResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support saving.");

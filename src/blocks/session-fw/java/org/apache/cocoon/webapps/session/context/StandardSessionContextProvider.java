@@ -53,13 +53,13 @@ package org.apache.cocoon.webapps.session.context;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -71,15 +71,15 @@ import org.apache.cocoon.webapps.session.SessionConstants;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.5 2003/07/04 10:46:29 cziegeler Exp $
+ * @version CVS $Id: StandardSessionContextProvider.java,v 1.6 2003/10/21 12:39:15 cziegeler Exp $
 */
 public final class StandardSessionContextProvider
 extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Contextualizable, Composable, Component {
+implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Component {
 
     protected Context context;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
     /**
      * Get the context
@@ -138,9 +138,9 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Composable, Com
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 

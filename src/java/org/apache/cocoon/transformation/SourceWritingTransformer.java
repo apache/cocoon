@@ -54,12 +54,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
@@ -256,7 +255,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.7 2003/09/23 12:26:58 vgritsenko Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.8 2003/10/21 12:39:16 cziegeler Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer {
@@ -667,7 +666,7 @@ public class SourceWritingTransformer
                                     try {
                                         resource = parser.createDocument();
                                     } finally {
-                                        this.manager.release( (Component)parser );
+                                        this.manager.release( parser );
                                     }
 
                                     resource.appendChild(resource.importNode(importNode, true));
@@ -706,7 +705,7 @@ public class SourceWritingTransformer
                 try {
                     resource = parser.createDocument();
                 } finally {
-                    this.manager.release( (Component)parser );
+                    this.manager.release( parser );
                 }
                 // import the fragment
                 Node importNode = resource.importNode(fragment, true);
@@ -733,11 +732,11 @@ public class SourceWritingTransformer
                 if (localSerializer == null) localSerializer = this.configuredSerializerName;
                 if (localSerializer != null) {
                     // Lookup the Serializer
-                    ComponentSelector selector = null;
+                    ServiceSelector selector = null;
                     Serializer serializer = null;
                     OutputStream oStream = null;
                     try {
-                        selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+                        selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
                         serializer = (Serializer)selector.select(localSerializer);
                         oStream = ws.getOutputStream();
                         serializer.setOutputStream(oStream);
@@ -775,7 +774,7 @@ public class SourceWritingTransformer
                 getLogger().debug("FAIL exception: "+de, de);
             }
             message = "There was a problem manipulating your document: " + de;
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("FAIL exception: "+ce, ce);
             }

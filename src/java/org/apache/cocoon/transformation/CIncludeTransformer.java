@@ -52,10 +52,9 @@ package org.apache.cocoon.transformation;
 
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
@@ -147,7 +146,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.6 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.7 2003/10/21 12:39:16 cziegeler Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -230,11 +229,11 @@ implements Disposable, CacheableProcessingComponent {
     }
 
     /**
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
-        if ( this.manager.hasComponent( IncludeCacheManager.ROLE )) {
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        if ( this.manager.hasService( IncludeCacheManager.ROLE )) {
             this.cacheManager = (IncludeCacheManager) this.manager.lookup( IncludeCacheManager.ROLE );
         } else {
             this.getLogger().warn("The cinclude transformer cannot find the IncludeCacheManager. Therefore caching is turned off for the include transformer.");
@@ -246,7 +245,7 @@ implements Disposable, CacheableProcessingComponent {
      */
     public void dispose() {
         if ( null != this.manager ) {
-            this.manager.release( (Component)this.cacheManager );
+            this.manager.release( this.cacheManager );
             this.manager = null;
         }
     }
@@ -393,7 +392,7 @@ implements Disposable, CacheableProcessingComponent {
                     }
                 } catch (ProcessingException pe) {
                     if (!ignoreErrors) throw pe;
-                } catch (ComponentException ignore) {
+                } catch (ServiceException ignore) {
                 } finally {
                     this.manager.release( serializer );
                     this.manager.release( deserializer );
@@ -551,8 +550,8 @@ implements Disposable, CacheableProcessingComponent {
                                                this);
                     }
                 } finally {
-                    this.manager.release((Component)parser);
-                    this.manager.release((Component)processor);
+                    this.manager.release(parser);
+                    this.manager.release(processor);
                 }
             } else {
                 String mimeType = null;
@@ -573,7 +572,7 @@ implements Disposable, CacheableProcessingComponent {
             throw new SAXException("CIncludeTransformer could not read resource", e);
         } catch (ProcessingException e){
             throw new SAXException("Exception in CIncludeTransformer",e);
-        } catch(ComponentException e) {
+        } catch(ServiceException e) {
             throw new SAXException(e);
         } finally {
             this.resolver.release(source);
@@ -605,7 +604,7 @@ implements Disposable, CacheableProcessingComponent {
             
             this.addRecorder(recorder);
   
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup xml serializer for compiling xml.", ce);
         }
         if (this.getLogger().isDebugEnabled()) {
@@ -651,7 +650,7 @@ implements Disposable, CacheableProcessingComponent {
                 deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
                 deserializer.setConsumer(this.filter);
                 deserializer.deserialize(compiledXML);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new SAXException("Unable to lookup xml deserializer.", ce);
             } finally {
                 this.manager.release( deserializer );
