@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.378 2004/07/02 09:10:15 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.379 2004/07/02 16:13:16 crossley Exp $:-->
 
 <status>
  <developers>
@@ -931,7 +931,7 @@
       Woody: in the form definition, for widgets that have child widgets, those
       child widgets should now be embedded inside a wd:widgets element.
       Practical update information can be found
-      <link href="http://wiki.cocoondev.org/Wiki.jsp?page=WoodySyntaxUpdateForWidgetsElement">
+      <link href="http://wiki.apache.org/cocoon/WoodySyntaxUpdateForWidgetsElement">
       in the wiki</link>.
    </action>
    <action dev="AG" type="update">
