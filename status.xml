@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="fix" fixes-bug="34325"i due-to="Joachim Breitsprecher" due-to-email="jb@dserv.net">
+      XInclude transformer does not handle fallback correctly.
+    </action>
     <action dev="VG" type="update">
       Deprecate EventRecorder (in o.a.c.t.helpers package). It will be
       removed starting with Cocoon 2.2.

@@ -171,6 +171,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
                 xIncludeLevel++;
                 return;
+            } else if (xIncludeLevel > 0 && fallbackLevel > 0) {
+                fallbackLevel++;
             }
 
             xmlBaseSupport.startElement(uri, name, raw, attr);
