@@ -80,7 +80,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.8 2003/11/06 15:44:26 unico Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.9 2004/01/03 12:42:39 vgritsenko Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
@@ -100,7 +100,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         Configuration config = tree.getChild("components", false);
 
         if (config == null) {
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
             }
             config = new DefaultConfiguration("", "");
@@ -197,7 +197,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
      * @param view the view name
      */
     public void addViewForLabel(String label, String view) {
-        if (this.getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("views:addViewForLabel(" + label + ", " + view + ")");
         }
         Set views = (Set)this.labelViews.get(label);
@@ -377,15 +377,17 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         // firstly, determine if any pipeline-hints are defined at the component level
         // if so, inherit these pipeline-hints (these hints can be overriden by local pipeline-hints)
+        SitemapComponentSelector selector = null;
         try {
-            SitemapComponentSelector  selector = (SitemapComponentSelector)this.manager.lookup(role + "Selector");
+            selector = (SitemapComponentSelector)this.manager.lookup(role + "Selector");
             componentHintParams = selector.getPipelineHint(hint);
-        }
-        catch (Exception ex) {
-            if (this.getLogger().isWarnEnabled()) {
+        } catch (Exception ex) {
+            if (getLogger().isWarnEnabled()) {
                 getLogger().warn("pipeline-hints: Component Exception: could not " + 
                              "check for component level hints " + ex);
             }
+        } finally {
+            this.manager.release(selector);
         }
 
         if (componentHintParams != null) {
@@ -394,8 +396,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             if (statementHintParams != null) {
                 hintParams = hintParams + "," + statementHintParams; 
             }
-        }
-        else {
+        } else {
             hintParams = statementHintParams;
         }
 
@@ -412,7 +413,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         String[]  expressions = commaSplit.split(hintParams.trim());
 
-        if (this.getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("pipeline-hints: (aggregate-hint) " + hintParams); 
         }
 
@@ -421,17 +422,15 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
             try {
                 if (nameValuePair.length < 2) {
-                    if (this.getLogger().isDebugEnabled()) {
+                    if (getLogger().isDebugEnabled()) {
                         getLogger().debug("pipeline-hints: (name) " + nameValuePair[0] 
                                        + "\npipeline-hints: (value) [implicit] true");
                     }
   
                     params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.manager),
                                 VariableResolverFactory.getResolver("true", this.manager));
-                }
-                else
-                {
-                    if (this.getLogger().isDebugEnabled()) {
+                } else {
+                    if (getLogger().isDebugEnabled()) {
                         getLogger().debug("pipeline-hints: (name) " + nameValuePair[0]
                                           + "\npipeline-hints: (value) " + nameValuePair[1]);
                     }
@@ -439,12 +438,11 @@ public class SitemapLanguage extends DefaultTreeBuilder {
                     params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.manager),
                                 VariableResolverFactory.getResolver(nameValuePair[1], this.manager));
                 }
-            }
-            catch(PatternException pe) {
+            } catch(PatternException pe) {
                 String msg = "Invalid pattern '" + hintParams + "' at " + statement.getLocation();
                 getLogger().error(msg, pe);
                 throw new ConfigurationException(msg, pe);
-             }
+            }
         }
 
         return params;

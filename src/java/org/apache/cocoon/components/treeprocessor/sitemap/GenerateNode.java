@@ -64,9 +64,8 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: GenerateNode.java,v 1.2 2003/03/24 14:33:55 stefano Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.3 2004/01/03 12:42:39 vgritsenko Exp $
  */
-
 public class GenerateNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
     private String generatorName;
@@ -74,6 +73,7 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
     private VariableResolver source;
 
     private Map parameters;
+
 
     public GenerateNode(String name, VariableResolver source) throws PatternException {
         this.generatorName = name;
@@ -85,7 +85,7 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 
         Map objectModel = env.getObjectModel();
 

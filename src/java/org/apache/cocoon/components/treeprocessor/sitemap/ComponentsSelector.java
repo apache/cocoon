@@ -79,11 +79,11 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.7 2003/11/06 21:31:05 vgritsenko Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.8 2004/01/03 12:42:39 vgritsenko Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector
-implements OutputComponentSelector, SitemapComponentSelector {
+                                implements OutputComponentSelector, SitemapComponentSelector {
 
     public static final int UNKNOWN     = -1;
     public static final int GENERATOR   = 0;

@@ -55,9 +55,8 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.1 2003/03/09 00:09:16 pier Exp $
+ * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.2 2004/01/03 12:42:39 vgritsenko Exp $
  */
-
 public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode {
 
     protected Map views;
@@ -73,10 +72,6 @@ public abstract class PipelineEventComponentProcessingNode extends AbstractProce
     }
 
     public boolean hasViews() {
-        if (this.views != null)
-            return true;
-
-        return false;
+        return this.views != null;
     }
-
 }

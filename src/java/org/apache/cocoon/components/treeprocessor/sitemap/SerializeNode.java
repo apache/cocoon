@@ -66,10 +66,9 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.6 2003/11/21 18:15:44 sylvain Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.7 2004/01/03 12:42:39 vgritsenko Exp $
  */
-
-public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode{
+public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
     private String serializerName;
 
@@ -80,6 +79,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
     private int statusCode;
 
     private Map parameters;
+
 
     /**
      * Build a <code>SerializerNode</code> having a name, a mime-type and a status code (HTTP codes).
@@ -100,7 +100,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 
         // Check view
         if (this.views != null) {
@@ -160,5 +160,3 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
         }
     }
 }
-
-
