@@ -61,7 +61,7 @@ package org.apache.cocoon.components.flow;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
  * @see WebContinuation
- * @version CVS $Id: ContinuationsManager.java,v 1.4 2003/03/20 02:46:32 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManager.java,v 1.5 2003/08/26 09:05:15 mpo Exp $
  */
 public interface ContinuationsManager {
     public final String ROLE = ContinuationsManager.class.getName();
@@ -77,12 +77,15 @@ public interface ContinuationsManager {
      * @param timeToLive an <code>int</code> value indicating how long
      * in seconds this continuation will live in the server if not
      * accessed
+     * @param disposer a <code>ContinuationsDisposer</code> instance to called when 
+     * the continuation gets cleaned up.
      * @return a <code>WebContinuation</code> value
      * @see WebContinuation
      */
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parentKont,
-                                                 int timeToLive);
+                                                 int timeToLive,
+                                                 ContinuationsDisposer disposer);
 
     /**
      * Invalidates a <code>WebContinuation</code>. This effectively
