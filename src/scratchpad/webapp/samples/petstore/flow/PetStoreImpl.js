@@ -44,7 +44,7 @@
 
 */
 
-cocoon.load("resource://org/apache/cocoon/components/flow/Database.js");
+cocoon.load("resource://org/apache/cocoon/components/flow/javascript/Database.js");
 
 function OrderForm() {
     this.order = new Order();
