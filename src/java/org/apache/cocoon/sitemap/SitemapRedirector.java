@@ -59,8 +59,10 @@ import java.io.IOException;
 /**
  * Wrapper for sitemap redirection
  *
+ * @deprecated This class has been used by the old sitemap engine
+ *  
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapRedirector.java,v 1.4 2003/11/14 18:57:43 unico Exp $
+ * @version CVS $Id: SitemapRedirector.java,v 1.5 2004/02/21 15:46:39 cziegeler Exp $
  */
 public class SitemapRedirector implements Redirector {
     private boolean hasRedirected = false;
