@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.components.language.markup.xsp;
+package org.apache.cocoon.components.language.markup.sitemap;
 
 import java.io.File;
 import java.util.Date;
@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-02 20:03:44 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 18:53:20 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
   /**
