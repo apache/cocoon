@@ -4,16 +4,16 @@ importPackage(Packages.org.apache.cocoon.components.source.helpers);
 importPackage(Packages.org.apache.cocoon.samples.slide);
 importPackage(Packages.org.apache.excalibur.source);
 
-var repository = cocoon.getComponent("org.apache.cocoon.components.repository.SourceRepository");
-var resolver = cocoon.getComponent(SourceResolver.ROLE);
-var slide = cocoon.getComponent(SlideRepository.ROLE);
-var nat = slide.getNamespaceToken("cocoon");
-
 // these variables need to be available in the sitemap as well
 // is/should there be a simple way to share these? an input module?
 var principal;
 var namespace = "cocoon";
 var base = "/samples/slide/";
+
+var repository = cocoon.getComponent("org.apache.cocoon.components.repository.SourceRepository");
+var resolver = cocoon.getComponent(SourceResolver.ROLE);
+var slide = cocoon.getComponent(SlideRepository.ROLE);
+var nat = slide.getNamespaceToken(namespace);
 
 // ---------------------------------------------- utility functions
 
@@ -25,6 +25,7 @@ function getBaseURI() {
 
 function protect() {
   var path = cocoon.parameters["path"];
+  cocoon.log.info("path: " + path);
   if (principal == undefined){
     login(path);
   }
@@ -52,8 +53,7 @@ function login(path) {
     var password = cocoon.request.getParameter("password");
     if (AdminHelper.login(nat,userid,password)) {
       principal = userid;
-      // also put it in the session so it can be accessed 
-      // from the sitemap throuhg the session attribute module
+      // make the principal accessible from the sitemap as well
       cocoon.session.setAttribute("slide-principal",principal);
     }
   }
@@ -199,7 +199,14 @@ function protected_adduser() {
   cocoon.redirectTo(base + "users");
 }
 
-function protected_addgroup() {
+function protected_addrole () {
+  var rolename = cocoon.request.getParameter("rolename");
+  
+  AdminHelper.addRole(nat,principal,rolename);
+  cocoon.redirectTo("users");
+}
+
+function protected_addgroup () {
   var groupname = cocoon.request.getParameter("groupname");
   
   AdminHelper.addGroup(nat,principal,groupname);

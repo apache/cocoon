@@ -186,6 +186,43 @@ public class AdminHelper {
         
     }
     
+    public static void addRole(NamespaceAccessToken nat,
+                                String caller,
+                                String rolename) throws Exception {
+        
+        String rolesPath = nat.getNamespaceConfig().getRolesPath();
+        String roleUri = rolesPath + "/" + rolename;
+        
+        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
+        Structure structure = nat.getStructureHelper();
+        Content content = nat.getContentHelper();
+        
+        try {
+            nat.begin();
+            
+            ObjectNode role = new SubjectNode();
+            structure.create(slideToken,role,roleUri);
+            
+            NodeRevisionDescriptor descriptor = new NodeRevisionDescriptor();
+            descriptor.setCreationDate(new Date());
+            descriptor.setLastModified(new Date());
+            
+            content.create(slideToken,roleUri,descriptor,null);
+            
+            nat.commit();
+        }
+        catch (Exception e) {
+            try {
+                nat.rollback();
+            }
+            catch (Exception f) {
+                f.printStackTrace();
+            }
+            throw e;
+        }
+        
+    }
+    
     public static void removeObject(NamespaceAccessToken nat,
                                     String caller,
                                     String objectUri) throws Exception {
