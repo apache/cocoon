@@ -28,7 +28,7 @@
 			<ul>
 				<li>Name : jsp</li>
 				<li>Class: org.apache.cocoon.generation.JspGenerator</li>
-				<li>Cacheable: ?.</li>
+				<li>Cacheable: no</li>
 			</ul>
 <source><![CDATA[
 <map:generate type="jsp"/>
