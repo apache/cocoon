@@ -178,12 +178,6 @@
     <mkdir dir="${build}"/>
   </target>
 
-  <!-- Prepare the build directories -->
-  <target name="prepare-core" depends="prepare">
-    <mkdir dir="${build.dest}"/>
-    <mkdir dir="${build.mocks}"/>
-  </target>
-
 <!-- Clean Targets ========================================================= -->
 
   <!-- Clean -->
