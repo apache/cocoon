@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.67 2000-05-07 04:42:07 ricardo Exp $
+  $Id: changes.xml,v 1.68 2000-05-07 17:22:35 ricardo Exp $
 -->
 
 <changes title="History of Changes">
@@ -21,7 +21,7 @@
   </action>
  </release>
  
- <release version="1.7.3" date="May 6 2000">
+ <release version="1.7.4" date="May 6 2000">
   <action dev="RR" type="fix" due-to="Kevin Burton" due-to-email="burton@relativity.yi.org">
   </action>
     Changed "create-session" attribute in &lt;xsp:page&gt; to accept
