@@ -329,6 +329,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="CZ" type="update">
+     Cache the mime-type of readers and serializers.
+   </action>
    <action dev="VG" type="update">
      Add support for translating attribute values which contain i18n expressions
      rather than complete i18n key.

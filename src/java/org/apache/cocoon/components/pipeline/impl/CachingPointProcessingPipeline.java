@@ -41,7 +41,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.8 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -50,7 +50,7 @@ public class CachingPointProcessingPipeline
     protected ArrayList xmlSerializerArray = new ArrayList();
     protected boolean nextIsCachePoint = false;
     protected String autoCachingPointSwitch;
-    protected  boolean autoCachingPoint = true;
+    protected boolean autoCachingPoint = true;
 
 
    /**
@@ -79,9 +79,9 @@ public class CachingPointProcessingPipeline
         }
     }
 
-   /**
-    * Set the generator.
-    */
+    /**
+     * Set the generator.
+     */
     public void setGenerator (String role, String source, Parameters param, Parameters hintParam) 
     throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
@@ -94,9 +94,7 @@ public class CachingPointProcessingPipeline
             if (this.getLogger().isDebugEnabled()) {
                 getLogger().debug("generator caching-point pipeline-hint is set to: " + pipelinehint);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             if (this.getLogger().isWarnEnabled()) {
                 getLogger().warn("caching-point hint Exception, pipeline-hint ignored: " + ex);
             }
@@ -125,9 +123,7 @@ public class CachingPointProcessingPipeline
             if (this.getLogger().isDebugEnabled()) {
                 getLogger().debug("transformer caching-point pipeline-hint is set to: " + pipelinehint);
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             if (this.getLogger().isWarnEnabled()) {
                 getLogger().warn("caching-point hint Exception, pipeline-hint ignored: " + ex);
             }
@@ -155,16 +151,17 @@ public class CachingPointProcessingPipeline
      */
     public void informBranchPoint() {
 
-        if (this.generator == null)
-        return;
-
-    if (!this.autoCachingPoint)
-        return;
+        if (this.generator == null) {
+            return;
+        }
+        if (!this.autoCachingPoint) {
+            return;
+        }   
 
         this.nextIsCachePoint = true;
-         if (this.getLogger().isDebugEnabled()) {
-           this.getLogger().debug("Informed Pipeline of branch point");
-         }
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Informed Pipeline of branch point");
+        }
     }
 
     /**
@@ -180,6 +177,7 @@ public class CachingPointProcessingPipeline
                 }
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           ((CachingOutputStream)os).getContent());
+                response.setContentType(environment.getContentType());
                 this.cache.store(this.toCacheKey.copy(),
                                  response);
                 //
@@ -260,137 +258,134 @@ public class CachingPointProcessingPipeline
      */
     protected void connectCachingPipeline(Environment   environment)
     throws ProcessingException {
-            try {
-                XMLSerializer localXMLSerializer = null;
-                XMLSerializer cachePointXMLSerializer = null;
-                if (!this.cacheCompleteResponse) {
-                    this.xmlSerializer = (XMLSerializer)this.manager.lookup( XMLSerializer.ROLE );
-                    localXMLSerializer = this.xmlSerializer;
+        try {
+            XMLSerializer localXMLSerializer = null;
+            XMLSerializer cachePointXMLSerializer = null;
+            if (!this.cacheCompleteResponse) {
+                this.xmlSerializer = (XMLSerializer)this.manager.lookup( XMLSerializer.ROLE );
+                localXMLSerializer = this.xmlSerializer;
+            }
+            if ( this.cachedResponse == null ) {
+
+                XMLProducer prev = super.generator;
+                XMLConsumer next;
+
+                int cacheableTransformerCount = this.firstNotCacheableTransformerIndex;
+                int currentTransformerIndex = 0; //start with the first transformer
+
+                Iterator itt = this.transformers.iterator();
+                while ( itt.hasNext() ) {
+                    next = (XMLConsumer) itt.next();
+
+                    // if we have cacheable transformers,
+                    // check the tranformers for cachepoints
+                    if (cacheableTransformerCount > 0) {
+                        if ( (this.isCachePoint.get(currentTransformerIndex) != null)  &&
+                                ((Boolean)this.isCachePoint.get(currentTransformerIndex)).booleanValue()) {
+
+                            cachePointXMLSerializer = ((XMLSerializer)
+                            this.manager.lookup( XMLSerializer.ROLE ));
+                            next = new XMLTeePipe(next, cachePointXMLSerializer);
+                            this.xmlSerializerArray.add(cachePointXMLSerializer);
+                        }
+                    }
+
+
+                    // Serializer is not cacheable,
+                    // but we  have the longest cacheable key. Do default longest key caching
+                    if (localXMLSerializer != null) {
+                        if (cacheableTransformerCount == 0) {
+                            next = new XMLTeePipe(next, localXMLSerializer);
+                            this.xmlSerializerArray.add(localXMLSerializer);
+                            localXMLSerializer = null;
+                        } else {
+                            cacheableTransformerCount--;
+                        }
+                    }
+                    this.connect(environment, prev, next);
+                    prev = (XMLProducer) next;
+
+                    currentTransformerIndex++;
                 }
-                if ( this.cachedResponse == null ) {
+                next = super.lastConsumer;
 
-                    XMLProducer prev = super.generator;
-                    XMLConsumer next;
 
-                    int cacheableTransformerCount = this.firstNotCacheableTransformerIndex;
-                    int currentTransformerIndex = 0; //start with the first transformer
+                // if the serializer is not cacheable, but all the transformers are:
+                // (this is default longest key caching)
+                if (localXMLSerializer != null) {
+                    next = new XMLTeePipe(next, localXMLSerializer);
+                    this.xmlSerializerArray.add(localXMLSerializer);
+                    localXMLSerializer = null;
+                }
 
-                    Iterator itt = this.transformers.iterator();
-                    while ( itt.hasNext() ) {
-                        next = (XMLConsumer) itt.next();
+                // else if the serializer is cacheable and has cocoon views
+                else if ((currentTransformerIndex == this.firstNotCacheableTransformerIndex) &&
+                        this.nextIsCachePoint) {
+                    cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
+                    next = new XMLTeePipe(next, cachePointXMLSerializer);
+                    this.xmlSerializerArray.add(cachePointXMLSerializer);
+                }
+                this.connect(environment, prev, next);
 
-                        // if we have cacheable transformers,
-                        // check the tranformers for cachepoints
-                        if (cacheableTransformerCount > 0) {
-                            if ( (this.isCachePoint.get(currentTransformerIndex) != null)  &&
-                                    ((Boolean)this.isCachePoint.get(currentTransformerIndex)).booleanValue()) {
+            } else {
+                // Here the first part of the pipeline has been retrived from cache
+                // we now check if any part of the rest of the pipeline can be cached
+                this.xmlDeserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
+                // connect the pipeline:
+                XMLProducer prev = xmlDeserializer;
+                XMLConsumer next;
+                int cacheableTransformerCount = 0;
+                Iterator itt = this.transformers.iterator();
+                while ( itt.hasNext() ) {
+                    next = (XMLConsumer) itt.next();
 
-                                cachePointXMLSerializer = ((XMLSerializer)
-                                this.manager.lookup( XMLSerializer.ROLE ));
+                    if (cacheableTransformerCount >= this.firstProcessedTransformerIndex) {
+
+                        // if we have cacheable transformers left,
+                        // then check the tranformers for cachepoints
+                        if (cacheableTransformerCount < this.firstNotCacheableTransformerIndex) {
+                            if ( !(prev instanceof XMLDeserializer) &&
+                                    (this.isCachePoint.get(cacheableTransformerCount) != null)  &&
+                                    ((Boolean)this.isCachePoint.get(cacheableTransformerCount)).booleanValue()) {
+                                cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
                                 next = new XMLTeePipe(next, cachePointXMLSerializer);
                                 this.xmlSerializerArray.add(cachePointXMLSerializer);
                             }
                         }
 
-
                         // Serializer is not cacheable,
                         // but we  have the longest cacheable key. Do default longest key caching
-                        if (localXMLSerializer != null) {
-                            if (cacheableTransformerCount == 0) {
-                                next = new XMLTeePipe(next, localXMLSerializer);
-                                this.xmlSerializerArray.add(localXMLSerializer);
-                                localXMLSerializer = null;
-                            } else {
-                                cacheableTransformerCount--;
-                            }
+                        if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)
+                                && cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
+                            next = new XMLTeePipe(next, localXMLSerializer);
+                            this.xmlSerializerArray.add(localXMLSerializer);
+                            localXMLSerializer = null;
                         }
                         this.connect(environment, prev, next);
-                        prev = (XMLProducer) next;
-
-                        currentTransformerIndex++;
+                        prev = (XMLProducer)next;
                     }
-                    next = super.lastConsumer;
-
-
-                    // if the serializer is not cacheable, but all the transformers are:
-                    // (this is default longest key caching)
-                    if (localXMLSerializer != null) {
-                        next = new XMLTeePipe(next, localXMLSerializer);
-                        this.xmlSerializerArray.add(localXMLSerializer);
-                        localXMLSerializer = null;
-                    }
-
-                    // else if the serializer is cacheable and has cocoon views
-                    else if ((currentTransformerIndex == this.firstNotCacheableTransformerIndex) &&
-                            this.nextIsCachePoint) {
-                        cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
-                        next = new XMLTeePipe(next, cachePointXMLSerializer);
-                        this.xmlSerializerArray.add(cachePointXMLSerializer);
-                    }
-                    this.connect(environment, prev, next);
-
-
-                } else {
-                    // Here the first part of the pipeline has been retrived from cache
-                    // we now check if any part of the rest of the pipeline can be cached
-                    this.xmlDeserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
-                    // connect the pipeline:
-                    XMLProducer prev = xmlDeserializer;
-                    XMLConsumer next;
-                    int cacheableTransformerCount = 0;
-                    Iterator itt = this.transformers.iterator();
-                    while ( itt.hasNext() ) {
-                        next = (XMLConsumer) itt.next();
-
-                        if (cacheableTransformerCount >= this.firstProcessedTransformerIndex) {
-
-                            // if we have cacheable transformers left,
-                            // then check the tranformers for cachepoints
-                            if (cacheableTransformerCount < this.firstNotCacheableTransformerIndex) {
-                                if ( !(prev instanceof XMLDeserializer) &&
-                                        (this.isCachePoint.get(cacheableTransformerCount) != null)  &&
-                                        ((Boolean)this.isCachePoint.get(cacheableTransformerCount)).booleanValue()) {
-                                    cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
-                                    next = new XMLTeePipe(next, cachePointXMLSerializer);
-                                    this.xmlSerializerArray.add(cachePointXMLSerializer);
-                                }
-                            }
-
-                            // Serializer is not cacheable,
-                            // but we  have the longest cacheable key. Do default longest key caching
-                            if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)
-                                    && cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
-                                next = new XMLTeePipe(next, localXMLSerializer);
-                                this.xmlSerializerArray.add(localXMLSerializer);
-                                localXMLSerializer = null;
-                            }
-                            this.connect(environment, prev, next);
-                            prev = (XMLProducer)next;
-                        }
-                        cacheableTransformerCount++;
-                    }
-                    next = super.lastConsumer;
-
-                    //*all* the transformers are cacheable, but the serializer is not!! this is longest key
-                    if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)) {
-                        next = new XMLTeePipe(next, localXMLSerializer);
-                        this.xmlSerializerArray.add(localXMLSerializer);
-                        localXMLSerializer = null;
-
-            }
-            //	else the serializer is cacheable but has views
-            else if (this.nextIsCachePoint && !(prev instanceof XMLDeserializer) &&
-                            cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
-                        cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
-                        next = new XMLTeePipe(next,  cachePointXMLSerializer);
-                        this.xmlSerializerArray.add(cachePointXMLSerializer);
-                    }
-                    this.connect(environment, prev, next);
+                    cacheableTransformerCount++;
                 }
+                next = super.lastConsumer;
 
-            } catch ( ServiceException e ) {
-                throw new ProcessingException("Could not connect pipeline.", e);
+                //*all* the transformers are cacheable, but the serializer is not!! this is longest key
+                if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)) {
+                    next = new XMLTeePipe(next, localXMLSerializer);
+                    this.xmlSerializerArray.add(localXMLSerializer);
+                    localXMLSerializer = null;
+                } else if (this.nextIsCachePoint && !(prev instanceof XMLDeserializer) &&
+                        cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
+                    // else the serializer is cacheable but has views
+                    cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
+                    next = new XMLTeePipe(next,  cachePointXMLSerializer);
+                    this.xmlSerializerArray.add(cachePointXMLSerializer);
+                }
+                this.connect(environment, prev, next);
             }
+
+        } catch ( ServiceException e ) {
+            throw new ProcessingException("Could not connect pipeline.", e);
+        }
     }
 
 

@@ -37,7 +37,7 @@ import org.apache.cocoon.xml.XMLProducer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public class CachingProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -53,6 +53,7 @@ public class CachingProcessingPipeline
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           ((CachingOutputStream)os).getContent(),
                                           expiresObj);
+                response.setContentType(environment.getContentType());
                 this.cache.store(this.toCacheKey,
                                  response);
             } else {

@@ -179,7 +179,9 @@ public abstract class AbstractProcessingPipeline
      * Informs pipeline we have come across a branch point
      * Default Behaviour is do nothing
      */
-    public void informBranchPoint() {}
+    public void informBranchPoint() {
+        // this can be overwritten in subclasses
+    }
 
     /**
      * Set the generator that will be used as the initial step in the pipeline.
@@ -377,28 +379,6 @@ public abstract class AbstractProcessingPipeline
                 );
             }
 
-            if (this.lastConsumer == null) {
-                // internal processing: text/xml
-                environment.setContentType("text/xml");
-            } else {
-                // Set the mime-type
-                // the behaviour has changed from 2.1.x to 2.2 according to bug #10277
-                if (serializerMimeType != null) {
-                    // there was a serializer defined in the sitemap
-                    environment.setContentType(serializerMimeType);
-                } else {
-                    // ask to the component itself
-                    String mimeType = this.serializer.getMimeType();
-                    if (mimeType != null) {
-                        environment.setContentType (mimeType);
-                    } else {
-                        // No mimeType available
-                        String message = "Unable to determine MIME type for " +
-                            environment.getURIPrefix() + "/" + environment.getURI();
-                        throw new ProcessingException(message);
-                    }
-                }
-            }
         } catch (SAXException e) {
             throw new ProcessingException(
                 "Could not setup pipeline.",
@@ -515,6 +495,8 @@ public abstract class AbstractProcessingPipeline
     protected boolean processXMLPipeline(Environment environment)
     throws ProcessingException {
 
+        this.setMimeTypeForSerializer(environment);
+        
         try {
             if (this.serializer != this.lastConsumer) {
                 // internal processing
@@ -567,6 +549,10 @@ public abstract class AbstractProcessingPipeline
         }
     }
 
+    /**
+     * Set the mime-type for a reader
+     * @param environment The current environment
+     */
     protected void setMimeTypeForReader(Environment environment) {
         // Set the mime-type
         // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
@@ -586,6 +572,36 @@ public abstract class AbstractProcessingPipeline
         }        
     }
     
+    /**
+     * Set the mime-type for a serializer
+     * @param environment The current environment
+     */
+    protected void setMimeTypeForSerializer(Environment environment) 
+    throws ProcessingException {
+        if (this.lastConsumer == null) {
+            // internal processing: text/xml
+            environment.setContentType("text/xml");
+        } else {
+            // Set the mime-type
+            // the behaviour has changed from 2.1.x to 2.2 according to bug #10277
+            if (serializerMimeType != null) {
+                // there was a serializer defined in the sitemap
+                environment.setContentType(serializerMimeType);
+            } else {
+                // ask to the component itself
+                String mimeType = this.serializer.getMimeType();
+                if (mimeType != null) {
+                    environment.setContentType (mimeType);
+                } else {
+                    // No mimeType available
+                    String message = "Unable to determine MIME type for " +
+                        environment.getURIPrefix() + "/" + environment.getURI();
+                    throw new ProcessingException(message);
+                }
+            }
+        }
+    }
+
     protected boolean checkIfModified(Environment environment,
                                         long lastModified)
     throws ProcessingException {

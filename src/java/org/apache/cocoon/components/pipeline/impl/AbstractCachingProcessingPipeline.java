@@ -62,8 +62,8 @@ public abstract class AbstractCachingProcessingPipeline
     /** The role name of the reader */
     protected String readerRole;
 
-    /** The cached byte stream */
-    protected byte[]           cachedResponse;
+    /** The cached response */
+    protected CachedResponse   cachedResponse;
     /** The timestamp of the cached byte stream */
     protected long             cachedLastModified;
 
@@ -173,17 +173,24 @@ public abstract class AbstractCachingProcessingPipeline
                 return true;
             }
 
+            // set mime-type
+            if ( this.cachedResponse.getContentType() != null ) {
+                environment.setContentType(this.cachedResponse.getContentType());
+            } else {
+                this.setMimeTypeForSerializer(environment);
+            }
             try {
-                final OutputStream outputStream =
-                            environment.getOutputStream(0);
-                if (this.cachedResponse.length > 0) {
-                    environment.setContentLength(this.cachedResponse.length);
-                    outputStream.write(this.cachedResponse);
+                final OutputStream outputStream = environment.getOutputStream(0);
+                final byte[] content = this.cachedResponse.getResponse();
+                if (content.length > 0) {
+                    environment.setContentLength(content.length);
+                    outputStream.write(content);
                 }
             } catch (Exception e) {
                 handleException(e);
             }
         } else {
+            this.setMimeTypeForSerializer(environment);
             if (getLogger().isDebugEnabled() && this.toCacheKey != null) {
                 getLogger().debug("processXMLPipeline: caching content for further" +
                                   " requests of '" + environment.getURI() +
@@ -439,7 +446,7 @@ public abstract class AbstractCachingProcessingPipeline
                                 ", ignoring all other cache settings. This entry expires on "+
                                 new Date(responseExpires.longValue()));
                         }
-                        this.cachedResponse = response.getResponse();
+                        this.cachedResponse = response;
                         this.cachedLastModified = response.getLastModified();
                         return;
                     } else {
@@ -518,7 +525,7 @@ public abstract class AbstractCachingProcessingPipeline
                         this.getLogger().debug("validatePipeline: using valid cached content for '" + environment.getURI() + "'.");
                     }
                     // we are valid, ok that's it
-                    this.cachedResponse = response.getResponse();
+                    this.cachedResponse = response;
                     this.cachedLastModified = response.getLastModified();
                     this.toCacheSourceValidities = fromCacheValidityObjects;
                 } else {
