@@ -63,7 +63,7 @@ import org.apache.log.Priority;
  * A simple test case for CommandLineContext.
  *
  * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version    CVS $Id: CommandLineContextTestCase.java,v 1.1 2003/03/09 00:10:40 pier Exp $
+ * @version    CVS $Id: CommandLineContextTestCase.java,v 1.2 2003/03/12 15:02:14 bloritsch Exp $
  */
 public final class CommandLineContextTestCase
          extends TestCase
@@ -218,8 +218,10 @@ public final class CommandLineContextTestCase
             String name = tests[0];
             String expected = tests[1];
 
+            /* NEVER USED!
             String message = "Test " +
                     "'" + name + "'" + ", " + "'" + expected + "'";
+            */
 
             commandlineContext.setAttribute(name, expected);
 

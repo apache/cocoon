@@ -50,10 +50,6 @@
 */
 package org.apache.cocoon.transformation;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
@@ -62,6 +58,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.WriteableSAXSource;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -76,11 +73,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
 
 /**
 /**
- * This transformer allows you to output to a ModifiableSource.
+ * This transformer allows you to output to a WriteableSource.
  *
  * <p>Definition:</p>
  * <pre>
@@ -346,11 +348,30 @@ public class SourceWritingTransformer
                               ", name=" + name + ", raw=" + raw + ", attr=" + attr);
         }
         // Element: insert
-        if (this.state == STATE_OUTSIDE 
-            && (name.equals(INSERT_ELEMENT) || name.equals(WRITE_ELEMENT))) {
+        if (name.equals(INSERT_ELEMENT)
+            && this.state == STATE_OUTSIDE) {
+            this.state = STATE_INSERT;
+            this.parent_state = STATE_INSERT;
+            if (attr.getValue(CREATE_ATTRIBUTE) != null
+                && attr.getValue(CREATE_ATTRIBUTE).equals("false")) {
+                this.stack.push("false");
+            } else {
+                this.stack.push("true");
+            }
+            if (attr.getValue(OVERWRITE_ATTRIBUTE) != null
+                && attr.getValue(OVERWRITE_ATTRIBUTE).equals("false")) {
+                this.stack.push("false");
+            } else {
+                this.stack.push("true");
+            }
+            this.stack.push(attr.getValue(SERIALIZER_ATTRIBUTE));
+            this.stack.push("INSERT");
 
-            this.state = (name.equals(INSERT_ELEMENT) ? STATE_INSERT : STATE_WRITE);
-            this.parent_state = this.state;
+        // Element: write
+        } else if (name.equals(WRITE_ELEMENT)
+            && this.state == STATE_OUTSIDE) {
+            this.state = STATE_WRITE;
+            this.parent_state = STATE_WRITE;
             if (attr.getValue(CREATE_ATTRIBUTE) != null
                 && attr.getValue(CREATE_ATTRIBUTE).equals("false")) {
                 this.stack.push("false");
@@ -364,7 +385,7 @@ public class SourceWritingTransformer
                 this.stack.push("true"); // default value
             }
             this.stack.push(attr.getValue(SERIALIZER_ATTRIBUTE));
-            this.stack.push("END");
+            this.stack.push("WRITE");
 
         // Element: file
         } else if (name.equals(SOURCE_ELEMENT)
@@ -424,23 +445,21 @@ public class SourceWritingTransformer
                               ", name=" + name +
                               ", raw=" + raw);
         }
-        if ((name.equals(INSERT_ELEMENT) && this.state == STATE_INSERT)
-            || (name.equals(WRITE_ELEMENT) && this.state == STATE_WRITE)) {
+        if (name.equals(INSERT_ELEMENT) == true && this.state == STATE_INSERT) {
 
             // get the information from the stack
-            DocumentFragment fragment  = null;
             String tag;
-            String sourceName    = null;
-            String path        = (this.state == STATE_INSERT ? null : "/");
-                                 // source:write's path can be empty
-            String replacePath = null;
-            String reinsert    = null;
+            String     fileName        = null;
+            DocumentFragment fragment  = null;
+            String     path            = null;
+            String     replacePath     = null;
+            String     reinsert        = null;
             do {
                 tag = (String)this.stack.pop();
                 if (tag.equals("PATH") == true) {
                     path = (String)this.stack.pop();
                 } else if (tag.equals("FILE") == true) {
-                    sourceName = (String)this.stack.pop();
+                    fileName = (String)this.stack.pop();
                 } else if (tag.equals("FRAGMENT") == true) {
                     fragment = (DocumentFragment)this.stack.pop();
                 } else if (tag.equals("REPLACE") == true) {
@@ -448,13 +467,47 @@ public class SourceWritingTransformer
                 } else if (tag.equals("REINSERT") == true) {
                     reinsert = (String)this.stack.pop();
                 }
-            } while ( !tag.equals("END") );
-
+            } while (tag.equals("INSERT") == false);
             final String localSerializer = (String)this.stack.pop();
             final boolean overwrite = this.stack.pop().equals("true");
             final boolean create = this.stack.pop().equals("true");
 
-            this.insertFragment(sourceName,
+            this.insertFragment(fileName,
+                                    path,
+                                    fragment,
+                                    replacePath,
+                                    create,
+                                    overwrite,
+                                    reinsert,
+                                    localSerializer,
+                                    name);
+
+            this.state = STATE_OUTSIDE;
+
+        } else if (name.equals(WRITE_ELEMENT) == true && this.state == STATE_WRITE) {
+
+            // get the information from the stack
+            String tag;
+            String     fileName        = null;
+            DocumentFragment fragment  = null;
+            String     path            = "/"; // source:write's path can be empty
+            String     replacePath     = null;
+            String     reinsert        = null;
+            do {
+                tag = (String)this.stack.pop();
+                if (tag.equals("PATH") == true) {
+                    path = (String)this.stack.pop();
+                } else if (tag.equals("FILE") == true) {
+                    fileName = (String)this.stack.pop();
+                } else if (tag.equals("FRAGMENT") == true) {
+                    fragment = (DocumentFragment)this.stack.pop();
+                }
+            } while (tag.equals("WRITE") == false);
+            final String localSerializer = (String)this.stack.pop();
+            final boolean overwrite = this.stack.pop().equals("true");
+            final boolean create = this.stack.pop().equals("true");
+
+            this.insertFragment(fileName,
                                     path,
                                     fragment,
                                     replacePath,
@@ -581,7 +634,7 @@ public class SourceWritingTransformer
             target = source.getURI();
             if ( exists == true && this.state == STATE_INSERT ) {
                                 message = "content inserted at: " + path;
-                resource = SourceUtil.toDOM( source );
+                resource = SourceUtil.toDOM( source, this.manager );
                 // import the fragment
                 Node importNode = resource.importNode(fragment, true);
                 // get the node
@@ -665,45 +718,53 @@ public class SourceWritingTransformer
             // write source
             if ( resource != null) {
                 resource.normalize();
-                // use serializer
-                if (localSerializer == null) localSerializer = this.configuredSerializerName;
-                if (localSerializer != null) {
-                    // Lookup the Serializer
-                    ComponentSelector selector = null;
-                    Serializer serializer = null;
-                    OutputStream oStream = null;
-                    try {
-                        selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
-                        serializer = (Serializer)selector.select(localSerializer);
-                        oStream = ws.getOutputStream();
-                        serializer.setOutputStream(oStream);
-                        DOMStreamer streamer = new DOMStreamer(serializer);
-                        streamer.stream(resource);
-                    } finally {
-                        if (oStream != null) {
-                            oStream.flush();
-                            try {
-                                oStream.close();
-                                failed = false;
-                            } catch (Throwable t) {
-                                if (this.getLogger().isDebugEnabled() == true) {
-                                    this.getLogger().debug("FAIL (oStream.close) exception"+t, t);
-                                }
-                                throw new ProcessingException("Could not process your document.", t);
-                            } finally {
-                                if ( selector != null ) {
-                                        selector.release( serializer );
-                                        this.manager.release( selector );
+                if (source instanceof WriteableSAXSource) {
+                    ContentHandler contentHandler = ((WriteableSAXSource)ws).getContentHandler();
+                    DOMStreamer streamer = new DOMStreamer(contentHandler);
+                    streamer.stream(resource);
+                    localSerializer = "null";
+                    failed = false;
+                } else {
+                    // use serializer
+                    if (localSerializer == null) localSerializer = this.configuredSerializerName;
+                    if (localSerializer != null) {
+                        // Lookup the Serializer
+                        ComponentSelector selector = null;
+                        Serializer serializer = null;
+                        OutputStream oStream = null;
+                        try {
+                            selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+                            serializer = (Serializer)selector.select(localSerializer);
+                            oStream = ws.getOutputStream();
+                            serializer.setOutputStream(oStream);
+                            DOMStreamer streamer = new DOMStreamer(serializer);
+                            streamer.stream(resource);
+                        } finally {
+                            if (oStream != null) {
+                                oStream.flush();
+                                try {
+                                    oStream.close();
+                                    failed = false;
+                                } catch (Throwable t) {
+                                    if (this.getLogger().isDebugEnabled() == true) {
+                                        this.getLogger().debug("FAIL (oStream.close) exception"+t, t);
+                                    }
+                                    throw new ProcessingException("Could not process your document.", t);
+                                } finally {
+                                    if ( selector != null ) {
+                                            selector.release( serializer );
+                                            this.manager.release( selector );
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        if (this.getLogger().isDebugEnabled() == true) {
+                            this.getLogger().debug("ERROR no serializer");
+                        }
+                        //throw new ProcessingException("No serializer specified for writing to source " + systemID);
+                        message = "That source requires a serializer, please add the appropirate tag to your code.";
                     }
-                } else {
-                    if (this.getLogger().isDebugEnabled() == true) {
-                        this.getLogger().debug("ERROR no serializer");
-                    }
-                    //throw new ProcessingException("No serializer specified for writing to source " + systemID);
-                    message = "That source requires a serializer, please add the appropirate tag to your code.";
                 }
             }
         } catch (DOMException de) {

@@ -58,14 +58,11 @@ import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-
-import org.apache.cocoon.components.source.impl.AvalonToCocoonSource;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Source;
 import org.apache.cocoon.ProcessingException;
-
+import org.apache.cocoon.components.source.impl.AvalonToCocoonSource;
+import org.apache.cocoon.environment.Source;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
