@@ -115,7 +115,7 @@ if [ ! -z "$1" ]; then
 fi
 
 # check if the local repository exists and do a checkout/update accordingly
-if [ -d "$LOCAL_PATH" ]; then
+if [ -d "$LOCAL_PATH" -a -d "$LOCAL_PATH/.svn" ]; then
   cd $LOCAL_PATH
   if [ $NOSVN = 0 ]; then
     echo
@@ -124,6 +124,13 @@ if [ -d "$LOCAL_PATH" ]; then
     echo
     svn switch ${SVN_BASE_URL}/$REVISION_SUB_URL
   fi
+elif  [ -d "$LOCAL_PATH" ]; then
+  cd $LOCAL_PATH
+  echo
+  echo "checking out into the local repository at $LOCAL_PATH with "
+  echo "    svn co ${SVN_BASE_URL}/$REVISION_SUB_URL $LOCAL_PATH"
+  echo
+  svn co ${SVN_BASE_URL}/$REVISION_SUB_URL $LOCAL_PATH
 else
   DIRNAME=`dirname $LOCAL_PATH`
   BASENAME=`basename $LOCAL_PATH`
