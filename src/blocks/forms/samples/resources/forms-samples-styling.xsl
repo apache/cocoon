@@ -35,6 +35,9 @@
 
   <xsl:template match="body">
     <body>
+      <!--+ !!! If template with mode 'forms-page' adds text or elements
+          |        template with mode 'forms-field' can no longer add attributes!!!
+          +-->
       <xsl:apply-templates select="." mode="forms-page"/>
       <xsl:apply-templates select="." mode="forms-field"/>
       <xsl:apply-templates/>
