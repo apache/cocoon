@@ -19,7 +19,15 @@ import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ExtendedSitemapComponentTestCase;
 import org.apache.cocoon.el.GenericExpressionCompiler;
-import org.apache.cocoon.template.tag.AbstractTag;
+import org.apache.cocoon.template.v2.script.AttributeToken;
+import org.apache.cocoon.template.v2.script.CharactersToken;
+import org.apache.cocoon.template.v2.script.ExpressionToken;
+import org.apache.cocoon.template.v2.script.PlainElementToken;
+import org.apache.cocoon.template.v2.script.Script;
+import org.apache.cocoon.template.v2.script.ScriptCompiler;
+import org.apache.cocoon.template.v2.script.ScriptContext;
+import org.apache.cocoon.template.v2.script.TagRepository;
+import org.apache.cocoon.template.v2.tag.AbstractTag;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class ScriptCompilerTestCase extends ExtendedSitemapComponentTestCase {
