@@ -15,10 +15,6 @@
  */
 package org.apache.cocoon.components.thread;
 
-import EDU.oswego.cs.dl.util.concurrent.CyclicBarrier;
-import EDU.oswego.cs.dl.util.concurrent.Rendezvous;
-
-
 /**
  * A rendezvous channel, similar to those used in CSP and Ada.  Each put must
  * wait for a take, and vice versa.  Synchronous channels are well suited for
@@ -40,8 +36,8 @@ import EDU.oswego.cs.dl.util.concurrent.Rendezvous;
  * Introduction to this package. </a>]
  * </p>
  *
- * @see CyclicBarrier
- * @see Rendezvous
+ * @see EDU.oswego.cs.dl.util.concurrent.CyclicBarrier
+ * @see EDU.oswego.cs.dl.util.concurrent.Rendezvous
  */
 public class SynchronousChannel
     extends EDU.oswego.cs.dl.util.concurrent.SynchronousChannel

@@ -38,7 +38,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.thread.RunnableManager;
-import org.apache.cocoon.components.thread.ThreadPool;
 
 /**
  * This class runs an instance of HSQLDB Server.

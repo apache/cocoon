@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
