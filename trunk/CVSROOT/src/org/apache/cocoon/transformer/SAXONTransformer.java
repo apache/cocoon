@@ -72,7 +72,7 @@ import org.apache.cocoon.framework.AbstractActor;
 import org.apache.cocoon.store.Store;
 
 import javax.xml.transform.Templates;
-// could be imported because of naming conflicts
+// could not be imported because of naming conflicts
 //import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.dom.DOMResult;
@@ -92,7 +92,7 @@ import com.icl.saxon.trace.SimpleTraceListener;
  * <a href="http:infozone-group.
  *
  * @author <a href="http://www.smb-tec.com/">SMB</a>
- * @version $Revision: 1.1 $Date: 2001/01/15 12:06:58 $
+ * @version $Revision: 1.2 $Date: 2001/01/26 21:07:41 $
  */
 public class SAXONTransformer extends AbstractActor implements Transformer, 
         Status, Configurable {
