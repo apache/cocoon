@@ -38,7 +38,7 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.9 2004/07/04 20:57:02 antonio Exp $
+ * @version CVS $Id: Sheet.java,v 1.10 2004/07/07 18:46:48 joerg Exp $
  */
 
 // package scope
@@ -322,7 +322,6 @@ class Sheet extends AbstractLogEnabled {
     /**
      * Set whether or not the worksheet content is centered (horizontally)
      * on the page when it is printed
-     * @param ls landscape
      */
     void setHCenter(boolean hCenter) {
         _sheet.setHorizontallyCenter(hCenter);
@@ -331,7 +330,6 @@ class Sheet extends AbstractLogEnabled {
     /**
      * Setwhether or not the worksheet content is centered (vertically)
      * on the page when it is printed
-     * @param ls landscape
      */
     void setVCenter(boolean vCenter) {
         _sheet.setVerticallyCenter(vCenter);
@@ -339,7 +337,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Setup whether or not printing is in monochrome (no color)
-     * @param ls landscape
      */
     void setMonochrome(boolean noColor) {
         _sheet.getPrintSetup().setNoColor(noColor);
@@ -347,7 +344,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Setup whether or not the worksheet is printed in draft format
-     * @param draftMode
      */
     void setDraft(boolean draftMode) {
         _sheet.getPrintSetup().setDraft(draftMode);
@@ -355,7 +351,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set text to be printed at the top of every page
-     * @param ls landscape
      */
     void setHeader(String left, String middle, String right) {
         HSSFHeader header = _sheet.getHeader();
@@ -366,7 +361,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set text to be printed at the bottom of every page
-     * @param ls landscape
      */
     void setFooter(String left, String middle, String right) {
         HSSFFooter footer = _sheet.getFooter();
@@ -377,7 +371,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set the top margin of the page
-     * @param ls landscape
      */
     void setTopMargin(double points) {
         _sheet.setMargin(HSSFSheet.TopMargin, points);
@@ -385,7 +378,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set the left margin of the page
-     * @param ls landscape
      */
     void setLeftMargin(double points) {
         _sheet.setMargin(HSSFSheet.LeftMargin, points);
@@ -393,7 +385,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set the right margin of the page
-     * @param ls landscape
      */
     void setRightMargin(double points) {
         _sheet.setMargin(HSSFSheet.RightMargin, points);
@@ -401,7 +392,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set the bottom margin of the page
-     * @param ls landscape
      */
     void setBottomMargin(double points) {
         _sheet.setMargin(HSSFSheet.BottomMargin, points);
@@ -409,7 +399,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set the header margin of the page
-     * @param ls landscape
      */
     void setHeaderMargin(double points) {
         _sheet.getPrintSetup().setHeaderMargin(points);
@@ -417,7 +406,6 @@ class Sheet extends AbstractLogEnabled {
     
     /**
      * Set the header margin of the page
-     * @param ls landscape
      */
     void setFooterMargin(double points) {
         _sheet.getPrintSetup().setFooterMargin(points);
