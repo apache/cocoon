@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: sitemap.xmap,v 1.1 2003/06/27 20:10:42 stefano Exp $ -->
+<!-- CVS: $Id: sitemap.xmap,v 1.2 2003/08/10 11:42:47 reinhard Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:components>
@@ -16,8 +16,13 @@
 
   <map:pipelines>
     <map:pipeline>
+    
       <map:match pattern="">
-        <map:redirect-to uri="list(1)"/>
+        <map:generate src="samples.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+           <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
       </map:match>
  
       <map:match pattern="*(*)">
