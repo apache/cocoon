@@ -468,6 +468,7 @@ function checkout() {
     var valid = false;
     while (!valid) {
         sendPageAndWait("/view/NewOrderForm" + EXT, { 
+	                accountForm: accountForm,
                         view: VIEW,
                         fmt: fmt,
                         creditCardTypes: ["Visa", "MasterCard", "American Express"],
@@ -475,18 +476,20 @@ function checkout() {
         var shippingAddressRequired = cocoon.request.get("shippingAddressRequired");
         if (shippingAddressRequired) {
             sendPageAndWait("/view/ShippingForm" + EXT,
-                            {order: order, fmt: fmt});
+                            {order: order, fmt: fmt, accountForm: accountForm});
         }
         // fix me !! do real validation
         valid = true;
     }
     sendPageAndWait("/view/ConfirmOrder" + EXT,
-                    {view: VIEW, order: order, fmt: fmt});
+	            {accountForm: accountForm,
+                     view: VIEW, order: order, fmt: fmt});
     
     var oldCartForm = cartForm;
     cartForm = new CartForm();
     sendPage("/view/ViewOrder" + EXT,
              {view: VIEW, order: order, 
+	      accountForm: accountForm,
               itemList: order.lineItems, 
               fmt: fmt});
 }
