@@ -52,8 +52,6 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.CompositeLayout;
@@ -69,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCompositeAspect.java,v 1.2 2003/05/19 12:50:59 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeAspect.java,v 1.3 2003/07/18 14:41:45 cziegeler Exp $
  */
 public abstract class AbstractCompositeAspect
     extends AbstractAspect {
@@ -105,25 +103,8 @@ public abstract class AbstractCompositeAspect
     protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
         final String rendererName = layout.getRendererName();
         Renderer renderer = null;
-        try {
-            renderer = (Renderer) this.getRenderSelector().select(rendererName);
-            renderer.toSAX(layout, service, handler);
-        } catch (ComponentException ce) {
-            throw new SAXException("Unable to lookup renderer for role " + rendererName, ce);
-        } finally {
-            this.getRenderSelector().release(renderer);
-        }
-    }
-
-    protected ComponentSelector getRenderSelector() {
-        if ( null == this.rendererSelector ) {
-            try {
-                this.rendererSelector = (ComponentSelector) this.manager.lookup(Renderer.ROLE + "Selector");
-            } catch (ComponentException local) {
-                throw new CascadingRuntimeException("Unable to lookup component selector for portal layout selector.", local);
-            }
-        }
-        return this.rendererSelector;
+        renderer = service.getComponentManager().getRenderer(rendererName);
+        renderer.toSAX(layout, service, handler);
     }
 
     /**

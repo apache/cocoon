@@ -52,7 +52,6 @@ package org.apache.cocoon.portal.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -62,13 +61,12 @@ import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  * This action logs the user into the portal
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LoginAction.java,v 1.1 2003/05/28 07:14:41 cziegeler Exp $
+ * @version CVS $Id: LoginAction.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
 */
 public final class LoginAction
 extends ComposerAction
@@ -91,21 +89,13 @@ implements ThreadSafe {
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.setPortalName(par.getParameter("portal-name"));
+            service.getComponentManager().getProfileManager().login();
         } catch (ParameterException pe) {
             throw new ProcessingException("Parameter portal-name is required.");
         } catch (ComponentException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
             this.manager.release(service);
-        }
-
-        // login
-        ProfileManager profileManager = null;
-        try {
-            profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-            profileManager.login();
-        } finally {
-            this.manager.release( (Component)profileManager );
         }
 
         if (this.getLogger().isDebugEnabled() ) {

@@ -59,8 +59,8 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -71,7 +71,7 @@ import org.apache.excalibur.source.SourceFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.3 2003/06/10 06:15:42 cziegeler Exp $
+ * @version CVS $Id: CopletSourceFactory.java,v 1.4 2003/07/18 14:41:44 cziegeler Exp $
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
@@ -102,11 +102,11 @@ public class CopletSourceFactory
             protocol = location.substring(0, position);
             location = location.substring(position+2);
         }
-        ProfileManager profileManager = null;
+        PortalService service = null;
         CopletInstanceData coplet = null;
         try {
-            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-            coplet = profileManager.getCopletInstanceData(location);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            coplet = service.getComponentManager().getProfileManager().getCopletInstanceData(location);
             CopletSource copletSource =
                 new CopletSource(uri, protocol,
                                  coplet);
@@ -115,7 +115,7 @@ public class CopletSourceFactory
         } catch (ComponentException ce) {
             throw new SourceException("Unable to lookup profile manager.", ce);
         } finally {
-            this.manager.release(profileManager);
+            this.manager.release(service);
         }
 	}
 

@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingAspect.java,v 1.4 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: SizingAspect.java,v 1.5 2003/07/18 14:41:44 cziegeler Exp $
  */
 public class SizingAspect extends AbstractAspect {
 
@@ -92,12 +92,12 @@ public class SizingAspect extends AbstractAspect {
 
             if ( !size.equals(SizingStatus.STATUS_MINIMIZED)) {
                 event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MINIMIZED);
-                XMLUtils.createElement(handler, "minimize-uri", service.getLinkService().getLinkURI(event));
+                XMLUtils.createElement(handler, "minimize-uri", service.getComponentManager().getLinkService().getLinkURI(event));
             }
 
             if ( !size.equals(SizingStatus.STATUS_MAXIMIZED)) {
                 event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MAXIMIZED);
-                XMLUtils.createElement(handler, "maximize-uri", service.getLinkService().getLinkURI(event));
+                XMLUtils.createElement(handler, "maximize-uri", service.getComponentManager().getLinkService().getLinkURI(event));
             }
             if (size != SizingStatus.STATUS_MINIMIZED) {
                 context.invokeNext(layout, service, handler);

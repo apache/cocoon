@@ -52,7 +52,6 @@ package org.apache.cocoon.portal.impl;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -63,7 +62,6 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -72,24 +70,24 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManagerImpl.java,v 1.4 2003/07/10 13:17:02 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.5 2003/07/18 14:41:46 cziegeler Exp $
  */
 public final class PortalManagerImpl
 	extends AbstractLogEnabled
 	implements PortalManager, Composable, ThreadSafe {
 
-    private ComponentManager componentManager;
+    private ComponentManager manager;
         
     public void process()
     throws ProcessingException {
         EventManager eventManager = null;
         try {
-            eventManager = (EventManager)this.componentManager.lookup(EventManager.ROLE);
+            eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
             eventManager.processEvents();
         } catch (ComponentException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
-            this.componentManager.release(eventManager);
+            this.manager.release(eventManager);
         }
     }
 
@@ -101,32 +99,20 @@ public final class PortalManagerImpl
 //        final boolean useContentDeliverer = (parameters == null ? true :
 //                                               parameters.getParameterAsBoolean("use-content-deliverer", true));
         
-        ProfileManager profileManager = null;
-        ComponentSelector rendererSelector = null;
-        Renderer portalLayoutRenderer = null;
         PortalService service = null;
         try {
-            service = (PortalService)this.componentManager.lookup(PortalService.ROLE);
-            profileManager = (ProfileManager)this.componentManager.lookup(ProfileManager.ROLE);
-            Layout portalLayout = profileManager.getPortalLayout(null, null);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            Layout portalLayout = service.getComponentManager().getProfileManager().getPortalLayout(null, null);
 
-            rendererSelector = (ComponentSelector)this.componentManager.lookup(Renderer.ROLE+"Selector");
-            portalLayoutRenderer = (Renderer)rendererSelector.select(portalLayout.getRendererName());       
+            Renderer portalLayoutRenderer = service.getComponentManager().getRenderer( portalLayout.getRendererName());       
 
             contentHandler.startDocument();
             portalLayoutRenderer.toSAX(portalLayout, service, contentHandler);
             contentHandler.endDocument();
         } catch (ComponentException ce) {
-            throw new SAXException("Unable to lookup profile manager.", ce);
+            throw new SAXException("Unable to lookup portal service.", ce);
         } finally {
-            if ( null != portalLayoutRenderer) {
-                rendererSelector.release(portalLayoutRenderer);
-            }
-            this.componentManager.release(rendererSelector);
-            if (null != profileManager) {
-                this.componentManager.release(profileManager);
-            }
-            this.componentManager.release(service);
+            this.manager.release(service);
         }
 	}
 
@@ -135,7 +121,7 @@ public final class PortalManagerImpl
 	 */
 	public void compose(ComponentManager componentManager)
 		throws ComponentException {
-        this.componentManager = componentManager;
+        this.manager = componentManager;
 	}
 
 }

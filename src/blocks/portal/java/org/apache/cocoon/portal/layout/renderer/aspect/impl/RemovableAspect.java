@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RemovableAspect.java,v 1.4 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: RemovableAspect.java,v 1.5 2003/07/18 14:41:45 cziegeler Exp $
  */
 public class RemovableAspect 
     extends AbstractAspect {
@@ -84,7 +84,7 @@ public class RemovableAspect
         Boolean mandatory = (Boolean)cid.getCopletData().getAspectData("mandatory");
         if ( !mandatory.booleanValue() ) {
             LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
-            XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));
+            XMLUtils.createElement(handler, "remove-uri", service.getComponentManager().getLinkService().getLinkURI(lre));
         }
         context.invokeNext(layout, service, handler);
 	}

@@ -64,7 +64,6 @@ import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
@@ -94,7 +93,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * &lt;/map:action&gt;</pre>
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.3 2003/07/10 13:17:03 cziegeler Exp $
+ * @version CVS $Id: CopletModule.java,v 1.4 2003/07/18 14:41:46 cziegeler Exp $
  */
 public class CopletModule 
 implements InputModule, Composable, ThreadSafe {
@@ -116,9 +115,10 @@ implements InputModule, Composable, ThreadSafe {
      */
 	public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
     throws ConfigurationException {
-        ProfileManager profileManager = null;
+        PortalService portalService = null;
         try {
-            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+
+            portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
             // determine coplet id
             String copletId = null;            
@@ -129,20 +129,14 @@ implements InputModule, Composable, ThreadSafe {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
                 
                 // set portal name
-                PortalService portalService = null;
-                try {
-                    portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-                    portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
-                } finally {
-                    this.manager.release(portalService);
-                }
+                portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
             }
             
             if (copletId == null) {
                 throw new ConfigurationException("copletId must be passed in the object model either directly (e.g. by using ObjectModelAction) or within the parent context.");
             }
             
-            JXPathContext jxpathContext = JXPathContext.newContext(profileManager.getCopletInstanceData(copletId));
+            JXPathContext jxpathContext = JXPathContext.newContext(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId));
             Object value = jxpathContext.getValue(name);
                 
             if (value == null) {
@@ -154,7 +148,7 @@ implements InputModule, Composable, ThreadSafe {
         } catch (ComponentException e) {
             throw new ConfigurationException("ComponentException ", e);
         } finally {
-            this.manager.release(profileManager);
+            this.manager.release(portalService);
         }
 	}
 

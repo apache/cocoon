@@ -66,7 +66,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ActionCounterEventAspect.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @version CVS $Id: ActionCounterEventAspect.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
  */
 public class ActionCounterEventAspect
 	extends AbstractLogEnabled
@@ -113,7 +113,7 @@ public class ActionCounterEventAspect
                 context.invokeNext( service );
             }
         }
-        service.getLinkService().addParameterToLink( requestParameterName, String.valueOf(actionCount));        
+        service.getComponentManager().getLinkService().addParameterToLink( requestParameterName, String.valueOf(actionCount));        
 	}
 
 

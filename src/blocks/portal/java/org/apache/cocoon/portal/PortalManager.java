@@ -57,11 +57,17 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * This is the main component that has currently two actions:
+ * Invoke the request processing using the {@link #process()} method,
+ * this starts the event handling for the current request (evaluating
+ * request parameters etc.)
+ * The section method {@link #showPortal(ContentHandler, Parameters)}
+ * starts rendering the portal.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManager.java,v 1.1 2003/05/07 06:22:28 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
  */
 public interface PortalManager extends Component {
 
