@@ -70,7 +70,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.7 2003/10/06 16:42:39 sylvain Exp $
+ * @version CVS $Id: MountNode.java,v 1.8 2003/11/07 12:51:38 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -135,8 +135,10 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             // Restore context
 			env.setContext(oldPrefix, oldURI, oldContext);
 
+            // Turning recomposing as a test, according to:
+            // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
             // Recompose pipelines which may have been recomposed by subsitemap
-            context.recompose(this.manager);
+            // context.recompose(this.manager);
         }
     }
 
