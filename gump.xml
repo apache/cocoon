@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.103 2004/01/13 11:29:49 unico Exp $
+    | CVS $Id: gump.xml,v 1.104 2004/01/21 07:57:48 stephan Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1164,7 +1164,7 @@
       Chaperon is a project that helps to convert structured text to XML
     </description>
     <home nested="src/blocks/chaperon/lib"/>
-    <jar name="chaperon-2.1.jar"/>
+    <jar name="chaperon-20040119.jar"/>
   </project>
 
   <project name="itext">
