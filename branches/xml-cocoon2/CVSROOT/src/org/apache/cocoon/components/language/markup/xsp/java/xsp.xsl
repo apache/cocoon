@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-12 12:55:10 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-12 15:27:56 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -168,14 +168,12 @@ Either both 'uri' and 'prefix' or none of them must be specified
       </xsl:choose>
     </xsl:variable>
 
-    <!-- FIXME (DIMS): Is this required? This causes of extra calls to startPrefixMapping.
     <xsl:for-each select="namespace::*">
       this.contentHandler.startPrefixMapping(
         "<xsl:value-of select="local-name(.)"/>",
         "<xsl:value-of select="."/>"
       );
     </xsl:for-each>
-    -->
 
     <xsl:apply-templates select="xsp:attribute"/>
 
@@ -196,13 +194,11 @@ Either both 'uri' and 'prefix' or none of them must be specified
       <xsl:copy-of select="$raw-name"/>
     );
 
-    <!-- FIXME (DIMS): Is this required? This causes of extra calls to endPrefixMapping.
     <xsl:for-each select="namespace::*">
       this.contentHandler.endPrefixMapping(
         "<xsl:value-of select="local-name(.)"/>"
       );
     </xsl:for-each>
-    -->
 
   </xsl:template>
 
@@ -332,14 +328,13 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
 
   <xsl:template match="*[not(starts-with(name(.), 'xsp:'))]">
-    <!-- FIXME (DIMS): Is this required? This causes of extra calls to startPrefixMapping.
+
     <xsl:for-each select="namespace::*">
       this.contentHandler.startPrefixMapping(
         "<xsl:value-of select="local-name(.)"/>",
         "<xsl:value-of select="."/>"
       );
     </xsl:for-each>
-    -->
 
     <xsl:apply-templates select="@*"/>
 
@@ -362,13 +357,12 @@ Either both 'uri' and 'prefix' or none of them must be specified
       "<xsl:value-of select="name(.)"/>"
     );
 
-    <!-- FIXME (DIMS): Is this required? This causes of extra calls to endPrefixMapping.
     <xsl:for-each select="namespace::*">
       this.contentHandler.endPrefixMapping(
         "<xsl:value-of select="local-name(.)"/>"
       );
     </xsl:for-each>
-    -->
+
   </xsl:template>
 
   <xsl:template match="@*">
