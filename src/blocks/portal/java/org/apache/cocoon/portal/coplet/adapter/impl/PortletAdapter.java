@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletAdapter.java,v 1.6 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id: PortletAdapter.java,v 1.7 2004/03/15 10:31:37 cziegeler Exp $
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -75,20 +75,30 @@ public class PortletAdapter
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
-        // now get the portal manager
-        ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-        PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
-        
-        this.portletContainer = portalManager.getPortletContainer();
-        this.environment = portalManager.getPortletContainerEnvironment();
+        try {
+            // now get the portal manager
+            ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+            PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
+            
+            this.portletContainer = portalManager.getPortletContainer();
+            this.environment = portalManager.getPortletContainerEnvironment();
+        } catch (ContextException ignore) {
+            // we ignore the context exception
+            // this avoids startup errors if the portal is configured for the CLI
+            // environment
+            this.getLogger().warn("The JSR-168 support is disabled as the servlet context is not available.", ignore);
+        }
     }
-
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void login(CopletInstanceData coplet) {
         super.login(coplet);
 
+        if ( this.portletContainer == null ) {
+            return;
+        }
         PortletDefinitionRegistry registry = (PortletDefinitionRegistry) environment.getContainerService(PortletDefinitionRegistry.class);
         
         final String portletEntityId = (String) getConfiguration(coplet, "portlet");   
@@ -136,6 +146,9 @@ public class PortletAdapter
     public void streamContent(CopletInstanceData coplet,
                               ContentHandler contentHandler)
     throws SAXException {
+        if ( this.portletContainer == null ) {
+            throw new SAXException("Unable to execute JSR-168 portlets because of missing servlet context.");
+        }
         try {
             final String portlet = (String)super.getConfiguration(coplet, "portlet");
             if ( portlet == null ) {
@@ -179,6 +192,9 @@ public class PortletAdapter
      */
     public void logout(CopletInstanceData coplet) {
         super.logout(coplet);
+        if ( this.portletContainer == null ) {
+            return;
+        }
         PortletWindow window = (PortletWindow)coplet.getAttribute("window");
         if ( window != null ) {
             coplet.removeAttribute("window");

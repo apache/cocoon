@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowAspect.java,v 1.3 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: PortletWindowAspect.java,v 1.4 2004/03/15 10:31:37 cziegeler Exp $
  */
 public final class PortletWindowAspect 
 extends AbstractAspect 
@@ -65,11 +65,18 @@ implements Contextualizable {
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
-        // now get the portal manager
-        ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-        PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
-        if ( portalManager != null ) {
-            this.environment = portalManager.getPortletContainerEnvironment();
+        try {
+            // now get the portal manager
+            ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+            PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
+            if ( portalManager != null ) {
+                this.environment = portalManager.getPortletContainerEnvironment();
+            }
+        } catch (ContextException ignore) {
+            // we ignore the context exception
+            // this avoids startup errors if the portal is configured for the CLI
+            // environment
+            this.getLogger().warn("The JSR-168 support is disabled as the servlet context is not available.", ignore);
         }
     }
 
