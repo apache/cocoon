@@ -128,15 +128,16 @@ a:focus {
 */
 
 #multipleSlides div.singleSlide {
+    page-break-inside: avoid;
+    float: left;
+    width: 100%;
     clear: both;
-    margin-top: 2.5em;
+}
+
+#multipleSlides img {
     page-break-inside: avoid;
 }
 
 #multipleSlides h1 {
     page-break-after: avoid;
-}
-
-#multipleSlides img {
-    page-break-inside: avoid;
 }
