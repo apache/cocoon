@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-02-16 16:21:38 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-02-16 16:29:21 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -141,32 +141,32 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             // Ensure no 2 requests for the same file overlap
             Class program = null;
             CompiledComponent programInstance = null;
-            synchronized(filename.intern()) {
-                // Attempt to load program object from cache
-                try {
-                    programInstance = (CompiledComponent) this.cache.select(filename);
-                } catch (Exception e) {
-                    getLogger().debug("The instance was not accessible, creating it now.");
-                    try {
-                        if (programInstance == null) {
-                          /*
-                             FIXME: Passing null as encoding may result in invalid
-                             recompilation under certain circumstances!
-                          */
 
-                            program = programmingLanguage.load(normalizedName, this.workDir, null);
-                            // Store loaded program in cache
-                            this.cache.addGenerator(filename, program);
-                        }
-                        // Instantiate program
-                        programInstance = programmingLanguage.instantiate(program);
-                        if (programInstance instanceof Loggable) {
-                            ((Loggable)programInstance).setLogger(getLogger());
-                        }
-                        programInstance.compose(this.manager);
-                    } catch (LanguageException le) {
-                        getLogger().debug("Language Exception", le);
+            // Attempt to load program object from cache
+            try {
+                programInstance = (CompiledComponent) this.cache.select(filename);
+                if (this.autoReload == false) return programInstance;
+            } catch (Exception e) {
+                getLogger().debug("The instance was not accessible, creating it now.");
+                try {
+                    if (programInstance == null) {
+                      /*
+                         FIXME: Passing null as encoding may result in invalid
+                         recompilation under certain circumstances!
+                      */
+
+                        program = programmingLanguage.load(normalizedName, this.workDir, null);
+                        // Store loaded program in cache
+                        this.cache.addGenerator(filename, program);
                     }
+                    // Instantiate program
+                    programInstance = programmingLanguage.instantiate(program);
+                    if (programInstance instanceof Loggable) {
+                        ((Loggable)programInstance).setLogger(getLogger());
+                    }
+                    programInstance.compose(this.manager);
+                } catch (LanguageException le) {
+                    getLogger().debug("Language Exception", le);
                 }
 
               /*
@@ -174,13 +174,14 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                  be queried for changes!!!
               */
 
-                if (this.autoReload && programInstance != null && programInstance.modifiedSince(file.lastModified())) {
-                        // Unload program
-                        programmingLanguage.unload(program, normalizedName, this.workDir);
-                        // Invalidate previous program/instance pair
-                        program = null;
-                        programInstance = null;
+                if (programInstance != null && programInstance.modifiedSince(file.lastModified())) {
+                    // Unload program
+                    programmingLanguage.unload(program, normalizedName, this.workDir);
+                    // Invalidate previous program/instance pair
+                    program = null;
+                    programInstance = null;
                 }
+
                 if (program == null) {
                     // Generate code
                     String code = markupLanguage.generateCode(
