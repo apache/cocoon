@@ -13,7 +13,7 @@ import org.apache.cocoon.xml.dom.DOMFactory;
 import org.apache.xerces.dom.DocumentImpl;
 import org.apache.xerces.dom.DocumentTypeImpl;
 import org.apache.xerces.parsers.SAXParser;
-import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.Poolable;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -25,10 +25,10 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-29 12:17:41 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-29 15:43:09 $
  */
 public class XercesParser extends AbstractXMLProducer
-implements Parser, ErrorHandler, DOMFactory, ThreadSafe {
+implements Parser, ErrorHandler, DOMFactory, Poolable {
 
     final SAXParser parser;
 
@@ -36,10 +36,10 @@ implements Parser, ErrorHandler, DOMFactory, ThreadSafe {
     throws SAXException {
         this.parser = new SAXParser();
 
-	this.parser.setFeature("http://xml.org/sax/features/validation",false);
-	this.parser.setFeature("http://xml.org/sax/features/namespaces",true);
+    this.parser.setFeature("http://xml.org/sax/features/validation",false);
+    this.parser.setFeature("http://xml.org/sax/features/namespaces",true);
     }
-    
+
     public void parse(InputSource in)
     throws SAXException, IOException {
       this.parser.setProperty("http://xml.org/sax/properties/lexical-handler",
@@ -52,23 +52,23 @@ implements Parser, ErrorHandler, DOMFactory, ThreadSafe {
     public XMLReader getXMLReader() {
         return this.parser;
     }
-        
-    /** 
+
+    /**
      * Create a new Document object.
      */
     public Document newDocument() {
         return(newDocument(null,null,null));
     }
 
-    /** 
+    /**
      * Create a new Document object with a specified DOCTYPE.
      */
     public Document newDocument(String name) {
         return(newDocument(name,null,null));
     }
 
-    /** 
-     * Create a new Document object with a specified DOCTYPE, public ID and 
+    /**
+     * Create a new Document object with a specified DOCTYPE, public ID and
      * system ID.
      */
     public Document newDocument(String name, String pub, String sys) {
