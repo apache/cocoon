@@ -68,7 +68,7 @@ import javax.xml.transform.sax.SAXResult;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-23 22:46:44 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-24 14:24:35 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
@@ -140,12 +140,14 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
             // Stored is an array of the template and the caching time
             if (store.containsKey(xsluri) == true) {
                 Object[] templateAndTime = (Object[])store.get(xsluri);
-                File xslFile = new File(systemID.substring(FILE.length()));
-                long storedTime = ((Long)templateAndTime[1]).longValue();
-                if (storedTime < xslFile.lastModified()) {
-                    templates = null;
-                } else {
-                    templates = (Templates)templateAndTime[0];
+                if(templateAndTime != null) {
+                    File xslFile = new File(systemID.substring(FILE.length()));
+                    long storedTime = ((Long)templateAndTime[1]).longValue();
+                    if (storedTime < xslFile.lastModified()) {
+                        templates = null;
+                    } else {
+                        templates = (Templates)templateAndTime[0];
+                    }
                 }
             }
         } else {
