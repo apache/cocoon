@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- OLD FILE, not used anymore. Will be deleted soon. -->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:map="http://apache.org/cocoon/sitemap/1.0">
     
     <xsl:output indent="yes"/>
