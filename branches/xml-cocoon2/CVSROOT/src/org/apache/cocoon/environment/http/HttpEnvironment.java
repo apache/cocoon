@@ -97,7 +97,6 @@ public class HttpEnvironment implements Environment {
      */
     public void changeContext(String prefix, String context) 
     throws MalformedURLException { 
-this.servletContext.log("changeContext: prefix="+prefix+",context="+context);
         if (uri.startsWith (prefix)) {
             this.prefix.append (prefix);
             uri = uri.substring(prefix.length());
@@ -109,6 +108,20 @@ this.servletContext.log("changeContext: prefix="+prefix+",context="+context);
         } else {
             //FIXME: should we throw an error here ?
         }
+    }
+
+    /**
+     * Redirect the client to a new URL
+     */
+    public void redirect (String newURL) throws IOException {
+        String qs = request.getQueryString();
+        if (qs != null) {
+System.out.println ("newURL='"+newURL+"?"+qs+"'");
+            this.response.sendRedirect (newURL+"?"+qs);
+        } else {
+System.out.println ("newURL='"+newURL+"'");
+            this.response.sendRedirect (newURL);
+        } 
     }
 
     // Request methods
