@@ -15,3 +15,5 @@ Tons of stuff, but here is a list of the things that I think are most important 
  5) improve the ability to redeploy linotype without having to hardwire URLs around the sitemap and flowscript.
  
  6) consider adding the ability to sinchronize two different linotypes. For example, if you have one installed in your laptop and you are offline for a while, you might want to synchronize it with the one online.
+
+ 7) multi-user setup to host multiple weblogs or weblogs authored by multiple authors.
