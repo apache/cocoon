@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,7 +77,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.8 2004/05/26 08:39:49 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.9 2004/06/18 14:28:55 vgritsenko Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -91,16 +91,16 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
 
     /** The media manager */
     private MediaManager mediaManager;
-    
+
     /** The XPath Processor */
     private XPathProcessor xpathProcessor;
 
     /** The session manager */
     private SessionManager     sessionManager;
-    
+
     /** The Context manager */
     private ContextManager     contextManager;
-    
+
     /** The transaction manager */
     private TransactionManager transactionManager;
 
@@ -112,10 +112,10 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
 
     /** The context */
     protected Context componentContext;
-    
+
     /** Are we already setup for this request? */
     protected boolean initialized = false;
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
@@ -144,7 +144,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
         AuthenticationManager authManager = null;
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            return authManager.getState();    
+            return authManager.getState();
         } catch (ServiceException ce) {
             // ignore this here
             return null;
@@ -156,7 +156,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) 
+    public void service(ServiceManager manager)
     throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
@@ -233,23 +233,23 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
     protected void setup()
     throws ProcessingException {
         if ( !this.initialized ) {
-            
+
             final Request request = ContextHelper.getRequest(this.componentContext);
-            
+
             if ( request.getAttribute(PortalManager.ROLE) == null ) {
-                
+
                 request.setAttribute(PortalManager.ROLE, Boolean.TRUE);
-                
+
                 // Get and ignore the configuration
                 this.getConfiguration();
-        
+
                 try {
                     this.changeProfile();
                 } catch (SAXException se) {
                     throw new ProcessingException(se);
                 }
             }
-            
+
             this.initialized = true;
         }
     }
@@ -258,14 +258,14 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
      * @see org.apache.cocoon.webapps.portal.components.PortalManager#configurationTest()
      */
     public void configurationTest()
-    throws ProcessingException {        
+    throws ProcessingException {
         // no sync required
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN configurationTest");
         }
 
         this.setup();
-        
+
         // Ignore result
         this.getConfiguration();
 
@@ -298,7 +298,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
                 if (context == null && create) {
 
                     // create new context
-                    
+
                     context = this.getAuthenticationManager().createApplicationContext(attrName, null, null);
 
                 }
@@ -323,7 +323,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
         // synchronized not req.
         this.setup();
         Response response = ContextHelper.getResponse(this.componentContext);
-        
+
         XMLUtils.startElement(consumer, PortalConstants.ELEMENT_CONFIGURATION);
 
         // set the portal-page uri:
@@ -537,13 +537,13 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
 
                         if (saveResource == null) {
                             throw new ProcessingException("portal: No save resource defined for type coplet-base.");
-                        } 
-                            
-                        SourceUtil.writeDOM(saveResource, 
-                                            null, 
-                                            pars, 
-                                            copletsFragment, 
-                                            this.resolver, 
+                        }
+
+                        SourceUtil.writeDOM(saveResource,
+                                            null,
+                                            pars,
+                                            copletsFragment,
+                                            this.resolver,
                                             "xml");
 
                         // now the hardest part, clean up the whole cache
@@ -686,9 +686,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
                     if (res == null) {
                         throw new ProcessingException("No configuration for portal-coplet base profile found.");
                     }
-                    copletsFragment = SourceUtil.readDOM(res, 
-                                                         null, 
-                                                         pars, 
+                    copletsFragment = SourceUtil.readDOM(res,
+                                                         null,
+                                                         pars,
                                                          this.resolver);
                     context.setAttribute(ATTRIBUTE_ADMIN_COPLETS, copletsFragment);
                 }
@@ -741,14 +741,15 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             }
         }
 
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END getStatusProfile statusProfile="+(statusProfile == null ? "null" : XMLUtils.serializeNode(statusProfile, XMLUtils.createPropertiesForXML(false))));
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("END getStatusProfile statusProfile=" +
+                              (statusProfile == null? "null": XMLUtils.serializeNode(statusProfile)));
         }
         return statusProfile;
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.webapps.portal.components.PortalManager#showPortal(org.apache.cocoon.xml.XMLConsumer, boolean, boolean)
+     * @see org.apache.cocoon.webapps.portal.components.PortalManager#showPortal(XMLConsumer, boolean, boolean)
      */
     public void showPortal(XMLConsumer consumer,
                            boolean configMode,
@@ -760,7 +761,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
                              configMode+", adminProfile="+adminProfile);
         }
         this.setup();
-        
+
         SessionContext context = this.getContext(true);
         String profileID = null;
         Map storedProfile = null;
@@ -1598,7 +1599,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
     public String getProfileID(String type,
                                 String role,
                                 String id,
-                                boolean adminProfile) 
+                                boolean adminProfile)
     throws ProcessingException {
         // No sync required
         this.setup();
@@ -1639,7 +1640,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
         int pos = profileID.indexOf('_');
         if (pos == -1) {
             return null;
-        } 
+        }
         String lastPart = profileID.substring(pos+1);
         pos = lastPart.indexOf('_');
         if (pos == -1) return null;
@@ -2621,9 +2622,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
         // each attribute of first must be in second with the same value
         while (i < l && ok) {
             value = attr1.item(i).getNodeName();
-            if (!value.equals("formtype") 
-                && !value.equals("formpath") 
-                && !value.equals("formdescription") 
+            if (!value.equals("formtype")
+                && !value.equals("formpath")
+                && !value.equals("formdescription")
                 && !value.startsWith("xmlns:")) {
                 ok = false;
                 m = 0;
@@ -2844,7 +2845,7 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (children != null && children.getLength() > 0) {
                 int l = children.getLength();
                 for(int i = 0; i < l; i++) {
-                    if (!children.item(i).getNodeName().equals("status") 
+                    if (!children.item(i).getNodeName().equals("status")
                         && children.item(i).getNodeType() == Node.ELEMENT_NODE) {
                         IncludeXMLConsumer.includeNode(children.item(i), consumer, consumer);
                     }
@@ -2917,18 +2918,18 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
     /* (non-Javadoc)
      * @see org.apache.cocoon.webapps.portal.components.PortalManager#getMediaType()
      */
-    public String getMediaType() 
+    public String getMediaType()
     throws ProcessingException {
         this.setup();
         return this.getMediaManager().getMediaType();
     }
-    
+
     /**
      * Get the coplet with the id
      */
     private Element getCopletConfiguration(String copletID,
                                            Map    defaultCoplets,
-                                           Map    mediaCoplets) 
+                                           Map    mediaCoplets)
     throws ProcessingException {
         // calling method is synced
         String media = this.getMediaManager().getMediaType();
@@ -3491,9 +3492,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isInfoEnabled()) {
                 this.getLogger().info("Building portal profile: " + resource);
             }
-            SourceUtil.readDOM(resource, 
-                               null, 
-                               pars, 
+            SourceUtil.readDOM(resource,
+                               null,
+                               pars,
                                this.resolver);
         } else {
             this.buildProfile(type, role, id, adminProfile);
@@ -3538,9 +3539,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Loading coplet base profile");
         }
-        copletsFragment = SourceUtil.readDOM(res, 
-                               null, 
-                               pars, 
+        copletsFragment = SourceUtil.readDOM(res,
+                               null,
+                               pars,
                                this.resolver);
 
         if (this.getLogger().isDebugEnabled()) {
@@ -3554,9 +3555,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             this.getLogger().debug("loading layout base profile");
         }
         pars.setSingleParameterValue("profile", "layout-base");
-        layoutFragment = SourceUtil.readDOM(res, 
-                               null, 
-                               pars, 
+        layoutFragment = SourceUtil.readDOM(res,
+                               null,
+                               pars,
                                this.resolver);
 
         if (this.getLogger().isDebugEnabled()) {
@@ -3584,9 +3585,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading type base profile");
             }
-            typeFragment = SourceUtil.readDOM(res, 
-                                   null, 
-                                   pars, 
+            typeFragment = SourceUtil.readDOM(res,
+                                   null,
+                                   pars,
                                    this.resolver);
             profileRoot.appendChild(profileDoc.importNode(DOMUtil.selectSingleNode(typeFragment,
                               "type-profile", this.xpathProcessor), true));
@@ -3627,9 +3628,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("loading global profile");
         }
-        globalFragment = SourceUtil.readDOM(res, 
-                                   null, 
-                                   pars, 
+        globalFragment = SourceUtil.readDOM(res,
+                                   null,
+                                   pars,
                                    this.resolver);
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("global profile loaded");
@@ -3646,9 +3647,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading global type profile");
             }
-            globalFragment = SourceUtil.readDOM(res, 
-                                       null, 
-                                       pars, 
+            globalFragment = SourceUtil.readDOM(res,
+                                       null,
+                                       pars,
                                        this.resolver);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("global type profile loaded");
@@ -3684,9 +3685,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading role profile");
             }
-            roleFragment = SourceUtil.readDOM(res, 
-                                       null, 
-                                       pars, 
+            roleFragment = SourceUtil.readDOM(res,
+                                       null,
+                                       pars,
                                        this.resolver);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("role profile loaded");
@@ -3704,9 +3705,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading role type profile");
             }
-            roleFragment = SourceUtil.readDOM(res, 
-                                   null, 
-                                   pars, 
+            roleFragment = SourceUtil.readDOM(res,
+                                   null,
+                                   pars,
                                    this.resolver);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("role type profile loaded");
@@ -3740,9 +3741,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading user profile");
             }
-            userFragment = SourceUtil.readDOM(res, 
-                                   null, 
-                                   pars, 
+            userFragment = SourceUtil.readDOM(res,
+                                   null,
+                                   pars,
                                    this.resolver);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("user profile loaded");
@@ -3760,9 +3761,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading user type profile");
             }
-            userFragment = SourceUtil.readDOM(res, 
-                                   null, 
-                                   pars, 
+            userFragment = SourceUtil.readDOM(res,
+                                   null,
+                                   pars,
                                    this.resolver);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("user type profile loaded");
@@ -3801,9 +3802,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading user status profile");
             }
-            userFragment = SourceUtil.readDOM(res, 
-                                   null, 
-                                   pars, 
+            userFragment = SourceUtil.readDOM(res,
+                                   null,
+                                   pars,
                                    this.resolver);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("user status profile loaded");
@@ -3863,11 +3864,11 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
                 pars.setSingleParameterValue("handler", reqstate.getHandlerName());
                 pars.setSingleParameterValue("profile", "user-status");
 
-                SourceUtil.writeDOM(res, 
-                                   null, 
+                SourceUtil.writeDOM(res,
+                                   null,
                                    pars,
-                                   userFragment, 
-                                   this.resolver, 
+                                   userFragment,
+                                   this.resolver,
                                    "xml");
 
             } finally {
@@ -4050,11 +4051,11 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
                             if (role != null) pars.setSingleParameterValue("role", role);
                             pars.setSingleParameterValue("application", reqstate.getApplicationName());
                             pars.setSingleParameterValue("handler", reqstate.getHandlerName());
-                            SourceUtil.writeDOM(saveResource, 
-                                               null, 
+                            SourceUtil.writeDOM(saveResource,
+                                               null,
                                                pars,
-                                               delta, 
-                                               this.resolver, 
+                                               delta,
+                                               this.resolver,
                                                "xml");
 
                             if (delta.getParentNode() != null) delta.getParentNode().removeChild(delta);
@@ -4192,28 +4193,30 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
             if (child != null) {
                 String loadUsersResource = child.getAttribute("uri", null);
                 SourceParameters loadUsersResourceParameters = SourceParameters.create(child);
-    
+
                 if (loadUsersResource != null) {
                     SourceParameters parameters = (loadUsersResourceParameters == null) ? new SourceParameters()
-
                                                                              : loadUsersResourceParameters;
-                    if (reqstate.getApplicationName() != null)
+                    if (reqstate.getApplicationName() != null) {
                         parameters.setSingleParameterValue("application", reqstate.getApplicationName());
+                    }
                     if (ID != null) {
                         parameters.setSingleParameterValue("type", "user");
                         parameters.setSingleParameterValue("ID", ID);
                     } else {
                         parameters.setSingleParameterValue("type", "users");
                     }
-                    if (role != null) parameters.setSingleParameterValue("role", role);
+                    if (role != null) {
+                        parameters.setSingleParameterValue("role", role);
+                    }
                     frag = this.loadResource(loadUsersResource, parameters);
-        
                 }
             }
         }
-            
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNode(frag, XMLUtils.createPropertiesForXML(false))));
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("END getUsers fragment=" +
+                              (frag == null? "null": XMLUtils.serializeNode(frag)));
         }
         return frag;
     }
@@ -4269,9 +4272,9 @@ implements Disposable, Serviceable, Recyclable, Contextualizable, Component, Por
     throws IOException, ProcessingException, SAXException {
         Source source = null;
         try {
-            source = SourceUtil.getSource(resource, 
-                                          null, 
-                                          parameters, 
+            source = SourceUtil.getSource(resource,
+                                          null,
+                                          parameters,
                                           this.resolver);
             return SourceUtil.toDOM(source);
         } catch (SourceException se) {

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  *  This is the default implementation of the session manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSessionManager.java,v 1.6 2004/03/17 12:09:51 cziegeler Exp $
+ * @version CVS $Id: DefaultSessionManager.java,v 1.7 2004/06/18 14:28:56 vgritsenko Exp $
 */
 public final class DefaultSessionManager
 extends AbstractLogEnabled
@@ -54,17 +54,17 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
 
     /** The context */
     private Context context;
-    
+
     /** The <code>ServiceManager</code> */
     private ServiceManager manager;
 
     /** The context manager */
     private ContextManager contextManager;
-    
+
     /**
     * Avalon Serviceable Interface
     */
-   public void service(ServiceManager manager) 
+   public void service(ServiceManager manager)
    throws ServiceException {
        this.manager = manager;
        this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
@@ -127,7 +127,7 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
      *                   it is set to false, the session is only terminated
      *                   if no session context is available.
      */
-    public void terminateSession(boolean force) 
+    public void terminateSession(boolean force)
     throws ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled() ) {
@@ -181,8 +181,9 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
         DocumentFragment frag;
         frag = context.getXML(path);
 
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END getContextFragment documentFragment=" + (frag == null ? "null" : XMLUtils.serializeNode(frag, XMLUtils.createPropertiesForXML(false))));
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("END getContextFragment documentFragment=" +
+                              (frag == null? "null": XMLUtils.serializeNode(frag)));
         }
         return frag;
     }
@@ -246,9 +247,10 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
     throws ProcessingException  {
         // synchronized via context
 
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN setContextFragment name=" + contextName + ", path=" + path +
-               ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("BEGIN setContextFragment name=" + contextName +
+                              ", path=" + path +
+                              ", fragment=" + (fragment == null? "null": XMLUtils.serializeNode(fragment)));
         }
         // test arguments
         if (contextName == null) {
@@ -291,10 +293,10 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
                                        DocumentFragment fragment)
     throws ProcessingException  {
         // synchronized via context
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN appendContextFragment name=" + contextName +
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("BEGIN appendContextFragment name=" + contextName +
                               ", path=" + path +
-                              ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
+                              ", fragment=" + (fragment == null? "null": XMLUtils.serializeNode(fragment)));
         }
         // test arguments
         if (contextName == null) {
@@ -337,9 +339,10 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
                                       DocumentFragment fragment)
     throws ProcessingException  {
         // synchronized via context
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN mergeContextFragment name=" + contextName + ", path=" + path +
-                ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("BEGIN mergeContextFragment name=" + contextName +
+                              ", path=" + path +
+                              ", fragment=" + (fragment == null? "null": XMLUtils.serializeNode(fragment)));
         }
 
         // test arguments

@@ -61,7 +61,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.20 2004/06/11 20:32:20 vgritsenko Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.21 2004/06/18 14:28:56 vgritsenko Exp $
  */
 public final class SourceUtil {
 
@@ -507,8 +507,7 @@ public final class SourceUtil {
 
                 frag.normalize();
 
-                if ( null != serializerName) {
-
+                if (null != serializerName) {
                     ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
 	                ServiceSelector selector = null;
 	                Serializer serializer = null;
@@ -549,8 +548,7 @@ public final class SourceUtil {
                 }
             } else {
             	String content;
-				if ( null != serializerName) {
-
+				if (null != serializerName) {
                     ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
                     ServiceSelector selector = null;
                     Serializer serializer = null;
@@ -585,12 +583,13 @@ public final class SourceUtil {
                     content = XMLUtils.serializeNode(frag, props);
 				}
 
-                if (parameters==null) {
+                if (parameters == null) {
                     parameters = new SourceParameters();
                 } else {
                     parameters = (SourceParameters) parameters.clone();
                 }
                 parameters.setSingleParameterValue("content", content);
+
                 source = SourceUtil.getSource(location, typeParameters,
                                               parameters, resolver);
                 SourceUtil.toSAX(source, new DefaultHandler());
@@ -601,8 +600,6 @@ public final class SourceUtil {
             throw new ProcessingException(ce);
         } catch (SAXException ce) {
             throw new ProcessingException(ce);
-            // } catch (ComponentException ce) {
-            // throw new ProcessingException("Exception during lookup of component.", ce);
         } finally {
             resolver.release(source);
         }

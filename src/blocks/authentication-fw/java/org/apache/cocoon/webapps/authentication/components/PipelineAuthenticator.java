@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,27 +46,27 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.14 2004/03/17 12:09:52 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.15 2004/06/18 14:28:55 vgritsenko Exp $
 */
-public class PipelineAuthenticator 
+public class PipelineAuthenticator
     extends AbstractLogEnabled
     implements Serviceable, ThreadSafe, Disposable, Authenticator {
-    
+
     /** The service manager */
     protected ServiceManager manager;
-    
+
     /** The source resolver */
     protected SourceResolver resolver;
-    
+
     /**
      * Check the fragment if it is valid
      */
-    private boolean isValidAuthenticationFragment(Document authenticationFragment) 
+    private boolean isValidAuthenticationFragment(Document authenticationFragment)
     throws ProcessingException {
         // calling method is synced
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN isValidAuthenticationFragment fragment="
-                                   + XMLUtils.serializeNode(authenticationFragment, XMLUtils.createPropertiesForXML(false)));
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("BEGIN isValidAuthenticationFragment fragment=" +
+                              XMLUtils.serializeNode(authenticationFragment));
         }
         boolean isValid = false;
 
@@ -136,12 +136,12 @@ public class PipelineAuthenticator
 
         Document doc = null;
         String exceptionMsg = null;
-        
+
         // invoke the source
         try {
             Source source = null;
             try {
-                source = SourceUtil.getSource(authenticationResourceName, null, 
+                source = SourceUtil.getSource(authenticationResourceName, null,
                                               parameters, this.resolver);
                 doc = SourceUtil.toDOM(source);
             } catch (SAXException se) {
@@ -169,7 +169,7 @@ public class PipelineAuthenticator
                     this.getLogger().info("Authenticator: User authenticated using handler '"
                                           + configuration.getName() + "'");
                 }
-                
+
                 MediaManager mediaManager = null;
                 String mediaType;
                 try {
@@ -204,7 +204,7 @@ public class PipelineAuthenticator
                 } // end sync
             }
         }
-        
+
         if ( !isValid ) {
             if (this.getLogger().isInfoEnabled() ) {
                 this.getLogger().info("Authenticator: Failed authentication using handler '"
@@ -245,20 +245,20 @@ public class PipelineAuthenticator
             } else {
                 root.appendChild(doc.importNode(data, true));
             }
-            
+
             result = new AuthenticationResult(false, doc);
         }
-            
+
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("end authenticator");
         }
 
         return result;
     }
-    
-    
+
+
 	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+	 * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
 	 */
 	public void service(ServiceManager manager) throws ServiceException {
 		this.manager = manager;
@@ -277,18 +277,18 @@ public class PipelineAuthenticator
 	}
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.webapps.authentication.components.Authenticator#logout(org.apache.cocoon.webapps.authentication.user.UserHandler)
+     * @see org.apache.cocoon.webapps.authentication.components.Authenticator#logout(UserHandler)
      */
     public void logout(UserHandler handler) {
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("logout using handler " + handler.getHandlerName());
         }
-        
+
         final HandlerConfiguration configuration = handler.getHandlerConfiguration();
         final String logoutResourceName = configuration.getLogoutResource();
         if (logoutResourceName != null) {
             final SourceParameters parameters = configuration.getAuthenticationResourceParameters();
-        
+
             // invoke the source
             Source source = null;
             try {
@@ -303,5 +303,4 @@ public class PipelineAuthenticator
             }
         }
     }
-
 }
