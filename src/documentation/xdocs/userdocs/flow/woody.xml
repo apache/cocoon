@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
 <document>
  <header>
   <title>Advanced Control Flow</title> 
@@ -10,15 +11,15 @@
  </header>
  <body>
   <s1 title="Woody">
-   <p><link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">Woody</link> is another form framework 
-     that can be used in your Flowscripts.</p>
+   <p><link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">Woody</link> is
+     another form framework that can be used in your Flowscripts.</p>
    <note>
-     Woody is marked as "unstable" block because it is under development!
+     Woody is marked as "unstable" block because it is under active development!
    </note>
-<p>Here is an example:</p>
-<source><![CDATA[
 
-cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody.js");
+   <p>Here is an example:</p>
+   <source><![CDATA[
+cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 
 function form1(form) {
     var model = form.getModel();
@@ -57,9 +58,9 @@ function form1(form) {
     });
     sendPage("form1-success-pipeline");
     form.finish();
-
 }
-]]></source>
+   ]]></source>
+
     <p>
     </p>
     <s2 title ="The woody function"><anchor id="woody"/>
@@ -67,8 +68,8 @@ function form1(form) {
       <p>
       <em>Function</em> <code>woody(form_function, form_definition)</code>
       </p>
-      <p>  You call the 
-<code>woody</code> function from your sitemap to create a new form, for example:</p>
+      <p>You call the <code>woody</code> function from your sitemap to create a
+        new form, for example:</p>
 <source><![CDATA[
 
    <map:match pattern="form1.flow">
@@ -78,6 +79,7 @@ function form1(form) {
            </map:call>
      </map:match>
 ]]></source>
+
 <p>
 The <code>function</code> parameter specifies the name of a JavaScript function that will 
 provide the form's flow. The <code>form-definition</code> parameter specifies the 
@@ -85,7 +87,10 @@ location of the Woody form definition of the form. The specified function will
 be called with one parameter, the newly created form.
       </p>
   <p>
-  To use Woody in a Flowscript you must load <code>woody.js</code> into your script and define a function that takes one argument (<code>form1</code> in the example at the top of this page). The argument passed to your function will be a JavaScript representation of your Woody form.
+  To use Woody in a Flowscript you must load <code>woody2.js</code> into your script
+  and define a function that takes one argument (<code>form1</code> in the example at
+  the top of this page). The argument passed to your function will be a JavaScript
+  representation of your Woody form.
   </p>
  </s2>
  <s2 title="Form Object">

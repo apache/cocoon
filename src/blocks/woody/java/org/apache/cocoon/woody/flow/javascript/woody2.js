@@ -49,11 +49,10 @@
 */
 
 /**
- * New implementation of the Woody/FlowScript integration. Should replace
- * woody.js in the future.
+ * Implementation of the Woody/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.6 2004/01/22 13:19:17 joerg Exp $
+ * @version CVS $Id: woody2.js,v 1.7 2004/01/28 19:14:23 vgritsenko Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
