@@ -151,7 +151,7 @@
       | carry "Meta" in their name. An example is the ChainMetaModule
       | which tries several other modules in turn until a non-null
       | value is obtained or all modules are tied.
-	  |
+      |
       | For details and optional configuration parameters refer to the
       | accompanying javadocs.
       +-->
@@ -196,7 +196,7 @@
     <component-instance logger="core.modules.input" name="jxpath"       class="org.apache.cocoon.components.modules.input.JXPathMetaModule"/>
     <component-instance logger="core.modules.input" name="simplemap"    class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"/>
     <component-instance logger="core.modules.input" name="locate"       class="org.apache.cocoon.components.modules.input.LocateResource"/>
-    <component-instance logger="core.modules.input" name="chain"    class="org.apache.cocoon.components.modules.input.ChainMetaModule">
+    <component-instance logger="core.modules.input" name="chain"        class="org.apache.cocoon.components.modules.input.ChainMetaModule">
       <input-module name="request-param"/>
       <input-module name="request-attr"/>
       <input-module name="session-attr"/>
@@ -559,7 +559,7 @@
     <parameter name="preemptive-loader-url"
                value="http://localhost:8080/cocoon/samples/cinclude/loader"/>
     -->
- </component>
+  </component>
 
   <!--+
       | Runnable manager
