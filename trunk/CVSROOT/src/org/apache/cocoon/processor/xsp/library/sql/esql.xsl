@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.78 2001-04-30 17:00:05 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.79 2001-05-18 01:03:55 balld Exp $-->
 <!--
 
  ============================================================================
@@ -842,6 +842,11 @@
 <xspdoc:desc>returns the name of the type of the given column. the column must be specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-column-type-name">
   <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnTypeName(<xsl:value-of select="@column"/>)</xsp:expr>
+</xsl:template>
+
+<xspdoc:desc>allows null-column testing. Evaluates to a Java expression, which is true when the referred column contains a null-value for the current resultset row</xspdoc:desc> 
+<xsl:template match="esql:row-results//esql:is-null">
+  <xsp:expr>((<xsl:call-template name="get-resultset"/>.getObject("<xsl:value-of select="@column"/>") == null) || <xsl:call-template name="get-resultset"/>.wasNull())</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the message of the current exception</xspdoc:desc>
