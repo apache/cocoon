@@ -78,7 +78,7 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.3 2003/08/07 08:52:15 cziegeler Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.4 2003/08/28 06:09:29 cziegeler Exp $
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline implements Configurable {
@@ -219,18 +219,18 @@ public class CachingPointProcessingPipeline
                                           ((CachingOutputStream)os).getContent());
                 this.cache.store(this.toCacheKey.copy(),
                                  response);
-        //
-        // Scan back along the pipelineCacheKey for
-        // for any cachepoint(s)
-        //
-            this.toCacheKey.removeUntilCachePoint();
+                //
+                // Scan back along the pipelineCacheKey for
+                // for any cachepoint(s)
+                //
+                this.toCacheKey.removeUntilCachePoint();
 
-        //
-        // adjust the validities object
-        // to reflect the new length of the pipeline cache key.
-        //
-        // REVISIT: Is it enough to simply reduce the length of the validities array?
-        //
+                //
+                // adjust the validities object
+                // to reflect the new length of the pipeline cache key.
+                //
+                // REVISIT: Is it enough to simply reduce the length of the validities array?
+                //
                 if (this.toCacheKey.size()>0) {
                     SourceValidity[] copy = new SourceValidity[this.toCacheKey.size()];
                     System.arraycopy(this.toCacheSourceValidities, 0,
@@ -316,8 +316,8 @@ public class CachingPointProcessingPipeline
                     while ( itt.hasNext() ) {
                         next = (XMLConsumer) itt.next();
 
-            // if we have cacheable transformers,
-            // check the tranformers for cachepoints
+                        // if we have cacheable transformers,
+                        // check the tranformers for cachepoints
                         if (cacheableTransformerCount > 0) {
                             if ( (this.isCachePoint.get(currentTransformerIndex) != null)  &&
                                     ((Boolean)this.isCachePoint.get(currentTransformerIndex)).booleanValue()) {
@@ -330,8 +330,8 @@ public class CachingPointProcessingPipeline
                         }
 
 
-                // Serializer is not cacheable,
-            // but we  have the longest cacheable key. Do default longest key caching
+                        // Serializer is not cacheable,
+                        // but we  have the longest cacheable key. Do default longest key caching
                         if (localXMLSerializer != null) {
                             if (cacheableTransformerCount == 0) {
                                 next = new XMLTeePipe(next, localXMLSerializer);
@@ -349,15 +349,15 @@ public class CachingPointProcessingPipeline
                     next = super.lastConsumer;
 
 
-            // if the serializer is not cacheable, but all the transformers are:
-            // (this is default longest key caching)
+                    // if the serializer is not cacheable, but all the transformers are:
+                    // (this is default longest key caching)
                     if (localXMLSerializer != null) {
                         next = new XMLTeePipe(next, localXMLSerializer);
                         this.xmlSerializerArray.add(localXMLSerializer);
                         localXMLSerializer = null;
                     }
 
-            // else if the serializer is cacheable and has cocoon views
+                    // else if the serializer is cacheable and has cocoon views
                     else if ((currentTransformerIndex == this.firstNotCacheableTransformerIndex) &&
                             this.nextIsCachePoint) {
                         cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
@@ -381,8 +381,8 @@ public class CachingPointProcessingPipeline
 
                         if (cacheableTransformerCount >= this.firstProcessedTransformerIndex) {
 
-                // if we have cacheable transformers left,
-                // then check the tranformers for cachepoints
+                            // if we have cacheable transformers left,
+                            // then check the tranformers for cachepoints
                             if (cacheableTransformerCount < this.firstNotCacheableTransformerIndex) {
                                 if ( !(prev instanceof XMLDeserializer) &&
                                         (this.isCachePoint.get(cacheableTransformerCount) != null)  &&
@@ -393,8 +393,8 @@ public class CachingPointProcessingPipeline
                                 }
                             }
 
-                    // Serializer is not cacheable,
-                // but we  have the longest cacheable key. Do default longest key caching
+                            // Serializer is not cacheable,
+                            // but we  have the longest cacheable key. Do default longest key caching
                             if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)
                                     && cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
                                 next = new XMLTeePipe(next, localXMLSerializer);
@@ -408,7 +408,7 @@ public class CachingPointProcessingPipeline
                     }
                     next = super.lastConsumer;
 
-            //*all* the transformers are cacheable, but the serializer is not!! this is longest key
+                    //*all* the transformers are cacheable, but the serializer is not!! this is longest key
                     if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)) {
                         next = new XMLTeePipe(next, localXMLSerializer);
                         this.xmlSerializerArray.add(localXMLSerializer);
