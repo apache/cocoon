@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.315 2004/05/07 18:32:44 crossley Exp $:-->
+<!-- CVS $Id: status.xml,v 1.316 2004/05/08 02:19:24 joerg Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="add" fixes-bug="28424" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
+     RequestListener hook added, that is called before and after a request is processed.
+   </action>
    <action dev="DC" type="update" due-to="Ralph Goers" fixes-bug="28704">
      Enable XConfToolTask to modify multiple attributes. See the bug report
      for description of use. Also enable suppression of comments.

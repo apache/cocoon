@@ -79,7 +79,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.23 2004/03/10 12:58:09 stephan Exp $
+ * @version CVS $Id: Cocoon.java,v 1.24 2004/05/08 02:19:24 joerg Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -135,6 +135,9 @@ public class Cocoon
 
     /** The source resolver */
     protected SourceResolver sourceResolver;
+    
+    /** An optional Avalon Component that is called before and after processing all requests. */
+    protected RequestListener requestListener; 
     
     /**
      * Creates a new <code>Cocoon</code> instance.
@@ -318,6 +321,10 @@ public class Cocoon
         }
 
         this.sourceResolver = (SourceResolver)this.componentManager.lookup(SourceResolver.ROLE);
+        
+        if (this.componentManager.hasComponent(RequestListener.ROLE)){
+            this.requestListener = (RequestListener) this.componentManager.lookup(RequestListener.ROLE);
+        }
     }
 
     /** Dump System Properties */
@@ -480,6 +487,9 @@ public class Cocoon
         this.threads = null;
         
         if ( this.componentManager != null ) {
+        	if ( this.requestListener!=null ){
+        		this.componentManager.release(this.requestListener);
+        	}
             this.componentManager.release(this.threadSafeProcessor);
             this.threadSafeProcessor = null;
             
@@ -615,12 +625,38 @@ public class Cocoon
                 this.debug(environment, false);
             }
 
+            
+            if (this.requestListener != null) {
+                try {
+                    requestListener.onRequestStart(environment);
+                }
+                catch (Exception e) {
+                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                }
+            }
+            
             if (this.threadSafeProcessor != null) {
                 result = this.threadSafeProcessor.process(environment);
+                if (this.requestListener != null) {
+                    try {
+                        requestListener.onRequestEnd(environment);
+                    }
+                    catch (Exception e) {
+                        getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                    }
+                }
             } else {
                 Processor processor = (Processor)this.componentManager.lookup(Processor.ROLE);
                 try {
                     result = processor.process(environment);
+                    if (this.requestListener != null) {
+                        try {
+                            requestListener.onRequestEnd(environment);
+                        }
+                        catch (Exception e) {
+                            getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                        }
+                    }
                 }
                 finally {
                     this.componentManager.release(processor);
@@ -631,6 +667,14 @@ public class Cocoon
 
             return result;
         } catch (Exception any) {
+            if (this.requestListener != null) {
+                try {
+                    requestListener.onRequestException(environment, any);
+                }
+                catch (Exception e) {
+                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                }
+            }
             // reset response on error
             environment.tryResetResponse();
             throw any;
