@@ -73,12 +73,11 @@ import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
 
 /**
- * TODO: Check attribute names and make them unique
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.4 2003/06/17 19:59:31 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -165,7 +164,6 @@ public class PortalServiceImpl
         if (null != map) {
             return map.keySet().iterator();
         }
-        // TODO
         return Collections.EMPTY_MAP.keySet().iterator();
     }
 

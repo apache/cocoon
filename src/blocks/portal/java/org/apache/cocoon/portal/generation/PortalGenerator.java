@@ -51,20 +51,16 @@
 package org.apache.cocoon.portal.generation;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ComposerGenerator;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.SAXException;
 
 /**
@@ -72,10 +68,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalGenerator.java,v 1.1 2003/05/07 06:22:29 cziegeler Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.2 2003/06/17 19:59:33 cziegeler Exp $
  */
-public class PortalGenerator extends ComposerGenerator
-implements CacheableProcessingComponent {
+public class PortalGenerator 
+extends ComposerGenerator {
 
 	/**
 	 * @see org.apache.cocoon.generation.Generator#generate()
@@ -93,23 +89,6 @@ implements CacheableProcessingComponent {
         } finally {
             this.manager.release(pm);
         }
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#generateKey()
-	 */
-	public Serializable getKey() {
-		// FIXME quick hack
-        return null; //ObjectModelHelper.getRequest(this.objectModel).getQueryString();
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#generateValidity()
-	 */
-	public SourceValidity getValidity() {
-		return new NOPValidity();
-
 	}
 
     /* (non-Javadoc)

@@ -62,7 +62,7 @@ import org.apache.cocoon.util.ClassUtils;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AspectUtil.java,v 1.2 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: AspectUtil.java,v 1.3 2003/06/17 19:59:32 cziegeler Exp $
  */
 public class AspectUtil { 
 
@@ -70,7 +70,6 @@ public class AspectUtil {
      * Create a new instance
      */
     public static Object createNewInstance(AspectDescription desc) {
-        // TODO - cache class
         try {
             Class clazz = ClassUtils.loadClass(desc.getClassName());
             if ( clazz.getName().startsWith("java.lang.")) {
