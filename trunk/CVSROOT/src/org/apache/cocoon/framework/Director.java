@@ -1,4 +1,4 @@
-/*-- $Id: Director.java,v 1.3 1999-11-09 02:30:11 dirkx Exp $ -- 
+/*-- $Id: Director.java,v 1.4 1999-12-16 11:43:19 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import java.util.*;
  * that part in the play.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:11 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-16 11:43:19 $
  */
 
 public interface Director {
@@ -67,12 +67,12 @@ public interface Director {
     /**
      * Get the actor currently playing the given role.
      */
-    Actor getActor(String role);
+    Object getActor(String role);
 
     /**
      * Set the actor for the role.
      */
-    void setRole(String role, Actor actor);
+    void setRole(String role, Object actor);
     
     /**
      * Get the roles currently set.

@@ -1,4 +1,4 @@
-/*-- $Id: Manager.java,v 1.4 1999-12-08 12:30:17 stefano Exp $ -- 
+/*-- $Id: Manager.java,v 1.5 1999-12-16 11:43:19 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ import java.util.*;
  * This class is used to create and control software actors.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-12-08 12:30:17 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-16 11:43:19 $
  */
 
 public class Manager extends Hashtable implements Actor, Factory, Director {
@@ -127,14 +127,14 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
     /**
      * Get the actor currently playing the given role.
      */
-    public Actor getActor(String role) {
-        return (Actor) this.get(role);
+    public Object getActor(String role) {
+        return this.get(role);
     }
 
     /**
      * Set the actor for the role.
      */
-    public void setRole(String role, Actor actor) {
+    public void setRole(String role, Object actor) {
         this.put(role, actor);
     }
     
