@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.1 2003/07/12 18:39:49 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.2 2003/08/04 03:06:30 joerg Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -258,15 +258,12 @@ public class PipelineAuthenticator
                     authContext.init(doc);
 
                     // And now load applications
-                    boolean loaded = true;
                     Iterator applications = configuration.getApplications().values().iterator();
 
                     while ( applications.hasNext() ) {
                         ApplicationConfiguration appHandler = (ApplicationConfiguration)applications.next();
                         if ( !appHandler.getLoadOnDemand() ) {
                             handler.getContext().loadApplicationXML( appHandler, this.resolver );
-                        } else {
-                            loaded = false;
                         }
                     }
 

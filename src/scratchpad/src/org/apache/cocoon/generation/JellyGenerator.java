@@ -111,8 +111,6 @@ public class JellyGenerator extends ComposerGenerator
      */
     public void generate() throws IOException, SAXException, ProcessingException {
         SAXParser parser = null;
-        int len = 0;
-        String contentType = null;
         Source scriptSource = null;
         try {
             

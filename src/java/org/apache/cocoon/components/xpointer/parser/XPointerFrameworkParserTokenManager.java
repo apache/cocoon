@@ -56,29 +56,10 @@ public class XPointerFrameworkParserTokenManager
     public void setDebugStream(java.io.PrintStream ds) {
         debugStream = ds;
     }
-    private final int jjStopStringLiteralDfa_0(int pos, long active0) {
-        switch (pos) {
-            default :
-                return -1;
-        }
-    }
-    private final int jjStartNfa_0(int pos, long active0) {
-        return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0), pos + 1);
-    }
     private final int jjStopAtPos(int pos, int kind) {
         jjmatchedKind = kind;
         jjmatchedPos = pos;
         return pos + 1;
-    }
-    private final int jjStartNfaWithStates_0(int pos, int kind, int state) {
-        jjmatchedKind = kind;
-        jjmatchedPos = pos;
-        try {
-            curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
-            return pos + 1;
-        }
-        return jjMoveNfa_0(state, pos + 1);
     }
     private final int jjMoveStringLiteralDfa0_0() {
         switch (curChar) {
@@ -109,10 +90,6 @@ public class XPointerFrameworkParserTokenManager
         do {
             jjCheckNAdd(jjnextStates[start]);
         } while (start++ != end);
-    }
-    private final void jjCheckNAddStates(int start) {
-        jjCheckNAdd(jjnextStates[start]);
-        jjCheckNAdd(jjnextStates[start + 1]);
     }
     static final long[] jjbitVec0 =
         { 0x0L, 0xffffffffffffc000L, 0xfffff0007fffffffL, 0x7fffffL };
@@ -260,12 +237,11 @@ public class XPointerFrameworkParserTokenManager
             0xfffffffe661fffffL,
             0x77ffffffffffffffL };
     private final int jjMoveNfa_0(int startState, int curPos) {
-        int[] nextStates;
         int startsAt = 0;
         jjnewStateCnt = 7;
         int i = 1;
         jjstateSet[0] = startState;
-        int j, kind = 0x7fffffff;
+        int kind = 0x7fffffff;
         for (;;) {
             if (++jjround == 0x7fffffff)
                 ReInitRounds();
@@ -407,16 +383,7 @@ public class XPointerFrameworkParserTokenManager
     private final int jjStartNfa_1(int pos, long active0) {
         return jjMoveNfa_1(jjStopStringLiteralDfa_1(pos, active0), pos + 1);
     }
-    private final int jjStartNfaWithStates_1(int pos, int kind, int state) {
-        jjmatchedKind = kind;
-        jjmatchedPos = pos;
-        try {
-            curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
-            return pos + 1;
-        }
-        return jjMoveNfa_1(state, pos + 1);
-    }
+
     private final int jjMoveStringLiteralDfa0_1() {
         switch (curChar) {
             case 40 :
@@ -463,12 +430,11 @@ public class XPointerFrameworkParserTokenManager
     static final long[] jjbitVec41 =
         { 0x0L, 0x0L, 0xffffffffffffffffL, 0xffffffffffffffffL };
     private final int jjMoveNfa_1(int startState, int curPos) {
-        int[] nextStates;
         int startsAt = 0;
         jjnewStateCnt = 1;
         int i = 1;
         jjstateSet[0] = startState;
-        int j, kind = 0x7fffffff;
+        int kind = 0x7fffffff;
         for (;;) {
             if (++jjround == 0x7fffffff)
                 ReInitRounds();
@@ -750,8 +716,6 @@ public class XPointerFrameworkParserTokenManager
     int jjmatchedKind;
 
     public Token getNextToken() {
-        int kind;
-        Token specialToken = null;
         Token matchedToken;
         int curPos = 0;
 

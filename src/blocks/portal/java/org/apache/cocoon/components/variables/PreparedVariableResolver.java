@@ -69,7 +69,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.1 2003/06/10 19:38:54 cziegeler Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.2 2003/08/04 03:06:30 joerg Exp $
  */
 public class PreparedVariableResolver 
     extends NOPVariableResolver {
@@ -187,8 +187,6 @@ public class PreparedVariableResolver
     
     public String resolve() 
     throws PatternException {
-        List mapStack = null; // get the stack only when necessary - lazy inside the loop
-        int stackSize = 0;
 
         StringBuffer result = new StringBuffer();
         

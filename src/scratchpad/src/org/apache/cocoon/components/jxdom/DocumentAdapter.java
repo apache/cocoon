@@ -65,14 +65,10 @@ public class DocumentAdapter implements Document {
     
     private static final CompiledExpression
         GET_SELF = JXPathContext.compile(".");
-    private static final CompiledExpression
-        GET_PARENT = JXPathContext.compile("..");
     private static final CompiledExpression 
         GET_ATTRS = JXPathContext.compile("@*");
     private static final CompiledExpression 
         GET_CHILD_NODES = JXPathContext.compile("*");
-    private static final CompiledExpression 
-        GET_ROOT = JXPathContext.compile("/");
 
     private static NamedNodeMap EMPTY_NODE_MAP = new NamedNodeMap() {
             public Node getNamedItem(String name) {

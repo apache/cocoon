@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.9 2003/07/11 20:34:22 joerg Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.10 2003/08/04 03:06:30 joerg Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -127,9 +127,7 @@ public class AuthenticationProfileManager
         parameters.put("config", config);
         parameters.put("handler", handler);
         CopletDataManager copletDataManager = null;
-        Map keyMap;
         try {
-                                                                                        
             this.lock.readLock();
 
             // load coplet base data
@@ -222,8 +220,6 @@ public class AuthenticationProfileManager
                                     Object factory, 
                                     boolean forcedLoad) 
 	throws Exception {
-        Configuration config = (Configuration) parameters.get("config");
-        
 		DeltaApplicableReferencesAdjustable result;
 		Object object;
 
@@ -382,7 +378,7 @@ public class AuthenticationProfileManager
 		}
 
 		SourceValidity newValidity = adapter.getValidity(key, parameters);
-		if (!forcedLoad && valid == SourceValidity.UNKNWON) {
+		if (!forcedLoad && valid == SourceValidity.UNKNOWN) {
 			if (sourceValidity.isValid(newValidity) == SourceValidity.VALID)
 				return objects[0];
 		}
