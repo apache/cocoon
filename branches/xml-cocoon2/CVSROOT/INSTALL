@@ -50,7 +50,7 @@
   directory so do
   
     [unix] cp ./build/cocoon/cocoon.war $TOMCAT_HOME/webapps/cocoon.war
-    [unix] copy .\build\cocoon\cocoon.war %TOMCAT_HOME%\webapps\cocoon.war
+    [win32] copy .\build\cocoon\cocoon.war %TOMCAT_HOME%\webapps\cocoon.war
   
   where TOMCAT_HOME points to the directory where tomcat is installed (note:
   you don't need to set it in the enviornment, it's there only to show you)
