@@ -50,13 +50,15 @@
 */
 package org.apache.cocoon.components.flow.javascript.fom;
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.mozilla.javascript.*;
-import org.mozilla.javascript.continuations.Continuation;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 
 public class FOM_WebContinuation extends ScriptableObject {
     
