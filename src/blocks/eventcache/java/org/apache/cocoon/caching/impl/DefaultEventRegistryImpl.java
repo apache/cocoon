@@ -82,7 +82,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.4 2003/08/04 03:09:42 joerg Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.5 2003/09/05 04:02:51 ghoward Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -233,8 +233,7 @@ public class DefaultEventRegistryImpl
         try {
             oos = new ObjectOutputStream(
                                         new FileOutputStream(this.m_persistentFile));
-            EventRegistryDataWrapper ecdw = new EventRegistryDataWrapper();
-            ecdw.setupMaps(this.m_keyMMap, this.m_eventMMap);
+            EventRegistryDataWrapper ecdw = wrapRegistry();
             oos.writeObject(ecdw);
             oos.flush();
         } catch (FileNotFoundException e) {
@@ -252,12 +251,18 @@ public class DefaultEventRegistryImpl
         m_eventMMap = null;
     }
 
+	protected EventRegistryDataWrapper wrapRegistry() {
+		EventRegistryDataWrapper ecdw = new EventRegistryDataWrapper();
+		ecdw.setupMaps(this.m_keyMMap, this.m_eventMMap);
+		return ecdw;
+	}
+
     /* 
      * I don't think this needs to get synchronized because it should 
      * only be called during initialize, which should only be called 
      * once by the container.
      */
-    private boolean recover() {
+    protected boolean recover() {
         if (this.m_persistentFile.exists()) {
             ObjectInputStream ois = null;
             EventRegistryDataWrapper ecdw = null;
@@ -284,9 +289,7 @@ public class DefaultEventRegistryImpl
                     // ignore
                 }
             }
-            
-            this.m_eventMMap = ecdw.get_eventMap();
-            this.m_keyMMap = ecdw.get_keyMap();
+            unwrapRegistry(ecdw);
         } else {
             getLogger().warn(this.m_persistentFile + " does not exist - Unable to " +
                 "retrieve EventRegistry.");
@@ -295,6 +298,11 @@ public class DefaultEventRegistryImpl
         }
         return true;
     }
+
+	protected void unwrapRegistry(EventRegistryDataWrapper ecdw) {
+		this.m_eventMMap = ecdw.get_eventMap();
+		this.m_keyMMap = ecdw.get_keyMap();
+	}
 
     // TODO: don't hardcode initial size
     private void createBlankCache() {

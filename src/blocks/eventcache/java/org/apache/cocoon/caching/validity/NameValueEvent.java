@@ -46,15 +46,11 @@
 package org.apache.cocoon.caching.validity;
 
 /**
- * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  In fact, if this 
- * becomes useful, it would probably move to Excalibur SourceResolve.
- * 
  * An external uncache event that consists of a name/value pair.  
  * An example might be "table_name", "primary_key"
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: NameValueEvent.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version $Id: NameValueEvent.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
  */
 public class NameValueEvent extends Event {
 
