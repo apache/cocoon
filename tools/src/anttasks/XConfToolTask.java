@@ -64,7 +64,7 @@ import java.util.Iterator;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.20 $ $Date: 2004/03/14 10:34:34 $
+ * @version CVS $Revision: 1.21 $ $Date: 2004/03/16 14:23:28 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -172,7 +172,7 @@ public final class XConfToolTask extends MatchingTask {
             modified = hasChanged;
 
             if (hasChanged && !suspended.isEmpty()) {
-                log("Try to apply suspended patch files");
+                log("Try to apply suspended patch files", Project.MSG_DEBUG);
             }
 
             ArrayList newSuspended = new ArrayList();
@@ -198,7 +198,7 @@ public final class XConfToolTask extends MatchingTask {
             if (!suspended.isEmpty()) {
                 for(Iterator i=suspended.iterator(); i.hasNext();) {
                     patchfile = (File)i.next();
-                    log("Dismiss: "+patchfile.toString());
+                    log("Dismiss: "+patchfile.toString(), Project.MSG_DEBUG);
                 }
             }
 
@@ -273,7 +273,7 @@ public final class XConfToolTask extends MatchingTask {
 
         // Suspend, because the xpath returned not one node
         if (nodes.getLength() !=1 ) {
-            log("Suspending: "+filename);
+            log("Suspending: "+filename, Project.MSG_DEBUG);
             return false;
         }
         Node root = nodes.item(0);
