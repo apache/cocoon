@@ -19,37 +19,37 @@
 <!ELEMENT developers (person+)>
 <!ELEMENT person EMPTY>
 <!ATTLIST person
-	name CDATA #REQUIRED
-	email CDATA #REQUIRED
-	id CDATA #REQUIRED
+  name CDATA #REQUIRED
+  email CDATA #REQUIRED
+  id CDATA #REQUIRED
 >
 <!ELEMENT todo (actions+)>
 <!ELEMENT actions (action+)>
 <!ATTLIST actions
-	priority (high | medium | low) #REQUIRED
+  priority (high | medium | low) #REQUIRED
 >
 <!ELEMENT changes (release+)>
 <!ELEMENT release (action+)>
 <!ATTLIST release
-	version CDATA #REQUIRED
-	date CDATA #REQUIRED
+  version CDATA #REQUIRED
+  date CDATA #REQUIRED
 >
 <!ELEMENT action (#PCDATA | link | br | code | ul | strong)*>
 <!ATTLIST action
-	context (build | code | docs) #IMPLIED
-	assigned-to CDATA #IMPLIED
-	dev CDATA #IMPLIED
-	type (add | fix | remove | update) #IMPLIED
-	fixes-bug CDATA #IMPLIED
-	due-to CDATA #IMPLIED
-	due-to-email CDATA #IMPLIED
+  context (build | code | docs) #IMPLIED
+  assigned-to CDATA #IMPLIED
+  dev CDATA #IMPLIED
+  type (add | fix | remove | update) #IMPLIED
+  fixes-bug CDATA #IMPLIED
+  due-to CDATA #IMPLIED
+  due-to-email CDATA #IMPLIED
 >
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT br EMPTY>
 <!ELEMENT strong (#PCDATA)>
 <!ELEMENT link (#PCDATA)>
 <!ATTLIST link
-	href CDATA #REQUIRED
+  href CDATA #REQUIRED
 >
 <!ELEMENT ul (li)+>
 <!ELEMENT li (#PCDATA | link | br | code | ul)*>
@@ -202,6 +202,48 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RP" type="add">
+    cForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
+            up the result by HTMLArea fields. The cleanup process, that is based upon
+            Nekohtml can be configured. One confiugration is available at
+            resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml
+            and guarantees valid XHTML
+     <br/>
+     Example:
+     <code>
+&lt;fd:datatype base="string"&gt;
+  &lt;fd:convertor type="htmlcleaner"
+      config="resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml"/&gt;
+&lt;/fd:datatype&gt;
+     </code>
+   </action>
+   <action dev="RP" type="add">
+    cForms: 'htmlarea' fields can be directly configured in cForms templates
+    <br/>
+    Example configuration (within the &lt;conf&gt; part the variable conf contains
+    the configuration object of HTMLArea
+    <code>
+&lt;fi:styling type="htmlarea" rows="8" style="width:100%"&gt;
+  &lt;conf&gt;
+    conf.statusBar = false;
+    conf.sizeIncludesToolbar = false;
+    conf.fullPage = false;
+    conf.toolbar = [
+      [ "bold", "italic", "separator",
+        "subscript", "superscript", "separator",
+        "insertorderedlist", "insertunorderedlist",
+        "outdent", "indent", "separator",
+        "inserthorizontalrule", "separator",
+        "copy", "cut", "paste", "space", "undo", "redo",
+        "separator", "showhelp"]
+      ];
+  &lt;/conf&gt;
+&lt;/fi:styling&gt;
+    </code>
+   </action>
+   <action dev="RP" type="fix">
+    cForms: fields styled as 'htmlarea' can be used in tables (workaround for strange IE behaviour)
+   </action>
    <action dev="JQ" type="add">
     Added querybean block, functionality moved from the lucene block as we hope to add a dependency on OJB so querybeans can be persisted.
    </action>
@@ -231,42 +273,42 @@
      to compatibility issues:
      <ul>
         <li>catch(return)</li>
-	<li>catch(continue)</li>
-	<li>catch(break)</li>
+  <li>catch(continue)</li>
+  <li>catch(break)</li>
      </ul>
      aren't supported any more. catch(break) can be replaced by passing the function
      to cocoon.sendPageAndWait([pipeline], [bizdata], [function], [time-to-live]).
      <br/>
      catch(return) and catch(continue) e.g.
      <code>
-	var pool = ...;
-	function someFunction() {
-	     var conn = pool.getConnection();
-	     ...
-	     catch (break) {
-		 conn.close();
-		 conn = null;
-	     }
-	     catch (continue) {
-		 conn = pool.getConnection();
-	     }
-	}
+  var pool = ...;
+  function someFunction() {
+       var conn = pool.getConnection();
+       ...
+       catch (break) {
+     conn.close();
+     conn = null;
+       }
+       catch (continue) {
+     conn = pool.getConnection();
+       }
+  }
      </code>
      can be replaced by catching the ContinuationException:
      <code>
-     	var pool = ...;    
-	function someFunction() {
-	     var conn = null;
-	     try {
-		 if (conn == null) {
-		     conn = pool.getConnection();
-		 }
-		 ...
-	     } finally {
-		 conn.close();
-		 conn = null;
-	     }
-	}        
+       var pool = ...;
+  function someFunction() {
+       var conn = null;
+       try {
+     if (conn == null) {
+         conn = pool.getConnection();
+     }
+     ...
+       } finally {
+     conn.close();
+     conn = null;
+       }
+  }
      </code>
    </action>
    <action dev="ATC" type="remove">
@@ -288,7 +330,7 @@
    </action>
    <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
      Apply patch: Add support for calling webservices from within Flowscript.
-   </action>   
+   </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
      current sitemap even if you are in a sub sitemap. Added an abstract request
@@ -421,8 +463,8 @@
      be removed completely in Cocoon 2.2.
    </action>
    <action dev="RG" type="fix" fixes-bug="32159" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
-     Portal: Request content length and content type are required in portlet ActionRequest 
-     for custom upload handling.     
+     Portal: Request content length and content type are required in portlet ActionRequest
+     for custom upload handling.
    </action>
    <action dev="RG" type="add" fixes-bug="31857">
      Portal: Added support for page labels.
@@ -624,7 +666,7 @@
    <action dev="NKB" type="add">
      New @pass-through attribute for the sitemap mount node.
      If true, processing will resume in the base sitemap just after the mount node
-     if the mounted sitemap has not already generated output (usually if no match 
+     if the mounted sitemap has not already generated output (usually if no match
      is found). Previous behaviour was always to throw a ResourceNotFoundException.
      The attribute defaults to "false" for backwards compatibility.
    </action>
@@ -693,8 +735,8 @@
    </action>
    <action dev="UH" type="add">
      Enhanced JMS support by adding a JMSConnectionManager component to the JMS block.
-     This component replaces the JMSConnection component which only supported 
-     publish/subscribe messaging and which mixed some concerns. Two abstract classes: 
+     This component replaces the JMSConnection component which only supported
+     publish/subscribe messaging and which mixed some concerns. Two abstract classes:
      AbstractMessageListener and AbstractMessagePublisher should be used as basis for
      custom publish/subscribe components.
    </action>
@@ -2238,14 +2280,14 @@
     Created additional isolation level for some OutputModules.
   </action>
   <action dev="CH" type="add"
-	  due-to="Jeff Turner"
-	  due-to-email="jefft@apache.org"
+    due-to="Jeff Turner"
+    due-to-email="jefft@apache.org"
       fixes-bug="15611">
     Added LinkRewriterTransformer.
   </action>
   <action dev="OP" type="add"
-	  due-to="Michael Melhem"
-	  due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
+    due-to="Michael Melhem"
+    due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
     Added support for expiring continuations.
   </action>
   <action dev="OP" type="update" due-to="Ugo Cei" due-to-email="u.cei@cbim.it">
