@@ -24,7 +24,7 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 07:15:11 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-02-27 12:56:20 $
  */
 public class PatternMatcher {
 
@@ -153,6 +153,8 @@ public class PatternMatcher {
      * <b>FIXME: This routine doesn't match when the pattern ends with a
      *    wildcard. Need to fix together with <code>translatePattern()</code>,
      *    in <code>PatternTranslator</code> otherwise it won't work.</b>
+     * <br>
+     * <i>Seems ok now</i>
      *
      * @param buff The <code>char []</code> of the path to be matched.
      * @param expr The <code>int []</code> representing the pattern, as
@@ -161,51 +163,48 @@ public class PatternMatcher {
      */
     protected boolean matchPattern(char buff[], int expr[])
     throws NullPointerException {
-        // Set the current position in buffers to zero
-        int k=0;
+                
+        // The previous and current position of the expression character
+        // (MATCH_*)
+        int charpos=0;
+        // Search the fist expression character
+        while (expr[charpos]>=0) charpos++;
+        // The expression charater (MATCH_*)
+        int exprchr=expr[charpos];
+
+        // The position in the expression, input, translation and result arrays
         int exprpos=0;
         int buffpos=0;
-        // This value represent the type of the last whildcard matching. It
-        // will store MATCH_FILE '*' and MATCH_PATH for '**'
-        int exprchr=0;
-        // Go in loop :)
-        while(true) {
-            // Search the first MATCH_FILE ('*'), MATCH_PATH ('**') or
-            // MATCH_END (end-of-buffer) character
-            int end=exprpos;
-            while(expr[end]>=0) end++;
+        int offset=-1;
+        
+        while (true) {
+            // Check if the data in the expression array before the current
+            // expression character matches the data in the input buffer
+            offset=this.matchArray(expr,exprpos,charpos,buff,buffpos);
+            if (offset<0) return(false);
 
-            // Get the offset of the token included between '?', '*' or '**'
-            int off=this.matchArray(expr,exprpos,end,buff,buffpos);
-
-            // If the substring was not found, we have no match
-            if(off==-1) return(false);
-
-            // If the previous wildcard was MATCH_FILE ('*') then we have to
-            // check that the part that was ignored doesn't contain a path
-            // separator '/'
-            // While we check, we also copy the characters that need to be 
-            // substituted to '*' in the target array
-            if(exprchr==MATCH_FILE) for(int x=buffpos; x<off; x++) {
-                if (buff[x]=='/') return(false);
+            if (exprchr==MATCH_END) return(true);
+            
+            // Search the next expression character
+            buffpos+=(charpos-exprpos);
+            exprpos=++charpos;
+            while (expr[charpos]>=0) charpos++;
+            int prevchr=exprchr;
+            exprchr=expr[charpos];
+   
+            offset=this.matchArray(expr,exprpos,charpos,buff,buffpos);
+            if (offset<0) return(false);
+    
+            // Copy the data from the source buffer into the result buffer
+            // to substitute the expression character
+            if (prevchr==MATCH_PATH) {
+                while (buffpos<offset) buffpos++;
+            } else {
+                // Matching file, don't copy '/'
+                while (buffpos<offset) {
+                    if (buff[buffpos++]=='/') return(false);
+                }
             }
-
-            // Check if we reached the end of the expression
-            if(expr[end]==MATCH_END) {
-                // If the data buffer is finished we have a match
-                if(off+end-exprpos==buff.length) return(true);
-                // Otherwise there is no match
-                return(true);
-            }
-
-            // Set the current data buffer position to the first character
-            // after the matched token
-            buffpos=off+end-exprpos;
-            // Set the current expression buffer position to the first
-            // character after the wildcard
-            exprpos=end+1;
-            // Update the last expression character ('*' or '**')
-            exprchr=expr[end];
         }
     }
 
@@ -228,7 +227,7 @@ public class PatternMatcher {
         // Check if pos and len are legal
         if(rend<rpos) throw new IllegalArgumentException("rend<rpos");
         // If we need to match a zero length string return current dpos
-        if(rend==rpos) return(dpos);
+        if(rend==rpos) return(d.length);
         // If we need to match a 1 char length string do it simply
         if(rend-rpos==1) {
             // Search for the specified character

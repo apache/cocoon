@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-27 01:33:09 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 12:56:19 $
  */
 public class Sitemap implements Composer, Configurable, Processor {
     
@@ -67,12 +67,12 @@ public class Sitemap implements Composer, Configurable, Processor {
         Enumeration e=conf.getConfigurations("partition");
         while (e.hasMoreElements()) {
             Configuration co=(Configuration)e.nextElement();
-            SitemapPartition p=new SitemapPartition();
+            SitemapPartition p=new SitemapPartition(this);
             p.setComponentManager(this.manager);
             p.setConfiguration(co);
             
-            String name=co.getAttribute("name",null);
-            if ((name==null)||("default".equals(name))) {
+            String name=co.getAttribute("name","default");
+            if ("default".equals(name)) {
                 if (this.partition==null) this.partition=p;
                 else throw new ConfigurationException("Dupliacate definition "+
                                                "of the default partition",co);

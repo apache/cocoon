@@ -15,7 +15,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 07:13:17 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 12:56:17 $
  */
 public class RequestGenerator extends AbstractGenerator {
 
@@ -103,7 +103,7 @@ public class RequestGenerator extends AbstractGenerator {
         this.end("request");
 
         // Finish
-        this.contentHandler.endPrefixMapping("cocoon");
+        this.contentHandler.endPrefixMapping("");
         this.contentHandler.endDocument();
     }
     

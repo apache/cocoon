@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:09 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 12:56:19 $
  */
 public class SitemapPartition implements Composer, Configurable, Processor {
 
@@ -35,14 +35,18 @@ public class SitemapPartition implements Composer, Configurable, Processor {
     private Vector processors=new Vector();
     /** The component manager instance */
     private ComponentManager manager=null;
+    /** The sitemap */
+    private Sitemap sitemap=null;
     /** This partition name */
     protected String name=null;
+    
 
     /**
      * Create a new <code>SitemapPartition</code> instance.
      */
-    public SitemapPartition() {
+    public SitemapPartition(Sitemap sitemap) {
         super();
+        this.sitemap=sitemap;
     }
 
     /**
@@ -62,13 +66,12 @@ public class SitemapPartition implements Composer, Configurable, Processor {
         if (!conf.getName().equals("partition"))
             throw new ConfigurationException("Invalid partition configuration",
                                              conf);
-        this.name=conf.getAttribute("name",null);
-        this.name=this.name!=null?this.name:"default";
+        this.name=conf.getAttribute("name","default");
         // Set components
         Enumeration e=conf.getConfigurations("process");
         while (e.hasMoreElements()) {
             Configuration co=(Configuration)e.nextElement();
-            GenericProcessor p=new GenericProcessor();
+            GenericProcessor p=new GenericProcessor(this);
             p.setComponentManager(this.manager);
             p.setConfiguration(co);
             this.processors.addElement(p);

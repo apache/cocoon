@@ -19,13 +19,12 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 07:15:11 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-02-27 12:56:21 $
  */
 public class PatternTranslator extends PatternMatcher {
 
     /** Wether the source and the target patterns are equal. */
     private boolean identityTranslation=false;
-
     /** The int array identifying the pattern to match. */
     protected int[] targetPattern=null;
 
@@ -71,8 +70,8 @@ public class PatternTranslator extends PatternMatcher {
         if ((this.targetPattern==null) || (super.sourcePattern==null))
             throw new IllegalStateException("Null internals");
         if (!super.match(data)) throw new IllegalArgumentException("No match");
-        char x[]=data.toCharArray();
         
+        char x[]=data.toCharArray();
         return(this.translatePattern(x,super.sourcePattern,this.targetPattern));
     }
 
@@ -123,68 +122,80 @@ public class PatternTranslator extends PatternMatcher {
      * <b>FIXME: This routine doesn't match when the pattern ends with a
      *    wildcard. Need to fix together with <code>matchPattern()</code>,
      *    in <code>PatternMatcher</code> otherwise it won't work.</b>
+     * <br>
+     * <i>Seems ok now</i>
      */
     protected String translatePattern(char buff[], int expr[], int trns[])
     throws NullPointerException {
+        // Allocate the result buffer
         char rslt[]=new char[expr.length+trns.length+buff.length];
-        // Set the current position in buffers to zero
-        int k=0;
-        int rsltpos=0;
+        
+        // The previous and current position of the expression character
+        // (MATCH_*)
+        int charpos=0;
+        // Search the fist expression character
+        while (expr[charpos]>=0) charpos++;
+        // The expression charater (MATCH_*)
+        int exprchr=expr[charpos];
+
+        // The position in the expression, input, translation and result arrays
         int exprpos=0;
         int buffpos=0;
-        // This value represent the type of the last whildcard matching. It
-        // will store MATCH_FILE '*' and MATCH_PATH for '**'
-        int exprchr=0;
-        // Go in loop :)
-        while(true) {
-            // Search the first MATCH_FILE ('*'), MATCH_PATH ('**') or
-            // MATCH_END (end-of-buffer) character
-            int end=exprpos;
-            while(expr[end]>=0) end++;
+        int trnspos=0;
+        int rsltpos=0;
+        int offset=-1;
+        
+        while (true) {
+            // Check if the data in the expression array before the current
+            // expression character matches the data in the input buffer
+            offset=super.matchArray(expr,exprpos,charpos,buff,buffpos);
+            if (offset<0) return(null);
 
-            // Get the offset of the token included between '?', '*' or '**'
-            int off=super.matchArray(expr,exprpos,end,buff,buffpos);
-
-            // If the substring was not found, we have no match
-            if(off==-1) return(null);
-
-            // If the previous wildcard was MATCH_FILE ('*') then we have to
-            // check that the part that was ignored doesn't contain a path
-            // separator '/'
-            // While we check, we also copy the characters that need to be 
-            // substituted to '*' in the target array
-            if(exprchr==MATCH_FILE) for(int x=buffpos; x<off; x++) {
-                if (buff[x]=='/') return(null);
-                else rslt[rsltpos++]=buff[x];
+            // Copy the data from the translation buffer into the result buffer
+            // up to the next expression character (arriving to the current in the
+            // expression buffer)        
+            while (trns[trnspos]>=0) rslt[rsltpos++]=(char)trns[trnspos++];
+            trnspos++;
+                
+            if (exprchr==MATCH_END) return(new String(rslt,0,rsltpos));
+            
+            // Search the next expression character
+            buffpos+=(charpos-exprpos);
+            exprpos=++charpos;
+            while (expr[charpos]>=0) charpos++;
+            int prevchr=exprchr;
+            exprchr=expr[charpos];
+   
+            offset=super.matchArray(expr,exprpos,charpos,buff,buffpos);
+            if (offset<0) return(null);
+    
+            // Copy the data from the source buffer into the result buffer
+            // to substitute the expression character
+            if (prevchr==MATCH_PATH) {
+                while (buffpos<offset) rslt[rsltpos++]=buff[buffpos++];
+            } else {
+                // Matching file, don't copy '/'
+                while (buffpos<offset) {
+                    if (buff[buffpos]=='/') return(null);
+                    rslt[rsltpos++]=buff[buffpos++];
+                }
             }
-
-            // If the previous wildcard was MATCH_FILE ('*') then we just copy
-            // the characters that need to be substituted to '**' in the target
-            // array
-            else if(exprchr==MATCH_PATH) {
-                for(int x=buffpos; x<off; x++) rslt[rsltpos++]=buff[x];
-            }                
-
-            // Copy the current token of characters from the source array
-            while(trns[k]>=0) rslt[rsltpos++]=(char)trns[k++]; k++;
-
-            // Check if we reached the end of the expression
-            if(expr[end]==MATCH_END) {
-                // If the data buffer is finished we have a match
-                if(off+end-exprpos==buff.length)
-                    return(new String(rslt,0,rsltpos));
-                // Otherwise return the null string
-                return(null);
-            }
-
-            // Set the current data buffer position to the first character
-            // after the matched token
-            buffpos=off+end-exprpos;
-            // Set the current expression buffer position to the first
-            // character after the wildcard
-            exprpos=end+1;
-            // Update the last expression character ('*' or '**')
-            exprchr=expr[end];
+        }
+    }
+    
+    /** Testing */
+    public static void main(String argv[]) {
+        try {
+            if (argv.length<3) return;
+            PatternTranslator t=new PatternTranslator(argv[0],argv[1]);
+            System.out.println("Matching Expr.    \""+argv[0]+"\"");
+            System.out.println("Translation Expr. \""+argv[1]+"\"");
+            System.out.println("Source Data       \""+argv[2]+"\"");
+            System.out.println(" - Math returned \""+t.match(argv[2])+"\"");
+            System.out.println(" - Translation   \""+t.translate(argv[2])+"\"");
+        } catch (Exception e) {
+            System.out.println(e.getClass().getName());
+            System.out.println(e.getMessage());
         }
     }
 }

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 07:14:32 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-02-27 12:56:19 $
  */
 public class GenericProcessor implements Composer, Configurable, Processor {
 
@@ -59,12 +59,15 @@ public class GenericProcessor implements Composer, Configurable, Processor {
     private String serializer=null;
     /** The serializer role */
     private Parameters serializerParam=null;
+    /** The sitemap partition */
+    private SitemapPartition partition=null;
 
     /**
      * Create a new <code>SitemapPartition</code> instance.
      */
-    public GenericProcessor() {
+    public GenericProcessor(SitemapPartition partition) {
         super();
+        this.partition=partition;
     }
 
     /**
@@ -82,6 +85,7 @@ public class GenericProcessor implements Composer, Configurable, Processor {
     public void setConfiguration(Configuration conf)
     throws ConfigurationException {
         String uri=conf.getAttribute("uri");
+        if ((uri.length()==0)||(uri.charAt(0)!='/')) uri='/'+uri;
         String source=conf.getAttribute("source",null);
         try {
             if(source==null) {
@@ -112,8 +116,6 @@ public class GenericProcessor implements Composer, Configurable, Processor {
             Configuration f=(Configuration)e.nextElement();
             this.filters.addElement("filter:"+c.getAttribute("name"));
         }
-        // NOTE NOTE NOTE NOTE NOTE NOTE
-        // STILL MISSING PARAMETERS RETRIEVAL
     }
 
     /**
