@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
@@ -497,7 +498,7 @@ implements Source, XMLizable {
     /**
      * A simple SourceValidity protecting callers from resets.
      */
-    private static final class SitemapSourceValidity implements SourceValidity {
+    public static final class SitemapSourceValidity implements SourceValidity, Serializable {
 
         private SourceValidity nested_validity = null;
 
@@ -505,7 +506,7 @@ implements Source, XMLizable {
             super();
         }
 
-        private void set(SourceValidity validity) {
+        void set(SourceValidity validity) {
             this.nested_validity = validity;
         }
 
@@ -520,5 +521,10 @@ implements Source, XMLizable {
                    this.nested_validity.isValid(validity):
                    SourceValidity.INVALID);
         }
+
+        public SourceValidity getNestedValidity() {
+            return this.nested_validity;
+        }
+
     }
 }
