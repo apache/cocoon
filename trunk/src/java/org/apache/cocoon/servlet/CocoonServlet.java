@@ -130,7 +130,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.18 2003/10/20 08:15:27 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.19 2003/10/20 08:42:45 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1353,8 +1353,11 @@ public class CocoonServlet extends HttpServlet {
             ContainerUtil.enableLogging(c, this.getCocoonLogger());
             c.setLoggerManager( getLoggerManager() );
             ContainerUtil.contextualize(c, this.appContext);
-            ContainerUtil.compose(c, getParentComponentManager());
-            ContainerUtil.service(c, this.getParentComponentManager());
+            final ComponentManager parent = this.getParentComponentManager();
+            if ( parent != null ) {
+                ContainerUtil.compose(c, getParentComponentManager());
+                ContainerUtil.service(c, this.getParentComponentManager());
+            }
             if (this.enableInstrumentation) {
                 c.setInstrumentManager(getInstrumentManager());
             }
