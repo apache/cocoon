@@ -50,7 +50,7 @@ import java.sql.*;
 
 /**
  *
- * @version CVS $Id: ScriptableResult.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: ScriptableResult.java,v 1.1 2003/06/22 18:12:52 coliver Exp $
  */
 public class ScriptableResult extends ScriptableObject {
 
