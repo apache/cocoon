@@ -12,8 +12,15 @@
         </convertors>
       </datatype>
       <datatype name="long" src="org.apache.cocoon.woody.datatype.typeimpl.LongTypeBuilder">
-        <convertors default="plain" plain="plain">
+        <convertors default="formatting" plain="plain">
           <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainLongConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingLongConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="decimal" src="org.apache.cocoon.woody.datatype.typeimpl.DecimalTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainDecimalConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingDecimalConvertorBuilder"/>
         </convertors>
       </datatype>
       <datatype name="date" src="org.apache.cocoon.woody.datatype.typeimpl.DateTypeBuilder">
