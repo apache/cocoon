@@ -112,7 +112,7 @@ import org.apache.cocoon.util.StringUtils;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.25 2003/12/28 20:52:21 unico Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.26 2003/12/29 21:49:25 unico Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -351,8 +351,8 @@ public class CocoonServlet extends HttpServlet {
         String cocoonConfigURI = servletContextURL + cocoonConfig;
         cocoonBean.setConfigURI(cocoonConfigURI);
         
-//        URL cocoonConfigURL = getConfigFile(cocoonConfigURI);
-//        cocoonBean.setProperty(Constants.CONTEXT_CONFIG_URL,cocoonConfigURL);
+        URL cocoonConfigURL = getConfigFile(cocoonConfigURI);
+        cocoonBean.setProperty(Constants.CONTEXT_CONFIG_URL,cocoonConfigURL);
 
         String logConfig = getInitParameter("log-config", "/WEB-INF/logkit.xconf");
         String logConfigURI = servletContextURL + logConfig;
@@ -1095,7 +1095,6 @@ public class CocoonServlet extends HttpServlet {
                  */
 
                 if (processor.process(env)) {
-                    env.commitResponse();
                     contentType = env.getContentType();
                 } else {
                     // We reach this when there is nothing in the processing change that matches

@@ -50,6 +50,12 @@
 */
 package org.apache.cocoon;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -74,28 +80,27 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Map;
-
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.29 2003/11/07 13:30:20 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.30 2003/12/29 21:49:25 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=CompilingProcessor
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=cocoon
  */
 public class Cocoon
         extends AbstractLogEnabled
-        implements Serviceable,
+        implements CompilingProcessor,
+                   Contextualizable,
+                   Serviceable,
                    Initializable,
                    Disposable,
-                   Modifiable,
-                   CompilingProcessor,
-                   Contextualizable {
+                   Modifiable {
 
     /** The application context */
     private Context context;
@@ -135,11 +140,13 @@ public class Cocoon
      * avoiding extra method calls, the manager parameter may be null.
      *
      * @param manager the parent component manager. May be <code>null</code>
+     * 
+     * @avalon.dependency type=SourceResolver
      */
     public void service(ServiceManager manager) 
     throws ServiceException {
         this.serviceManager = manager;
-        this.sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
+        this.sourceResolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
         try {
             this.environmentHelper = new EnvironmentHelper(
                          (String) this.context.get(Constants.CONTEXT_ROOT_URL));
@@ -377,7 +384,8 @@ public class Cocoon
                 ++activeRequestCount;
                 this.debug(environment, false);
             }
-
+            // FIXME: the processor is most likely threadsafe
+            // cache it for speed ...
             Processor processor = null;
             try {
                 processor = (Processor) this.serviceManager.lookup( Processor.ROLE );
