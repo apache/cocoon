@@ -20,11 +20,12 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 
 /**
- * This object is set to a {@link ParentAware} component and allows
+ * FIXME: Javadoc is no longer correct.
+ * This object is set to a ParentAware component and allows
  * access to the parent component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocatorImpl.java,v 1.3 2004/07/14 19:39:10 cziegeler Exp $
+ * @version CVS $Id: ComponentLocatorImpl.java,v 1.4 2004/07/17 10:51:15 joerg Exp $
  */
 public class ComponentLocatorImpl  {
 

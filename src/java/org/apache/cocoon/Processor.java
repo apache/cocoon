@@ -29,7 +29,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.11 2004/07/15 12:49:49 sylvain Exp $
+ * @version CVS $Id: Processor.java,v 1.12 2004/07/17 10:51:15 joerg Exp $
  */
 public interface Processor extends Component {
 
@@ -54,7 +54,7 @@ public interface Processor extends Component {
         
         public void release() {
             if (this.pipelineSelector != null) {
-                this.pipelineSelector.release( (Component)this.processingPipeline);
+                this.pipelineSelector.release(this.processingPipeline);
                 this.pipelineManager.release(this.pipelineSelector);
             }
             this.lastProcessor = null;

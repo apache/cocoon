@@ -16,20 +16,16 @@
 package org.apache.cocoon.components;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.component.WrapperComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.WrapperServiceSelector;
 import org.apache.cocoon.components.container.ComponentLocatorImpl;
 
@@ -38,7 +34,7 @@ import org.apache.cocoon.components.container.ComponentLocatorImpl;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.11 2004/07/15 12:49:49 sylvain Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.12 2004/07/17 10:51:15 joerg Exp $
  */
 
 public class ExtendedComponentSelector 

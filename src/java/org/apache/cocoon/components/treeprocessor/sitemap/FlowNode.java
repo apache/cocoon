@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
@@ -35,7 +34,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: FlowNode.java,v 1.7 2004/07/17 10:51:15 joerg Exp $
  */
 public class FlowNode extends AbstractProcessingNode
         implements Serviceable, Contextualizable, Disposable {
@@ -75,8 +74,8 @@ public class FlowNode extends AbstractProcessingNode
      * instance to hold the scripts defined within the <code>&lt;map:flow&gt;</code>
      * in the sitemap.
      *
-     * @param manager a <code>ComponentManager</code> value
-     * @exception ComponentException if no flow interpreter could be obtained
+     * @param manager a <code>ServiceManager</code> value
+     * @exception ServiceException if no flow interpreter could be obtained
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
