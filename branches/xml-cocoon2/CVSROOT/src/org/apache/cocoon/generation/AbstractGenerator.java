@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:44 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-02 15:55:00 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer
 implements Generator, Recyclable {
@@ -53,6 +53,7 @@ implements Generator, Recyclable {
      * Recycle the generator by removing references
      */
     public void recycle() {
+        super.recycle();
         this.resolver = null;
         this.objectModel = null;
         this.source = null;

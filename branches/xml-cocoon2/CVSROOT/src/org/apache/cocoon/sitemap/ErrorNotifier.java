@@ -27,10 +27,10 @@ import org.apache.avalon.ThreadSafe;
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @created 31 July 2000
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-12 16:44:06 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-02 15:55:13 $
  */
  
-public class ErrorNotifier extends ComposerGenerator implements ThreadSafe {
+public class ErrorNotifier extends ComposerGenerator {
 
     /**
      * The <code>Notification</code> to report.
@@ -67,5 +67,14 @@ public class ErrorNotifier extends ComposerGenerator implements ThreadSafe {
     public void generate() throws SAXException {
         Notifier.notify(notification, this.contentHandler);
     }
+
+    /**
+     * Recycle
+     */
+    public void recycle() {
+        super.recycle();
+        this.notification = null;
+    }
+
 }
 
