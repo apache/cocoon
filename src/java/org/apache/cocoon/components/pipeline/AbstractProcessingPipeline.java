@@ -89,7 +89,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.16 2004/02/11 14:00:47 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.17 2004/02/11 14:37:28 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -492,14 +492,15 @@ public abstract class AbstractProcessingPipeline
      */
     public boolean process(Environment environment)
     throws ProcessingException {
+        
         // If this is an internal request, lastConsumer not the serializer!
-        if (this.serializer != this.lastConsumer) {
+        if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
         }
-        if (this.serializer != this.lastConsumer || this.reader != null) {
+        if (null != this.lastConsumer || this.reader != null) {
             this.preparePipeline(environment);
         }
-
+        
         // See if we need to set an "Expires:" header
         if (this.expires != 0) {
             Response res = ObjectModelHelper.getResponse(environment.getObjectModel());
