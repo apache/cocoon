@@ -51,7 +51,6 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -335,16 +334,16 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
      */
     public void pushSourceLocks(LockableSource source)
       throws SAXException, SourceException {
-        Enumeration locks = source.getSourceLocks();
+        SourceLock[] locks = source.getSourceLocks();
         SourceLock lock;
 
-        if (locks != null && locks.hasMoreElements()) {
+        if (locks != null && locks.length > 0) {
             this.contentHandler.startElement(URI, LOCKS_NODE_NAME,
                                              LOCKS_NODE_QNAME,
                                              new AttributesImpl());
 
-            while (locks.hasMoreElements()) {
-                lock = (SourceLock) locks.nextElement();
+            for (int i = 0; locks.length > 0; i++) {
+                lock = (SourceLock) locks[i];
 
                 AttributesImpl attributes = new AttributesImpl();
 
