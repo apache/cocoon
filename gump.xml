@@ -43,7 +43,8 @@
     </ant>
 
     <depend project="ant" inherit="runtime"/>
-
+    <depend project="ant-contrib"/>
+    
     <depend project="xml-xerces"/>
     <depend project="xml-xalan2"/>
     <depend project="xml-commons-resolver"/>
