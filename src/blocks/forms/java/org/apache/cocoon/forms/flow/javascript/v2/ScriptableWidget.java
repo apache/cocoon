@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.4 2004/03/20 22:45:31 coliver Exp $
+ * @version $Id: ScriptableWidget.java,v 1.5 2004/04/14 21:25:41 coliver Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -503,7 +503,7 @@ public class ScriptableWidget extends ScriptableObject {
         return wrap(sub);
     }
 
-    public void jsFunction_setValidationError(String message, 
+    public void jsFunction_setValidationError(Object message /* null to clear error */, 
                                               Object parameters) {
         if (delegate instanceof ValidationErrorAware) {
             String[] parms = null;
@@ -520,10 +520,10 @@ public class ScriptableWidget extends ScriptableObject {
             if (message != null) {
                 if (parms != null && parms.length > 0) {
                     validationError = 
-                        new ValidationError(message, parms);
+                        new ValidationError(Context.toString(message), parms);
                 } else {
                     validationError = 
-                        new ValidationError(message, parms != null);
+                        new ValidationError(Context.toString(message), parms != null);
                 }
             }
             ((ValidationErrorAware)delegate).setValidationError(validationError);
