@@ -143,7 +143,7 @@
          inheritRefs="false"
          target="patch-roles"/>
   </target>
-  
+
   <!-- compiles and packages all blocks -->
   <target name="blocks" depends="compile,prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
@@ -152,3 +152,9 @@
          target="compile"/>
   </target>
 
+  <target name="call-block-target" depends="prepare">
+    <ant antfile="${build.temp}/blocks-build.xml" 
+         inheritAll="true" 
+         inheritRefs="false" 
+         target="cocoon-block-${block.name}-${target.name}" />
+  </target>
