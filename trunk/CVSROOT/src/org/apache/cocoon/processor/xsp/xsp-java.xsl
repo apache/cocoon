@@ -321,34 +321,6 @@
 
   <xsl:template match="xsp:variable"/>
 
-  <xsl:template match="xsp:generate-method-header">
-    private <xsl:value-of select="@returns"/>
-    <xsl:text> </xsl:text>
-    <xsl:value-of select="@name"/> (
-      Node xspParentNode,
-      Node xspCurrentNode,
-      Stack xspNodeStack,
-      Document document <xsl:for-each select="//xsp:variable">
-        <xsl:text>, </xsl:text>
-        <xsl:value-of select="@type"/>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@name"/>
-        <xsl:if test="@value">
-          <xsl:text> = </xsl:text>
-          <xsl:value-of select="@value"/>
-        </xsl:if>
-      </xsl:for-each>
-      ) throws Exception 
-  </xsl:template>
-
-  <xsl:template match="xsp:call-method">
-    this.<xsl:value-of select="@name"/>(xspParentNode,xspCurrentNode,xspNodeStack,document
-    <xsl:for-each select="//xsp:variable">
-      ,<xsl:value-of select="@name"/>
-    </xsl:for-each>
-    )
-  </xsl:template>
-
   <!-- *** Dynamic Tag Support *** -->
 
   <!-- Expand dynamic tags to code -->
