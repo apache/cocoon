@@ -126,10 +126,11 @@ waiting for? C'mon, dive in and have fun.
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
 
-    <property name="debug"       value="on"/>
-    <property name="optimize"    value="on"/>
-    <property name="deprecation" value="off"/>
+    <property name="debug"          value="on"/>
+    <property name="optimize"       value="off"/>
+    <property name="deprecation"    value="off"/>
     <property name="build.compiler" value="classic"/>
+    <property name="target.vm"      value="1.2"/>
 
     <property name="src.dir"      value="./src"/>
     <property name="lib.dir"      value="./lib"/>
@@ -167,16 +168,36 @@ waiting for? C'mon, dive in and have fun.
     <filter token="log"     value="true"/>
     <filter token="verbose" value="true"/>
 
-    <available property="servlet.present" classname="javax.servlet.http.HttpServlet"/>
-    <available property="php.present"     classname="net.php.servlet"/>
-    <available property="xt.present"      classname="com.jclark.xsl.sax.XMLProcessorImpl"/>
-    <available property="svg.present"     classname="org.csiro.svg.dom.SVGDocumentImpl"/>
-    <available property="rhino.present"   classname="org.mozilla.javascript.tools.jsc.Main"/>
-    <available property="jstyle.present"  classname="jstyle.JSFormatter"/>
-    <available property="fop.present"     classname="org.apache.fop.apps.Driver"/>
-    <available property="jpeg.present"    classname="com.sun.image.codec.jpeg.JPEGCodec"/>
-    <available property="png.present"     classname="com.keypoint.PngEncoder"/>
-    <available property="jai.present"     classname="com.sun.media.jai.codec.ImageCodec"/>
+    <available property="servlet.present" classname="javax.servlet.http.HttpServlet">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="php.present" classname="net.php.servlet">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="xt.present" classname="com.jclark.xsl.sax.XMLProcessorImpl">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="svg.present" classname="org.csiro.svg.dom.SVGDocumentImpl">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="rhino.present" classname="org.mozilla.javascript.tools.jsc.Main">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="jstyle.present" classname="jstyle.JSFormatter">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="fop.present" classname="org.apache.fop.apps.Driver">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="jpeg.present" classname="com.sun.image.codec.jpeg.JPEGCodec">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="png.present" classname="com.keypoint.PngEncoder">
+      <classpath refid="classpath"/>
+    </available>
+    <available property="jai.present" classname="com.sun.media.jai.codec.ImageCodec">
+      <classpath refid="classpath"/>
+    </available>
     <available property="action.present"  file="action.inc"/>
   </target>
 
@@ -213,12 +234,12 @@ waiting for? C'mon, dive in and have fun.
       <include name="sitemap.xsl" if="action.present"/>
     </copydir>
 
-
     <javac srcdir="${build.src}"
            destdir="${build.dest}"
            debug="${debug}"
            optimize="${optimize}"
-           deprecation="${deprecation}">
+           deprecation="${deprecation}"
+           target="${target.vm}">
       <classpath refid="classpath"/>
       <exclude name="**/*.html"/>
       <exclude name="**/CocoonServlet*.java" unless="servlet.present"/>
@@ -226,7 +247,7 @@ waiting for? C'mon, dive in and have fun.
       <exclude name="**/SVG*.java"           unless="svg.present"/>
       <exclude name="**/Javascript*"         unless="rhino.present"/>
       <exclude name="**/Jstyle*"             unless="jstyle.present"/>
-      <exclude name="**/FO2*"                unless="fop.present"/>
+      <exclude name="**/FOP*"                unless="fop.present"/>
       <exclude name="**/Php*"                unless="php.present"/>
       <exclude name="**/JPEGEncoder*.java"   unless="jpeg.present"/>
       <exclude name="**/PNGEncoder*.java"    unless="png.present"/>
