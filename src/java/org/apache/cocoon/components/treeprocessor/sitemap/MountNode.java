@@ -30,6 +30,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  *
@@ -40,9 +41,8 @@ import org.apache.cocoon.environment.Environment;
 public class MountNode extends AbstractProcessingNode
                        implements Composable, Disposable {
 
-    /** The  key to get the pass_through value fron the Environment */
+    /** The key to get the pass_through value from the Environment */
     protected final static String COCOON_PASS_THROUGH = "COCOON_PASS_THROUGH";
-
 
     /** The 'uri-prefix' attribute */
     private final VariableResolver prefix;
@@ -98,7 +98,7 @@ public class MountNode extends AbstractProcessingNode
         String oldURI    = env.getURI();
         String oldContext   = env.getContext();
         Object oldPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
-        env.setAttribute(COCOON_PASS_THROUGH, new Boolean(passThrough));
+        env.setAttribute(COCOON_PASS_THROUGH, BooleanUtils.toBooleanObject(passThrough));
 
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
