@@ -50,20 +50,19 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
-import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,7 +73,7 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingManager.java,v 1.13 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.14 2004/01/28 12:55:25 joerg Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled
         implements BindingManager, Serviceable, Disposable,
@@ -138,20 +137,16 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     /**
-     * Allows the innerclass Assistant to get access to the logger. JDK 1.3 gives a
-     * NoSuchMethod error if getLogger() is called directly.
-     */
-    private Logger getTheLogger() {
-        return getLogger();
-    }
-
-    /**
      * Assistant Inner class discloses enough features to the created
      * childBindings to recursively
      *
      * This patterns was chosen to prevent Inversion Of Control between
      * this factory and its builder classes (that could be provided by third
      * parties)
+     */
+    /* NOTE: To get access to the logger in this inner class you must not call
+     * getLogger() as with JDK 1.3 this gives a NoSuchMethod error. You need to
+     * implement an explicite access method for the logger in the outer class.
      */
     public class Assistant {
 
@@ -169,8 +164,6 @@ public class JXPathBindingManager extends AbstractLogEnabled
          */
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
-            //if (JXPathBindingManager.this.getTheLogger().isDebugEnabled())
-            //    JXPathBindingManager.this.getTheLogger().debug("build binding for config elm " + bindingType);
             JXpathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
             JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
             return childBinding;
