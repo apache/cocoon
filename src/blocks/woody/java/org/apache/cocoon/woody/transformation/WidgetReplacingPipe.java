@@ -62,7 +62,7 @@ import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.commons.jxpath.JXPathContext;
+import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -105,14 +105,15 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected Widget widget;
     /** Boolean indicating wether the current widget requires special repeater-treatement. */
     protected boolean repeaterWidget;
-    protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
-    protected JXPathContext jxpathContext;
 
-    public void init(Widget contextWidget, JXPathContext jxpathContext) {
+    protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
+    protected WoodyTemplateTransformer pipeContext;
+
+    public void init(Widget contextWidget, WoodyTemplateTransformer pipeContext) {
         this.contextWidget = contextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;
-        this.jxpathContext = jxpathContext;
+        this.pipeContext = pipeContext;
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
@@ -159,10 +160,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     throw new SAXException("Detected nested wt:form-template elements, this is not allowed.");
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
 
-                // Note: since the wt:form-template element is the top-level element in which
-                // all other widget elements must be nested, we can safely assume here that this
-                // instance of the WidgetReplacingPipe == WoodyTemplateTransformer
-                WoodyTemplateTransformer wtt = (WoodyTemplateTransformer)this;
+                // ====> Retrieve the form
 
                 // first look for the form using the location attribute, if any
                 String formJXPath = attributes.getValue("location");
@@ -172,26 +170,46 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     attrsCopy.removeAttribute(attributes.getIndex("location"));
                     attributes = attrsCopy;
 
-                    Object form = jxpathContext.getValue(formJXPath);
+                    Object form = pipeContext.getJXPathContext().getValue(formJXPath);
                     if (form == null)
                         throw new SAXException("No form found at location \"" + formJXPath + "\".");
                     if (!(form instanceof Form))
                         throw new SAXException("Object returned by expression \"" + formJXPath + "\" is not a Woody Form.");
                     contextWidget = (Form)form;
-                } else if (wtt.attributeName != null) { // then see if an attribute-name was specified
-                    contextWidget = (Form)wtt.request.getAttribute(wtt.attributeName);
+                } else if (pipeContext.getAttributeName() != null) { // then see if an attribute-name was specified
+                    contextWidget = (Form)pipeContext.getRequest().getAttribute(pipeContext.getAttributeName());
                     if (contextWidget == null)
-                        throw new SAXException("No form found in request attribute with name \"" + wtt.attributeName);
+                        throw new SAXException("No form found in request attribute with name \"" + pipeContext.getAttributeName());
                 } else { // and then see if we got a form from the flow
                     formJXPath = "/" + WoodyTemplateTransformer.WOODY_FORM;
                     Object form = null;
                     try {
-                        form = jxpathContext.getValue(formJXPath);
+                        form = pipeContext.getJXPathContext().getValue(formJXPath);
                     } catch (JXPathException e) {}
                     if (form != null)
                         contextWidget = (Form)form;
                     else
                         throw new SAXException("No Woody form found.");
+                }
+
+                // ====> Determine the Locale
+
+                String localeAttr = attributes.getValue("locale");
+                if (localeAttr != null) { // first use value of locale attribute if any
+                    localeAttr = translateText(localeAttr);
+                    pipeContext.setLocale(I18nUtils.parseLocale(localeAttr));
+                } else if (pipeContext.getLocaleParameter() != null) { // then use locale specified as transformer parameter, if any
+                    pipeContext.setLocale(pipeContext.getLocaleParameter());
+                } else { // use locale specified in bizdata supplied for form
+                    String localeJXPath = "/locale";
+                    Object locale = null;
+                    try {
+                        locale = pipeContext.getJXPathContext().getValue(localeJXPath);
+                    } catch (JXPathException e) {}
+                    if (locale != null)
+                        pipeContext.setLocale((Locale)locale);
+                    else // final solution: use US locale
+                        pipeContext.setLocale(Locale.getDefault());
                 }
 
                 String[] namesToTranslate = {"action"};
@@ -271,7 +289,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     }
 
     private String evaluateExpression(String expression) {
-        return jxpathContext.getValue(expression).toString();
+        return pipeContext.getJXPathContext().getValue(expression).toString();
     }
 
     protected Widget getWidget(Attributes attributes) throws SAXException {
@@ -298,7 +316,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 Object saxFragment = xmlCompiler.getSAXFragment();
                 for (int i = 0; i < rowCount; i++) {
                     Repeater.RepeaterRow row = repeater.getRow(i);
-                    rowPipe.init(row, jxpathContext);
+                    rowPipe.init(row, pipeContext);
                     rowPipe.setContentHandler(contentHandler);
                     rowPipe.setLexicalHandler(lexicalHandler);
                     interpreter.setConsumer(rowPipe);
@@ -312,7 +330,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 stylingHandler.setContentHandler(contentHandler);
                 stylingHandler.setLexicalHandler(lexicalHandler);
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
-                widget.generateSaxFragment(stylingHandler, Locale.US /* TODO take locale from transformer parameter */);
+                widget.generateSaxFragment(stylingHandler, pipeContext.getLocale());
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
             }
 

@@ -60,6 +60,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.excalibur.source.Source;
 
 import java.util.Map;
@@ -86,6 +87,11 @@ public class HandleFormSubmitAction extends AbstractWoodyAction implements Actio
         String formAttribute = parameters.getParameter("attribute-name");
         String formHandlerClassName = parameters.getParameter("formhandler", null);
 
+        Locale locale = Locale.getDefault();
+        String localeStr = parameters.getParameter("locale", null);
+        if (localeStr != null)
+            locale = I18nUtils.parseLocale(localeStr, locale);
+
         Source source = resolver.resolveURI(formSource);
         try {
             Form form = formManager.createForm(source);
@@ -101,7 +107,7 @@ public class HandleFormSubmitAction extends AbstractWoodyAction implements Actio
                 form.setFormHandler(formHandler);
             }
 
-            FormContext formContext = new FormContext(request, Locale.US);
+            FormContext formContext = new FormContext(request, locale);
 
             boolean finished = form.process(formContext);
             request.setAttribute(formAttribute, form);

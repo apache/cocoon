@@ -52,9 +52,11 @@ package org.apache.cocoon.woody.transformation;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Locale;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -72,8 +74,13 @@ import org.xml.sax.SAXException;
 public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer {
 
     /** Name of the request attribute under which the Woody form is stored (optional). */
-    protected String attributeName;
-    protected Request request;
+    private String attributeName;
+    private Request request;
+    private JXPathContext jxpathContext;
+    /** Containts locale specified as a parameter to the transformer, if any. */
+    private Locale localeParameter;
+    /** The locale currently used by the transformer. */
+    private Locale locale;
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
@@ -94,6 +101,42 @@ public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Tra
         this.attributeName = parameters.getParameter("attribute-name", null);
         this.request = request;
 
-        init(null, jxpathContext);
+        String localeStr = parameters.getParameter("locale", null);
+        if (localeStr != null)
+            localeParameter = I18nUtils.parseLocale(localeStr);
+
+        init(null, this);
+    }
+
+    public JXPathContext getJXPathContext() {
+        return jxpathContext;
+    }
+
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
+    public JXPathContext getJxpathContext() {
+        return jxpathContext;
+    }
+
+    public void setJxpathContext(JXPathContext jxpathContext) {
+        this.jxpathContext = jxpathContext;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public Locale getLocaleParameter() {
+        return localeParameter;
     }
 }
