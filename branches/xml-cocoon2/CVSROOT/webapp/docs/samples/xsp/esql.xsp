@@ -13,12 +13,24 @@
    <content>
 
    <esql:connection>
-     <esql:pool>personnel</esql:pool>
+     <esql:driver>org.postgresql.Driver</esql:driver>
+     <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+     <esql:username>test</esql:username>
+     <esql:password>test</esql:password>
      <esql:execute-query>
        <esql:query>select * from department_table</esql:query>
        <esql:results>
          <esql:row-results>
            <para><esql:get-string column="name"/></para>
+           <esql:get-columns/>
+         </esql:row-results>
+       </esql:results>
+     </esql:execute-query>
+     <esql:execute-query>
+       <esql:query>select xml from xml_table</esql:query>
+       <esql:results>
+         <esql:row-results>
+           <esql:get-xml column="xml"/>
          </esql:row-results>
        </esql:results>
      </esql:execute-query>
