@@ -99,6 +99,10 @@ public class StaticSelectionList implements SelectionList {
         contentHandler.endElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL);
     }
 
+    public List getItems() {
+        return items;
+    }
+
     /**
      * Adds a new item to this selection list.
      * @param value a value of the correct type (i.e. the type with which this selectionlist is associated)
@@ -108,13 +112,17 @@ public class StaticSelectionList implements SelectionList {
         items.add(new SelectionListItem(value, label));
     }
 
-    private final class SelectionListItem {
+    public final class SelectionListItem {
         private final Object value;
         private final Object label;
 
         public SelectionListItem(Object value, Object label) {
             this.value = value;
             this.label = label;
+        }
+
+        public Object getValue() {
+            return value;
         }
 
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale, Convertor.FormatCache formatCache)
