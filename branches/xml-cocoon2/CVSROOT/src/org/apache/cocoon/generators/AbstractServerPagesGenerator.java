@@ -7,6 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.generators;
 
+import org.apache.arch.Modifiable;
+
 import java.io.File;
 import org.apache.cocoon.Request;
 import org.xml.sax.helpers.AttributesImpl;
@@ -18,11 +20,11 @@ import org.xml.sax.SAXException;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:11 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 17:29:26 $
  */
 public abstract class AbstractServerPagesGenerator
   extends ComposerGenerator
-  implements ServerPagesGenerator
+  implements Modifiable
 {
   /**
    * Code generators should produce a static
@@ -45,21 +47,16 @@ public abstract class AbstractServerPagesGenerator
   protected static File[] dependencies = null;
 
   /**
-   * Returns this generator's creation date
-   *
-   * @return The date this generator was automatically created
-   */
-  public long dateCreated() {
-    return dateCreated;
-  }
-
-  /**
    * Determines whether this generator's source files have changed
    *
-   * @return Whether any of the files this generator depends on has changes
-   * since it was automatically created
+   * @return Whether any of the files this generator depends on has changed
+   * since it was created
    */
-  public final boolean hasChanged() {
+  public final boolean modifiedSince(long date) {
+    if (dateCreated < date) {
+      return true;
+    }
+
     for (int i = 0; i < dependencies.length; i++) {
       if (dateCreated < dependencies[i].lastModified()) {
         return true;
