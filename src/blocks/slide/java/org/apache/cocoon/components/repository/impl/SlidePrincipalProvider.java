@@ -94,7 +94,7 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.6 2003/11/15 13:31:18 joerg Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.7 2003/11/15 13:34:43 joerg Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
   implements PrincipalProvider, Serviceable, Configurable, Initializable {
@@ -155,7 +155,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
     }
 
     /**
-     * Initialialize the service. Initialization includes
+     * Initialize the service. Initialization includes
      * allocating any resources required throughout the
      * service's lifecycle.
      *
