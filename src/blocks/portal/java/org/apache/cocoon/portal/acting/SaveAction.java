@@ -31,7 +31,7 @@ import org.apache.cocoon.portal.PortalService;
  * This action saves the profile
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SaveAction.java,v 1.3 2004/03/15 18:18:19 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class SaveAction
 extends ServiceableAction
@@ -57,7 +57,7 @@ implements ThreadSafe {
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.setPortalName(par.getParameter("portal-name"));
-            service.getComponentManager().getProfileManager().saveUserProfiles();
+            service.getComponentManager().getProfileManager().saveUserProfiles(null);
         } catch (ParameterException pe) {
             throw new ProcessingException("Parameter portal-name is required.");
         } catch (ServiceException ce) {

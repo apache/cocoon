@@ -77,12 +77,12 @@ public class GroupBasedProfileManager
     protected Map copletDatas;
     
     protected UserProfile getUserProfile(String layoutKey) {
-        if ( layoutKey == null ) {
-            layoutKey = this.getDefaultLayoutKey();
-        }
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            if ( layoutKey == null ) {
+                layoutKey = service.getDefaultLayoutKey();
+            }
 
             return (UserProfile)service.getAttribute(KEY_PREFIX + layoutKey);
         } catch (ServiceException e) {
@@ -95,10 +95,10 @@ public class GroupBasedProfileManager
     
     protected void removeUserProfiles() {
         // TODO: remove all profiles - we have to rememember all used layout keys
-        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             service.removeAttribute(KEY_PREFIX + layoutKey);
         } catch (ServiceException e) {
@@ -111,7 +111,7 @@ public class GroupBasedProfileManager
 
     protected void storeUserProfile(String layoutKey, PortalService service, UserProfile profile) {
         if ( layoutKey == null ) {
-            layoutKey = this.getDefaultLayoutKey();
+            layoutKey = service.getDefaultLayoutKey();
         }
         service.setAttribute(KEY_PREFIX + layoutKey, profile);
     }
@@ -289,12 +289,7 @@ public class GroupBasedProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
             if ( null == layoutKey ) {
-                layoutKey = this.getDefaultLayoutKey();
-            }
-            // FIXME actually this is a hack for full screen
-            Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
-            if ( null != l) {
-                return l;
+                layoutKey = service.getDefaultLayoutKey();
             }
             
             UserProfile profile = this.getUserProfile(layoutKey);

@@ -36,7 +36,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractContentEventAspect.java,v 1.4 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractContentEventAspect
     extends AbstractLogEnabled
@@ -95,6 +95,7 @@ public abstract class AbstractContentEventAspect
                         publisher.publish(e);
                     }
                 } catch (Exception ignore) {
+                    // ignroe it
                 }
                 // the event could not be generated, so try different approach
                 if (e == null) {

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManagerImpl.java,v 1.7 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortalManagerImpl
 	extends AbstractLogEnabled
@@ -61,13 +61,14 @@ public class PortalManagerImpl
 	 */
 	public void showPortal(ContentHandler contentHandler, Parameters parameters) 
     throws SAXException {
-//        final boolean useContentDeliverer = (parameters == null ? true :
-//                                               parameters.getParameterAsBoolean("use-content-deliverer", true));
-        
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            Layout portalLayout = service.getComponentManager().getProfileManager().getPortalLayout(null, null);
+            // first check for a full screen layout
+            Layout portalLayout = service.getEntryLayout(null);
+            if ( portalLayout == null ) {
+                portalLayout = service.getComponentManager().getProfileManager().getPortalLayout(null, null);
+            }
 
             Renderer portalLayoutRenderer = service.getComponentManager().getRenderer( portalLayout.getRendererName());       
 

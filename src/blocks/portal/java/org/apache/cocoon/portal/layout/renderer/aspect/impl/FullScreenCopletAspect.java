@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class FullScreenCopletAspect extends AbstractAspect {
 
@@ -64,7 +64,7 @@ public class FullScreenCopletAspect extends AbstractAspect {
 
         Boolean supportsFullScreen = (Boolean)cid.getCopletData().getAspectData("full-screen");
         if ( supportsFullScreen == null || supportsFullScreen.equals(Boolean.TRUE) ) {
-            final Layout fullScreenLayout = service.getComponentManager().getProfileManager().getEntryLayout();
+            final Layout fullScreenLayout = service.getEntryLayout(null);
             if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
                 FullScreenCopletEvent event = new FullScreenCopletEvent( cid, null );
                 XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));

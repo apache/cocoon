@@ -18,6 +18,7 @@ package org.apache.cocoon.portal;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.component.Component;
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
  * This is the central component in the portal. It holds the configuration
@@ -28,7 +29,7 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalService.java,v 1.3 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface PortalService extends Component {
 
@@ -92,4 +93,22 @@ public interface PortalService extends Component {
      * Return the component manager for the current portal
      */
     PortalComponentManager getComponentManager();
+
+    /**
+     * FIXME this is for the full-screen function
+     * @param layoutKey TODO
+     */
+    void setEntryLayout(String layoutKey, Layout object);
+    Layout getEntryLayout(String layoutKey);
+    
+    /**
+     * Change the default layout key for most functions
+     */
+    void setDefaultLayoutKey(String layoutKey);
+    
+    /**
+     * Get the default layout key
+     */
+    String getDefaultLayoutKey();
+    
 }
