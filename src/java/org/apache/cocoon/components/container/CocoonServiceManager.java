@@ -43,7 +43,12 @@ public class CocoonServiceManager extends CoreServiceManager {
 
     /** Create the ServiceManager with a parent ServiceManager */
     public CocoonServiceManager( final ServiceManager parent) {
-        super( parent );
+        this(parent, null);
+    }
+    
+    /** Create the ServiceManager with a parent ServiceManager and a ClassLoader */
+    public CocoonServiceManager( final ServiceManager parent, final ClassLoader classloader) {
+        super(parent, classloader);
         ProcessorComponentInfo parentInfo = null;
         if (parent != null) {
             try {

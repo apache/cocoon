@@ -401,7 +401,10 @@ public class TreeProcessor extends AbstractLogEnabled
                 treeBuilder.setParentProcessorManager(this.manager);
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
-                newProcessor.setProcessorData(treeBuilder.getBuiltProcessorManager(), root, treeBuilder.getDisposableNodes());
+                newProcessor.setProcessorData(
+                        treeBuilder.getBuiltProcessorManager(),
+                        treeBuilder.getBuiltProcessorClassLoader(),
+                        root, treeBuilder.getDisposableNodes());
             } finally {
                 this.manager.release(treeBuilder);
             }
