@@ -50,29 +50,28 @@
 */
 package org.apache.cocoon.woody;
 
-import org.apache.cocoon.woody.formmodel.*;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.util.SimpleServiceSelector;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceValidity;
+import java.io.IOException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.woody.formmodel.*;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.util.SimpleServiceSelector;
 import org.apache.commons.collections.FastHashMap;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.InputSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.io.IOException;
 
 /**
  * Component implementing the {@link FormManager} role.
