@@ -97,6 +97,7 @@
     <filter token="version"             value="${version}"/>
     <filter token="date"                value="${TODAY}"/>
     <filter token="released.version"    value="${released.version}"/>
+    <filter token="loglevel"            value="${build.webapp.loglevel}"/>
 
     <!-- Set classpath -->
     <path id="classpath">
