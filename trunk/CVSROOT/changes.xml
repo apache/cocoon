@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.79 2000-06-04 05:55:28 balld Exp $
+  $Id: changes.xml,v 1.80 2000-06-04 20:03:32 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,7 +16,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="db" type="fix" due-to="Daniel Schneider" due-to-email="Daniel.Schneider@tecfa.unige.ch">
+  <action dev="DB" type="fix" due-to="Jeremy Quinn" due-to-email="jeremy@media.demon.co.uk">
+   Added HTTP method to Utils.encode so HEAD and GET are distinguishable
+  </action>
+  <action dev="DB" type="fix" due-to="Daniel Schneider" due-to-email="Daniel.Schneider@tecfa.unige.ch">
    XIncludeProcessor now strips document type nodes from included documents
   </action
   <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">

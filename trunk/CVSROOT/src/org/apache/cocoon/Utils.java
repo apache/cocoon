@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.15 2000-05-12 12:39:46 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.16 2000-06-04 20:03:35 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.15 $ $Date: 2000-05-12 12:39:46 $
+ * @version $Revision: 1.16 $ $Date: 2000-06-04 20:03:35 $
  */
 
 public final class Utils {
@@ -188,7 +188,7 @@ public final class Utils {
 
     /**
      * Encodes the given request into a string using the format
-     *   userAgent:protocol://serverName:serverPort/requestURI?query
+     *   userAgent:method:protocol://serverName:serverPort/requestURI?query
      * with the agent flag controlling the presence of the userAgent
      * field.
      */
@@ -198,7 +198,7 @@ public final class Utils {
 
     /**
      * Encodes the given request into a string using the format
-     *   userAgent:protocol://serverName:serverPort/requestURI?query
+     *   userAgent:method:protocol://serverName:serverPort/requestURI?query
      * with the agent flag controlling the presence of the userAgent
      * field and the query flag controlling the query field.
      */
@@ -208,6 +208,8 @@ public final class Utils {
             url.append(req.getHeader("user-Agent"));
             url.append(':');
         }
+		url.append(req.getMethod());
+		url.append(':');
         url.append(req.getScheme());
         url.append("://");
         url.append(req.getServerName());
