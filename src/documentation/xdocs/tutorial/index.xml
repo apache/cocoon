@@ -49,10 +49,7 @@ This is a collection of tutorials. The Cocooon project is actively seeking addit
   <s2 title="Third-Party Tutorials">
 
 	<ul>
-<li>Andreas Hartmann's <link href="http://www.cocooncenter.de/cc/documents/resources/request-params/index.html">Request Parameters</link> Tutorial at cocooncenter.de.</li>
-<li>Andreas Hartmann's <link href="http://www.cocooncenter.de/cc/documents/resources/navigation/index.html">Navigation Menus</link> Tutorial at cocooncenter.de.</li>
-<li> Michal Durdina's <link href="http://www.cocooncenter.de/cc/documents/resources/db-app/index.html">Database Web Application</link> Tutorial at cocooncenter.de.</li>
-<li>Konstantin Piroumian's <link href="http://www.cocooncenter.de/cc/documents/resources/logicsheet/index.html">Logicsheet Development</link> Tutorial at cocooncenter.de.</li>
+<li><link href="http://cocooncenter.org/">cocooncenter.org has a few tutorials and articles</link></li>
 <li><link href="http://www.galatea.com/flashguides/index.html">Galatea FlashGuides(TM)</link></li>
 <li><link href="http://durdo.miesto.sk/Cocoon2HowTo/index.html">Cocoon 2 How-To Pages</link></li>
 <li>Leigh Dodds's <link href="http://www-105.ibm.com/developerworks/education.nsf/xml-onlinecourse-bytitle/83F66813F7FFD61486256B74006EB648?open&amp;l=472,t=gr">Introduction to Cocoon 2</link> at the IBM developerWorks web site. Covers how to install and configure Cocoon,
