@@ -169,7 +169,7 @@ function saveDocument(document, uri) {
             var streamer = new Packages.org.apache.cocoon.xml.dom.DOMStreamer(transformerHandler);
             streamer.stream(document);
         } else {
-            throw new Error("Cannot write to source " + uri);
+            throw new Packages.org.apache.cocoon.ProcessingException("Cannot write to source " + uri);
         }
     } finally {
         if (source != null)
