@@ -78,7 +78,7 @@ import java.util.Map;
  * from the input component to the output component or, if a specific
  * parameter is specified through parameter-name, just one parameter.
  *
- * @version CVS $Id: TestAction.java,v 1.3 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: TestAction.java,v 1.4 2004/02/10 05:55:18 stefano Exp $
  */
 public class TestAction extends ServiceableAction
     implements Configurable, ThreadSafe {
@@ -190,12 +190,12 @@ public class TestAction extends ServiceableAction
             if (getLogger().isDebugEnabled()) getLogger().debug("releasing components");
             if (outputSelector != null) {
                 if (output != null)
-                    outputSelector.release(output);
+                    outputSelector.release((ComponentSelector) output);
                 this.manager.release(outputSelector);
             }
             if (inputSelector != null) {
                 if (input != null)
-                    inputSelector.release(input);
+                    inputSelector.release((ComponentSelector) input);
                 this.manager.release(inputSelector);
             }
             if (getLogger().isDebugEnabled()) getLogger().debug("... end");
