@@ -906,24 +906,6 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-linotype" status="unstable" dir="src/blocks/linotype">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="linotype"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-
-    <work nested="tools/anttasks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/linotype-block.jar"/>
-
-    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
-  </project>
-
   <project name="cocoon-block-webdav" status="unstable" dir="src/blocks/webdav">
     <package>org.apache.cocoon</package>
 
