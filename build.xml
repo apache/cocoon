@@ -6,7 +6,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.27 2003/03/24 16:21:59 stephan Exp $:
+       CVS $Id: build.xml,v 1.28 2003/03/25 09:50:34 stefano Exp $:
 
 ============================================================================ -->
 
@@ -18,7 +18,8 @@
   <!ENTITY webapp-targets   SYSTEM "./src/targets/webapp-build.xml"> 
   <!ENTITY ide-targets      SYSTEM "./src/targets/ide-build.xml"> 
   <!ENTITY test-targets     SYSTEM "./src/targets/test-build.xml"> 
-  <!ENTITY docs-targets     SYSTEM "./src/targets/docs-build.xml"> 
+  <!ENTITY docs-targets     SYSTEM "./src/targets/docs-build.xml">
+  <!ENTITY dist-targets     SYSTEM "./src/targets/dist-build.xml">
   <!-- =================================================================== -->
 
   <!-- ==================  Apache Forrest targets  ======================= -->
@@ -47,6 +48,8 @@
   <!-- Testcases targets       -->  &test-targets;
   <!-- =================================================================== -->
   <!-- Documentation targets   -->  &docs-targets;
+  <!-- =================================================================== -->
+  <!-- Distribution targets    -->  &dist-targets;
   <!-- =================================================================== -->
 
 
