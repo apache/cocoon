@@ -54,7 +54,7 @@ package org.apache.cocoon.webapps.session;
  * The <code>Constants</code> used throughout the core of the session management.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionConstants.java,v 1.2 2003/05/18 11:31:40 cziegeler Exp $
+ * @version CVS $Id: SessionConstants.java,v 1.3 2003/07/04 11:04:35 cziegeler Exp $
 */
 public interface SessionConstants {
 
@@ -63,9 +63,6 @@ public interface SessionConstants {
 
     /** Reserved Context: Request context */
     String REQUEST_CONTEXT = "request";
-
-    /** Reserved Context: Response context */
-    String RESPONSE_CONTEXT= "response";
 
     /** Reserved Context: Temp */
     String TEMPORARY_CONTEXT = "temporary";
