@@ -225,10 +225,6 @@ public class PortletPortalManager
                 final ServletRequestImpl req = (ServletRequestImpl) objectModel.get("portlet-request");
                 final ServletResponseImpl res= (ServletResponseImpl)objectModel.get("portlet-response");
                 this.portletContainer.processPortletAction(actionWindow, req.getRequest(actionWindow), res);
-
-                final String redirectURL = res.getRedirectURL();
-                HttpServletResponse response = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-                response.sendRedirect(redirectURL);
             } catch (Exception ignore) {
                 this.getLogger().error("Error during processing of portlet action.", ignore);
             }
