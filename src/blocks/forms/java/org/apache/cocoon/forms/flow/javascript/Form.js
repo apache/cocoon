@@ -85,27 +85,38 @@ Form.prototype.lookupWidget = function(path) {
 }
 
 /**
+ * Set a function that will be called when 
+ */
+
+/**
  * Manages the display of a form and its validation.
  *
- * This uses some additionnal propertied on the form object :
+ * This uses some additionnal properties on the form object :
  * - "locale" : the form locale (default locale is used if not set)
+ * - "cleanupHook": a function called after having sent the page displaying the form. This is equivalent
+ *       to the "fun" argument of sendPageAndWait(), which allows to perform some cleanup when the pipeline
+ *       has been processed. The function is called with a single parameter which is the form it is attached to.
+ * - "restoreHook": a function called before processing the form when it has been submitted by
+ *       the browser. This allows to restore some environment that is needed by the form processing.
+ *       The function is called with a single parameter which is the form it is attached to.
  *
  * On return, the calling code can check some properties to know the form result :
  * - "isValid" : true if the form was sucessfully validated
  * - "submitId" : the id of the widget that triggered the form submit (can be null)
  *
  * @parameter uri the page uri (like in cocoon.sendPageAndWait())
- * @parameter bizdata some business data for the view (like in cocoon.sendPageAndWait()).
+ * @parameter viewdata some data for the view (like in cocoon.sendPageAndWait()).
  *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
+ * @parameter ttl the time to live of the continuation used to display the form
  */
-Form.prototype.showForm = function(uri, bizData, fun, ttl) {
+Form.prototype.showForm = function(uri, viewdata, ttl) {
 
-    if (bizData == undefined) bizData = new Object();
-    bizData[Packages.org.apache.cocoon.forms.transformation.FormsPipelineConfig.CFORMSKEY] = this.form;
+    if (viewdata == undefined) viewdata = new Object();
+    viewdata[Packages.org.apache.cocoon.forms.transformation.FormsPipelineConfig.CFORMSKEY] = this.form;
 
     if (this.locale == null)
         this.locale = java.util.Locale.getDefault();
-    bizData["locale"] = this.locale;
+    viewdata["locale"] = this.locale;
 
     // Keep the first continuation that will be created as the result of this function
     var result = null;
@@ -118,13 +129,17 @@ Form.prototype.showForm = function(uri, bizData, fun, ttl) {
 
     if (comingBack) {
         // We come back to the bookmark: process the form
+        
+	    if (this.restoreHook) {
+	        this.restoreHook(this);
+	    }
         var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
 
-        // Prematurely add the bizData as in the object model so that event listeners can use it 	 
+        // Prematurely add the viewdata as in the object model so that event listeners can use it 	 
         // (the same is done by cocoon.sendPage()) 	 
         // FIXME : hack needed because FOM doesn't provide access to the object model 	 
         var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext); 	 
-        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData); 	 
+        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata); 	 
 
         finished = this.form.process(formContext);
         if (finished) {
@@ -136,10 +151,13 @@ Form.prototype.showForm = function(uri, bizData, fun, ttl) {
         }
     }
     comingBack = true;
-    cocoon.sendPage(uri, bizData, bookmark);
-    if (fun && fun instanceof Function) {
-        fun();
+    cocoon.sendPage(uri, viewdata, bookmark);
+    
+    // Clean up after sending the page
+    if (this.cleanupHook) {
+        this.cleanupHook(this);
     }
+    
     FOM_Cocoon.suicide();
 }
 
