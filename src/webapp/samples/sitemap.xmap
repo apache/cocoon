@@ -539,9 +539,32 @@
 
    <!-- ========================= Server ================================ -->
 
-   <map:match pattern="request">
+   <map:match pattern="status.html">
+    <map:generate src="status" type="status"/>
+    <map:transform src="stylesheets/system/status2html.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="clearcache.html">
+    <map:act type="clear-cache">
+     <map:generate src="status" type="status"/>
+     <map:transform src="stylesheets/system/status2html.xsl"/>
+     <map:serialize/>
+    </map:act>
+   </map:match>
+
+   <map:match pattern="clearpersistentstore.html">
+    <map:act type="clear-persistent-store">
+     <map:generate src="status" type="status"/>
+     <map:transform src="stylesheets/system/status2html.xsl"/>
+     <map:serialize/>
+    </map:act>
+   </map:match>
+
+   <map:match pattern="request.html">
     <map:generate type="request"/>
-    <map:serialize type="xml"/>
+    <map:transform src="stylesheets/simple-xml2html.xsl"/>
+    <map:serialize/>
    </map:match>
 
    <map:match pattern="generror.html">
@@ -550,28 +573,6 @@
        <map:parameter name="contextPath" value="{request:contextPath}"/>
     </map:transform>
     <map:serialize/>
-   </map:match>
-
-   <map:match pattern="status">
-    <map:generate src="status" type="status"/>
-    <map:transform src="stylesheets/system/status2html.xsl"/>
-    <map:serialize/>
-   </map:match>
-
-   <map:match pattern="clearcache">
-     <map:act type="clear-cache">
-       <map:generate src="status" type="status"/>
-       <map:transform src="stylesheets/system/status2html.xsl"/>
-       <map:serialize/>
-     </map:act>
-   </map:match>
-
-    <map:match pattern="clearpersistentstore">
-     <map:act type="clear-persistent-store">
-       <map:generate src="status" type="status"/>
-       <map:transform src="stylesheets/system/status2html.xsl"/>
-       <map:serialize/>
-     </map:act>
    </map:match>
 
    <map:match pattern="sites/styles/**.css">
