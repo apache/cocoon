@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.6 2003/05/02 06:53:08 bdelacretaz Exp $
+:: $Id: cocoon.bat,v 1.7 2003/05/17 15:33:36 vgritsenko Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -46,7 +46,7 @@ if not "%OS%" == "Windows_NT" goto noExecNT
 set EXEC=start "Cocoon" /D. /MAX
 goto gotExec
 :noExecNT
-set EXEC=""
+set EXEC=
 :gotExec
 
 if not "%COCOON_HOME%" == "" goto gotHome
