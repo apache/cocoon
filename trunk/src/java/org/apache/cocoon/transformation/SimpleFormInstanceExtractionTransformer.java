@@ -62,12 +62,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DocumentWrapper;
+import org.apache.excalibur.mpool.Resettable;
 
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
@@ -86,10 +85,10 @@ import org.xml.sax.SAXException;
  * request parameter exists.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.2 2003/10/22 18:07:15 bloritsch Exp $
  */
-public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
-    implements Configurable, Composable, Recyclable {
+public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer
+    implements Configurable, Composable, Resettable {
 
     protected class ElementData {
         public String uri = null;
@@ -162,8 +161,8 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
         this.objectModel = objectModel;
     }
 
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.instanceName = null;
     }
 
@@ -247,7 +246,7 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
      * @param doc a <code>Document</code> value
      */
     public void handleExtractedDocument(Document doc) {
-        
+
         ComponentSelector outputSelector = null;
         OutputModule output = null;
 

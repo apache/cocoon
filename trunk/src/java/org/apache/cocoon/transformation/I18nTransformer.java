@@ -51,14 +51,14 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
@@ -234,11 +234,11 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.13 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.14 2003/10/22 18:07:15 bloritsch Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
-        Composable, Configurable, Disposable {
+                   Serviceable, Configurable, Disposable {
 
     /**
      * The namespace for i18n is "http://apache.org/cocoon/i18n/2.1".
@@ -759,7 +759,7 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     // Component manager for this component
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     private SourceResolver sourceResolver;
 
@@ -884,13 +884,13 @@ public class I18nTransformer extends AbstractTransformer
      * Implementation of composable interface.
      * Looksup the Bundle Factory to be used.
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
         try {
             this.factory = (BundleFactory)manager.lookup(BundleFactory.ROLE);
 
             debug("BundleFactory is obtained");
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             this.getLogger().error("BundleFactory is not loaded", ce);
         }
     }
@@ -1231,14 +1231,14 @@ public class I18nTransformer extends AbstractTransformer
 
             prev_state = current_state;
             current_state = STATE_INSIDE_TEXT;
-            
+
             current_key = attr.getValue("", I18N_KEY_ATTRIBUTE);
             if (current_key == null) {
                 // Try the namespaced attribute
                 current_key = attr.getValue(I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
                 if (current_key == null) {
                     // Try the old namespace
-                    current_key = attr.getValue(I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);   
+                    current_key = attr.getValue(I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
                 }
             }
 
@@ -1565,7 +1565,7 @@ public class I18nTransformer extends AbstractTransformer
         // Translate all attributes from i18n:attr="name1 name2 ..."
         // using their values as keys
         int i18n_attr_index = temp_attr.getIndex(I18N_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
-        
+
         if (i18n_attr_index == -1) {
             // Try the old namespace
             i18n_attr_index = temp_attr.getIndex(I18N_OLD_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
@@ -1963,7 +1963,7 @@ public class I18nTransformer extends AbstractTransformer
             to_fmt.setMaximumFractionDigits(309);
             for (int i = value.length() - 1;
                  i >= 0 && value.charAt(i) != dec; i--, decAt++) {
-                
+
             }
 
             if (decAt < value.length())to_fmt.setMinimumFractionDigits(decAt);
@@ -2147,7 +2147,7 @@ public class I18nTransformer extends AbstractTransformer
         getLogger().debug("I18nTransformer: " + msg);
     }
 
-    public void recycle() {
+    public void reset() {
         // restore untranslated-text if necessary
         if (globalUntranslated != null)
             untranslated = globalUntranslated;
@@ -2168,7 +2168,7 @@ public class I18nTransformer extends AbstractTransformer
         sourceResolver = null;
         objectModel = null;
 
-        super.recycle();
+        super.reset();
     }
 
     public void dispose() {

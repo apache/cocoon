@@ -110,7 +110,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.5 2003/08/04 03:44:05 joerg Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.6 2003/10/22 18:07:15 bloritsch Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -150,26 +150,26 @@ public class EncodeURLTransformer
 
     /**
      * check if encoding of URLs is neccessary.
-     * 
-     * THis is true if session object exists, and session-id   
+     *
+     * THis is true if session object exists, and session-id
      * was provided from URL, or session is new.
      * The result is stored in some instance variables
      */
     protected void checkForEncoding(Request request) {
         this.session = request.getSession();
         this.isEncodeURLNeeded = false;
-        
+
         if ( null != this.session ) {
-            // do encoding if session id is from URL, or the session is new, 
+            // do encoding if session id is from URL, or the session is new,
             // fixes BUG #13855, due to paint007@mc.duke.edu
             if ( request.isRequestedSessionIdFromURL() || this.session.isNew()) {
                 this.isEncodeURLNeeded = true;
             }
         }
     }
-                
 
-    
+
+
     /**
      * Setup the transformer.
      * <p>
@@ -185,12 +185,12 @@ public class EncodeURLTransformer
     throws ProcessingException, SAXException, IOException {
 
         this.checkForEncoding(ObjectModelHelper.getRequest(objectModel));
-        
+
         if (this.isEncodeURLNeeded) {
             this.response = ObjectModelHelper.getResponse(objectModel);
 
             // don't check if URL encoding is needed now, as
-            // a generator might create a new session 
+            // a generator might create a new session
             final String includeName = parameters.getParameter(INCLUDE_NAME,
                                                                this.includeNameConfigure);
             final String excludeName = parameters.getParameter(EXCLUDE_NAME,
@@ -235,8 +235,8 @@ public class EncodeURLTransformer
     /**
      * Recycle resources of this transformer
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.response = null;
         this.session = null;
         this.elementAttributeMatching = null;
@@ -337,7 +337,7 @@ public class EncodeURLTransformer
         }
         return encoded_url;
     }
-    
+
     /**
      * A helper class for matching element names, and attribute names.
      *
@@ -347,7 +347,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.5 2003/08/04 03:44:05 joerg Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.6 2003/10/22 18:07:15 bloritsch Exp $
      */
     public class ElementAttributeMatching {
         /**

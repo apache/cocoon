@@ -55,12 +55,11 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.excalibur.mpool.Resettable;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -80,10 +79,10 @@ import java.util.Map;
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: AbstractDOMTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: AbstractDOMTransformer.java,v 1.2 2003/10/22 18:07:15 bloritsch Exp $
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer
-        implements Transformer, DOMBuilder.Listener, Composable, Disposable, Recyclable {
+        implements Transformer, DOMBuilder.Listener, Composable, Disposable, Resettable {
 
     /**
      *  The SAX entity resolver
@@ -148,12 +147,12 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
     /**
      * Recycle the component.
      */
-    public void recycle() {
+    public void reset() {
         this.resolver = null;
         this.source = null;
         this.objectModel = null;
         this.parameters = null;
-        this.builder.recycle();
+        this.builder.reset();
     }
 
     /**

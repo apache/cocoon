@@ -84,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.10 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.11 2003/10/22 18:07:15 bloritsch Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     protected SourceResolver resolver;
@@ -126,12 +126,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
         this.manager = manager;
     }
 
-    public void recycle()
+    public void reset()
     {
         // Reset all variables to initial state.
         this.resolver = null;
         this.xIncludePipe = null;
-        super.recycle();
+        super.reset();
     }
 
     /**

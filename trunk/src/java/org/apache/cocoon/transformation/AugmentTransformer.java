@@ -26,15 +26,15 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since October 10, 2001
- * @version CVS $Id: AugmentTransformer.java,v 1.4 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: AugmentTransformer.java,v 1.5 2003/10/22 18:07:15 bloritsch Exp $
  */
 public class AugmentTransformer
     extends AbstractTransformer {
-        
+
     protected Map objectModel;
     protected Request request;
     protected String baseURI;
-  
+
     public void setup(SourceResolver resolver,
                       Map objectModel,
                       String source,
@@ -42,20 +42,20 @@ public class AugmentTransformer
     throws ProcessingException, SAXException, IOException {
         this.objectModel = objectModel;
         this.request = ObjectModelHelper.getRequest( this.objectModel );
-    
+
         String mountPoint = parameters.getParameter("mount", null);
-        
+
         StringBuffer uribuf = new StringBuffer();
         boolean isSecure = this.request.isSecure();
         int port = this.request.getServerPort();
-    
+
         if (isSecure) {
             uribuf.append("https://");
         } else {
             uribuf.append("http://");
         }
         uribuf.append(request.getServerName());
-    
+
         if (isSecure) {
             if (port != 443) {
                 uribuf.append(":").append(port);
@@ -84,7 +84,7 @@ public class AugmentTransformer
                              Attributes attrs)
     throws SAXException {
         AttributesImpl newAttrs = null;
-    
+
         for (int i = 0, size = attrs.getLength(); i < size; i++) {
             String attrName = attrs.getLocalName(i);
             if (attrName.equals("href")) {
@@ -114,10 +114,10 @@ public class AugmentTransformer
     /**
      * Recyclable
      */
-    public void recycle() {
+    public void reset() {
         this.objectModel = null;
         this.request = null;
         this.baseURI = null;
-        super.recycle();
+        super.reset();
     }
 }

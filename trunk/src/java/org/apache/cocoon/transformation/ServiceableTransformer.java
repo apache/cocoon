@@ -65,14 +65,14 @@ import org.xml.sax.SAXException;
 /**
  * This class can be used as a base class for own transformer implementations
  * that need to lookup other components.
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: ServiceableTransformer.java,v 1.1 2003/09/04 14:40:32 cziegeler Exp $
+ * @version CVS $Id: ServiceableTransformer.java,v 1.2 2003/10/22 18:07:15 bloritsch Exp $
  */
 
-public abstract class ServiceableTransformer 
-    extends AbstractTransformer 
+public abstract class ServiceableTransformer
+    extends AbstractTransformer
     implements Serviceable, Disposable {
 
     /** The current <code>SourceResolver</code>. */
@@ -85,7 +85,7 @@ public abstract class ServiceableTransformer
     protected String source;
     /** The ServiceManager */
     protected ServiceManager manager;
-    
+
     /**
      * Set the <code>SourceResolver</code>, object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
@@ -101,14 +101,14 @@ public abstract class ServiceableTransformer
     /**
      * Recycle the generator by removing references
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.resolver = null;
         this.objectModel = null;
         this.source = null;
         this.parameters = null;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
