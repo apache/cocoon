@@ -99,7 +99,7 @@ attrib +s %COCOON_HOME%
 
 :: ----- Set Up The Classpath --------------------------------------------------
 
-set CP=%COCOON_HOME%\tools\loader;%COCOON_HOME%\build\webapp\WEB-INF\classes
+set CP=%COCOON_HOME%\tools\loader
 
 :: ----- Check action ----------------------------------------------------------
 
