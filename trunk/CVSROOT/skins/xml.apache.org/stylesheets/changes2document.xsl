@@ -38,9 +38,9 @@
    </xsl:if>
 
    <xsl:if test="@fixes-bug">
-    <xsl:text> Fixes <xsl:text>
+    <xsl:text> Fixes </xsl:text>
     <link href="http://xml.apache.org/bugs/show_bug.cgi?id={@fixes-bug}">
-     <xsl:text>bug <xsl:text><xsl:value-of select="@fixes-bug"/>
+     <xsl:text>bug </xsl:text><xsl:value-of select="@fixes-bug"/>
     </link>
     <xsl:text>.</xsl:text>
    </xsl:if>
