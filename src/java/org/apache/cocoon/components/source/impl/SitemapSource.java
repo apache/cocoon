@@ -89,7 +89,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.4 2003/05/20 00:50:06 vgritsenko Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.5 2003/05/30 09:23:14 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -101,6 +101,9 @@ implements Source, XMLizable {
     /** The system id */
     private String systemId;
 
+    /** The system id used for caching */
+    private String systemIdForCaching;
+    
     /** The uri */
     private String uri;
 
@@ -291,7 +294,13 @@ implements Source, XMLizable {
      * Return the unique identifer for this source
      */
     public String getURI() {
-        return this.systemId;
+        if (this.needsRefresh) {
+            this.refresh();
+        }
+        if (this.redirectSource != null) {
+            return this.systemId;
+        }
+        return this.systemIdForCaching;
     }
 
     /**
@@ -358,6 +367,20 @@ implements Source, XMLizable {
                                                             this.pipelineProcessor);
                     this.processingPipeline.prepareInternal(this.environment);
                     this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
+                    final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
+                    if ( eventPipelineKey != null ) {
+                        StringBuffer buffer = new StringBuffer(this.systemId);
+                        if ( this.systemId.indexOf('?') == -1) {
+                            buffer.append('?');
+                        } else {
+                            buffer.append('&');
+                        }
+                        buffer.append("pipelinehash=");
+                        buffer.append(eventPipelineKey);
+                        this.systemIdForCaching = buffer.toString();
+                    } else {
+                        this.systemIdForCaching = this.systemId; 
+                    }
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
                     envStack.resetOffset(currentOffset);

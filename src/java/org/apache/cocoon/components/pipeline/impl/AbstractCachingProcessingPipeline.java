@@ -69,6 +69,7 @@ import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
@@ -80,7 +81,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.5 2003/05/03 18:34:41 gianugo Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.6 2003/05/30 09:23:14 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
             extends AbstractProcessingPipeline
@@ -863,11 +864,20 @@ public abstract class AbstractCachingProcessingPipeline
      * Otherwise return <code>null</code>
      */
     public SourceValidity getValidityForEventPipeline() {
-        if ( null != this.toCacheKey 
-             && !this.completeResponseIsCached
+        int vals = 0;
+        
+        if ( null != this.toCacheKey
+             && !this.cacheCompleteResponse 
              && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
-            AggregatedValidity validity = new AggregatedValidity();
-            for(int i=0; i < this.toCacheKey.size(); i++) {
+             vals = this.toCacheKey.size();
+        } else if ( null != this.fromCacheKey
+                     && !this.completeResponseIsCached
+                     && this.firstProcessedTransformerIndex == super.transformers.size()) {
+             vals = this.fromCacheKey.size();
+        }
+        if ( vals > 0 ) {
+            final AggregatedValidity validity = new AggregatedValidity();
+            for(int i=0; i < vals; i++) {
                 validity.add(this.getValidityForInternalPipeline(i));
                 //validity.add(new DeferredPipelineValidity(this, i));
             }
@@ -876,6 +886,23 @@ public abstract class AbstractCachingProcessingPipeline
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getKeyForEventPipeline()
+     */
+    public String getKeyForEventPipeline() {
+        if ( null != this.toCacheKey 
+             && !this.cacheCompleteResponse
+             && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
+             return String.valueOf(HashUtil.hash(this.toCacheKey.toString()));
+        }
+        if ( null != this.fromCacheKey 
+             && !this.completeResponseIsCached
+             && this.firstProcessedTransformerIndex == super.transformers.size()) {
+            return String.valueOf(HashUtil.hash(this.fromCacheKey.toString()));
+        }
+        return null;
+    }
+    
     /**
      * 
      * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getValidityForInternalPipeline(int)
