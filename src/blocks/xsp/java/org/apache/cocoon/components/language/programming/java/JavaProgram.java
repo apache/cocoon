@@ -20,6 +20,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 
+import org.apache.cocoon.components.ServiceInfo;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
@@ -52,11 +53,13 @@ public class JavaProgram extends AbstractLogEnabled implements Program {
         env.serviceManager = manager;
         env.context = context;
         env.logger = this.getLogger();
+        final ServiceInfo info = new ServiceInfo();
+        info.setConfiguration(new DefaultConfiguration("", "GeneratorSelector"));
+        info.setServiceClass(program);
 
         return AbstractComponentHandler.getComponentHandler(
                 null, // role
-                program,
-                new DefaultConfiguration("", "GeneratorSelector"),
+                info,
                 env, null);
     }
 

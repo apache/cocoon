@@ -25,6 +25,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
+import org.apache.cocoon.components.ServiceInfo;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
@@ -92,10 +93,13 @@ public class ServerPagesAction
             final ComponentEnvironment env = new ComponentEnvironment();
             env.serviceManager = this.manager;
             env.logger = this.getLogger();
+            final ServiceInfo info = new ServiceInfo();
+            info.setConfiguration(conf);
+            info.setServiceClass(ServerPagesGenerator.class);
+            
             this.generatorHandler = AbstractComponentHandler.getComponentHandler(
                 null,  // role
-                ServerPagesGenerator.class,
-                conf,
+                info,
                 env,
                 null   // RoleManager
             );
