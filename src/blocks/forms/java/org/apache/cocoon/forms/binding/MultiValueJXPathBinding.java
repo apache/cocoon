@@ -29,7 +29,7 @@ import org.apache.commons.jxpath.Pointer;
  * Simple binding for multi fields: on save, first deletes the target data
  * before recreating it from scratch.
  *
- * @version CVS $Id: MultiValueJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: MultiValueJXPathBinding.java,v 1.2 2004/04/23 11:42:58 mpo Exp $
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 
@@ -54,7 +54,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
     }
 
     public void doLoad(Widget frmModel, JXPathContext jctx) throws BindingException {
-        Widget widget = frmModel.getWidget(this.multiValueId);
+        Widget widget = selectWidget(frmModel,this.multiValueId);
         if (widget == null) {
             throw new BindingException("The widget with the ID [" + this.multiValueId
                     + "] referenced in the binding does not exist in the form definition.");
@@ -93,7 +93,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
-        Widget widget = frmModel.getWidget(this.multiValueId);
+        Widget widget = selectWidget(frmModel,this.multiValueId);
         Object[] values = (Object[])widget.getValue();
 
         JXPathContext multiValueContext = jctx.getRelativeContext(jctx.createPath(this.multiValuePath));

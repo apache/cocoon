@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
- * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.3 2004/04/12 14:05:08 tim Exp $
+ * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.4 2004/04/23 11:42:58 mpo Exp $
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -71,7 +71,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         // (There should be a general widget type checker for all the bindings to use,
         // coupled with a general informative exception class to throw if the widget is
         // of the wrong type or null.)
-        Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
         if (repeater == null) {
             String fullId = frmModel.getFullyQualifiedId();
             if (fullId == null || fullId.length() == 0) {
@@ -150,7 +150,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
         // (See comment in doLoad about type checking and throwing a meaningful exception.)
-        Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
 
         // Perform shortcut binding if the repeater is empty
         // and the deleteIfEmpty config option is selected.

@@ -31,7 +31,7 @@ import org.apache.commons.jxpath.Pointer;
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -59,7 +59,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jctx)
             throws BindingException {
         // Find the repeater and clear it
-        Repeater repeater = (Repeater)frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
 
         if (this.clearOnLoad) {
             repeater.removeRows();
@@ -101,7 +101,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     public void doSave(Widget frmModel, JXPathContext jctx)
             throws BindingException {
         // Find the repeater
-        Repeater repeater = (Repeater)frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater)selectWidget(frmModel, this.repeaterId);
 
         if (repeater.getSize() == 0 && this.deleteIfEmpty) {
             // Repeater is empty : erase all

@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * union widget.</li>
  * </ol>
  *
- * @version CVS $Id: UnionJXPathBinding.java,v 1.2 2004/04/12 14:05:08 tim Exp $
+ * @version CVS $Id: UnionJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
  */
 public class UnionJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -55,7 +55,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Widget widget = frmModel.getWidget(this.widgetId);
+        Widget widget = selectWidget(frmModel, this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         if (!(widget instanceof Union))
             throw new RuntimeException("Binding: Expected Union widget, but received class: \"" +
@@ -79,7 +79,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Union unionWidget = (Union)frmModel.getWidget(this.widgetId);
+        Union unionWidget = (Union)selectWidget(frmModel, this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {

@@ -64,7 +64,7 @@ public class CustomJXPathBinding extends JXPathBindingBase {
      * @throws BindingException when the wrapped CustomBinding fails
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Widget selectedWidget = selectWidget(frmModel);
+        Widget selectedWidget = selectWidget(frmModel, this.widgetId);
         JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         
         this.wrappedBinding.doLoad(selectedWidget, context);
@@ -79,29 +79,11 @@ public class CustomJXPathBinding extends JXPathBindingBase {
      * @throws BindingException when the wrapped CustomBinding fails
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Widget selectedWidget = selectWidget(frmModel);
+        Widget selectedWidget = selectWidget(frmModel, this.widgetId);
         JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         
         this.wrappedBinding.doSave(selectedWidget, context);
     }
     
-    
-    /**
-     * Helper method which selects down the identified widget from the formModel.
-     * If no 'widgetId' is set the formModel will just be returned.
-     *  
-     * @param frmModel
-     * @return
-     * @throws BindingException
-     */
-    private Widget selectWidget(Widget frmModel) throws BindingException {
-        if (this.widgetId == null) return frmModel;
-        
-        Widget selectedWidget = frmModel.getWidget(this.widgetId);            
-        if (selectedWidget == null) {
-            throw new BindingException("The widget with the ID [" + this.widgetId
-                    + "] referenced in the binding does not exist in the form definition.");
-        }
-        return selectedWidget;
-    }
+
 }

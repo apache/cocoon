@@ -33,7 +33,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.4 2004/03/31 20:34:11 vgritsenko Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.5 2004/04/23 11:42:58 mpo Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -96,7 +96,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jxpc)
             throws BindingException {
         // Find the repeater
-        Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater) (Repeater) selectWidget(frmModel, this.repeaterId);
         if (repeater == null) {
             throw new BindingException("The repeater with the ID [" + this.repeaterId
                     + "] referenced in the binding does not exist in the form definition.");
@@ -136,7 +136,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     public void doSave(Widget frmModel, JXPathContext jxpc)
             throws BindingException {
         // Find the repeater
-        Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
         // and his context
         JXPathContext repeaterContext =
             jxpc.getRelativeContext(jxpc.getPointer(this.repeaterPath));

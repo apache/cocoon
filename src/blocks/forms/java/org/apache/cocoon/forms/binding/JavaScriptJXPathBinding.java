@@ -31,7 +31,7 @@ import org.mozilla.javascript.Script;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.2 2004/03/24 01:32:45 joerg Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
@@ -52,7 +52,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
     public void doLoad(Widget frmModel, JXPathContext jctx) {
         if (this.loadScript != null) {
-            Widget widget = frmModel.getWidget(this.id);
+            Widget widget = selectWidget(frmModel,this.id);
     
             // Move to widget context
             Pointer pointer = jctx.getPointer(this.path);
@@ -86,7 +86,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
         if (this.saveScript != null) {
-            Widget widget = frmModel.getWidget(this.id);
+            Widget widget = selectWidget(frmModel,this.id);
 
             // Move to widget context and create the path if needed
             Pointer pointer = jctx.createPath(this.path);
