@@ -25,6 +25,15 @@
     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
+  <group name="Using Persistence Broker">
+    <note>
+      Low-level API that can be used directly by applications that don't need
+      full fledged object level transactions.
+    </note>
+    <sample name="XSP" href="pb/xspdemo">Sample using JDO in a XSP page.</sample>
+    <sample name="Forms" href="">Sample using Cocoon Forms. To be done!</sample>
+  </group>
+
   <group name="Using JDO 1.01">
     <note>
       WARNING: To use JDO demo you have to download jdo.jar from Sun's website!
@@ -36,7 +45,7 @@
       instances into the persistent store (database). Uses Java Data Object Query Language (JDOQL).
     </note>
     <sample name="XSP" href="jdo/xspdemo">Sample using JDO in a XSP page.</sample>
-    <sample name="Cocoon Forms" href="jdo/forms/employee">Sample using JDO with Cocoon Forms Binding.</sample>
+    <sample name="Forms" href="jdo/forms/employee">Sample using JDO with Cocoon Forms.</sample>
   </group>
 
   <group name="Using ODMG 3.0 (To be done)">
@@ -45,17 +54,7 @@
       Uses Object Query Language (OQL). ODMG has been superceded by JDO.
     </note>
     <sample name="XSP" href="odmg/xspdemo">Sample using JDO in a XSP page.</sample>
-    <sample name="Cocoon Forms" href="">Sample using Cocoon Forms Binding. To be done.</sample>
-  </group>
-
-  <group name="Using Persistence Broker (To be done)">
-    <note>
-      Low-level API that can be used directly by applications that don't need
-      full fledged object level transactions.
-    </note>
-    <sample name="XSP" href="">Sample using JDO in a XSP page. To be done.</sample>
-    <sample name="Cocoon Forms" href="">Sample using Cocoon Forms Binding. To be done.</sample>
-    <sample name="JXForm" href="">Sample using JXForms. To be done.</sample>
+    <sample name="Forms" href="">Sample using Cocoon Forms. To be done!</sample>
   </group>
 
   <group name="OJB Documentation">
