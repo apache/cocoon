@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  *   &lt;/composite&gt;
  * </pre>
  *
- * <h2>Example XML with sub-navigation:</h2>
+ * <h2>Example XML with sub-navigation (child-tag-name enabled):</h2>
  * <pre>
  *   &lt;composite&gt;
  *     &lt;named-item name="..." parameter="link-event"/&gt;
@@ -66,6 +66,23 @@ import org.xml.sax.SAXException;
  *   &lt;/composite&gt;
  * </pre>
  *
+ *  <h2>Example XML with sub-navigation (show-all-nav without child-tag-name enabled):</h2>
+ * <pre>
+ *   &lt;composite&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;named-item name="..." selected="true"&gt;
+ *       &lt;!-- output from processing layout --&gt;
+ *     &lt;/named-item&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;named-item name="..." parameter="link-event"&gt;
+ *         &lt;named-item name="..." parameter="link-event"/&gt;
+ *         &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;/named-item&gt;
+ *   &lt;/composite&gt;
+ * </pre>
+
+ *
+ *  *
  * <h2>Applicable to:</h2>
  * <ul>
  *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
@@ -80,9 +97,12 @@ import org.xml.sax.SAXException;
  *  <tr><th>root-tag</th><td>Should a tag enclosing the following output be generated?</td>
  *      <td></td><td>boolean</td><td><code>true</code></td></tr>
  *  <tr><th>child-tag-name</th><td>The name of the tag to enclose named items (i.e. the subnavigation)
- * of non-selected items. If a value is not specified then no sub-navigation named items will be
- * generated.</td>
+ * of non-selected (default) items. Setting this parameter will enable show-all-nav.</td>
  *      <td></td><td>String</td><td><code>""</code></td></tr>
+ *  <tr><th>show-all-nav</th><td>Setting this value to true will output the enclosed named-items</td>
+ *      <td></td><td>boolean</td><td><code>false</code></td></tr>
+ *  <tr><th>include-selected</th><td>Setting this value to true will output the enclosed named-items of the selected tab too.</td>
+ *      <td></td><td>boolean</td><td><code>false</code></td></tr>
  * </tbody></table>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
@@ -141,6 +161,11 @@ public class TabContentAspect
                 XMLUtils.startElement(handler, "named-item", attributes);
                 if (j == selected) {
                     this.processLayout(tab.getLayout(), service, handler);
+                    if (config.includeSelected) {
+                        List events = new ArrayList();
+                        events.add(event);
+                        this.processNav(context, tab.getLayout(), service, handler, events);
+                    }
                 } else if (config.showAllNav) {
                     List events = new ArrayList();
                     events.add(event);
@@ -207,7 +232,7 @@ public class TabContentAspect
                 // open named-item tag
                 attributes.clear();
                 if (tab instanceof NamedItem) {
-                    if (!subNav) {
+                    if (!subNav && !config.childTagName.equals("")) {
                         XMLUtils.startElement(handler, config.childTagName);
                         subNav = true;
                     }
@@ -250,6 +275,7 @@ public class TabContentAspect
         public String aspectName;
         public String store;
         public boolean showAllNav = false;
+        public boolean includeSelected = false;
         public String childTagName;
 
         public void takeValues(TabPreparedConfiguration from) {
@@ -257,6 +283,7 @@ public class TabContentAspect
             this.aspectName = from.aspectName;
             this.store = from.store;
             this.showAllNav = from.showAllNav;
+            this.includeSelected = from.includeSelected;
             this.childTagName = from.childTagName;
         }
     }
@@ -273,7 +300,10 @@ public class TabContentAspect
         pc.childTagName = configuration.getParameter("child-tag-name", "");
         if (!pc.childTagName.equals("")) {
             pc.showAllNav = true;
+        } else {
+            pc.showAllNav = configuration.getParameterAsBoolean("show-all-nav", false);
         }
+        pc.includeSelected = configuration.getParameterAsBoolean("include-selected", false);
         return pc;
     }
 

@@ -85,7 +85,7 @@ public abstract class AbstractCompositeAspect
             final String rendererName = layout.getRendererName();
             final Renderer renderer = service.getComponentManager().getRenderer(rendererName);
             renderer.toSAX(layout, service, handler);
-       }
+        }
     }
 
 }

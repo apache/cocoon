@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,14 +14,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <xsl:stylesheet version="1.0" 
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:param name="user"/>
+
+<xsl:param name="base"/>
+
 <xsl:template match="/">
 <html>
 	<head>
+	   <xsl:if test="$base">
+			<base>
+				<xsl:attribute name="href"><xsl:value-of select="$base"/></xsl:attribute>
+			</base>
+        </xsl:if>
 		<link type="text/css" rel="stylesheet" href="css/page.css"/>
 	</head>
 	<body>
@@ -47,6 +55,9 @@
 				    <xsl:if test="$user!='anonymous'">
 						<a href="logout" style="color:#4C6C8F;font-size:75%;">
 							Logout
+						</a><br/>
+						<a href="tools/" style="color:#4C6C8F;font-size:75%;">
+							Tools
 						</a>
 				    </xsl:if>
 				</td>

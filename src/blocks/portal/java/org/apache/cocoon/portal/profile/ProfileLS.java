@@ -21,7 +21,7 @@ import org.apache.excalibur.source.SourceValidity;
 
 /**
  * This component is used for loading/saving of a profile.
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>

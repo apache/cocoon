@@ -20,9 +20,15 @@
 
 <xsl:param name="user"/>
 
+<xsl:param name="base"/>
 <xsl:template match="/">
   <html>
     <head>
+	  <xsl:if test="$base">
+		<base>
+			<xsl:attribute name="href"><xsl:value-of select="$base"/></xsl:attribute>
+		</base>
+      </xsl:if>
       <link type="text/css" rel="stylesheet" href="css/page.css"/>
     </head>
     <body>
@@ -51,6 +57,7 @@
                 <td height="99%" bgcolor="#294563" width="1%" align="right">
                   <xsl:if test="$user!='anonymous'">
                     <a href="logout" style="color:#CFDCED;font-size:75%;">Logout</a>&#160;
+					<a href="tools/" style="color:#CFDCED;font-size:75%;">Tools</a>&#160;
                   </xsl:if>
                   <img height="5" src="images/space.gif" width="5"/>
                 </td>

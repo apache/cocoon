@@ -77,14 +77,27 @@ implements ThreadSafe, Parameterizable {
     
     protected String historyParameterName;
     
+    protected String configurationFile;
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
         this.historyParameterName = parameters.getParameter("history-parameter-name", "history");
-        final String configurationFile = parameters.getParameter("src", null);
-        if ( configurationFile == null ) return;
+        this.configurationFile = parameters.getParameter("src", null);
+        if ( this.configurationFile == null ) return;
+        
+        // The "lazy-load" parameter allows to defer loading of the config from "src" at
+        // the first call to act. This is for now undocumented until
+        // That was needed in the case of a dynamic source ("cocoon://blah") produced by the sitemap where
+        // the action is defined. Loading immediately in that case leads to an infinite loop where the sitemap
+        // is constantly reloaded.
+        if (!parameters.getParameterAsBoolean("lazy-load", false)) {
+            loadConfig();
+        }
+    }
        
+    private void loadConfig() throws ParameterException {
         Configuration config;
         org.apache.excalibur.source.SourceResolver resolver = null;
         try {
@@ -133,7 +146,7 @@ implements ThreadSafe, Parameterizable {
                             mapping.path = path;  
                             this.eventMap.put(id, mapping);
                         } else {
-                           throw new ParameterException("Unknown target type " + targetType);
+                            throw new ParameterException("Unknown target type " + targetType);
                         }
                     } else if ( "fullscreen".equals(type) ) {
                         if ( this.eventMap.containsKey(id)) {
@@ -153,6 +166,9 @@ implements ThreadSafe, Parameterizable {
                 }
             }
         }
+        
+        // Nullify config filename so as not to reload it.
+        this.configurationFile = null;
     }
 
     public Map act(Redirector redirector,
@@ -166,6 +182,10 @@ implements ThreadSafe, Parameterizable {
                                    ", objectModel="+objectModel+
                                    ", source="+source+
                                    ", par="+par);
+        }
+
+        if (this.configurationFile != null) {
+            loadConfig();
         }
 
         Map result;

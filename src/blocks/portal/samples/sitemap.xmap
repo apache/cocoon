@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@
       <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
         <parameter name="src" value="resources/bookmarks.xml"/>
       </map:action>
-    <map:action src="org.apache.cocoon.portal.acting.PreparePortalAction" name="portal-prepare"/>
+      <map:action src="org.apache.cocoon.portal.acting.PreparePortalAction" name="portal-prepare"/>
     </map:actions>
   </map:components>
 
@@ -334,6 +334,26 @@
         <!-- TODO logout page -->
         <map:redirect-to uri="login"/>
       </map:match>
+      
+      	<!-- ==== P O R T A L   T O O L S ==== -->
+	
+	<!-- mount sitemap of the portal tools -->
+	<map:match pattern="tools/**"> 
+		<map:act type="auth-protect">
+			<map:parameter name="handler" value="portal-handler"/> 
+			<map:parameter name="application" value="portal"/> 
+			
+			<map:mount uri-prefix="tools" check-reload="no" src="tools/sitemap.xmap"/>
+		</map:act>
+	</map:match>
+	
+    <!-- portal tools image reader -->
+	<map:match pattern="toolImages/*/*.jpg">
+		<map:read mime-type="image/jpg" src="tools/skins/{1}/images/{2}.jpg"/>
+	</map:match>
+	<map:match pattern="userImages/*.jpg">
+		<map:read mime-type="image/jpg" src="tools/plugins/userManagement/userImages/{1}.jpg"/>
+	</map:match>
 
       <!-- Everything else redirect to the portal -->
       <map:match pattern="**">

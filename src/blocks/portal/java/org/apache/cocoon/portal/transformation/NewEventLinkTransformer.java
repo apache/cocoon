@@ -246,7 +246,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      * @see org.apache.cocoon.transformation.AbstractSAXTransformer#endTransformingElement(String, String, String)
      */
     public void endTransformingElement(String uri, String name, String raw)
-        throws SAXException {
+    throws SAXException {
         String elementName = (String) this.stack.pop();
         contentHandler.endElement("", elementName, elementName);
     }

@@ -193,7 +193,7 @@ public class AuthenticationProfileManager
         try {
             adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            if (layoutKey == null) {
+            if ( layoutKey == null ) {
                 layoutKey = service.getDefaultLayoutKey();
             }
 

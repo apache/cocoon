@@ -125,7 +125,7 @@ public class CompositeLayoutImpl
     public void setItemClassName(String value) {
         this.itemClassName = value;
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#clone()
      */
