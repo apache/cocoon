@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="block" xmlns:block="http://apache.org/cocoon/blocks/cob/1.0" version="1.0">
   <xsl:template match="/">
     <projectDescription>
-    	<name><xsl:value-of select="/block:block/block:name"/></name>
+    	<name>[COB] <xsl:value-of select="/block:block/block:name"/> v<xsl:value-of select="/block:block/block:name/@version"/></name>
     	<comment></comment>
     	<projects>
     	</projects>
