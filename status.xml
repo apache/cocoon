@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.281 2004/03/15 18:11:24 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.282 2004/03/16 10:35:33 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add">
+     Databases: The xml-encoding for the SQLTransformer is now configurable.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="27217" due-to="Andreas Hartmann" due-to-email="andreas@apache.org">
      Build System: Apply filtering to patched configurations coming from the different blocks (loglevel etc.)
    </action>

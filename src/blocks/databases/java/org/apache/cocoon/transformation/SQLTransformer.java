@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.16 2004/03/06 02:05:27 joerg Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.17 2004/03/16 10:33:02 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -176,11 +176,8 @@ public class SQLTransformer
      * Constructor
      */
     public SQLTransformer() {
-        // FIXME (CZ) We have to get the correct encoding from
-        // somewhere else (XML Serializer?)
         this.format = new Properties();
         this.format.put(OutputKeys.METHOD, "text");
-        this.format.put(OutputKeys.ENCODING, "ISO-8859-1");
         this.format.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
         this.namespaceURI = NAMESPACE;
     }
@@ -258,6 +255,9 @@ public class SQLTransformer
                        String source, Parameters parameters )
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, source, parameters);
+        // set encoding
+        this.format.put(OutputKeys.ENCODING, parameters.getParameter("xml-encoding", "ISO-8859-1"));
+
         // setup instance variables
         this.current_query_index = -1;
         this.current_state = SQLTransformer.STATE_OUTSIDE;
