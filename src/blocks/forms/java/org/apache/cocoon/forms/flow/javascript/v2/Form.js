@@ -44,6 +44,7 @@ function Form(formDefinition) {
             form = formMgr.createForm(formDefinition)
         }
         this.binding_ = null;
+        this.form = form;
         this.formWidget_ = new Widget(form);
         this.local_ = cocoon.createPageLocal();
         this.locale = java.util.Locale.getDefault();
