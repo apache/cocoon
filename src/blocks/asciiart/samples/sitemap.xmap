@@ -2,30 +2,25 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-<!-- =========================== Components ================================ -->
-
  <map:components>
-
-<!-- =========================== Generators ================================= -->
 
   <map:generators default="file">
    <map:generator name="asciiart-svg" logger="sitemap.generator.asciiart-svg" 
                   src="org.apache.cocoon.generation.asciiart.AsciiArtSVGGenerator"/>
   </map:generators>
 
-<!-- =========================== Transformers ================================= -->
-<!-- =========================== Readers ================================= -->
-<!-- =========================== Serializers ================================= -->
-<!-- =========================== Matchers ================================= -->
-<!-- ====================== Pipelines defintions ============================= -->
  </map:components>
-
 
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
 
   <map:pipeline>   
+ 
+   <map:match pattern="">
+    <map:redirect-to uri="welcome"/>
+   </map:match>
+
    <map:match pattern="welcome">
      <map:generate type="directory" src="data">
        <map:parameter name="include" value="\.txt$"/>
