@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
 package org.apache.cocoon.transformation;
 
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -33,7 +40,7 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-22 19:08:17 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-23 14:48:46 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer implements Composer {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
@@ -380,9 +387,5 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         } else {
             this.currentBuilder.comment(ch,start,len);
         }
-    }
-
-    public void processDocument(Document doc) {
-        getLogger().debug("FragmentExtractorTransformer recieved document.");
     }
 }

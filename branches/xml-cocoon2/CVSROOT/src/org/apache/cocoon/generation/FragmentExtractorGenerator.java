@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
 package org.apache.cocoon.generation;
 
 import org.apache.cocoon.ResourceNotFoundException;
@@ -28,7 +35,7 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-22 17:10:33 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-23 14:48:46 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
 
