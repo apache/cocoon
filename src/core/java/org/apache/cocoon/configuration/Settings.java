@@ -26,6 +26,9 @@ import java.util.Properties;
  */
 public class Settings {
 
+    /** Name of the property specifying a user properties file */
+    public static final String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
+    
     /**
      * Default value for {@link #isAllowReload()} parameter (false)
      */

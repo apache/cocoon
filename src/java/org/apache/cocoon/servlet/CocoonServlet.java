@@ -16,6 +16,7 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -167,8 +169,42 @@ public class CocoonServlet extends HttpServlet {
      * can be overwritten
      */
     protected Settings getSettings() {
-        // create a settings object from the servlet parameters
-        Settings s = SettingsHelper.getSettings(this.getServletConfig());
+        // create an empty settings objects
+        final Settings s = new Settings();
+
+        String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
+        
+        // read cocoon-settings.properties - if available
+        InputStream propsIS = this.getServletContext().getResourceAsStream("cocoon-settings.properties");
+        if ( propsIS != null ) {
+            this.servletContext.log("Reading settings from 'cocoon-settings.properties'");
+            final Properties p = new Properties();
+            try {
+                p.load(propsIS);
+                propsIS.close();
+                s.fill(p);
+                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);
+            } catch (IOException ignore) {
+                this.servletContext.log("Unable to read 'cocoon-settings.properties'.", ignore);
+                this.servletContext.log("Continuing initialization.");
+            }
+        }
+        // fill from the servlet parameters
+        SettingsHelper.fill(s, this.getServletConfig());
+        
+        // read additional properties file
+        if ( additionalPropertyFile != null ) {
+            this.servletContext.log("Reading user settings from '" + additionalPropertyFile + "'");
+            final Properties p = new Properties();
+            try {
+                FileInputStream fis = new FileInputStream(additionalPropertyFile);
+                p.load(fis);
+                fis.close();
+            } catch (IOException ignore) {
+                this.servletContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
+                this.servletContext.log("Continuing initialization.");
+            }
+        }
         // now overwrite with system properties
         s.fill(System.getProperties());
 
@@ -189,7 +225,9 @@ public class CocoonServlet extends HttpServlet {
      */
     public void init(ServletConfig conf)
     throws ServletException {
-
+        this.servletContext = conf.getServletContext();
+        this.servletContext.log("Initializing Apache Cocoon " + Constants.VERSION);
+        
         super.init(conf);
 
         // initialize settings
@@ -216,7 +254,6 @@ public class CocoonServlet extends HttpServlet {
             System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
         }
 
-        this.servletContext = conf.getServletContext();
         this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
         this.servletContextPath = this.servletContext.getRealPath("/");
 
@@ -384,6 +421,8 @@ public class CocoonServlet extends HttpServlet {
         // Add the servlet configuration
         this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
         this.createCocoon();
+        this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is initialized and ready to serve requests.");
+
     }
 
     /**
@@ -1191,7 +1230,7 @@ public class CocoonServlet extends HttpServlet {
     }
 
     private Logger getCocoonLogger() {
-        final String rootlogger = getInitParameter("cocoon-logger");
+        final String rootlogger = this.settings.getCocoonLogger();
         if (rootlogger != null) {
             return this.getLoggerManager().getLoggerForCategory(rootlogger);
         } else {
