@@ -993,7 +993,7 @@
   <!-- 2 --><td><link href="../userdocs/generators/html-generator.html">html</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>html</td>
-  <!-- C --><td>n</td>
+  <!-- C --><td>y</td>
   <!-- D --><td></td>
   <!-- E --><td></td>
 </tr>
@@ -1101,7 +1101,7 @@
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>html</td>
-  <!-- C --><td>n</td>
+  <!-- C --><td>y</td>
   <!-- D --><td></td>
   <!-- E --><td></td>
 </tr>
@@ -1200,7 +1200,7 @@
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
-  <!-- C --><td>n</td>
+  <!-- C --><td>y</td>
   <!-- D --><td></td>
   <!-- E --><td></td>
 </tr>
@@ -2689,10 +2689,10 @@
 </tr>
 <tr>
   <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/IncludeTransformer.html">IncludeTransformer</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
+  <!-- 2 --><td><link href="../userdocs/transformers/include-transformer.html">include</link></td>
+  <!-- A --><td>y</td>
   <!-- B --><td>scratchpad</td>
-  <!-- C --><td>n</td>
+  <!-- C --><td>y</td>
   <!-- D --><td></td>
   <!-- E --><td></td>
 </tr>
