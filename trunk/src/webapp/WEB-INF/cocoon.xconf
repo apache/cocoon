@@ -532,4 +532,6 @@
   <cocoon/>
   <source-resolver/>
   <cache/>
+  <notifying-builder/>
+  
 </cocoon>
