@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4 $ $Date: 2004/03/10 09:11:50 $
+ * @version CVS $Id$
  */
 public class Loader {
 

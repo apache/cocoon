@@ -26,9 +26,8 @@ import org.apache.tools.ant.Task;
  * in the specified directory.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Revision: 1.5 $ $Date: 2004/05/01 16:12:05 $
+ * @version CVS $Id$
  */
-
 public final class ManifestToolTask extends Task {
 
     private String directory;

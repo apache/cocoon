@@ -29,11 +29,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *  Set the special attributes for the pooling
+ * Set the special attributes for the pooling.
  *
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.4 $ $Date: 2004/05/08 02:54:45 $
+ * @version CVS $Id$
  */
 public final class PoolSetterTask extends Task {
 
