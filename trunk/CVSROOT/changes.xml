@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.216 2001-03-07 23:33:12 greenrd Exp $ 
+  $Id: changes.xml,v 1.217 2001-03-08 10:52:39 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -66,9 +66,6 @@
   <action dev="RDG" type="fix">
    Fixed Utils.getLocationResource to use parent ClassLoader instead of System ClassLoader, but
    fallback to System if resource not found.
-  </action>
-  <action dev="RDG" type="fix" due-to="Sebastien Koechlin" due-to-email="skoechlin@ivision.fr">
-   Reversed change in 1.8.1 that ignored query string for XSLTProcessor caching
   </action>
   <action dev="RDG" type="update">
    Changed default XSP encoding to UTF8, so that all characters are supported.

@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.29 2001-02-26 17:31:38 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.30 2001-03-08 10:52:37 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.29 $ $Date: 2001-02-26 17:31:38 $
+ * @version $Revision: 1.30 $ $Date: 2001-03-08 10:52:37 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -256,7 +256,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
             if ((o != null) && (!sheetMonitor.hasChanged(resource))) {
                 return (Document) o;
             } else {
-                String encReq = Utils.encode (request);
+                String encReq = Utils.encode (request, false, false);
                 // resource URI might have changed so invalidate previous
                 requestMonitor.invalidate(encReq);
                 Document sheet = getDocument(resource);
@@ -276,7 +276,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
     }
 
     public boolean hasChanged(Object context) {
-        return requestMonitor.hasChanged(Utils.encode((HttpServletRequest) context));
+        return requestMonitor.hasChanged(Utils.encode((HttpServletRequest) context), false, false);
     }
 
     public boolean isCacheable(HttpServletRequest request) {
