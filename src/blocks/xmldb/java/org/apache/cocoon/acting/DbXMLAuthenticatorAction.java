@@ -19,7 +19,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -86,7 +85,7 @@ import java.util.Map;
  * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @since 2002/02/03
- * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.7 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  *
  * based on DatabaseAuthenticatorAction created by Martin Man <Martin.Man@seznam.cz>
  */
@@ -102,7 +101,7 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
     ResourceSet rs = null;
 
     // read global parameter settings
-    boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+    boolean reloadable = DESCRIPTOR_RELOADABLE_DEFAULT;
 
     if (this.settings.containsKey("reloadable")) {
         reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();

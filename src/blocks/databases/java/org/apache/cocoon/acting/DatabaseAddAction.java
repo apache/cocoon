@@ -32,7 +32,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
@@ -49,7 +48,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.4 2004/03/30 05:50:48 antonio Exp $
+ * @version CVS $Id$
  */
 public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadSafe {
     protected static final Map addStatements = new HashMap();
@@ -66,7 +65,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadS
         Map results = new HashMap();
 
         // read global parameter settings
-        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+        boolean reloadable = DESCRIPTOR_RELOADABLE_DEFAULT;
         if (this.settings.containsKey("reloadable"))
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
         // read local parameter settings

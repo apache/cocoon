@@ -95,17 +95,10 @@ public class ConfigurationBuilder
     private Locator locator;
     private final NamespaceSupport namespaceSupport = new NamespaceSupport();
 
-    private final boolean processIncludes;
-    
     /**
      * Create a Configuration Builder
      */
     public ConfigurationBuilder() {
-        this(false);
-    }
-    
-    public ConfigurationBuilder(boolean processIncludes) {
-        this.processIncludes = processIncludes;
         try {
             final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 

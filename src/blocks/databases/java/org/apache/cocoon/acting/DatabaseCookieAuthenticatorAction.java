@@ -19,7 +19,6 @@ import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.language.markup.xsp.XSPCookieHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
@@ -69,7 +68,7 @@ import java.util.Map;
  *  parameter "append-session" to "yes" or "true".
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.5 2004/03/30 01:12:47 antonio Exp $
+ * @version CVS $Id$
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {
 
@@ -93,7 +92,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         ResultSet rs = null;
 
         // read global parameter settings
-        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+        boolean reloadable = DESCRIPTOR_RELOADABLE_DEFAULT;
 
         if (this.settings.containsKey("reloadable")) {
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();

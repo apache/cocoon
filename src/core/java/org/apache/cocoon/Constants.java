@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * The <code>Constants</code> use throughout the core of the Cocoon engine.
+ * The <code>Constants</code> used throughout the core of the Cocoon engine.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
@@ -281,14 +281,6 @@ public final class Constants {
 
     /** Application <code>Context</code> Key for the default encoding */
     public static final String CONTEXT_DEFAULT_ENCODING = "default-encoding";
-
-
-    /**
-     * Should descriptors be reloaded?
-     *
-     * FIXME(GP): Isn't this Action specific only?
-     */
-    public static final boolean DESCRIPTOR_RELOADABLE_DEFAULT = true;
 
 }
 
