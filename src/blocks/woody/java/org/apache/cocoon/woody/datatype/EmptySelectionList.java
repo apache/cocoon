@@ -54,7 +54,6 @@ import java.util.Locale;
 
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.typeimpl.StringType;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -62,7 +61,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: EmptySelectionList.java,v 1.1 2003/09/26 14:44:07 sylvain Exp $
+ * @version CVS $Id: EmptySelectionList.java,v 1.2 2003/10/03 13:40:41 sylvain Exp $
  */
 public class EmptySelectionList implements SelectionList {
     private String text;

@@ -48,58 +48,93 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.event.impl;
+package org.apache.cocoon.woody.binding;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.event.ValueChangedEvent;
-import org.apache.cocoon.woody.event.ValueChangedListener;
-import org.apache.cocoon.woody.event.WidgetEvent;
+import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.util.JavaScriptHelper;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
 import org.mozilla.javascript.Script;
 
 /**
- * Listeners built by {@link org.apache.cocoon.woody.event.impl.JavaScriptWidgetListenerBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListener.java,v 1.4 2003/10/03 13:40:41 sylvain Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.1 2003/10/03 13:40:41 sylvain Exp $
  */
-public abstract class JavaScriptWidgetListener {
+public class JavaScriptJXPathBinding extends JXPathBindingBase {
     
-    private Script script;
+    private final String id;
+    private final String path;
+    private final Script loadScript;
+    private final Script saveScript;
     
-    public JavaScriptWidgetListener(Script script) {
-        this.script = script;
+    public JavaScriptJXPathBinding(String id, String path, Script loadScript, Script saveScript) {
+        this.id = id;
+        this.path = path;
+        this.loadScript = loadScript;
+        this.saveScript = saveScript;
     }
+
+    public void loadFormFromModel(Widget frmModel, JXPathContext jctx) {
+        
+        if (this.loadScript == null) return;
+        
+        Widget widget = frmModel.getWidget(this.id);
+        
+        // Move to widget context
+        Pointer pointer = jctx.getPointer(this.path);
+        JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
+        if (pointer.getNode() != null) {
+            // There are some nodes to load from
     
-    /**
-     * Call the script that implements the event handler
-     */
-    protected void callScript(WidgetEvent event) {
-        try {
-            
-            HashMap values = new HashMap(2);
-            values.put("event", event);
-            
             // FIXME: remove this ugly hack and get the request from the Avalon context once
-            // listener builder are real components
+            // binding builder are real components
             Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
             
-            // Add the biz data that was passed to showForm()
-            Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
-            if (viewData != null) {
-                values.put("viewData", viewData);
+            try {
+                Map values = new HashMap(3);
+                values.put("widget", widget);
+                values.put("jxpathContext", widgetCtx);
+                values.put("jxpathPointer", pointer);
+                
+                JavaScriptHelper.execScript(this.loadScript, values, request);
+                
+            } catch(RuntimeException re) {
+                // rethrow
+                throw re;
+            } catch(Exception e) {
+                throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
             }
-            
-            JavaScriptHelper.execScript(this.script, values, request);
-            
+        }
+    }
+
+    public void saveFormToModel(Widget frmModel, JXPathContext jctx) throws BindingException {
+        if (this.saveScript == null) return;
+        
+        Widget widget = frmModel.getWidget(this.id);
+
+        // Move to widget context and create the path if needed
+        Pointer pointer = jctx.createPath(this.path);
+        JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
+        try {
+            // FIXME: remove this ugly hack and get the request from the Avalon context once
+            // binding builder are real components
+            Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+
+            Map values = new HashMap();
+            values.put("widget", widget);
+            values.put("jxpathContext", widgetCtx);
+            values.put("jxpathPointer", pointer);
+
+            JavaScriptHelper.execScript(this.saveScript, values, request);
+                
         } catch(RuntimeException re) {
             // rethrow
             throw re;
@@ -107,26 +142,5 @@ public abstract class JavaScriptWidgetListener {
             throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
         }
     }
-    
-    public static class JSActionListener extends JavaScriptWidgetListener implements ActionListener {
 
-        public JSActionListener(Script script) {
-            super(script);
-        }
-
-        public void actionPerformed(ActionEvent event) {
-            super.callScript(event);
-        }
-    }
-    
-    public static class JSValueChangedListener extends JavaScriptWidgetListener implements ValueChangedListener {
-
-        public JSValueChangedListener(Script script) {
-            super(script);
-        }
-
-        public void valueChanged(ValueChangedEvent event) {
-            super.callScript(event);
-        }
-    }
 }

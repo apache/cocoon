@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.167 2003/10/03 11:40:25 gianugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.168 2003/10/03 13:41:00 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,10 @@
 
  <release version="@version@" date="@date@">
  
+   <action dev="SW" type="add">
+     New JavaScriptBinding for Woody, which allows writing specific binding strategies
+     with two JavaScript snippets (one for load, one for save).
+   </action>
    <action dev="GR" type="update" fixes-bug="23575" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
     TraversableGenerators  can now be used with plain resources too (not only
     collections). XPathTraversableGenerator has been revamped 

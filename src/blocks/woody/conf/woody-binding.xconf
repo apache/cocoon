@@ -13,6 +13,7 @@
       <binding name="insert-node" src="org.apache.cocoon.woody.binding.InsertNodeJXPathBindingBuilder"/>
       <binding name="delete-node" src="org.apache.cocoon.woody.binding.DeleteNodeJXPathBindingBuilder"/>
       <binding name="insert-bean" src="org.apache.cocoon.woody.binding.InsertBeanJXPathBindingBuilder"/>
+      <binding name="javascript" src="org.apache.cocoon.woody.binding.JavaScriptJXPathBindingBuilder"/>
     </bindings>
   </woody-binding>
 
