@@ -578,6 +578,8 @@
     <depend project="jakarta-slide"/>
     <depend project="jdom"/>
     <depend project="jms"/>
+    <depend project="commons-transaction"/>
+    <depend project="commons-codec"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
