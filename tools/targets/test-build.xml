@@ -70,6 +70,7 @@
       </fileset>
       <report format="frames" todir="${build.test.output}"/>
     </junitreport>
+    <echo message="Unit report is at ${build.test.output}/index.html"/>
     <fail if="junit.test.failed" message="One or more JUnit tests failed or caused errors. Please have a look into the report for details."/>
   </target>
 
