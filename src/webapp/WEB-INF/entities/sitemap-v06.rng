@@ -1205,6 +1205,7 @@ FIXME:
       <attribute name="set"/>
     </optional>
     <ref name="optsrc.attr"/>
+    <ref name="optname.attr"/>
   </define>
 
 <!-- =============================================================== -->
@@ -1301,6 +1302,7 @@ FIXME:
     <ref name="universal.attr"/>
     <ref name="type.attr"/>
     <attribute name="pattern"/>
+    <ref name="optname.attr"/>
   </define>
 
   <define name="map.select">
