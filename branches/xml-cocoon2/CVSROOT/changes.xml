@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE changes SYSTEM "./xdocs/dtd/changes-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: changes.xml,v 1.9.2.2 2000-03-20 21:22:01 stefano Exp $
+-->
+
+<changes title="History of Changes">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+ </devs>
+
+ <release version="@version@" date="@date@">
+  <action dev="SM" type="add">
+   Distribution cleanup, early documentation.
+  </action>
+  <action dev="PF" type="add">
+   Initial code implementation.
+  </action>
+ </release>
+
+</changes>
