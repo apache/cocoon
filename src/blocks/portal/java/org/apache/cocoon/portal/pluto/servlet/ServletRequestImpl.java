@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,11 +37,9 @@ import org.apache.pluto.om.window.PortletWindow;
 
 /**
  * Our request wrapper
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: URICopletAdapter.java,v 1.11 2003/10/20 13:36:41 cziegeler
- *          Exp $
+ * @version CVS $Id$
  */
 public class ServletRequestImpl implements HttpServletRequest {
 
@@ -74,7 +72,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getAuthType()
      */
     public String getAuthType() {
@@ -83,7 +81,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getContextPath()
      */
     public String getContextPath() {
@@ -92,7 +90,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getCookies()
      */
     public Cookie[] getCookies() {
@@ -101,7 +99,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
      */
     public long getDateHeader(String arg0) {
@@ -110,7 +108,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
      */
     public String getHeader(String arg0) {
@@ -119,7 +117,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
      */
     public Enumeration getHeaderNames() {
@@ -128,7 +126,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
      */
     public Enumeration getHeaders(String arg0) {
@@ -137,7 +135,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
      */
     public int getIntHeader(String arg0) {
@@ -146,7 +144,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getMethod()
      */
     public String getMethod() {
@@ -155,7 +153,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getPathInfo()
      */
     public String getPathInfo() {
@@ -164,7 +162,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
      */
     public String getPathTranslated() {
@@ -173,7 +171,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getQueryString()
      */
     public String getQueryString() {
@@ -182,7 +180,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getRemoteUser()
      */
     public String getRemoteUser() {
@@ -191,7 +189,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
      */
     public String getRequestedSessionId() {
@@ -200,7 +198,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestURI()
      */
     public String getRequestURI() {
@@ -209,7 +207,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestURL()
      */
     public StringBuffer getRequestURL() {
@@ -219,7 +217,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getServletPath()
      */
     public String getServletPath() {
@@ -228,7 +226,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getSession()
      */
     public HttpSession getSession() {
@@ -237,7 +235,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
      */
     public HttpSession getSession(boolean arg0) {
@@ -246,7 +244,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getUserPrincipal()
      */
     public Principal getUserPrincipal() {
@@ -255,7 +253,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
      */
     public boolean isRequestedSessionIdFromCookie() {
@@ -264,7 +262,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
      */
     public boolean isRequestedSessionIdFromUrl() {
@@ -273,7 +271,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromURL()
      */
     public boolean isRequestedSessionIdFromURL() {
@@ -282,7 +280,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
      */
     public boolean isRequestedSessionIdValid() {
@@ -291,7 +289,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#isUserInRole(java.lang.String)
      */
     public boolean isUserInRole(String arg0) {
@@ -300,7 +298,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
      */
     public Object getAttribute(String arg0) {
@@ -309,7 +307,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
@@ -318,7 +316,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getCharacterEncoding()
      */
     public String getCharacterEncoding() {
@@ -327,7 +325,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getContentLength()
      */
     public int getContentLength() {
@@ -336,7 +334,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
@@ -345,7 +343,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getLocale()
      */
     public Locale getLocale() {
@@ -354,7 +352,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getLocales()
      */
     public Enumeration getLocales() {
@@ -363,7 +361,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getProtocol()
      */
     public String getProtocol() {
@@ -372,7 +370,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getReader()
      */
     public BufferedReader getReader() throws IOException {
@@ -381,7 +379,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
      */
     public String getRealPath(String arg0) {
@@ -390,7 +388,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getRemoteAddr()
      */
     public String getRemoteAddr() {
@@ -399,7 +397,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getRemoteHost()
      */
     public String getRemoteHost() {
@@ -408,7 +406,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
      */
     public RequestDispatcher getRequestDispatcher(String arg0) {
@@ -417,7 +415,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getScheme()
      */
     public String getScheme() {
@@ -426,7 +424,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getServerName()
      */
     public String getServerName() {
@@ -435,7 +433,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getServerPort()
      */
     public int getServerPort() {
@@ -444,7 +442,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#isSecure()
      */
     public boolean isSecure() {
@@ -453,7 +451,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String arg0) {
@@ -462,7 +460,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
      *      java.lang.Object)
      */
@@ -472,7 +470,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
      */
     public void setCharacterEncoding(String arg0)
@@ -482,7 +480,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getContentType()
      */
     public java.lang.String getContentType() {
@@ -495,7 +493,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
      */
     public String getParameter(String name) {
@@ -505,7 +503,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
@@ -567,7 +565,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameterNames()
      */
     public Enumeration getParameterNames() {
@@ -576,7 +574,7 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
