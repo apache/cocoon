@@ -89,7 +89,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.5 $ $Date: 2003/05/23 02:48:03 $
+ * @version CVS $Revision: 1.6 $ $Date: 2003/06/05 02:55:51 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -247,15 +247,20 @@ public final class XConfToolTask extends MatchingTask {
         Node root = nodes.item(0);
 
         // Test that 'root' node satisfies 'component' insertion criteria
-        String test = component.getDocumentElement().getAttribute("unless");
+        String testPath = component.getDocumentElement().getAttribute("unless-path");
+        if (testPath == null) {
+            // only look for old "unless" attr if unless-path is not present
+            testPath = component.getDocumentElement().getAttribute("unless");
+        }
+        // Is if-path needed?
         String ifProp = component.getDocumentElement().getAttribute("if-prop");
         boolean ifValue = Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
      
         if (ifProp != null && (ifProp.length()>0) && !ifValue ) {
             log("Skipping: " + file, Project.MSG_DEBUG);
             return false;
-        } else if ((test!=null) && (test.length()>0) &&
-            (XPathAPI.selectNodeList(root, test).getLength()!=0)) {
+        } else if ((testPath!=null) && (testPath.length()>0) &&
+            (XPathAPI.selectNodeList(root, testPath).getLength()!=0)) {
             log("Skipping: " + file, Project.MSG_DEBUG);
             return false;
         } else {
