@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sdocbook2body.xsl,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $ -->
+<!-- CVS $Id: sdocbook2body.xsl,v 1.3 2003/07/08 01:42:18 crossley Exp $ -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
@@ -10,7 +10,7 @@
   <xsl:template match="article">
     <html>
      <head>
-      <title><xsl:value-of select="article/title"/></title>
+      <title><xsl:value-of select="title"/></title>
      </head>
     <body>
       <center>
