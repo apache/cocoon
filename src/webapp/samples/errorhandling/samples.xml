@@ -81,5 +81,10 @@
     <sample name="ApplicationException (3)" href="exception/application?code=3">
       Generate ApplicationException with error code 3.
     </sample>
+    <sample name="Internal Requests" href="internal/">
+      Internal requests error handling is the new feature introduced in Cocoon 2.1.7
+      provides a way to handle exceptions for aggregated, included, or used elsewhere,
+      internal pipelines.
+    </sample>
   </group>
 </samples>
