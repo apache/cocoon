@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+<?xml version="1.0"?>
+<!-- $Id: welcome.xml,v 1.5 2004/02/29 05:58:11 antonio Exp $-->
+<samples>
 
   <group name="Using JDO 1.01">
   <sample name="Back" href="..">to Cocoon examples main page</sample><br/>

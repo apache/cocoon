@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: form1.xml,v 1.1 2004/01/28 18:32:32 coliver Exp $
+    | CVS $Id: form1.xml,v 1.2 2004/02/29 05:58:11 antonio Exp $
     +-->
 
-<wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
-         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+<wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
   
   <wd:widgets>
     <wd:field id="tab-state">
