@@ -7,7 +7,7 @@
             <xsl:if test="not(//dir)">
                 <META HTTP-EQUIV="refresh" content="2;URL=index-list.html" /> 
             </xsl:if>
-            <title></title>
+            <title>Cocoon Sitemap Viewer</title>
             <style type="text/css">
                 td, th { vertical-align: top }
                 pre.example { color: blue }
