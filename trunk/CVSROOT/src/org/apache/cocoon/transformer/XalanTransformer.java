@@ -1,4 +1,4 @@
-/*-- $Id: XalanTransformer.java,v 1.3 2000-01-09 23:46:14 stefano Exp $ -- 
+/*-- $Id: XalanTransformer.java,v 1.4 2000-01-20 00:20:22 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * Xalan XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-09 23:46:14 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-20 00:20:22 $
  */
 
 public class XalanTransformer extends AbstractActor implements Transformer, Status {
@@ -113,8 +113,21 @@ public class XalanTransformer extends AbstractActor implements Transformer, Stat
 
         public void parse(InputSource in) throws IOException, SAXException {
             this.document = this.parser.parse(in);
+            
+            // The Xalan stylesheet is normally built from SAX events,
+            // so if a DocumentHandler is specified, we need to produce
+            // SAX events from the DOM tree.
+/*            if (m_docHandler != null) {
+                (new TreeWalker(stylesheetProcessor)).traverse(this.document);
+                
+                // Note that when cocoon transitions to being more SAX based,
+                // this function will be called recursivly while the parser is
+                // still in the middle of a parse, and thus the parser will have
+                // created on the fly (or perhaps cloned) since the Xerces parser
+                // is not (to my knowledge) reentrant.
+            }*/
         }
-
+     
         public Document getDocument() {
             return this.document;
         }
