@@ -15,7 +15,7 @@
 */
 
 // flowscripts for using the Query Bean
-// $Id: query.js,v 1.1 2004/06/21 10:00:20 jeremy Exp $
+// $Id: query.js,v 1.2 2004/06/23 10:50:50 jeremy Exp $
 
 
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
@@ -49,18 +49,20 @@ function simpleLuceneQuery () {
 	var historyid = cocoon.parameters["id"];
 	var directory = cocoon.parameters["lucene-directory"];
 	var query = null;
-	var page = null;
 	var results = null;
 	var history = getHistory ();
 	var searcher = cocoon.getComponent (LuceneCocoonSearcher.ROLE);
 	var contextAccess = cocoon.createObject (ContextAccess);
 	var avalonContext = contextAccess.getAvalonContext ();
+	var page = null;
+	var match = "".equals (cocoon.parameters["match"]) ? SimpleLuceneCriterion.ANY_MATCH : cocoon.parameters["match"];
+	var field = "".equals (cocoon.parameters["field"]) ? SimpleLuceneCriterion.ANY_FIELD : cocoon.parameters["field"];
 	try {
 		if ( !"".equals (cocoon.parameters["page"]) ) page = new java.lang.Long (cocoon.parameters["page"]);
 		if ( !"".equals (cocoon.parameters["query"]) ) { // test for: quick ?query
-			query = new SimpleLuceneQueryBean (type, null, SimpleLuceneCriterion.ANY_MATCH, SimpleLuceneCriterion.ANY_FIELD, cocoon.parameters["query"]);
+			query = new SimpleLuceneQueryBean (type, null, match, field, cocoon.parameters["query"]);
 		} else if ( "".equals (historyid) ) {            // test for: new query
-			query = new SimpleLuceneQueryBean (type, null, SimpleLuceneCriterion.ANY_MATCH, SimpleLuceneCriterion.ANY_FIELD, "");
+			query = new SimpleLuceneQueryBean (type, null, match, field, "");
 			edit (query);
 		} else {
 			try {

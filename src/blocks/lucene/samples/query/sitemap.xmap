@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -130,9 +130,11 @@
 					<map:parameter name="type" value="{1}"/> 																<!-- the query type -->
 					<map:parameter name="lucene-directory" value="index2"/> 								<!-- the lucene index -->
 					<map:parameter name="screen" value="screen/results"/> 									<!-- the search results cocoon:/ pipeline -->
-					<map:parameter name="query" value="{request-param:query}"/> 						<!-- the query param (for quick queries) -->
 					<map:parameter name="id" value="{request-param:id}"/> 									<!-- the history id param -->
 					<map:parameter name="page" value="{request-param:page}"/> 							<!-- the page param -->
+					<map:parameter name="query" value="{request-param:query}"/> 						<!-- the query param (for quick queries) -->
+					<map:parameter name="match" value="{request-param:match}"/> 						<!-- the match param (for quick queries) -->
+					<map:parameter name="field" value="{request-param:field}"/> 						<!-- the field param (for quick queries) -->
 				</map:call>
 			</map:match>
 
