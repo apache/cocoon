@@ -297,29 +297,23 @@
         <p>This action logs the user out of the given handler and removes all
           information about this handler stored in the session.</p>
      </s2>
-     <s2 title="Working With subsitemaps">
-        <p>The common solution for the framework and subsitemaps is to define the
-          handler (in the main sitemap. The documents
-          in the subsitemap are then simply protected in the same way as if the action
-          were declared in the main sitemap. This makes moving resources from one sitemap
-          to the other very simple.</p>
-        <p><strong>However, there is one drawback with this solution. After
-          you have started your server, make sure that first a resource using the framework
-          from the main sitemap is invoked, before any of the subsitemap!</strong></p>
-        <p><strong>The definition of handlers in a sub-sitemap is a TODO and will be
-           available in the next release.</strong></p>
-     </s2>
   </s1>
   <s1 title="User Management">
      <p>In addition to the authentication the framework manages all kinds of
         information belonging to the user in XML format. For this reason the framework
-        creates an own session context called "authentication". All information is stored in
-        this context.</p>
+        creates an own session context called <em>authentication</em>. All information 
+        is stored in this context.</p>
      <p>The authentication information (the "authentication" scheme retrieved
         from the authentication resource) is stored in this context, so you can
         retrieve and change the information using the session transformer and the
         usual getxml, setxml etc. commands, so we suggest you to read the session
         context document.</p>
+     <note>The <em>authentication</em> context is only available to the
+       <em>session transformer</em> if the pipeline, the transformer is
+       running in, is associated to the (authentication) handler. Or putting
+       it in other words: you have to use the <em>auth-project</em> action
+       in that pipeline. Otherwise the <em>authentication</em> context
+       is not available.</note>
      <s2 title="Getting information from the context">
         <p>Each information from within the context is gettable using an XML
           tag:</p>
