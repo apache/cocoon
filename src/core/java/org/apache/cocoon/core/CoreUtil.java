@@ -17,21 +17,44 @@
 package org.apache.cocoon.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
+import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
+import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.source.SimpleSourceResolver;
+import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.log.LoggingHelper;
+import org.apache.cocoon.util.log.Log4JConfigurator;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.TraversableSource;
+import org.apache.log.ErrorHandler;
+import org.apache.log.Hierarchy;
+import org.apache.log.Priority;
+import org.apache.log.util.DefaultErrorHandler;
+import org.apache.log4j.LogManager;
 
 /**
  *
@@ -39,6 +62,9 @@ import org.apache.cocoon.util.log.LoggingHelper;
  * @since 2.2
  */
 public class CoreUtil {
+
+    /** Parameter map for the context protocol */
+    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
     /** The callback to the real environment */
     protected final Core.BootstrapEnvironment env;
@@ -58,17 +84,17 @@ public class CoreUtil {
 
         // create settings
         this.settings = Core.createSettings(this.env);
+        this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
 
         this.createRootServiceManager();
     }
 
     /**
-     * Bootstrap Cocoon Service Manager
+     * Bootstrap Cocoon Service Manager.
      */
-    public ServiceManager createRootServiceManager() 
+    public ServiceManager createRootServiceManager()
     throws Exception {
 
-        
         if (this.settings.isInitClassloader()) {
             // Force context classloader so that JAXP can work correctly
             // (see javax.xml.parsers.FactoryFinder.findClassLoader())
@@ -79,14 +105,27 @@ public class CoreUtil {
             }
         }
 
-        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.env.getEnvironmentContext());
+        // add root url
+        try {
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL, 
+                           new URL(env.getContextURL()));            
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
+
+        // add environment context
+        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, 
+                            this.env.getEnvironmentContext());
+
+        // now add environment specific information
+        this.env.configure(appContext);
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
         final String workDirParam = this.settings.getWorkDirectory();
         File workDir;
         if (workDirParam != null) {
-            if (this.env.getContextPath() == null) {
+            if (this.env.getContextForWriting() == null) {
                 // No context path : consider work-directory as absolute
                 workDir = new File(workDirParam);
             } else {
@@ -97,7 +136,7 @@ public class CoreUtil {
                     workDir = workDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    workDir = new File(this.env.getContextPath(), workDirParam);
+                    workDir = new File(this.env.getContextForWriting(), workDirParam);
                 }
             }
         } else {
@@ -107,62 +146,13 @@ public class CoreUtil {
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
-        // TODO we should move the following into the bootstrap env
-        String contextURL;
-        String path = env.getContextPath();
-        // these two variables are just for debugging. We can't log at this point
-        // as the logger isn't initialized yet.
-        String debugPathOne = null, debugPathTwo = null;
-        if (path == null) {
-            // Try to figure out the path of the root from that of WEB-INF
-            //try {
-                // TODO:
-                //path = this.servletContext.getResource("/WEB-INF").toString();
-            //} catch (MalformedURLException me) {
-            //    throw new ServletException("Unable to get resource 'WEB-INF'.", me);
-            //}
-            debugPathOne = path;
-            path = path.substring(0, path.length() - "WEB-INF".length());
-            debugPathTwo = path;
-        }
-        try {
-            if (path.indexOf(':') > 1) {
-                contextURL = path;
-            } else {
-                contextURL = new File(path).toURL().toExternalForm();
-            }
-        } catch (MalformedURLException me) {
-            // VG: Novell has absolute file names starting with the
-            // volume name which is easily more then one letter.
-            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
-            try {
-                contextURL = new File(path).toURL().toExternalForm();
-            } catch (MalformedURLException ignored) {
-                throw new Exception("Unable to determine context URL.", me);
-            }
-        }
-
-        try {
-            appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextURL));            
-        } catch (MalformedURLException ignore) {
-            // we simply ignore this
-        }
-
         // Init logger
         initLogger();
-        if (this.log.isDebugEnabled()) {
-            this.log.debug(this.settings.toString());
-            this.log.debug("getRealPath for /: " + this.env.getContextPath());
-            if ( this.env.getContextPath() == null ) {                
-                this.log.debug("getResource for /WEB-INF: " + debugPathOne);
-                this.log.debug("Path for Root: " + debugPathTwo);
-            }
-        }
-
 
         // Output some debug info
         if (this.log.isDebugEnabled()) {
-            this.log.debug("Context URL: " + contextURL);
+            this.log.debug("Context URL: " + env.getContextURL());
+            this.log.debug("Writeable Context: " + env.getContextForWriting());
             if (workDirParam != null) {
                 this.log.debug("Using work-directory " + workDir);
             } else {
@@ -173,7 +163,7 @@ public class CoreUtil {
         final String uploadDirParam = this.settings.getUploadDirectory();
         File uploadDir;
         if (uploadDirParam != null) {
-            if (env.getContextPath() == null) {
+            if (env.getContextForWriting() == null) {
                 uploadDir = new File(uploadDirParam);
             } else {
                 // Context path exists : is upload-directory absolute ?
@@ -183,7 +173,7 @@ public class CoreUtil {
                     uploadDir = uploadDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    uploadDir = new File(env.getContextPath(), uploadDirParam);
+                    uploadDir = new File(env.getContextForWriting(), uploadDirParam);
                 }
             }
             if (this.log.isDebugEnabled()) {
@@ -202,7 +192,7 @@ public class CoreUtil {
         String cacheDirParam = this.settings.getCacheDirectory();
         File cacheDir;
         if (cacheDirParam != null) {
-            if (env.getContextPath() == null) {
+            if (env.getContextForWriting() == null) {
                 cacheDir = new File(cacheDirParam);
             } else {
                 // Context path exists : is cache-directory absolute ?
@@ -212,7 +202,7 @@ public class CoreUtil {
                     cacheDir = cacheDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    cacheDir = new File(env.getContextPath(), cacheDirParam);
+                    cacheDir = new File(env.getContextForWriting(), cacheDirParam);
                 }
             }
             if (this.log.isDebugEnabled()) {
@@ -232,11 +222,19 @@ public class CoreUtil {
         appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
-        // create new Core
-        final Core cocoon = new Core(this.settings);
-        
+        // update settings
+        final URL u = this.env.getConfigFile(this.log, this.settings.getConfiguration());
+        this.settings.setConfiguration(u.toExternalForm());
+        this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
+
         // create parent service manager
         final ServiceManager parent = this.getParentServiceManager();
+
+        // set encoding
+        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
+
+        // create new Core
+        final Core cocoon = new Core(this.settings);
 
         return new RootServiceManager(parent, cocoon);
     }
@@ -267,13 +265,13 @@ public class CoreUtil {
                 Constructor pcmc = pcm.getConstructor(new Class[]{String.class});
                 parentServiceManager = (ServiceManager) pcmc.newInstance(new Object[]{parentServiceManagerInitParam});
 
-                //ContainerUtil.enableLogging(parentServiceManager, getLogger());
-                //ContainerUtil.contextualize(parentServiceManager, this.appContext);
+                ContainerUtil.enableLogging(parentServiceManager, this.log);
+                ContainerUtil.contextualize(parentServiceManager, this.appContext);
                 ContainerUtil.initialize(parentServiceManager);
             } catch (Exception e) {
-                /*if (getLogger().isErrorEnabled()) {
-                    getLogger().error("Could not initialize parent component manager.", e);
-                }*/
+                if (this.log.isErrorEnabled()) {
+                    this.log.error("Could not initialize parent component manager.", e);
+                }
             }
         }
         return parentServiceManager;
@@ -282,19 +280,212 @@ public class CoreUtil {
     protected void initLogger() {
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
-        if (this.env.getContextPath() == null) {
+        if (this.env.getContextURL() == null) {
             File logSCDir = new File(this.settings.getWorkDirectory(), "log");
             logSCDir.mkdirs();
             subcontext.put("context-root", logSCDir.toString());
         } else {
-            subcontext.put("context-root", this.env.getContextPath());
+            subcontext.put("context-root", this.env.getContextURL());
         }
         this.env.configureLoggingContext(subcontext);
 
-        // FIXME - we can move the logging helper into this class
-        LoggingHelper loggingHelper = new LoggingHelper(this.settings, this.env.getDefaultLogTarget(), subcontext);
-        this.loggerManager = loggingHelper.getLoggerManager();
-        this.log = loggingHelper.getLogger();
+        String logLevel = settings.getBootstrapLogLevel();
+        if (logLevel == null) {
+            logLevel = "INFO";
+        }
+
+        String accesslogger = settings.getAccessLogger();
+        if (accesslogger == null) {
+            accesslogger = "cocoon";
+        }
+
+        final Priority logPriority = Priority.getPriorityForName(logLevel);
+
+        final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
+        final ErrorHandler errorHandler = new DefaultErrorHandler();
+        defaultHierarchy.setErrorHandler(errorHandler);
+        defaultHierarchy.setDefaultLogTarget(this.env.getDefaultLogTarget());
+        defaultHierarchy.setDefaultPriority(logPriority);
+        final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy()
+                .getLoggerFor(""));
+
+        // we can't pass the context-root to our resolver
+        Object value = null;
+        try {
+            value = subcontext.get("context-root");
+            ((DefaultContext) subcontext).put("context-root", null);
+        } catch (ContextException ignore) {
+            // not available
+        }
+        // Create our own resolver
+        SimpleSourceResolver resolver = new SimpleSourceResolver();
+        resolver.enableLogging(logger);
+        try {
+            resolver.contextualize(subcontext);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException(
+                    "Cannot setup source resolver.", ce);
+        }
+        if (value != null) {
+            ((DefaultContext) subcontext).put("context-root", value);
+        }
+        String loggerManagerClass = settings.getLoggerClassName();
+        if (loggerManagerClass == null) {
+            loggerManagerClass = LogKitLoggerManager.class.getName();
+        }
+
+        // the log4j support requires currently that the log4j system is already
+        // configured elsewhere
+
+        final LoggerManager loggerManager = newLoggerManager(
+                loggerManagerClass, defaultHierarchy);
+        ContainerUtil.enableLogging(loggerManager, logger);
+
+        try {
+            ContainerUtil.contextualize(loggerManager, subcontext);
+            this.loggerManager = loggerManager;
+
+            if (loggerManager instanceof Configurable) {
+                //Configure the logkit management
+                String logkitConfig = settings.getLoggingConfiguration();
+                if (logkitConfig == null) {
+                    logkitConfig = "/WEB-INF/logkit.xconf";
+                }
+
+                Source source = null;
+                try {
+                    source = resolver.resolveURI(logkitConfig);
+                    final ConfigurationBuilder builder = new ConfigurationBuilder(
+                            settings);
+                    final Configuration conf = builder.build(source
+                            .getInputStream());
+                    final DefaultConfiguration categories = (DefaultConfiguration) conf
+                            .getChild("categories");
+                    final DefaultConfiguration targets = (DefaultConfiguration) conf
+                            .getChild("targets");
+                    final DefaultConfiguration factories = (DefaultConfiguration) conf
+                            .getChild("factories");
+
+                    // now process includes
+                    final Configuration[] children = conf
+                            .getChildren("include");
+                    for (int i = 0; i < children.length; i++) {
+                        String directoryURI = children[i].getAttribute("dir");
+                        final String pattern = children[i].getAttribute(
+                                "pattern", null);
+                        int[] parsedPattern = null;
+                        if (pattern != null) {
+                            parsedPattern = WildcardHelper
+                                    .compilePattern(pattern);
+                        }
+                        Source directory = null;
+                        try {
+                            directory = resolver.resolveURI(directoryURI,
+                                    source.getURI(), CONTEXT_PARAMETERS);
+                            if (directory instanceof TraversableSource) {
+                                final Iterator c = ((TraversableSource) directory)
+                                        .getChildren().iterator();
+                                while (c.hasNext()) {
+                                    final Source s = (Source) c.next();
+                                    if (parsedPattern == null
+                                            || this.match(s.getURI(),
+                                                    parsedPattern)) {
+                                        final Configuration includeConf = builder
+                                                .build(s.getInputStream());
+                                        // add targets and categories
+                                        categories.addAllChildren(includeConf
+                                                .getChild("categories"));
+                                        targets.addAllChildren(includeConf
+                                                .getChild("targets"));
+                                        factories.addAllChildren(includeConf
+                                                .getChild("factories"));
+                                    }
+                                }
+                            } else {
+                                throw new ConfigurationException(
+                                        "Include.dir must point to a directory, '"
+                                                + directory.getURI()
+                                                + "' is not a directory.'");
+                            }
+                        } catch (IOException ioe) {
+                            throw new ConfigurationException(
+                                    "Unable to read configurations from "
+                                            + directoryURI);
+                        } finally {
+                            resolver.release(directory);
+                        }
+
+                        // finally remove include
+                        ((DefaultConfiguration) conf).removeChild(children[i]);
+                    }
+                    // override log level?
+                    if (settings.getOverrideLogLevel() != null) {
+                        this.overrideLogLevel(conf.getChild("categories"),
+                                settings.getOverrideLogLevel());
+                    }
+                    ContainerUtil.configure(loggerManager, conf);
+                } finally {
+                    resolver.release(source);
+                }
+            }
+
+            // let's configure log4j
+            final String log4jConfig = settings.getLog4jConfiguration();
+            if (log4jConfig != null) {
+                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext);
+
+                Source source = null;
+                try {
+                    source = resolver.resolveURI(log4jConfig);
+                    configurator.doConfigure(source.getInputStream(),
+                            LogManager.getLoggerRepository());
+                } finally {
+                    resolver.release(source);
+                }
+            }
+
+            ContainerUtil.initialize(loggerManager);
+        } catch (Exception e) {
+            errorHandler.error(
+                    "Could not set up Cocoon Logger, will use screen instead",
+                    e, null);
+        }
+
+        this.log = this.loggerManager.getLoggerForCategory(accesslogger);
+    }
+
+    private LoggerManager newLoggerManager(String loggerManagerClass,
+            Hierarchy hierarchy) {
+        if (loggerManagerClass.equals(LogKitLoggerManager.class.getName())) {
+            return new LogKitLoggerManager(hierarchy);
+        } else if (loggerManagerClass
+                .equals(Log4JLoggerManager.class.getName())
+                || loggerManagerClass.equalsIgnoreCase("LOG4J")) {
+            return new Log4JLoggerManager();
+        } else {
+            try {
+                Class clazz = Class.forName(loggerManagerClass);
+                return (LoggerManager) clazz.newInstance();
+            } catch (Exception e) {
+                return new LogKitLoggerManager(hierarchy);
+            }
+        }
+    }
+
+    protected void overrideLogLevel(Configuration root, String value) {
+        Configuration[] c = root.getChildren("category");
+        for(int i=0;i<c.length;i++) {
+            ((DefaultConfiguration)c[i]).setAttribute("log-level", value);
+            this.overrideLogLevel(c[i], value);
+        }
+    }
+
+    private boolean match(String uri, int[] parsedPattern ) {
+        int pos = uri.lastIndexOf('/');
+        if ( pos != -1 ) {
+            uri = uri.substring(pos+1);
+        }
+        return WildcardHelper.match(null, uri, parsedPattern);      
     }
 
     public static final class RootServiceManager implements ServiceManager {
@@ -344,5 +535,5 @@ public class CoreUtil {
             }
         }
     }
-    
+
 }
