@@ -164,6 +164,31 @@ of build files, give credits to the original authors. Thank you.
   <property name="site.docs" value="../xml-site/targets/cocoon"/>
 
   <!-- =================================================================== -->
+  <!-- Help on usage                                                       -->
+  <!-- =================================================================== -->
+  <target name="usage">
+    <echo message=""/>
+    <echo message=""/>
+    <echo message="Cocoon Build file"/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=" available targets are:"/>
+    <echo message=""/>
+    <echo message="   package  --> generates the Cocoon.jar file (default)"/>
+    <echo message="   compile  --> compiles the source code"/>
+    <echo message="   docs     --> generates the HTML documentation"/>
+    <echo message="   javadocs --> generates the API documentation"/>
+    <echo message="   dist     --> generates the Cocoon distribution"/>
+    <echo message="   clean    --> cleans up the directory"/>
+    <echo message="   site     --> generates the Cocoon web site"/>
+    <echo message=""/>
+    <echo message=" See the comments inside the build.xml file for more details."/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=""/>
+  </target>
+
+  <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
   <target name="prepare">
