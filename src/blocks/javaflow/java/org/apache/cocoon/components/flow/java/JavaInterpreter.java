@@ -175,7 +175,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         Continuation continuation = new Continuation(context);
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(
+                continuation, null, timeToLive, getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
@@ -218,7 +219,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         if (!initialized)
             initialize();
 
-        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id);
+        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
 
         if (parentwk == null) {
         /*
@@ -252,7 +253,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         ContinuationCapable flow = (ContinuationCapable) context.getObject();
         Method method = context.getMethod();
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(
+                continuation, parentwk, timeToLive, getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();

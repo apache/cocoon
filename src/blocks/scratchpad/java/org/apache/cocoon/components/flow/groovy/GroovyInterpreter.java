@@ -45,7 +45,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
 /**
  * Implementation of the groovy flow interpreter.
  *
- * @version CVS $Id: GroovyInterpreter.java,v 1.1 2004/06/07 01:04:18 antonio Exp $
+ * @version CVS $Id$
  */
 public class GroovyInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -172,7 +172,8 @@ public class GroovyInterpreter extends AbstractInterpreter implements Configurab
 
         Continuation continuation = new Continuation(context);
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, 
+                                                                    getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
@@ -215,7 +216,7 @@ public class GroovyInterpreter extends AbstractInterpreter implements Configurab
         if (!initialized) {
             initialize();
         }
-        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id);
+        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
         if (parentwk == null) {
         /*
          * Throw an InvalidContinuationException to be handled inside the
@@ -241,7 +242,8 @@ public class GroovyInterpreter extends AbstractInterpreter implements Configurab
         Continuable flow = (Continuable) context.getObject();
         Method method = context.getMethod();
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, 
+                                                                    getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();

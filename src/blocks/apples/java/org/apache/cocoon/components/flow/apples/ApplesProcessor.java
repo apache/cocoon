@@ -52,7 +52,8 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         WebContinuation wk = null;
         if (!(app instanceof StatelessAppleController)) {
-            wk = this.continuationsMgr.createWebContinuation(app, null, 0, this);
+            wk = this.continuationsMgr.createWebContinuation(app, null, 0,
+                    getInterpreterID(), this);
             if (getLogger().isDebugEnabled())
                 getLogger().debug("Instantiated a stateful apple, continuationid = " + wk.getId());
         }
@@ -79,7 +80,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         throws Exception {
 
         WebContinuation wk =
-            this.continuationsMgr.lookupWebContinuation(continuationId);
+            this.continuationsMgr.lookupWebContinuation(continuationId, getInterpreterID());
         if (wk == null) {
             // Throw an InvalidContinuationException to be handled inside the
             // <map:handle-errors> sitemap element.
