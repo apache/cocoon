@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: selector.template,v 1.3 2003/10/12 13:04:51 cziegeler Exp $ 
+  <![CDATA[ CVS Version: $Id: selector.template,v 1.4 2004/02/16 23:53:52 joerg Exp $ 
   ]]>
 
   Using this TemplateSelector:

@@ -3,7 +3,7 @@
 <!--+
     | Event Cache Sample
     |
-    | CVS $Id: sitemap.xmap,v 1.4 2003/11/16 00:28:40 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.5 2004/02/17 00:15:21 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
