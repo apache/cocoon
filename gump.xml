@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -936,7 +936,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-session-fw"/>
     <depend project="cocoon-block-authentication-fw"/>
-    <depend project="cocoon-block-html"/>
+    <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-cron"/>
     <depend project="jtidy"/>
     <depend project="castor"/>
