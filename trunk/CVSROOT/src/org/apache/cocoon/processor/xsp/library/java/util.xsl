@@ -263,6 +263,49 @@
     </xsp:expr>
   </xsl:template>
 
+  <xsl:template match="util:get-encoding">
+    <xsl:variable name="encoding">
+      <xsl:choose>
+        <xsl:when test="@encoding">"<xsl:value-of select="@encoding"/>"</xsl:when>
+        <xsl:when test="util:encoding">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="util:encoding"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsp:expr>new String(<xsl:apply-templates/>,String.valueOf(<xsl:copy-of select="$encoding"/>).trim())</xsp:expr>
+  </xsl:template>
+
+  <xsl:template match="util:generate-method-header">
+    private <xsl:value-of select="@returns"/>
+    <xsl:text> </xsl:text>
+    <xsl:value-of select="@name"/> (
+      Node xspParentNode,
+      Node xspCurrentNode,
+      Stack xspNodeStack,
+      Document document <xsl:for-each select="//xsp:variable">
+        <xsl:text>, </xsl:text>
+        <xsl:value-of select="@type"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="@name"/>
+        <xsl:if test="@value">
+          <xsl:text> = </xsl:text>
+          <xsl:value-of select="@value"/>
+        </xsl:if>
+      </xsl:for-each>
+      ) throws Exception 
+  </xsl:template>
+
+  <xsl:template match="util:call-method">
+    this.<xsl:value-of select="@name"/>(xspParentNode,xspCurrentNode,xspNodeStack,document
+    <xsl:for-each select="//xsp:variable">
+      ,<xsl:value-of select="@name"/>
+    </xsl:for-each>
+    )
+  </xsl:template>
+
+
   <!-- Standard Templates -->
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
