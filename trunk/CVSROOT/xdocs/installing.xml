@@ -190,6 +190,24 @@
     <td>Yes</td>
     <td>Position in CLASSPATH is very important (see below)</td>
    </tr>
+   <tr>
+    <td>batik-libs.jar</td>
+    <td>Batik 1.0</td>
+    <td><link href="http://xml.apache.org/cocoon2">Cocoon 2.0b2</link></td>
+    <td>Formatting SVG as bitmap images.</td>
+    <td>Yes</td>
+    <td>Optional</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>dom2.jar</td>
+    <td>DOM 2 interfaces</td>
+    <td><link href="http://xml.apache.org/cocoon2">Cocoon 2.0b2</link></td>
+    <td>Required by Batik</td>
+    <td>Yes</td>
+    <td>Yes if using Batik</td>
+    <td></td>
+   </tr>
   </table>
 
   <p>

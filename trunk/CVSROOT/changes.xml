@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.230 2001-04-10 17:15:37 greenrd Exp $ 
+  $Id: changes.xml,v 1.231 2001-07-27 09:20:15 sylvain Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -15,9 +15,13 @@
     <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
     <person name="Robin Green" email="greenrd@hotmail.com" id="RDG"/>
     <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
+    <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SW" type="add">
+   New SVG formatter based on Batik.
+  </action>
   <action dev="RDG" type="fix" due-to="Paul Nock" due-to-email="pnock@medicineplanet.com">
    Workaround for XSP isCacheable bug.
   </action>
