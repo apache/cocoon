@@ -54,9 +54,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -70,9 +70,9 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.7 2003/10/06 16:42:39 sylvain Exp $
+ * @version CVS $Id: MountNode.java,v 1.8 2003/10/20 08:15:27 cziegeler Exp $
  */
-public class MountNode extends AbstractProcessingNode implements Composable {
+public class MountNode extends AbstractProcessingNode implements Serviceable {
 
     /** The 'uri-prefix' attribute */
     private VariableResolver prefix;
@@ -90,7 +90,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
     private String language;
 
     /** The component manager to be used by the mounted processor */
-    private ComponentManager manager;
+    private ServiceManager manager;
 
     public MountNode(VariableResolver prefix, VariableResolver source, String language, TreeProcessor parentProcessor) {        this.prefix = prefix;
         this.source = source;
@@ -98,7 +98,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         this.parentProcessor = parentProcessor;
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -108,9 +108,9 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
-        TreeProcessor processor = getProcessor(resolvedSource);
-
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
+
+        TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
@@ -140,7 +140,12 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         }
     }
 
-    private synchronized TreeProcessor getProcessor(String source) throws Exception {
+    /**
+     * Get the processor for the sub sitemap
+     * FIXME Better synchronization strategy
+     */
+    private synchronized TreeProcessor getProcessor(String source, String prefix) 
+    throws Exception {
 
         TreeProcessor processor = (TreeProcessor)processors.get(source);
 
@@ -156,7 +161,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
             Source src = resolver.resolveURI(actualSource);
             try {
-                processor = this.parentProcessor.createChildProcessor(this.manager, this.language, src);
+                processor = this.parentProcessor.createChildProcessor(this.manager, this.language, src, prefix);
             } finally {
                 resolver.release(src);
                 this.manager.release(resolver);

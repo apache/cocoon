@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.10 2003/10/19 17:20:23 cziegeler Exp $
+ * @version CVS $Id: Constants.java,v 1.11 2003/10/20 08:15:27 cziegeler Exp $
  */
 public final class Constants {
 
@@ -140,10 +140,6 @@ public final class Constants {
 
     /** The name of the class for the default XML parser to use */
     public static final String DEFAULT_PARSER  = "org.apache.excalibur.xml.impl.JaxpParser";
-
-    /** The name of the property holding the class for a XML parser
-     *  @deprecated This will be removed in future release */
-    public static final String DEPRECATED_PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
 
     /** The namespace for the XSP core logicsheet. */
     public static final String XSP_URI = "http://apache.org/xsp";

@@ -86,6 +86,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
@@ -129,7 +130,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.17 2003/10/19 17:20:23 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.18 2003/10/20 08:15:27 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1349,14 +1350,15 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().info("Reloading from: " + configFile.toExternalForm());
             }
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
-            c.enableLogging( getCocoonLogger() );
+            ContainerUtil.enableLogging(c, this.getCocoonLogger());
             c.setLoggerManager( getLoggerManager() );
-            c.contextualize(this.appContext);
-            c.compose(getParentComponentManager());
+            ContainerUtil.contextualize(c, this.appContext);
+            ContainerUtil.compose(c, getParentComponentManager());
+            ContainerUtil.service(c, this.getParentComponentManager());
             if (this.enableInstrumentation) {
                 c.setInstrumentManager(getInstrumentManager());
             }
-            c.initialize();
+            ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();
 
             disposeCocoon();
@@ -1486,7 +1488,7 @@ public class CocoonServlet extends HttpServlet {
     private final void disposeCocoon()
     {
         if (this.cocoon != null) {
-            this.cocoon.dispose();
+            ContainerUtil.dispose(this.cocoon);
             this.cocoon = null;
         }
     }

@@ -59,14 +59,17 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 
 /**
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.2 2003/10/19 17:27:32 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.3 2003/10/20 08:15:27 cziegeler Exp $
  * @since 2.2
  */
 
@@ -80,15 +83,17 @@ implements SourceResolver, Serviceable, Disposable {
     /** The service manager */
     protected ServiceManager manager;
     
-    /** The current prefix to strip off from the request uri 
-     *  TODO (CZ) Convert this to a String */
-    protected StringBuffer prefix = new StringBuffer();
+    /** The current prefix to strip off from the request uri */
+    protected String prefix;
 
      /** The Context path */
     protected String context;
 
     /** The root context path */
     protected String rootContext;
+
+    /** The environment information */
+    private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
 
     /**
      * Constructor
@@ -162,40 +167,47 @@ implements SourceResolver, Serviceable, Disposable {
         return this.resolveURI(location, null, null);
     }
 
-    public void changeContext(Environment env) {
+    public void changeContext(Environment env) 
+    throws ProcessingException {
         String uris = env.getURI();
-        final int l = this.prefix.length();
-        if ( l >= 1 ) {
-            if (!uris.startsWith(this.prefix.toString())) {
+        if ( this.prefix != null ) {
+            if (!uris.startsWith(this.prefix)) {
                 String message = "The current URI (" + uris +
                                  ") doesn't start with given prefix (" + prefix + ")";
                 getLogger().error(message);
-                throw new RuntimeException(message);
+                throw new ProcessingException(message);
             }      
             // we don't need to check for slash at the beginning
             // of uris - the prefix always ends with a slash!
+            final int l = this.prefix.length();
             uris = uris.substring(l);
             // TODO (CZ) Implement this in the environment
             // env.setURI(uris);
         }
     }
+    
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
-    public void changeContext(String prefix, String newContext)
+    public void changeContext(String newPrefix, String newContext)
     throws IOException {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Changing Cocoon context");
             getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");
-            getLogger().debug("  to context(" + newContext + ") and prefix(" + prefix + ")");
+            getLogger().debug("  to context(" + newContext + ") and prefix(" + newPrefix + ")");
         }
-        int l = prefix.length();
+        int l = newPrefix.length();
         if (l >= 1) {
-            this.prefix.append(prefix);
-            // check for a slash at the beginning to avoid problems with subsitemaps
-            if ( !this.prefix.toString().endsWith("/") ) {
-                this.prefix.append('/');
+            if ( this.prefix == null ) {
+                this.prefix = "";
             }
+            final StringBuffer buffer = new StringBuffer(this.prefix);
+            buffer.append(newPrefix);
+            // check for a slash at the beginning to avoid problems with subsitemaps
+            if ( buffer.charAt(buffer.length()-1) != '/') {
+                buffer.append('/');
+            }
+            this.prefix = buffer.toString();
         }
 
         if (SourceUtil.getScheme(this.context).equals("zip")) {
@@ -246,4 +258,67 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
     
+    /**
+     * This hook must be called by the sitemap each time a sitemap is entered
+     * This method should never raise an exception, except when the
+     * parameters are not set!
+     */
+    public static void enterProcessor(Processor processor) {
+        if ( null == processor) {
+            throw new IllegalArgumentException("Processor is not set.");
+        }
+
+        EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if (stack == null) {
+            stack = new EnvironmentStack();
+            environmentStack.set(stack);
+        }
+        stack.push(new Object[] {processor, new Integer(stack.getOffset())});
+        stack.setOffset(stack.size()-1);
+    }
+
+    /**
+     * This hook must be called by the sitemap each time a sitemap is left.
+     * It's the counterpart to {@link #enterProcessor(Processor)}.
+     */
+    public static void leaveProcessor() {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final Object[] objs = (Object[])stack.pop();
+        stack.setOffset(((Integer)objs[1]).intValue());
+    }
+
+    /**
+     * Create an environment aware xml consumer for the cocoon
+     * protocol
+     */
+    public static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final Object[] objs = (Object[])stack.getCurrent();
+        return stack.getEnvironmentAwareConsumerWrapper(consumer, ((Integer)objs[1]).intValue());
+    }
 }
+
+final class CloningInheritableThreadLocal
+    extends InheritableThreadLocal {
+
+    /**
+     * Computes the child's initial value for this InheritableThreadLocal
+     * as a function of the parent's value at the time the child Thread is
+     * created.  This method is called from within the parent thread before
+     * the child is started.
+     * <p>
+     * This method merely returns its input argument, and should be overridden
+     * if a different behavior is desired.
+     *
+     * @param parentValue the parent thread's value
+     * @return the child thread's initial value
+     */
+    protected Object childValue(Object parentValue) {
+        if ( null != parentValue) {
+            return ((EnvironmentStack)parentValue).clone();
+        } else {
+            return null;
+        }
+    }
+}
+

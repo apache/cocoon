@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.24 2003/10/19 17:43:17 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.25 2003/10/20 08:15:27 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -371,6 +371,7 @@ public class Cocoon
         CocoonComponentManager.enterEnvironment(environment,
                                                 this.serviceManager,
                                                 this);              */
+        EnvironmentHelper.enterProcessor(this);
         try {
             boolean result;
             if (this.getLogger().isDebugEnabled()) {
@@ -395,6 +396,7 @@ public class Cocoon
             environment.tryResetResponse();
             throw any;
         } finally {
+            EnvironmentHelper.leaveProcessor();
 //            CocoonComponentManager.leaveEnvironment();
 //            CocoonComponentManager.endProcessing(environment, key);
             if (this.getLogger().isDebugEnabled()) {

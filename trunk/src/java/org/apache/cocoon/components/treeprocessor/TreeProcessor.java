@@ -95,7 +95,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.18 2003/10/19 17:43:17 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.19 2003/10/20 08:15:27 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -209,11 +209,11 @@ public class TreeProcessor
      * @param language the language to be used by the child processor.
      * @return a new child processor.
      */
-    public TreeProcessor createChildProcessor(
-        ServiceManager manager,
-        String language,
-        Source source)
-      throws Exception {
+    public TreeProcessor createChildProcessor(ServiceManager manager,
+                                                String language,
+                                                Source source,
+                                                String prefix)
+    throws Exception {
 
         // Note: lifecycle methods aren't called, since this constructors copies all
         // that can be copied from the parent (see above)
@@ -364,7 +364,8 @@ public class TreeProcessor
         }
 
         // and now process
-        CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
+        //CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
+        EnvironmentHelper.enterProcessor(this);
         try {
             boolean success = this.rootNode.invoke(environment, context);
             
@@ -386,6 +387,7 @@ public class TreeProcessor
             }
 
         } finally {
+            EnvironmentHelper.leaveProcessor();
             CocoonComponentManager.leaveEnvironment();
         }
     }
