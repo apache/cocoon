@@ -18,7 +18,6 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -44,11 +43,11 @@ public class StartForEach extends StartInstruction {
 
         String items = attrs.getValue("items");
         String select = attrs.getValue("select");
-        this.var = Parser.compileExpr(attrs.getValue("var"), null, locator);
-        this.varStatus = Parser.compileExpr(attrs.getValue("varStatus"), null, locator);
-        this.begin = Parser.compileInt(attrs.getValue("begin"), name, locator);
-        this.end = Parser.compileInt(attrs.getValue("end"), name, locator);
-        this.step = Parser.compileInt(attrs.getValue("step"), name, locator);
+        this.var = JXTExpression.compileExpr(attrs.getValue("var"), null, locator);
+        this.varStatus = JXTExpression.compileExpr(attrs.getValue("varStatus"), null, locator);
+        this.begin = JXTExpression.compileInt(attrs.getValue("begin"), name, locator);
+        this.end = JXTExpression.compileInt(attrs.getValue("end"), name, locator);
+        this.step = JXTExpression.compileInt(attrs.getValue("step"), name, locator);
         String lenientValue = attrs.getValue("lenient");
         this.lenient = (lenientValue == null) ? null : Boolean.valueOf(lenientValue);
 
@@ -61,7 +60,7 @@ public class StartForEach extends StartInstruction {
             throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified",
                                         locator, null);
         }
-        this.items = Parser.compileExpr(items == null ? select : items, null, locator);
+        this.items = JXTExpression.compileExpr(items == null ? select : items, null, locator);
     }
 
     public JXTExpression getBegin() {

@@ -18,7 +18,6 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -35,7 +34,7 @@ public class StartIf extends StartInstruction {
         Locator locator = getLocation();
         String test = attrs.getValue("test");
         if (test != null) {
-            this.test = Parser.compileExpr(test, "if: \"test\": ", locator);
+            this.test = JXTExpression.compileExpr(test, "if: \"test\": ", locator);
         } else {
             throw new SAXParseException("if: \"test\" is required", locator, null);
         }

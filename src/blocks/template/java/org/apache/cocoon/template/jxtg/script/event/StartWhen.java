@@ -18,7 +18,6 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -40,7 +39,7 @@ public class StartWhen extends StartInstruction {
         }
         String test = attrs.getValue("test");
         if (test != null) {
-            this.test = Parser.compileExpr(test, "when: \"test\": ", locator);
+            this.test = JXTExpression.compileExpr(test, "when: \"test\": ", locator);
             
             StartChoose startChoose = (StartChoose) stack.peek();
             if (startChoose.getFirstChoice() != null) {

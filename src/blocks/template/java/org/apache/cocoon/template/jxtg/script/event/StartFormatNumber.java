@@ -24,7 +24,6 @@ import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
@@ -69,53 +68,44 @@ public class StartFormatNumber extends StartInstruction {
 
         Locator locator = getLocation();
 
-        this.value = Parser.compileExpr(attrs.getValue("value"), null, locator);
-        this.type = Parser.compileExpr(attrs.getValue("type"), null, locator);
-        this.pattern = Parser.compileExpr(attrs.getValue("pattern"), null, locator);
+        this.value = JXTExpression.compileExpr(attrs.getValue("value"), null, locator);
+        this.type = JXTExpression.compileExpr(attrs.getValue("type"), null, locator);
+        this.pattern = JXTExpression.compileExpr(attrs.getValue("pattern"), null, locator);
         this.currencyCode =
-            Parser.compileExpr(attrs.getValue("currencyCode"), null, locator);
+            JXTExpression.compileExpr(attrs.getValue("currencyCode"), null, locator);
         this.currencySymbol =
-            Parser.compileExpr(attrs.getValue("currencySymbol"), null, locator);
+            JXTExpression.compileExpr(attrs.getValue("currencySymbol"), null, locator);
         this.isGroupingUsed =
-            Parser.compileBoolean(attrs.getValue("isGroupingUsed"), null, locator);
+            JXTExpression.compileBoolean(attrs.getValue("isGroupingUsed"), null, locator);
         this.maxIntegerDigits =
-            Parser.compileInt(attrs.getValue("maxIntegerDigits"), null, locator);
+            JXTExpression.compileInt(attrs.getValue("maxIntegerDigits"), null, locator);
         this.minIntegerDigits =
-            Parser.compileInt(attrs.getValue("minIntegerDigits"), null, locator);
+            JXTExpression.compileInt(attrs.getValue("minIntegerDigits"), null, locator);
         this.maxFractionDigits =
-            Parser.compileInt(attrs.getValue("maxFractionDigits"), null, locator);
+            JXTExpression.compileInt(attrs.getValue("maxFractionDigits"), null, locator);
         this.minFractionDigits =
-            Parser.compileInt(attrs.getValue("minFractionDigits"), null, locator);
-        this.locale = Parser.compileExpr(attrs.getValue("locale"), null, locator);
-        this.var = Parser.compileExpr(attrs.getValue("var"), null, locator);
+            JXTExpression.compileInt(attrs.getValue("minFractionDigits"), null, locator);
+        this.locale = JXTExpression.compileExpr(attrs.getValue("locale"), null, locator);
+        this.var = JXTExpression.compileExpr(attrs.getValue("var"), null, locator);
     }
 
     public String format(JexlContext jexl, JXPathContext jxp) throws Exception {
         // Determine formatting locale
-        String var = ValueHelper.getStringValue(this.var, jexl, jxp);
-        Number input = ValueHelper
-                .getNumberValue(this.value, jexl, jxp);
-        String type = ValueHelper.getStringValue(this.type, jexl, jxp);
-        String pattern = ValueHelper.getStringValue(this.pattern, jexl,
-                jxp);
-        String currencyCode = ValueHelper.getStringValue(
-                this.currencyCode, jexl, jxp);
-        String currencySymbol = ValueHelper.getStringValue(
-                this.currencySymbol, jexl, jxp);
-        Boolean isGroupingUsed = ValueHelper.getBooleanValue(
-                this.isGroupingUsed, jexl, jxp);
-        Number maxIntegerDigits = ValueHelper.getNumberValue(
-                this.maxIntegerDigits, jexl, jxp);
-        Number minIntegerDigits = ValueHelper.getNumberValue(
-                this.minIntegerDigits, jexl, jxp);
-        Number maxFractionDigits = ValueHelper.getNumberValue(
-                this.maxFractionDigits, jexl, jxp);
-        Number minFractionDigits = ValueHelper.getNumberValue(
-                this.minFractionDigits, jexl, jxp);
-        String localeStr = ValueHelper.getStringValue(this.locale,
-                jexl, jxp);
-        Locale loc = localeStr != null ? ValueHelper.parseLocale(
-                localeStr, null) : Locale.getDefault();
+        String var = this.var.getStringValue(jexl, jxp);
+        Number input = this.value.getNumberValue(jexl, jxp);
+        String type = this.type.getStringValue(jexl, jxp);
+        String pattern = this.pattern.getStringValue(jexl, jxp);
+        String currencyCode = this.currencyCode.getStringValue(jexl, jxp);
+        String currencySymbol = this.currencySymbol.getStringValue(jexl, jxp);
+        Boolean isGroupingUsed = this.isGroupingUsed.getBooleanValue(jexl, jxp);
+        Number maxIntegerDigits = this.maxIntegerDigits.getNumberValue(jexl, jxp);
+        Number minIntegerDigits = this.minIntegerDigits.getNumberValue(jexl, jxp);
+        Number maxFractionDigits = this.maxFractionDigits.getNumberValue(jexl, jxp);
+        Number minFractionDigits = this.minFractionDigits.getNumberValue(jexl, jxp);
+        String localeStr = this.locale.getStringValue(jexl, jxp);
+        Locale loc = localeStr != null
+            ? ValueHelper.parseLocale(localeStr, null)
+            : Locale.getDefault();
         String formatted;
         if (loc != null) {
             // Create formatter

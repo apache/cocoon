@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.environment;
 
+import org.apache.avalon.framework.logger.ConsoleLogger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.SitemapComponentTestCase;
@@ -24,6 +26,11 @@ import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.ExpressionFactory;
 
 public class FOMTestCase extends SitemapComponentTestCase {
+    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
+
+    protected Logger getLogger() {
+        return this.logger;
+    }
 
     public void testFOMJexl() throws ExpressionException, ServiceException {
         ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
@@ -37,6 +44,7 @@ public class FOMTestCase extends SitemapComponentTestCase {
 
         expression = factory.getExpression("jexl", "cocoon.request.protocol");
         assertEquals("HTTP/1.1", expression.evaluate(fomContext));
+        this.release(factory);
     }
 
     public void testFOMJXPath() throws ExpressionException, ServiceException {
@@ -51,6 +59,7 @@ public class FOMTestCase extends SitemapComponentTestCase {
 
         expression = factory.getExpression("jxpath", "$cocoon/request/protocol");
         assertEquals("HTTP/1.1", expression.evaluate(fomContext));
+        this.release(factory);
     }
 }
 

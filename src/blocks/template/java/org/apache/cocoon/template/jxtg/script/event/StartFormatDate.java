@@ -23,7 +23,6 @@ import java.util.TimeZone;
 
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jxpath.JXPathContext;
 import org.xml.sax.Attributes;
@@ -52,30 +51,27 @@ public class StartFormatDate extends StartInstruction {
 
         Locator locator = getLocation();
 
-        this.var = Parser.compileExpr(attrs.getValue("var"), null, locator);
-        this.value = Parser.compileExpr(attrs.getValue("value"), null, locator);
-        this.type = Parser.compileExpr(attrs.getValue("type"), null, locator);
-        this.pattern = Parser.compileExpr(attrs.getValue("pattern"), null, locator);
-        this.timeZone = Parser.compileExpr(attrs.getValue("timeZone"), null, locator);
-        this.dateStyle = Parser.compileExpr(attrs.getValue("dateStyle"), null, locator);
-        this.timeStyle = Parser.compileExpr(attrs.getValue("timeStyle"), null, locator);
-        this.locale = Parser.compileExpr(attrs.getValue("locale"), null, locator);
+        this.var = JXTExpression.compileExpr(attrs.getValue("var"), null, locator);
+        this.value = JXTExpression.compileExpr(attrs.getValue("value"), null, locator);
+        this.type = JXTExpression.compileExpr(attrs.getValue("type"), null, locator);
+        this.pattern = JXTExpression.compileExpr(attrs.getValue("pattern"), null, locator);
+        this.timeZone = JXTExpression.compileExpr(attrs.getValue("timeZone"), null, locator);
+        this.dateStyle = JXTExpression.compileExpr(attrs.getValue("dateStyle"), null, locator);
+        this.timeStyle = JXTExpression.compileExpr(attrs.getValue("timeStyle"), null, locator);
+        this.locale = JXTExpression.compileExpr(attrs.getValue("locale"), null, locator);
     }
 
     public String format(JexlContext jexl, JXPathContext jxp) throws Exception {
-        String var = ValueHelper.getStringValue(this.var, jexl, jxp);
-        Object value = ValueHelper.getValue(this.value, jexl, jxp);
-        Object locVal = ValueHelper.getValue(this.locale, jexl, jxp);
-        String pattern = ValueHelper.getStringValue(this.pattern, jexl,
+        String var = this.var.getStringValue(jexl, jxp);
+        Object value = this.value.getValue(jexl, jxp);
+        Object locVal = this.locale.getValue(jexl, jxp);
+        String pattern = this.pattern.getStringValue(jexl,
                 jxp);
-        Object timeZone = ValueHelper
-                .getValue(this.timeZone, jexl, jxp);
+        Object timeZone = this.timeZone.getValue(jexl, jxp);
 
-        String type = ValueHelper.getStringValue(this.type, jexl, jxp);
-        String timeStyle = ValueHelper.getStringValue(this.timeStyle,
-                jexl, jxp);
-        String dateStyle = ValueHelper.getStringValue(this.dateStyle,
-                jexl, jxp);
+        String type = this.type.getStringValue(jexl, jxp);
+        String timeStyle = this.timeStyle.getStringValue(jexl, jxp);
+        String dateStyle = this.dateStyle.getStringValue(jexl, jxp);
 
         String formatted = null;
 

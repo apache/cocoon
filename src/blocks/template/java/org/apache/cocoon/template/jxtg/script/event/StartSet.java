@@ -18,7 +18,6 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -39,10 +38,10 @@ public class StartSet extends StartInstruction {
         JXTExpression varExpr = null;
         JXTExpression valueExpr = null;
         if (var != null) {
-            varExpr = Parser.compileExpr(var, "set: \"var\":", locator);
+            varExpr = JXTExpression.compileExpr(var, "set: \"var\":", locator);
         }
         if (value != null) {
-            valueExpr = Parser.compileExpr(value, "set: \"value\":", locator);
+            valueExpr = JXTExpression.compileExpr(value, "set: \"value\":", locator);
         }
         this.var = varExpr;
         this.value = valueExpr;

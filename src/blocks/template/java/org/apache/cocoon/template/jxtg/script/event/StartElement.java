@@ -23,7 +23,6 @@ import java.util.List;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.expression.Literal;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -64,7 +63,7 @@ public class StartElement extends Event {
                                 String str = buf.toString();
                                 JXTExpression compiledExpression;
                                 try {
-                                    compiledExpression = Parser.compile(str,
+                                    compiledExpression = JXTExpression.compile(str,
                                             xpath);
                                 } catch (Exception exc) {
                                     throw new SAXParseException(exc
