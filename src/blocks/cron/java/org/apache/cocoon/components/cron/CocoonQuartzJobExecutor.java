@@ -31,7 +31,7 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java 47533 2004-09-30 03:15:55Z vgritsenko $
+ * @version CVS $Id$
  *
  * @since 2.1.1
  */
