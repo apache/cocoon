@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ In the sitemap file, each transformer has a unique name which is mapped to a jav
   <li><link href="encodeurl-transformer.html">EncodeURL Transformer</link></li>
   <li><link href="sourcewriting-transformer.html">SourceWriting Transformer</link></li>
     <li><link href="augment-transformer.html">Augment Transformer</link></li>
+    <li><link href="jx-template-transformer.html">JX Template Transformer</link></li>
   <li><link href="ldap-transformer.html">LDAP Transformer</link> (optional)</li>
     <li><link href="lexer-transformer.html">Lexical Transformer</link> (optional)</li>
     <li><link href="parser-transformer.html">Parser Transformer</link> (optional)</li>
