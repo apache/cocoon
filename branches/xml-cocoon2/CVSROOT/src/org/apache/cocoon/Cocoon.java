@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.25 $ $Date: 2000-09-16 00:18:51 $
+ * @version CVS $Revision: 1.4.2.26 $ $Date: 2000-09-19 00:27:51 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -66,7 +66,10 @@ public class Cocoon
     
     /** The root uri/path */
     private URL root = null;
-        
+
+    /** The classpath (if available) */
+    private String classpath = null;
+            
     /**
      * Create a new <code>Cocoon</code> instance.
      */
@@ -85,19 +88,21 @@ public class Cocoon
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(String configurationFile)
+    public Cocoon(String configurationFile, String classpath)
     throws SAXException, IOException, ConfigurationException {
-        this(new File(configurationFile).getCanonicalFile());
+        this(new File(configurationFile).getCanonicalFile(), classpath);
     }
     
     /**
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(File configurationFile)
+    public Cocoon(File configurationFile, String classpath)
     throws SAXException, IOException, ConfigurationException {
         this();
-        
+
+        this.classpath = classpath;
+                
         this.configurationFile = configurationFile;
         if (!configurationFile.isFile()) {
             throw new FileNotFoundException(configurationFile.toString());
@@ -120,6 +125,14 @@ public class Cocoon
      */
     public void setRoot(URL root) {
         this.root = root;
+    }
+
+    /**
+     * Get the local classpath
+     * @return the classpath available to this instance or null if not available.
+     */
+    public String getClasspath() {
+        return this.classpath;
     }
 
     /**
