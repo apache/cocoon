@@ -32,15 +32,15 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.jsp.JSPEngine;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.excalibur.source.Source;
 
 /**
  * The <code>JSPReader</code> component is used to serve Servlet and JSP page 
  * output data in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.10 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id: JSPReader.java,v 1.11 2004/04/24 01:57:19 joerg Exp $
  */
 public class JSPReader extends ServiceableReader implements Configurable {
 
@@ -78,31 +78,30 @@ public class JSPReader extends ServiceableReader implements Configurable {
         }
 
         JSPEngine engine = null;
+        Source inputSource = null;
+        Source contextSource = null;
         try {
-            // TODO (KP): Should we exclude not supported protocols, say 'context'?
-            String url = this.source;
+            inputSource = this.resolver.resolveURI(this.source);
+            contextSource = this.resolver.resolveURI("context:/");
 
-            // absolute path is processed as is
-            if (!url.startsWith("/")) {
-                // get current request path
-                String servletPath = servletRequest.getServletPath();
-                // remove sitemap URI part
-                String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-                if (sitemapURI != null) {
-                    servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
-                } else {
-                    // for example when using cocoon:/ pseudo protocol
-                    servletPath = servletPath.substring(0, servletPath.lastIndexOf("/") + 1);
-                }
-                url = servletPath + url;
+            String inputSourceURI = inputSource.getURI();
+            String contextSourceURI = contextSource.getURI();
+
+            if (!inputSourceURI.startsWith(contextSourceURI)) {
+                throw new ProcessingException("You must not reference a file "
+                        + "outside of the servlet context at " + contextSourceURI + ".");
             }
 
-            engine = (JSPEngine) super.manager.lookup(JSPEngine.ROLE);
+            String url = inputSourceURI.substring(contextSourceURI.length());
+            if (url.charAt(0) != '/') {
+                url = "/" + url;
+            }
 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("JSPReader executing:" + url);
             }
 
+            engine = (JSPEngine) super.manager.lookup(JSPEngine.ROLE);
             byte[] bytes = engine.executeJSP(url, servletRequest, servletResponse, servletContext);
 
             if (this.outputEncoding != null) {
@@ -122,9 +121,9 @@ public class JSPReader extends ServiceableReader implements Configurable {
         } catch (Exception e) {
             throw new ProcessingException("Exception JSPReader.generate()", e);
         } finally {
-            if (engine != null) {
-                super.manager.release(engine);
-            }
+            super.manager.release(engine);
+            this.resolver.release(inputSource);
+            this.resolver.release(contextSource);
         }
     }
 
