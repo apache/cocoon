@@ -100,7 +100,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.10 2004/03/22 13:42:01 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.11 2004/03/22 13:49:04 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -285,15 +285,15 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *                              the source hierarchy 
      */
     public void generate() throws SAXException, ProcessingException {
-		Source src = null;
-		Stack ancestors = null;
+        Source src = null;
+        Stack ancestors = null;
         try {
             src = this.resolver.resolveURI(this.source);
             if (!(src instanceof TraversableSource)) {
                 throw new SourceException(this.source + " is not a traversable source");
             }
-			TraversableSource inputSource = 
-				(TraversableSource) this.resolver.resolveURI(this.source);
+            final TraversableSource inputSource = 
+                (TraversableSource) this.resolver.resolveURI(this.source);
 
             if (!inputSource.exists()) {
                 throw new ResourceNotFoundException(this.source + " does not exist.");
@@ -319,7 +319,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             this.resolver.release(src);
             Enumeration enum = ancestors.elements();
             while (enum.hasMoreElements()) {
-            	resolver.release((Source) enum.nextElement());
+                resolver.release((Source) enum.nextElement());
             }
         }
     }
@@ -389,74 +389,74 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
 
                 Collection contents = null;
                 
-				try {
-					contents = source.getChildren();
-					if (sort.equals("name")) {
-					    Arrays.sort(contents.toArray(), new Comparator() {
-					        public int compare(Object o1, Object o2) {
-					            if (reverse) {
-					                return ((TraversableSource) o2).getName().compareTo(((TraversableSource) o1).getName());
-					            }
-					            return ((TraversableSource) o1).getName().compareTo(((TraversableSource) o2).getName());
-					        }
-					    });
-					} else if (sort.equals("size")) {
-					    Arrays.sort(contents.toArray(), new Comparator() {
-					        public int compare(Object o1, Object o2) {
-					            if (reverse) {
-					                return new Long(((TraversableSource) o2).getContentLength()).compareTo(new Long(((TraversableSource) o1).getContentLength()));
-					            }
-					            return new Long(((TraversableSource) o1).getContentLength()).compareTo(new Long(((TraversableSource) o2).getContentLength()));
-					        }
-					    });
-					} else if (sort.equals("lastmodified")) {
-					    Arrays.sort(contents.toArray(), new Comparator() {
-					        public int compare(Object o1, Object o2) {
-					            if (reverse) {
-					                return new Long(((TraversableSource) o2).getLastModified()).compareTo(new Long(((TraversableSource) o1).getLastModified()));
-					            }
-					            return new Long(((TraversableSource) o1).getLastModified()).compareTo(new Long(((TraversableSource) o2).getLastModified()));
-					        }
-					    });
-					} else if (sort.equals("collection")) {
-					    Arrays.sort(contents.toArray(), new Comparator() {
-					        public int compare(Object o1, Object o2) {
-					            TraversableSource ts1 = (TraversableSource) o1;
-					            TraversableSource ts2 = (TraversableSource) o2;
-					
-					            if (reverse) {
-					                if (ts2.isCollection() && !ts1.isCollection())
-					                    return -1;
-					                if (!ts2.isCollection() && ts1.isCollection())
-					                    return 1;
-					                return ts2.getName().compareTo(ts1.getName());
-					            }
-					            if (ts2.isCollection() && !ts1.isCollection())
-					                return 1;
-					            if (!ts2.isCollection() && ts1.isCollection())
-					                return -1;
-					            return ts1.getName().compareTo(ts2.getName());
-					        }
-					    });
-					}
-					
-					for (int i = 0; i < contents.size(); i++) {
-					    if (isIncluded((TraversableSource) contents.toArray()[i]) && !isExcluded((TraversableSource) contents.toArray()[i])) {
-					        addPath((TraversableSource) contents.toArray()[i], depth - 1);
-					    }
-					}
-				}
-				catch (SourceException e) {
-					throw new ProcessingException("Error adding paths", e);
-				}
-				finally {
-					if (contents != null) {
-						Iterator iter = contents.iterator();
-						while (iter.hasNext()) {
-							resolver.release((Source) iter.next());
-						}
-					}
-				}
+                try {
+                    contents = source.getChildren();
+                    if (sort.equals("name")) {
+                        Arrays.sort(contents.toArray(), new Comparator() {
+                            public int compare(Object o1, Object o2) {
+                                if (reverse) {
+                                    return ((TraversableSource) o2).getName().compareTo(((TraversableSource) o1).getName());
+                                }
+                                return ((TraversableSource) o1).getName().compareTo(((TraversableSource) o2).getName());
+                            }
+                        });
+                    } else if (sort.equals("size")) {
+                        Arrays.sort(contents.toArray(), new Comparator() {
+                            public int compare(Object o1, Object o2) {
+                                if (reverse) {
+                                    return new Long(((TraversableSource) o2).getContentLength()).compareTo(new Long(((TraversableSource) o1).getContentLength()));
+                                }
+                                return new Long(((TraversableSource) o1).getContentLength()).compareTo(new Long(((TraversableSource) o2).getContentLength()));
+                            }
+                        });
+                    } else if (sort.equals("lastmodified")) {
+                        Arrays.sort(contents.toArray(), new Comparator() {
+                            public int compare(Object o1, Object o2) {
+                                if (reverse) {
+                                    return new Long(((TraversableSource) o2).getLastModified()).compareTo(new Long(((TraversableSource) o1).getLastModified()));
+                                }
+                                return new Long(((TraversableSource) o1).getLastModified()).compareTo(new Long(((TraversableSource) o2).getLastModified()));
+                            }
+                        });
+                    } else if (sort.equals("collection")) {
+                        Arrays.sort(contents.toArray(), new Comparator() {
+                            public int compare(Object o1, Object o2) {
+                                TraversableSource ts1 = (TraversableSource) o1;
+                                TraversableSource ts2 = (TraversableSource) o2;
+                    
+                                if (reverse) {
+                                    if (ts2.isCollection() && !ts1.isCollection())
+                                        return -1;
+                                    if (!ts2.isCollection() && ts1.isCollection())
+                                        return 1;
+                                    return ts2.getName().compareTo(ts1.getName());
+                                }
+                                if (ts2.isCollection() && !ts1.isCollection())
+                                    return 1;
+                                if (!ts2.isCollection() && ts1.isCollection())
+                                    return -1;
+                                return ts1.getName().compareTo(ts2.getName());
+                            }
+                        });
+                    }
+                    
+                    for (int i = 0; i < contents.size(); i++) {
+                        if (isIncluded((TraversableSource) contents.toArray()[i]) && !isExcluded((TraversableSource) contents.toArray()[i])) {
+                            addPath((TraversableSource) contents.toArray()[i], depth - 1);
+                        }
+                    }
+    			}
+                catch (SourceException e) {
+                    throw new ProcessingException("Error adding paths", e);
+                }
+                finally {
+                    if (contents != null) {
+                        Iterator iter = contents.iterator();
+                        while (iter.hasNext()) {
+                            resolver.release((Source) iter.next());
+                        }
+                    }
+                }
             }
             endNode(COL_NODE_NAME);
         } else {
