@@ -16,7 +16,7 @@
       <p>
         The search generator creates xml content resulting from an indexing search.
         Speaking simply, SearchGenerator takes a query-string passes it to search engine.
-        The hits delivered by the search engine are wrapped into xml output, feed into 
+        The hits delivered by the search engine are wrapped into xml output and fed into 
         the pipeline.
       </p>
       <p>
@@ -68,7 +68,7 @@
         <tr>
           <td>query-string</td><td>QueryString</td>
           <td>
-            This parameter specifies the name of the query paramter name used
+            This parameter specifies the name of the query parameter name used
             for passing the query-string, eg. 
             <code>http://foo/bar?queryString=cocoon</code>, for generating
             xml content for query "cocoon".
@@ -166,10 +166,10 @@
       <p>
         As SearchGenerator uses some avalon components be sure to configure
         your <code>cocoon.xconf</code> properly. The avalon
-        componet <code>org.apache.cocoon.components.search.LuceneCocoonSearcher</code>
-        is used by SearchGenerator.
+        component <code>org.apache.cocoon.components.search.LuceneCocoonSearcher</code>
+        is used by the SearchGenerator.
         Usually this component is specified in 
-        <code>cocoon.roles</code>, and the <code>cocoon.xconf</code> file
+        <code>cocoon.roles</code> and the <code>cocoon.xconf</code> file
         for the default cocoon webapp.
       </p>
       <p>
