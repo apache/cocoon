@@ -91,7 +91,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ExtendedParserTransformer.java,v 1.4 2004/02/02 11:17:25 stephan Exp $
+ * @version CVS $Id: ExtendedParserTransformer.java,v 1.5 2004/02/05 10:45:16 stephan Exp $
  */
 public class ExtendedParserTransformer extends ExtendedDirectParserProcessor
         implements Transformer, LogEnabled, Serviceable, Parameterizable,
@@ -167,8 +167,6 @@ public class ExtendedParserTransformer extends ExtendedDirectParserProcessor
   public void setup(SourceResolver resolver, Map objectmodel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException
   {
-    System.out.println("setup");
-
     this.resolver = resolver;
 
     Store store = null;
