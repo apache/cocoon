@@ -51,12 +51,13 @@ import org.apache.log.LogTarget;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.35 $ $Date: 2000-12-06 19:19:58 $
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.4.36 $ $Date: 2000-12-06 23:52:41 $
  */
 
 public class CocoonServlet extends HttpServlet {
 
-    private Logger log = null;
+    private Logger log;
 
     final long second = 1000;
     final long minute = 60 * second;
@@ -71,106 +72,196 @@ public class CocoonServlet extends HttpServlet {
     private String workDir;
 
     /**
-     * Initialize this <code>CocoonServlet</code> instance.
+     * Initialize this <code>CocoonServlet</code> instance.  You will
+     * notice that I have broken the init into sub methods to make it
+     * easier to maintain (BL).  The context is passed to a couple of
+     * the subroutines.  This is also because it is better to explicitly
+     * pass variables than implicitely.  It is both more maintainable,
+     * and more elegant.
+     *
+     * @param conf The ServletConfig object from the servlet engine.
+     *
+     * @throws ServletException
      */
-    public void init(ServletConfig conf) throws ServletException {
+    public void init(ServletConfig conf)
+    throws ServletException {
 
         super.init(conf);
 
         this.context = conf.getServletContext();
 
+        this.initLogger(conf.getInitParameter("log-level"), this.context);
+
+        this.setClassPath(conf.getInitParameter("classpath-attribute"), this.context);
+
+        this.forceLoad(conf.getInitParameter("force-load"));
+
+        this.setWorkDir((File) this.context.getAttribute("javax.servlet.context.tempdir"));
+
+        this.setConfigFile(conf.getInitParameter("configurations"), this.context);
+
+        this.createCocoon();
+    }
+
+    /**
+     * WARNING (SM): the lines below BREAKS the Servlet API portability of
+     * web applications.
+     *
+     * This is a hack to go around java compiler design problems that
+     * do not allow applications to force their own classloader to the
+     * compiler during compilation.
+     *
+     * We look for a specific Tomcat attribute so we are bound to Tomcat
+     * this means Cocoon won't be able to compile things if the necessary
+     * classes are not already present in the *SYSTEM* classpath, any other
+     * container classloading will break it on other servlet containers.
+     * To fix this, Javac must be redesigned and rewritten or we have to
+     * write our own compiler.
+     *
+     * So, for now, the cocoon.war file with included libraries can work
+     * only in Tomcat or in containers that simulate this context attribute
+     * (I don't know if any do) or, for other servlet containers, you have
+     * to extract all the libraries and place them in the system classpath
+     * or the compilation of sitemaps and XSP will fail.
+     * I know this sucks, but I don't have the energy to write a java
+     * compiler to fix this :(
+     *
+     * This solution is to allow you to specify the servlet ClassPath
+     * attribute so that Cocoon can use it.  If your files are in the
+     * system classpath, then we are still ok.  For these popular
+     * servlet containers, we will provide you with the attribute name:
+     *
+     * Catalina (Tomcat 4.x) = "org.apache.catalina.jsp_classpath"
+     * Tomcat (3.x)          = "org.apache.tomcat.jsp_classpath"
+     * Resin                 = "caucho.class.path"
+     * WebSphere (3.5 sp2)   = "com.ibm.websphere.servlet.application.classpath"
+     *
+     * For other servlet containers, please consult your manuals or
+     * put Cocoon in the System Classpath.
+     *
+     * @param classpathAttribute The classpath attribute to lookup.
+     * @param context            The ServletContext to perform the lookup.
+     *
+     * @throws ServletException
+     */
+     private void setClassPath(final String classpathAttribute, final ServletContext context)
+     throws ServletException {
+        if (classpathAttribute != null) {
+            this.classpath = (String) context.getAttribute(classpathAttribute.trim());
+        } else {
+            this.classpath = System.getProperty("java.class.path");
+        }
+     }
+
+    /**
+     * Set up the log level and path.  The default log level is
+     * Priority.DEBUG, although it can be overwritten by the parameter
+     * "log-level".  The log system goes to both a file and the Servlet
+     * container's log system.  Only messages that are Priority.ERROR
+     * and above go to the servlet context.  The log messages can
+     * be as restrictive (Priority.FATAL_ERROR and above) or as liberal
+     * (Priority.DEBUG and above) as you want that get routed to the
+     * file.
+     *
+     * @param logLevel The minimum log message handling priority.
+     * @param context  The ServletContext for the real path.
+     *
+     * @throws ServletException
+     */
+    private void initLogger(final String logLevel, final ServletContext context)
+    throws ServletException {
+        final Priority.Enum logPriority;
+
+        if (logLevel != null) {
+            logPriority = LogKit.getPriorityForName(logLevel);
+        } else {
+            logPriority = Priority.DEBUG;
+        }
+
         try {
-            String path = this.context.getRealPath("/") +
+            final String path = context.getRealPath("/") +
                           "/WEB-INF/logs/cocoon.log";
 
-            Category cocoonCategory = LogKit.createCategory("cocoon", Priority.DEBUG);
+            final Category cocoonCategory = LogKit.createCategory("cocoon", logPriority);
             log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
                     new FileOutputLogTarget(path),
-                    new ServletLogTarget(this.context, Priority.ERROR)
+                    new ServletLogTarget(context, Priority.ERROR)
                 });
         } catch (Exception e) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
 
-        LogKit.setGlobalPriority(Priority.DEBUG);
+        LogKit.setGlobalPriority(logPriority);
+    }
 
-        /* WARNING (SM): the lines below BREAKS the Servlet API portability of
-         * web applications.
-         *
-         * This is a hack to go around java compiler design problems that
-         * do not allow applications to force their own classloader to the
-         * compiler during compilation.
-         *
-         * We look for a specific Tomcat attribute so we are bound to Tomcat
-         * this means Cocoon won't be able to compile things if the necessary
-         * classes are not already present in the *SYSTEM* classpath, any other
-         * container classloading will break it on other servlet containers.
-         * To fix this, Javac must be redesigned and rewritten or we have to
-         * write our own compiler.
-         *
-         * So, for now, the cocoon.war file with included libraries can work
-         * only in Tomcat or in containers that simulate this context attribute
-         * (I don't know if any do) or, for other servlet containers, you have
-         * to extract all the libraries and place them in the system classpath
-         * or the compilation of sitemaps and XSP will fail.
-         * I know this sucks, but I don't have the energy to write a java
-         * compiler to fix this :(
-         *
-         * This solution is to allow you to specify the servlet ClassPath
-         * attribute so that Cocoon can use it.  If your files are in the
-         * system classpath, then we are still ok.  For these popular
-         * servlet containers, we will provide you with the attribute name:
-         *
-         * Catalina (Tomcat 4.x) = "org.apache.catalina.jsp_classpath"
-         * Tomcat (3.x)          = "org.apache.tomcat.jsp_classpath"
-         * Resin                 = "caucho.class.path"
-         * WebSphere (3.5 sp2)   = "com.ibm.websphere.servlet.application.classpath"
-         *
-         * For other servlet containers, please consult your manuals or
-         * put Cocoon in the System Classpath.
-         */
-        String servletClassPath = conf.getInitParameter("classpath-attribute");
-        if (servletClassPath != null) {
-            this.classpath = (String) context.getAttribute(servletClassPath);
+    /**
+     * Set the ConfigFile for the Cocoon object.
+     *
+     * @param configFileName The file location for the cocoon.xconf
+     * @param context        The servlet context to get the file handle
+     *
+     * @throws ServletException
+     */
+    private void setConfigFile(final String configFileName, final ServletContext context)
+    throws ServletException {
+        if (configFileName == null) {
+            throw new ServletException("Servlet initialization argument 'configurations' not specified");
         }
 
-        this.workDir = ((File) this.context.getAttribute("javax.servlet.context.tempdir")).toString();
+        log.info("Using configuration file: " + configFileName);
 
-        String forceLoading = conf.getInitParameter("force-load");
+        try {
+            this.configFile = new File(context.getResource(configFileName).getFile());
+        } catch (Exception mue) {
+            log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
+            throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
+        }
+    }
+
+    /**
+     *  Set up the Work Directory (where things get compiled).
+     *
+     * @param workDir the File handle for the work directory
+     *
+     * @throws ServletException
+     */
+    private void setWorkDir(final File workDir)
+    throws ServletException {
+        this.workDir = workDir.toString();
+    }
+
+    /**
+     * Handle the "force-load" parameter.  This overcomes limits in
+     * many classpath issues.  One of the more notorious ones is a
+     * bug in WebSphere that does not load the URL handler for the
+     * "classloader://" protocol.  In order to overcome that bug,
+     * set "force-load" to "com.ibm.servlet.classloader.Handler".
+     *
+     * If you need to force more than one class to load, then
+     * separate each entry with a comma.  Cocoon will strip any
+     * whitespace from the entry.
+     *
+     * @param forceLoading The array of fully qualified classes to force loading.
+     *
+     * @throws ServletException
+     */
+    private void forceLoad(final String forceLoading)
+    throws ServletException {
         if (forceLoading != null) {
             StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoading, ",", false);
 
             while (fqcnTokenizer.hasMoreTokens()) {
-                String fqcn = fqcnTokenizer.nextToken();
+                final String fqcn = fqcnTokenizer.nextToken().trim();
 
                 try {
                     Class.forName(fqcn);
                 } catch (Exception e) {
                     log.error("Could not force-load class: " + fqcn, e);
-                    this.context.log("Could not force-load  class: " + fqcn, e);
                     throw new ServletException("Could not force-load the required class: " +
                               fqcn + "\n" + e.getMessage(), e);
                 }
             }
         }
-
-        String configFileName = conf.getInitParameter("configurations");
-        if (configFileName == null) {
-            throw new ServletException("Servlet initialization argument 'configurations' not specified");
-        } else {
-            log.info("Using configuration file: " + configFileName);
-            this.context.log("Using configuration file: " + configFileName);
-        }
-
-        try {
-            this.configFile = new File(this.context.getResource(configFileName).getFile());
-        } catch (Exception mue) {
-            this.context.log("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
-            log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
-            throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
-        }
-
-        this.cocoon = this.create();
     }
 
     /**
@@ -178,33 +269,12 @@ public class CocoonServlet extends HttpServlet {
      * on the specified <code>HttpServletResponse</code>.
      */
     public void service(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
 
-        long start = System.currentTimeMillis();
+        // This is more scalable
+        long start = new Date().getTime();
 
-        // Reload cocoon if configuration changed or we are reloading
-        boolean reloaded = false;
-
-        synchronized (this) {
-            if (this.cocoon != null) {
-                if (this.cocoon.modifiedSince(this.creationTime)) {
-                    log.info("Configuration changed reload attempt");
-                    this.context.log("Configuration changed reload attempt");
-                    this.cocoon = this.create();
-                    reloaded    = true;
-                } else if ((req.getPathInfo() == null) && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
-                    log.info("Forced reload attempt");
-                    this.context.log("Forced reload attempt");
-                    this.cocoon = this.create();
-                    reloaded    = true;
-                }
-            } else if ((req.getPathInfo() == null) && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
-                log.info("Invalid configurations reload");
-                this.context.log("Invalid configurations reload");
-                this.cocoon = this.create();
-                reloaded    = true;
-            }
-        }
+        Cocoon cocoon = getCocoon(req.getPathInfo(), req.getParameter(Cocoon.RELOAD_PARAM));
 
         // Check if cocoon was initialized
         if (this.cocoon == null) {
@@ -248,7 +318,7 @@ public class CocoonServlet extends HttpServlet {
                 uri = uri.substring(1);
             }
 
-            HttpEnvironment env = new HttpEnvironment(uri, req, res, context);
+            HttpEnvironment env = new HttpEnvironment(uri, req, res, this.context);
 
             if (!this.cocoon.process(env)) {
 
@@ -299,18 +369,19 @@ public class CocoonServlet extends HttpServlet {
         out.flush();
     }
 
-    private Cocoon create() {
+    /**
+     * Creates the Cocoon object and handles exception handling.
+     */
+    private void createCocoon() {
         try {
             log.info("Reloading from: " + this.configFile);
-            this.context.log("Reloading from: " + this.configFile);
             Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
-            this.creationTime = System.currentTimeMillis();
-            return c;
+            this.creationTime = new Date().getTime();
+            this.cocoon = c;
         } catch (Exception e) {
             log.error("Exception reloading", e);
-            this.context.log("Exception reloading: " + e.getMessage());
             this.exception = e;
-            return null;
+            this.cocoon = null;
         }
     }
 
@@ -335,6 +406,32 @@ public class CocoonServlet extends HttpServlet {
         }
 
         return out.toString();
+    }
+
+    /**
+     * Gets the current cocoon object.  Reload cocoon if configuration
+     * changed or we are reloading.
+     *
+     * @returns Cocoon
+     */
+    private synchronized Cocoon getCocoon(final String pathInfo, final String reloadParam) {
+        if (this.cocoon != null) {
+            if (this.cocoon.modifiedSince(this.creationTime)) {
+                log.info("Configuration changed reload attempt");
+                this.createCocoon();
+                return this.cocoon;
+            } else if ((pathInfo == null) && (reloadParam != null)) {
+                log.info("Forced reload attempt");
+                this.createCocoon();
+                return this.cocoon;
+            }
+        } else if ((pathInfo == null) && (reloadParam != null)) {
+            log.info("Invalid configurations reload");
+            this.createCocoon();
+            return this.cocoon;
+        }
+
+        return this.cocoon;
     }
 }
 

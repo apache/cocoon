@@ -30,6 +30,10 @@
         IBM:      com.ibm.websphere.servlet.application.classpath
    -->
   </init-param>
+  <init-param>
+   <param-name>log-level</param-name>
+   <param-value>DEBUG</param-value>
+  </init-param>
  </servlet>
  <servlet-mapping>
   <servlet-name>Cocoon2</servlet-name>
