@@ -304,6 +304,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="add">
+     Faces block: Added JSF CarStore demo.
+   </action>
    <action dev="VG" type="fix">
      Flow preserves global variables on sitemap reload.
    </action>
@@ -351,6 +354,9 @@
      AbstractSAXTransformer namespaceURI and defaultNamespaceURI must never
      be null. When extending AbstractSAXTransformer make sure to set
      defaultNamespaceURI in the constructor.
+   </action>
+   <action dev="VG" type="add">
+     Faces block: Initial implementation of JavaServer Faces for Cocoon.
    </action>
    <action dev="VG" type="add">
      Taglib block: Initial implementation of BodyTag.
