@@ -60,12 +60,11 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 /**
- *
- * Implements the {@link HttpServletResponse} interface to provide HTTP-specific
- * functionality in sending a response.  For example, it has methods
- * to access HTTP headers and cookies.
- * @author ?
- * @version CVS $Id: HttpResponse.java,v 1.2 2003/06/24 15:20:28 upayavira Exp $
+ * Implements the {@link org.apache.cocoon.environment.Response} interface
+ * to provide response functionality in the HTTP servlets environment.
+ * 
+ * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
+ * @version CVS $Id: HttpResponse.java,v 1.3 2003/10/31 21:38:36 vgritsenko Exp $
  */
 
 public final class HttpResponse implements Response {
@@ -114,8 +113,10 @@ public final class HttpResponse implements Response {
     }
 
     public String encodeRedirectURL(String url) {
-        if (url != null && url.indexOf(";jsessionid=") != -1)
+        if (url != null && url.indexOf(";jsessionid=") != -1) {
             return url;
+        }
+
         return this.res.encodeRedirectURL(url);
     }
 
@@ -135,6 +136,7 @@ public final class HttpResponse implements Response {
         this.res.setHeader("location", location);
         this.res.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
     }
+    
     public void setDateHeader(String name, long date) {
         this.res.setDateHeader(name, date);
     }

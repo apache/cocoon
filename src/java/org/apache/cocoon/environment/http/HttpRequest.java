@@ -70,11 +70,11 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 
 /**
- * Implements the {@link javax.servlet.http.HttpServletRequest} interface
- * to provide request information for HTTP servlets.
+ * Implements the {@link org.apache.cocoon.environment.Request} interface
+ * to provide request information in the HTTP servlets environment.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.5 2003/10/29 14:48:56 vgritsenko Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.6 2003/10/31 21:38:36 vgritsenko Exp $
  */
 
 public final class HttpRequest implements Request {
