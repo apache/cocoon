@@ -428,7 +428,7 @@
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
  </release>
- <release version="2.1.7" date="TBD">
+ <release version="2.1.7" date="March 23 2005">
    <action dev="AG" type="update">
      Updated hsqldb to 1.7.3.3.
    </action>
