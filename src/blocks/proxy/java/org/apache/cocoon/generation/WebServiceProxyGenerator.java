@@ -67,9 +67,11 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.regexp.RE;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -78,6 +80,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -104,7 +107,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
  * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2, 2002
- * @version CVS $Id: WebServiceProxyGenerator.java,v 1.1 2003/07/05 14:46:13 joerg Exp $
+ * @version CVS $Id: WebServiceProxyGenerator.java,v 1.2 2003/08/21 12:54:20 cziegeler Exp $
  */
 public class WebServiceProxyGenerator extends ComposerGenerator {
 
@@ -263,6 +266,8 @@ public class WebServiceProxyGenerator extends ComposerGenerator {
      * Create one per client session. 
      */
     protected HttpClient getHttpClient() throws ProcessingException {
+    	URI uri = null;
+	String host = null;
         Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(true);
         HttpClient httpClient = null;
@@ -277,12 +282,50 @@ public class WebServiceProxyGenerator extends ComposerGenerator {
             }
             
             try {
-                config.setHost(new URI(this.source));
+                uri = new URI(this.source);
+                host = uri.getHost();
+                config.setHost(uri);
             } catch (URIException ex) {
                 throw new ProcessingException("URI format error: " + ex, ex);
             }
 
-            if (System.getProperty("http.proxyHost") != null) {
+            // Check the http.nonProxyHosts to see whether or not the current
+            // host needs to be served through the proxy server.
+            boolean proxiableHost = true;
+            String nonProxyHosts = System.getProperty("http.nonProxyHosts");
+            if (nonProxyHosts != null)
+            {
+                StringTokenizer tok = new StringTokenizer(nonProxyHosts, "|");
+
+                while (tok.hasMoreTokens()) {
+                    String nonProxiableHost = tok.nextToken().trim();
+
+                    // XXX is there any other characters that need to be
+                    // escaped?
+                    nonProxiableHost = StringUtils.replace(nonProxiableHost, ".", "\\.");
+                    nonProxiableHost = StringUtils.replace(nonProxiableHost, "*", ".*");
+
+                    // XXX do we want .example.com to match
+                    // computer.example.com?  it seems to be a very common
+                    // idiom for the nonProxyHosts, in that case then we want
+                    // to change "^" to "^.*"
+                    RE re = null;
+                    try {
+                        re = new RE("^" + nonProxiableHost + "$");
+                    }
+                    catch (Exception ex) {
+                        throw new ProcessingException("Regex syntax error: " + ex, ex);
+                    }
+
+                    if (re.match(host))
+                    {
+                        proxiableHost = false;
+                        break;
+                    }
+                }
+            }
+
+            if (proxiableHost && System.getProperty("http.proxyHost") != null) {
                 String proxyHost = System.getProperty("http.proxyHost");
                 int proxyPort = Integer.parseInt(System.getProperty("http.proxyPort"));
                 config.setProxy(proxyHost, proxyPort);

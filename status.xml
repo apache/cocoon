@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.128 2003/08/20 17:29:07 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.129 2003/08/21 12:54:20 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add" fixes-bug="21399" due-to="Peter Ross" due-to-email="peter@emailross.com">
+     Applying patch for processing http.nonProxyHosts in WebServiceProxyGenerator.
+   </action>
    <action dev="JH" type="fix" fixes-bug="22574" due-to="Neil Bacon" due-to-email="nbacon@pinnaclesoftware.com.au">
      POI block: fixed formula support. If no ValueType attribute is set on
      &lt;gmr:Cell/>, the cell content will be interpreted as formula.
@@ -301,12 +304,12 @@
     Added delete capabilities to the SourceWritingTransformer.
   </action>
   <action dev="GR" type="add" fixes-bug="21881" due-to="Guido Casper"
-    due-to-email="g.casper@s-und-n.de">
+    due-to-email="gcasper@s-und-n.de">
     Add a defaultContentType parameter to StreamGenerator, to comply
     with misbehaving clients.
   </action>  
   <action dev="GR" type="add" fixes-bug="21778" due-to="Guido Casper"
-    due-to-email="g.casper@s-und-n.de">
+    due-to-email="gcasper@s-und-n.de">
     Add a new set of WebDAV samples, with the capability of serving
     WebDAV content straight from Cocoon.
   </action>  
