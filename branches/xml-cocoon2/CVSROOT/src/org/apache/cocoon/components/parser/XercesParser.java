@@ -9,20 +9,24 @@ package org.apache.cocoon.components.parser;
 
 import java.io.IOException;
 import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.cocoon.xml.util.DOMFactory;
+import org.apache.xerces.dom.DocumentImpl;
+import org.apache.xerces.dom.DocumentTypeImpl;
 import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.w3c.dom.Document;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:06 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 17:47:13 $
  */
 public class XercesParser extends AbstractXMLProducer
-implements Parser, ErrorHandler {
+implements Parser, ErrorHandler, DOMFactory {
     
     public void parse(InputSource in)
     throws SAXException, IOException {
@@ -36,6 +40,36 @@ implements Parser, ErrorHandler {
         p.parse(in);
     }
         
+    /** 
+     * Create a new Document object.
+     */
+    public Document newDocument() {
+        return(newDocument(null,null,null));
+    }
+
+    /** 
+     * Create a new Document object with a specified DOCTYPE.
+     */
+    public Document newDocument(String name) {
+        return(newDocument(name,null,null));
+    }
+
+    /** 
+     * Create a new Document object with a specified DOCTYPE, public ID and 
+     * system ID.
+     */
+    public Document newDocument(String name, String pub, String sys) {
+        DocumentImpl doc=new DocumentImpl();
+        if ((pub!=null)||(sys!=null)) {
+            DocumentTypeImpl dtd=new DocumentTypeImpl(doc,name,pub,sys);
+            doc.appendChild(dtd);
+        } else if (name!=null) {
+            DocumentTypeImpl dtd=new DocumentTypeImpl(doc,name);
+            doc.appendChild(dtd);
+        }
+        return(doc);
+    }
+
     /**
      * Receive notification of a recoverable error.
      */
