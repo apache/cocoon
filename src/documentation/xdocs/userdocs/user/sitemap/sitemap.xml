@@ -344,7 +344,7 @@
      The <code>&lt;map:view&gt;</code> element defines different view
      of the site. Views are defined independent of pipelines and might
      be used with any pipeline defined in the sitemap. For more on views 
-     read <link href="../concepts/views.html">the Views section</link>.
+     read <link href="../../concepts/views.html">the Views section</link>.
     </p>
    
     <source>

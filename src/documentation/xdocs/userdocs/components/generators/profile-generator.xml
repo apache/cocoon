@@ -18,7 +18,7 @@ Cocoon.</abstract>
       <p>The profile generator creates xml from the current profiler
         measurement results of cocoon.</p>
       <p>If you just want to use the Cocoon profiler, look at <link
-          href="../concepts/profiler.html">this document</link>.</p>
+          href="../../config/profiler.html">this document</link>.</p>
       <ul>
         <li>Name : profile</li>
         <li>Class: org.apache.cocoon.components.profiler.ProfilerGenerator</li>
