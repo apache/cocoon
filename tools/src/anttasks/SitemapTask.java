@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.12 $ $Date: 2004/05/03 14:23:56 $
+ * @version CVS $Revision: 1.13 $ $Date: 2004/05/04 07:14:08 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -634,7 +634,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             } else if ( clazz.isA(PIPELINE) ) {
                 return "pipe";
             } else {
-                throw new BuildException("Sitemap component " + clazz.getName() + " does not implement a sitemap component interface.");
+                throw new BuildException("Sitemap component " + clazz.getFullyQualifiedName() + " does not implement a sitemap component interface.");
             }            
         }
         

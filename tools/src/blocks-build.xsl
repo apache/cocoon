@@ -413,7 +413,7 @@
       <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xweb"/>
       </xpatch>
-      <!-- generate sitemap entries -->
+      <!-- generate sitemap entries 
       <sitemap-components sitemap="${{build.webapp}}/sitemap.xmap" 
                           source="${{blocks}}/{$block-name}/java"
                           block="{$block-name}">
@@ -424,11 +424,12 @@
           <xsl:attribute name="deprecated">true</xsl:attribute>
         </xsl:if>
       </sitemap-components>
-
-      <!-- TODO - this is the wrong place for documentation, but currently blocks
-           don't have own docs! -->
-      <mkdir dir="${{build.context}}/xdocs/userdocs"/>
+      -->
+      
       <!-- generate sitemap components docs -->
+      <!-- TODO - this is the wrong place for documentation, but currently blocks
+           don't have own docs!
+        <mkdir dir="${{build.context}}/xdocs/userdocs"/>
       <sitemap-components docDir="${{build.context}}/xdocs/userdocs" 
                           source="${{blocks}}/{$block-name}/java"
                           block="{$block-name}">
@@ -439,7 +440,7 @@
           <xsl:attribute name="deprecated">true</xsl:attribute>
         </xsl:if>
       </sitemap-components>
-
+      -->
     </target>
                                                                                                                                                                                
     <target name="{@name}-roles" unless="internal.exclude.block.{$block-name}">
