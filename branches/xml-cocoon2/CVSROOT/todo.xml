@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.4 2000-05-31 18:34:23 pier Exp $
+  $Id: todo.xml,v 1.6.2.5 2000-06-06 23:10:20 stefano Exp $
 -->
 
 
@@ -20,9 +20,51 @@
  </devs>
 
  <actions priority="high">
-  <action context="build">
-   create a distribution
+  <action context="code">
+   To simplify portability and installation on different enviornments, the
+   XSP subsystem should use the temporary directory provided by the
+   ServletContext via the "javax.servlet.context.tempdir" attribute.
   </action>
+  
+  <action context="code">
+   Write a better error handling code for CocoonServlet to avoid hardcoding
+   HTML inside the servlet which sucks big time.
+  </action>
+
+  <action context="code">
+   Complete ResourceProcessor.java to allow Cocoon to read resources from its
+   URI space without attempting to process them (should use context.getResource()
+   but how do we make that instance available and maintain the engine abstracted
+   enough? we should implement the "loading" abstraction).
+  </action>
+
+  <action context="code">
+   Extend the cocoon demo war file to create a complete presentation of current
+   publishing capabilities (need FO, SVG, SMIL, RSS, VRML... we can just port
+   them from Cocoon1 and adapt them for the new processing)
+  </action>
+
+  <action context="code">
+   Check and fix xsl:import which doesn't seem to work expected... very strange..
+   it might be an XSLT problem with the XSP example since it uses namespaces
+   heavily... should we use the namespace() axis?
+  </action>
+
+ <actions>
+ 
+ <actions priority="medium">
+
+  <action context="code">
+   Create a better logging subsystem.
+  </action>
+
+  <action context="code">
+   Create a Cocoon1-like status page to indicate current status. Should be 
+   implemented as a Generator directly. It should also be able to generate
+   SVG graphs of current load and so forth. Now that we have the technology,
+   let's use it!.
+  </action>
+  
  </actions>
 
 </todo>
