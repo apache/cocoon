@@ -67,9 +67,7 @@
         <!-- copy Cocoon -->
         <copy todir="${build.webapp.dir}">
             <fileset dir="${rep.cocoon.webapp.dir}">
-                <exclude name="sitemap*"/>
-                <exclude name="welcome*"/>
-                <!--include name="WEB-INF/**"/-->
+                <include name="WEB-INF/**"/>
             </fileset>
         </copy>
 
