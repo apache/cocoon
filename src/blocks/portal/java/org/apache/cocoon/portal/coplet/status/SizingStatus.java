@@ -56,11 +56,12 @@ package org.apache.cocoon.portal.coplet.status;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingStatus.java,v 1.3 2003/05/26 13:18:20 cziegeler Exp $
+ * @version CVS $Id: SizingStatus.java,v 1.4 2003/09/02 08:55:26 cziegeler Exp $
  */
 public final class SizingStatus {
 
     public final static Integer STATUS_MINIMIZED = new Integer(0);
     public final static Integer STATUS_MAXIMIZED = new Integer(1);
+    public final static Integer STATUS_MAXPAGED  = new Integer(2);
 
 }
