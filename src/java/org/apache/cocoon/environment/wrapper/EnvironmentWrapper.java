@@ -38,7 +38,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.18 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.19 2004/06/07 08:18:17 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -142,7 +142,7 @@ public class EnvironmentWrapper
      */
     public void redirect(String newURL, boolean global, boolean permanent)
     throws IOException {
-        if ( !global ) {
+        if ( !global && !this.internalRedirect ) {
             this.redirectURL = newURL;
         } else {
             this.environment.redirect(newURL, global, permanent);
