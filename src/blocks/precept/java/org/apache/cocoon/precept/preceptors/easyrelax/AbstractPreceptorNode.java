@@ -50,21 +50,16 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
-import org.apache.cocoon.precept.Preceptor;
-
-import org.apache.cocoon.precept.Constraint;
-
-
+import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
-
-import java.util.Iterator;
+import org.apache.cocoon.precept.Constraint;
+import org.apache.cocoon.precept.Preceptor;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 22, 2002
- * @version CVS $Id: AbstractPreceptorNode.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: AbstractPreceptorNode.java,v 1.3 2003/03/23 12:35:11 stefano Exp $
  */
 public abstract class AbstractPreceptorNode {
 
@@ -82,6 +77,7 @@ public abstract class AbstractPreceptorNode {
     }
 
     public List validate(Object value) {
+        /* FIXME (SM): the code below is totally useless. What is supposed to do?
         if (constraints != null) {
             for (Iterator it = constraints.iterator(); it.hasNext();) {
                 Constraint constraint = (Constraint) it.next();
@@ -90,7 +86,8 @@ public abstract class AbstractPreceptorNode {
         }
         else {
             return (null);
-        }
+        }*/
+        return (null);
     }
 
     public List getConstraints() {
