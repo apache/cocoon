@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.12 2004/05/07 13:42:09 mpo Exp $
+ * @version CVS $Id: Upload.java,v 1.13 2004/07/04 14:36:59 joerg Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -59,7 +59,10 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void setValue(Object object) {
-        throw new RuntimeException("Cannot manually set the value of an upload widget for field \"" + getRequestParameterName() + "\"");
+        if (!(object instanceof Part)) {
+            throw new RuntimeException("The value of an upload widget must be of type " + Part.class + ".");
+        }
+        this.part = (Part)object;
     }
 
     public void readFromRequest(FormContext formContext) {
