@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="31407" due-to="Mark H. Butler" due-to-email=" mark-h.butler@hp.com">
+     Upgrading DELI block from version 0.9.8 to x020904.
+   </action>
    <action dev="VG" type="update">
      Add support for translating attribute values which contain i18n expressions
      rather than complete i18n key.
