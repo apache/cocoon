@@ -91,7 +91,7 @@
         | types must/should be in the HTML output too.
         +-->
     <xsl:variable name="validHTMLTypes"
-                  select="'text hidden textarea checkbox radio password'"/>
+                  select="'text hidden textarea checkbox radio password image reset submit'"/>
     <xsl:if test="normalize-space(.) and
                   contains(concat(' ', $validHTMLTypes, ' '), concat(' ', ., ' '))">
       <xsl:copy-of select="."/>      
