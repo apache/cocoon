@@ -4,7 +4,7 @@
 <!-- ===================== General Components =========================== -->
 
   <component role="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component role="store" class="org.apache.cocoon.components.store.MemoryStore"/>
+  <component role="store"  class="org.apache.cocoon.components.store.MemoryStore"/>
 
   <component role="factory" class="org.apache.avalon.NamedComponentManagerImpl">
     <component-type name="programming-language">
@@ -51,6 +51,9 @@
   <component role="program-generator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
     <parameter name="auto-reload" value="true"/>
   </component>
+
+  <!-- these components are the image encoders for the SVG serializer -->
+	<component role="jaipngencoder" class="org.apache.cocoon.components.image.JAIPNGEncoder"/>
 
   <sitemap file="sitemap.xmap"/> 
 </cocoon>

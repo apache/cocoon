@@ -39,6 +39,9 @@
    <sample name="formatting objects" url="fo">
     This is an example of FO translated to PDF by Apache FOP.
    </sample>
+   <sample name="scalable vector graphics" url="svg">
+    An example of a SVG file rendered to a PNG image.
+   </sample>
    <sample name="slides" url="slides/slides">
     Example of complex XSLT usage.
    </sample>

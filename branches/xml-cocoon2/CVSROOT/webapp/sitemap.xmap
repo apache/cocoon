@@ -37,9 +37,14 @@
     <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
     <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
    </map:serializer> 
-   <map:serializer name="svg"     mime-type="image/svg-xml"   src="org.apache.cocoon.serialization.XMLSerializer">
+   <map:serializer name="svgxml"     mime-type="image/svg-xml"   src="org.apache.cocoon.serialization.XMLSerializer">
     <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
     <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
+   </map:serializer> 
+   <map:serializer name="svg2png" mime-type="image/png" src="org.apache.cocoon.serialization.SVGSerializer">
+    <encoder>jaipngencoder</encoder>
+    <transparent>false</transparent>
+    <background>#FFFFFF</background>
    </map:serializer> 
   </map:serializers>
   
@@ -63,8 +68,8 @@
   <map:view name="links" generate-from="content">
    <map:serialize type="links"/>
   </map:view>
- </map:views>
 
+ </map:views>
 <!-- =========================== Resources ================================= --> 
 
  <map:resources>
@@ -110,7 +115,7 @@
    <map:match pattern="hello.svg">
     <map:generate src="docs/samples/hello-page.xml"/> 
     <map:transform src="stylesheets/page/simple-page2svg.xsl"/> 
-    <map:serialize type="svg"/> 
+    <map:serialize type="svg2png"/>
    </map:match>
 
    <map:match pattern="hello.wrl">
@@ -144,6 +149,11 @@
     <map:serialize type="fo2pdf"/> 
    </map:match>
 
+   <map:match pattern="svg">
+    <map:generate src="docs/samples/opac.svg"/>
+    <map:serialize type="svg2png"/>
+   </map:match>
+
    <map:match pattern="slides/slides">
     <map:redirect-to resource="slides"/>
    </map:match>
@@ -157,11 +167,11 @@
    </map:match>
 
    <map:match pattern="slides/*.gif">
-    <map:read src="documents/slides/{1}.gif" mime-type="image/gif"/> 
+    <map:read src="docs/samples/slides/{1}.gif" mime-type="image/gif"/> 
    </map:match>
 
    <map:match pattern="slides/*.jpg">
-    <map:read src="documents/slides/{1}.jpg" mime-type="image/jpg"/> 
+    <map:read src="docs/samples/slides/{1}.jpg" mime-type="image/jpg"/> 
    </map:match>
 
    <map:match pattern="xsp/*"> 
@@ -194,19 +204,19 @@
     <map:serialize/> 
    </map:match>
 
-   <map:match pattern="styles/**.css"> 
+   <map:match pattern="styles/*.css"> 
     <map:read src="resources/styles/{1}.css" mime-type="text/css"/> 
    </map:match>
 
-   <map:match pattern="images/**.gif"> 
+   <map:match pattern="images/*.gif"> 
     <map:read src="resources/images/{1}.gif" mime-type="image/gif"/> 
    </map:match>
 
-   <map:match pattern="images/**.jpg"> 
+   <map:match pattern="images/*.jpg"> 
     <map:read src="resources/images/{1}.jpg" mime-type="image/jpg"/> 
    </map:match>
 
-   <map:match pattern="images/**.png"> 
+   <map:match pattern="images/*.png"> 
     <map:read src="resources/images/{1}.png" mime-type="image/png"/> 
    </map:match>
 

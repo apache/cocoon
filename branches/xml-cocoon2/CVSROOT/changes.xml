@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.9 2000-08-23 13:12:09 stefano Exp $
+  $Id: changes.xml,v 1.9.2.10 2000-08-29 20:11:26 rossb Exp $
 -->
 
 <changes title="History of Changes">
@@ -18,9 +18,13 @@
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RB" type="add"> 
+   Added a more complete SVG serializer.
+  </action>
   <action dev="SM" type="update">
    Distribution cleanup and creation of a decent live demo, also to test the new sitemap.
   </action>
