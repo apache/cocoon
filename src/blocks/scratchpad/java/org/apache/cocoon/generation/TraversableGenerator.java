@@ -127,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.2 2003/09/25 17:28:38 joerg Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.3 2003/10/03 11:45:33 gianugo Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -308,8 +308,8 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         try {
             inputSource = (TraversableSource) this.resolver.resolveURI(this.source);
 
-            if (!inputSource.isCollection()) {
-                throw new ResourceNotFoundException(this.source + " is not a collection.");
+            if (!inputSource.exists()) {
+                throw new ResourceNotFoundException(this.source + " does not exist.");
             }
 
             this.contentHandler.startDocument();

@@ -61,6 +61,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.excalibur.source.SourceException;
@@ -83,7 +85,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * It can be used both as a plain TraversableGenerator or, if an XPath is
  * specified, it will perform an XPath query on every XML resource, where "xml
  * resource" is, by default, any resource ending with ".xml", which can be
- * overriden by setting the (regexp) pattern "xmlFiles as a sitemap parameter.
+ * overriden by setting the (regexp) pattern "xmlFiles as a sitemap parameter, 
+ * or where the name of the resource has a container-wide mime-type mapping to 
+ * 'text/xml' such as specified by mime-mapping elements in a web.xml 
+ * descriptor file.
  * 
  * The XPath can be specified in two ways:
  * <ol>
@@ -129,7 +134,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.1 2003/09/04 12:42:40 cziegeler Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.2 2003/10/03 11:45:33 gianugo Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -150,8 +155,10 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	protected XPathProcessor processor = null;
 	/** The parser for the XML snippets to be included. */
 	protected DOMParser parser = null;
-   /** The prefix resolver for namespaced queries */
+    /** The prefix resolver for namespaced queries */
 	protected XPathPrefixResolver prefixResolver;
+    /** The cocoon context used for mime-type mappings */
+    protected Context context;
 	 	
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
@@ -206,8 +213,10 @@ public class XPathTraversableGenerator extends TraversableGenerator {
             	this.prefixResolver.addPrefix(paramName, paramValue);
             }
         }
+        
+        this.context = ObjectModelHelper.getContext(objectModel);
     }
-
+    
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
@@ -330,7 +339,8 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	 * otherwise.
 	 */
 	protected boolean isXML(TraversableSource path) {
-		return this.xmlRE.match(path.getName());
+        String mimeType = this.context.getMimeType(path.getName());
+		return this.xmlRE.match(path.getName()) || "text/xml".equalsIgnoreCase(mimeType);
 	}
 	
 	/**
@@ -375,6 +385,9 @@ public class XPathTraversableGenerator extends TraversableGenerator {
       this.xpath = null;
       this.attributes = null;
       this.doc = null;
+      this.xmlRE = null;
+      this.prefixResolver = null;
+      this.context = null;
     }
 
     /**
