@@ -146,7 +146,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.6 2003/11/07 13:00:17 giacomo Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.7 2003/11/07 14:22:12 vgritsenko Exp $
  */
 public class XPathDirectoryGenerator
 extends DirectoryGenerator {
@@ -244,8 +244,7 @@ extends DirectoryGenerator {
         final String mappings = par.getParameter("nsmapping", null);
 
         if (null != mappings) {
-            final boolean mapping_reload =
-                Boolean.valueOf(par.getParameterAsBoolean("nsmapping-reload", false)).booleanValue();
+            final boolean mapping_reload = par.getParameterAsBoolean("nsmapping-reload", false);
             final Source mappingSource = resolver.resolveURI(mappings);
             final String mappingKey = mappingSource.getURI();
             final MappingInfo mappingInfo = (MappingInfo)XPathDirectoryGenerator.mappingFiles.get(mappingKey);
@@ -352,7 +351,7 @@ extends DirectoryGenerator {
      * The MappingInfo class to reolve namespace prefixes to their namespace URI
      *
      * @author <a href="mailto:giacomo(at)apache.org">Giacomo Pati</a>
-     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.6 2003/11/07 13:00:17 giacomo Exp $
+     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.7 2003/11/07 14:22:12 vgritsenko Exp $
      */
     private static class MappingInfo
     implements PrefixResolver {
