@@ -62,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.74 $ $Date: 2001-04-02 14:37:14 $
+ * @version CVS $Revision: 1.1.4.75 $ $Date: 2001-04-03 06:26:20 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -77,6 +77,8 @@ public class CocoonServlet extends HttpServlet {
     protected Cocoon cocoon;
     protected Exception exception;
     protected DefaultContext appContext = new DefaultContext();
+    /** Allow reloading of cocoon by specifying the cocoon-reload parameter with a request */
+    protected boolean allowReload;
 
     private static final boolean ALLOW_OVERWRITE = false;
     private static final boolean SILENTLY_RENAME = true;
@@ -136,6 +138,12 @@ public class CocoonServlet extends HttpServlet {
 
         this.appContext.put(Constants.CONTEXT_ROOT_PATH, context.getRealPath("/"));
 
+        String value = conf.getInitParameter("allow-reload");
+        if (value == null || value.equals("yes") == true) {
+            this.allowReload = true;
+        } else {
+            this.allowReload = false;
+        }
         this.createCocoon();
     }
 
@@ -557,12 +565,12 @@ public class CocoonServlet extends HttpServlet {
                 log.info("Configuration changed reload attempt");
                 this.createCocoon();
                 return this.cocoon;
-            } else if ((pathInfo == null) && (reloadParam != null)) {
+            } else if ((pathInfo == null) && (this.allowReload == true) && (reloadParam != null)) {
                 log.info("Forced reload attempt");
                 this.createCocoon();
                 return this.cocoon;
             }
-        } else if ((pathInfo == null) && (reloadParam != null)) {
+        } else if ((pathInfo == null) && (this.allowReload == true) && (reloadParam != null)) {
             log.info("Invalid configurations reload");
             this.createCocoon();
             return this.cocoon;

@@ -27,6 +27,10 @@
    <param-name>log-level</param-name>
    <param-value>DEBUG</param-value>
   </init-param>
+  <init-param>
+   <param-name>allow-reload</param-name>
+   <param-value>yes</param-value>
+  </init-param>
     <init-param>
       <param-name>load-class</param-name>
       <param-value>
