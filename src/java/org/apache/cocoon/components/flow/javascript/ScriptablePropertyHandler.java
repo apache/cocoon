@@ -46,11 +46,17 @@
 package org.apache.cocoon.components.flow.javascript;
 
 import org.apache.commons.jxpath.DynamicPropertyHandler;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyHandler.java,v 1.5 2003/10/10 10:48:25 cziegeler Exp $
+ * @version CVS $Id: ScriptablePropertyHandler.java,v 1.6 2004/03/01 03:50:58 antonio Exp $
  */
 public class ScriptablePropertyHandler implements DynamicPropertyHandler {
 

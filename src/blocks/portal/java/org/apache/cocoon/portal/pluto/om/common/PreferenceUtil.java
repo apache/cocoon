@@ -45,7 +45,9 @@
 */
 package org.apache.cocoon.portal.pluto.om.common;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.pluto.om.common.Preference;
 
@@ -54,7 +56,7 @@ import org.apache.pluto.om.common.Preference;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PreferenceUtil.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: PreferenceUtil.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 public class PreferenceUtil {
 

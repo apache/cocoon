@@ -50,18 +50,23 @@
 */
 package org.apache.cocoon.components.language.programming.java;
 
-import org.apache.cocoon.components.language.programming.CompilerError;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import org.apache.cocoon.components.language.programming.CompilerError;
 
 /**
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Jikes.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: Jikes.java,v 1.4 2004/03/01 03:50:57 antonio Exp $
  * @since 2.0
  */
 

@@ -50,6 +50,21 @@
 */
 package org.apache.cocoon.components.xslt;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TemplatesHandler;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -68,16 +83,6 @@ import org.apache.excalibur.store.Store;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
-
-import javax.xml.transform.*;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TemplatesHandler;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamSource;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * This class defines the implementation of the {@link XSLTProcessor}
@@ -106,7 +111,7 @@ import java.util.HashMap;
  * @deprecated Use the avalon excalibur xslt processor instead.
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: XSLTProcessorImpl.java,v 1.2 2003/04/27 15:16:15 cziegeler Exp $
+ * @version CVS $Id: XSLTProcessorImpl.java,v 1.3 2004/03/01 03:50:59 antonio Exp $
  * @version 1.0
  * @since   July 11, 2001
  */

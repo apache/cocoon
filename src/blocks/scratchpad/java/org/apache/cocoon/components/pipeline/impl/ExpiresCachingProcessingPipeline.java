@@ -58,9 +58,9 @@ import java.util.Map;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.*;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
+import org.apache.cocoon.caching.SimpleCacheKey;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
@@ -79,7 +79,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.1 2003/09/04 12:42:42 cziegeler Exp $
+ * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 public class ExpiresCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {

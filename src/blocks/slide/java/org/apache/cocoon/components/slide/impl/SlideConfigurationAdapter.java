@@ -51,16 +51,17 @@
 
 package org.apache.cocoon.components.slide.impl;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import org.apache.slide.util.conf.Configuration;
 import org.apache.slide.util.conf.ConfigurationException;
-
-import java.util.*;
 
 /**
  * The class represent an adapter for the configuration class from jakarta slide
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideConfigurationAdapter.java,v 1.1 2003/12/02 19:18:45 unico Exp $
+ * @version CVS $Id: SlideConfigurationAdapter.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class SlideConfigurationAdapter implements Configuration {
 

@@ -50,20 +50,17 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.environment.Environment;
-
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.sitemap.ContentAggregator;
-
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-
-import java.util.*;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.ContentAggregator;
+import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
@@ -82,7 +79,7 @@ import java.util.*;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.2 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.3 2004/03/01 03:50:58 antonio Exp $
  */
 
 public class AggregateNode extends AbstractProcessingNode {

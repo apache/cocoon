@@ -45,16 +45,19 @@
 */
 package org.apache.cocoon.portal.pluto.om;
 
-import java.util.*;
-import org.apache.pluto.om.window.*;
+import java.util.HashMap;
+
 import org.apache.pluto.om.common.ObjectID;
+import org.apache.pluto.om.window.PortletWindow;
+import org.apache.pluto.om.window.PortletWindowList;
+import org.apache.pluto.om.window.PortletWindowListCtrl;
 
 /**
  * 
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowListImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: PortletWindowListImpl.java,v 1.3 2004/03/01 03:50:57 antonio Exp $
  */
 public class PortletWindowListImpl implements PortletWindowList, PortletWindowListCtrl {
 

@@ -44,8 +44,18 @@
 
 */
 package org.apache.cocoon.components.flow.javascript;
-import org.mozilla.javascript.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 
 /**
  * Wraps a JDBC connection and provides an API similar to JSTL
@@ -86,7 +96,7 @@ import java.sql.*;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
- * @version CVS $Id: ScriptableConnection.java,v 1.4 2004/02/24 10:35:11 joerg Exp $
+ * @version CVS $Id: ScriptableConnection.java,v 1.5 2004/03/01 03:50:58 antonio Exp $
  */
 public class ScriptableConnection extends ScriptableObject {
 

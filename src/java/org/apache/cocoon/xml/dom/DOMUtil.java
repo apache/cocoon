@@ -50,22 +50,11 @@
 */
 package org.apache.cocoon.xml.dom;
 
-import org.apache.excalibur.source.SourceParameters;
-import org.apache.xpath.XPathAPI;
-import org.apache.excalibur.xml.xpath.NodeListImpl;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.apache.excalibur.xml.xpath.XPathUtil;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
-
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -77,12 +66,33 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
+import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.excalibur.xml.xpath.NodeListImpl;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.apache.excalibur.xml.xpath.XPathUtil;
+import org.apache.xpath.XPathAPI;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
 /**
  *  This class is a utility class for miscellaneous DOM functions, like
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.7 2003/12/18 14:29:03 cziegeler Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.8 2004/03/01 03:50:58 antonio Exp $
 */
 public final class DOMUtil {
 

@@ -54,7 +54,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Transaction;
 
 import org.apache.cocoon.ojb.jdo.components.JdoPMF;
-import org.apache.cocoon.ojb.samples.bean.*;
+import org.apache.cocoon.ojb.samples.bean.Employee;
 import org.apache.ojb.broker.Identity;
 import org.apache.ojb.broker.PersistenceBroker;
 import org.apache.ojb.broker.PersistenceBrokerFactory;
@@ -62,7 +62,7 @@ import org.apache.ojb.broker.PersistenceBrokerFactory;
  *  Employee's Impl
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: EmployeeDAO.java,v 1.1 2004/02/04 17:33:59 joerg Exp $
+ * @version CVS $Id: EmployeeDAO.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
 */
 public class EmployeeDAO {
 

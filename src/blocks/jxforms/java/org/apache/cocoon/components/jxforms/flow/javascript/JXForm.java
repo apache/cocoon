@@ -49,20 +49,29 @@
 
 */
 package org.apache.cocoon.components.jxforms.flow.javascript;
-import org.apache.cocoon.components.jxforms.validation.*;
-import org.apache.cocoon.components.jxforms.xmlform.*;
-import org.mozilla.javascript.*;
-import org.mozilla.javascript.continuations.Continuation;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_WebContinuation;
-import org.apache.commons.jxpath.JXPathContext;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.Source;
+import org.apache.cocoon.components.jxforms.validation.Schema;
+import org.apache.cocoon.components.jxforms.validation.SchemaFactory;
+import org.apache.cocoon.components.jxforms.validation.Violation;
+import org.apache.cocoon.components.jxforms.xmlform.Form;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
+import org.mozilla.javascript.continuations.Continuation;
 import org.xml.sax.InputSource;
-import java.util.Set;
-import java.util.List;
-import java.util.LinkedList;
 
 public class JXForm extends ScriptableObject {
 

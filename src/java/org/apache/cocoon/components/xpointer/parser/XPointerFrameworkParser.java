@@ -50,8 +50,14 @@
 */
 package org.apache.cocoon.components.xpointer.parser;
 
-import org.apache.cocoon.components.xpointer.*;
 import java.util.HashMap;
+
+import org.apache.cocoon.components.xpointer.ElementPathPart;
+import org.apache.cocoon.components.xpointer.ShorthandPart;
+import org.apache.cocoon.components.xpointer.UnsupportedPart;
+import org.apache.cocoon.components.xpointer.XPointer;
+import org.apache.cocoon.components.xpointer.XPointerPart;
+import org.apache.cocoon.components.xpointer.XmlnsPart;
 
 public class XPointerFrameworkParser
     implements XPointerFrameworkParserConstants {

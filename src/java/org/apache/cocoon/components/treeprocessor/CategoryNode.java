@@ -50,16 +50,17 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.ProcessingException;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.*;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * A generic container node that just invokes its children.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CategoryNode.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: CategoryNode.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 
 public final class CategoryNode extends AbstractParentProcessingNode {

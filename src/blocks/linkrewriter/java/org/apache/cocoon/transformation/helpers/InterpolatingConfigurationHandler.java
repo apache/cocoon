@@ -50,11 +50,13 @@
 */
 package org.apache.cocoon.transformation.helpers;
 
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
-import org.xml.sax.*;
-import org.xml.sax.helpers.AttributesImpl;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A SAX ContentHandler that builds Avalon <code>Configuration</code> objects,
@@ -62,7 +64,7 @@ import java.util.StringTokenizer;
  *
  * @see VariableConfiguration
  * @author <a href="jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: InterpolatingConfigurationHandler.java,v 1.3 2003/05/03 10:24:55 jefft Exp $
+ * @version CVS $Id: InterpolatingConfigurationHandler.java,v 1.4 2004/03/01 03:50:58 antonio Exp $
  */
 public class InterpolatingConfigurationHandler extends SAXConfigurationHandler {
     final private Map vars;

@@ -46,7 +46,9 @@
 package org.apache.cocoon.portal.pluto.factory;
 
 import org.apache.cocoon.portal.pluto.om.common.UnmodifiableSet;
-import org.apache.pluto.om.*;
+import org.apache.pluto.om.Controller;
+import org.apache.pluto.om.ControllerFactory;
+import org.apache.pluto.om.Model;
 
 /**
  * The implementation of the controller factory
@@ -54,7 +56,7 @@ import org.apache.pluto.om.*;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ControllerFactoryImpl.java,v 1.1 2004/01/22 14:01:22 cziegeler Exp $
+ * @version CVS $Id: ControllerFactoryImpl.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class ControllerFactoryImpl 
 extends AbstractFactory

@@ -45,16 +45,17 @@
 */
 package org.apache.cocoon.portal.pluto.om;
 
-import org.apache.pluto.om.window.*;
-import org.apache.pluto.om.entity.*;
 import org.apache.pluto.om.common.ObjectID;
+import org.apache.pluto.om.entity.PortletEntity;
+import org.apache.pluto.om.window.PortletWindow;
+import org.apache.pluto.om.window.PortletWindowCtrl;
 
 /**
  * 
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: PortletWindowImpl.java,v 1.3 2004/03/01 03:50:57 antonio Exp $
  */
 public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
         

@@ -50,7 +50,19 @@
 */
 package org.apache.cocoon.components.xmlform;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.validation.Validator;
@@ -77,7 +89,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.6 2003/09/02 09:13:51 sylvain Exp $
+ * @version CVS $Id: Form.java,v 1.7 2004/03/01 03:50:57 antonio Exp $
  */
 public class Form {
 

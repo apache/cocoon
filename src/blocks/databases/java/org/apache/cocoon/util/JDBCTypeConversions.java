@@ -50,23 +50,28 @@
 */
 package org.apache.cocoon.util;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Time;
-import java.sql.Date;
-import java.sql.Array;
-import java.sql.Types;
-import java.sql.Clob;
-import java.sql.Blob;
 import java.sql.Struct;
-import java.math.BigDecimal;
-import java.util.Map;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.excalibur.source.Source;
@@ -107,7 +112,7 @@ import org.apache.excalibur.source.Source;
  * <tr><td>object     </td><td>Object      </td><td>        </td><td>Object       </td></tr>
  * </table></p>
  *
- * @version CVS $Id: JDBCTypeConversions.java,v 1.5 2003/09/24 21:54:49 cziegeler Exp $
+ * @version CVS $Id: JDBCTypeConversions.java,v 1.6 2004/03/01 03:50:59 antonio Exp $
  */
 public class JDBCTypeConversions {
     public static final Map typeConstants;

@@ -50,12 +50,24 @@
 */
 package org.apache.cocoon.util;
 
-import org.apache.log.Hierarchy;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.Locale;
+
+import org.apache.log.Hierarchy;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
@@ -63,7 +75,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: IOUtils.java,v 1.1 2003/03/09 00:09:43 pier Exp $
+ * @version CVS $Id: IOUtils.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class IOUtils {
 

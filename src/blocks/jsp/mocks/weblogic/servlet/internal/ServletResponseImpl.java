@@ -50,9 +50,10 @@
 */
 package weblogic.servlet.internal;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * **********************************************************************
@@ -66,7 +67,7 @@ import javax.servlet.http.*;
  *
  * **********************************************************************
  * 
- * @version CVS $Id: ServletResponseImpl.java,v 1.2 2003/07/11 17:03:27 joerg Exp $
+ * @version CVS $Id: ServletResponseImpl.java,v 1.3 2004/03/01 03:50:59 antonio Exp $
  */
  
 public class ServletResponseImpl implements HttpServletResponse {

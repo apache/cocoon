@@ -45,12 +45,20 @@
 */
 package org.apache.cocoon.components.flow.javascript;
 
-import org.mozilla.javascript.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NotAFunctionException;
+import org.mozilla.javascript.PropertyException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 /**
  *
- * @version CVS $Id: ScriptableResult.java,v 1.2 2004/02/23 01:19:45 coliver Exp $
+ * @version CVS $Id: ScriptableResult.java,v 1.3 2004/03/01 03:50:58 antonio Exp $
  */
 public class ScriptableResult extends ScriptableObject {
 

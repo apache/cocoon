@@ -56,7 +56,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -93,7 +99,13 @@ import org.apache.velocity.util.introspection.UberspectImpl;
 import org.apache.velocity.util.introspection.VelMethod;
 import org.apache.velocity.util.introspection.VelPropertyGet;
 import org.apache.velocity.util.introspection.VelPropertySet;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -175,7 +187,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: VelocityGenerator.java,v 1.11 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: VelocityGenerator.java,v 1.12 2004/03/01 03:50:58 antonio Exp $
  */
 public class VelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {

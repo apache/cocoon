@@ -53,12 +53,16 @@ package org.apache.cocoon.components.source.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.excalibur.source.*;
-import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ModifiableSource;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -68,7 +72,7 @@ import org.xml.sax.SAXException;
  * to avoid recoding existing source objects.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonToAvalonSource.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ * @version CVS $Id: CocoonToAvalonSource.java,v 1.3 2004/03/01 03:50:59 antonio Exp $
  */
 public final class CocoonToAvalonSource
     implements Source, XMLizable, Recyclable {

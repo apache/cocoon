@@ -49,6 +49,9 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -56,13 +59,11 @@ import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBu
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 
-import java.util.*;
-
 /**
  * Builds a &lt;map:pipeline&gt;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: PipelineNodeBuilder.java,v 1.2 2003/04/01 21:25:09 sylvain Exp $
+ * @version CVS $Id: PipelineNodeBuilder.java,v 1.3 2004/03/01 03:50:58 antonio Exp $
  */
 
 public class PipelineNodeBuilder

@@ -50,12 +50,17 @@
 */
 package org.apache.cocoon.components.language.programming.java;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+
 import jstyle.JSBeautifier;
 import jstyle.JSFormatter;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
-
-import java.io.*;
 
 /**
  * This class implements <code>CodeFormatter</code> based on
@@ -63,7 +68,7 @@ import java.io.*;
  * beautifier. This implementation is very improvised...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JstyleFormatter.java,v 1.2 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: JstyleFormatter.java,v 1.3 2004/03/01 03:50:57 antonio Exp $
  */
 public class JstyleFormatter extends AbstractLogEnabled implements CodeFormatter {
   /**

@@ -45,15 +45,17 @@
 */
 package org.apache.cocoon.portal.pluto.om.common;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * 
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: UnmodifiableSet.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: UnmodifiableSet.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 public class UnmodifiableSet implements Set, Serializable {
 

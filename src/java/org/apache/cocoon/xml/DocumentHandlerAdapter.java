@@ -50,12 +50,16 @@
 */
 package org.apache.cocoon.xml;
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.AttributesImpl;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import org.xml.sax.AttributeList;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.DocumentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This class is an utility class &quot;adapting&quot; a SAX version 1.0
@@ -68,7 +72,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DocumentHandlerAdapter.java,v 1.1 2003/03/09 00:09:45 pier Exp $
+ * @version CVS $Id: DocumentHandlerAdapter.java,v 1.2 2004/03/01 03:50:59 antonio Exp $
  */
 public class DocumentHandlerAdapter extends AbstractXMLProducer
 implements DocumentHandler {

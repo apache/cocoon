@@ -50,6 +50,28 @@
 */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.lang.reflect.Field;
+import java.sql.CallableStatement;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TreeMap;
+import java.util.Vector;
+
+import javax.xml.transform.OutputKeys;
+
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -74,14 +96,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Field;
-import java.sql.*;
-import java.util.*;
-import javax.xml.transform.OutputKeys;
-
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
@@ -90,7 +104,7 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.13 2003/11/07 09:14:34 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.14 2004/03/01 03:50:57 antonio Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer

@@ -50,8 +50,12 @@
 */
 package org.apache.cocoon.ant;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.cocoon.util.NetUtils;
 
@@ -62,7 +66,7 @@ import org.apache.cocoon.util.NetUtils;
  * over all classes.
  *
  * @author    huber@apache.org
- * @version CVS $Id: UriType.java,v 1.3 2003/11/16 00:52:08 vgritsenko Exp $
+ * @version CVS $Id: UriType.java,v 1.4 2004/03/01 03:50:57 antonio Exp $
  */
 public class UriType {
     private String uri;

@@ -50,22 +50,13 @@
 */
 package org.apache.cocoon.acting;
 
-import oracle.jdbc.OracleResultSet;
-import oracle.sql.BLOB;
-import oracle.sql.CLOB;
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.ImageProperties;
-import org.apache.cocoon.util.ImageUtils;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.SourceResolver;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,12 +65,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import oracle.jdbc.OracleResultSet;
+import oracle.sql.BLOB;
+import oracle.sql.CLOB;
+
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.ImageProperties;
+import org.apache.cocoon.util.ImageUtils;
+
 /**
  * Add a record in a database.  This Action assumes that there is
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: OraAddAction.java,v 1.1 2003/03/09 00:03:03 pier Exp $
+ * @version CVS $Id: OraAddAction.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();

@@ -50,20 +50,25 @@
 */
 package org.apache.cocoon.environment.commandline;
 
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
-import java.util.*;
-
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.7 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.8 2004/03/01 03:50:58 antonio Exp $
  */
 
 /*

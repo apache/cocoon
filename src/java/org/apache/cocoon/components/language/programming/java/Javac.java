@@ -50,22 +50,26 @@
 */
 package org.apache.cocoon.components.language.programming.java;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.components.language.programming.CompilerError;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.log.Hierarchy;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.components.language.programming.CompilerError;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.log.Hierarchy;
+
 /**
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Javac.java,v 1.1 2003/03/09 00:09:00 pier Exp $
+ * @version CVS $Id: Javac.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  * @since 2.0
  */
 
