@@ -19,8 +19,7 @@ import java.util.Iterator;
 /**
  * Interface to be implemented by Widgets which contain other widgets.
  *
- * @author Timothy Larson
- * @version $Id: ContainerWidget.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: ContainerWidget.java,v 1.2 2004/04/12 14:05:09 tim Exp $
  */
 public interface ContainerWidget extends Widget {
     

@@ -18,8 +18,7 @@
   xmlns:xsp="http://apache.org/xsp">
 
   <!--
-    CVS $Id: form_model_gui_success.xsp,v 1.1 2004/03/09 10:33:48 reinhard Exp $
-    Author: Timothy Larson
+    CVS $Id: form_model_gui_success.xsp,v 1.2 2004/04/12 14:05:09 tim Exp $
   -->
 
   <xsp:structure>

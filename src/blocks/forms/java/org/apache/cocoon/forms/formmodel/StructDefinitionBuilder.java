@@ -22,8 +22,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {StructDefinition}s.
  *
- * @author Timothy Larson
- * @version $Id: StructDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: StructDefinitionBuilder.java,v 1.3 2004/04/12 14:05:09 tim Exp $
  */
 public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

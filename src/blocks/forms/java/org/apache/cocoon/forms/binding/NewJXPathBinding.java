@@ -27,8 +27,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * class that contains other widgets.</li>
  * </ol>
  *
- * @author Timothy Larson
- * @version CVS $Id: NewJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: NewJXPathBinding.java,v 1.2 2004/04/12 14:05:08 tim Exp $
  */
 public class NewJXPathBinding extends ComposedJXPathBindingBase {
 

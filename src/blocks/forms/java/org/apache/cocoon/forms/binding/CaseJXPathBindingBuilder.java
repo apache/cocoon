@@ -30,8 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:case&gt;
  * </code></pre>
  *
- * @author Timothy Larson
- * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.2 2004/04/01 13:07:55 mpo Exp $
+ * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.3 2004/04/12 14:05:08 tim Exp $
  */
 public class CaseJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

@@ -28,8 +28,7 @@ import org.xml.sax.SAXException;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @author Timothy Larson
- * @version $Id: Union.java,v 1.2 2004/04/09 16:43:21 mpo Exp $
+ * @version $Id: Union.java,v 1.3 2004/04/12 14:05:09 tim Exp $
  */
 public class Union extends AbstractContainerWidget {
     private static final String ELEMENT = "field";

@@ -20,8 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {NewDefinition}s.
  *
- * @author Timothy Larson
- * @version $Id: NewDefinitionBuilder.java,v 1.1 2004/03/09 10:33:49 reinhard Exp $
+ * @version $Id: NewDefinitionBuilder.java,v 1.2 2004/04/12 14:05:09 tim Exp $
  */
 public class NewDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

@@ -30,8 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:new&gt;
  * </code></pre>
  *
- * @author Timothy Larson
- * @version CVS $Id: NewJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id: NewJXPathBindingBuilder.java,v 1.3 2004/04/12 14:05:08 tim Exp $
  */
 public class NewJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

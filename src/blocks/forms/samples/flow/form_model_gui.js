@@ -15,8 +15,7 @@
 */
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
-// CVS $Id: form_model_gui.js,v 1.2 2004/03/11 02:56:33 joerg Exp $
-// Author: Timothy Larson
+// CVS $Id: form_model_gui.js,v 1.3 2004/04/12 14:05:09 tim Exp $
 
 function form_model_gui(form) {
 
