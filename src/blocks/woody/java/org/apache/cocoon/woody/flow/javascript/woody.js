@@ -49,19 +49,29 @@
 */
 
 defineClass("org.apache.cocoon.woody.flow.javascript.ScriptableWidget");
+defineClass("org.apache.cocoon.woody.flow.javascript.Woody");
+
+Woody.suicide = new Continuation();
 
 function Form(formDef, attrName) {
-    var formMgr = cocoon.componentManager.lookup(Packages.org.apache.cocoon.woody.FormManager.ROLE);
+    var formMgr;
+    var resolver;
+    var src;
     try {
-        var resolver = cocoon.environment;
-        var src = resolver.resolveURI(formDef);
+        formMgr = cocoon.getComponent(Packages.org.apache.cocoon.woody.FormManager.ROLE);
+        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
+        src = resolver.resolveURI(formDef);
         this.form = formMgr.createForm(src);
         this.formWidget = new Widget(this.form);
         this.attrName = attrName;
         this.lastWebContinuation = null;
         this.rootContinuation = null;
+        this.woody = new Woody();
     } finally {
-        cocoon.componentManager.release(formMgr);
+        cocoon.releaseComponent(formMgr);
+        if (src != null)
+            resolver.release(src);
+        cocoon.releaseComponent(resolver);
     }
 }
 
@@ -75,7 +85,7 @@ Form.prototype.start = function(lastWebCont, timeToLive) {
     // clear the current page's violations before showing the previous page.
     // Without this, violations from the current page will
     // incorrectly be displayed on the previous page.
-    if (result instanceof WebContinuation) {
+    if (result instanceof FOM_WebContinuation) {
         return result;
     }
     return result.kont;
@@ -83,8 +93,7 @@ Form.prototype.start = function(lastWebCont, timeToLive) {
 
 Form.prototype._start = function(lastWebCont, timeToLive) {
     var k = new Continuation();
-    var kont = new WebContinuation(cocoon, k, 
-                                   lastWebCont, timeToLive);
+    var kont = this.woody.makeWebContinuation(k, lastWebCont, timeToLive);
     if (this.rootContinuation == null) {
         this.rootContinuation = kont;
     }
@@ -106,7 +115,7 @@ Form.prototype.show = function(uri, validator) {
             // this continuation has been invalidated
             this.dead = true;
             handleInvalidContinuation();
-            suicide();
+            Woody.suicide();
         }
         var thisWebCont = this._show(uri, wk);
         // _show creates a continuation, the invocation of which
@@ -118,7 +127,7 @@ Form.prototype.show = function(uri, validator) {
             suicide();
         }
         var formContext = 
-            new Packages.org.apache.cocoon.woody.FormContext(cocoon.request, 
+            new Packages.org.apache.cocoon.woody.FormContext(this.woody.request,
                                                              java.util.Locale.US);
         cocoon.request.setAttribute(this.attrName, this.form);
         var finished = this.form.process(formContext);
@@ -139,17 +148,15 @@ Form.prototype.show = function(uri, validator) {
 
 Form.prototype._show = function(uri, lastWebCont, timeToLive) {
     var k = new Continuation();
-    var wk = new WebContinuation(cocoon, k, lastWebCont, timeToLive);
+    var wk = this.woody.makeWebContinuation(k, lastWebCont, timeToLive);
     var bizData = this.form;
     if (bizData == undefined) {
         bizData = null;
     }
     this.lastWebContinuation = wk;
     cocoon.request.setAttribute(this.attrName, this.form);
-    cocoon.forwardTo("cocoon://" + 
-                     cocoon.environment.getURIPrefix() + uri,
-                     bizData, wk);
-    suicide();
+    this.woody.forwardTo(uri, bizData, wk);
+    Woody.suicide();
 }
 
 Form.prototype.finish = function() {
