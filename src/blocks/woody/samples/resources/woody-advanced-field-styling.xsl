@@ -6,28 +6,38 @@
                 exclude-result-prefixes="wi">
 
   <!--+
-      | This stylesheet is designed to be imported by 'woody-samples-styling.xsl'.
-      | Uncomment this variable declaration if you need to use it by itself.
-      |
-      |      <xsl:param name="resources-uri">resources</xsl:param>
+      | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
+      | It extends the 'woody-field-styling.xsl' with additional stylings.
+      | The calendar can also be seen as advanced field styling, it's only
+      | separated out of this file because of its much specific stuff.
       +-->
 
-  <!--+
-      | must be called in <head>
-      +-->
-  <xsl:template name="woody-advanced-field-head">
+  <xsl:import href="woody-field-styling.xsl"/>
+  <xsl:include href="woody-calendar-styling.xsl"/>
+  <!-- Location of the resources directory, where JS libs and icons are stored -->
+  <xsl:param name="resources-uri">resources</xsl:param>
+
+  <xsl:template match="head" mode="woody-field">
+    <xsl:apply-imports/>
     <script src="{$resources-uri}/mattkruse-lib/OptionTransfer.js" language="JavaScript" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/selectbox.js" language="JavaScript" type="text/javascript"/>
+    <xsl:apply-templates select="." mode="woody-calendar"/>
   </xsl:template>
 
-  <!--+
-      | must be called in <body> to load help popups, calendar script,
-      | and setup the CSS
+  <xsl:template match="body" mode="woody-field">
+    <xsl:apply-imports/>
+    <xsl:apply-templates select="." mode="woody-calendar"/>
+  </xsl:template>
+
+  <!--+ This template should not be necessary as this stylesheet "inherits"
+      | all templates from 'woody-field-styling.xsl', but without it, it does
+      | not work for me (using Xalan 2.5.1). It's like adding all methods of
+      | a superclass in a subclass and calling everywhere only the super
+      | implementation.
       +-->
-  <xsl:template name="woody-advanced-field-body">
-    <!-- nothing here for now -->
+  <xsl:template match="*">
+    <xsl:apply-imports/>
   </xsl:template>
-
 
   <!--+
       | wi:multivaluefield with list-type='double-listbox' styling

@@ -4,30 +4,23 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-  
+
   <!--+
-      | This stylesheet is designed to be imported by 'woody-samples-styling.xsl'.
-      | Uncomment this variable declaration if you need to use it by itself.
-      |
-      |      <xsl:param name="resources-uri">resources</xsl:param>
+      | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
       +-->
 
-  <!-- must be called in <head>  -->
-  <xsl:template name="woody-field-head">
+  <!-- Location of the resources directory, where JS libs and icons are stored -->
+  <xsl:param name="resources-uri">resources</xsl:param>
+
+  <xsl:template match="head" mode="woody-field">
     <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" language="JavaScript" type="text/javascript"/>
     <script src="{$resources-uri}/woody-lib.js" language="JavaScript" type="text/javascript"/>
+    <link rel="stylesheet" type="text/css" href="{$resources-uri}/woody.css"/>
   </xsl:template>
 
-  <!--+
-      | must be called in <body>
-      +-->
-  <xsl:template name="woody-field-body">
+  <xsl:template match="body" mode="woody-field">
     <xsl:attribute name="onload">woody_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
-    <!--script language="JavaScript">
-      // Register woody startup function
-      document.body.onload = woody_init;
-    </script-->
   </xsl:template>
 
   <!--+
