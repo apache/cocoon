@@ -17,7 +17,7 @@
  * Runtime JavaScript library for Cocoon forms.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: forms-lib.js,v 1.3 2004/05/11 22:44:41 joerg Exp $
+ * @version CVS $Id: forms-lib.js,v 1.4 2004/05/11 22:50:25 joerg Exp $
  */
 
 // Handlers that are to be called in the document's "onload" event
@@ -83,7 +83,7 @@ function forms_getForm(element) {
  * This is required for help popups inside <wi:group> tabs. The reason is that CSS positioning
  * properties ("left" and "top") on a block with a "position: absolute" are actually relative to
  * the nearest ancestor that has a position of "absolute", "relative" or "fixed".
- * See http://www.w3.org/TR/CSS21/visudet.html#containing-block-details �4
+ * See http://www.w3.org/TR/CSS21/visudet.html#containing-block-details $4
  */
 
 function forms_moveInBody(element) {
