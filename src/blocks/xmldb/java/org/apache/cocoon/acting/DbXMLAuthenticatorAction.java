@@ -85,20 +85,18 @@ import java.util.Map;
  *
  * <pre>
  * <root>
- *
  *   <connection>
  *     <driver>org.apache.xindice.client.xmldb.DatabaseImpl</driver>
  *     <base>xmldb:xindice:///db/beta</base>
  *   </connection>
  *
- *   <root name="users>
+ *   <root name="users">
  *      <select element="username" request-param="username" to-session="username"/>
  *      <select element="password" request-param="password" nullable="yes"/>
  *
  *      <select element="role" to-session="role" type="string"/>
  *      <select element="skin" to-session="skin" type="string"/>
  *   </root>
- *
  * </root>
  * </pre>
  *
@@ -122,7 +120,7 @@ import java.util.Map;
  * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @since 2002/02/03
- * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.4 2003/09/05 07:40:21 cziegeler Exp $
+ * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.5 2003/10/29 14:21:14 vgritsenko Exp $
  *
  * based on DatabaseAuthenticatorAction created by Martin Man <Martin.Man@seznam.cz>
  */
