@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.sax;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.xml.XMLConsumer;
 
 /**
@@ -61,9 +60,9 @@ import org.apache.cocoon.xml.XMLConsumer;
  * the serialized data.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLSerializer.java,v 1.1 2003/03/09 00:09:11 pier Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.2 2003/10/27 01:49:54 ghoward Exp $
  */
-public interface XMLSerializer extends XMLConsumer, Component {
+public interface XMLSerializer extends XMLConsumer {
 
     String ROLE = XMLSerializer.class.getName();
     /**
