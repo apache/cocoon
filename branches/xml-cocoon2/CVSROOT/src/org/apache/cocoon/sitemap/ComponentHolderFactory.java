@@ -21,20 +21,20 @@ import org.apache.cocoon.util.ClassUtils;
  * interfaces the passed component implements.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-09 09:30:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-12 16:44:05 $
  */
 public class ComponentHolderFactory {
 
     public static ComponentHolder getComponentHolder (String componentName, Configuration configuration, ComponentManager manager)
     throws Exception {
-        if (ClassUtils.implementsInterface (componentName, Poolable.class.getName())) {
-            return new PoolableComponentHolder (componentName, configuration, manager);
-        } else if (ClassUtils.implementsInterface (componentName, SingleThreaded.class.getName())) {
-            return new DefaultComponentHolder (componentName, configuration, manager);
-        } else if (ClassUtils.implementsInterface (componentName, ThreadSafe.class.getName())) {
+          /* if (ClassUtils.implementsInterface (componentName, Poolable.class.getName())) {
+              return new PoolableComponentHolder (componentName, configuration, manager);
+          } else if (ClassUtils.implementsInterface (componentName, SingleThreaded.class.getName())) {
+              return new DefaultComponentHolder (componentName, configuration, manager);
+          } else */ if (ClassUtils.implementsInterface (componentName, ThreadSafe.class.getName())) {
             return new ThreadSafeComponentHolder (componentName, configuration, manager);
-        } else  {
+          } else  {
             return new DefaultComponentHolder (componentName, configuration, manager);
-        }
+          }
     }
 }

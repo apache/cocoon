@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-06 21:25:27 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-12 16:43:11 $
  */
 
 public interface Constants {
@@ -33,6 +33,9 @@ public interface Constants {
 
     public static final String PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
     public static final String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.XercesParser";
+    public static final String PROCESSOR_PROPERTY = "trax.processor.xslt";
+    public static final String DEFAULT_PROCESSOR = "org.apache.xalan.processor.StylesheetProcessor";
+
 
     public static final String XSP_PREFIX          = "xsp";
     public static final String XSP_URI             = "http://apache.org/xsp";

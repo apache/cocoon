@@ -13,18 +13,23 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Enumeration;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.NamedNodeMap;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.XMLFilterImpl;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+import trax.Processor;
+import trax.Transformer;
+import trax.Templates;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
@@ -42,482 +47,600 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should
- * be decoupled from this context!!! Moreover, this class uses DOM documents
- * (as opposed to Cocoon2's standard SAX events)
+ * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-02 11:07:26 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-12 16:43:15 $
  */
 public abstract class AbstractMarkupLanguage
-  extends AbstractNamedComponent
-  implements MarkupLanguage, Composer
+    extends AbstractNamedComponent
+    implements MarkupLanguage, Composer
 {
-  /**
-   * The supported language table
-   */
-  protected Hashtable languages;
+    /**
+    * The supported language table
+    */
+    protected Hashtable languages;
 
-  /**
-   * The in-memory code-generation logicsheet cache
-   */
-  protected MemoryStore logicsheetCache;
+    /**
+    * The in-memory code-generation logicsheet cache
+    */
+    protected MemoryStore logicsheetCache;
 
-  /**
-   * The markup language's namespace uri
-   */
-  protected String uri;
+    /**
+    * The markup language's namespace uri
+    */
+    protected String uri;
 
-  /**
-   * The markup language's namespace prefix
-   */
-  protected String prefix;
+    /**
+    * The markup language's namespace prefix
+    */
+    protected String prefix;
 
-  /** The component manager */
-  protected ComponentManager manager;
+    /** The component manager */
+    protected ComponentManager manager;
 
-  /**
-   * Set the global component manager.
-   *
-   * @param manager The sitemap-specified component manager
-   */
-  public void setComponentManager(ComponentManager manager) {
-    this.manager = manager;
-  }
+    /**
+    * Set the global component manager.
+    *
+    * @param manager The sitemap-specified component manager
+    */
+    public void setComponentManager(ComponentManager manager) {
+        this.manager = manager;
+    }
 
-  /**
-   * The defualt constructor.
-   */
-  public AbstractMarkupLanguage() throws SAXException, IOException {
-    // Initialize language table
-    this.languages = new Hashtable();
+    /**
+    * The default constructor.
+    */
+    public AbstractMarkupLanguage() throws SAXException, IOException {
+        // Initialize language table
+        this.languages = new Hashtable();
 
-    // Initialize logicsheet cache
-    this.logicsheetCache = new MemoryStore();
-  }
+        // Initialize logicsheet cache
+        this.logicsheetCache = new MemoryStore();
+    }
 
-  /**
-   * Initialize the (required) markup language namespace definition.
-   *
-   * @param params The sitemap-supplied parameters
-   * @exception Exception Not actually thrown
-   */
-  protected void setParameters(Parameters params) throws Exception
-  {
-    this.uri = getRequiredParameter(params, "uri");
-    this.prefix = getRequiredParameter(params, "prefix");
-  }
+    /**
+    * Initialize the (required) markup language namespace definition.
+    *
+    * @param params The sitemap-supplied parameters
+    * @exception Exception Not actually thrown
+    */
+    protected void setParameters(Parameters params) throws Exception
+    {
+        this.uri = getRequiredParameter(params, "uri");
+        this.prefix = getRequiredParameter(params, "prefix");
+    }
 
-  /**
-   * Process additional configuration. Load supported programming language
-   * definitions
-   *
-   * @param conf The language configuration
-   * @exception ConfigurationException If an error occurs loading logichseets
-   */
-  protected void setAdditionalConfiguration(Configuration conf)
-    throws ConfigurationException
-  {
-    try {
-      Enumeration l = conf.getConfigurations("target-language");
-      while (l.hasMoreElements()) {
-        Configuration lc = (Configuration) l.nextElement();
+    /**
+    * Process additional configuration. Load supported programming language
+    * definitions
+    *
+    * @param conf The language configuration
+    * @exception ConfigurationException If an error occurs loading logichseets
+    */
+    protected void setAdditionalConfiguration(Configuration conf)
+        throws ConfigurationException
+    {
+        try {
+            Enumeration l = conf.getConfigurations("target-language");
+            while (l.hasMoreElements()) {
+                Configuration lc = (Configuration) l.nextElement();
 
-        LanguageDescriptor language = new LanguageDescriptor();
-        language.setName(lc.getAttribute("name"));
+                LanguageDescriptor language = new LanguageDescriptor();
+                language.setName(lc.getAttribute("name"));
 
-	      Parameters lcp = Parameters.fromConfiguration(lc);
-        String logicsheetLocation =
-	        getRequiredParameter(lcp, "core-logicsheet");
+                Parameters lcp = Parameters.fromConfiguration(lc);
+                String logicsheetLocation =
+                	        getRequiredParameter(lcp, "core-logicsheet");
 
-        URL logicsheetURL = NetUtils.getURL(logicsheetLocation);
-        String logicsheetName = logicsheetURL.toExternalForm();
-        Logicsheet logicsheet = new Logicsheet();
-        logicsheet.setInputSource(new InputSource(logicsheetURL.openStream()));
-        CachedURL entry = new CachedURL(logicsheetURL, logicsheet);
-        this.logicsheetCache.store(logicsheetName, entry);
-        language.setLogicsheet(logicsheetName);
+                URL logicsheetURL = NetUtils.getURL(logicsheetLocation);
+                String logicsheetName = logicsheetURL.toExternalForm();
+                // FIXME (SSA) should be abstracted
+                Logicsheet logicsheet = new Logicsheet();
+                logicsheet.setInputSource(new InputSource(logicsheetURL.toString()));
+                CachedURL entry = new CachedURL(logicsheetURL, logicsheet);
+                this.logicsheetCache.store(logicsheetName, entry);
+                language.setLogicsheet(logicsheetName);
 
-        Enumeration n = lc.getConfigurations("builtin-logicsheet");
-        while (n.hasMoreElements()) {
-          Configuration nc = (Configuration) n.nextElement();
-	        Parameters ncp = Parameters.fromConfiguration(nc);
+                Enumeration n = lc.getConfigurations("builtin-logicsheet");
+                while (n.hasMoreElements()) {
+                    Configuration nc = (Configuration) n.nextElement();
+                    Parameters ncp = Parameters.fromConfiguration(nc);
 
-          String namedLogicsheetPrefix = getRequiredParameter(ncp, "prefix");
-          String namedLogicsheetUri = getRequiredParameter(ncp, "uri");
-          String namedLogicsheetLocation = getRequiredParameter(ncp, "href");
+                    String namedLogicsheetPrefix = getRequiredParameter(ncp, "prefix");
+                    String namedLogicsheetUri = getRequiredParameter(ncp, "uri");
+                    String namedLogicsheetLocation = getRequiredParameter(ncp, "href");
 
-          // FIXME: This is repetitive; add method for both cases
-          URL namedLogicsheetURL = NetUtils.getURL(namedLogicsheetLocation);
-          String namedLogicsheetName = namedLogicsheetURL.toExternalForm();
-          NamedLogicsheet namedLogicsheet = new NamedLogicsheet();
-          namedLogicsheet.setInputSource(
-            new InputSource(namedLogicsheetURL.openStream())
-          );
-          namedLogicsheet.setPrefix(namedLogicsheetPrefix);
-          namedLogicsheet.setUri(namedLogicsheetUri);
-          CachedURL namedEntry =
-            new CachedURL(namedLogicsheetURL, namedLogicsheet);
-          this.logicsheetCache.store(namedLogicsheetName, namedEntry);
-          language.addNamedLogicsheet(
-            namedLogicsheetPrefix, namedLogicsheetName
-          );
+                    // FIXME: This is repetitive; add method for both cases
+                    URL namedLogicsheetURL = NetUtils.getURL(namedLogicsheetLocation);
+                    String namedLogicsheetName = namedLogicsheetURL.toExternalForm();
+                    NamedLogicsheet namedLogicsheet = new NamedLogicsheet();
+                    namedLogicsheet.setInputSource(
+                        new InputSource(namedLogicsheetURL.toString())
+                    );
+                    namedLogicsheet.setPrefix(namedLogicsheetPrefix);
+                    namedLogicsheet.setUri(namedLogicsheetUri);
+                    CachedURL namedEntry =
+                    new CachedURL(namedLogicsheetURL, namedLogicsheet);
+                    this.logicsheetCache.store(namedLogicsheetName, namedEntry);
+                    language.addNamedLogicsheet(
+                        namedLogicsheetPrefix, namedLogicsheetName
+                    );
+                }
+
+            this.languages.put(language.getName(), language);
+            }
+        } catch (Exception e) {
+            // FIXME (SSA) Better error handling
+            e.printStackTrace();
+            throw new ConfigurationException(e.getMessage(), conf);
+        }
+    }
+
+    /**
+    * Return the source document's encoding. This can be <code>null</code> for
+    * the platform's default encoding. The default implementation returns
+    * <code>null, but derived classes may override it if encoding applies to
+    * their concrete languages. FIXME: There should be a way to get the
+    * XML document's encoding as seen by the parser; unfortunately, this
+    * information is not returned by current DOM or SAX parsers...
+    *
+    * @return The document-specified encoding
+    */
+    public String getEncoding() {
+        return null;
+    }
+
+    /**
+    * Returns a filter that chains on the fly the requested transformers for source
+    * code generation. This method scans the input SAX events for built-in logicsheet
+    * declared as namespace attribute on the root element.
+    *
+    * Derived class should overide this method and the public inner class in
+    * order to add more specif action and to build a more specific transformer
+    * chain.
+    *
+    * @param logicsheetMarkupGenerator the logicsheet markup generator
+    * @param resolver the entity resolver
+    * @return XMLFilter the filter that build on the fly the transformer chain
+    */
+    protected TransformerChainBuilderFilter getTranformerChainBuilder (
+                                LogicsheetCodeGenerator logicsheetMarkupGenerator,
+                                EntityResolver resolver) {
+        return new TransformerChainBuilderFilter(logicsheetMarkupGenerator, resolver);
+    }
+
+    /**
+    * Prepare the input source for logicsheet processing and code generation
+    * with a preprocess filter.
+    * The return <code>XMLFilter</code> object is the first filter on the
+    * transformer chain.
+    *
+    * The default implementation does nothing by returning a identity filter, but
+    * derived classes should (at least) use the passed programming language to
+    * quote <code>Strings</code>
+    *
+    * @param filename The source filename
+    * @param language The target programming language
+    * @return The preprocess filter
+    */
+    protected XMLFilter getPreprocessFilter(
+        String filename, ProgrammingLanguage language
+    )
+    {
+        return new XMLFilterImpl();
+    }
+
+    /**
+    * Add a dependency on an external file to the document for inclusion in
+    * generated code. This is used by <code>AbstractServerPagesGenerator</code>
+    * to populate a list of <code>File</code>'s tested for change on each
+    * invocation; this information, in turn, is used by
+    * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
+    * necessary.
+    *
+    * @param PARAM_NAME Param description
+    * @return the value
+    * @exception EXCEPTION_NAME If an error occurs
+    * @see ServerPages <code>AbstractServerPagesGenerator</code>
+    *      and <code>ServerPagesLoaderImpl</code>
+    */
+    protected abstract void addDependency(String location);
+
+    /**
+    * Generate source code from the input document for the target
+    * <code>ProgrammingLanguage</code>. After preprocessing the input document,
+    * this method applies logicsheets in the following order:
+    * <ul>
+    *   <li>User-defined logicsheets</li>
+    *   <li>Namespace-mapped logicsheets</li>
+    *   <li>Language-specific logicsheet</li>
+    * </ul>
+    *
+    * @param input The input source
+    * @param filename The input document's original filename
+    * @param programmingLanguage The target programming language
+    * @return The generated source code
+    * @exception Exception If an error occurs during code generation
+    */
+    public String generateCode(
+        InputSource input, String filename, ProgrammingLanguage programmingLanguage,
+        EntityResolver resolver
+    ) throws Exception {
+        String languageName = programmingLanguage.getName();
+        LanguageDescriptor language =
+            (LanguageDescriptor) this.languages.get(languageName);
+
+        if (language == null) {
+            throw new IllegalArgumentException(
+                "Unsupported programming language: " + languageName
+            );
         }
 
-        this.languages.put(language.getName(), language);
-      }
-    } catch (Exception e) {
-      throw new ConfigurationException(e.getMessage(), conf);
-    }
-  }
+        // Create a XMLReader
+        XMLReader reader = XMLReaderFactory.createXMLReader();
+        reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 
-  /**
-   * Return the source document's encoding. This can be <code>null</code> for
-   * the platform's default encoding. The default implementation returns
-   * <code>null, but derived classes may override it if encoding applies to
-   * their concrete languages. FIXME: There should be a way to get the
-   * XML document's encoding as seen by the parser; unfortunately, this
-   * information is not returned by current DOM or SAX parsers...
-   *
-   * @param document The input document
-   * @return The document-specified encoding
-   */
-  public String getEncoding(Document document) {
-    return null;
-  }
+        // Get the needed preprocess filter
+        XMLFilter preprocessFilter = this.getPreprocessFilter(filename, programmingLanguage);
+        preprocessFilter.setParent(reader);
 
-  /**
-   * Prepare the document for logicsheet processing and code generation. The
-   * default implementation does nothing, but derived classes should (at least)
-   * use the passed programming language to quote <code>Strings</code>
-   *
-   * @param document The input document
-   * @param filename The input source filename
-   * @param language The target programming language
-   * @return The augmented document
-   */
-  protected Document preprocessDocument(
-    Document document, String filename, ProgrammingLanguage language
-  )
-  {
-    return document;
-  }
+        // Create code generator
+        LogicsheetCodeGenerator codeGenerator = new LogicsheetCodeGenerator();
 
-  /**
-   * Returns a list of logicsheets to be applied to this document for source
-   * code generation.
-   *
-   * @param document The input document
-   * @return An array of logicsheet <i>names</i>
-   */
-  protected abstract String[] getLogicsheets(Document document);
+        // set the transformer chain builder filter
+        TransformerChainBuilderFilter tranBuilder = getTranformerChainBuilder(codeGenerator, resolver);
+        tranBuilder.setLanguageDescriptor(language);
+        tranBuilder.setParent(preprocessFilter);
 
-  /**
-   * Add a dependency on an external file to the document for inclusion in
-   * generated code. This is used by <code>AbstractServerPagesGenerator</code>
-   * to populate a list of <code>File</code>'s tested for change on each
-   * invocation; this information, in turn, is used by
-   * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
-   * necessary.
-   *
-   * @param PARAM_NAME Param description
-   * @return the value
-   * @exception EXCEPTION_NAME If an error occurs
-   * @see ServerPages <code>AbstractServerPagesGenerator</code>
-   *      and <code>ServerPagesLoaderImpl</code>
-   */
-  protected abstract void addDependency(Document document, String location);
-
-  /**
-   * Generate source code from the input document for the target
-   * <code>ProgrammingLanguage</code>. After preprocessing the input document,
-   * this method applies logicsheets in the following order:
-   * <ul>
-   *   <li>User-defined logicsheets</li>
-   *   <li>Namespace-mapped logicsheets</li>
-   *   <li>Language-specific logicsheet</li>
-   * </ul>
-   *
-   * @param document The input document
-   * @param filename The input document's original filename
-   * @param programmingLanguage The target programming language
-   * @return The generated source code
-   * @exception Exception If an error occurs during code generation
-   */
-  public String generateCode(
-    Document document, String filename, ProgrammingLanguage programmingLanguage,
-    EntityResolver resolver
-  ) throws Exception {
-    String languageName = programmingLanguage.getName();
-
-    LanguageDescriptor language =
-      (LanguageDescriptor) this.languages.get(languageName);
-
-    if (language == null) {
-      throw new IllegalArgumentException(
-        "Unsupported programming language: " + languageName
-      );
+        return codeGenerator.generateCode(tranBuilder, input, filename);
     }
 
-    // Preprocess document as needed
-    document = this.preprocessDocument(document, filename, programmingLanguage);
+    /**
+    * Add a logicsheet to the code generator.
+    *
+    * @param codeGenerator The code generator
+    * @param logicsheetLocation Location of the logicsheet to be added
+    * @param document The input document
+    * @exception MalformedURLException If location is invalid
+    * @exception IOException IO Error
+    * @exception SAXException Logicsheet parse error
+    */
+    protected void addLogicsheet(
+        LogicsheetCodeGenerator codeGenerator,
+        String logicsheetLocation,
+        EntityResolver entityResolver
+    ) throws MalformedURLException, IOException, SAXException
+    {
+        String systemId = null;
+        InputSource inputSource = null;
 
-    // Create code generator
-    LogicsheetCodeGenerator codeGenerator = new LogicsheetCodeGenerator(); 
-
-    // Add user-defined logicsheets
-    String[] logicsheetNames = this.getLogicsheets(document);
-    for (int i = 0; i < logicsheetNames.length; i++) {
-      this.addLogicsheet(codeGenerator, logicsheetNames[i], document, resolver);
-    }
-
-    // Add namespace-mapped logicsheets
-    Element root = document.getDocumentElement();
-    NamedNodeMap attrs = root.getAttributes();
-    int attrCount = attrs.getLength();
-    for (int i = 0; i < attrCount; i++) {
-      Attr attr = (Attr) attrs.item(i);
-      String name = attr.getName();
-
-      if (name.startsWith("xmlns:")) {
-        String prefix = name.substring(6);
-        String namedLogicsheetName = language.getNamedLogicsheet(prefix);
-
-        if (namedLogicsheetName != null) {
-          this.addLogicsheet(codeGenerator, namedLogicsheetName, document, resolver);
+        if (logicsheetLocation.indexOf(":/") < 0) { // Relative to Cocoon root
+            inputSource = entityResolver.resolveEntity(null, logicsheetLocation);
+            systemId = inputSource.getSystemId();
+        } else { // Fully resolved URL
+            systemId = logicsheetLocation;
+            inputSource = new InputSource(systemId);
         }
-      }
+
+        URL url = new URL(systemId);
+        String logicsheetName = url.toExternalForm();
+
+        CachedURL entry = (CachedURL) this.logicsheetCache.get(logicsheetName);
+
+        Logicsheet logicsheet = null;
+
+        if (entry == null) {
+            logicsheet = new Logicsheet();
+            logicsheet.setInputSource(inputSource);
+            entry = new CachedURL(url, logicsheet);
+            this.logicsheetCache.store(logicsheetName, entry);
+        }
+
+        logicsheet = entry.getLogicsheet();
+
+        if (entry.hasChanged()) {
+            logicsheet.setInputSource(inputSource);
+        }
+
+        if (entry.isFile()) {
+            this.addDependency(IOUtils.getFullFilename(entry.getFile()));
+        }
+
+        codeGenerator.addLogicsheet(logicsheet);
     }
 
-    // Add language-specific logicsheet (always last!)
-    this.addLogicsheet(codeGenerator, language.getLogicsheet(), document, resolver);
-
-    return codeGenerator.generateCode(document, filename);
-  }
-
-  /**
-   * Add a logicsheet to the code generator.
-   *
-   * @param codeGenerator The code generator
-   * @param logicsheetLocation Location of the logicsheet to be added
-   * @param document The input document
-   * @exception MalformedURLException If location is invalid
-   * @exception IOException IO Error
-   * @exception SAXException Logicsheet parse error
-   */
-  protected void addLogicsheet(
-    LogicsheetCodeGenerator codeGenerator,
-    String logicsheetLocation,
-    Document document,
-    EntityResolver entityResolver
-  ) throws MalformedURLException, IOException, SAXException
-  {
-    String systemId = null;
-    InputSource inputSource = null;
-
-    if (logicsheetLocation.indexOf(":/") < 0) { // Relative to Cocoon root
-      inputSource = entityResolver.resolveEntity(null, logicsheetLocation);
-      systemId = inputSource.getSystemId();
-    } else { // Fully resolved URL
-      systemId = logicsheetLocation;
-      inputSource = new InputSource(systemId);
-    }
-
-    URL url = new URL(systemId);
-    String logicsheetName = url.toExternalForm();
-    CachedURL entry = (CachedURL) this.logicsheetCache.get(logicsheetName);
-
-    Logicsheet logicsheet = null;
-
-    if (entry == null) {
-      logicsheet = new Logicsheet();
-      logicsheet.setInputSource(inputSource);
-      entry = new CachedURL(url, logicsheet);
-      this.logicsheetCache.store(logicsheetName, entry);
-    }
-
-    logicsheet = entry.getLogicsheet();
-
-    if (entry.hasChanged()) {
-      logicsheet.setInputSource(inputSource);
-    }
-
-    if (entry.isFile()) {
-      this.addDependency(document, IOUtils.getFullFilename(entry.getFile()));
-    }
-
-    codeGenerator.addLogicsheet(logicsheet);
-  }
-
-  // Inner classes
-
-  /**
-   * This class holds transient information about a target programming
-   * language.
-   *
-   */
-  protected class LanguageDescriptor {
-    /**
-     * The progamming language name
-     */
-    protected String name;
+//
+// Inner classes
+//
 
     /**
-     * The progamming language core logicsheet
-     */
-    protected String logicsheet;
+    * This class holds transient information about a target programming
+    * language.
+    *
+    */
+    protected class LanguageDescriptor {
+        /**
+         * The progamming language name
+         */
+        protected String name;
 
-    /**
-     * The list of built-in logicsheets defined for this target language
-     */
-    protected Hashtable namedLogicsheets;
+        /**
+         * The progamming language core logicsheet
+         */
+        protected String logicsheet;
 
-    /**
-     * The default constructor
-     */
-    protected LanguageDescriptor() {
-      this.namedLogicsheets = new Hashtable();
-    }
+        /**
+         * The list of built-in logicsheets defined for this target language
+         */
+        protected Hashtable namedLogicsheets;
 
-    /**
-     * Set the programming language's name
-     *
-     * @param name The programming language's name
-     */
-    protected void setName(String name) {
-      this.name = name;
-    }
+        /**
+         * The default constructor
+         */
+        protected LanguageDescriptor() {
+            this.namedLogicsheets = new Hashtable();
+        }
 
-    /**
-     * Return the programming language's name
-     *
-     * @return The programming language's name
-     */
-    protected String getName() {
-      return this.name;
-    }
+        /**
+         * Set the programming language's name
+         *
+         * @param name The programming language's name
+         */
+        protected void setName(String name) {
+            this.name = name;
+        }
 
-    /**
-     * Set the programming language's core logichseet location
-     *
-     * @param logicsheet The programming language's core logichseet location
-     */
-    protected void setLogicsheet(String logicsheet) {
-      this.logicsheet = logicsheet;
-    }
+        /**
+        * Return the programming language's name
+        *
+        * @return The programming language's name
+        */
+        protected String getName() {
+            return this.name;
+        }
 
-    /**
-     * Return the programming language's core logichseet location
-     *
-     * @return The programming language's core logichseet location
-     */
-    protected String getLogicsheet() {
-      return this.logicsheet;
+        /**
+         * Set the programming language's core logichseet location
+         *
+         * @param logicsheet The programming language's core logichseet location
+         */
+        protected void setLogicsheet(String logicsheet) {
+            this.logicsheet = logicsheet;
+        }
+
+        /**
+         * Return the programming language's core logichseet location
+         *
+         * @return The programming language's core logichseet location
+         */
+        protected String getLogicsheet() {
+            return this.logicsheet;
+        }
+
+        /**
+         * Add a namespace-mapped logicsheet to this language
+         *
+         * @param prefix The logichseet's namespace prefix
+         * @param uri The logichseet's namespace uri
+         * @param namedLogicsheet The logichseet's location
+         */
+        protected void addNamedLogicsheet(String prefix, String namedLogicsheet) {
+            this.namedLogicsheets.put(
+                prefix,
+                namedLogicsheet
+            );
+        }
+
+        /**
+         * Return a namespace-mapped logicsheet given its name
+         *
+         * @return The namespace-mapped logicsheet
+         */
+        protected String getNamedLogicsheet(String prefix) {
+            return (String) this.namedLogicsheets.get(prefix);
+        }
     }
 
     /**
-     * Add a namespace-mapped logicsheet to this language
-     *
-     * @param prefix The logichseet's namespace prefix
-     * @param uri The logichseet's namespace uri
-     * @param namedLogicsheet The logichseet's location
-     */
-    protected void addNamedLogicsheet(String prefix, String namedLogicsheet) {
-      this.namedLogicsheets.put(
-        prefix,
-        namedLogicsheet
-      );
+    * This class holds a cached URL entry associated with a logicsheet
+    *
+    */
+    protected class CachedURL {
+        /**
+         * The logicsheet URL
+         */
+        protected URL url;
+        /**
+         * The logicsheet's <code>File</code> if it's actually a file.
+         * This is used to provide last modification information not
+         * otherwise available for URL's in Java :-(
+         */
+        protected File file;
+        /**
+         * The cached logicsheet
+         */
+        protected Logicsheet logicsheet;
+        /**
+         * The las time this logicsheet was changed/loaded
+         */
+        protected long lastModified;
+
+        /**
+         * The constructor.
+         */
+        protected CachedURL(URL url, Logicsheet logicsheet) throws IOException {
+            this.url = url;
+            this.logicsheet = logicsheet;
+
+            if (this.isFile()) {
+                this.file = new File(url.getFile());
+            }
+
+            this.lastModified = (new Date()).getTime();
+        }
+
+        /**
+         * Return this entry's URL
+         *
+         * @return The cached logicsheet's URL
+         */
+        protected URL getURL() {
+            return this.url;
+        }
+
+        protected boolean isFile() {
+            return this.url.getProtocol().equals("file");
+        }
+
+        /**
+         * Return this entry's <code>File</code>
+         *
+         * @return The cached logicsheet's <code>File</code>
+         */
+        protected File getFile() {
+            return this.file;
+        }
+
+        /**
+         * Return this entry's cached logicsheet
+         *
+         * @return The cached logicsheet
+         */
+        protected Logicsheet getLogicsheet() {
+            return this.logicsheet;
+        }
+
+        /**
+         * Assert whether this entry's logicsheet should be reloaded
+         *
+         * @return Whether the cached logicsheet has changed
+         */
+        protected boolean hasChanged() {
+            if (this.file == null) {
+                return false;
+            }
+
+            return this.lastModified < this.file.lastModified();
+        }
     }
 
     /**
-     * Return a namespace-mapped logicsheet given its name
-     *
-     * @return The namespace-mapped logicsheet
-     */
-    protected String getNamedLogicsheet(String prefix) {
-      return (String) this.namedLogicsheets.get(prefix);
+    * a XMLFilter that build the chain of transformers on the fly.
+    * Each time a stylesheet is found, a call to the code generator is done
+    * to add the new transformer at the end of the current transformer chain.
+    *
+    */
+    public class TransformerChainBuilderFilter extends XMLFilterImpl {
+
+        /**
+         * The markup generator
+         */
+        protected LogicsheetCodeGenerator logicsheetMarkupGenerator;
+
+        /**
+         * the language description
+         */
+        protected LanguageDescriptor language;
+
+        /**
+         * the entity resolver
+         */
+        protected EntityResolver resolver;
+
+        private boolean isRootElem;
+
+        private List startPrefixes;
+
+        /**
+        * the constructor depends on the code generator, and the entity resolver
+        *
+        * @param logicsheetMarkupGenerator The code generator
+        * @param resolver
+        */
+        protected TransformerChainBuilderFilter (
+            LogicsheetCodeGenerator logicsheetMarkupGenerator,
+                EntityResolver resolver
+        ) {
+            this.logicsheetMarkupGenerator = logicsheetMarkupGenerator;
+            this.resolver = resolver;
+        }
+
+        /**
+        * This method should be called prior to receiving any SAX event.
+        * Indeed the language information is needed to get the core stylesheet.
+        *
+        * @language the language in used
+        */
+        protected void setLanguageDescriptor(LanguageDescriptor language) {
+            this.language = language;
+        }
+
+
+        /**
+         * @see ContentHandler
+         */
+        public void startDocument () throws SAXException {
+            isRootElem=true;
+            startPrefixes = new ArrayList();
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            if(!isRootElem) {
+                super.startPrefixMapping(prefix, uri);
+            } else {
+                // cache the prefix mapping
+                String[] prefixArray = new String [2];
+                prefixArray[0]= prefix;
+                prefixArray[1]= uri;
+                this.startPrefixes.add(prefixArray);
+            }
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void startElement (
+            String namespaceURI, String localName,
+        	String qName, Attributes atts
+         ) throws SAXException {
+            if(isRootElem) {
+                isRootElem=false;
+                try {
+                    // Add namespace-mapped logicsheets
+                    int prefixesCount = this.startPrefixes.size();
+                    for (int i = 0; i < prefixesCount; i++) {
+                        String[] prefixNamingArray = (String[]) this.startPrefixes.get(i);
+                        String namedLogicsheetName =
+                            this.language.getNamedLogicsheet(prefixNamingArray[0]);
+                        if (namedLogicsheetName != null) {
+                            AbstractMarkupLanguage.this.addLogicsheet(
+                                this.logicsheetMarkupGenerator, namedLogicsheetName, resolver
+                            );
+                        }
+                    }
+                    // Add the language stylesheet (Always the last one)
+                    AbstractMarkupLanguage.this.addLogicsheet(
+                        this.logicsheetMarkupGenerator, this.language.getLogicsheet(), resolver
+                    );
+                } catch (IOException ioe) {
+                    throw new SAXException (ioe);
+                }
+                // All stylesheet have been configured and correctly setup.
+                // Starts firing SAX events, especially the startDocument event,
+                // and the cached prefixNaming.
+                super.startDocument();
+                int prefixesCount = this.startPrefixes.size();
+                for (int i = 0; i < prefixesCount; i++) {
+                    String[] prefixNamingArray = (String[]) this.startPrefixes.get(i);
+                    super.startPrefixMapping(prefixNamingArray[0], prefixNamingArray[1]);
+                }
+            }
+            // Call super method
+            super.startElement(namespaceURI, localName, qName, atts);
+        }
     }
-  }
-
-  /**
-   * This class holds a cached URL entry associated with a logicsheet
-   *
-   */
-  protected class CachedURL {
-    /**
-     * The logicsheet URL
-     */
-    protected URL url;
-    /**
-     * The logicsheet's <code>File</code> if it's actually a file.
-     * This is used to provide last modification information not
-     * otherwise available for URL's in Java :-(
-     */
-    protected File file;
-    /**
-     * The cached logicsheet 
-     */
-    protected Logicsheet logicsheet;
-    /**
-     * The las time this logicsheet was changed/loaded
-     */
-    protected long lastModified;
-
-    /**
-     * The constructor.
-     */
-    protected CachedURL(URL url, Logicsheet logicsheet) throws IOException {
-      this.url = url;
-      this.logicsheet = logicsheet;
-
-      if (this.isFile()) {
-        this.file = new File(url.getFile());
-      }
-
-      this.lastModified = (new Date()).getTime();
-    }
-
-    /**
-     * Return this entry's URL
-     *
-     * @return The cached logicsheet's URL
-     */
-    protected URL getURL() {
-      return this.url;
-    }
-
-    protected boolean isFile() {
-      return this.url.getProtocol().equals("file");
-    }
-
-    /**
-     * Return this entry's <code>File</code>
-     *
-     * @return The cached logicsheet's <code>File</code>
-     */
-    protected File getFile() {
-      return this.file;
-    }
-
-    /**
-     * Return this entry's cached logicsheet
-     *
-     * @return The cached logicsheet
-     */
-    protected Logicsheet getLogicsheet() {
-      return this.logicsheet;
-    }
-
-    /**
-     * Assert whether this entry's logicsheet should be reloaded
-     *
-     * @return Whether the cached logicsheet has changed
-     */
-    protected boolean hasChanged() {
-      if (this.file == null) {
-        return false;
-      }
-
-      return this.lastModified < this.file.lastModified();
-    }
-  }
 }

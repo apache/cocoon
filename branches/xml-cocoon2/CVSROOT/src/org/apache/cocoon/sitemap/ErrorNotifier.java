@@ -19,16 +19,18 @@ import org.apache.cocoon.Notification;
 
 import org.apache.cocoon.generation.ComposerGenerator;
 
+import org.apache.avalon.ThreadSafe;
+
 /**
  * Generates an XML representation of the current notification.
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @created 31 July 2000
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-29 01:05:18 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-12 16:44:06 $
  */
  
-public class ErrorNotifier extends ComposerGenerator {
+public class ErrorNotifier extends ComposerGenerator implements ThreadSafe {
 
     /**
      * The <code>Notification</code> to report.

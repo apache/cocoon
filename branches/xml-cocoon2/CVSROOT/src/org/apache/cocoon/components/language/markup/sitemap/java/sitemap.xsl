@@ -70,7 +70,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.46 $ $Date: 2000-10-09 06:43:57 $
+     * @version CVS $Revision: 1.1.2.47 $ $Date: 2000-10-12 16:43:45 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -412,7 +412,7 @@
             List list;
             Parameters param;
             pipeline.setGenerator (generator_error_handler, e.getMessage(), emptyParam);
-            ErrorNotifier eg = (ErrorNotifier) pipeline.getGenerator();
+            ErrorNotifier eg = (ErrorNotifier)pipeline.getGenerator().get();
             eg.setException (e);
             <xsl:apply-templates select="./map:handle-errors/*"/>
             return false;

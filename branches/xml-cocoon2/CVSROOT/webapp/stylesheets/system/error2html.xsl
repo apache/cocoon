@@ -2,13 +2,13 @@
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
- xmlns:err="http://apache.org/cocoon/2.0/error">
+ xmlns:error="http://apache.org/cocoon/2.0/error">
 
-<xsl:template match="notify">
+<xsl:template match="error:notify">
  <html>
   <head>
    <title>
-    <xsl:value-of select="@type"/>:<xsl:value-of select="title"/>
+    <xsl:value-of select="@type"/>:<xsl:value-of select="error:title"/>
    </title>
   </head>
   <body bgcolor="#ffffff">
@@ -17,7 +17,7 @@
      <tr>
       <td bgcolor="#0086b2" colspan="2">
        <font color="#ffffff" face="arial,helvetica,sanserif" size="+2">
-        <xsl:value-of select="title"/>
+        <xsl:value-of select="error:title"/>
        </font>
       </td>
      </tr>
@@ -29,7 +29,7 @@
        </font>
       </td>
       <td bgcolor="#ffffff" >
-       <xsl:apply-templates select="message"/>
+       <xsl:apply-templates select="error:message"/>
       </td>
      </tr>
 
@@ -56,12 +56,12 @@
       </td>
       <td bgcolor="#ffffff">
        <font face="arial,helvetica,sanserif">
-        <xsl:value-of select="source"/>
+        <xsl:value-of select="error:source"/>
        </font>
       </td>
      </tr>
 
-     <xsl:apply-templates select="description"/>
+     <xsl:apply-templates select="error:description"/>
 
      <tr>
       <td bgcolor="#0086b2" valign="top" colspan="2">
@@ -69,7 +69,7 @@
       </td>
      </tr>
 
-     <xsl:apply-templates select="extra"/>
+     <xsl:apply-templates select="error:extra"/>
 
     </tbody>
    </table>
@@ -77,7 +77,7 @@
  </html>
 </xsl:template>
 
- <xsl:template match="description">
+ <xsl:template match="error:description">
   <tr>
    <td bgcolor="#0086b2" valign="top">
     <font color="#ffffff" face="arial,helvetica,sanserif">description</font>
@@ -90,13 +90,13 @@
   </tr>
  </xsl:template>
 
- <xsl:template match="message">
+ <xsl:template match="error:message">
   <font face="arial,helvetica,sanserif">
    <xsl:value-of select="."/>
   </font>
  </xsl:template>
 
- <xsl:template match="extra">
+ <xsl:template match="error:extra">
   <tr>
    <td bgcolor="#0086b2" valign="top">
     <font color="#ffffff" face="arial,helvetica,sanserif">
@@ -110,7 +110,4 @@
    </td>
   </tr>
  </xsl:template>
-
- <xsl:template match="*"/>
-
 </xsl:stylesheet>

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-09-22 20:27:29 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-12 16:43:13 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -126,7 +126,7 @@ public class ProgramGeneratorImpl
     if (programmingLanguage instanceof Composer) {
         ((Composer) programmingLanguage).setComponentManager(this.manager);
     }
-    
+
     // Create filesystem store
     FilesystemStore repository = new FilesystemStore(this.workDir);
 
@@ -142,7 +142,7 @@ public class ProgramGeneratorImpl
     synchronized(filename.intern()) {
       // Attempt to load program object from cache
       program = this.cache.get(filename);
-  
+
       try {
         if (program == null) {
           /*
@@ -152,7 +152,7 @@ public class ProgramGeneratorImpl
           program = programmingLanguage.load(
             normalizedName, this.workDir, null
           );
-  
+
           // Store loaded program in cache
           this.cache.store(filename, program);
         }
@@ -160,7 +160,7 @@ public class ProgramGeneratorImpl
         // Instantiate program
         programInstance = programmingLanguage.instantiate(program);
       } catch (LanguageException e) { }
-      
+
       /*
          FIXME: It's the program (not the instance) that must
          be queried for changes!!!
@@ -176,31 +176,30 @@ public class ProgramGeneratorImpl
         programmingLanguage.unload(
           program, normalizedName, this.workDir
         );
-  
+
         // Invalidate previous program/instance pair
         program = null;
         programInstance = null;
       }
-  
+
       if (program == null) {
         // Generate code
-        Document document =
-          DOMUtils.DOMParse(new InputSource(new FileReader(file)));
-        String encoding = markupLanguage.getEncoding(document);
         String code = markupLanguage.generateCode(
-          document, normalizedName, programmingLanguage, resolver
+          new InputSource(new FileReader(file)), normalizedName, programmingLanguage, resolver
         );
-  
+
+        String encoding = markupLanguage.getEncoding();
+
         // Format source code if applicable
         CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
         if (codeFormatter != null) {
           code = codeFormatter.format(code, encoding);
         }
-  
+
         // Store generated code
         String sourceFilename = filename + "." + sourceExtension;
         repository.store(sourceFilename, code);
-  
+
         // Verify source file generation was successful
         File sourceFile = (File) repository.get(sourceFilename);
         if (sourceFile == null) {
@@ -208,7 +207,7 @@ public class ProgramGeneratorImpl
             "Error creating source file: " + sourceFilename
           );
         }
-  
+
         // [Compile]/Load generated program
         program = programmingLanguage.load(
           normalizedName, this.workDir, encoding

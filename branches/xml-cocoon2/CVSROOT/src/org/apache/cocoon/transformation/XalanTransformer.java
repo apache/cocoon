@@ -10,6 +10,7 @@ package org.apache.cocoon.transformation;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Hashtable;
 import java.text.StringCharacterIterator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,22 +28,19 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.DocumentHandlerAdapter;
 import org.apache.cocoon.xml.DocumentHandlerWrapper;
 
-import org.apache.xalan.xslt.StylesheetRoot;
-import org.apache.xalan.xslt.XSLTInputSource;
-import org.apache.xalan.xslt.XSLTProcessor;
-import org.apache.xalan.xslt.XSLTProcessorFactory;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+import org.xml.sax.XMLReader;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-08 21:09:53 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-12 16:44:08 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer, Poolable {
@@ -50,8 +48,32 @@ implements Transformer, Composer, Poolable {
     /** The store service instance */
     private Store store = null;
 
-    /** The XALAN XSLTProcessor */
-    private XSLTProcessor processor = null;
+    /** The XALAN Transformer */
+	trax.Transformer transformer = null;
+
+    /** Hash table for Templates */
+    private static Hashtable templatesCache = new Hashtable();
+
+    private static trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
+      throws SAXException, ProcessingException, IOException
+    {
+        trax.Templates templates = (trax.Templates)templatesCache.get(xsluri);
+        if(templates == null)
+        {
+    	    trax.Processor processor = 
+                org.apache.cocoon.util.DOMUtils.getXSLTProcessor();
+    	    XMLReader reader =
+        	    XMLReaderFactory.createXMLReader();
+            reader.setFeature("http://xml.org/sax/features/namespaces", true);
+    	    trax.TemplatesBuilder templatesBuilder =
+        	    processor.getTemplatesBuilder();
+    	    reader.setContentHandler (templatesBuilder);
+    	    reader.parse(resolver.resolveEntity(null,xsluri));
+    	    templates = templatesBuilder.getTemplates();
+            templatesCache.put(xsluri,templates);
+        }
+        return templates.newTransformer();
+    }
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -70,7 +92,7 @@ implements Transformer, Composer, Poolable {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
+        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);        
 
         // Check the stylesheet uri
         String xsluri = src;
@@ -78,27 +100,24 @@ implements Transformer, Composer, Poolable {
             throw new ProcessingException("Stylesheet URI can't be null");
         }
 
-        // Load the stylesheet
-        XSLTProcessor loaderprocessor = XSLTProcessorFactory.getProcessor();
-        InputSource xslsrc = resolver.resolveEntity(null,xsluri);
-        XSLTInputSource style = new XSLTInputSource(xslsrc);
-        StylesheetRoot stylesheet = loaderprocessor.processStylesheet(style);
+        /** get a transformer */
+    	transformer = getTransformer(resolver,xsluri);
 
-        // Create the processor and set it as this documenthandler
-        this.processor = XSLTProcessorFactory.getProcessor();
-        this.processor.setStylesheet(stylesheet);
         if (request != null) {
             Enumeration parameters = request.getParameterNames();
             while (parameters.hasMoreElements()) {
                 String name = (String) parameters.nextElement();
                 if (isValidXSLTParameterName(name)) {
                     String value = request.getParameter(name);
-                    processor.setStylesheetParam(name, this.processor.createXString(value));
+                    transformer.setParameter(name, null /* namespace */,value);
                 }
             }
         }
 
-        this.setDocumentHandler(this.processor);
+        ContentHandler chandler = transformer.getInputContentHandler();
+        this.setDocumentHandler(new DocumentHandlerAdapter(chandler));
+        if(chandler instanceof org.xml.sax.ext.LexicalHandler)
+            this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)chandler);
     }
 
     /**
@@ -118,7 +137,7 @@ implements Transformer, Composer, Poolable {
      * accessing the protected <code>super.contentHandler</code> field.
      */
     public void setContentHandler(ContentHandler content) {
-        this.processor.setDocumentHandler(new DocumentHandlerAdapter(content));
+        this.transformer.setContentHandler(content);
     }
 
     /**

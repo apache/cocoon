@@ -7,24 +7,26 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup;
 
-import org.w3c.dom.Document;
+import org.xml.sax.XMLReader;
+import org.xml.sax.InputSource;
 
 /**
  * This interfaces defines the functionality of a source code generator
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:28 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:43:16 $
  */
 public interface MarkupCodeGenerator {
-  /**
-   * Generate source code from the input document. Filename information may be
-   * needed by certain code-generation approaches and programming languages
-   *
-   * @param input The input document
-   * @param filename The input source original filename
-   * @return The generated source code
-   * @exception Exception If an error occurs during code generation
-   */
-  public String generateCode(Document document, String filename)
-    throws Exception;
+    /**
+    * Generate source code from the input reader. Filename information may be
+    * needed by certain code-generation approaches and programming languages
+    *
+    * @param reader The input reader
+    * @param input The input source
+    * @param filename The input source original filename
+    * @return The generated source code
+    * @exception Exception If an error occurs during code generation
+    */
+    public String generateCode(XMLReader reader, InputSource input, String filename)
+        throws Exception;
 }

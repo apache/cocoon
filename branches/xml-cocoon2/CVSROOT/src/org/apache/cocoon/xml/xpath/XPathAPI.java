@@ -14,12 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import org.apache.xalan.xpath.XPathSupport;
-import org.apache.xalan.xpath.XPath;
-import org.apache.xalan.xpath.XPathProcessorImpl;
-import org.apache.xalan.xpath.xml.XMLParserLiaisonDefault;
-import org.apache.xalan.xpath.xml.PrefixResolverDefault;
-import org.apache.xalan.xpath.XObject;
+import org.apache.xpath.objects.XObject;
 
 /**
  * The methods in this class are convenience methods into the
@@ -51,7 +46,7 @@ public class XPathAPI {
   public static Node selectSingleNode(Node contextNode, String str)
     throws SAXException
   {
-    return selectSingleNode(contextNode, str, contextNode);
+    return org.apache.xpath.XPathAPI.selectSingleNode(contextNode, str);
   }
 
   /**
@@ -66,11 +61,7 @@ public class XPathAPI {
   public static Node selectSingleNode(Node contextNode, String str, Node namespaceNode)
     throws SAXException
   {
-    // Have the XObject return its result as a NodeSet.
-    NodeList nl = selectNodeList(contextNode, str, namespaceNode);
-
-    // Return the first node, or null
-    return (nl.getLength() > 0) ? nl.item(0) : null;
+    return org.apache.xpath.XPathAPI.selectSingleNode(contextNode, str, namespaceNode);
   }
 
  /**
@@ -84,7 +75,7 @@ public class XPathAPI {
   public static NodeList selectNodeList(Node contextNode, String str)
     throws SAXException
   {
-    return selectNodeList(contextNode, str, contextNode);
+    return org.apache.xpath.XPathAPI.selectNodeList(contextNode, str);
   }
 
  /**
@@ -99,12 +90,7 @@ public class XPathAPI {
   public static NodeList selectNodeList(Node contextNode, String str, Node namespaceNode)
     throws SAXException
   {
-    // Execute the XPath, and have it return the result
-    XObject list = eval(contextNode, str, namespaceNode);
-
-    // Have the XObject return its result as a NodeSet.
-    return list.nodeset();
-
+    return org.apache.xpath.XPathAPI.selectNodeList(contextNode, str, namespaceNode);
   }
 
  /**
@@ -124,7 +110,7 @@ public class XPathAPI {
   public static XObject eval(Node contextNode, String str)
     throws SAXException
   {
-    return eval(contextNode, str, contextNode);
+    return org.apache.xpath.XPathAPI.eval(contextNode, str);
   }
 
  /**
@@ -148,29 +134,6 @@ public class XPathAPI {
   public static XObject eval(Node contextNode, String str, Node namespaceNode)
     throws SAXException
   {
-    // Since we don't have a XML Parser involved here, install some default support
-    // for things like namespaces, etc.
-    // (Changed from: XPathSupportDefault xpathSupport = new XPathSupportDefault();
-    //    because XPathSupportDefault is weak in a number of areas... perhaps
-    //    XPathSupportDefault should be done away with.)
-    XPathSupport xpathSupport = new XMLParserLiaisonDefault();
-
-    // Create an object to resolve namespace prefixes.
-    // XPath namespaces are resolved from the input context node's document element
-    // if it is a root node, or else the current context node (for lack of a better
-    // resolution space, given the simplicity of this sample code).
-    PrefixResolverDefault prefixResolver = new PrefixResolverDefault((contextNode.getNodeType() == Node.DOCUMENT_NODE)
-                                                         ? ((Document)contextNode).getDocumentElement() :
-                                                           contextNode);
-
-    // Create the XPath object.
-    XPath xpath = new XPath();
-
-    // Create a XPath parser.
-    XPathProcessorImpl parser = new XPathProcessorImpl(xpathSupport);
-    parser.initXPath(xpath, str, prefixResolver);
-
-    // Execute the XPath, and have it return the result
-    return xpath.execute(xpathSupport, contextNode, prefixResolver);
+    return org.apache.xpath.XPathAPI.eval(contextNode, str, namespaceNode);
   }
 }

@@ -24,16 +24,20 @@ import org.xml.sax.SAXException;
 import java.net.MalformedURLException;
 import java.util.NoSuchElementException;
 
-/* Start Xalan/Xerces kludge */
 import org.w3c.dom.*;
-import org.apache.xerces.dom.DocumentImpl;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException; 
 import org.apache.xerces.parsers.DOMParser;
-import org.apache.xalan.xslt.XSLTProcessor;
-import org.apache.xalan.xslt.XSLTInputSource;
-import org.apache.xalan.xslt.XSLTResultTarget;
-import org.apache.xalan.xslt.XSLTProcessorFactory;
-import org.apache.xalan.xpath.xml.XMLParserLiaisonDefault;
-/* End Xalan/Xerces kludge */
+
+import trax.Processor;
+import trax.Result;
+import trax.Transformer;
+import trax.Templates;
+
+import serialize.OutputFormat;
+import org.apache.xalan.templates.StylesheetRoot;
+import org.apache.xalan.templates.Stylesheet;
 
 /**
  * Collection of utility methods for DOM manipulation.
@@ -42,23 +46,75 @@ import org.apache.xalan.xpath.xml.XMLParserLiaisonDefault;
  * add (needed!) DOM support.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:42 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:44:09 $
  */
 public class DOMUtils {
-  // *** Start Xalan/Xerces kludge ***
+
+  /** reuse the trax.Processor instance */
+  private static trax.Processor traxProcessor = null;
+
+  /** reuse the DocumentBuilder instance */
+  private static DocumentBuilder docBuilder = null;
 
   /**
-   * Static stylesheet processor with an augmented default liaison capable
-   * of creating empty documents
+   * Return a trax.Processor which can be used to process a style sheet.
+   *
+   * @return The Processor instance.
    */
-  private static XSLTProcessor xsltProcessor =
-      XSLTProcessorFactory.getProcessor(
-        new XMLParserLiaisonDefault() {
-          public Document createDocument() {
-            return new DocumentImpl();
-          }
-	}
-      );
+  public static trax.Processor getXSLTProcessor() 
+    throws trax.ProcessorFactoryException
+  {
+    if(traxProcessor == null)
+      traxProcessor = Processor.newInstance("xslt");
+	return traxProcessor;
+  }
+
+  /**
+   * Return a DocumentBuilder which can be used to parse a document.
+   *
+   * @return The DocumentBuilder instance.
+   */
+  private static DocumentBuilder getDocumentBuilder() 
+    throws javax.xml.parsers.ParserConfigurationException
+  {
+    if(docBuilder == null)
+    {
+      DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
+      dfactory.setNamespaceAware(true);
+      docBuilder = dfactory.newDocumentBuilder();
+    }
+	return docBuilder;
+  }
+
+
+  /**
+   * Parse an input source returning a Transformer. <code>Transformer</code>
+   *
+   * @param inputSource The input source
+   * @return A Transformer <code>Document</code>
+   * @exception IOException IO Error
+   * @exception SAXException Parse Error
+   * @exception ParserConfigurationException Parser Configuration Error
+   */
+  public static Templates getTemplates(InputSource inputSource)
+    throws SAXException, IOException, ParserConfigurationException
+  {
+    Processor processor = getXSLTProcessor();
+    if(processor.getFeature("http://xml.org/trax/features/dom/input"))
+    {
+      try {
+        return processor.process(inputSource);
+      } catch (SAXException e){
+        e.printStackTrace();
+        throw(e);
+      } catch (IOException e){
+        e.printStackTrace();
+        throw(e);
+      }
+    } else {
+      throw new org.xml.sax.SAXNotSupportedException("DOM node processing not supported!");
+    }
+  }
 
   /**
    * Parse an input source returning a DOM. <code>Document</code>
@@ -71,35 +127,46 @@ public class DOMUtils {
   public static Document DOMParse(InputSource inputSource)
     throws IOException, SAXException
   {
-    DOMParser parser = new DOMParser();
-    parser.parse(inputSource);
-
-    return parser.getDocument();
+    try {
+      return getDocumentBuilder().parse(inputSource);
+    } catch (javax.xml.parsers.ParserConfigurationException e) {
+      e.printStackTrace();        
+      throw new org.xml.sax.SAXNotSupportedException("caught javax.xml.parsers.ParserConfigurationException!!!" + e);
+    } catch (IOException e){
+      e.printStackTrace();
+      throw(e);
+    } catch (SAXException e){
+      e.printStackTrace();
+      throw(e);
+    }
   }
 
   /**
    * Apply a stylesheet to a given document
    *
    * @param input The input document
-   * @param stylehseet The stylesheet document
+   * @param transformer The stylesheet document
    * @return The transformed document
    * @exception SAXException SAX Error
    */
-  public static Document transformDocument(Document input, Document stylesheet)
-    throws SAXException
+  public static Document transformDocument(Document input, Transformer transformer)
+    throws SAXException, ParserConfigurationException
   {
-    Document output = new DocumentImpl();
+    // Use an implementation of the JAVA API for XML Parsing 1.0 to
+    // create a DOM Document node to contain the result.
+    Document outNode = getDocumentBuilder().newDocument();
 
-    xsltProcessor.process(
-      new XSLTInputSource(input),
-      new XSLTInputSource(stylesheet),
-      new XSLTResultTarget(output)
-    );
-
-    return output;
+    // Perform the transformation, placing the output in the DOM
+    // Document Node.
+    try 
+    {
+      transformer.transformNode(input, new Result(outNode));
+    } catch (SAXException e){
+      e.printStackTrace();
+      throw(e);
+    }    
+    return outNode;
   }
-
-  // *** End Xalan/Xerces kludge ***
 
   /**
    * This method returns an hashtable of pseudo attributes found in the first
@@ -144,7 +211,53 @@ public class DOMUtils {
     }
   }
 
-
+  /**
+   * Return a list of all namespace-declaring attributes in the element.
+   * This method returns both prefix-mapped namespaces and the optional
+   * "unnamed" uri.
+   *
+   * @param Templates The compiled stylesheet
+   * @return A (possibly empty) vector containing all namespace declarations
+   *         as a <code>String</code> array of 2 elements (attribue name, uri)
+   */
+  public static Vector getNamespaces(trax.Templates templates) 
+  {
+    Vector vector = new Vector();
+    // FIXME: Need to figure out how to get the namespaces from Templates.
+    //        The following code throws an exception. 
+    /*
+    try 
+    {
+        StylesheetRoot stylesheet = (StylesheetRoot)templates;
+        int n = stylesheet.getGlobalImportCount();
+        for(int j = 0; j < n; j++)
+        {
+          Stylesheet imported = stylesheet.getGlobalImport(j);
+          Element element = imported.getDocumentElement();
+          NamedNodeMap map = element.getAttributes();
+          int attrCount = map.getLength();
+          for (int i = 0; i < attrCount; i++) 
+          {
+            Attr attr = (Attr) map.item(i);
+            String attrName = attr.getName();
+            if (
+             !attrName.equals("xmlns:xsl") &&
+                 (attrName.equals("xmlns") || attrName.startsWith("xmlns:"))
+            ) {
+              String[] pair = new String[2];
+              pair[0] = attrName;
+              pair[1] = attr.getValue();
+              vector.addElement(pair);
+            }
+          }  
+        }
+    } catch (Exception e){
+        //e.printStackTrace();
+    }
+    */
+    return vector;
+  }
+  
   /**
    * Return a list of all namespace-declaring attributes in the element.
    * This method returns both prefix-mapped namespaces and the optional
@@ -154,7 +267,7 @@ public class DOMUtils {
    * @return A (possibly empty) vector containing all namespace declarations
    *         as a <code>String</code> array of 2 elements (attribue name, uri)
    */
-  public static Vector namespaces(Element element) {
+  public static Vector getNamespaces(Element element) {
    Vector vector = new Vector();
    NamedNodeMap map = element.getAttributes();
    int attrCount = map.getLength();
@@ -162,7 +275,7 @@ public class DOMUtils {
      Attr attr = (Attr) map.item(i);
      String attrName = attr.getName();
      if (
-	  !attrName.equals("xmlns:xsl") &&
+      !attrName.equals("xmlns:xsl") &&
           (attrName.equals("xmlns") || attrName.startsWith("xmlns:"))
      ) {
        String[] pair = new String[2];

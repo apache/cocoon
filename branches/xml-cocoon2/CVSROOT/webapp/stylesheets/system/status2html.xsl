@@ -4,7 +4,7 @@
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:status="http://apache.org/cocoon/2.0/status">
 
-  <xsl:template match="statusinfo">
+  <xsl:template match="status:statusinfo">
     <html>
       <head>
         <title>Cocoon2 status [<xsl:value-of select="@host"/>]</title>
@@ -44,7 +44,7 @@
     </html>
   </xsl:template>
 
-  <xsl:template match="group">
+  <xsl:template match="status:group">
    <table bgcolor="#000000" noshade="noshade" border="0" cellspacing="2" cellpadding="6" width="100%">
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left" colspan="2">
@@ -71,7 +71,7 @@
 
   </xsl:template>
 
-  <xsl:template match="value">
+  <xsl:template match="status:value">
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left">
        <FONT face="arial,helvetica,sanserif" color="#ffffff">

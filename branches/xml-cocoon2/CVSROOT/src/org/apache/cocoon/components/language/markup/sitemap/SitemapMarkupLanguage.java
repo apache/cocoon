@@ -9,18 +9,22 @@ package org.apache.cocoon.components.language.markup.sitemap;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.ProcessingInstruction;
+import org.xml.sax.XMLReader;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.XMLFilterImpl;
+import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.cocoon.util.DOMUtils;
-import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
+import org.apache.cocoon.components.language.markup.*;
+import org.apache.cocoon.components.language.markup.sitemap.*;
+
 
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
@@ -33,226 +37,382 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:28 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-12 16:43:42 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
-  /**
-   * The default constructor.
-   */
-  public SitemapMarkupLanguage() throws SAXException, IOException {
-    super();
-  }
 
-  /**
-   * Return the Sitemap language name: <i>map</i> :-)
-   *
-   * @return The <i>map</i> constant
-   */
-  public String getName() {
-    return "map";
-  }
+    /**
+    * the dependencies' list
+    */
+    private Set dependencies;
 
-  /**
-   * Return the document-declared encoding or <code>null</code> if it's the
-   * platform's default encoding
-   *
-   * @param document The input document
-   * @return The document-declared encoding
-   */
-  public String getEncoding(Document document) {
-    String encoding = document.getDocumentElement().getAttribute("encoding");
-
-    if (encoding.length() > 0) {
-      return encoding;
+    /**
+    * The default constructor.
+    */
+    public SitemapMarkupLanguage() throws SAXException, IOException {
+        super();
+        dependencies = new HashSet();
     }
 
-    return null;
-  }
+    /**
+    * Return the Sitemap language name: <i>map</i> :-)
+    *
+    * @return The <i>map</i> constant
+    */
+    public String getName() {
+        return "map";
+    }
 
-  /**
-   * Prepare the document for logicsheet processing and code generation. This
-   * method sets the base filename, file path and creation date as root element
-   * attibutes and encodes text nodes as strings.
-   *
-   * @param document The input document
-   * @param filename The input source filename
-   * @param language The target programming language
-   * @return The augmented document
-   */
-  protected Document preprocessDocument(
-    Document document, String filename, ProgrammingLanguage language
-  )
-  {
-    // Store path and file name
-    int pos = filename.lastIndexOf(File.separatorChar);
-    String name = filename.substring(pos + 1);
-    String path = filename.substring(0, pos).replace(File.separatorChar, '/');
+    /**
+    * FIXME (SSA) : See interface. For now returns null.
+    *
+    * Return the document-declared encoding or <code>null</code> if it's the
+    * platform's default encoding
+    *
+    * @return The document-declared encoding
+    */
+    public String getEncoding() {
+        return null;
+    }
 
-    Element root = document.getDocumentElement();
+    /**
+    * Prepare the input source for logicsheet processing and code generation
+    * with a preprocess filter.
+    * The return <code>XMLFilter</code> object is the first filter on the
+    * transformer chain.
+    *
+    * The Sitemap preprocess filter adds information on the root element such as
+    * creation-date, file-name and file-path, plus it use the the passed
+    * programming language to quote <code>Strings</code> on PCDATA node.
+    *
+    * @param filename The source filename
+    * @param language The target programming language
+    * @return The preprocess filter
+    *
+    * @see SitemapMarkupLanguage.PreProcessFilter
+    *
+    */
+    protected XMLFilter getPreprocessFilter( String filename, ProgrammingLanguage language  )
+    {
+        return new PreProcessFilter(filename, language);
+    }
 
-    root.setAttribute("file-name", name);
-    root.setAttribute("file-path", path);
-    root.setAttribute("creation-date", String.valueOf(new Date().getTime()));
+    /**
+    * Add a dependency on an external file to the document for inclusion in
+    * generated code. This is used by <code>AbstractServerPagesGenerator</code>
+    * to populate a list of <code>File</code>'s tested for change on each
+    * invocation; this information, in turn, is used by
+    * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
+    * necessary.
+    *
+    * @param location The file path of the dependent file
+    * @see ServerPages <code>AbstractServerPagesGenerator</code>
+    *      and <code>ServerPagesLoaderImpl</code>
+    */
+    protected void addDependency(String location) {
+        dependencies.add(location);
+    }
 
-    this.quoteStrings(document, language);
 
-    return document;
-  }
+    /**
+    * Returns a filter that chain on the fly the requested transformers
+    * for source code generation. This method scans the input SAX events for
+    * &lt;?xml-logicsheet?&gt; processing instructions and top-level
+    * &lt;map:logicsheet&gt; elements. Logicsheet declarations are removed from
+    * the input document.
+    *
+    * @param logicsheetMarkupGenerator the logicsheet markup generator
+    * @param language the language descriptor
+    * @param resolver the entity resolver
+    * @return XMLFilter the filter that build on the fly the transformer chain
+    */
+    protected TransformerChainBuilderFilter getTranformerChainBuilder (
+        LogicsheetCodeGenerator logicsheetMarkupGenerator,
+        EntityResolver resolver
+    ) {
+        return new SitemapTransformerChainBuilderFilter(
+            logicsheetMarkupGenerator,
+            resolver
+        );
+    }
 
-  /**
-   * Encode text nodes as strings according to the target programming languages
-   * string constant escaping rules.
-   *
-   * @param node The node to be escaped
-   * @param language The target programming language
-   */
-  protected void quoteStrings(Node node, ProgrammingLanguage language) {
-    switch (node.getNodeType()) {
-      case Node.PROCESSING_INSTRUCTION_NODE:
-        ProcessingInstruction pi = (ProcessingInstruction) node;
-	if (!pi.getTarget().equals("xml-logicsheet")) {
-          pi.setData(language.quoteString(pi.getData()));
-	}
-        break;
-      case Node.TEXT_NODE:
-        if (true) break; // the sitemap shouldn't have any text node
-        Element parent = (Element) node.getParentNode();
 
-        String tagName = parent.getTagName();
+//
+//  Inner classes
+//
 
-        if (
-          tagName.equals("xsp:expr") ||
-          tagName.equals("xsp:logic") ||
-          tagName.equals("xsp:structure") ||
-          tagName.equals("xsp:include")
+    /**
+    * Preprocess filter for Sitemap Markup language.
+    * It looks for PI event other that &lt;?xml-logisheet href=&quot;...&quot;&gt;
+    * for quoting them;
+    * It adds creation-date, file-name and file-path attributes to the root
+    * Element;
+    * And it quotes the PCDATA based by calling the quote method of the
+    * programming language.
+    *
+    */
+    protected class PreProcessFilter extends XMLFilterImpl {
+
+        private String filename;
+
+        private boolean isRootElem;
+
+        private ProgrammingLanguage language;
+
+        public PreProcessFilter (String filename, ProgrammingLanguage language) {
+            super ();
+            this.filename = filename;
+            this.language = language;
+        }
+
+        public void startDocument() throws SAXException {
+            super.startDocument();
+            isRootElem = true;
+        }
+
+        public void processingInstruction(String target, String data) throws SAXException {
+            if (!"xml-logicsheet".equals(target)) {
+                data = this.language.quoteString(data);
+            }
+            super.processingInstruction(target, data);
+        }
+
+        public void startElement (String namespaceURI, String localName,
+		    String qName, Attributes atts) throws SAXException {
+            if (isRootElem) {
+                 isRootElem=false;
+                // Store path and file name
+                int pos = this.filename.lastIndexOf(File.separatorChar);
+                String name = this.filename.substring(pos + 1);
+                String path =
+                    this.filename.substring(0, pos).replace(File.separatorChar, '/');
+                // update the attributes
+                AttributesImpl newAtts = new AttributesImpl(atts);
+                newAtts.addAttribute("", "file-name", "file-name", "CDATA", name);
+                newAtts.addAttribute("", "file-path", "file-path", "CDATA", path);
+                newAtts.addAttribute("", "creation-date", "creation-date",
+                    "CDATA", String.valueOf(new Date().getTime())
+                );
+                // forward element with the modified attribute
+                super.startElement(namespaceURI, localName, qName, newAtts);
+            } else {
+                super.startElement(namespaceURI, localName, qName, atts);
+            }
+        }
+    }
+
+    /**
+    * This filter builds on the fly a chain of transformers. It extends the
+    * <code>AbstractMArkupLanguage.TransformerChainBuilderFilter</code> so
+    * it can adds XSP specific feature such as :
+    * looking for &lt;?xml-logisheet href=&quot;...&quot?;&gt; PI and
+    * &lt;map:xml-logisheet location=&quot;...&quot;&gt; elements to register
+    * user defined logicsheets ;
+    * adding all the dependencies related to the Sitemap as
+    * &lt;map:dependency;&gt;...&lt;/map:dependency;&gt;
+    *
+    */
+    protected  class SitemapTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
+
+        private Object[] rootElement;
+
+        private List startPrefix;
+
+        private List endPrefix;
+
+        private StringBuffer rootChars;
+
+        private boolean isRootElem;
+
+        private boolean insideRootElement;
+
+        private boolean finished;
+
+        /**
+         * default constructor
+         *
+         * @param logicsheetMarkupGenerator the code generator
+         * @param resolver the entity resolver
+         */
+        protected SitemapTransformerChainBuilderFilter (
+            LogicsheetCodeGenerator logicsheetMarkupGenerator,
+            EntityResolver resolver
         ) {
-          return;
+            super(logicsheetMarkupGenerator, resolver);
         }
 
-        String value = language.quoteString(node.getNodeValue());
-        Text textNode = node.getOwnerDocument().createTextNode(value);
-
-        Element textElement = node.getOwnerDocument().createElement("xsp:text");
-
-        textElement.appendChild(textNode);
-        parent.replaceChild(textElement, node);
-
-        break;
-      case Node.ELEMENT_NODE:
-        ((Element) node).normalize();
-        // Fall through
-      default:
-        NodeList childList = node.getChildNodes();
-        int childCount = childList.getLength();
-
-        for (int i = 0; i < childCount; i++) {
-          this.quoteStrings(childList.item(i), language);
+        /**
+         * @see ContentHandler
+         */
+        public void startDocument () throws SAXException {
+            isRootElem=true;
+            insideRootElement=false;
+            finished=false;
+            startPrefix = new ArrayList();
+            rootChars = new StringBuffer();
         }
 
-        break;
+        /**
+         * @see ContentHandler
+         */
+        public void processingInstruction(String target, String data) throws SAXException {
+            // Retrieve logicsheets declared by processing-instruction
+            if ("xml-logicsheet".equals(target)) {
+                int start = data.indexOf("href");
+                if (start >=0) {
+                    // add 6, for lenght of 'href', plus '=' char, plus '"' char
+                    start += 6;
+                    // get the quote char. Can be " or '
+                    char quote = data.charAt(start-1);
+                    String href = data.substring(start);
+                    int end = href.indexOf(quote);
+                    href = href.substring(0, end);
+                    try {
+                        SitemapMarkupLanguage.this.addLogicsheet(
+                            this.logicsheetMarkupGenerator, href, this.resolver
+                        );
+                    } catch (IOException ioe) {
+                        throw new SAXException (ioe);
+                    }
+                }
+                // Do not forward the PI event.
+                return;
+            }
+            // Call super when this is not a logicsheet related PI
+            super.processingInstruction(target,data);
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void startElement (String namespaceURI, String localName,
+            String qName, Attributes atts) throws SAXException {
+
+            if (finished) {
+                // Call super method
+                super.startElement(namespaceURI, localName, qName, atts);
+            } else {
+                // Need more work
+                if(isRootElem) {
+                    isRootElem = false;
+                    // cache the root element so that we resend the SAX event when
+                    // we've finished dealing with <map:logicsheet > elements
+                    rootElement = new Object[4];
+                    rootElement[0]=namespaceURI;
+                    rootElement[1]=localName;
+                    rootElement[2]=qName;
+                    rootElement[3]=atts;
+                } else {
+                    insideRootElement = true;
+                    // Retrieve logicsheets declared by top-level elements <map:logicsheet ...>
+                    // And do not forward the startElement event
+                    if ("map:logicsheet".equals(qName)) {
+                        String location = atts.getValue("location");
+                        try {
+                            SitemapMarkupLanguage.this.addLogicsheet(
+                                this.logicsheetMarkupGenerator,
+                                location,
+                                this.resolver
+                            );
+                        } catch (IOException ioe) {
+                            throw new SAXException (ioe);
+                        }
+                    } else {
+                        // This element is not a <map:logicsheet element, so finish
+                        // by :
+                        // * setting the 'fisnished' flag to true ;
+                        // * refiring all the cached events ;
+                        // * firing all the necessary event dealing with file dependencies
+                        finished=true;
+
+                        // send SAX events 'startDocument'
+                        super.startDocument();
+
+                        // send all prefix namespace
+                        String [] prefixArray;
+                        for (int i=0; i<startPrefix.size(); i++) {
+                            prefixArray = (String []) startPrefix.get(i);
+                            super.startPrefixMapping(
+                                prefixArray[0],
+                                prefixArray[1]
+                            );
+                        }
+
+                        // send cached RootElement event
+                        super.startElement(
+                            (String) rootElement[0],
+                            (String) rootElement[1],
+                            (String) rootElement[2],
+                            (Attributes) rootElement[3]
+                        );
+
+                        // send cached characters
+                        char[] ch = rootChars.toString().toCharArray();
+                        super.characters( ch, 0, ch.length);
+
+                        // send the events dealing with dependencies.
+                        // If some dependencies exist, then create <map:dependency elements
+                        char[] locationChars;
+                        Iterator iter = SitemapMarkupLanguage.this.dependencies.iterator();
+                        while(iter.hasNext()) {
+                            super.startElement(namespaceURI,
+                                "dependency", "map:dependency",
+                                new AttributesImpl()
+                            );
+                            locationChars = ((String) iter.next()).toCharArray();
+                            super.characters(locationChars, 0 ,
+                                locationChars.length
+                            );
+                            super.endElement(namespaceURI,
+                                "dependency", "map:dependency"
+                            );
+                        }
+
+                        // And finally forward current Element.
+                        super.startElement(namespaceURI, localName, qName, atts);
+                    }
+                }
+            }
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void endElement (String namespaceURI, String localName,
+        			      String qName) throws SAXException {
+            if (finished) {
+                // Forward the events
+                super.endElement(namespaceURI, localName, qName);
+            }
+        }
+
+
+        /**
+         * @see ContentHandler
+         */
+         public void characters(char[] ch, int start, int length) throws SAXException {
+            if (finished) {
+                super.characters(ch, start, length);
+            } else {
+                if(!insideRootElement) {
+                    // caching the PCDATA for the root element
+                    rootChars.append(ch, start, length);
+                }
+            }
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            if(finished) {
+                super.startPrefixMapping(prefix, uri);
+            } else {
+                String[] prefixArray = new String [2];
+                prefixArray[0]= prefix;
+                prefixArray[1]= uri;
+                startPrefix.add(prefixArray);
+            }
+        }
     }
-  }
-
-  /**
-   * Returns a list of logicsheets to be applied to this document for source
-   * code generation. This method scans the input document for
-   * &lt;?xml-logicsheet?&gt; processing instructions and top-level
-   * &lt;xsp:logicsheet&gt; elements. Logicsheet declarations are removed from
-   * the input document.
-   *
-   * @param document The input document
-   * @return An array of logicsheet <i>names</i>
-   */
-  protected String[] getLogicsheets(Document document) {
-    Vector removedNodes = new Vector();
-    Vector logicsheetList = new Vector();
-    Element root = document.getDocumentElement();
-
-    // Retrieve logicsheets declared by processing-instruction
-    NodeList nodeList = document.getChildNodes();
-    int count = nodeList.getLength();
-    for (int i = 0; i < count; i++) {
-      Node node = nodeList.item(i);
-      if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-	ProcessingInstruction pi = (ProcessingInstruction) node;
-
-	if (pi.getTarget().equals("xml-logicsheet")) {
-          Hashtable attrs = DOMUtils.getPIPseudoAttributes(pi);
-	  logicsheetList.addElement(attrs.get("href"));
-
-	  removedNodes.addElement(pi);
-	}
-      }
-    }
-
-    // Retrieve logicsheets declared by top-level elements
-    nodeList = root.getElementsByTagName("map:logicsheet");
-    count = nodeList.getLength();
-
-    for (int i = 0; i < count; i++) {
-      Element logicsheetElement = (Element) nodeList.item(i);
-      removedNodes.addElement(logicsheetElement);
-      logicsheetList.addElement(logicsheetElement.getAttribute("location"));
-    }
-
-    String[] logicsheetLocations = new String[logicsheetList.size()];
-    logicsheetList.copyInto(logicsheetLocations);
-
-
-    // Remove logicsheet directives
-    count = removedNodes.size();
-    for (int i = 0; i < count; i++) {
-      Node node = (Node) removedNodes.elementAt(i); 
-      Node parent = node.getParentNode();
-      parent.removeChild(node);
-    }
-
-    return logicsheetLocations;
-  }
-
-  /**
-   * Add a dependency on an external file to the document for inclusion in
-   * generated code. This is used by <code>AbstractServerPagesGenerator</code>
-   * to populate a list of <code>File</code>'s tested for change on each
-   * invocation; this information, in turn, is used by
-   * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
-   * necessary. XSP uses &lt;xsp:dependency&gt; elements for this purpose
-   *
-   * @param PARAM_NAME Param description
-   * @return the value
-   * @exception EXCEPTION_NAME If an error occurs
-   * @see ServerPages <code>AbstractServerPagesGenerator</code>
-   *      and <code>ServerPagesLoaderImpl</code>
-   */
-/** Sitemaps don't (yet) have dependencies */
-  protected void addDependency(Document document, String location) {
-    Element root = document.getDocumentElement();
-    Element dependency = document.createElement("xsp:dependency");
-    dependency.appendChild(document.createTextNode(location));
-    root.appendChild(dependency);
-  }
-/* */
-
-  /**
-   * Scan top-level document elements for non-xsp tag names returning the first
-   * (and hopefully <i>only</i>) user-defined element
-   *
-   * @param document The input document
-   * @return The first non-xsp element
-   */
-/** Sitemaps don't have a user root
-  protected Element getUserRoot(Document document) {
-    Element root = document.getDocumentElement();
-    NodeList elements = root.getElementsByTagName("*");
-    int elementCount = elements.getLength();
-    for (int i = 0; i < elementCount; i++) {
-      Element userRoot = (Element) elements.item(i);
-      if (!userRoot.getTagName().startsWith("map:")) {
-        return userRoot;
-      }
-    }
-
-    return null;
-  }
-*/
 }

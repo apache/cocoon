@@ -32,7 +32,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.cocoon.xml.xpath.XPathAPI;
+import org.apache.xpath.XPathAPI;
 
 /**
  * My first pass at an XInclude transformation. Currently it should set the base URI
@@ -42,7 +42,7 @@ import org.apache.cocoon.xml.xpath.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-01 00:17:37 $ $Author: stefano $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-12 16:44:07 $ $Author: giacomo $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 

@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.29 $ $Date: 2000-09-28 19:13:59 $
+ * @version CVS $Revision: 1.4.2.30 $ $Date: 2000-10-12 16:43:11 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -77,6 +77,9 @@ public class Cocoon
      * Create a new <code>Cocoon</code> instance.
      */
     protected Cocoon() throws ConfigurationException {
+        // Set the system properties needed by Xalan2.
+        setSystemProperties();
+
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
@@ -84,6 +87,13 @@ public class Cocoon
             this.components.put("parser", ClassUtils.loadClass(parser));
         } catch (Exception e) {
             throw new ConfigurationException("Error creating parser (" + parser + ")", null);
+        }
+        String processor = System.getProperty(PROCESSOR_PROPERTY, DEFAULT_PROCESSOR);
+        try {
+			trax.Processor.setPlatformDefaultProcessor(processor);
+            this.components.put("processor", ClassUtils.loadClass(parser));
+        } catch (Exception e) {
+            throw new ConfigurationException("Error creating processor (" + processor + ")", null);
         }
     }
     
@@ -228,4 +238,26 @@ public class Cocoon
         String file = new URL(environment.resolveEntity(null, this.sitemapFileName).getSystemId()).getFile();
         return this.sitemapManager.invoke(environment, "", file, true);
     }
+
+  /**
+   * Sets required system properties .
+   */	
+    protected void setSystemProperties()
+	{
+	  java.util.Properties props = new java.util.Properties();
+
+      // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
+      // to locate the SAX2 driver.
+	  props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
+	  
+      java.util.Properties systemProps = System.getProperties();
+      Enumeration propEnum = props.propertyNames();
+      while(propEnum.hasMoreElements())
+      {
+        String prop = (String)propEnum.nextElement();
+        if(!systemProps.containsKey(prop))
+          systemProps.put(prop, props.getProperty(prop));
+      }
+      System.setProperties(systemProps);
+	}
 }
