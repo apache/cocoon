@@ -61,8 +61,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.12 2004/04/30 11:36:26 cziegeler Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.13 2004/07/06 07:57:00 unico Exp $
  * @author <a href="mailto:haul@apache.org">haul</a>
+ * @deprecated  use {@link org.apache.cocoon.components.jms.JMSConnectionManager} instead
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
                                implements Configurable, 
