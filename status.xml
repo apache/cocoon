@@ -181,6 +181,11 @@
   <changes>
 
  <release version="@version@" date="@date@"> 
+  <action dev="SW" type="update">
+    Updated ParanoidCocoonServlet, which is now an easy solution to the
+    well-known endorsed library problem (incompatible version of Xalan in
+    Cocoon and in JDK 1.4+).
+  </action>
   <action dev="DC" type="fix" fixes-bug="14327">
     Encoding-related change to the JSP engine: the response charset is now
     retrieved from the Content-Type, and if not found ISO-8859-1 is used as

@@ -50,18 +50,18 @@
 */
 package org.apache.cocoon.servlet;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServlet;
-
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Set;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 /**
  * A bootstrap servlet to allow Cocoon to run in servlet engines that aren't fully
@@ -78,144 +78,58 @@ import java.util.Set;
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: BootstrapServlet.java,v 1.1 2003/03/09 00:09:37 pier Exp $
+ * @version CVS $Id: BootstrapServlet.java,v 1.2 2003/06/03 13:25:42 sylvain Exp $
  */
 
-public class BootstrapServlet extends HttpServlet {
+public class BootstrapServlet extends ParanoidCocoonServlet {
     
-    /**
-     * The name of the actual servlet class.
-     */
-    public static final String SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
+    private File contextDir;
     
-    protected Servlet servlet;
-    
-    protected ClassLoader classloader;
-    
-    protected ServletContext context;
-    
-    public void init(ServletConfig config) throws ServletException {
-        this.context = config.getServletContext();
-        
-        this.context.log("getRealPath(\"/\") = " + context.getRealPath("/"));
+	protected File getContextDir() throws ServletException {
+		
+		ServletContext context = getServletContext();
+		ServletConfig config = getServletConfig();
+		
+		log("getRealPath(\"/\") = " + context.getRealPath("/"));
 
-        String contextDirParam = config.getInitParameter("context-directory");
-        if (contextDirParam == null) {
-            // Check old form, not consistent with other parameter names
-            contextDirParam = config.getInitParameter("context-dir");
-            if (contextDirParam == null) {
-                String msg = "The 'context-directory' parameter must be set to the root of the servlet context";
-                this.context.log(msg);
-                throw new ServletException(msg);
-            } else {
-                this.context.log("Parameter 'context-dir' is deprecated - use 'context-directory'");
-            }
-        }
+		String contextDirParam = config.getInitParameter("context-directory");
+		
+		if (contextDirParam == null) {
+				throw new ServletException("The 'context-directory' parameter must be set to the root of the servlet context");
+		}
         
-        // Ensure context dir doesn't end with a "/" (servlet spec says that paths for
-        // getResource() should start by a "/")
-        if (contextDirParam.endsWith("/")) {
-            contextDirParam = contextDirParam.substring(0, contextDirParam.length() - 1);
-        }
+		// Ensure context dir doesn't end with a "/" (servlet spec says that paths for
+		// getResource() should start by a "/")
+		if (contextDirParam.endsWith("/")) {
+			contextDirParam = contextDirParam.substring(0, contextDirParam.length() - 1);
+		}
         
-        // Ensure context dir exists and is a directory
-        File contextDir = new File(contextDirParam);
-        if (!contextDir.exists()) {
-            String msg = "Context dir '" + contextDir + "' doesn't exist";
-            this.context.log(msg);
-            throw new ServletException(msg);
-        }
+		// Ensure context dir exists and is a directory
+		this.contextDir = new File(contextDirParam);
+		if (!this.contextDir.exists()) {
+			String msg = "Context dir '" + this.contextDir + "' doesn't exist";
+			log(msg);
+			throw new ServletException(msg);
+		}
 
-        if (!contextDir.isDirectory()) {
-            String msg = "Context dir '" + contextDir + "' should be a directory";
-            this.context.log(msg);
-            throw new ServletException(msg);
-        }
+		if (!this.contextDir.isDirectory()) {
+			String msg = "Context dir '" + this.contextDir + "' should be a directory";
+			log(msg);
+			throw new ServletException(msg);
+		}
         
-        context.log("Context dir set to " + contextDir);
+		context.log("Context dir set to " + this.contextDir);
+		
+		return this.contextDir;
+	}
 
-        this.classloader = getClassLoader(contextDirParam);
-        
-        try {
-            Class servletClass = this.classloader.loadClass(SERVLET_CLASS);
-            
-            this.servlet = (Servlet)servletClass.newInstance();
-        } catch(Exception e) {
-            context.log("Cannot load servlet", e);
-            throw new ServletException(e);
-        }
-        
-        // Always set the context classloader. JAXP uses it to find a ParserFactory,
-        // and thus fails if it's not set to the webapp classloader.
-        Thread.currentThread().setContextClassLoader(this.classloader);
-        
-        ServletContext newContext = new ContextWrapper(context, contextDirParam);
-        ServletConfig newConfig = new ConfigWrapper(config, newContext);
-        
-        super.init(newConfig);
-        
-        // Inlitialize the actual servlet
-        this.servlet.init(newConfig);
-        
-    }
-    
-    /**
-     * Get the classloader that will be used to create the actual servlet.
-     */
-    protected ClassLoader getClassLoader(String contextDirParam) throws ServletException {
-        List urlList = new ArrayList();
-        
-        try {
-            File classDir = new File(contextDirParam + "/WEB-INF/classes");
-            if (classDir.exists()) {
-                if (!classDir.isDirectory()) {
-                    String msg = classDir + " exists but is not a directory";
-                    this.context.log(msg);
-                    throw new ServletException(msg);
-                }
-            
-                URL classURL = classDir.toURL();
-                context.log("Adding class directory " + classURL);
-                urlList.add(classURL);
-                
-            }
-            
-            File libDir = new File(contextDirParam + "/WEB-INF/lib");
-            File[] libraries = libDir.listFiles();
 
-            for (int i = 0; i < libraries.length; i++) {
-                URL lib = libraries[i].toURL();
-                context.log("Adding class library " + lib);
-                urlList.add(lib);
-            }
-        } catch (MalformedURLException mue) {
-            context.log("Malformed url", mue);
-            throw new ServletException(mue);
-        }
+    protected void initServlet(Servlet servlet) throws ServletException {
         
-        URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
+        ServletContext newContext = new ContextWrapper(getServletContext(), this.contextDir);
+        ServletConfig newConfig = new ConfigWrapper(getServletConfig(), newContext);
         
-        return ParanoidClassLoader.newInstance(urls, this.getClass().getClassLoader());
-    }
-    
-    /**
-     * Service the request by delegating the call to the real servlet
-     */
-    public void service(ServletRequest request, ServletResponse response)
-      throws ServletException, IOException {
-
-        Thread.currentThread().setContextClassLoader(this.classloader);
-        this.servlet.service(request, response);
-    }
-    
-    /**
-     * Destroy the actual servlet
-     */
-    public void destroy() {
-
-        super.destroy();
-        Thread.currentThread().setContextClassLoader(this.classloader);
-        this.servlet.destroy();
+        servlet.init(newConfig);        
     }
 
     //-------------------------------------------------------------------------
@@ -260,13 +174,13 @@ public class BootstrapServlet extends HttpServlet {
      */
     public static class ContextWrapper implements ServletContext {
         ServletContext context;
-        String contextRoot;
+        File contextRoot;
         
         /**
          * Builds a wrapper around an existing context, and handle all
          * resource resolution relatively to <code>contextRoot</code>
          */
-        public ContextWrapper(ServletContext context, String contextRoot) {
+        public ContextWrapper(ServletContext context, File contextRoot) {
             this.context = context;
             this.contextRoot = contextRoot;
         }
@@ -293,7 +207,7 @@ public class BootstrapServlet extends HttpServlet {
          * returned.
          */
         public URL getResource(String path) throws MalformedURLException {
-            File file = new File(this.contextRoot + path);
+            File file = new File(this.contextRoot, path);
             if (file.exists()) {
                 URL result = file.toURL();
                 //this.context.log("getResource(" + path + ") = " + result);

@@ -64,8 +64,8 @@ import java.net.URLStreamHandlerFactory;
  * classes.  It checks this classloader before it checks its parent.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidClassLoader.java,v 1.1 2003/03/09 00:09:37 pier Exp $
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ParanoidClassLoader.java,v 1.2 2003/06/03 13:25:42 sylvain Exp $
  */
 
 public class ParanoidClassLoader extends URLClassLoader {
@@ -85,7 +85,7 @@ public class ParanoidClassLoader extends URLClassLoader {
      * Alternate constructor to define a parent.
      */
     public ParanoidClassLoader(final ClassLoader parent) {
-        this(null, parent, null);
+        this(new URL[0], parent, null);
     }
 
     /**
@@ -151,6 +151,7 @@ public class ParanoidClassLoader extends URLClassLoader {
             
             try {
                 clazz = findClass(name);
+                //System.err.println("Paranoid load : " + name);
             } catch (ClassNotFoundException cnfe) {
                 if (this.parent != null) {
                      // Ask to parent ClassLoader (can also throw a CNFE).
@@ -201,5 +202,13 @@ public class ParanoidClassLoader extends URLClassLoader {
         } catch (MalformedURLException mue) {
             throw new CascadingIOException("Could not add repository", mue);
         }
+    }
+    
+    /**
+     * Adds a new URL
+     */
+    
+    public void addURL(URL url) {
+    	super.addURL(url);
     }
 }
