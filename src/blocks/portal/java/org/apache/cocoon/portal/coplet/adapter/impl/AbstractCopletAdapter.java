@@ -70,12 +70,10 @@ import org.xml.sax.ext.LexicalHandler;
 /**
  * This is the adapter to use pipelines as coplets
  * 
- * TODO - implement timeout
- *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.4 2003/05/27 14:07:16 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.5 2003/05/28 13:47:30 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -116,7 +114,12 @@ public abstract class AbstractCopletAdapter
     public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
         Boolean bool = (Boolean) this.getConfiguration( coplet, "buffer" );
-
+        Integer timeout = (Integer) this.getConfiguration( coplet, "timeout");
+        if ( timeout != null ) {
+            // if timeout is set we have to buffer!
+            bool = Boolean.TRUE;
+        }
+        
         if ( bool != null && bool.booleanValue() ) {
             boolean read = false;
             XMLSerializer serializer = null;
@@ -124,9 +127,24 @@ public abstract class AbstractCopletAdapter
             try {
                 serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
                 
-                this.streamContent( coplet, serializer );
-                data = serializer.getSAXFragment();
-                read = true;
+                if ( timeout != null ) {
+                    final int milli = timeout.intValue() * 1000;
+                    LoaderThread loader = new LoaderThread(this, coplet, serializer);
+                    Thread thread = new Thread(loader);
+                    thread.start();
+                    try {
+                        thread.join(milli);
+                    } catch (InterruptedException ignore) {
+                    }
+                    if ( loader.finished ) {
+                        data = serializer.getSAXFragment();
+                        read = true;
+                    }
+                } else {
+                    this.streamContent( coplet, serializer );
+                    data = serializer.getSAXFragment();
+                    read = true;
+                }
             } catch (ComponentException ce) {
                 throw new SAXException("Unable to lookup xml serializer.", ce);
             } catch (Exception exception ) {
@@ -190,4 +208,32 @@ public abstract class AbstractCopletAdapter
     throws SAXException {
         return false;
     }
+}
+
+final class LoaderThread implements Runnable {
+    
+    private  AbstractCopletAdapter adapter;
+    private  ContentHandler        handler;
+    private  CopletInstanceData    coplet;
+    boolean  finished;
+    Exception exception;
+
+    public LoaderThread(AbstractCopletAdapter adapter, 
+                         CopletInstanceData coplet,
+                         ContentHandler handler) {
+        this.adapter = adapter;
+        this.coplet  = coplet;
+        this.handler = handler;
+    }
+    
+    public void run() {
+        try {
+            adapter.streamContent( this.coplet, this.handler );
+        } catch (Exception local) {
+            this.exception = local;
+        } finally {
+            this.finished = true;
+        }
+    }
+    
 }

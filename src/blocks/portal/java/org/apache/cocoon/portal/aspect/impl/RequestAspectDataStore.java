@@ -53,29 +53,44 @@ package org.apache.cocoon.portal.aspect.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
+import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 
 /**
  * An aspect data store is a component that manages aspect data objects.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestAspectDataStore.java,v 1.3 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: RequestAspectDataStore.java,v 1.4 2003/05/28 13:47:29 cziegeler Exp $
  */
 public class RequestAspectDataStore 
     extends AbstractLogEnabled
-    implements Component, ThreadSafe, AspectDataStore, Contextualizable {
+    implements Component, Composable, ThreadSafe, AspectDataStore, Contextualizable, Parameterizable {
     
     protected Context context;
+    
+    protected String requestParameterName;
+    
+    protected ComponentManager manager;
     
     protected Map getMap(Aspectalizable owner) {
         final Request request = ContextHelper.getRequest(this.context);
@@ -98,6 +113,26 @@ public class RequestAspectDataStore
     
     public void setAspectData(Aspectalizable owner, String aspectName, Object data) {
         this.getMap(owner).put(aspectName, data);
+        // create persistence
+        ChangeAspectDataEvent e;
+        if ( owner instanceof CopletInstanceData) {
+            e = new ChangeCopletInstanceAspectDataEvent((CopletInstanceData)owner, aspectName, data);
+        } else {
+            e = new ChangeAspectDataEvent( owner, aspectName, data );
+        }
+        if ( this.requestParameterName != null ) {
+            e.setRequestParameterName( this.requestParameterName );
+        }
+        LinkService service = null;
+        try {
+            service = (LinkService)this.manager.lookup(LinkService.ROLE);
+            service.addEventToLink( e );
+        } catch (ComponentException ce) {
+            throw new CascadingRuntimeException("Unable to lookup link service.", ce);
+        } finally {
+            this.manager.release( service );
+        }
+        
     }
 
     public boolean isPersistent() {
@@ -110,6 +145,20 @@ public class RequestAspectDataStore
     public void contextualize(Context context) throws ContextException {
         this.context = context;
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void parameterize(Parameters pars) throws ParameterException {
+        requestParameterName = pars.getParameter("parameter-name", null);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
     }
 
 }

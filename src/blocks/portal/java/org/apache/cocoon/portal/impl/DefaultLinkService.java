@@ -70,13 +70,14 @@ import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.RequestEvent;
+import org.apache.excalibur.source.SourceUtil;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.3 2003/05/23 12:13:15 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.4 2003/05/28 13:47:30 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -122,12 +123,14 @@ public class DefaultLinkService
                     }
                     hasParams = true;
                     String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-                    if (ce instanceof RequestEvent) {
-                        parameterName = ((RequestEvent)ce).getRequestParameterName();
+                    if (ce instanceof RequestEvent ) {
+                        final String eventParName = ((RequestEvent)ce).getRequestParameterName();
+                        if ( eventParName != null ) {
+                            parameterName = eventParName;
+                        }
                     }
-                    // FIXME Encode value
                     final String value = this.converter.encode( ce );
-                    buffer.append(parameterName).append('=').append(value);
+                    buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
                 }
             }
         }
@@ -140,10 +143,12 @@ public class DefaultLinkService
         }
         String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
         if (event instanceof RequestEvent) {
-            parameterName = ((RequestEvent)event).getRequestParameterName();
+            final String eventParName = ((RequestEvent)event).getRequestParameterName();
+            if ( eventParName != null ) {
+                parameterName = eventParName;
+            }
         }
-        // FIXME Encode value
-        buffer.append(parameterName).append('=').append(value);
+        buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
 
         return buffer.toString();
     }
@@ -165,10 +170,12 @@ public class DefaultLinkService
             hasPars = true;
             String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
             if (current instanceof RequestEvent) {
-                parameterName = ((RequestEvent)current).getRequestParameterName();
+                final String eventParName = ((RequestEvent)current).getRequestParameterName();
+                if ( eventParName != null ) {
+                    parameterName = eventParName;
+                }
             }
-            // FIXME Encode value
-            buffer.append(parameterName).append('=').append(value);
+            buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
         }
         return buffer.toString();
     }
@@ -179,10 +186,12 @@ public class DefaultLinkService
             info.comparableEvents.add( event );
         } else {
             final String value = converter.encode(event);
-            // FIXME - remove hardcoded parameter name
-            String parameterName = "frame-event";
+            String parameterName = LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
             if (event instanceof RequestEvent) {
-                parameterName = ((RequestEvent)event).getRequestParameterName();
+                final String eventParName = ((RequestEvent)event).getRequestParameterName();
+                if ( eventParName != null ) {
+                    parameterName = eventParName;
+                }
             }
             this.addParameterToLink(parameterName, value);
         }
@@ -195,8 +204,7 @@ public class DefaultLinkService
         } else {
             info.linkBase.append('?');
         }
-        // FIXME Encode value
-        info.linkBase.append(name).append('=').append(value);
+        info.linkBase.append(name).append('=').append(SourceUtil.encode(value));
         info.hasParameters = true;
     }
 

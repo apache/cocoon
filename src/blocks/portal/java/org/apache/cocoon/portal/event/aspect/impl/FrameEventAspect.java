@@ -71,7 +71,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.5 2003/05/26 09:52:58 cziegeler Exp $
+ * @version CVS $Id: FrameEventAspect.java,v 1.6 2003/05/28 13:47:29 cziegeler Exp $
  */
 public class FrameEventAspect
     extends AbstractLogEnabled
@@ -96,7 +96,6 @@ public class FrameEventAspect
                     e = context.getEventConverter().decode(value);
                     if (null != e) {
                         publisher.publish(e);
-                        service.getLinkService().addEventToLink(e);
                     }
                 } catch (Exception ignore) {
                 }
@@ -121,11 +120,6 @@ public class FrameEventAspect
                         } catch (ComponentException ignore) {
                         } finally {
                             this.manager.release( profileManager );
-                        }
-                        
-                        // TODO - move this into aspect data store
-                        if (uri != null) {
-                            service.getLinkService().addEventToLink(e);
                         }
                     }
                 }

@@ -76,11 +76,16 @@ import org.xml.sax.SAXException;
  *          xml data stream from the coplet is buffered. If the stream
  *          is not buffered and an exception occurs then the whole
  *          portal will be rendered invalid.
+ * timeout - An integer value (default is endless) that defines the
+ *           maximum time (in seconds) the coplet has to deliver it's content.
+ *           If the timeout is reached the content is assumed as not
+ *           gettable. If you set a timeout, the content is automatically
+ *           buffered.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletAdapter.java,v 1.5 2003/05/27 14:07:16 cziegeler Exp $
+ * @version CVS $Id: CopletAdapter.java,v 1.6 2003/05/28 13:47:29 cziegeler Exp $
  */
 public interface CopletAdapter 
     extends Component {
