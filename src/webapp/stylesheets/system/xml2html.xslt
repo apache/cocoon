@@ -8,13 +8,21 @@
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
     | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.6 2003/11/14 14:04:15 joerg Exp $
+    | CVS $Id: xml2html.xslt,v 1.7 2003/12/12 14:59:54 vgritsenko Exp $
     +-->
     
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
    <xsl:template match="/">
       <HTML>
+         <xsl:call-template name="head"/>
+         <BODY>
+            <xsl:apply-templates/>
+         </BODY>
+      </HTML>
+   </xsl:template>
+
+   <xsl:template name="head">
          <HEAD>
             <STYLE>
               BODY  {background-color: white; color: black; font: monospace;}
@@ -31,21 +39,18 @@
                 DIV {border:0; padding:0; margin:0;}
             </STYLE>
             <SCRIPT><xsl:comment><![CDATA[
-
 function click(event) {
 
     var mark = event.target;
-
     while ((mark.className != "b") && (mark.nodeName != "BODY")) {
         mark = mark.parentNode
     }
-    
+
     var e = mark;
-    
     while ((e.className != "e") && (e.nodeName != "BODY")) {
         e = e.parentNode
     }
-    
+
     if (mark.childNodes[0].nodeValue == "+") {
         mark.childNodes[0].nodeValue = "-";
         for (var i = 2; i < e.childNodes.length; i++) {
@@ -68,14 +73,9 @@ function click(event) {
         }
     }
 }  
-  
 ]]></xsl:comment>
-         </SCRIPT>
+            </SCRIPT>
          </HEAD>
-         <BODY>
-            <xsl:apply-templates/>
-         </BODY>
-      </HTML>
    </xsl:template>
 
    <!-- match processing instructions -->
@@ -148,7 +148,7 @@ function click(event) {
         </xsl:if>
         <xsl:apply-templates select="@*"/>
         <SPAN class="m">
-           <xsl:text>/></xsl:text>
+           <xsl:text>/&gt;</xsl:text>
         </SPAN>
       </DIV>
    </xsl:template>
