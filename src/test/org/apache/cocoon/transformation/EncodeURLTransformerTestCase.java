@@ -38,13 +38,6 @@ import org.w3c.dom.Document;
  */
 public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
     
-    /** Create new testcase
-     * @param name of testase
-     */
-    public EncodeURLTransformerTestCase(String name) {
-        super(name);
-    }
-    
     /**
      * Run this test suite from commandline
      *

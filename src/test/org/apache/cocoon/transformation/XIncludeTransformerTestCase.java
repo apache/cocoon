@@ -33,13 +33,6 @@ import org.apache.cocoon.environment.mock.MockEnvironment;
  */
 public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     
-    /** Create new testcase
-     * @param name of testase
-     */
-    public XIncludeTransformerTestCase(String name) {
-        super(name);
-    }
-    
     /**
      * Run this test suite from commandline
      *

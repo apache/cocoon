@@ -36,13 +36,6 @@ import org.w3c.dom.Document;
  */
 public class AugmentTransformerTestCase extends SitemapComponentTestCase {
     
-    /** Create new testcase
-     * @param name of testase
-     */
-    public AugmentTransformerTestCase(String name) {
-        super(name);
-    }
-    
     /**
      * Run this test suite from commandline
      *

@@ -25,10 +25,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class HeaderMatcherTestCase extends SitemapComponentTestCase {
     
-    public HeaderMatcherTestCase(String name) {
-        super(name);
-    }
-    
     /**
      * Run this test suite from commandline
      *

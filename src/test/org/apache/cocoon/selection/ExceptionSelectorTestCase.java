@@ -28,10 +28,6 @@ public class ExceptionSelectorTestCase extends SitemapComponentTestCase {
 
     private final String EXCEPTION_SELECTOR = "exception";    
 
-    public ExceptionSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

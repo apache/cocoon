@@ -144,10 +144,6 @@ public class ContainerTestCase extends TestCase {
     /** The service manager to use */
     private ServiceManager manager;
 
-    public ContainerTestCase( final String name ) {
-        super( name );
-    }
-
     /** Return the logger */
     protected Logger getLogger() {
         return logger;

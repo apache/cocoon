@@ -46,7 +46,6 @@ package org.apache.cocoon.faces.samples.carstore;
 import org.apache.cocoon.faces.taglib.ValidatorTag;
 
 import javax.faces.validator.Validator;
-import javax.servlet.jsp.JspException;
 
 /**
  * FormatValidatorTag is the tag handler class for FormatValidator tag,

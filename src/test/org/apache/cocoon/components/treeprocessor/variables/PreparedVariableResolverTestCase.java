@@ -33,11 +33,6 @@ import org.apache.cocoon.sitemap.PatternException;
  */
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
-    public PreparedVariableResolverTestCase(String name) {
-        super(name);
-    }
-
-
     public void testNestedExpressions() throws PatternException, ServiceException {
         String expr = "{request-param:{request-param:foo}}";
         MockRequest request = getRequest();

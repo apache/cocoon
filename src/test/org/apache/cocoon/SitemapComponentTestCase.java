@@ -78,15 +78,6 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
     private MockRedirector redirector = new MockRedirector();
     private Map objectmodel = new HashMap();
 
-    /**
-     * Create a new composite test case.
-     *
-     * @param name Name of test case.
-     */
-    public SitemapComponentTestCase(String name) {
-        super(name);
-    }
-
     public final MockRequest getRequest() {
         return request;
     }

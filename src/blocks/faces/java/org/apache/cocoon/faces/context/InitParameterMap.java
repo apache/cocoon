@@ -16,11 +16,6 @@
 package org.apache.cocoon.faces.context;
 
 import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.Request;
-
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Init parameters map

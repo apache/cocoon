@@ -25,10 +25,6 @@ import org.apache.cocoon.environment.mock.MockCookie;
 
 public class CookieMatcherTestCase extends SitemapComponentTestCase {
     
-    public CookieMatcherTestCase(String name) {
-        super(name);
-    }
-    
     /**
      * Run this test suite from commandline
      *

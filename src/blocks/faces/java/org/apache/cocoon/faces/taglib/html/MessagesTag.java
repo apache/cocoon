@@ -21,11 +21,7 @@ import org.apache.commons.lang.BooleanUtils;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.component.UIMessages;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
-import javax.faces.event.ValueChangeEvent;
 
 /**
  * @version CVS $Id$
