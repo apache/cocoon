@@ -58,7 +58,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -107,7 +106,7 @@ import org.apache.excalibur.source.SourceValidity;
  */
 public class SimpleJdbcSourceDescriptor
     extends AbstractConfigurableSourceDescriptor
-    implements SourceDescriptor, Serviceable, Configurable, Initializable, Disposable, ThreadSafe {
+    implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSafe {
     
     
     private static final String STMT_SELECT_SINGLE =
@@ -139,9 +138,8 @@ public class SimpleJdbcSourceDescriptor
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
         m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-        Cache cache = (Cache) manager.lookup(Cache.ROLE + "/EventAware");
-        if (cache instanceof EventAware) {
-            m_cache = (EventAware) cache;
+        if (manager.hasService(Cache.ROLE + "/EventAware")) {
+            m_cache = (EventAware) manager.lookup(Cache.ROLE + "/EventAware");
         } else {
             getLogger().warn("EventAware cache was not found: sources won't be cacheable.");
         }
@@ -153,7 +151,7 @@ public class SimpleJdbcSourceDescriptor
      * <ul>
      *  <li>element <code>property</code> (multiple,required) 
      *      - define a property that this store should handle.</li>
-     *  <li>element <code>datasource</code> (single,required) 
+     *  <li>element <code>datasource</code> (single,optional,[cocoondb]) 
      *      - the name of the excalibur datasource to use.</li>
      * </ul>
      */
@@ -174,9 +172,6 @@ public class SimpleJdbcSourceDescriptor
         ServiceSelector datasources = (ServiceSelector) m_manager.lookup(
             DataSourceComponent.ROLE + "Selector");
         m_datasource = (DataSourceComponent) datasources.select(m_datasourceName);
-    }
-    
-    public void dispose() {
     }
     
     // ---------------------------------------------------- SourceInspection
