@@ -1,4 +1,4 @@
-/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/* 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -68,7 +68,7 @@ import java.sql.*;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
- * @version CVS $Id: ScriptableConnection.java,v 1.1 2003/07/12 19:09:39 coliver Exp $
+ * @version CVS $Id: ScriptableConnection.java,v 1.2 2003/09/05 07:21:48 cziegeler Exp $
  */
 public class ScriptableConnection extends ScriptableObject {
 

@@ -71,7 +71,7 @@ import com.lowagie.text.xml.SAXiTextHandler;
 
 /**
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: iTextSerializer.java,v 1.5 2003/05/26 09:55:28 tcurdt Exp $
+ * @version CVS $Id: iTextSerializer.java,v 1.6 2003/09/05 07:21:48 cziegeler Exp $
  */
 final public class iTextSerializer extends AbstractSerializer implements Configurable, CacheableProcessingComponent {
 
@@ -162,10 +162,6 @@ final public class iTextSerializer extends AbstractSerializer implements Configu
 
     public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
-    }
-
-    public void recycle() {
-        super.recycle();
     }
 
     public boolean shouldSetContentLength() {
