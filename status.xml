@@ -208,7 +208,7 @@
     corresponding Java classes.
    </action>
    <action dev="CZ" type="fix">
-    CForms: template generator and transformer now use the same object model as the JXTG: access
+    CForms: forms generator and template transformer now use the same object model as the JXTG: access
             to objects have to use the "cocoon" object, like "cocoon/continuation/id".
    </action>
    <action dev="RP" type="add">
