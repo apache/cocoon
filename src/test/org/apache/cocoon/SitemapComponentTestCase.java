@@ -17,10 +17,11 @@
 package org.apache.cocoon;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
-import java.util.*;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.transform.TransformerException;
@@ -36,7 +37,8 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.flow.*;
+import org.apache.cocoon.components.flow.AbstractInterpreter;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -46,9 +48,9 @@ import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -65,7 +67,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.6 2004/06/14 14:49:25 stephan Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.7 2004/06/23 09:16:31 stephan Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -406,7 +408,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         return document.toByteArray();
     }
     
-    public String callFunction(String type, String source, String function, List params) throws Exception {
+    public String callFunction(String type, String source, String function, Map params) throws Exception {
         
         ComponentSelector selector = null;
         Interpreter interpreter = null;
@@ -424,7 +426,15 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             assertNotNull("Test lookup of interpreter", interpreter);
             
             ((AbstractInterpreter)interpreter).register(source);
-            interpreter.callFunction(function, params, getRedirector());
+            
+            ArrayList parameters = new ArrayList();
+            for (Iterator i = params.keySet().iterator(); i.hasNext();) {
+                String name = (String)i.next();
+                String value = (String)params.get(name);
+                parameters.add(new Interpreter.Argument(name, value));
+            }
+            
+            interpreter.callFunction(function, parameters, getRedirector());
             
         } catch (ComponentException ce) {
             getLogger().error("Could not retrieve interpeter", ce);
@@ -439,7 +449,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         return FlowHelper.getWebContinuation(getObjectModel()).getId();
     }
     
-    public String callContinuation(String type, String source, String id, List params) throws Exception {
+    public String callContinuation(String type, String source, String id, Map params) throws Exception {
         
         ComponentSelector selector = null;
         Interpreter interpreter = null;
@@ -457,7 +467,15 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             assertNotNull("Test lookup of interpreter", interpreter);
 
             ((AbstractInterpreter)interpreter).register(source);
-            interpreter.handleContinuation(id, params, getRedirector());
+            
+            ArrayList parameters = new ArrayList();
+            for (Iterator i = params.keySet().iterator(); i.hasNext();) {
+                String name = (String)i.next();
+                String value = (String)params.get(name);
+                parameters.add(new Interpreter.Argument(name, value));
+            }
+            
+            interpreter.handleContinuation(id, parameters, getRedirector());
 
         } catch (ComponentException ce) {
             getLogger().error("Could not retrieve interpreter", ce);

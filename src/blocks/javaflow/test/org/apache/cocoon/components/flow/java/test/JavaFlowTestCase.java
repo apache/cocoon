@@ -16,7 +16,7 @@
 
 package org.apache.cocoon.components.flow.java.test;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.java.VarMap;
@@ -26,7 +26,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: JavaFlowTestCase.java,v 1.1 2004/06/14 14:53:56 stephan Exp $
+ * @version CVS $Id: JavaFlowTestCase.java,v 1.2 2004/06/23 09:16:32 stephan Exp $
  */
 public class JavaFlowTestCase extends SitemapComponentTestCase {
 
@@ -36,12 +36,12 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
     
     public void testSimple() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "simpleTest", new ArrayList());
+        String id = callFunction("java", source, "simpleTest", new HashMap());
         
         getRequest().addParameter("a", "2.3");
         getRedirector().reset();
         
-        callContinuation("java", source, id, new ArrayList());
+        callContinuation("java", source, id, new HashMap());
 
         VarMap map = (VarMap)getFlowContextObject();
         
@@ -55,26 +55,26 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
     
     public void testNew() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "newTest", new ArrayList());
+        String id = callFunction("java", source, "newTest", new HashMap());
     }
     
     public void testCatch() throws Exception {
         
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "catchTest", new ArrayList());
+        String id = callFunction("java", source, "catchTest", new HashMap());
         
         assertEquals(getRedirector().getRedirect(), "cocoon:/getNumberA");
         
         getRequest().addParameter("a", "bla");
         getRedirector().reset();
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
         
         assertEquals(getRedirector().getRedirect(), "cocoon:/error");
         
         getRedirector().reset();
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
         
         assertEquals(getRedirector().getRedirect(), "cocoon:/result");
         
@@ -83,7 +83,7 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
     public void testAbstract() throws Exception {
         
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "abstractTest", new ArrayList());
+        String id = callFunction("java", source, "abstractTest", new HashMap());
 
         assertEquals(getRedirector().getRedirect(), "cocoon:/parent");
     }
@@ -91,62 +91,73 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
     public void testDelegate() throws Exception {
 
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "delegateTest", new ArrayList());
+        String id = callFunction("java", source, "delegateTest", new HashMap());
 
         assertEquals(getRedirector().getRedirect(), "cocoon:/page/getNumberA");
 
         getRequest().addParameter("a", "2");
         getRedirector().reset();
 
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
         
         assertEquals(getRedirector().getRedirect(), "cocoon:/page/getNumberB");
 
         getRequest().addParameter("b", "2");
         getRedirector().reset();
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
 
         assertEquals(getRedirector().getRedirect(), "cocoon:/page/getOperator");
         
         getRequest().addParameter("operator", "plus");
         getRedirector().reset();
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
 
         assertEquals(getRedirector().getRedirect(), "cocoon:/page/displayResult");
     }
 
     public void testException() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "exceptionTest", new ArrayList());
+        String id = callFunction("java", source, "exceptionTest", new HashMap());
         
         assertEquals(getRedirector().getRedirect(), "cocoon:/test.jxt");
         
         try {
-            callContinuation("java", source, id, new ArrayList());
+            callContinuation("java", source, id, new HashMap());
             fail("Excepting a FooException");
         } catch (FooException e) {}
     }
     
     public void testSimpleContinuable() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleContinuable";
-        String id = callFunction("java", source, "suspendTest", new ArrayList());
+        String id = callFunction("java", source, "suspendTest", new HashMap());
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
     }
 
     public void testWrapperContinuable() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.WrapperContinuable";
-        String id = callFunction("java", source, "wrapperTest", new ArrayList());
+        String id = callFunction("java", source, "wrapperTest", new HashMap());
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
     }
 
     public void testExtendedContinuable() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.ExtendedContinuable";
-        String id = callFunction("java", source, "extendedTest", new ArrayList());
+        String id = callFunction("java", source, "extendedTest", new HashMap());
         
-        id = callContinuation("java", source, id, new ArrayList());
+        id = callContinuation("java", source, id, new HashMap());
+    }
+    
+    public void testParameters() throws Exception {
+        String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
+        
+        HashMap parameters = new HashMap();
+        parameters.put("p1", "abc");
+        parameters.put("p2", "def");
+        parameters.put("p3", "2.3");
+        
+        String id = callFunction("java", source, "parameterTest", parameters);
     }
 }

@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -41,7 +42,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.8 2004/06/14 14:53:56 stephan Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.9 2004/06/23 09:16:32 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -175,6 +176,12 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setLogger(getLogger());
         context.setServiceManager(manager);
         context.setRedirector(redirector);
+        Parameters parameters = new Parameters();
+        for(Iterator i=params.iterator(); i.hasNext();) {
+        	Argument argument = (Argument)i.next();
+        	parameters.setParameter(argument.name, argument.value);
+        }
+        context.setParameters(parameters);
 
         Continuation continuation = new Continuation(context);
 
@@ -239,6 +246,13 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setLogger(getLogger());
         context.setServiceManager(manager);
         context.setRedirector(redirector);
+        Parameters parameters = new Parameters();
+        for(Iterator i=params.iterator(); i.hasNext();) {
+        	Argument argument = (Argument)i.next();
+        	parameters.setParameter(argument.name, argument.value);
+        }
+        context.setParameters(parameters);
+        
         Continuation continuation = new Continuation(parentContinuation, context);
 
         Request request = ContextHelper.getRequest(this.avalonContext);

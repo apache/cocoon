@@ -17,6 +17,8 @@ package org.apache.cocoon.components.flow.java.test;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.apache.cocoon.components.flow.java.*;
 import org.apache.cocoon.forms.FormContext;
 /*import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -123,6 +125,12 @@ public class SimpleFlow extends AbstractSimpleFlow {
              throw new FooException("test", 123);
          }
      }
+    
+    public void doParameterTest() throws Exception {
+    	Assert.assertEquals("abc", getParameters().getParameter("p1")); 
+    	Assert.assertEquals("def", getParameters().getParameter("p2"));
+    	Assert.assertEquals(2.3f, getParameters().getParameterAsFloat("p3"), 0.1f);
+    }
 }
 
 class FooInner {
