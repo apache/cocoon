@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletAspect.java,v 1.5 2003/12/08 13:47:51 cziegeler Exp $
+ * @version CVS $Id: FullScreenCopletAspect.java,v 1.6 2004/03/03 21:44:54 cziegeler Exp $
  */
 public class FullScreenCopletAspect extends AbstractAspect {
 
@@ -80,15 +80,17 @@ public class FullScreenCopletAspect extends AbstractAspect {
         
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
 
-        final Layout fullScreenLayout = service.getComponentManager().getProfileManager().getEntryLayout();
-        if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
-            FullScreenCopletEvent event = new FullScreenCopletEvent( cid, null );
-            XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
-        } else {
-            FullScreenCopletEvent event = new FullScreenCopletEvent( cid, layout );
-            XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
+        Boolean supportsFullScreen = (Boolean)cid.getCopletData().getAspectData("full-screen");
+        if ( supportsFullScreen == null || supportsFullScreen.equals(Boolean.TRUE) ) {
+            final Layout fullScreenLayout = service.getComponentManager().getProfileManager().getEntryLayout();
+            if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
+                FullScreenCopletEvent event = new FullScreenCopletEvent( cid, null );
+                XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
+            } else {
+                FullScreenCopletEvent event = new FullScreenCopletEvent( cid, layout );
+                XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
+            }
         }
-
         context.invokeNext(layout, service, handler);
 	}
 
