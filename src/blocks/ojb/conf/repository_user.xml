@@ -30,4 +30,31 @@
         <field-descriptor name="name"           column="NAME"           jdbc-type="VARCHAR"/>
     </class-descriptor>
 
+    <!-- mappings for the QueryBean Block -->
+    <class-descriptor class="org.apache.cocoon.bean.query.SimpleLuceneCriterionBean" table="CRITERION">
+        <field-descriptor name="id"   column="ID"   jdbc-type="BIGINT" primarykey="true" autoincrement="true"/>
+        <field-descriptor name="qid" column="Q_ID" jdbc-type="BIGINT" access="anonymous"/>
+        <field-descriptor name="field" column="C_FIELD" jdbc-type="VARCHAR"/>
+        <field-descriptor name="match" column="C_MATCH" jdbc-type="VARCHAR"/>
+        <field-descriptor name="term" column="C_TERM" jdbc-type="VARCHAR"/>
+    </class-descriptor>
+
+    <class-descriptor class="org.apache.cocoon.bean.query.SimpleLuceneQueryBean" table="QUERY">
+        <field-descriptor name="id"   column="ID"   jdbc-type="BIGINT" primarykey="true" autoincrement="true"/>
+        <field-descriptor name="user" column="USER_ID" jdbc-type="VARCHAR"/>
+        <field-descriptor name="date" column="Q_DATE" jdbc-type="TIMESTAMP" conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlTimestampFieldConversion"/>
+        <field-descriptor name="bool" column="Q_BOOL" jdbc-type="VARCHAR"/>
+        <field-descriptor name="name" column="Q_NAME" jdbc-type="VARCHAR"/>
+        <field-descriptor name="type" column="Q_TYPE" jdbc-type="VARCHAR"/>
+        <field-descriptor name="size" column="Q_SIZE" jdbc-type="BIGINT"/>
+        <collection-descriptor
+            name="criteria"
+            element-class-ref="org.apache.cocoon.bean.query.SimpleLuceneCriterionBean"
+            auto-retrieve="true"
+            auto-update="true"
+            auto-delete="true">
+            <inverse-foreignkey field-ref="qid"/>
+        </collection-descriptor>
+    </class-descriptor>
+
 <!-- END OF OJB USER MAPPINGS-->
