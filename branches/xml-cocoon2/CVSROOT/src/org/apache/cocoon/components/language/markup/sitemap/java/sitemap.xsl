@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2000-08-21 17:39:36 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2000-08-22 23:05:11 $
 -->
 
 <xsl:stylesheet 
@@ -500,8 +500,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment);
       </xsl:when>
       <xsl:when test="@uri">
-        // request.setUri ("<xsl:value-of select="@uri"/>");
-        // this.process(environment);
+        environment.redirect (substitute(listOfLists, "<xsl:value-of select="@uri"/>"));
+        return true;
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="error">
