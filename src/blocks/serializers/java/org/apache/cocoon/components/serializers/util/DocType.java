@@ -15,7 +15,8 @@
  */
 package org.apache.cocoon.components.serializers.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * The <code>DocType</code> class encapsulates informations regarding
@@ -134,17 +135,27 @@ public class DocType {
      * instance.
      */
     public boolean equals(Object object) {
-        if (object == null) return(false);
-        if (this == object) return(true);
-
-        if (!(object instanceof DocType)) return(false);
-        DocType doctype = (DocType)object;
-
-        if (StringUtils.equals(this.public_id, doctype.public_id)
-            && StringUtils.equals(this.system_id, doctype.system_id)
-            && this.root_name.equals(doctype.root_name)) {
-            return true;
+        if (!(object instanceof DocType)) {
+            return false;
         }
-        return false;
+        DocType rhs = (DocType)object;
+        return new EqualsBuilder()
+            .appendSuper(super.equals(object))
+            .append(public_id, rhs.public_id)
+            .append(system_id, rhs.system_id)
+            .append(root_name, rhs.root_name)
+            .isEquals();
+    }
+
+    /**
+     * Returns the hash code value for this docType
+     */
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .appendSuper(super.hashCode())
+            .append(public_id)
+            .append(system_id)
+            .append(root_name)
+            .toHashCode();
     }
 }
