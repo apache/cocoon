@@ -1,4 +1,4 @@
-/*-- $Id: Manager.java,v 1.10 2000-12-03 19:54:48 greenrd Exp $ --
+/*-- $Id: Manager.java,v 1.11 2001-01-18 22:38:17 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import java.io.*;
  * This class is used to create and control software actors and resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-12-03 19:54:48 $
+ * @version $Revision: 1.11 $ $Date: 2001-01-18 22:38:17 $
  */
 
 public class Manager 
@@ -121,7 +121,7 @@ public class Manager
         } catch (NoClassDefFoundError e) {
             throw new RuntimeException("Error creating " + name + ": make sure the needed classes can be found in the classpath (" + e.getMessage() + ")");
         } catch (Throwable e) {
-            throw new RuntimeException("Factory error:  unknown exception creating \" " + name + "\" : " + e);
+            throw new RuntimeException("Exception when creating \" " + name + "\" : \n" + e);
         }
     }
 
