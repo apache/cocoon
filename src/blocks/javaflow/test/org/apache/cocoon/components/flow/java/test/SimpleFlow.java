@@ -50,6 +50,14 @@ public class SimpleFlow extends AbstractSimpleFlow {
     public void doNewTest() {
         Locale locale = null;
         FormContext formContext = new FormContext(getRequest(), locale);
+        
+        //second test
+        new Double("2.3");
+        
+        //third test
+        new String(new char[]{'a','b','c'}, 0, 3);
+        
+        Assert.assertNotNull(formContext);
     }
 
     public void doCatchTest() {
@@ -58,6 +66,15 @@ public class SimpleFlow extends AbstractSimpleFlow {
             float a = Float.parseFloat(getRequest().getParameter("a"));
         } catch (NumberFormatException nfe) {
             sendPageAndWait("error");
+        }
+        sendPage("result");
+    }
+    
+    public void doCatchTest2() {
+        try {
+            sendPageAndWait("getNumberA");
+            float a = Float.parseFloat(getRequest().getParameter("a"));
+        } catch (NumberFormatException nfe) {
         }
         sendPage("result");
     }

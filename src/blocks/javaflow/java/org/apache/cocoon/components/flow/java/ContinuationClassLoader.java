@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.flow.java;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
@@ -35,7 +36,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.11 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.12 2004/06/26 18:29:30 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -143,9 +144,12 @@ public class ContinuationClassLoader extends ClassLoader {
         ClassGen clazz = new ClassGen(javaclazz);
         ConstantPoolGen cp = clazz.getConstantPool();
         
+        String path = "build/rewritten/"+clazz.getClassName().replace('.', '/');
+        
         if (debug) {
         	try {
-                FileOutputStream fos = new FileOutputStream(javaclazz.getClassName() + ".orig.j");
+        		new File(path).mkdirs();
+                FileOutputStream fos = new FileOutputStream(path + ".orig.j");
                 DecompilingVisitor v = new DecompilingVisitor(javaclazz, fos);
                 v.start();
             } catch (Exception e) {
@@ -177,18 +181,6 @@ public class ContinuationClassLoader extends ClassLoader {
                 rewrite(method, cfg);
                 
                 // make last optional check for consistency
-                /*System.out.println("check " + methods[i].getName());
-
-                try {
-                    cfg = new ControlFlowGraph(method);
-                    analyse(clazz, method, cfg, ev);
-                    printFrameInfo(method, cfg);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new ClassNotFoundException("Rewritten method is not consistent", e);
-                }*/
-                
-                // make last optional check for consistency
                 clazz.replaceMethod(methods[i], method.getMethod());
             }
         }
@@ -196,7 +188,7 @@ public class ContinuationClassLoader extends ClassLoader {
         if (debug) {
         	byte[] changed = clazz.getJavaClass().getBytes();
         	try {
-        		FileOutputStream out = new FileOutputStream(clazz.getClassName() + ".rewritten.class");
+        		FileOutputStream out = new FileOutputStream(path + ".class");
         		out.write(changed);
         		out.flush();
         		out.close();
@@ -205,7 +197,7 @@ public class ContinuationClassLoader extends ClassLoader {
         	}
         	
         	try {
-                FileOutputStream fos = new FileOutputStream(clazz.getClassName() + ".rewritten.j");
+                FileOutputStream fos = new FileOutputStream(path + ".rewritten.j");
                 DecompilingVisitor v = new DecompilingVisitor(clazz.getJavaClass(), fos);
                 v.start();
             } catch (Exception e) {
@@ -280,6 +272,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 // We can only follow _one_ successor, the one after the
                 // JSR that was recently executed.
                 RET ret = (RET)u.getInstruction().getInstruction();
+                System.out.println("type="+u.getOutFrame(oldchain).getLocals().get(ret.getIndex()));
                 ReturnaddressType t = (ReturnaddressType)u.getOutFrame(oldchain).getLocals().get(ret.getIndex());
                 InstructionContext theSuccessor = cfg.contextOf(t.getTarget());
 
@@ -392,11 +385,23 @@ public class ContinuationClassLoader extends ClassLoader {
                 // remove all new's                
                 if (ins.getInstruction().getOpcode() == Constants.NEW) {
                     try {
-                        // remove additional dup's
-                        while (next != null && next.getInstruction().getOpcode() == Constants.DUP) {
+                    	// TODO: Replace new hack by a generic secure method to handle uninitialze objects
+                        
+                    	// remove additional dup or the dup_x1&swap combination
+                    	if (next != null && next.getInstruction().getOpcode() == Constants.DUP) { 
                             context = cfg.contextOf(next);
                             frame = context.getOutFrame(new ArrayList());
                             InstructionHandle newnext = next.getNext();
+                            insList.delete(next);
+                            next = newnext;
+                        } else if (next != null && next.getInstruction().getOpcode() == Constants.DUP_X1 && 
+                        		   next.getNext().getInstruction().getOpcode() == Constants.SWAP) {
+                        	InstructionHandle newnext = next.getNext();
+                            insList.delete(next);
+                            next = newnext;
+                        	context = cfg.contextOf(next);
+                            frame = context.getOutFrame(new ArrayList());
+                            newnext = next.getNext();
                             insList.delete(next);
                             next = newnext;
                         }
@@ -421,7 +426,7 @@ public class ContinuationClassLoader extends ClassLoader {
                     Type type = os.peek(arguments.length);
                     if (type instanceof UninitializedObjectType) {
                         ObjectType objecttype = ((UninitializedObjectType) type).getInitialized();
-                        InstructionList duplicator = duplicateStack(method, invoke, objecttype);
+                        InstructionList duplicator = duplicateStack(method, invoke, objecttype, os);
                         InstructionTargeter[] targeter = ins.getTargeters();
 
                         if (targeter!=null) {
@@ -487,7 +492,7 @@ public class ContinuationClassLoader extends ClassLoader {
     }
 
     private InstructionList duplicateStack(MethodGen method, InvokeInstruction invoke,
-            ObjectType objecttype) throws ClassNotFoundException {
+            ObjectType objecttype, OperandStack os) throws ClassNotFoundException {
         // reconstruction of an uninitialed object to call the constructor.
         InstructionFactory insFactory = new InstructionFactory(method.getConstantPool());
         InstructionList insList = new InstructionList();
@@ -519,7 +524,9 @@ public class ContinuationClassLoader extends ClassLoader {
         }
         // create uninitialzed object
         insList.append(insFactory.createNew(objecttype));
-        insList.append(InstructionFactory.createDup(objecttype.getSize()));
+        // test for more occurrences in the stack
+        if ((os.size()>=arguments.length+2) && (os.peek(arguments.length+1) instanceof UninitializedObjectType))
+        	insList.append(InstructionFactory.createDup(objecttype.getSize()));
         // return the arguments into the stack
         for (int i = 0; i < arguments.length; i++) {
             Type type = arguments[i];

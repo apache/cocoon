@@ -26,7 +26,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: JavaFlowTestCase.java,v 1.3 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id: JavaFlowTestCase.java,v 1.4 2004/06/26 18:29:30 stephan Exp $
  */
 public class JavaFlowTestCase extends SitemapComponentTestCase {
 
@@ -39,18 +39,17 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
         String id = callFunction("java", source, "simpleTest", new HashMap());
         
         getRequest().addParameter("a", "2.3");
-        getRedirector().reset();
         
         callContinuation("java", source, id, new HashMap());
 
         VarMap map = (VarMap)getFlowContextObject();
         
-        assertEquals(((Float)map.getMap().get("result")).floatValue(), 3.3f, 0.1f);
+        assertEquals(3.3f, ((Float)map.getMap().get("result")).floatValue(), 0.1f);
 
         JXPathContext jxcontext = JXPathContext.newContext(getFlowContextObject());
         Float result = (Float)jxcontext.getValue("result");
 
-        assertEquals(result.floatValue(), 3.3f, 0.1f);
+        assertEquals(3.3f, result.floatValue(), 0.1f);
     }
     
     public void testNew() throws Exception {
@@ -63,20 +62,17 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
         String id = callFunction("java", source, "catchTest", new HashMap());
         
-        assertEquals(getRedirector().getRedirect(), "cocoon:/getNumberA");
+        assertEquals("cocoon:/getNumberA", getRedirector().getRedirect());
         
         getRequest().addParameter("a", "bla");
-        getRedirector().reset();
         
         id = callContinuation("java", source, id, new HashMap());
         
-        assertEquals(getRedirector().getRedirect(), "cocoon:/error");
-        
-        getRedirector().reset();
+        assertEquals("cocoon:/error", getRedirector().getRedirect());
         
         id = callContinuation("java", source, id, new HashMap());
         
-        assertEquals(getRedirector().getRedirect(), "cocoon:/result");
+        assertEquals("cocoon:/result", getRedirector().getRedirect());
         
     }
     
@@ -85,7 +81,7 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
         String id = callFunction("java", source, "abstractTest", new HashMap());
 
-        assertEquals(getRedirector().getRedirect(), "cocoon:/parent");
+        assertEquals("cocoon:/parent", getRedirector().getRedirect());
     }
     
     public void testDelegate() throws Exception {
@@ -93,35 +89,32 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
         String id = callFunction("java", source, "delegateTest", new HashMap());
 
-        assertEquals(getRedirector().getRedirect(), "cocoon:/page/getNumberA");
+        assertEquals("cocoon:/page/getNumberA", getRedirector().getRedirect());
 
         getRequest().addParameter("a", "2");
-        getRedirector().reset();
 
         id = callContinuation("java", source, id, new HashMap());
         
-        assertEquals(getRedirector().getRedirect(), "cocoon:/page/getNumberB");
+        assertEquals("cocoon:/page/getNumberB", getRedirector().getRedirect());
 
         getRequest().addParameter("b", "2");
-        getRedirector().reset();
         
         id = callContinuation("java", source, id, new HashMap());
 
-        assertEquals(getRedirector().getRedirect(), "cocoon:/page/getOperator");
+        assertEquals("cocoon:/page/getOperator", getRedirector().getRedirect());
         
         getRequest().addParameter("operator", "plus");
-        getRedirector().reset();
         
         id = callContinuation("java", source, id, new HashMap());
 
-        assertEquals(getRedirector().getRedirect(), "cocoon:/page/displayResult");
+        assertEquals("cocoon:/page/displayResult", getRedirector().getRedirect());
     }
 
     public void testException() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
         String id = callFunction("java", source, "exceptionTest", new HashMap());
         
-        assertEquals(getRedirector().getRedirect(), "cocoon:/test.jxt");
+        assertEquals("cocoon:/test.jxt", getRedirector().getRedirect());
         
         try {
             callContinuation("java", source, id, new HashMap());
@@ -163,6 +156,22 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
     
     public void testClass() throws Exception {
         String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
-        String id = callFunction("java", source, "forClassTest", new HashMap());
+        String id = callFunction("java", source, "classTest", new HashMap());
+    }
+    
+    public void testInnerClass() throws Exception {
+        String source = "org.apache.cocoon.components.flow.java.test.InnerContinuable";
+        String id = callFunction("java", source, "innerClassTest1", new HashMap());
+        
+        assertEquals("cocoon:/test1", getRedirector().getRedirect());
+        
+        callContinuation("java", source, id, new HashMap());
+        
+        // second test
+        id = callFunction("java", source, "innerClassTest2", new HashMap());
+        
+        assertEquals("cocoon:/test2", getRedirector().getRedirect());
+        
+        callContinuation("java", source, id, new HashMap());
     }
 }

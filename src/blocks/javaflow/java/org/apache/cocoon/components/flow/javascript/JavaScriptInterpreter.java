@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.flow.javascript;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +41,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.1 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.2 2004/06/26 18:29:30 stephan Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -67,6 +66,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter implements Config
         super.configure(config);
         
         continuationclassloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
+        continuationclassloader.addIncludeClass("org.mozilla.**");
         continuationclassloader.setDebug(config.getAttributeAsBoolean("debug", false));
 
         Configuration[] includes = config.getChildren("include");
@@ -185,7 +185,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter implements Config
 
         Request request = ContextHelper.getRequest(this.avalonContext);
         Session session = request.getSession(true);
-        HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
+        //HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
 
         ScriptHelper flow = (ScriptHelper) context.getObject();
 

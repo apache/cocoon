@@ -35,41 +35,43 @@ import java.util.Map;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractContinuable.java,v 1.6 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.7 2004/06/26 18:29:30 stephan Exp $
  */
 public abstract class AbstractContinuable implements Continuable {
 
-    private ContinuationContext getContext() {
+    private static ContinuationContext getContext() {
         if (Continuation.currentContinuation()==null)
             throw new IllegalStateException("No continuation is running");
         return (ContinuationContext) Continuation.currentContinuation().getContext();
     }
   
-    public Logger getLogger() {
+    public static Logger getLogger() {
         return getContext().getLogger();
     }
     
-    public Context getAvalonContext() {
+    public static Context getAvalonContext() {
         return getContext().getAvalonContext();
     }
 
-    public ServiceManager getServiceManager() {
+    public static ServiceManager getServiceManager() {
         return getContext().getServiceManager();
     }
  
-    public Redirector getRedirector() {
+    public static Redirector getRedirector() {
         return getContext().getRedirector();
     }
 
-    public void sendPageAndWait(String uri) {
+    public static void sendPageAndWait(String uri) {
         sendPageAndWait(uri, new VarMap());
     }
 
-    public void sendPageAndWait(String uri, Object bizdata) {
+    public static void sendPageAndWait(String uri, Object bizdata) {
+    	
+    	System.out.println("sendPageAndWait("+uri+", "+bizdata+")");
 
         ContinuationContext context = getContext();
 
-				if (context.getLogger()!=null)
+		if (context.getLogger()!=null)
             context.getLogger().debug("send page and wait '" + uri + "'");
 
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
@@ -91,11 +93,11 @@ public abstract class AbstractContinuable implements Continuable {
         Continuation.suspend();
     }
 
-    public void sendPage(String uri) {
+    public static void sendPage(String uri) {
         sendPage(uri, new VarMap());
     }
 
-    public void sendPage(String uri, Object bizdata) {
+    public static void sendPage(String uri, Object bizdata) {
 
         ContinuationContext context = getContext();
 
@@ -119,19 +121,20 @@ public abstract class AbstractContinuable implements Continuable {
         }
     }
 
-    public Request getRequest() {
+    public static Request getRequest() {
+    	System.out.println("getRequest()");
         return ContextHelper.getRequest(getContext().getAvalonContext());
     }
     
-    public Map getObjectModel() {
+    public static Map getObjectModel() {
         return ContextHelper.getObjectModel(getContext().getAvalonContext());
     }
     
-    public Parameters getParameters() {
+    public static Parameters getParameters() {
     	return getContext().getParameters();
     }
 
-    public void processPipelineTo(String uri, Object bizdata, OutputStream out) {
+    public static void processPipelineTo(String uri, Object bizdata, OutputStream out) {
 
         ContinuationContext context = getContext();
 
@@ -147,7 +150,7 @@ public abstract class AbstractContinuable implements Continuable {
         }
     }
 
-    public void redirectTo(String uri) {
+    public static void redirectTo(String uri) {
         try {
             getContext().getRedirector().redirect(false, uri);
         } catch (Exception e) {
@@ -155,14 +158,14 @@ public abstract class AbstractContinuable implements Continuable {
         }
     }
 
-    public void sendStatus(int sc) {
+    public static void sendStatus(int sc) {
         getContext().getRedirector().sendStatus(sc);
     }
 
     /**
      * Access components.
      */
-    public Object getComponent(String id) {
+    public static Object getComponent(String id) {
         try {
             return getContext().getServiceManager().lookup(id);
         } catch (Exception e) {
@@ -175,7 +178,7 @@ public abstract class AbstractContinuable implements Continuable {
      *
      * @param component a component
      */
-    public void releaseComponent( Object component ) {
+    public static void releaseComponent( Object component ) {
         if (component != null) {
             getContext().getServiceManager().release(component);
         }

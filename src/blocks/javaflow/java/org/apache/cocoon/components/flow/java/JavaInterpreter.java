@@ -42,7 +42,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.10 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.11 2004/06/26 18:29:30 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -94,8 +94,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         if (getLogger().isDebugEnabled())
             getLogger().debug("initialize java flow interpreter");
 
-        initialized = true;
-
         for (Iterator scripts = needResolve.iterator(); scripts.hasNext();) {
 
             String name = (String) scripts.next();
@@ -105,12 +103,13 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
                 name = JavaScriptCompilingClassLoader.getClassName(name);
             }
 
+            System.out.println("registered java class \"" + name + "\" for flow");
             if (getLogger().isDebugEnabled())
                 getLogger().debug("registered java class \"" + name + "\" for flow");
             
             Class clazz = continuationclassloader.loadClass(name);
 
-            if (!Continuable.class.isAssignableFrom(clazz)) {
+            if (!ContinuationCapable.class.isAssignableFrom(clazz)) {
                 getLogger().error("java class \"" + name + "\" doesn't implement Continuable");
                 continue;
             }
@@ -126,9 +125,9 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
                         String function = removePrefix(methodName);
                         this.methods.put(function, methods[i]);
 
+                        System.out.println("registered method \"" + methodName + "\" as function \"" + function + "\"");
                         if (getLogger().isDebugEnabled())
-                            getLogger().debug(
-                                    "registered method \"" + methodName + "\" as function \"" + function + "\"");
+                            getLogger().debug("registered method \"" + methodName + "\" as function \"" + function + "\"");
                     }
                 }
             } catch (Exception e) {
@@ -136,6 +135,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             }
 
         }
+        
+        initialized = true;
     }
 
     /**
@@ -168,7 +169,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         if (userScopes == null)
             userScopes = new HashMap();
 
-        Continuable flow = (Continuable) userScopes.get(method.getDeclaringClass());
+        ContinuationCapable flow = (ContinuationCapable) userScopes.get(method.getDeclaringClass());
 
         ContinuationContext context = new ContinuationContext();
         context.setObject(flow);
@@ -195,7 +196,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
                 if (getLogger().isDebugEnabled())
                     getLogger().debug("create new instance of \"" + method.getDeclaringClass() + "\"");
 
-                flow = (Continuable) method.getDeclaringClass().newInstance();
+                flow = (ContinuationCapable) method.getDeclaringClass().newInstance();
                 context.setObject(flow);
             }
 
@@ -260,7 +261,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         Session session = request.getSession(true);
         HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
 
-        Continuable flow = (Continuable) context.getObject();
+        ContinuationCapable flow = (ContinuationCapable) context.getObject();
         Method method = context.getMethod();
 
         WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);

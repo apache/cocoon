@@ -37,7 +37,7 @@ import org.apache.bcel.verifier.exc.StructuralCodeConstraintException;
  * 
  * WARNING! These classes are a fork of the bcel verifier. 
  *
- * @version $Id: ControlFlowGraph.java,v 1.1 2004/06/03 12:43:27 stephan Exp $
+ * @version $Id: ControlFlowGraph.java,v 1.2 2004/06/26 18:29:30 stephan Exp $
  * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
  */
 public class ControlFlowGraph{
@@ -159,10 +159,12 @@ public class ControlFlowGraph{
 
 			//sanity check
 			if ( (lastExecutionJSR() == null) && (subroutines.subroutineOf(getInstruction()) != subroutines.getTopLevel() ) ){
-				throw new AssertionViolatedException("Huh?! Am I '"+this+"' part of a subroutine or not?");
+				//throw new AssertionViolatedException("Huh?! Am I '"+this+"' part of a subroutine or not?");
+				return false;
 			}
 			if ( (lastExecutionJSR() != null) && (subroutines.subroutineOf(getInstruction()) == subroutines.getTopLevel() ) ){
-				throw new AssertionViolatedException("Huh?! Am I '"+this+"' part of a subroutine or not?");
+				//throw new AssertionViolatedException("Huh?! Am I '"+this+"' part of a subroutine or not?");
+				return false;
 			}
 
 			Frame inF = (Frame) inFrames.get(lastExecutionJSR());

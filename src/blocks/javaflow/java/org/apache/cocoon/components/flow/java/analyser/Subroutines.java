@@ -15,14 +15,28 @@
  */
 package org.apache.cocoon.components.flow.java.analyser;
 
-import org.apache.bcel.generic.*;
-import org.apache.bcel.verifier.exc.*;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+
+import org.apache.bcel.generic.ASTORE;
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.BranchInstruction;
+import org.apache.bcel.generic.CodeExceptionGen;
+import org.apache.bcel.generic.GotoInstruction;
+import org.apache.bcel.generic.IndexedInstruction;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.JsrInstruction;
+import org.apache.bcel.generic.LocalVariableInstruction;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.RET;
+import org.apache.bcel.generic.ReturnInstruction;
+import org.apache.bcel.generic.Select;
+import org.apache.bcel.verifier.exc.AssertionViolatedException;
+import org.apache.bcel.verifier.exc.StructuralCodeConstraintException;
 
 	/**
 	 * Instances of this class contain information about the subroutines
@@ -46,7 +60,7 @@ import java.util.Iterator;
 	 * 
 	 * WARNING! These classes are a fork of the bcel verifier.
 	 *
-	 * @version $Id: Subroutines.java,v 1.2 2004/06/24 16:48:53 stephan Exp $
+	 * @version $Id: Subroutines.java,v 1.3 2004/06/26 18:29:30 stephan Exp $
 	 * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
 	 * @see #getTopLevel()
 	 */
@@ -356,7 +370,6 @@ public class Subroutines{
 
 		// Calculate "real" subroutines.
 		HashSet sub_leaders = new HashSet(); // Elements: InstructionHandle
-		InstructionHandle ih = all[0];
 		for (int i=0; i<all.length; i++){
 			Instruction inst = all[i].getInstruction();
 			if (inst instanceof JsrInstruction){
@@ -435,7 +448,7 @@ public class Subroutines{
 				if (colors.get(all[i]) == Color.black){
 					((SubroutineImpl) (actual==all[0]?getTopLevel():getSubroutine(actual))).addInstruction(all[i]);
 					if (instructions_assigned.contains(all[i])){
-						throw new StructuralCodeConstraintException("Instruction '"+all[i]+"' is part of more than one subroutine (or of the top level and a subroutine).");
+						//throw new StructuralCodeConstraintException("Instruction '"+all[i]+"' is part of more than one subroutine (or of the top level and a subroutine).");
 					}
 					else{
 						instructions_assigned.add(all[i]);

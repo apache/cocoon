@@ -15,9 +15,14 @@
  */
 package org.apache.cocoon.components.flow.javascript;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -26,6 +31,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.java.AbstractContinuable;
+import org.apache.cocoon.components.flow.java.Continuable;
+import org.apache.cocoon.components.flow.java.ContinuationHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -41,6 +48,7 @@ import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.PropertyException;
+import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -54,7 +62,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptHelper.java,v 1.1 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.2 2004/06/26 18:29:30 stephan Exp $
  */
 public class JavaScriptHelper extends AbstractContinuable
     implements ScriptHelper {
@@ -81,7 +89,7 @@ public class JavaScriptHelper extends AbstractContinuable
     /**
      * Mapping of String objects (source uri's) to ScriptSourceEntry's
      */
-    //protected Map compiledScripts = new HashMap();
+    protected Map compiledScripts = new HashMap();
 
     /**
      * LAST_EXEC_TIME
@@ -150,6 +158,7 @@ public class JavaScriptHelper extends AbstractContinuable
      */
     public void register(String source)
     {
+    	System.out.println("register source "+source);
         synchronized(this) {
             needResolve.add(source);
         }
@@ -196,6 +205,8 @@ public class JavaScriptHelper extends AbstractContinuable
             e.printStackTrace();
             throw e;
         }
+        
+        sourceresolver = (SourceResolver)getServiceManager().lookup(SourceResolver.ROLE);
     }
 
     /**
@@ -275,7 +286,7 @@ public class JavaScriptHelper extends AbstractContinuable
         ClassLoader classLoader;
 
         /* true if this scope has assigned any global vars */
-        boolean useSession = false;
+        public boolean useSession = false;
 
         public ThreadScope() {
             final String[] names = { "importClass"};
@@ -302,7 +313,7 @@ public class JavaScriptHelper extends AbstractContinuable
             super.put(index, start, value);
         }
 
-        void reset() {
+        public void reset() {
             useSession = false;
         }
 
@@ -345,7 +356,7 @@ public class JavaScriptHelper extends AbstractContinuable
     }
 
     private ThreadScope createThreadScope() throws Exception {
-        Context context = Context.getCurrentContext();
+        //Context context = Context.getCurrentContext();
 
         ThreadScope thrScope = new ThreadScope();
 
@@ -357,7 +368,7 @@ public class JavaScriptHelper extends AbstractContinuable
         // Put in the thread scope the Cocoon object, which gives access
         // to the interpreter object, and some Cocoon objects. See
         // FOM_Cocoon for more details.
-        Object[] args = {};
+        //Object[] args = {};
         thrScope.defineProperty(LAST_EXEC_TIME,
                                 new Long(0),
                                 ScriptableObject.DONTENUM | ScriptableObject.PERMANENT);
@@ -409,7 +420,7 @@ public class JavaScriptHelper extends AbstractContinuable
         //thrScope.setupPackages(classLoader);
 
         // Check if we need to compile and/or execute scripts
-        /*synchronized (compiledScripts) {
+        synchronized (compiledScripts) {
             List execList = new ArrayList();
             // If we've never executed scripts in this scope or
             // if reload-scripts is true and the check interval has expired
@@ -452,7 +463,9 @@ public class JavaScriptHelper extends AbstractContinuable
                     thrScope.reset();
                 }
             }
-        }*/
+        }
+        
+        thrScope.put("cocoon", thrScope, new ContinuationHelper());
     }
 
     /**
@@ -462,7 +475,7 @@ public class JavaScriptHelper extends AbstractContinuable
      * @param fileName resource uri
      * @return compiled script
      */
-    /*Script compileScript(Context cx, String fileName) throws Exception {
+    Script compileScript(Context cx, String fileName) throws Exception {
         Source src = this.sourceresolver.resolveURI(fileName);
         if (src != null) {
             synchronized (compiledScripts) {
@@ -481,9 +494,9 @@ public class JavaScriptHelper extends AbstractContinuable
         } else {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
-    }*/
+    }
 
-    /*protected Script compileScript(Context cx, Scriptable scope, Source src)
+    protected Script compileScript(Context cx, Scriptable scope, Source src)
             throws Exception {
         InputStream is = src.getInputStream();
         if (is != null) {
@@ -498,7 +511,7 @@ public class JavaScriptHelper extends AbstractContinuable
         } else {
             throw new ResourceNotFoundException(src.getURI() + ": not found");
         }
-    }*/
+    }
 
     /**
      * Calls a JavaScript function, passing <code>params</code> as its
@@ -679,7 +692,7 @@ public class JavaScriptHelper extends AbstractContinuable
         }
     }*/
     
-    /*protected class ScriptSourceEntry {
+    protected class ScriptSourceEntry implements Continuable {
         final private Source source;
         private Script script;
         private long compileTime;
@@ -710,5 +723,5 @@ public class JavaScriptHelper extends AbstractContinuable
             }
             return script;
         }
-    }*/
+    }
 }
