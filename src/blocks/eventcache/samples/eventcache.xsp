@@ -3,7 +3,7 @@
 <!--
     XSP event-based cache sample.
 
-    $Id: eventcache.xsp,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+    Cvs $Id: eventcache.xsp,v 1.2 2003/10/02 04:21:17 ghoward Exp $
  -->
 
 
@@ -100,10 +100,10 @@
 		</para>
         <para>Test links:
             <ul>
-                <li><a target="_new" href="?pageKey=one">pageKey=one</a> 
+                <li><a href="?pageKey=one">pageKey=one</a> 
                 	(<a href="action?pageKey=one&amp;event=one">uncache with action</a>) 
                 	(<a href="flow?pageKey=one&amp;event=one">uncache with flow</a>)</li>
-                <li><a target="_new" href="?pageKey=two">pageKey=two</a>
+                <li><a href="?pageKey=two">pageKey=two</a>
                 	(<a href="action?pageKey=two&amp;event=two">uncache with action</a>) 
                 	(<a href="flow?pageKey=two&amp;event=two">uncache with flow</a>)</li>
             </ul>
@@ -127,7 +127,8 @@
 				the EventAware cache implementation is that it allows other components to 
 				contact it and notify it of an Event.  The Cache then looks up the keys 
 				mapped to that event in the event registry and cleans out the cache and 
-				registry accordingly.</li>
+				registry accordingly.  <i>See the sitemap of this sample for an example of 
+				configuring a pipeline to use this implementation.</i></li>
 				<li>The EventRegistry is responsible for mapping Events to cache keys, and 
 				providing information about that mapping to systems that need it, usually just 
 				the EventAwareCache.  Another crucial responsibility of the EventRegistry is to 

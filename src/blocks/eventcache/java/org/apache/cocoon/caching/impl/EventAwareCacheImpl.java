@@ -45,6 +45,7 @@
 */
 package org.apache.cocoon.caching.impl;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Initializable;
@@ -65,7 +66,7 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * in two MultiHashMap to facilitate efficient lookup by either as Key.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.5 2003/09/05 04:02:51 ghoward Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.6 2003/10/02 04:21:17 ghoward Exp $
  */
 public class EventAwareCacheImpl 
         extends CacheImpl 
@@ -92,16 +93,25 @@ public class EventAwareCacheImpl
      * 
      * <code>AggregatedValidity</code> is handled recursively.
 	 */
-	public void store(PipelineCacheKey key,
+	public void store(Serializable key,
                 		CachedResponse response)
                 		throws ProcessingException {
         SourceValidity[] validities = response.getValidityObjects();
         for (int i=0; i< validities.length;i++) {
             SourceValidity val = validities[i];
-			examineValidity(val, key);
+            examineValidity(val, key);
         }
-		super.store(key, response);
+        super.store(key, response);
 	}
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.caching.Cache#store(java.io.Serializable, org.apache.cocoon.caching.CachedResponse)
+     
+    public void store(Serializable key, CachedResponse response)
+        throws ProcessingException {
+        // TODO Auto-generated method stub
+        super.store(key, response);
+    }*/
 
     /**
      * Look up the EventRegistry 
@@ -129,19 +139,19 @@ public class EventAwareCacheImpl
      */
     public void processEvent(Event e) {
         if (e == null) return;
-        PipelineCacheKey[] pcks = m_eventRegistry.keysForEvent(e);
-        if (pcks == null) return;
-        for (int i=0;i<pcks.length; i++) {
-            if (pcks[i] != null) {
+        Serializable[] keys = m_eventRegistry.keysForEvent(e);
+        if (keys == null) return;
+        for (int i=0;i<keys.length; i++) {
+            if (keys[i] != null) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Processing cache event, found Pipeline key: " + pcks[i].toString());
+                    getLogger().debug("Processing cache event, found Pipeline key: " + keys[i].toString());
                 }
                 /* every pck associated with this event needs to be
                  * removed -- regardless of event mapping. and every 
                  * event mapped to those keys needs to be removed 
                  * recursively.
                  */ 
-                remove(pcks[i]);
+                remove(keys[i]);
             }
         }
     }
@@ -168,14 +178,14 @@ public class EventAwareCacheImpl
      * removed abnormally or is not configured with persistence.
      */
     public void veryifyEventCache() {
-        PipelineCacheKey[] pcks = m_eventRegistry.allKeys();
-        if (pcks == null) return;
-        for (int i=0; i<pcks.length; i++) {
-            if (!this.containsKey(pcks[i])) {
-                m_eventRegistry.removeKey(pcks[i]);
+        Serializable[] keys = m_eventRegistry.allKeys();
+        if (keys == null) return;
+        for (int i=0; i<keys.length; i++) {
+            if (!this.containsKey(keys[i])) {
+                m_eventRegistry.removeKey(keys[i]);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Cache key no longer valid: " + 
-                            pcks[i]);
+                            keys[i]);
                 }
             }
         }
@@ -191,7 +201,7 @@ public class EventAwareCacheImpl
         m_eventRegistry = null;
 	}
 
-    private void examineValidity(SourceValidity val, PipelineCacheKey key) {
+    private void examineValidity(SourceValidity val, Serializable key) {
         if (val instanceof AggregatedValidity) {
             handleAggregatedValidity((AggregatedValidity)val, key);
         } else if (val instanceof EventValidity) {
@@ -201,7 +211,7 @@ public class EventAwareCacheImpl
 
     private void handleAggregatedValidity(
                                     AggregatedValidity val,
-                                    PipelineCacheKey key) {
+                                    Serializable key) {
         // AggregatedValidity must be investigated further.
          Iterator it = val.getValidities().iterator();
          while (it.hasNext()) {
@@ -211,7 +221,7 @@ public class EventAwareCacheImpl
          }
     }
 
-    private void handleEventValidity(EventValidity val, PipelineCacheKey key) {
+    private void handleEventValidity(EventValidity val, Serializable key) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Found EventValidity: " + val.toString());
         }
