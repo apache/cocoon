@@ -54,17 +54,18 @@ import java.io.IOException;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
 /**
- * A <code>Redirector</code> that handles forward redirects, i.e. internal
+ * A base class for <code>Redirector</code>s that handle forward redirects, i.e. internal
  * redirects using the "cocoon:" pseudo-protocol.
+ * <p>
+ * Concrete subclasses have to define the <code>cocoonRedirect()</code> method.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.11 2004/01/18 22:27:26 sylvain Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.12 2004/01/19 10:50:57 sylvain Exp $
  */
-public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
+public abstract class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
     /**
      * Was there a call to <code>redirect()</code> ?
@@ -133,10 +134,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
         this.hasRedirected = true;
     }
 
-    protected void cocoonRedirect(String uri)  throws IOException, ProcessingException {
-        // Simply notify the Processor.
-        this.env.setAttribute(TreeProcessor.COCOON_REDIRECT_ATTR, uri);
-    }
+    protected abstract void cocoonRedirect(String uri)  throws IOException, ProcessingException;
 
     /**
      * Perform check on whether redirection has occured or not
@@ -152,5 +150,4 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
         env.setStatus(sc);
         this.hasRedirected = true;
     }
-
 }
