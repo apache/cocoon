@@ -1,13 +1,19 @@
 cocoon.load("resource://org/apache/cocoon/webapps/authentication/flow/javascript/auth.js");
 
-// @TODO@ Get parameter_ removal working in auth.js
-// @TODO@ Get flow redirects to be session aware
-// @TODO@ Sort out error on clicking login when already logged in
+function isLoggedIn() {
+  var handler = cocoon.parameters["handler"];
+
+  if (auth_isAuthenticated(handler)) {
+    success();
+  } else {
+    failure();
+  }
+}
 
 function protect() {
   var handler = cocoon.parameters["handler"];
 
-  if (auth_isAuthenticated(handler)) {
+  if (auth_checkAuthentication(handler,"")) {
     success();
   } else {
     failure();
@@ -40,8 +46,8 @@ function success() {
   
   if (internal != null) {
     cocoon.sendPage(internal);
-  } else if (redirect+"" != "undefined") {
-    cocoon.redirectTo(redirect); //THIS NEEDS TO BE A SESSION AWARE REDIRECT
+  } else if (redirect != null) {
+    cocoon.redirectTo(redirect);
   } else {
     throw new Error("No protected redirection parameter given");
   }
@@ -54,8 +60,8 @@ function failure() {
 
   if (internal != null) {
     cocoon.sendPage(internal);
-  } else if (typeof redirect+"" != "undefined") {
-    cocoon.redirectTo(redirect); //THIS NEEDS TO BE A SESSION AWARE REDIRECT
+  } else if (redirect != null) {
+    cocoon.redirectTo(redirect);
   } else {
     // Why does this throw cause an error?
     throw new Error("No failure redirection parameter given");

@@ -52,13 +52,35 @@
 
        WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
 */
+
+function auth_checkAuthentication(handler, application) {
+
+    var authMgr = null;
+    var authenticated = false;
+    try {
+        authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
+
+        // do authentication
+        authenticated = authMgr.checkAuthentication(null, handler, application);
+        if (authenticated) {
+            state = authMgr.getState();
+            map = state.getHandler().getContext().getContextInfo();
+        } else {
+            cocoon.redirectTo(authMgr.getForwardingURI(handler));
+        }
+    } finally {
+        cocoon.releaseComponent(authMgr);
+    }
+    return authenticated;
+}
+
 function auth_isAuthenticated(handler) {
     var authMgr = null;
     try {
         // ApplicationName, do we need it?
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
         
-        return authMgr.isAuthenticated(handler)!=null;
+        return authMgr.isAuthenticated(handler);
     } finally {
         cocoon.releaseComponent(authMgr);
     }
@@ -68,9 +90,9 @@ function auth_login(handler, application, params) {
 
     var authParams = new Packages.org.apache.excalibur.source.SourceParameters();
     for (var name in params) {
-//      if ((""+name.substring(0,10)) == "parameters_")) {
-        authParams.setParameter(name, params[name]);
-  //    }
+      if (name.substring(0,10).equals("parameter_")) {
+        authParams.setParameter(name.substring(10), params[name]);
+      }
     }
     
     var authMgr = null;
