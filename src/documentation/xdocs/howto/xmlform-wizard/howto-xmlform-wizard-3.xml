@@ -58,7 +58,7 @@ public class HowToBean
   private boolean flowers = true;
   private boolean vegetables = true;  
   private boolean fruitTrees = true;
-  private boolean traditionalReciepes = true;
+  private boolean traditionalRecipes = true;
   private boolean soups = true;
   private boolean veganCookery = true;
   private boolean pigKeeping = true;
@@ -154,14 +154,14 @@ public class HowToBean
     fruitTrees = newFruitTrees;
     }
 
-  public boolean getTraditionalReciepes() 
+  public boolean getTraditionalRecipes() 
     {
-    return traditionalReciepes;
+    return traditionalRecipes;
     }
   
-  public void setTraditionalReciepes( boolean newTraditionalReciepes ) 
+  public void setTraditionalRecipes( boolean newTraditionalRecipes ) 
     {
-    traditionalReciepes = newTraditionalReciepes;
+    traditionalRecipes = newTraditionalRecipes;
     }
 
   public boolean getSoups() 
