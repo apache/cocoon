@@ -1,0 +1,238 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Cocoon - History of Changes</title>
+</head>
+
+<body>
+
+<p><img src="images/logo.gif" border="0"></p>
+
+<h1 align="center">History of Changes</h1>
+<p align="center"><b>Changes are chronologically ordered from top (most recent) to
+bottom (least recent)</b></p>
+<p><b>Cocoon 1.6-dev </b>- &lt;not yet released, found under CVS&gt;<br>
+(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>)
+<ul>
+  <li>Removed all old PI formats from docs and properties file. Thanks to <a href="mailto:Simon@BALR.com">Simon
+    McClenahan</a> for the report (SM)</li>
+  <li>Added a public method to FormatterFactory to allow more direct formatting.
+    Thanks to <a href="mailto:zvia@netmanage.co.il">               Zvi Avraham</a>
+    for the suggestion (SM)</li>
+  <li>Patched EngineWrapper to allow FileProducer to work when called from
+    command line. Thanks to <a href="mailto:hiddinkg@cs.utwente.nl">Gerrit Hiddink</a>
+    for the bug report (SM)</li>
+</ul>
+<p><b>Cocoon 1.5 </b>- October 29, 1999<br>
+(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> [SM], <a href="mailto:balld@webslingerZ.com">Donald
+Ball</a>, <a href="mailto:murphyk@umsystem.edu">Kenneth Murphy</a>, <a href="mailto:malimpen@dei.unipd.it">Stefano
+Malimpensa</a> [SM2])
+<ul>
+  <li>Fixed concurrency problem in XML4j parser. Again thanks to Jeffrey Thomas
+    Harris for the info (SM)</li>
+  <li>Added JRun installation instructions. Thanks to <a href="mailto:sstirlin@gis.net">           Scott Stirling</a>
+    for this (SM)</li>
+  <li>Added more info on the Cocoon status page. Thanks to <a href="mailto:dlehn@vt.edu">David
+    Lehn</a> for the patch. (SM)</li>
+  <li>Patched OpenXML that had a bug in the XML publisher that didn't support doctypes imposed from the
+    outside. This was breaking the WML formatter. (SM)</li>
+  <li>Patched XSL:P to support &lt;xsl:processing-instruction&gt; instead of
+    &lt;xsl:pi&gt; which is now deprecated. 
+    This makes XSL:P a hybrid between XSLT revisions but it's easier this way than to create two sets
+    of examples that work with latest and oldest releases of XSLT. Hopefully XSLT will standardize soon. (SM)</li>
+  <li>Fixed XML4J support bug. Thanks to <a href="mailto:harris@columbus.rr.com"> Jeffrey Thomas Harris</a>
+    for the patch (SM)</li>
+  <li>Added XSL:P Formatters (SM)</li>
+  <li>Updated XSL:P to build 19991017 (SM)</li>
+  <li>Added parameter visibility to formatters to allow request-dependent
+    formatting. Thanks to <a href="mailto:ben@algroup.co.uk">Ben Laurie</a> for
+    the suggestion (SM)</li>
+  <li>Changed Hashtable in more abstract Dictionary in all interfaces (this will
+    be updated to collection classes when JDK 1.2 is available) (SM)</li>
+  <li>Updated Fop to version 0.11 (SM)</li>
+  <li>Added a work-around for the JServ1.1b2 bug (SM2)</li>
+  <li>Updated documentation (SM)</li>
+  <li>Added the plan for JavaDOC XML generator and the JavaDOC DTD working draft
+    (KM)</li>
+  <li>Updated examples, especially the WML example which was based on an
+    obsolete WML DTD (SM)</li>
+  <li>Added WML formatter (SM)</li>
+  <li>Added the ability to &quot;mount&quot; the Cocoon status to a configurable
+    URL (SM)</li>
+  <li>Added the ability to hide Cocoon status for security reasons (SM)</li>
+  <li>Removed the persistent part of the object store since it's not used (SM)</li>
+  <li>Fixed DCP problem in loading the initScript.es file as system resource
+    (SM)</li>
+  <li>Added some better diagnostic hooks. Thanks to <a href="mailto:ben@algroup.co.uk">Ben
+    Laurie</a> for the patch (SM)</li>
+  <li>Added SQLProcessor (DB)</li>
+  <li>Fixed a bug in the EcmaScript language interpreter.(SM2)</li>
+  <li>Fixed problems on startup without complete configurations and written more
+    descriptive error messages on exceptions. (SM)</li>
+  <li>Updated the examples to reflect the changes. (SM)</li>
+  <li>Changed Cocoon illegal PIs from &lt;?cocon:xxx?&gt; to &lt;?cocoon-xxx?&gt;.
+    Thanks to <a href="mailto:tbray@textuality.com">Tim Bray</a> for his advice
+    (SM)</li>
+</ul>
+<p><b>Cocoon 1.4 </b>- September 13 1999<br>
+(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>, <a href="mailto:jtauber@jtauber.com">James
+Tauber</a>, <a href="mailto:paul_ororke@sparks.com">Paul O'Rorke</a>, <a href="mailto:rrocha@plenix.org">Ricardo
+Rocha</a>, <a href="mailto:chris_conway@mail.scp.com">Christopher Conway</a>, <a href="mailto:kvisco@ziplink.net">Keith
+Visco</a>, <a href="mailto:hannes@haug.com">Hannes Haug</a>)
+<ul>
+  <li>Fixed portability issues with JRun and Sun's JSWDK. (HH)</li>
+  <li>Added parsed stylesheets caching capabilities to the AbstractXSLTProcessor:
+    now if produced files are changed but stylesheets don't, the second are not
+    reparsed, improving the system performance since this is a very frequent
+    case (SM)&nbsp;</li>
+  <li>Reduced the memory footprint of some classes by initializing the
+    hashtables to lower values than default (SM)</li>
+  <li>Improved the speed of PI searching by looking for first found PI instead
+    of scanning the whole file (SM)</li>
+  <li>Updated the cocoon processing instructions that drive the reaction: &lt;?<i>cocoon:process?&gt;</i>
+    drives the processing reaction, <i>&lt;?cocoon.format?&gt;</i> indicates the
+    formatter used to end processing and format the document (SM)</li>
+  <li>Removed the processor pipeline and replaced with a reactor-type router
+    with PI-based reaction. (SM)</li>
+  <li>Moved the example classes in their own package for easier installation and
+    testing (SM)&nbsp;</li>
+  <li>Modified a number of classes to fit the new Store and Cache subframeworks.
+    (SM)</li>
+  <li>Added a first implementation of the Cache interface based on dynamic
+    evaluation of changeable points. Since each page is created by different
+    logic blocks, each one is treated as a <i>changeable point</i> and queried
+    for change at request time. This allows the page to be recreated if one of
+    the changeable points changes. (SM)</li>
+  <li>Added a first implementation of the Store interface based on serialization
+    persistency wrapped by an adaptively managed memory buffer. The object
+    storage system is used by the Cache system and its ready for long-living
+    objects such as compiled pages and such that should survive the JVM
+    shutdown. (SM)</li>
+  <li>Added support for the Oracle XSL Processor (works only with the Oracle XML
+    Parser) (SM)</li>
+  <li>Added the Store framework (SM)</li>
+  <li>Included FOP Version 0.9.1 that partially supports latest XSL Formatting
+    Object specification (19990421) (JT)</li>
+  <li>Included XSL:P Version 1.0 Beta (19990823) that supports latest XSLT
+    specification (19990421) (KV)</li>
+  <li>Introduced the Actor/Director concept to allow cleaner implementation and
+    configuration of dynamically loaded objects. (SM)</li>
+  <li>Added the WAP example to show how Cocoon can serve the same content to fat
+    HTML clients and thin WML clients such as WAP-enabled cellular phones or PDA.
+    (SM).</li>
+  <li>Removed the need for a properties file in DCP (SM)</li>
+  <li>Fixed a minor bug in Configurations. (HH)</li>
+  <li>Added the Producer subframework for easier dynamic XML generation (SM)</li>
+  <li>Rewrote and cleaned up the formatting section using the Router abstract
+    class (SM)</li>
+  <li>Rewrote some of the underlying design pattern implementations (SM)</li>
+  <li>Fixed bug in SunXMLParser not implementing Status (CC)</li>
+  <li>Added support for Oracle XML parser (CC)</li>
+  <li>Added Dynamic Content Processor (RR)</li>
+  <li>Updated sample configurations to reflect the changes (SM)</li>
+  <li>Rewrote the PI parser for more general use in AbstractXSLProcessor (SM)</li>
+  <li>Created the EngineWrapper class to extend the Engine class for use on
+    non-servlet based applications. (SM)</li>
+  <li>Added the possibility to use request parameters to trigger special events
+    on the page. Currently <em>debug</em> and <em>cache</em> are supported (SM)</li>
+  <li>Added request and cache as parameters for the processor chain as requested
+    by more sophisticated processors (SM)</li>
+  <li>Changed the cache system interface to match new needs (SM) [note: the
+    cache system has not been yet ported]</li>
+  <li>Changed the printing architecture. Now, you don't need to specify the type
+    of formattation but the publishing system will understand it for you (based
+    on processing instructions and the specified document type) (SM)</li>
+  <li>Added white paper on the Cocoon 2 architecture for public review (SM)</li>
+  <li>Fixed typos, added support for more detailed verbosity and fixed a
+    path-parsing bug for win32 systems (PO)</li>
+  <li>Added support for James Tauber's FOP to translate XSL:FO-styled documents
+    into PDF documents (JT, SM)</li>
+</ul>
+<p><b>Cocoon 1.3.1</b> - May 31 1999<br>
+(<a href="mailto:balld@webslingerZ.com">Donald Ball</a>, <a href="mailto:stefano@apache.org">Stefano
+Mazzocchi</a>)
+<ul>
+  <li>Added the first finished working draft of the XSP specification for public
+    review (SM)</li>
+  <li>Removed the XML and XSL specifications from the distribution (SM)</li>
+  <li>Fixed a deadlock problem in the cache system (DB)</li>
+</ul>
+<p><b>Cocoon 1.3</b> - May 12 1999<br>
+(<a href="mailto:balld@webslingerZ.com">Donald Ball</a>, <a href="mailto:stefano@apache.org">Stefano
+Mazzocchi</a>, <a href="mailto:shecter@darmstadt.gmd.de">Robb Shecter</a>)
+<ul>
+  <li>Included more detailed example of future XSP technology (under <em>examples/xsp</em>).
+    Note: the Cocoon 1.x generation will not support XSP and they are currently
+    being designed. A very very early access of the working draft is available
+    under <em>docs/xsp</em> (SM)</li>
+  <li>Patched the Sun ProjectX parser wrapper to work with latest release. Added
+    also a Sun printer class (RS)</li>
+  <li>Added the ability to call Cocoon from the command line (DB and SM)</li>
+  <li>Fixed the final Vector.toString() problem in JDK 1.1 compilation (SM)</li>
+  <li>Fixed the &quot;verify error&quot; by using Jikes compiler for
+    distribution (SM)</li>
+  <li>Cleaned up documentation and added some entries in the FAQ (SM)</li>
+  <li>Removed win32 batch scripts and rewritten the makefile (SM)</li>
+  <li>Added a better cache engine (DB)</li>
+</ul>
+<p><b>Cocoon 1.2</b> - Apr 30 1999<br>
+(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>, <a href="mailto:balld@webslingerZ.com">Donald
+Ball</a>)
+<ul>
+  <li>Improved documentation and cleaned things around (SM)</li>
+  <li>Changed versions of both OpenXML and XSL:P (SM)</li>
+  <li>Moved the core processing into a different class named Engine, first step
+    to a complete servlet/application duality (SM)</li>
+  <li>Added the Cocoon status handler (SM)</li>
+  <li>Added a better user interface for the servlet and a nicer look to report
+    errors (SM)</li>
+  <li>Added the OpenXML printer wrapper class that uses the new X3P API (DB)</li>
+  <li>Changed the initialization section to match exceptions thrown on different
+    servlet platforms (SM).</li>
+  <li>Changed behavior to identity transformation through the DOM processors if
+    no PI are found. Thanks to <a href="mailto:george@moberg.com">George T.
+    Talbot</a> for pointing it out (SM)</li>
+</ul>
+<p><b>Cocoon 1.1.1</b> - Apr 5 1999<br>
+(<a href="mailto:ritter@wt.net">Greg Ritter</a>, <a href="mailto:adrian_durkin@hotmail.com">Adrian
+Durkin</a>, <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>)
+<ul>
+  <li>Fixed a problem with the getClassloader() method returning null. Now
+    Cocoon doesn't always use the internal properties file but adds hardcoded
+    default values. This is because in Java 1.1 there is no getSystemClassloader()
+    method (SM).</li>
+  <li>Included the updated versions of both OpenXML 1.0.5 and XSL:P 19990326
+    which should fix lots of bugs and improve the overall performance (SM)</li>
+  <li>Patched to avoid the use of File.toURL() method which is not found under
+    the Java1 platform (SM, thanks to AD)</li>
+  <li>Added DoNothingCache to avoid caching during document debugging (GR)</li>
+</ul>
+<p><b>Cocoon 1.1</b> - Mar 25 1999<br>
+(<a href="mailto:patrick@cre8tivegroup.com">Patrick Gardella</a>, <a href="mailto:stefano@apache.org">Stefano
+Mazzocchi</a>, <a href="mailto:ritter@wt.net">Greg Ritter</a>, <a href="mailto:kvisco@ziplink.net">Keith
+Visco</a>)
+<ul>
+  <li>Changed the stylesheet mapping processing instruction from illegal &quot;xml:stylesheet&quot;
+    to standard &quot;xml-stylesheet&quot; (SM)</li>
+  <li>Created Cocoon logo (SM)</li>
+  <li>Added support for XSL:P processor (SM and KV)</li>
+  <li>Removed support for Koala XSL parser (SM)</li>
+  <li>Added LRU caching (both memory and disk) (GR)</li>
+  <li>Redesigned internal framework (SM)</li>
+  <li>Fixed some typos and English bugs in docs (PG)</li>
+</ul>
+<p><b>Cocoon 1.0</b> - Mar 10 1999<br>
+(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>)
+<ul>
+  <li>Initial version. (SM)</li>
+</ul>
+
+<p align="center"><font size="-1">Copyright (c) <a href="http://xml.apache.org">The Apache XML Project</a>.<br>
+$Id: changes.html,v 1.1.1.1 1999-11-09 01:51:29 stefano Exp $<br>
+All rights reserved.</font></p>
+
+</body>
+
+</html>
+
