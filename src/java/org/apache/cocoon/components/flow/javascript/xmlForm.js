@@ -12,7 +12,7 @@
  */
 
 function XForm(id, validatorNS, validatorDoc, scope) {
-    if (scope == "session") {
+    if (scope != "request") {
 	cocoon.createSession();
     }
     this.id = id;
