@@ -75,7 +75,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
+ * @version CVS $Id: PortletRequest.java,v 1.3 2003/12/08 15:55:43 vgritsenko Exp $
  */
 public abstract class PortletRequest implements Request {
 
@@ -415,9 +415,7 @@ public abstract class PortletRequest implements Request {
     }
 
     public String getProtocol() {
-        // TODO protocol should be available somehow
-        // return this.request.getProtocol();
-        return null;
+        return "JSR168";
     }
 
     public String getScheme() {
