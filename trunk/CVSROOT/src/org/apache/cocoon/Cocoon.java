@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.12 2000-02-13 18:29:16 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.13 2000-04-04 11:10:10 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.12 $ $Date: 2000-02-13 18:29:16 $
+ * @version $Revision: 1.13 $ $Date: 2000-04-04 11:10:10 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -102,7 +102,7 @@ public class Cocoon extends HttpServlet implements Defaults {
             exception = null;
             message = "<p>The servlet initialization argument <i>\"" + INIT_ARG + "\"</i> was not found. " +
                 "Please, make sure Cocoon is able to find its configurations or it won't be able to execute correctly.</p>" +
-                "<p>A template for such configurations may be found in the file \"/bin/cocoon.properties\" in the distribution.</p>";
+                "<p>A template for such configurations may be found in the file \"/conf/cocoon.properties\" in the distribution.</p>";
             return;
         }
 
