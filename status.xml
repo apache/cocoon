@@ -184,7 +184,6 @@
   <action dev="GP" type="iupdate">
     Upgraded to new Axis 1.1 release
   </action>
-  <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
   <action dev="CZ" type="add">
     Adding concept of parent-aware components, making e.g. the usage of 
     selectors with a component manager hierarchy much easier.
