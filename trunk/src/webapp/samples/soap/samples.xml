@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:14 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.4 2003/05/08 04:41:08 crossley Exp $ -->
 
 <samples name="SOAP Samples">
 
@@ -15,7 +15,7 @@
     Find out the current temperature in Beverly Hills, CA.
    </sample>
    <sample name="Currency Conversion" href="currency">
-    Get current Euro/Dollar exchange rate.
+    Get the current Euro/USDollar exchange rate.
    </sample>
   </group>
    
