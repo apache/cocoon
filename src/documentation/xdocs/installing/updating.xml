@@ -14,24 +14,21 @@
  <body>
 
  <s1 title="Updating Cocoon">
-  <p>Please take your time to read this document completely before trying to upgrade from
-     a Cocoon 2.0.x installation to 2.1 (or above).</p>
   <p>
-   This is a brief discussion of the changes between the latest official release @released.version@
-   and the current development version of Apache Cocoon.
-   You only need this information if you are updating an existing Cocoon installation, or
-   if you want to know what is going on in the development of Cocoon.
+    Please take your time to read this document completely before trying to upgrade from
+    a Cocoon 2.0.x installation to 2.1 (or above). You can also read it if you want to
+    know what was going on in the development of Cocoon.
   </p>
   <p>
     The Cocoon team took great care in making this new version as compatible as
     possible. However, in order to achieve even more flexibility, usability and
     performance, the internal architecure of Cocoon has been improved. Due to these
-    improvements it has not been possible to be compatible in every little detail. 
+    improvements it has not been possible to be compatible in every little detail.
     If you follow the instructions of document closely, however,
     you should be able to quickly upgrade your Cocoon 2.0.x installation.
   </p>
   <p>
-   The Cocoon team has developed many Avalon components that are not specific to Cocoon 
+   The Cocoon team has developed many Avalon components that are not specific to Cocoon
    and therefore have been donated to the Avalon Excalibur project and moved out
    of Cocoon. This has led to some configuration changes which are also described
    in this document.
@@ -82,8 +79,6 @@
        component. If the type attribute is omitted, the default configuration from the <code>map:components</code>
        section is used.
      </p>
-     <p>The SAXConnectors have been removed, so if you upgrade manually you have to remove
-        the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
      <p>So it's not that bad, despite incompatible changes in the Cocoon code there is
        little to do to update your Cocoon installation.</p>
     </s2>
@@ -94,32 +89,34 @@
     </p>
    </s2>
    <s2 title="FOP Serializer">
-    <p>Relative paths in FOP serializer's &lt;user-config&gt; are now resolved relatively
-      to the directory that contains the sitemap.</p>
+    <p>Relative paths in FOP serializer's <code>&lt;user-config&gt;</code> are now resolved
+      relatively to the directory that contains the sitemap.</p>
     <p>All Cocoon URIs are supported too.</p>
    </s2>
   <s2 title="Namespace changes">
     <p>
-        In order to have consistent namespaces, some transformers
-       and generators (listed below) use new namespaces. If you use any of these components, you will
-       need to use the new namespaces.
+      In order to have consistent namespaces, some transformers and generators
+      (listed below) use new namespaces. If you use any of these components, you
+      will need to use the new namespaces.
     </p>
     <s3 title="Request Generator">
-    <p>RequestGenerator changed its namespace from http://xml.apache.org/cocoon/requestgenerator/2.0 to
-       http://apache.org/cocoon/request/2.0.
+    <p>RequestGenerator changed its namespace from
+      <code>http://xml.apache.org/cocoon/requestgenerator/2.0</code> to
+      <code>http://apache.org/cocoon/request/2.0</code>.
     </p>
     </s3>
     <s3 title="I18nTransformer">
-      <p>The I18nTransformer changed its namespace from
-         http://apache.org/cocoon/i18n/2.0 to http://apache.org/cocoon/i18n/2.1</p>
+      <p>The I18nTransformer supports both
+         <code>http://apache.org/cocoon/i18n/2.0</code> and
+         <code>http://apache.org/cocoon/i18n/2.1</code> namespace.</p>
     </s3>
   </s2>
   </s1>
   <s1 title="Changes in logging interfaces require recompilation">
     <p>
        Due to some interface changes in the Cocoon logging components, custom java
-       components (generators,transformers or actions for example) compiled for Cocoon 2.0.x will not run
-       under Cocoon 2.1 unless recompiled.</p>
+       components (generators, transformers or actions for example) compiled for Cocoon
+       2.0.x will not run under Cocoon 2.1 unless recompiled.</p>
        <p>It's also advisable to change your implementations from using <em>Loggable</em>
          to <em>LogEnabled</em> when it comes to logging in your components.
        </p>
@@ -128,8 +125,6 @@
    <p>
     The Cocoon architecture has changed significantly. However, great care has been
     taken to preserve backwards compatibility.
-    This effort has been successful except for
-    one change which shouldn't affect anybody (see below).
    </p>
    <s2 title="Cocoon Configuration (cocoon.xconf)">
     <p>In order to reflect the new version, the version information in the <em>cocoon.xconf</em>
@@ -137,6 +132,8 @@
     </p>
     <p>To update <em>cocoon.xconf</em>, we recommend that you start with the new cocoon.xconf from V2.1 and
        incorporate your changes in it, instead of trying to migrate your old configuration file.</p>
+     <p>The SAXConnectors have been removed, so if you upgrade manually you have to remove
+        the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
    </s2>
    <s2 title="Source Resolver">
     <p>The SourceResolver is now an Avalon component
@@ -144,33 +141,7 @@
       The package name of the component is <em>org.apache.excalibur.source</em>.</p>
    </s2>
    <s2 title="XSLT Processor">
-    <p>
-        There are some issues related to JDK 1.4
-    </p>
-<!--
-    <p>
-        The default XSLT processor has changed, and there are some issues related to JDK 1.4
-    </p>
-    <s3 title="Xalan vs. XSLTC">
-     <p>The most important change is the switch from
-      <link href="http://xml.apache.org/xalan-j">Xalan</link> to
-      <link href="http://xml.apache.org/xalan-j/xsltc_usage.html">XSLTC</link> as the default XSLT
-      processor (configured in the root sitemap in the <code>map:components</code> section under
-      <code>map:transformers</code>).</p>
-     <p>We decided to switch to XSLTC for performance reasons, but it might not be as stable as
-      Xalan, and XSLTC's error messages are currently not as good as Xalan's.
-     </p>
-     <p>
-      Bruno Dumon has queued a
-      <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=20114">patch</link>
-      for XSLTC, which improves error handling and will hopefully be applied soon. For now, if you get error
-      messages like <em>"unable to create templates for stylesheet ..."</em>, simply switch the
-      processor to Xalan in the <code>map:transform</code> element to get better error reporting (hopefully).
-      You don't necessarily need to switch the default processor, it can be done individually for the transformation
-      that gives errors.
-    </p>
-     </s3>
--->
+    <p>There are some issues related to JDK 1.4.</p>
      <s3 title="XML/XSLT with JDK 1.4">
       <p>Another serious issue is the presence of the Xalan and Xerces
        package in the JDK 1.4. For general information on this please read the
@@ -259,7 +230,7 @@
    <s2 title="File Upload">
      <p>The class name for file upload has changed from <em>org.apache.cocoon.components.request.multipart.FilePart</em> to
         <em>org.apache.cocoon.servlet.multipart.Part</em>, and the <em>getFilePath()</em> has been renamed
-        <em>Part.getUploadName().</em>
+        <em>Part.getUploadName()</em>.
      </p>
    </s2>
    <s2 title="RequestLifeCycleComponent">
