@@ -18,9 +18,12 @@ package org.apache.cocoon.forms.util;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.excalibur.xml.EntityResolver;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.xerces.dom.NodeImpl;
 import org.apache.xerces.parsers.DOMParser;
@@ -312,9 +315,12 @@ public class DomHelper {
      * Creates a W3C Document that remembers the location of each element in
      * the source file. The location of element nodes can then be retrieved
      * using the {@link #getLocation(Element)} method.
+     *
+     * @param inputSource the inputSource to read the document from
+     * @param manager the service manager where to lookup the entity resolver
      */
-    public static Document parse(InputSource inputSource)
-            throws SAXException, SAXNotSupportedException, IOException {
+    public static Document parse(InputSource inputSource, ServiceManager manager)
+            throws SAXException, SAXNotSupportedException, IOException, ServiceException {
         DOMParser domParser = new LocationTrackingDOMParser();
         domParser.setFeature(
                 "http://apache.org/xml/features/dom/defer-node-expansion",
@@ -322,8 +328,19 @@ public class DomHelper {
         domParser.setFeature(
                 "http://apache.org/xml/features/dom/create-entity-ref-nodes",
                 false);
-        domParser.parse(inputSource);
-        return domParser.getDocument();
+        
+        EntityResolver resolver = null;
+        if (manager.hasService(EntityResolver.ROLE)) {
+            resolver = (EntityResolver)manager.lookup(EntityResolver.ROLE);
+            domParser.setEntityResolver(resolver);
+        }
+        
+        try {
+            domParser.parse(inputSource);
+            return domParser.getDocument();
+        } finally {
+            manager.release(resolver);
+        }
     }
 
     /**

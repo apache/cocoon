@@ -97,7 +97,7 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
                 InputSource is = new InputSource(source.getInputStream());
                 is.setSystemId(source.getURI());
 
-                Document doc = DomHelper.parse(is);
+                Document doc = DomHelper.parse(is, manager);
                 Element rootElm = doc.getDocumentElement();
                 if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
                     binding = getBuilderAssistant()

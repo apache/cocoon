@@ -127,7 +127,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
             source = resolver.resolveURI(src);
             InputSource inputSource = new InputSource(source.getInputStream());
             inputSource.setSystemId(source.getURI());
-            Document document = DomHelper.parse(inputSource);
+            Document document = DomHelper.parse(inputSource, this.serviceManager);
             Element selectionListElement = document.getDocumentElement();
             if (!Constants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) ||
                     !"selection-list".equals(selectionListElement.getLocalName())) {

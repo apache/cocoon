@@ -151,7 +151,7 @@ public class DefaultFormManager
             try {
                 InputSource inputSource = new InputSource(source.getInputStream());
                 inputSource.setSystemId(source.getURI());
-                formDocument = DomHelper.parse(inputSource);
+                formDocument = DomHelper.parse(inputSource, this.manager);
             } catch (Exception e) {
                 throw new CascadingException("Could not parse form definition from " +
                                              source.getURI(), e);
@@ -185,7 +185,7 @@ public class DefaultFormManager
             try {
                 InputSource inputSource = new InputSource(source.getInputStream());
                 inputSource.setSystemId(source.getURI());
-                formDocument = DomHelper.parse(inputSource);
+                formDocument = DomHelper.parse(inputSource, this.manager);
             } catch (Exception e) {
                 throw new CascadingException("Could not parse form definition from " +
                                              source.getURI(), e);
