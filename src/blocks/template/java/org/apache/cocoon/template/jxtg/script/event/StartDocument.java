@@ -18,8 +18,12 @@ package org.apache.cocoon.template.jxtg.script.event;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 public class StartDocument extends Event {
     public StartDocument(Locator location) {
@@ -73,5 +77,14 @@ public class StartDocument extends Event {
      */
     public Object getTemplateProperty(String name) {
         return getTemplateProperties().get(name);
+    }
+
+    public Event execute(XMLConsumer consumer,
+            ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent) throws SAXException {
+        if (getEndDocument() != null)
+            consumer.startDocument();
+        return getNext();
     }
 }

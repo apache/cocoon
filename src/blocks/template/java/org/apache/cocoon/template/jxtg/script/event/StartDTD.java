@@ -15,7 +15,11 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 public class StartDTD extends Event {
     public StartDTD(Locator location, String name, String publicId,
@@ -41,4 +45,12 @@ public class StartDTD extends Event {
     private final String name;
     private final String publicId;
     private final String systemId;
+
+    public Event execute(XMLConsumer consumer,
+            ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent) throws SAXException {
+        consumer.startDTD(getName(), getPublicId(), getSystemId());
+        return getNext();
+    }
 }

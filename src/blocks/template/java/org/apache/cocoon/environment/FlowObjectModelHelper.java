@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.environment.TemplateObjectModelHelper;
 
 
 /**
