@@ -29,6 +29,7 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -55,12 +56,26 @@ import org.apache.excalibur.source.SourceResolver;
  * 
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RefresherImpl.java,v 1.4 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: RefresherImpl.java,v 1.5 2004/03/06 21:00:39 haul Exp $
  */
 public class RefresherImpl 
     extends AbstractLogEnabled
     implements Parameterizable, ThreadSafe, Refresher, Serviceable, Disposable, CronJob {
     
+    private static final String PARAM_CACHE_ROLE = "cache-role";
+    private static final String PARAM_CACHE_EXPIRES = "cache-expires";
+    private static final String PARAM_SCHEDULER_TARGET = "scheduler-target";
+    private static final String PARAM_WRITE_INTERVAL = "write-interval";
+    private static final String PARAM_WRITE_TARGET = "write-target";
+
+    private static final String CACHE_KEY = "cache-key";
+	
+    private static final String TAGNAME_TARGET = "target";
+	private static final String ATTR_CACHE = "cache";
+	private static final String ATTR_EXPIRES = "expires";
+    private static final String ATTR_KEY = "key";
+	private static final String ATTR_URI = "uri";
+
     protected String schedulerTarget;
     
     protected ServiceManager manager;
@@ -80,63 +95,108 @@ public class RefresherImpl
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        this.schedulerTarget = parameters.getParameter("scheduler-target");
-        int writeInterval = parameters.getParameterAsInteger("write-interval", 0);
+        this.schedulerTarget = parameters.getParameter(PARAM_SCHEDULER_TARGET);
+        int writeInterval = parameters.getParameterAsInteger(PARAM_WRITE_INTERVAL, 0);
         if ( writeInterval > 0) {
-            try {
-                this.writeSource = this.resolver.resolveURI(parameters.getParameter("write-source"));
-            } catch (IOException ioe) {
-                throw new ParameterException("Error getting write-source.", ioe);
-            }
-            if (!(this.writeSource instanceof ModifiableSource)) {
-                throw new ParameterException("Write-source is not modifiable.");
-            }
-            SAXConfigurationHandler b = new SAXConfigurationHandler();
-            try {
-                SourceUtil.toSAX(this.manager, this.writeSource, this.writeSource.getMimeType(), b);
-            } catch (Exception ignore) {
-                this.getLogger().warn("Unable to read configuration from " + this.writeSource.getURI());
-            }
-            final Configuration conf = b.getConfiguration();
-            if ( conf != null ) {
-                final Configuration[] childs = conf.getChildren("target");
-                if ( childs != null ) {
-                    for(int i=0; i < childs.length; i++) {
-                        try {
-                            String uri = URLDecoder.decode(childs[i].getAttribute("uri"));
-                            int expires = childs[i].getAttributeAsInteger("expires");
-                            String cache = childs[i].getAttribute("cache");                        
-                            String key = URLDecoder.decode(childs[i].getAttribute("key"));
-                            SimpleCacheKey cacheKey = new SimpleCacheKey(key, false);
-                            TargetConfiguration tc = new TargetConfiguration(cacheKey, uri, expires, cache);
-                            this.entries.put(key, tc);
-                            final String name = cacheKey.getKey();
-                            
-                            this.scheduler.addPeriodicJob(name, this.schedulerTarget,
-                                                  expires,
-                                                  true,
-                                                  tc.parameters,
-                                                  tc.map);
-
-                        } catch (CascadingException ignore) {
-                        }
-                    
-                    }
-                }
-            }
-            try {
-                this.scheduler.addPeriodicJob(this.getClass().getName(), 
-                                      parameters.getParameter("write-target"),
-                                      (long)writeInterval * 1000,
-                                      true,
-                                      null,
-                                      null);
-            } catch (CascadingException ignore) {
-            }
+            this.setupRefreshJobSource(parameters);
+            final Configuration conf = this.readRefreshJobConfiguration();
+            this.setupRefreshJobs(conf);
+            this.registerSelfWithScheduler(parameters, writeInterval);
         }
     }
 
-    /* (non-Javadoc)
+    /**
+	 * @param parameters
+	 * @param writeInterval
+	 */
+	private void registerSelfWithScheduler(Parameters parameters, int writeInterval) {
+		try {
+		    this.scheduler.addPeriodicJob(this.getClass().getName(), 
+		                          parameters.getParameter(PARAM_WRITE_TARGET),
+		                          (long)writeInterval * 1000,
+		                          true,
+		                          null,
+		                          null);
+		} catch (CascadingException ignore) {
+            if (this.getLogger().isDebugEnabled()) {
+				this.getLogger().debug("Registering self with scheduler, ignoring exception:", ignore);
+			}
+		}
+	}
+
+	/**
+	 * @param conf
+	 */
+	private void setupRefreshJobs(final Configuration conf) {
+		if ( conf != null ) {
+		    final Configuration[] childs = conf.getChildren(TAGNAME_TARGET);
+		    if ( childs != null ) {
+		        for(int i=0; i < childs.length; i++) {
+		            try {
+		                this.setupSingleRefreshJob(childs[i]);
+		            } catch (CascadingException ignore) {
+		                if (this.getLogger().isDebugEnabled()) {
+							this.getLogger().debug("Setting up refresh jobs, ignoring exception:", ignore);
+						}
+		            }
+		        }
+		    }
+		}
+	}
+
+	/**
+	 * @param childs
+	 * @param i
+	 * @throws ConfigurationException
+	 * @throws CascadingException
+	 */
+	private void setupSingleRefreshJob(final Configuration conf) throws ConfigurationException, CascadingException {
+		String uri = URLDecoder.decode(conf.getAttribute(ATTR_URI));
+		int expires = conf.getAttributeAsInteger(ATTR_EXPIRES);
+		String cache = conf.getAttribute(ATTR_CACHE);                        
+		String key = URLDecoder.decode(conf.getAttribute(ATTR_KEY));
+		SimpleCacheKey cacheKey = new SimpleCacheKey(key, false);
+		TargetConfiguration tc = new TargetConfiguration(cacheKey, uri, expires, cache);
+		this.entries.put(key, tc);
+		final String name = cacheKey.getKey();
+		
+		this.scheduler.addPeriodicJob(name, this.schedulerTarget,
+		                      expires,
+		                      true,
+		                      tc.parameters,
+		                      tc.map);
+	}
+
+	/**
+	 * @return
+	 */
+	private Configuration readRefreshJobConfiguration() {
+		SAXConfigurationHandler b = new SAXConfigurationHandler();
+		try {
+		    SourceUtil.toSAX(this.manager, this.writeSource, this.writeSource.getMimeType(), b);
+		} catch (Exception ignore) {
+		    this.getLogger().warn("Unable to read configuration from " + this.writeSource.getURI());
+		}
+		final Configuration conf = b.getConfiguration();
+		return conf;
+	}
+
+	/**
+	 * @param parameters
+	 * @throws ParameterException
+	 */
+	private void setupRefreshJobSource(Parameters parameters) throws ParameterException {
+		try {
+		    this.writeSource = this.resolver.resolveURI(parameters.getParameter("write-source"));
+		} catch (IOException ioe) {
+		    throw new ParameterException("Error getting write-source.", ioe);
+		}
+		if (!(this.writeSource instanceof ModifiableSource)) {
+		    throw new ParameterException("Write-source is not modifiable.");
+		}
+	}
+
+	/* (non-Javadoc)
      * @see org.apache.cocoon.components.source.impl.Refresher#refresh(org.apache.cocoon.caching.SimpleCacheKey, java.lang.String, long, java.lang.String)
      */
     public void refresh(SimpleCacheKey cacheKey,
@@ -227,17 +287,7 @@ public class RefresherImpl
                 writer.write("<targets>\n");
                 final Iterator iter = this.entries.values().iterator();
                 while ( iter.hasNext() ) {
-                    
-                    final TargetConfiguration c = (TargetConfiguration)iter.next();
-                    writer.write("<target uri=\"");
-                    writer.write(URLEncoder.encode(c.parameters.getParameter("uri", "")));
-                    writer.write("\" expires=\"");
-                    writer.write(c.parameters.getParameter("cache-expires", "0"));
-                    writer.write("\" cache=\"");
-                    writer.write(c.parameters.getParameter("cache-role", ""));
-                    writer.write("\" key=\"");
-                    writer.write(URLEncoder.encode(((SimpleCacheKey)c.map.get("cache-key")).getKey()));
-                    writer.write("\"/>\n"); 
+                    this.writeRefreshJobConfiguration(writer, (TargetConfiguration) iter.next()); 
                 }
                 writer.write("</targets>\n");
                 writer.flush();
@@ -248,7 +298,24 @@ public class RefresherImpl
         }
     }
 
-    class TargetConfiguration {
+    /**
+	 * @param writer
+	 * @param iter
+	 * @throws IOException
+	 */
+	private void writeRefreshJobConfiguration(Writer writer, final TargetConfiguration c) throws IOException {
+		writer.write("<"+TAGNAME_TARGET+" "+ATTR_URI+"=\"");
+		writer.write(URLEncoder.encode(c.parameters.getParameter(ATTR_URI, "")));
+		writer.write("\" "+ATTR_EXPIRES+"=\"");
+		writer.write(c.parameters.getParameter(PARAM_CACHE_EXPIRES, "0"));
+		writer.write("\" "+ATTR_CACHE+"=\"");
+		writer.write(c.parameters.getParameter(PARAM_CACHE_ROLE, ""));
+		writer.write("\" "+ATTR_KEY+"=\"");
+		writer.write(URLEncoder.encode(((SimpleCacheKey)c.map.get(CACHE_KEY)).getKey()));
+		writer.write("\"/>\n");
+	}
+
+	class TargetConfiguration {
         
         public Parameters parameters;
         
@@ -262,13 +329,13 @@ public class RefresherImpl
             this.map = new HashMap();
 
             this.update(uri, expires, cacheRole);
-            this.map.put("cache-key", cacheKey);
+            this.map.put(CACHE_KEY, cacheKey);
         }
         
         public void update(String uri, long expires, String cacheRole) {
-            this.parameters.setParameter("uri",uri);
-            this.parameters.setParameter("cache-role", cacheRole);
-            this.parameters.setParameter("cache-expires", String.valueOf(expires));
+            this.parameters.setParameter(ATTR_URI,uri);
+            this.parameters.setParameter(PARAM_CACHE_ROLE, cacheRole);
+            this.parameters.setParameter(PARAM_CACHE_EXPIRES, String.valueOf(expires));
         }
         
     }
