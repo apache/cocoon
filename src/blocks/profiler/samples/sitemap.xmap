@@ -42,7 +42,9 @@
    <map:match pattern="caching-testsite.html">
     <map:generate src="test.xml"/>
     <map:transform src="test2page.xsl"/>
-    <map:transform src="page2html.xsl"/>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
@@ -55,7 +57,9 @@
    <map:match pattern="noncaching-testsite.html">
     <map:generate src="test.xml"/>
     <map:transform src="test2page.xsl"/>
-    <map:transform src="page2html.xsl"/>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
@@ -82,7 +86,9 @@
     <map:transform src="profile2page.xsl">
      <map:parameter name="use-request-parameters" value="true"/>
     </map:transform>
-    <map:transform src="page2html.xsl"/>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 

@@ -4,245 +4,25 @@
           xmlns:xsp="http://apache.org/xsp"
           xmlns:xsp-request="http://apache.org/xsp/request/2.0">
 
-<html>
- <head>
-  <title>Wiki example</title>
-  <style>
- .title
-      {
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        font-family: sans-serif,Arial,Tahoma;
-        color: black;
-        background: white;
-        border-color: black;
-        border-width: 10px;
-      }
-      
-      .main
-      {
-        border: 1px solid #0086B2;
-        padding: 0px;
-        margin: 6px;
-        min-width: 630px;
-      }
-      
-      .head
-      {
-        border-bottom: #0086B2;
-        border-width: 0 0 1px 0;
-        border-style: none none solid none;
-        padding: 6px 6px 3px 6px;
-      }
-      
-      .block { padding: 6px; }
-      
-      .confirm
-      {
-        width: 40%;
-        margin-left: 50%;
-        padding: 6px;
-      }
-      
-      .content
-      {
-        border: 1px solid #0086B2; 
-        padding: 6px;
-        margin: 1px;
-      }
- 
-      tr 
-      {
-        padding: 2px 6px 2px 6px;
-      }
-           
-    
-      .col1
-      {
-        font-weight: bold;
-      }
+ <document>
+  <header>
+   <title>Chaperon examples</title>
+   <tab title="back" href="."/>
+  </header>
+  <body>
+   <row>
+    <column title="Wiki preview">
 
-       .error .col1
-      {
-        padding: 2px 20px 2px 6px;
-      }
+     <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0"><xsp-request:get-parameter name="text" default="No text"/></text>
 
-       .error .col2
-      {
-        color:#BB0000;
-        padding: 2px 20px 2px 6px;
-      }
-     
-      .field { }
-      
-      .notify
-      {
-        font-size: 15px;
-        text-align: left;
-      }
-      
-      .tools { text-align: right; }
-      .tool { padding: 6px; }
-      
-      .notes
-      {
-        font-size: 12px;
-        font-weight: bold;
-        color: white;
-        background: #0086B2;
-        text-align: left;
-        padding: 6px 6px 3px 6px;
-      }
-      
-      .foot
-      {
-        text-align: center;
-        font-size: 12px;
-        margin-top: 50px;
-      }
-      
-      .hspace { margin: 30px; }
-      #left { float: left; }
-      #right { float: right; }
-      #center { text-align: center; }
-      #row { background: #EEFFFF; }
-      
-      .failure
-      {
-        font-weight: bold;
-        color: #BB0000;
-      }
-      
-      .warning
-      {
-        font-weight: bold;
-        color: #BB0000;
-      }
-      
-      .success
-      {
-        font-weight: bold;
-        color: green;
-      }
-      
-      .tab
-      {
-        font-size: 12px;
-        font-weight: bold;
-        color: white;
-        background: #0086B2;
-        padding: 4px 4px 2px 4px;
-        border: 0px solid #0086B2;
-        margin: 1px;
-      }
-      
-      .tab a
-      {
-        text-decoration: none;
-        color: white;
-      }
-      
-      .tab a:visited
-      {
-        text-decoration: none;
-        color: white;
-      }
-      
-      .tab a:link
-      {
-        text-decoration: none;
-        color: white;
-      }
-      
-      .tab a:hover
-      {
-        text-decoration: underline;
-        color: red;
-      }
-      
-      a { text-decoration: none; }
-      
-      a:hover
-      {
-        text-decoration: underline;
-        color: red;
-      }
-      
-      body
-      {
-        font-size: 12px;
-        font-family: sans-serif,Arial,Tahoma;
-        color: black;
-        background: white;
-      }
-      
-      form { font-size: 12px; }
-      
-      textarea
-      {
-        background-color: #EEFFFF;
-        font-size: 12px;
-        font-family: geneva,arial,sans-serif;
-        border-color: #0086B2;
-        border-width: 1px;
-        padding-left: 2px;
-      }
-      
-      textarea.hidden { display: none; }
-      
-      input
-      {
-        background-color: #EEFFFF;
-        font-size: 12px;
-        font-family: geneva,arial,sans-serif;
-        border-color: #0086B2;
-        border-width: 1px;
-        padding-left: 2px;
-      }
-      
-      input.submit
-      {
-        background-color: #0086B2;
-        font-size: 12px;
-        font-family: geneva,arial,sans-serif;
-        border-color: black;
-        border-width: 1px;
-        padding: 2px 6px;
-        font-weight: bold;
-        color: white;
-      }
-      
-      input.button
-      {
-        background-color: #BB0000;
-        font-size: 12px;
-        font-family: geneva,arial,sans-serif;
-        border-color: black;
-        border-width: 1px;
-        padding: 2px 6px;
-        font-weight: bold;
-        color: white;
-      }
- </style>
- </head>
- <body>
+    </column>
+   </row>
+   <row>
+    <column title="Wiki content">
 
-  <div class="title">Wiki example</div>
+     <form action="wiki.html" method="post">
 
-  <p>
-   <div class="block"><span class="tab">Preview</span><div class="content">
- <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0"><xsp-request:get-parameter name="text" default="No text"/></text>
-   </div></div>
-  </p>
-
-  <p>
-
-   <form action="wiki.html" method="post">
-
-   <div class="block"><span class="tab">Content</span><div class="field">
-
-   <textarea name="text" type="textarea" cols="100" rows="23" style="width: 100%"><![CDATA[When you've figured out how the editor works, then you should read [WikiEtiquette] so that you would know how to use
+      <textarea name="text" type="textarea" cols="100" rows="23" style="width: 100%"><![CDATA[When you've figured out how the editor works, then you should read [WikiEtiquette] so that you would know how to use
 your newly acquired skills...
 
 !Quick reference
@@ -465,16 +245,11 @@ There is more information in [JSPWikiPlugins].
 [#1] Here's the footnote I mentioned.
 
 [The other footnote|#2] The other footnote.  Note how it's name is different?]]></textarea><br/>
-   </div></div>
+      <input value="Preview" type="submit" class="submit"/>
 
-   <div style="text-align:right" class="block">
-   <input value="Preview" type="submit" class="submit"/>
-   </div>
-
-   </form>
-  </p>
-
- </body>
-</html>
-
+     </form>
+    </column>
+   </row>
+  </body>
+ </document>
 </xsp:page>

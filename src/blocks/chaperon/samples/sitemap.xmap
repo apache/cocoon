@@ -114,7 +114,7 @@
    <map:match pattern="welcome">
     <map:generate                src="misc/samples.xml"/>
     <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
     </map:transform>
     <map:serialize/>
    </map:match>
@@ -127,6 +127,9 @@
     <map:transform type="lexer"   src="grammars/mathexp.xlex"/>
     <map:transform type="parser"  src="grammars/mathexp.xgrm"/>
     <map:transform                src="stylesheets/mathexp2html.xsl"/>
+    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
@@ -135,7 +138,9 @@
     <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
     <map:transform type="parser"  src="cocoon:/wiki.xgrm"/>
     <map:transform                src="stylesheets/wiki2xdoc.xsl"/>
-    <map:transform                src="stylesheets/xdoc2html.xsl"/>
+    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
@@ -144,7 +149,9 @@
     <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
     <map:transform type="parser"  src="cocoon:/wiki.xgrm"         label="ast"/>
     <map:transform                src="stylesheets/wiki2xdoc.xsl" label="xdoc"/>
-    <map:transform                src="stylesheets/xdoc2html.xsl"/>
+    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
@@ -152,14 +159,20 @@
     <map:generate  type="text"    src="misc/quote.txt"/>
     <map:transform type="lexer"   src="grammars/quote.xlex"/>
     <map:transform type="parser"  src="grammars/quote.xgrm" label="ast"/>
-    <map:transform                src="stylesheets/quote2html.xsl"/>
+    <map:transform                src="stylesheets/quote2page.xsl"/>
+    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
    <map:match pattern="pattern.html">
-    <map:generate                 src="misc/patterntext.xhtml"/>
+    <map:generate                 src="misc/patterntext.xml"/>
     <map:transform type="pattern" src="grammars/link.xlex"/>
     <map:transform                src="stylesheets/pattern2link.xsl"/>
+    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 

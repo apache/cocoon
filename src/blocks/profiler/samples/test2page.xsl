@@ -3,16 +3,17 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
  <xsl:template match="hello-world">
-  <page>
-   <tab title="Overview" href="welcome"/>
-
-   <row>
-    <column title="{title}">
+  <document>
+   <header>
+    <tab title="Overview" href="welcome"/>
+   </header>
+   <body>
+    <section>
+     <title><xsl:apply-templates select="title"/></title>
      <xsl:apply-templates select="some-text"/>
-    </column>
-   </row>
- 
-  </page>
+    </section>
+   </body>
+  </document>
  </xsl:template>
 
  <xsl:template match="some-text">
