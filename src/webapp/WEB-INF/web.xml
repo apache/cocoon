@@ -166,7 +166,7 @@
       <param-name>overwrite-uploads</param-name>
       <param-value>rename</param-value>
     </init-param>
-    
+
     <!--
       Specify maximum allowed size of the upload. Defaults to 10 Mb.
 
@@ -246,6 +246,7 @@
       length header in the response. This is due to the internal processing
       of Readers and the Caching. So, this might be the reason if you get
       a warning about a wrong content length.
+      See http://nagoya.apache.org/bugzilla/show_bug.cgi?id=17370.
     <init-param>
       <param-name>show-time</param-name>
       <param-value>hide</param-value>
@@ -322,7 +323,7 @@
     <servlet-name>Cocoon</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
-  
+
   <!--
     Some servlet engines (Tomcat) have defaults which are not overriden
     by '/' mapping, but must be overriden explicitly.
