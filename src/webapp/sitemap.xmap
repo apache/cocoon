@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.28 2003/07/29 08:26:36 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.29 2003/08/05 17:02:15 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -75,20 +75,28 @@
       +-->
   <map:transformers default="xslt">
 
-    <!-- NOTE: XSLTC is now the default processor. If you use Xalan extensions, use the "xalan" transformer. -->
+    <!-- NOTE: This is the default XSLT processor. -->
     <map:transformer logger="sitemap.transformer.xslt" name="xslt" pool-grow="2" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.TraxTransformer">
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
-      <xslt-processor-role>xsltc</xslt-processor-role>
+      <xslt-processor-role>xalan</xslt-processor-role>
     </map:transformer>
 
-    <!-- NOTE: This used to be the default XSLT processor. The default now is XSLTC -->
+    <!-- NOTE: This is the same as the default processor but with a different name (for compatibility) -->
     <map:transformer logger="sitemap.transformer.xalan" name="xalan" pool-grow="2" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.TraxTransformer">
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xalan</xslt-processor-role>
+    </map:transformer>
+
+    <!-- NOTE: You can also try XSLTC as the default processor. If you use Xalan extensions, use the "xalan" transformer. -->
+    <map:transformer logger="sitemap.transformer.xsltc" name="xsltc" pool-grow="2" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.TraxTransformer">
+      <use-request-parameters>false</use-request-parameters>
+      <use-session-parameters>false</use-session-parameters>
+      <use-cookie-parameters>false</use-cookie-parameters>
+      <xslt-processor-role>xsltc</xslt-processor-role>
     </map:transformer>
 
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
