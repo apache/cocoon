@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 /*
-    CVS: $Id: prefs.js,v 1.5 2004/03/06 02:25:54 antonio Exp $
+    CVS: $Id$
 
     This file is the central controller piece in the preferences
     application. It receives the requests from the client browser (the
@@ -130,8 +130,9 @@ function registerUser()
 
 
 // This top-level function is used for user login.
-function login(errorMsg)
+function login()
 {
+  var errorMsg = cocoon.parameters["errorMsg"];
   var login = "";
   var password = "";
 
