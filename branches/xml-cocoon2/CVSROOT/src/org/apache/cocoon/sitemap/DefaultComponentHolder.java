@@ -21,23 +21,25 @@ import org.apache.cocoon.util.ClassUtils;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-08 20:58:58 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:42 $
  */
 public class DefaultComponentHolder implements ComponentHolder {
 
-    private String className;
-    private Configuration configuration;
-    private ComponentManager manager;
-    
+    protected String className;
+    protected Configuration configuration;
+    protected ComponentManager manager;
+    protected String mime_type;
+
     /** Creates a DefaultComponentHolder
      * @param className The component class name
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public DefaultComponentHolder(String className, Configuration configuration, ComponentManager manager) {
+    public DefaultComponentHolder(String className, Configuration configuration, ComponentManager manager, String mime_type) {
         this.className = className;
         this.configuration = configuration;
         this.manager = manager;
+        this.mime_type = mime_type;
     }
 
     /** Creates a new instance of the <CODE>Component</CODE>
@@ -68,5 +70,12 @@ public class DefaultComponentHolder implements ComponentHolder {
      */
     public String getName() {
         return className;
+    }
+
+    /**
+     * This method returns the mime-type of the component or null
+     */
+    public String getMimeType() {
+        return mime_type;
     }
 }

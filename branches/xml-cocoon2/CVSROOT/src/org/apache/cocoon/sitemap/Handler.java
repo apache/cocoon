@@ -31,7 +31,7 @@ import org.apache.avalon.ComponentManager;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-04 20:54:38 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-13 04:14:42 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
 
@@ -40,6 +40,9 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
 
     /** the component manager */
     private ComponentManager manager;
+
+    /** the parent sitemap component manager */
+    private ComponentManager parentSitemapComponentManager;
 
     /** the source of this sitemap */
     private File sourceFile;
@@ -67,8 +70,9 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         this.conf = conf;
     }
 
-    protected Handler (String source, boolean check_reload)
+    protected Handler (ComponentManager sitemapComponentManager, String source, boolean check_reload)
     throws FileNotFoundException {
+        this.parentSitemapComponentManager = sitemapComponentManager;
         this.check_reload = check_reload;
         String s = null;
         if (source.charAt(source.length() - 1) == File.separatorChar) {
@@ -145,6 +149,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         try {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.getComponent("program-generator");
             smap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage, environment);
+            smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
             if (smap instanceof Composer) smap.setComponentManager(this.manager);
             if (smap instanceof Configurable) smap.setConfiguration(this.conf);
             this.sitemap = smap;

@@ -19,58 +19,44 @@ import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.util.pool.PoolController;
 
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.ComponentPool;
 
 /** 
  * This class holds a sitemap component which is not specially marked as having 
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-08 20:58:58 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:43 $
  */
-public class PoolableComponentHolder implements ComponentHolder, ObjectFactory {
-
-    /** The name of the class */
-    private String className;
+public class PoolableComponentHolder extends DefaultComponentHolder implements ObjectFactory {
 
     /** The class of this component */
     private Class clazz = null;
-
-    /** The <code>Configuration</code> of this component */
-    private Configuration configuration;
-
-    /** The <code>ComponentManagercode> of this component */
-    private ComponentManager manager;
 
     /** Initial increase/decrease amount */
     public final static int DEFAULT_AMOUNT = 16;
 
     /** Current increase/decrease amount */
-    protected int amount = DEFAULT_AMOUNT;
-
-    /** The last direction to increase/decrease >0 means increase, <0 decrease */
-    protected int sizing_direction = 0;
+    protected int amount = DEFAULT_AMOUNT / 2;
 
     /** The <code>Pool</code> for this components */
     protected Pool pool;
-
     
     /** Creates a DefaultComponentHolder
      * @param className The component class name
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public PoolableComponentHolder(String className, Configuration configuration, ComponentManager manager)
+    public PoolableComponentHolder(String className, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
-        this.className = className;
+        super(className, configuration, manager, mime_type);
         try {
-            this.clazz = ClassUtils.loadClass (className);
+            this.clazz = ClassUtils.loadClass (super.className);
         } catch (Exception e) {
             this.clazz = null;
         }
-        this.configuration = configuration;
-        this.manager = manager;
-        PoolController pc = (PoolController)this.manager.getComponent ("sitemap-component-pool-controller");
-        this.pool = new ComponentPool (this, pc, amount, amount);
+        PoolController pc = (PoolController)super.manager.getComponent ("sitemap-component-pool-controller");
+        this.pool = new ComponentPool (this, pc, amount, DEFAULT_AMOUNT);
     }
 
     /** Creates a new instance of the <CODE>Component</CODE>
@@ -102,14 +88,7 @@ public class PoolableComponentHolder implements ComponentHolder, ObjectFactory {
      * @return A Poolable component
      */
     public Poolable newInstance() throws Exception {
-        Poolable comp = (Poolable) ClassUtils.newInstance (this.className);
-        if (comp instanceof Composer) {
-            ((Composer) comp).setComponentManager (this.manager);
-        }
-        if (comp instanceof Configurable) {
-            ((Configurable) comp).setConfiguration (this.configuration);
-        }
-        return comp;
+        return (Poolable) super.get();
     }
 
     /**

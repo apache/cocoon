@@ -20,13 +20,10 @@ import org.apache.cocoon.util.ClassUtils;
  * This class holds a sitemap component which is specially marked as beeing thread safe
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-09 09:30:12 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:43 $
  */
-public class ThreadSafeComponentHolder implements ComponentHolder {
+public class ThreadSafeComponentHolder extends DefaultComponentHolder {
 
-    private String className;
-    private Configuration configuration;
-    private ComponentManager manager;
     private Component comp;
 
     /** Creates a ThreadSafeComponentHolder
@@ -34,18 +31,10 @@ public class ThreadSafeComponentHolder implements ComponentHolder {
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public ThreadSafeComponentHolder(String className, Configuration configuration, ComponentManager manager)
+    public ThreadSafeComponentHolder(String className, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
-        this.className = className;
-        this.configuration = configuration;
-        this.manager = manager;
-        this.comp = (Component) ClassUtils.newInstance (this.className);
-        if (this.comp instanceof Composer) {
-            ((Composer) this.comp).setComponentManager (this.manager);
-        }
-        if (this.comp instanceof Configurable) {
-            ((Configurable) this.comp).setConfiguration (this.configuration);
-        }
+        super(className, configuration, manager, mime_type);
+        this.comp = super.get();
     }
 
     /** Returns the instance of the <CODE>Component</CODE>

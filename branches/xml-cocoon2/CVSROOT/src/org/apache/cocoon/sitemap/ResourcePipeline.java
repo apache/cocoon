@@ -26,88 +26,97 @@ import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLProducer;
 
+import org.apache.cocoon.sitemap.ErrorNotifier;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-10-08 21:09:26 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-10-13 04:14:43 $
  */
 public class ResourcePipeline implements Composer {
-    private ComponentHolder generator = null;
-    private Parameters generatorParam = null;
-    private String generatorSource = null;
-    private ComponentHolder reader = null;
-    private Parameters readerParam = null;
-    private String readerSource = null;
-    private String readerMimeType = null;
+    private ComponentHolder generator;
+    private Parameters generatorParam;
+    private String generatorSource;
+    private Exception generatorException;
+    private ComponentHolder reader;
+    private Parameters readerParam;
+    private String readerSource;
+    private String readerMimeType;
     private Vector transformers = new Vector();
     private Vector transformerParams = new Vector();
     private Vector transformerSources = new Vector();
-    private ComponentHolder serializer = null;
-    private Parameters serializerParam = null;
-    private String serializerSource = null;
-    private String serializerMimeType = null;
+    private ComponentHolder serializer;
+    private Parameters serializerParam;
+    private String serializerSource;
+    private String serializerMimeType;
 
     /** the component manager */
-    private ComponentManager manager = null;
+    private ComponentManager manager;
 
-    public ResourcePipeline () {
+    /** the sitemap component manager */
+    private ComponentManager sitemapComponentManager;
+
+    public ResourcePipeline (ComponentManager sitemapComponentManager) {
+        this.sitemapComponentManager = sitemapComponentManager;
     }
 
     public void setComponentManager (ComponentManager manager) {
         this.manager = manager;
     }
 
-    public void setGenerator (ComponentHolder holder, String source, Parameters param)
+    public void setGenerator (String role, String source, Parameters param, Exception e)
+    throws Exception {
+        this.generatorException = e;
+        this.setGenerator (role, source, param);
+    }
+
+    public void setGenerator (String role, String source, Parameters param)
     throws Exception {
         if (this.generator != null) {
-            throw new ProcessingException ("Generator " + holder.getName() + " already set. You can only select one Generator");
+            throw new ProcessingException ("Generator already set. You can only select one Generator (" + role + ")");
         }
-        this.generator = holder;
+        this.generator = (ComponentHolder)sitemapComponentManager.getComponent(role);
         this.generatorSource = source;
         this.generatorParam = param;
     }
 
-    public ComponentHolder getGenerator () {
-        return this.generator;
-    }
-
-    public void setReader (ComponentHolder holder, String source, Parameters param)
+    public void setReader (String role, String source, Parameters param)
     throws Exception {
-        this.setReader (holder, source, param, null);
+        this.setReader (role, source, param, null);
     }
 
-    public void setReader (ComponentHolder holder, String source, Parameters param, String mimeType)
+    public void setReader (String role, String source, Parameters param, String mimeType)
     throws Exception {
         if (this.reader != null) {
-            throw new ProcessingException ("Reader " + holder.getName() + " already set. You can only select one Reader");
+            throw new ProcessingException ("Reader already set. You can only select one Reader (" + role + ")");
         }
-        this.reader = holder;
+        this.reader = (ComponentHolder)sitemapComponentManager.getComponent(role);
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
     }
 
-    public void setSerializer (ComponentHolder holder, String source, Parameters param)
+    public void setSerializer (String role, String source, Parameters param)
     throws Exception {
-        this.setSerializer (holder, source, param, null);
+        this.setSerializer (role, source, param, null);
     }
 
-    public void setSerializer (ComponentHolder holder, String source, Parameters param, String mimeType)
+    public void setSerializer (String role, String source, Parameters param, String mimeType)
     throws Exception {
         if (this.serializer != null) {
-            throw new ProcessingException ("Serializer " + holder.getName() + " already set. You can only select one Serializer");
+            throw new ProcessingException ("Serializer already set. You can only select one Serializer (" + role + ")");
         }
-        this.serializer = holder;
+        this.serializer = (ComponentHolder)sitemapComponentManager.getComponent(role);
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
     }
 
-    public void addTransformer (ComponentHolder holder, String source, Parameters param)
+    public void addTransformer (String role, String source, Parameters param)
     throws Exception {
-        this.transformers.add (holder);
+        this.transformers.add ((ComponentHolder)sitemapComponentManager.getComponent(role));
         this.transformerSources.add (source);
         this.transformerParams.add (param);
     }
@@ -118,23 +127,28 @@ public class ResourcePipeline implements Composer {
 
         if (generator == null) {
             if (reader != null) {
-                Reader myReader = (Reader) reader.get();
+                Reader myReader = null;
                 try {
+                    myReader = (Reader) reader.get();
                     myReader.setup ((EntityResolver) environment, environment.getObjectModel(), readerSource, readerParam);
                     mime_type = myReader.getMimeType();
                     if (mime_type != null) {
+                        // we have a mimeType freom the component itself
                         environment.setContentType (mime_type);
                     } else if (readerMimeType != null) {
+                        // there was a mimeType specified in the sitemap pipeline
                         environment.setContentType (readerMimeType);
                     } else {
-                        /* (GP)FIXME: Reaching here we havn't set a mime-type. This
-                         * case should be prevented by the sitemap generating stylesheet */
+                        // use the mimeType specified in the sitemap component declaration
+                        environment.setContentType (reader.getMimeType());
                     }
                     myReader.setOutputStream (environment.getOutputStream());
                     myReader.generate();
                 } finally {
-                    reader.put(myReader);
+                    if (myReader != null)
+                        reader.put(myReader);
                 }
+
             } else {
                 throw new ProcessingException ("Generator or Reader not specified");
             }
@@ -144,39 +158,58 @@ public class ResourcePipeline implements Composer {
             }
 
             Generator myGenerator = (Generator) generator.get();
-            int i = transformers.size();
-            Transformer myTransformer[] = new Transformer[i];
-            for (int j=0; j < i; j++) {
-                myTransformer[j] = (Transformer)((ComponentHolder) transformers.elementAt (j)).get();
-            }
-            Serializer mySerializer = (Serializer) serializer.get();
-
             try {
-                myGenerator.setup ((EntityResolver) environment, environment.getObjectModel(), generatorSource, generatorParam);
-                Transformer transformer = null;
-                XMLProducer producer = myGenerator;
-                for (int j=0; j < i; j++) {
-                    myTransformer[j].setup ((EntityResolver) environment, environment.getObjectModel(),
-                                   (String)transformerSources.elementAt (j),
-                                   (Parameters)transformerParams.elementAt (j));
-                    producer.setConsumer (myTransformer[j]);
-                    producer = myTransformer[j];
+                if (generatorException != null) {
+                    ((ErrorNotifier)myGenerator).setException (generatorException);
                 }
+                int i = transformers.size();
+                Transformer myTransformer[] = new Transformer[i];
+                int num_transformers = 0;
 
-                mime_type = mySerializer.getMimeType();
-                if (mime_type != null)
-                        environment.setContentType (mime_type);
-                else if (serializerMimeType != null)
-                        environment.setContentType (serializerMimeType);
-                mySerializer.setOutputStream (environment.getOutputStream());
-                producer.setConsumer (mySerializer);
-                myGenerator.generate();
-            } finally {
-                serializer.put(mySerializer);
-                for (int j=0; j < i; j++) {
-                    ((ComponentHolder) transformers.elementAt (j)).put(myTransformer[j]);
+                try {
+                    for (num_transformers=0; num_transformers < i; num_transformers++) {
+                        myTransformer[num_transformers] = (Transformer)((ComponentHolder) transformers.elementAt (num_transformers)).get();
+                    }
+
+                    Serializer mySerializer = (Serializer) serializer.get();
+                    try {
+
+                        myGenerator.setup ((EntityResolver) environment, environment.getObjectModel(), generatorSource, generatorParam);
+                        Transformer transformer = null;
+                        XMLProducer producer = myGenerator;
+                        for (int j=0; j < i; j++) {
+                            myTransformer[j].setup ((EntityResolver) environment, environment.getObjectModel(),
+                                    (String)transformerSources.elementAt (j),
+                                    (Parameters)transformerParams.elementAt (j));
+                            producer.setConsumer (myTransformer[j]);
+                            producer = myTransformer[j];
+                        }
+
+                        mime_type = mySerializer.getMimeType();
+                        if (mime_type != null) {
+                            // we have a mimeType freom the component itself
+                            environment.setContentType (mime_type);
+                        } else if (serializerMimeType != null) {
+                            // there was a mimeType specified in the sitemap pipeline
+                            environment.setContentType (serializerMimeType);
+                        } else {
+                            // use the mimeType specified in the sitemap component declaration
+                            environment.setContentType (serializer.getMimeType());
+                        }
+                        mySerializer.setOutputStream (environment.getOutputStream());
+                        producer.setConsumer (mySerializer);
+                        myGenerator.generate();
+                    } finally {
+                        serializer.put(mySerializer);
+                    }
+                } finally {
+                    for (int j=0; j < num_transformers; j++) {
+                        ((ComponentHolder) transformers.elementAt (j)).put(myTransformer[j]);
+                    }
                 }
-                generator.put(myGenerator);
+            } finally {
+                if (myGenerator != null)
+                    generator.put(myGenerator);
             }
         }
         return true;

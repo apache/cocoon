@@ -14,10 +14,11 @@ import org.apache.avalon.Component;
  * This interface is used by the sitemap engine to access the sitemap components
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-08 20:58:58 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:14:42 $
  */
 public interface ComponentHolder extends Component {
     Component get() throws Exception;
     void put (Component component);
+    String getMimeType ();
     String getName ();
 }
