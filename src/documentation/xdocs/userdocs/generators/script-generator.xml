@@ -16,7 +16,7 @@
 -->
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 <!--
-  <![CDATA[ CVS Version: $Id: script-generator.xml,v 1.8 2004/05/08 08:57:57 crossley Exp $ 
+  <![CDATA[ CVS Version: $Id$ 
   ]]>
 --><document>
   <header>
@@ -64,7 +64,7 @@
       </table>
     </s1>
     <s1 title="Description">
-      <p>The ScriptGenerator executes arbitrary scripts using the BSF
+      <p>The ScriptGenerator executes arbitrary scripts using the Apache BSF
       framework and additional interpreter (Rhino, Jython, etc.) as a Cocoon
       Generator.</p>
     </s1>
@@ -256,8 +256,8 @@
     <s1 title="See also">
       <p><!-- Links to related components pages. -->A general documentation
       about generators is available at <link href="../concepts/sitemap.html">generators</link>.</p>
-      <p>Further Documentation about BSF is available <link
-      href="http://www-124.ibm.com/developerworks/projects/bsf">here</link>.</p>
+      <p>Further Documentation about Apache BSF is available <link
+      href="http://jakarta.apache.org/bsf/index.html">here</link>.</p>
     </s1>
   </body>
 </document>
