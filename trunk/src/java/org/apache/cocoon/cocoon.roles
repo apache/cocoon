@@ -129,38 +129,14 @@
   <role name="org.apache.cocoon.components.image.ImageEncoderSelector"
         shorthand="image-encoder"/>
 
-  <role name="org.apache.avalon.excalibur.datasource.DataSourceComponentSelector"
-        shorthand="datasources"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
-	<hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.ResourceLimitingJdbcDataSource"/>
-    <hint shorthand="j2ee" class="org.apache.avalon.excalibur.datasource.J2eeDataSource"/>
-    <hint shorthand="informix" class="org.apache.avalon.excalibur.datasource.InformixDataSource"/>
-  </role>
-
   <role name="org.apache.avalon.excalibur.monitor.Monitor"
         shorthand="monitor"
         default-class="org.apache.avalon.excalibur.monitor.ActiveMonitor">
   </role>
 
-  <role name="org.apache.cocoon.components.sax.XMLSerializer"
-        shorthand="xml-serializer"
-        default-class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"/>
-
-  <role name="org.apache.cocoon.components.sax.XMLDeserializer"
-        shorthand="xml-deserializer"
-        default-class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"/>
-
   <role name="org.apache.cocoon.components.xscript.XScriptManager"
         shorthand="xscript"
         default-class="org.apache.cocoon.components.xscript.XScriptManagerImpl"/>
-
-  <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
-        shorthand="notifying-builder"
-        default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>
-
-  <role name="org.apache.cocoon.caching.Cache"
-        shorthand="cache"
-        default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
 
   <role name="org.apache.cocoon.i18n.BundleFactory"
         shorthand="i18n-bundles"
@@ -169,14 +145,6 @@
   <role name="org.apache.cocoon.components.flow.ContinuationsManager"
         shorthand="continuations-manager"
         default-class="org.apache.cocoon.components.flow.ContinuationsManagerImpl" />
-
-  <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
-        shorthand="input-modules"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
-
-  <role name="org.apache.cocoon.components.modules.output.OutputModuleSelector"
-        shorthand="output-modules"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
 
   <role name="org.apache.cocoon.components.persistence.RequestDataStore"
         shorthand="request-data-store"

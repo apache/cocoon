@@ -63,14 +63,13 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.6 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.7 2004/01/31 16:54:49 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="XMLSerializer"
- * @x-avalon.lifestyle type="pooled"
- * @x-avalon.info name="xml-serializer"
+ * @avalon.service type=XMLSerializer
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=xml-serializer
  */
-
 public final class XMLByteStreamCompiler
 implements XMLSerializer, Recyclable {
 

@@ -62,14 +62,13 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.7 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.8 2004/01/31 16:54:49 unico Exp $
  *
  * @avalon.component
- * @avalon.service type="XMLDeserializer"
- * @x-avalon.lifestyle type="pooled"
- * @x-avalon.info name="xml-deserializer"
+ * @avalon.service type=XMLDeserializer
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=xml-deserializer
  */
-
 public final class XMLByteStreamInterpreter
 extends AbstractXMLProducer
 implements XMLDeserializer, Recyclable {

@@ -67,14 +67,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Marc Liyanage (futureLAB AG)
- * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.4 2004/01/26 16:07:18 unico Exp $
- * 
- * TODO: is no x-avalon.lifestyle correct/allowed here?
+ * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.5 2004/01/31 16:54:49 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=NotifyingBuilder
- * @x-avalon.info name=notifying-builder
  * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=notifying-builder
  */
 public class DefaultNotifyingBuilder implements NotifyingBuilder {
 
