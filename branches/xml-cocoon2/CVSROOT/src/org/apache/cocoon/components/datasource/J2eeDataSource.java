@@ -9,7 +9,6 @@ package org.apache.cocoon.components.datasource;
 
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.ThreadSafe;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
 
@@ -26,9 +25,9 @@ import java.sql.SQLException;
  * J2EE container pools the datasources properly.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-10 15:21:01 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-10 22:07:03 $
  */
-public class J2eeDataSource implements DataSourceComponent, ThreadSafe {
+public class J2eeDataSource implements DataSourceComponent {
     final static String JDBC_NAME = "java:comp/env/jdbc/";
     Logger log = LogKit.getLoggerFor("cocoon");
     DataSource ds = null;

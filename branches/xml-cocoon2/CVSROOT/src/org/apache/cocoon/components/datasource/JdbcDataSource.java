@@ -10,7 +10,6 @@ package org.apache.cocoon.components.datasource;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.ThreadSafe;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
 
@@ -23,9 +22,9 @@ import java.sql.SQLException;
  * <code>java.sql.DriverManager</code>.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-10 13:44:00 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-10 22:07:04 $
  */
-public class JdbcDataSource implements DataSourceComponent, ThreadSafe {
+public class JdbcDataSource implements DataSourceComponent {
     Logger log = LogKit.getLoggerFor("cocoon");
     JdbcConnectionPool pool = null;
 

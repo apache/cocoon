@@ -34,7 +34,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-10 19:31:39 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-10 22:07:00 $
  */
 public class AddEmployeeAction extends ComposerAction {
 
@@ -50,6 +50,7 @@ public class AddEmployeeAction extends ComposerAction {
             ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
             this.datasource = (DataSourceComponent) selector.select(connElement.getValue());
         } catch (ComponentManagerException cme) {
+            log.error("Could not get the DataSourceComponent", cme);
             throw new ConfigurationException("Could not get the DataSource Component", cme);
         }
     }
@@ -75,40 +76,39 @@ public class AddEmployeeAction extends ComposerAction {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        boolean returnValue = false;
+        boolean returnValue = true;
 
         try {
             conn = datasource.getConnection();
             conn.setAutoCommit(false);
-            rs = conn.createStatement().executeQuery("SELECT Max(id) AS maxid FROM employee_table;");
+            rs = conn.createStatement().executeQuery("SELECT Max(id) AS maxid FROM employee_table");
             int maxid = -1;
 
             if (rs.next() == true) {
-                maxid = rs.getInt("maxid");
+                maxid = rs.getInt("maxid") + 1;
 
                 ps = conn.prepareStatement("INSERT INTO employee_table (id, name, department_id) VALUES (?, ?, ?)");
                 ps.setInt(1, maxid);
                 ps.setString(2, name);
                 ps.setString(3, department);
 
-                returnValue = ps.execute();
+                ps.executeUpdate();
+                returnValue = true;
+                conn.commit();
+            } else {
+                returnValue = false;
+                conn.rollback();
             }
         } catch (SQLException se) {
-            // returnValue = false;
+            log.error("There was a SQL error", se);
         } finally {
             try {
-                if (returnValue = false) {
-                    conn.rollback();
-                } else {
-                    conn.commit();
-                }
-
-                ps.close();
-                rs.close();
-                rs.getStatement().close();
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                if (rs.getStatement() != null) rs.getStatement().close();
                 conn.close();
             } catch (Exception e) {
-                // we should never be here
+                log.error("We should never be in this clause", e);
             }
         }
 

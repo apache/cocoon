@@ -9,6 +9,7 @@ package org.apache.cocoon.components.datasource;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.Configurable;
+import org.apache.avalon.ThreadSafe;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,9 +18,9 @@ import java.sql.SQLException;
  * The standard interface for DataSources in Cocoon.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-08 20:20:46 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-10 22:07:02 $
  */
-public interface DataSourceComponent extends Component, Configurable {
+public interface DataSourceComponent extends Component, Configurable, ThreadSafe {
     /**
      * Gets the Connection to the database
      */
