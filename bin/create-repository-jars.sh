@@ -1,7 +1,7 @@
 #!/bin/sh -x
 
 
-# $Id: create-repository-jars.sh,v 1.7 2004/02/02 20:28:03 giacomo Exp $
+# $Id: create-repository-jars.sh,v 1.8 2004/02/04 16:09:11 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
@@ -66,32 +66,39 @@ $JAVA_HOME/bin/java -version
 NOCVS=0
 NOBUILD=0
 NOCLEAN=0
-while getopts ":CkBh" option
+NOJARS=0
+NOWAR=0
+BUILD_SRC_DIST=0
+while getopts ":BCdhJkW" option
 do
   case $option in
-    C) NOCVS=1;;
-    k) NOCLEAN=1;;
     B) NOBUILD=1;;
-    h) echo "Usage: `basename $0` [-C] [-k] [-B] [-h] [RELEASE-TAG]"
-       echo "       -C          don't do a cvs update"
-       echo "       -k          keep the build tree (don't do a clean-dist)"
+    C) NOCVS=1;;
+    d) BUILD_SRC_DIST=1;;
+    h) echo "Usage: `basename $0` [-B] [-C] [-d] [-J] [-h] [-k] [-W] [RELEASE-TAG]"
        echo "       -B          don't do a build"
+       echo "       -C          don't do a cvs update"
+       echo "       -d          build a src dist"
        echo "       -h          this usage note"
+       echo "       -J          don't deploy the jar files"
+       echo "       -k          keep the build tree (don't do a clean-dist)"
+       echo "       -W          don't deploy the war file"
        echo "       RELEASE-TAG the tag to do a cvs update for"
        echo "                   if the RELEASE-TAG is HEAD a snapshot version"
        echo "                   will be produced"
        exit 0
        ;;
+    J) NOJARS=1;;
+    k) NOCLEAN=1;;
+    W) NOWAR=1;;
     *     ) echo "Unimplemented option $option chosen.";;
   esac
 done
 
 shift $(($OPTIND - 1))
-
-# create the target directory if they do not exists and make them group writable
-ssh $REMOTEHOST "mkdir -p $REMOTEPATH/jars 2>/dev/null >/dev/null; \
-                 mkdir -p $REMOTEPATH/wars 2>/dev/null >/dev/null; \
-                 chmod -R g+w $REMOTEPATH"
+if [ "$1" != "" ]; then
+  REVISION=$1
+fi
 
 # check if the local repository exists and do a checkout/update accordingly
 if [ -d "$LOCAL_REPOSITORY" ]; then
@@ -167,27 +174,62 @@ if [ $RC -ne 0 ]; then
   exit $RC
 fi
 
-# copy all the jars produced over to the iremote repository space
+# copy all the jars produced over to the remote repository space
 VERSION=`ls build | grep cocoon | sed s/cocoon-//`
 if [ "$REVISION" = "HEAD" ]; then 
   TVERSION=`date "+%Y%m%d.%H%M%S"` 
 else
   TVERSION=$VERSION
 fi
-JARS=`find build/cocoon-$VERSION -name "*.jar"`
-for i in $JARS; do
-  FILE=`echo $i | sed 's/.*[/]//' | sed s/[.]jar//`
-  isBlock=`echo $FILE|grep block`
-  if [ ! -z "$isBlock" ]; then
-    BLOCKPART="-`echo $FILE | sed 's/-block//'`"
-  else
-    BLOCKPART=`echo $FILE | sed 's/cocoon//'`
-  fi
+
+if [ $NOJARS = 0 ]; then
+  # create the target directory if they do not exists and make them group writable
+  ssh $REMOTEHOST "mkdir -p $REMOTEPATH/jars 2>/dev/null >/dev/null; \
+                 chmod -R g+w $REMOTEPATHi/jars"
+  JARS=`find build/cocoon-$VERSION -name "*.jar"`
+  for i in $JARS; do
+    FILE=`echo $i | sed 's/.*[/]//' | sed s/[.]jar//`
+    isBlock=`echo $FILE|grep block`
+    if [ ! -z "$isBlock" ]; then
+      BLOCKPART="-`echo $FILE | sed 's/-block//'`"
+    else
+      BLOCKPART=`echo $FILE | sed 's/cocoon//'`
+    fi
+    if [ "$REVISION" = "HEAD" ]; then
+      # remove all snapshots in the remote repository
+      SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/jars/cocoon$BLOCKPART-????????.??????.jar 2>/dev/null"` 
+    fi
+    scp $i $REMOTEHOST:$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar
+    if [ "$REVISION" = "HEAD" ]; then
+      if [ ! -z "$SNAPSHOT" ]; then
+        RM="rm $SNAPSHOT;"
+      else
+        RM=""
+      fi
+      CMD="$RM \
+           cd $REMOTEPATH/jars; \
+           ln -fs cocoon$BLOCKPART-$TVERSION.jar cocoon$BLOCKPART-SNAPSHOT.jar; \
+           echo $TVERSION >cocoon$BLOCKPART-snapshot.version;"
+    else
+      CMD=""
+    fi
+    ssh $REMOTEHOST "$CMD \
+                     $MD5SUM <$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
+                       sed 's/ .*$//' >$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar.md5; \
+                     chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.*"
+  done
+fi
+
+# copy the war file to the web space
+if [ "$NOWAR" = "0" ]; then
+  # create the target directory if they do not exists and make them group writable
+  ssh $REMOTEHOST "mkdir -p $REMOTEPATH/wars 2>/dev/null >/dev/null; \
+                   chmod -R g+w $REMOTEPATH/wars"
+  WAR=build/cocoon-$VERSION/cocoon.war
   if [ "$REVISION" = "HEAD" ]; then
-    # remove all snapshots in the remote repository
-    SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/jars/cocoon$BLOCKPART-????????.??????.jar 2>/dev/null"` 
+    SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/wars/cocoon-war-????????.??????.war 2>/dev/null"` 
   fi
-  scp $i $REMOTEHOST:$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar
+  scp $WAR $REMOTEHOST:$REMOTEPATH/wars/cocoon-war-$TVERSION.war
   if [ "$REVISION" = "HEAD" ]; then
     if [ ! -z "$SNAPSHOT" ]; then
       RM="rm $SNAPSHOT;"
@@ -195,39 +237,31 @@ for i in $JARS; do
       RM=""
     fi
     CMD="$RM \
-         cd $REMOTEPATH/jars; \
-         ln -fs cocoon$BLOCKPART-$TVERSION.jar cocoon$BLOCKPART-SNAPSHOT.jar; \
-         echo $TVERSION >cocoon$BLOCKPART-snapshot.version;"
+         cd $REMOTEPATH/wars; \
+         ln -fs cocoon-war-$TVERSION.war cocoon-war-SNAPSHOT.war; \
+         echo $TVERSION >cocoon-war-snapshot.version;"
   else
     CMD=""
   fi
   ssh $REMOTEHOST "$CMD \
-                   $MD5SUM <$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
-                     sed 's/ .*$//' >$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar.md5; \
-                   chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.*"
-done
-
-# copy the war file to the web space
-WAR=build/cocoon-$VERSION/cocoon.war
-if [ "$REVISION" = "HEAD" ]; then
-  SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/wars/cocoon-war-????????.??????.war 2>/dev/null"` 
+                   $MD5SUM <$REMOTEPATH/wars/cocoon-war-$TVERSION.war | \
+                     sed 's/ .*$//' >$REMOTEPATH/jars/cocoon-war-$TVERSION.jar.md5; \
+                   chmod g+w $REMOTEPATH/jars/cocoon-war-$TVERSION.*"
 fi
-scp $WAR $REMOTEHOST:$REMOTEPATH/wars/cocoon-war-$TVERSION.war
-if [ "$REVISION" = "HEAD" ]; then
-  if [ ! -z "$SNAPSHOT" ]; then
-    RM="rm $SNAPSHOT;"
-  else
-    RM=""
+
+# create a distribution
+if [ "$BUILD_SRC_DIST" = "1" ]; then
+  # create the target directory if they do not exists and make them group writable
+  ssh $REMOTEHOST "mkdir -p $REMOTEPATH/distributions 2>/dev/null >/dev/null; \
+                   chmod -R g+w $REMOTEPATH/distributions"
+  ./build.sh clean-dist
+  cd ..
+  if [ "$REVISION" = "HEAD" ]; then
+    TVERSION=SNAPSHOT
   fi
-  CMD="$RM \
-       cd $REMOTEPATH/wars; \
-       ln -fs cocoon-war-$TVERSION.war cocoon-war-SNAPSHOT.war; \
-       echo $TVERSION >cocoon-war-snapshot.version;"
-else
-  CMD=""
+  ln -sf $REPOSITORY_NAME cocoon-src-$TVERSION
+  zip -r cocoon-src-$TVERSION.zip cocoon-src-$TVERSION
+  rm cocoon-src-$TVERSION
+  scp cocoon-src-$TVERSION.zip $REMOTEHOST:$REMOTEPATH/distributions/cocoon-src-$TVERSION.zip
+  rm cocoon-src-$TVERSION.zip
 fi
-ssh $REMOTEHOST "$CMD \
-                 $MD5SUM <$REMOTEPATH/wars/cocoon-war-$TVERSION.jar | \
-                   sed 's/ .*$//' >$REMOTEPATH/jars/cocoon-war-$TVERSION.jar.md5; \
-                 chmod g+w $REMOTEPATH/jars/cocoon-war-$TVERSION.*"
-
