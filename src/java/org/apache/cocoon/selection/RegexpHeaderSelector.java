@@ -49,8 +49,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * also be specified as a <code>&lt;map:parameter&nbsp;.../&gt;</code> inside the
  * pipeline itself.</p>
  * 
- * @version CVS $Revision: 1.0 $
- * @author <a href="mailto:colin@colina.demon.co.uk">Colin Adams</a>
+ * @version CVS $Id$
  */
 public class RegexpHeaderSelector extends AbstractRegexpSelector {
 
