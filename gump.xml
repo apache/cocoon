@@ -577,6 +577,7 @@
     <depend project="jta"/>
     <depend project="jakarta-slide"/>
     <depend project="jdom"/>
+    <depend project="jms"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
