@@ -49,7 +49,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.22 $ $Date: 2001-02-15 20:28:25 $
+ * @version CVS $Revision: 1.1.4.23 $ $Date: 2001-02-24 13:57:49 $
  */
 
 public class Main {
@@ -63,6 +63,7 @@ public class Main {
     protected static final int CONTEXT_DIR_OPT = 'c';
     protected static final int DEST_DIR_OPT =    'd';
     protected static final int WORK_DIR_OPT =    'w';
+    protected static final int XSP_OPT =         'x';
 
     protected static final CLOptionDescriptor [] options = new CLOptionDescriptor [] {
         new CLOptionDescriptor("help",
@@ -92,7 +93,11 @@ public class Main {
         new CLOptionDescriptor("workDir",
                                CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                WORK_DIR_OPT,
-                               "use given dir as working directory")
+                               "use given dir as working directory"),
+        new CLOptionDescriptor("xspOnly",
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
+                               XSP_OPT,
+                               "generate java code for xsp files")
     };
 
 
@@ -105,6 +110,7 @@ public class Main {
         CLArgsParser parser = new CLArgsParser(args, options);
         String logUrl = "logs/cocoon.log";
         String logLevel = "DEBUG";
+        boolean xspOnly = false;
 
         List clOptions = parser.getArguments();
         int size = clOptions.size();
@@ -143,6 +149,10 @@ public class Main {
 
                 case Main.LOG_LEVEL_OPT:
                     logLevel = option.getArgument();
+                    break;
+
+                case Main.XSP_OPT:
+                    xspOnly = true;
                     break;
             }
         }
@@ -204,7 +214,7 @@ public class Main {
             c.init();
             Main main = new Main(c, context, dest);
             main.warmup();
-            main.process(targets);
+            main.process(targets, xspOnly);
             log.info("Done");
         } catch (Exception e) {
             log.fatalError("Exception caught ", e);
@@ -234,7 +244,7 @@ public class Main {
 
     private static File getConfigurationFile(File dir) throws Exception {
 
-        log.debug("Trying configuration file at: " + Constants.DEFAULT_CONF_FILE);
+        log.debug("Trying configuration file at: " + dir + File.separator + Constants.DEFAULT_CONF_FILE);
         File f = new File(dir, Constants.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
@@ -304,11 +314,11 @@ public class Main {
     /**
      * Process the URI list and process them all independently.
      */
-    public void process(Collection uris) throws Exception {
+    public void process(Collection uris, boolean xspOnly) throws Exception {
         log.info("...ready, let's go:");
         Iterator i = uris.iterator();
         while (i.hasNext()) {
-            this.processURI(NetUtils.normalize((String) i.next()), 0);
+            this.processURI(NetUtils.normalize((String) i.next()), 0, xspOnly);
         }
     }
 
@@ -330,7 +340,7 @@ public class Main {
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
      */
-    public String processURI(String uri, int level) throws Exception {
+    public String processURI(String uri, int level, boolean xspOnly) throws Exception {
         log.info("Processing URI: " + leaf(level) + uri);
 
         Collection links = this.getLinks(uri);
@@ -341,34 +351,38 @@ public class Main {
             String path = NetUtils.getPath(uri);
             String relativeLink = (String) i.next();
             String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
-            String translatedAbsoluteLink = this.processURI(absoluteLink, level + 1);
+            String translatedAbsoluteLink = this.processURI(absoluteLink, level + 1, xspOnly);
             String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
             translatedLinks.put(relativeLink, translatedRelativeLink);
         }
-
+        
         String filename = mangle(uri);
-        File file = IOUtils.createFile(destDir, filename);
-        FileOutputStream output = new FileOutputStream(file);
-        String type = getPage(uri, translatedLinks, output);
-        output.close();
+        if (!xspOnly) {
+            File file = IOUtils.createFile(destDir, filename);
+            FileOutputStream output = new FileOutputStream(file);
+            String type = getPage(uri, translatedLinks, output);
+            output.close();
 
-        String ext = NetUtils.getExtension(filename);
-        String defaultExt = MIMEUtils.getDefaultExtension(type);
+            String ext = NetUtils.getExtension(filename);
+            String defaultExt = MIMEUtils.getDefaultExtension(type);
 
-        if ((ext == null) || (!ext.equals(defaultExt))) {
-            filename += defaultExt;
-            File newFile = IOUtils.createFile(destDir, filename);
-            file.renameTo(newFile);
-            file = newFile;
-        }
+            if ((ext == null) || (!ext.equals(defaultExt))) {
+                filename += defaultExt;
+                File newFile = IOUtils.createFile(destDir, filename);
+                file.renameTo(newFile);
+                file = newFile;
+            }
+            log.info(tree(level));
 
-        log.info(tree(level));
-
-        if (type == null) {
-            log.warn(leaf(level + 1) + "[broken link]--> " + filename);
-            resourceUnavailable(file);
+            if (type == null) {
+                log.warn(leaf(level + 1) + "[broken link]--> " + filename);
+                resourceUnavailable(file);
+            } else {
+                log.info(leaf(level + 1) + "[" + type + "]--> " + filename);
+            }
         } else {
-            log.info(leaf(level + 1) + "[" + type + "]--> " + filename);
+            log.info(tree(level));
+            log.info(leaf(level + 1) + "--> " + filename);
         }
 
         return filename;

@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-21 17:22:31 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-24 13:57:49 $
  */
 public class IOUtils {
 
@@ -205,10 +205,36 @@ public class IOUtils {
    * Return the path within a base directory
    */
   public static String getContextFilePath(String contextDir, String filePath) {
-      if (filePath.startsWith(contextDir)) {
-          return filePath.substring(contextDir.length());
+
+      // If the context directory has a . indicating current directory 
+      // then replace it with the users directory
+      if (contextDir.startsWith(".")) {
+        contextDir = System.getProperty("user.dir") + contextDir.substring(1);
       }
 
+      // If the context directory does not have a File.separator 
+      // at the end then add one explicitly
+      if(!contextDir.endsWith(File.separator)){
+        contextDir += File.separator;
+      }
+      
+      // If the context dir contains both kinds of spearator 
+      // then standardize on using the File.separator
+      if ((contextDir.indexOf('/') !=-1) && (contextDir.indexOf('\\') !=-1)) {
+        contextDir = contextDir.replace('\\', File.separator.charAt(0));
+        contextDir = contextDir.replace('/', File.separator.charAt(0));
+      }
+
+      // If the file path contains both kinds of spearator 
+      // then standardize on using the File.separator
+      if ((filePath.indexOf('/') !=-1) && (filePath.indexOf('\\') !=-1)) {
+        filePath = filePath.replace('\\', File.separator.charAt(0));
+        filePath = filePath.replace('/', File.separator.charAt(0));
+      }
+
+      if (filePath.startsWith(contextDir)) {
+          filePath = filePath.substring(contextDir.length());
+      }
       return filePath;
   }
 
