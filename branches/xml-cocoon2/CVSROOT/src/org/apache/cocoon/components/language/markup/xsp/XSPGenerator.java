@@ -12,11 +12,10 @@ import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.components.parser.Parser;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.PoolClient;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
-import org.apache.avalon.util.pool.Pool;
+import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.generation.AbstractServerPage;
 
@@ -24,11 +23,10 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-16 22:07:37 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-22 17:10:28 $
  */
-public abstract class XSPGenerator extends AbstractServerPage implements Loggable, PoolClient, CompiledComponent {
+public abstract class XSPGenerator extends AbstractServerPage implements Loggable, Poolable, CompiledComponent {
 
-  protected Pool pool;
   protected Parser parser;
   protected Logger log;
 
@@ -54,14 +52,4 @@ public abstract class XSPGenerator extends AbstractServerPage implements Loggabl
         log.error("Can't find component", e);
     }
   }
-    public void setPool(Pool pool) {
-        if (this.pool == null) {
-           this.pool = pool;
-        }
-    }
-
-    public void returnToPool() {
-       super.recycle();
-       this.pool.put(this);
-    }
 }

@@ -9,14 +9,14 @@ package org.apache.cocoon.components.language.generator;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.Modifiable;
-import org.apache.cocoon.PoolClient;
+import org.apache.avalon.Poolable;
 
 /**
  * This interface is the common base of all Compiled Components.  This
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-16 22:07:33 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-22 17:10:25 $
  */
-public interface CompiledComponent extends Composer, PoolClient, Modifiable {
+public interface CompiledComponent extends Composer, Poolable, Modifiable {
 }

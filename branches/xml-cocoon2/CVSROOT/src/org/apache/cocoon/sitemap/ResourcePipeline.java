@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -26,7 +26,6 @@ import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.cocoon.PoolClient;
 import org.apache.cocoon.Roles;
 
 import org.apache.cocoon.sitemap.ErrorNotifier;
@@ -36,7 +35,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-19 21:57:50 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-22 17:10:52 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;
@@ -48,9 +47,9 @@ public class ResourcePipeline implements Composer {
     private String readerSource;
     private String readerMimeType;
     private String sitemapReaderMimeType;
-    private Vector transformers = new Vector();
-    private Vector transformerParams = new Vector();
-    private Vector transformerSources = new Vector();
+    private ArrayList transformers = new ArrayList();
+    private ArrayList transformerParams = new ArrayList();
+    private ArrayList transformerSources = new ArrayList();
     private Serializer serializer;
     private Parameters serializerParam;
     private String serializerSource;
@@ -146,10 +145,7 @@ public class ResourcePipeline implements Composer {
                 reader.setOutputStream (environment.getOutputStream());
                 reader.generate();
 
-                if (reader instanceof PoolClient) {
-                   ((PoolClient)reader).returnToPool();
-                }
-
+                ((ComponentSelector) this.manager.lookup(Roles.READERS)).release((Component) reader);
             } else {
                 throw new ProcessingException ("Generator or Reader not specified");
             }
@@ -161,23 +157,18 @@ public class ResourcePipeline implements Composer {
             if (generatorException != null) {
                 ((ErrorNotifier)this.generator).setException (generatorException);
             }
-            int i = transformers.size();
-            Transformer myTransformer[] = new Transformer[i];
-            int num_transformers = 0;
 
-            for (num_transformers=0; num_transformers < i; num_transformers++) {
-                myTransformer[num_transformers] = (Transformer) transformers.elementAt (num_transformers);
-            }
+            Transformer myTransformer[] = (Transformer []) transformers.toArray(new Transformer[] {});
 
             this.generator.setup ((EntityResolver) environment, environment.getObjectModel(), generatorSource, generatorParam);
             Transformer transformer = null;
             XMLProducer producer = this.generator;
-            for (int j=0; j < i; j++) {
-                myTransformer[j].setup ((EntityResolver) environment, environment.getObjectModel(),
-                        (String)transformerSources.elementAt (j),
-                        (Parameters)transformerParams.elementAt (j));
-                producer.setConsumer (myTransformer[j]);
-                producer = myTransformer[j];
+            for (int i = 0; i < myTransformer.length; i++) {
+                myTransformer[i].setup ((EntityResolver) environment, environment.getObjectModel(),
+                        (String)transformerSources.get (i),
+                        (Parameters)transformerParams.get (i));
+                producer.setConsumer (myTransformer[i]);
+                producer = myTransformer[i];
             }
 
             mime_type = this.serializer.getMimeType();
@@ -195,19 +186,13 @@ public class ResourcePipeline implements Composer {
             producer.setConsumer (this.serializer);
             this.generator.generate();
 
-            if (generator instanceof PoolClient) {
-               ((PoolClient)generator).returnToPool();
+            ((ComponentSelector) this.manager.lookup(Roles.GENERATORS)).release((Component) generator);
+
+            for (int i = 0; i < myTransformer.length; i++) {
+                ((ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS)).release((Component) myTransformer[i]);
             }
 
-            for (int j=0; j < i; j++) {
-                if (myTransformer[j] instanceof PoolClient) {
-                   ((PoolClient)myTransformer[j]).returnToPool();
-                }
-            }
-
-            if (serializer instanceof PoolClient) {
-               ((PoolClient)serializer).returnToPool();
-            }
+            ((ComponentSelector) this.manager.lookup(Roles.SERIALIZERS)).release((Component) serializer);
         }
         return true;
     }

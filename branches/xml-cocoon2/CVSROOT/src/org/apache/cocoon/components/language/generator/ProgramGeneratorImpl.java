@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-02-22 12:07:58 $
+ * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-02-22 17:10:26 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -227,5 +227,9 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         }
 
         return program;
+    }
+
+    public void release(CompiledComponent component) {
+        this.cache.release((Component) component);
     }
 }

@@ -16,15 +16,17 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log.Logger;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.PoolClient;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.DocumentHandlerAdapter;
@@ -65,18 +67,14 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.util.pool.Pool;
-
 /**
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-19 15:58:11 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-22 17:10:57 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
-implements Transformer, Composer, Loggable, PoolClient {
+implements Transformer, Composer, Loggable, Poolable {
     private Logger log;
 
     /** The component manager */
@@ -90,16 +88,6 @@ implements Transformer, Composer, Loggable, PoolClient {
 
     /**The DocumentHandler */
     private DocumentHandler docHandler = null;
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     public void setLogger(Logger logger) {
         if (this.log == null) {

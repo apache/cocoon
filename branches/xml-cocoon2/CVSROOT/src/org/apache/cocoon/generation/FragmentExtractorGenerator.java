@@ -5,8 +5,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.avalon.Parameters;
-import org.apache.avalon.util.pool.Pool;
-import org.apache.cocoon.PoolClient;
+import org.apache.avalon.Poolable;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -29,22 +28,12 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-19 21:57:48 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-22 17:10:33 $
  */
-public class FragmentExtractorGenerator extends AbstractGenerator implements PoolClient {
+public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
 
     /** The fragment store. */
     private static Map fragmentStore = new HashMap();
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     /** Construct a new <code>FragmentExtractorGenerator</code> and ensure that the
      * fragment store is initialized and threadsafe (since it is a global store, not

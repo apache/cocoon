@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import org.apache.avalon.util.pool.Pool;
-import org.apache.cocoon.PoolClient;
+import org.apache.avalon.Poolable;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
@@ -30,25 +29,15 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-19 15:58:09 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-22 17:10:42 $
  *
  */
-public class FOPSerializer extends AbstractSerializer implements MessageListener, PoolClient {
+public class FOPSerializer extends AbstractSerializer implements MessageListener, Poolable {
 
     /**
      * The FOP driver
      */
     private Driver driver = null;
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     /**
      * Create the FOP driver

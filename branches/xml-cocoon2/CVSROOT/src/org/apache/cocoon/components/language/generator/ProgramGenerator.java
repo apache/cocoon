@@ -17,7 +17,7 @@ import org.xml.sax.EntityResolver;
  * documents writeen in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 15:38:27 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-22 17:10:26 $
  */
 public interface ProgramGenerator extends Component {
   /**
@@ -36,4 +36,12 @@ public interface ProgramGenerator extends Component {
     File file, String markupLanguage, String programmingLanguage,
     EntityResolver resolver
   ) throws Exception;
+
+  /**
+   * Release a program built from an XML document written in a
+   * <code>MarkupLanguage</code>.
+   *
+   * @param CompiledSheet
+   */
+  void release(CompiledComponent component);
 }

@@ -25,6 +25,7 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.CocoonComponentSelector;
 import org.apache.cocoon.ProcessingException;
@@ -32,7 +33,6 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
-import org.apache.cocoon.components.language.generator.AbstractCompiledComponent;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -42,9 +42,9 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-19 21:57:49 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-02-22 17:10:51 $
  */
-public abstract class AbstractSitemap extends AbstractCompiledComponent implements Sitemap {
+public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;
 
     private static final int BYTE_ARRAY_SIZE = 1024;

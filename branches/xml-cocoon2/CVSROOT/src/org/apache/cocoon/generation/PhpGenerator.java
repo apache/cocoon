@@ -17,8 +17,7 @@ import net.php.servlet;
 
 import org.apache.cocoon.components.parser.Parser;
 
-import org.apache.avalon.util.pool.Pool;
-import org.apache.cocoon.PoolClient;
+import org.apache.avalon.Poolable;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -29,19 +28,9 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-19 21:13:33 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-22 17:10:34 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     /**
      * Stub implementation of Servlet Config

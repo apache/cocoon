@@ -7,8 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.util.pool.Pool;
-import org.apache.cocoon.PoolClient;
+import org.apache.avalon.Poolable;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.ProcessingException;
@@ -30,18 +29,9 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-19 21:13:32 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-22 17:10:33 $
  */
-public class HTMLGenerator extends ComposerGenerator implements PoolClient {
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
+public class HTMLGenerator extends ComposerGenerator implements Poolable {
 
     /**
      * Generate XML data.

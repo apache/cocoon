@@ -14,7 +14,6 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.*;
 import org.apache.cocoon.xml.dom.*;
 import org.apache.avalon.*;
-import org.apache.avalon.util.pool.Pool;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
@@ -31,19 +30,9 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-02-21 23:42:54 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-02-22 17:10:45 $
  */
-public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, PoolClient {
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
+public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, Poolable {
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler=null;
@@ -68,7 +57,7 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
     public void setOutputStream(OutputStream out) {
         this.output = new BufferedOutputStream(out);
     }
-    
+
     /**
      * Set the configurations for this serializer.
      */
@@ -78,7 +67,7 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
         // TODO: take the mime type and create a transcoder from it
         // allow the parameter "transcoder" to override it however
         String transcoderName = null; // TODO: whatever the factory will say it is
-       
+
         // Iterate through the parameters, looking for a transcoder reference
         for (Iterator i = conf.getChildren("parameter"); i.hasNext(); ) {
             Configuration paramConf = (Configuration)i.next();
@@ -131,7 +120,7 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
                     // Assume String, and get the value. Allow an empty string.
                     value = paramConf.getValue("");
                 }
-                // TODO: if (logger.isDebug()) 
+                // TODO: if (logger.isDebug())
                 log.debug("SVG Serializer: adding hint \"" + name + "\" with value \"" + value.toString() + "\"");
                 transcoder.addTranscodingHint(key, value);
             } catch (ClassCastException ex) {

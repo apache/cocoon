@@ -9,7 +9,6 @@
 package org.apache.cocoon;
 
 import org.apache.avalon.util.pool.ObjectFactory;
-import org.apache.avalon.Poolable;
 import org.apache.avalon.util.pool.Pool;
 
 import org.apache.avalon.Configuration;
@@ -19,15 +18,16 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Context;
+import org.apache.avalon.Poolable;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-19 21:57:45 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-22 17:10:18 $
  */
-public class ComponentFactory implements ObjectFactory, PoolClient, ThreadSafe, Loggable {
+public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     private Logger log;
 
     /** The class which this <code>ComponentFactory</code>
@@ -46,16 +46,6 @@ public class ComponentFactory implements ObjectFactory, PoolClient, ThreadSafe, 
     /** The Context for the component
      */
     private Context context;
-
-    /** The Pool for the component
-     */
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-         if (this.pool == null) {
-             this.pool = pool;
-         }
-    }
 
     /** Construct a new component factory for the specified component.
      * @param componentClass the class to instantiate (must have a default constructor).
@@ -98,14 +88,8 @@ public class ComponentFactory implements ObjectFactory, PoolClient, ThreadSafe, 
             ((Configurable)comp).configure(this.conf);
         }
 
-        if ( comp instanceof PoolClient) {
-            ((PoolClient) comp).setPool(this.pool);
-        }
-
         return comp;
     }
-
-    public void returnToPool() {}
 
     public final Class getCreatedClass() {
         return componentClass;

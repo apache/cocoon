@@ -13,8 +13,7 @@ import java.io.PrintStream;
 import java.io.IOException;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.PoolClient;
-import org.apache.avalon.util.pool.Pool;
+import org.apache.avalon.Poolable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -23,22 +22,12 @@ import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-19 15:58:10 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-22 17:10:44 $
  */
 
-public class LinkSerializer extends ExtendedXLinkPipe implements Serializer, PoolClient {
+public class LinkSerializer extends ExtendedXLinkPipe implements Serializer, Poolable {
 
     private PrintStream out;
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     /**
      * Set the <code>OutputStream</code> where the requested resource should

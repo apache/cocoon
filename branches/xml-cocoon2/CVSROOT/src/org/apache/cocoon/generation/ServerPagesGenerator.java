@@ -21,7 +21,8 @@ import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.util.pool.Pool;
+import org.apache.avalon.Poolable;
+import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -34,19 +35,17 @@ import java.net.MalformedURLException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.PoolClient;
-import org.apache.avalon.Loggable;
 
 /**
  * This class acts as a proxy to a dynamically loaded<code>Generator</code>
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-19 21:13:34 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 17:10:35 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler, PoolClient
+  implements ContentHandler, LexicalHandler, Poolable
 {
   /**
    * The sitemap-defined server pages program generator
@@ -54,16 +53,6 @@ public class ServerPagesGenerator
   protected static ProgramGenerator programGenerator = null;
 
   protected static URLFactory factory = null;
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
   /**
    * Set the global component manager. This method sets the sitemap-defined
@@ -154,20 +143,6 @@ public class ServerPagesGenerator
       throw new ResourceNotFoundException(e.getMessage(), e);
     }
 
-/*    if (generator instanceof Loggable) {
-        ((Loggable) generator).setLogger(getLogger());
-    }
-
-    // Delegate XML production to loaded generator
-    if (generator instanceof Composer) {
-        try {
-            ((Composer) generator).compose(this.manager);
-        } catch (Exception e) {
-            getLogger().error("Could not compose generator", e);
-            throw new ProcessingException("Could not compose generator");
-        }
-    }
-*/
     generator.setContentHandler(this);
     generator.setLexicalHandler(this);
     generator.setup(this.resolver, this.objectModel, this.source, this.parameters);
@@ -204,7 +179,7 @@ public class ServerPagesGenerator
       }
     }
 
-    generator.returnToPool();
+    programGenerator.release(generator);
   }
 
   /* Handlers */

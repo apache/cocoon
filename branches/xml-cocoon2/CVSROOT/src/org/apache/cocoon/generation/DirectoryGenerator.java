@@ -21,13 +21,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import org.apache.avalon.Parameters;
-import org.apache.avalon.util.pool.Pool;
+import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.url.URLFactory;
-import org.apache.cocoon.PoolClient;
 
 /**
  * Generates an XML directory listing.
@@ -62,9 +61,9 @@ import org.apache.cocoon.PoolClient;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-19 15:58:08 $ */
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-22 17:10:30 $ */
 
-public class DirectoryGenerator extends ComposerGenerator implements PoolClient {
+public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI =
@@ -89,16 +88,6 @@ public class DirectoryGenerator extends ComposerGenerator implements PoolClient 
     protected int depth;
     protected AttributesImpl attributes = new AttributesImpl();
     protected SimpleDateFormat dateFormatter;
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     /**
      * Set the request parameters. Must be called before the generate

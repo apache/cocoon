@@ -10,20 +10,18 @@ package org.apache.cocoon.reading;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.cocoon.PoolClient;
-
 import org.xml.sax.EntityResolver;
 
 import org.apache.avalon.Parameters;
 import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.util.pool.Pool;
+import org.apache.avalon.Poolable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-20 20:34:17 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-22 17:10:41 $
  */
-public abstract class AbstractReader extends AbstractLoggable implements PoolClient, Reader {
+public abstract class AbstractReader extends AbstractLoggable implements Poolable, Reader {
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
     /** The current <code>Map</code> of the object model. */
@@ -34,16 +32,7 @@ public abstract class AbstractReader extends AbstractLoggable implements PoolCli
     protected String source=null;
     /** The <code>OutputStream</code> to write on. */
     protected OutputStream out=null;
-    /** The pool to return the object to */
-    private Pool pool;
 
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
     /**
      * Set the <code>EntityResolver</code> the object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.

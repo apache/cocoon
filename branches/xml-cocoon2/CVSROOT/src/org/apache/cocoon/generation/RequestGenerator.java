@@ -13,30 +13,19 @@ import java.util.Enumeration;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.avalon.util.pool.Pool;
-import org.apache.cocoon.PoolClient;
+import org.apache.avalon.Poolable;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-19 21:13:33 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-22 17:10:34 $
  */
-public class RequestGenerator extends ServletGenerator implements PoolClient {
+public class RequestGenerator extends ServletGenerator implements Poolable {
 
     /** The URI of the namespace of this generator. */
     private String URI="http://xml.apache.org/cocoon/2.0/RequestGenerator";
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     /**
      * Generate XML data.
