@@ -18,10 +18,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 17:47:13 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-05-24 23:13:14 $
  */
 public interface Parser extends Component, XMLProducer, DOMFactory {
     
-    public void parse(InputSource in)
-    throws SAXException, IOException;
+    public void parse(InputSource in) throws SAXException, IOException;
+    
 }
