@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.157 2004/01/26 02:11:02 antonio Exp $
+    | CVS $Id: jars.xml,v 1.158 2004/01/31 00:07:01 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -461,7 +461,7 @@
       based upon Microsoft's OLE 2 Compound Document format using pure Java.
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
-    <lib>poi/lib/jakarta-poi-1.10.0-dev-20030222.jar</lib>
+    <lib>poi/lib/poi-2.0-final-20040126.jar</lib>
     <homepage>http://jakarta.apache.org/poi/</homepage>
   </file>
 
