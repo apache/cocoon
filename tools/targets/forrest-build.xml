@@ -37,7 +37,7 @@
   </target>
 
   <target name="forrest.checkenv" if="env.FORREST_HOME">
-    <echo level="verbose">Found $FORREST_HOME..</echo>
+    <echo level="verbose">Found $FORREST_HOME=${env.FORREST_HOME}</echo>
     <property name="forrest.home" location="${env.FORREST_HOME}"/>
     <echo level="verbose">forrest.home set to ${forrest.home}</echo>
     <available file="${forrest.home}" type="dir" property="forrest.home.present"/>
