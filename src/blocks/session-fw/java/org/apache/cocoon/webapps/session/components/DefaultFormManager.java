@@ -44,7 +44,7 @@ import org.w3c.dom.DocumentFragment;
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.7 2004/04/15 08:26:53 cziegeler Exp $
+ * @version CVS $Id: DefaultFormManager.java,v 1.8 2004/04/15 08:51:31 cziegeler Exp $
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled
@@ -201,6 +201,9 @@ implements Serviceable, Component, FormManager, ThreadSafe, Contextualizable {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.FormManager#processInputFields()
+     */
     public void processInputFields() {
         final Map objectModel = ContextHelper.getObjectModel(this.context);
         this.processInputFields( objectModel ) ;
