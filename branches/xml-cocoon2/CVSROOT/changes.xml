@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.19 2001-01-06 06:36:15 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.20 2001-01-12 16:24:15 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -22,6 +22,9 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="update">
+    Put meat on the Action Framework for the ManageEmployees form.
+  </action>
   <action dev="BL" type="add">
     Added DataSourceComponent framework to Cocoon and esql logicsheet.
   </action>
@@ -29,7 +32,7 @@
    SVG serializer now uses Batik.
   </action>
   <action dev="BL" type="add">
-    I did a first stab at importing the util logicsheet from Cocoon 1.8.x.
+    I did a first stab at importing the util logicsheet from Cocoon 1.8.1.
   </action>
   <action dev="BL" type="add">
     I added some simple forms that make use of the xsp-request and esql
