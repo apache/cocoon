@@ -18,7 +18,7 @@
 <!--+
     | Apples block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.10 2004/04/05 12:25:34 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.11 2004/05/11 14:18:15 bruno Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -92,11 +92,11 @@
 
       <map:match pattern="form2xml.flow">
         <map:call function="org.apache.cocoon.components.flow.apples.samples.BindingWoodyApple">
-          <map:parameter name="form-src" value="context://samples/forms/forms/form2_model.xml"/>
-          <map:parameter name="binding-src" value="context://samples/forms/forms/form2_bind_xml.xml"/>
-          <map:parameter name="documentURI" value="context://samples/forms/forms/form2_data.xml"/>
-          <map:parameter name="form-pipe" value="/samples/forms/form2-display-pipeline"/>
-          <map:parameter name="valid-pipe" value="/samples/forms/form2-success-pipeline"/>
+          <map:parameter name="form-src" value="context://samples/blocks/forms/forms/form2_model.xml"/>
+          <map:parameter name="binding-src" value="context://samples/blocks/forms/forms/form2_bind_xml.xml"/>
+          <map:parameter name="documentURI" value="context://samples/blocks/forms/forms/form2_data.xml"/>
+          <map:parameter name="form-pipe" value="/samples/blocks/forms/form2-display-pipeline"/>
+          <map:parameter name="valid-pipe" value="/samples/blocks/forms/form2-success-pipeline"/>
         </map:call>
       </map:match>
 
