@@ -52,7 +52,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.8 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.9 2004/06/05 08:18:50 sylvain Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
@@ -63,7 +63,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     /**
      * The tree processor that we're building.
      */
-    protected TreeProcessor processor;
+    protected ConcreteTreeProcessor processor;
 
     //----- lifecycle-related objects ------
     protected Context context;
@@ -237,11 +237,11 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         return selector;
     }
 
-    public void setProcessor(TreeProcessor processor) {
+    public void setProcessor(ConcreteTreeProcessor processor) {
         this.processor = processor;
     }
 
-    public TreeProcessor getProcessor() {
+    public ConcreteTreeProcessor getProcessor() {
         return this.processor;
     }
 

@@ -15,11 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
@@ -39,12 +34,8 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -52,11 +43,7 @@ import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ForwardRedirector;
-import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
-import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -64,7 +51,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.33 2004/06/04 13:35:05 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.34 2004/06/05 08:18:50 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -101,12 +88,6 @@ public class TreeProcessor
     /** Selector of TreeBuilders, the hint is the language name */
     protected ExtendedComponentSelector builderSelector;
 
-    /** The root node of the processing tree */
-    protected ProcessingNode rootNode;
-
-    /** The list of processing nodes that should be disposed when disposing this processor */
-    protected List disposableNodes;
-
     /** Last modification time */
     protected long lastModified = 0;
 
@@ -125,23 +106,14 @@ public class TreeProcessor
     /** Check for reload? */
     protected boolean checkReload;
 
-    /** The component configurations from the sitemap (if any) */
-    protected Configuration componentConfigurations;
-    
-    /** The different sitemap component configurations */
-    protected Map sitemapComponentConfigurations;
-    
-    /** The component manager for the sitemap */
-    protected ComponentManager sitemapComponentManager;
-    
-    /** A service manager wrapper */
-    protected ServiceManager serviceManager;
-    
     /** The source resolver */
     protected SourceResolver resolver;
     
     /** The environment helper */
     private EnvironmentHelper environmentHelper;
+    
+    /** The actual processor (package-private as needs to be accessed by ConcreteTreeProcessor) */
+    ConcreteTreeProcessor concreteProcessor;
 
     /**
      * Create a TreeProcessor.
@@ -175,7 +147,7 @@ public class TreeProcessor
         this.lastModifiedDelay = parent.lastModifiedDelay;
         
         // We have our own CM
-        this.manager = parent.sitemapComponentManager;
+        this.manager = parent.concreteProcessor.sitemapComponentManager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
@@ -198,31 +170,19 @@ public class TreeProcessor
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
-     */
     public void setRoleManager(RoleManager rm) {
         this.roleManager = rm;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null ) {
@@ -301,95 +261,12 @@ public class TreeProcessor
      *         ConnectionResetException  If the connection was reset
      */
     public boolean process(Environment environment) throws Exception {
-        InvokeContext context = new InvokeContext();
-
-        context.enableLogging(getLogger());
-
-        try {
-            return process(environment, context);
-        } finally {
-            context.dispose();
-        }
+    	
+    		setupConcreteProcessor(environment);
+    		
+    		return this.concreteProcessor.process(environment);
     }
 
-    /**
-     * Do the actual processing, be it producing the response or just building the pipeline
-     * @param environment
-     * @param context
-     * @return true if the pipeline was successfully built, false otherwise.
-     * @throws Exception
-     */
-    protected boolean process(Environment environment, InvokeContext context)
-    throws Exception {
-
-        // first, check for sitemap changes
-        if (this.rootNode == null ||
-            (this.checkReload && this.source.getLastModified() > this.lastModified)) {
-            setupRootNode(environment);
-        }
-
-        // and now process
-        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
-
-        final Redirector oldRedirector = context.getRedirector();
-
-        // Build a redirector
-        TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
-        setupLogger(redirector);
-        context.setRedirector(redirector);
-
-        try {
-            boolean success = this.rootNode.invoke(environment, context);
-            
-            return success;
-
-        } finally {
-            EnvironmentHelper.leaveProcessor();
-            // Restore old redirector 
-            context.setRedirector(oldRedirector);
-        }
-    }
-        
-    private boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
-        
-        // Build an environment wrapper
-        // If the current env is a facade, change the delegate and continue processing the facade, since
-        // we may have other redirects that will in turn also change the facade delegate
-        
-        MutableEnvironmentFacade facade = environment instanceof MutableEnvironmentFacade ?
-            ((MutableEnvironmentFacade)environment) : null;
-        
-        if (facade != null) {
-            // Consider the facade delegate (the real environment)
-            environment = facade.getDelegate();
-        }
-        
-        // test if this is a call from flow
-        boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
-        Environment newEnv = new ForwardEnvironmentWrapper(environment, uri, getLogger());
-        if ( isRedirect ) {
-            ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
-        }
-        
-        if (facade != null) {
-            // Change the facade delegate
-            facade.setDelegate((EnvironmentWrapper)newEnv);
-            newEnv = facade;
-        }
-        
-        // Get the processor that should process this request
-        TreeProcessor processor;
-        if ( newEnv.getURIPrefix().equals("") ) {
-            processor = (TreeProcessor)getRootProcessor();
-        } else {
-            processor = this;
-        }
-        
-        // Process the redirect
-// No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
-//        context.reset();
-        return processor.process(newEnv, context);
-    }
     
     /**
      * Process the given <code>Environment</code> to assemble
@@ -398,19 +275,10 @@ public class TreeProcessor
      */
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
-        InvokeContext context = new InvokeContext( true );
-
-        context.enableLogging(getLogger());
-        context.setLastProcessor(this);
-        try {
-            if ( process(environment, context) ) {
-                return context.getInternalPipelineDescription(environment);
-            } else {
-                return null;
-            }
-        } finally {
-            context.dispose();
-        }
+    	
+    		setupConcreteProcessor(environment);
+    		
+    		return this.concreteProcessor.buildPipeline(environment);
     }
       
     /* (non-Javadoc)
@@ -429,54 +297,14 @@ public class TreeProcessor
      * Set the sitemap component configurations
      */
     public void setComponentConfigurations(Configuration componentConfigurations) {
-        this.componentConfigurations = componentConfigurations;
-        this.sitemapComponentConfigurations = null;
+    		this.concreteProcessor.setComponentConfigurations(componentConfigurations);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
     public Map getComponentConfigurations() {
-        // do we have the sitemap configurations prepared for this processor?
-        if ( null == this.sitemapComponentConfigurations ) {
-            
-            synchronized (this) {
-
-                if ( this.sitemapComponentConfigurations == null ) {
-                    // do we have configurations?
-                    final Configuration[] childs = (this.componentConfigurations == null 
-                                                     ? null 
-                                                     : this.componentConfigurations.getChildren());
-                    
-                    if ( null != childs ) {
-        
-                        if ( null == this.parent ) {
-                            this.sitemapComponentConfigurations = new HashMap(12);
-                        } else {
-                            // copy all configurations from parent
-                            this.sitemapComponentConfigurations = new HashMap(this.parent.getComponentConfigurations()); 
-                        }
-                        
-                        // and now check for new configurations
-                        for(int m = 0; m < childs.length; m++) {
-                            
-                            final String r = this.roleManager.getRoleForName(childs[m].getName());
-                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
-                                                                             (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
-                        }
-                    } else {
-                        // we don't have configurations
-                        if ( null == this.parent ) {
-                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
-                        } else {
-                            // use configuration from parent
-                            this.sitemapComponentConfigurations = this.parent.getComponentConfigurations(); 
-                        }
-                    }
-                }
-            }
-        }
-        return this.sitemapComponentConfigurations;
+    		return this.concreteProcessor.getComponentConfigurations();
     }
 
     /* (non-Javadoc)
@@ -497,29 +325,37 @@ public class TreeProcessor
         return this.environmentHelper;   
     }
 
-    protected synchronized void setupRootNode(Environment env) throws Exception {
+    private void setupConcreteProcessor(Environment env) throws Exception {
+        // first, check for sitemap changes
+        if (this.concreteProcessor == null ||
+            (this.checkReload && this.source.getLastModified() != this.lastModified)) {
+            buildConcreteProcessor(env);
+        }
+    }
+    
+    private synchronized void buildConcreteProcessor(Environment env) throws Exception {
 
         // Now that we entered the synchronized area, recheck what's already
         // been checked in process().
-        if (this.rootNode != null && source.getLastModified() <= this.lastModified) {
+        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified) {
             // Nothing changed
             return;
         }
 
         long startTime = System.currentTimeMillis();
 
-        // Dispose the previous tree, if any
-        disposeTree();
-
         // Get a builder
         TreeBuilder builder = (TreeBuilder)this.builderSelector.select(this.language);
-        ProcessingNode root;
+        ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this);
+        long newLastModified;
+        this.setupLogger(newProcessor);
+        //FIXME (SW): why do we need to enterProcessor here?
         EnvironmentHelper.enterProcessor(this, new ComponentManagerWrapper(this.manager), env);
         try {
             if (builder instanceof Recomposable) {
                 ((Recomposable)builder).recompose(this.manager);
             }
-            builder.setProcessor(this);
+            builder.setProcessor(newProcessor);
             if (this.fileName == null) {
                 this.fileName = builder.getFileName();
             }
@@ -527,116 +363,54 @@ public class TreeProcessor
             if (this.source == null) {
                 this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName), lastModifiedDelay);
             }
-            root = builder.build(this.source);
-
-            this.sitemapComponentManager = builder.getSitemapComponentManager();
-            this.serviceManager = new ComponentManagerWrapper(this.sitemapComponentManager);
             
-            this.disposableNodes = builder.getDisposableNodes();
+            newLastModified = this.source.getLastModified();
+
+            ProcessingNode root = builder.build(this.source);
+
+            newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes());
         } finally {
             EnvironmentHelper.leaveProcessor();
             this.builderSelector.release(builder);
         }
-
-        this.lastModified = System.currentTimeMillis();
 
         if (getLogger().isDebugEnabled()) {
             double time = (this.lastModified - startTime) / 1000.0;
             getLogger().debug("TreeProcessor built in " + time + " secs from " + source.getURI());
         }
 
-        // Finished
-        this.rootNode = root;
+        // Switch to the new processor (ensure it's never temporarily null)
+        ConcreteTreeProcessor oldProcessor = this.concreteProcessor;
+
+        this.concreteProcessor = newProcessor;
+        this.lastModified = newLastModified;
+
+        // Dispose the old processor, if any
+        if (oldProcessor != null) {
+                    oldProcessor.markForDisposal();
+        }
     }
 
     public void dispose() {
-        disposeTree();
+        // Dispose the concrete processor. No need to check for existing requests, as there
+        // are none when a TreeProcessor is disposed.
+        if (this.concreteProcessor != null) {
+                this.concreteProcessor.dispose();
+        }
+
         if (this.parent == null) {
-            // root processor : dispose the builder selector
-            this.builderSelector.dispose();
-        }
-        if ( this.manager != null ) {
-            if ( this.source != null ) {
-                this.resolver.release(this.source.getSource());
-                this.source = null;
-            }
-            this.manager.release(this.resolver);
-            this.resolver = null;
-            this.manager = null;
-        }
-    }
+        		// root processor : dispose the builder selector
+        		this.builderSelector.dispose();
+        	}
 
-    /**
-     * Dispose all nodes in the tree that are disposable
-     */
-    protected void disposeTree() {
-        if (this.disposableNodes != null) {
-            // we must dispose the nodes in reverse order
-            // otherwise selector nodes are freed before the components node
-            for(int i=this.disposableNodes.size()-1; i>-1; i--) {
-                ((Disposable)disposableNodes.get(i)).dispose();
-            }
-            this.disposableNodes = null;
-        }
-    }
-    
-    private class TreeProcessorRedirector extends ForwardRedirector {
-        
-        private InvokeContext context;
-        public TreeProcessorRedirector(Environment env, InvokeContext context) {
-            super(env);
-            this.context = context;
-        }
-        
-        protected void cocoonRedirect(String uri) throws IOException, ProcessingException {
-            try {
-                TreeProcessor.this.handleCocoonRedirect(uri, this.env, this.context);
-            } catch(IOException ioe) {
-                throw ioe;
-            } catch(ProcessingException pe) {
-                throw pe;
-            } catch(RuntimeException re) {
-                throw re;
-            } catch(Exception ex) {
-                throw new ProcessingException(ex);
-            }
-        }
-    }
-    
-    /**
-     * Local extension of EnvironmentWrapper to propagate otherwise blocked
-     * methods to the actual environment.
-     */
-    private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
-
-        public ForwardEnvironmentWrapper(Environment env,
-            String uri, Logger logger) throws MalformedURLException {
-            super(env, uri, logger);
-        }
-
-        public void setStatus(int statusCode) {
-            environment.setStatus(statusCode);
-        }
-
-        public void setContentLength(int length) {
-            environment.setContentLength(length);
-        }
-
-        public void setContentType(String contentType) {
-            environment.setContentType(contentType);
-        }
-
-        public String getContentType() {
-            return environment.getContentType();
-        }
-
-        public boolean isResponseModified(long lastModified) {
-            return environment.isResponseModified(lastModified);
-        }
-        
-        public void setResponseIsNotModified() {
-            environment.setResponseIsNotModified();
-        }
-    }
-
+	    if ( this.manager != null ) {
+	        if ( this.source != null ) {
+	            this.resolver.release(this.source.getSource());
+	            this.source = null;
+	        }
+	        this.manager.release(this.resolver);
+	        this.resolver = null;
+	        this.manager = null;
+	    }
+	}
 }
