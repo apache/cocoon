@@ -48,7 +48,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.17 2004/03/19 14:16:54 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.18 2004/04/06 14:48:56 cziegeler Exp $
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -85,10 +85,16 @@ implements SessionContext {
         }
     }
     
+    /**
+     * Return the current authentication state
+     */
     protected RequestState getState() {
         return DefaultAuthenticationManager.getRequestState( this.context );
     }
     
+    /**
+     * Initialize this context
+     */
     public void init(Document doc) 
     throws ProcessingException {
         if ( initialized ) {
@@ -97,26 +103,22 @@ implements SessionContext {
         this.authContext.setNode("/", doc.getFirstChild());
     }
     
-    /** Set the name of the context.
-     *  This method must be invoked in the init phase.
-     *  In addition a load and a save resource can be provided.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setup(java.lang.String, java.lang.String, java.lang.String)
      */
     public void setup(String value, String load, String save) {
         // this is not used, everything is set in the constructor
     }
 
-    /**
-     * Get the name of the context
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getName()
      */
     public String getName() {
         return this.name;
     }
 
-    /**
-     *  Get a document fragment.
-     *  If the node specified by the path exist, its content is returned
-     *  as a DocumentFragment.
-     *  If the node does not exists, <CODE>null</CODE> is returned.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getXML(java.lang.String)
      */
     public DocumentFragment getXML(String path)
     throws ProcessingException {
@@ -192,12 +194,8 @@ implements SessionContext {
         return frag;
     }
 
-    /**
-     *  Set a document fragment at the given path.
-     *  The implementation of this method is context specific.
-     *  Usually all children of the node specified by the path are removed
-     *  and the children of the fragment are inserted as new children.
-     *  If the path is not existent it is created.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setXML(java.lang.String, org.w3c.dom.DocumentFragment)
      */
     public void setXML(String path, DocumentFragment fragment)
     throws ProcessingException {
@@ -236,13 +234,8 @@ implements SessionContext {
         }
     }
 
-    /**
-     * Append a document fragment at the given path.
-     * The implementation of this method is context specific.
-     * Usually the children of the fragment are appended as new children of the
-     * node specified by the path.
-     * If the path is not existent it is created and this method should work
-     * in the same way as setXML.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#appendXML(java.lang.String, org.w3c.dom.DocumentFragment)
      */
     public void appendXML(String path, DocumentFragment fragment)
     throws ProcessingException {
@@ -281,11 +274,8 @@ implements SessionContext {
         }
     }
 
-    /**
-     * Remove some content from the context.
-     * The implementation of this method is context specific.
-     * Usually this method should remove all children of the node specified
-     * by the path.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#removeXML(java.lang.String)
      */
     public void removeXML(String path)
     throws ProcessingException {
@@ -322,31 +312,24 @@ implements SessionContext {
         }
     }
 
-    /**
-     * Set a context attribute.
-     * Attributes over a means to store any data (object) in a session
-     * context. If <CODE>value</CODE> is <CODE>null</CODE> the attribute is
-     * removed. If already an attribute exists with the same key, the value
-     * is overwritten with the new one.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String key, Object value)
     throws ProcessingException {
         this.authContext.setAttribute(key, value);
     }
 
-    /**
-     * Get the value of a context attribute.
-     * If the attribute is not available return <CODE>null</CODE>.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getAttribute(java.lang.String)
      */
     public Object getAttribute(String key)
     throws ProcessingException {
         return this.authContext.getAttribute(key);
     }
 
-    /**
-     * Get the value of a context attribute.
-     * If the attribute is not available the return the
-     * <CODE>defaultObject</CODE>.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#getAttribute(java.lang.String, java.lang.Object)
      */
     public Object getAttribute(String key, Object defaultObject)
     throws ProcessingException {
@@ -354,8 +337,7 @@ implements SessionContext {
     }
 
     /**
-     * Get a copy of the first node specified by the path.
-     * If the node does not exist, <CODE>null</CODE> is returned.
+     * NOT IMPLEMENTED - throws an exception
      */
     public Node getSingleNode(String path)
     throws ProcessingException {
@@ -363,7 +345,7 @@ implements SessionContext {
     }
 
     /**
-     * Get a copy of all nodes specified by the path.
+     * NOT IMPLEMENTED - throws an exception
      */
     public NodeList getNodeList(String path)
     throws ProcessingException {
@@ -371,7 +353,7 @@ implements SessionContext {
     }
 
     /**
-     * Set the value of a node. The node is copied before insertion.
+     * NOT IMPLEMENTED - throws an exception
      */
     public void setNode(String path, Node node)
     throws ProcessingException {
@@ -379,9 +361,7 @@ implements SessionContext {
     }
 
     /**
-     * Get the value of this node.
-     * This is similiar to the xsl:value-of function.
-     * If the node does not exist, <code>null</code> is returned.
+     * NOT IMPLEMENTED - throws an exception
      */
     public String getValueOfNode(String path)
     throws ProcessingException {
@@ -389,21 +369,15 @@ implements SessionContext {
     }
 
     /**
-     * Set the value of a node.
-     * All children of the node are removed beforehand and one single text
-     * node with the given value is appended to the node.
+     * NOT IMPLEMENTED - throws an exception
      */
     public void setValueOfNode(String path, String value)
     throws ProcessingException {
         throw new ProcessingException("This method is not supported by the authenticaton session context.");
     }
 
-    /**
-     * Stream the XML directly to the handler.
-     * This streams the contents of getXML() to the given handler without
-     * creating a DocumentFragment containing a copy of the data.
-     * If no data is available (if the path does not exist) <code>false</code> is
-     * returned, otherwise <code>true</code>.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#streamXML(java.lang.String, org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler)
      */
     public boolean streamXML(String path, ContentHandler contentHandler,
                              LexicalHandler lexicalHandler)
@@ -447,10 +421,8 @@ implements SessionContext {
         return false;
     }
 
-    /**
-     * Try to load XML into the context.
-     * If the context does not provide the ability of loading,
-     * an exception is thrown.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#loadXML(java.lang.String, org.apache.excalibur.source.SourceParameters)
      */
     public void loadXML(String path,
                         SourceParameters parameters)
@@ -487,10 +459,8 @@ implements SessionContext {
         }
     }
 
-    /**
-     * Try to save XML from the context.
-     * If the context does not provide the ability of saving,
-     * an exception is thrown.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContext#saveXML(java.lang.String, org.apache.excalibur.source.SourceParameters)
      */
     public void saveXML(String             path,
                         SourceParameters parameters)
