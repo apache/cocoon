@@ -91,7 +91,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="debug"       value="on"/>
     <property name="optimize"    value="on"/>
     <property name="deprecation" value="off"/>
-    <property name="build.compiler" value="jikes"/>
+    <property name="build.compiler" value="classic"/>
 
     <property name="src.dir"      value="./src"/>
     <property name="lib.dir"      value="./lib"/>
@@ -228,8 +228,6 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <target name="webapp" depends="prepare">
     <mkdir dir="${build.war}"/>
-
-    <copydir src="${webapp.dir}" dest="${build.war}" filtering="on"/>
 
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
       <exclude name="**/*.gif"/>
