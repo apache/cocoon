@@ -14,212 +14,231 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project name="Cocoon build system" default="init">
+<project name="Cocoon build system" default="cocoon:init">
 
-    <target name="core-setProperties">
+    <target name="cocoon:core-setProperties">
         <!-- get the properties of properties configuration files -->
-        <property name="server" value="localhost"/>
-        <property file="${server}.build.properties"/>
+        <property name="cocoon.server" value="localhost"/>
+        <property file="${cocoon.server}.build.properties"/>
+
         <property file="project.properties"/>
 
         <!-- conditions depending on property values -->
-        <property name="container.use" value="false"/>
-        <property name="classesToJAR" value="false"/>
-        <condition property="cond.container.use">
-          <istrue value="${container.use}"/>
+        <property name="cocoon.container.use" value="false"/>
+        <property name="cocoon.classesToJAR" value="false"/>
+        <condition property="cocoon.cond.container.use">
+          <istrue value="${cocoon.container.use}"/>
         </condition>
-        <condition property="cond.classesToJAR">
-          <istrue value="${classesToJAR}"/>
+        <condition property="cocoon.cond.classesToJAR">
+          <istrue value="${cocoon.classesToJAR}"/>
         </condition>
 
         <!-- repository directory structure -->
-        <property name="rep.cocoon.dir" value="${rep}/cocoon/${cocoon.version}"/>
-        <property name="rep.cocoon.webapp.dir" value="${rep.cocoon.dir}/webapp"/>
-        <property name="rep.cocoon.lib.dir" value="${rep.cocoon.dir}/webapp/WEB-INF/lib"/>
-        <property name="rep.cocoon.classes.dir" value="${rep.cocoon.dir}/webapp/WEB-INF/classes"/>
-        <property name="rep.cocoon.db.dir" value="${rep.cocoon.webapp.dir}/WEB-INF/db"/>
-        <property name="rep.container.dir" value="${rep}/container/${container.version}"/>
-
+        <property name="cocoon.rep.cocoon.dir" value="${cocoon.rep}/cocoon/${cocoon.version}"/>
+        <property name="cocoon.rep.cocoon.webapp.dir" value="${cocoon.rep.cocoon.dir}/webapp"/>
+        <property name="cocoon.rep.cocoon.lib.dir" value="${cocoon.rep.cocoon.dir}/webapp/WEB-INF/lib"/>
+        <property name="cocoon.rep.cocoon.classes.dir" value="${cocoon.rep.cocoon.dir}/webapp/WEB-INF/classes"/>
+        <property name="cocoon.rep.cocoon.db.dir" value="${cocoon.rep.cocoon.webapp.dir}/WEB-INF/db"/>
+        <property name="cocoon.rep.container.dir" value="${cocoon.rep}/container/${cocoon.container.version}"/>
+    	
+		<!-- container properties -->
+        <property file="${cocoon.rep.container.dir}/server.properties"/>
+        	
         <!-- target directory structure -->
-        <property name="build.dir" value="build"/>
-        <property name="build.webapp.war.dir" value="${build.dir}/${server}_webapp"/>
-        <property name="build.webapp.dir" value="${build.dir}/${server}_webapp/ROOT"/>
-        <property name="build.container.dir" value="${build.dir}/${server}_container"/>
+        <property name="cocoon.build.dir" value="build"/>
+        <property name="cocoon.build.webapp.war.dir" value="${cocoon.build.dir}/${cocoon.server}_webapp"/>
+        <property name="cocoon.build.webapp.dir" value="${cocoon.build.dir}/${cocoon.server}_webapp/ROOT"/>
+        <property name="cocoon.build.container.dir" value="${cocoon.build.dir}/${cocoon.server}_container"/>
 
         <!-- local directories -->
-        <property name="local.webapp.dir" value="webapp"/>
-        <property name="local.src.dir" value="java"/>
-        <property name="local.lib.dir" value="lib"/>
-        <property name="local.conf.dir" value="conf"/>
+        <property name="cocoon.local.webapp.dir" value="webapp"/>
+        <property name="cocoon.local.src.dir" value="java"/>
+        <property name="cocoon.local.lib.dir" value="lib"/>
+        <property name="cocoon.local.conf.dir" value="conf"/>
 
         <!-- default values for compiler settings -->
-        <property name="compiler" value="modern"/>
-        <property name="compiler.debug" value="on"/>
-        <property name="compiler.optimize" value="on"/>
-        <property name="compiler.deprecation" value="off"/>
-        <property name="compiler.nowarn" value="on"/>
-        <property name="source.vm" value="1.3"/>
-        <property name="target.vm" value="1.3"/>
+        <property name="cocoon.compiler" value="modern"/>
+        <property name="cocoon.compiler.debug" value="on"/>
+        <property name="cocoon.compiler.optimize" value="on"/>
+        <property name="cocoon.compiler.deprecation" value="off"/>
+        <property name="cocoon.compiler.nowarn" value="on"/>
+        <property name="cocoon.compiler.source.vm" value="1.3"/>
+        <property name="cocoon.compiler.target.vm" value="1.3"/>
+    	
+    	<!-- run/stop properties (have to be set by user) -->
+    	<property name="cocoon.container.run" value=""/>
+    	<property name="cocoon.container.stop" value=""/>
+    	
     </target>
 
-    <target name="init" depends="setProperties, setFilters">
+    <target name="cocoon:init" depends="cocoon:setProperties, cocoon:setFilters">
         <!-- global filters -->
-        <filter token="filter.webapp.path" value="${webapp.path}"/>
+        <filter token="cocoon.filter.webapp.path" value="${cocoon.webapp.path}"/>
     </target>
 
-    <target name="core-webapp" depends="before-webapp">
-        <mkdir dir="${build.webapp.dir}"/>
+    <target name="cocoon:core-webapp" depends="cocoon:before-webapp">
+        <mkdir dir="${cocoon.build.webapp.dir}"/>
 
         <!-- copy Cocoon -->
-        <copy todir="${build.webapp.dir}">
-            <fileset dir="${rep.cocoon.webapp.dir}">
+        <copy todir="${cocoon.build.webapp.dir}">
+            <fileset dir="${cocoon.rep.cocoon.webapp.dir}">
                 <include name="WEB-INF/**"/>
             </fileset>
         </copy>
 
         <!-- copy local resources -->
-        <copy todir="${build.webapp.dir}" filtering="off">
-            <fileset dir="${local.webapp.dir}">
+        <copy todir="${cocoon.build.webapp.dir}" filtering="off">
+            <fileset dir="${cocoon.local.webapp.dir}">
                 <exclude name="sitemap.xmap"/>
             </fileset>
         </copy>
 
-        <copy todir="${build.webapp.dir}" filtering="on">
-            <fileset dir="${local.webapp.dir}">
+        <copy todir="${cocoon.build.webapp.dir}" filtering="on">
+            <fileset dir="${cocoon.local.webapp.dir}">
                 <include name="sitemap.xmap"/>
             </fileset>
         </copy>
 
         <!-- customize Cocoon -->
-        <copy todir="${build.webapp.dir}/WEB-INF/xconf" filtering="on" overwrite="true">
-            <fileset dir="${local.conf.dir}">
+        <copy todir="${cocoon.build.webapp.dir}/WEB-INF/xconf" filtering="on" overwrite="true">
+            <fileset dir="${cocoon.local.conf.dir}">
                 <include name="*xconf"/>
             </fileset>
         </copy>
 
         <!-- add own Java classes -->
-        <antcall target="compile"/>
-        <antcall target="classesToJAR"/>
+        <antcall target="cocoon:compile"/>
+        <antcall target="cocoon:classesToJAR"/>
 
         <!-- copy local libraries -->
-        <copy todir="${build.webapp.dir}/WEB-INF/lib" filtering="off">
-            <fileset dir="${local.lib.dir}"/>
+        <copy todir="${cocoon.build.webapp.dir}/WEB-INF/lib" filtering="off">
+            <fileset dir="${cocoon.local.lib.dir}"/>
         </copy>
     </target>
 
-    <target name="classesToJAR" if="cond.classesToJAR">
-        <zip destfile="${build.webapp.dir}/WEB-INF/lib/_project.jar">
-            <fileset dir="${build.webapp.dir}/WEB-INF/classes"/>
+    <target name="cocoon:classesToJAR" if="cond.classesToJAR">
+        <zip destfile="${cocoon.build.webapp.dir}/WEB-INF/lib/_project.jar">
+            <fileset dir="${cocoon.build.webapp.dir}/WEB-INF/classes"/>
         </zip>
-        <delete dir="${build.webapp.dir}/WEB-INF/classes"/>
+        <delete dir="${cocoon.build.webapp.dir}/WEB-INF/classes"/>
     </target>
 
-    <target name="core-war" depends="before-war">
-        <zip destfile="${build.webapp.war.dir}/ROOT.war">
-            <fileset dir="${build.webapp.dir}"/>
+    <target name="cocoon:core-war" depends="cocoon:before-war">
+        <zip destfile="${cocoon.build.webapp.war.dir}/ROOT.war">
+            <fileset dir="${cocoon.build.webapp.dir}"/>
         </zip>
     </target>
 
-    <target name="core-container" depends="before-container">
-        <ant antfile="${rep.container.dir}/container-build.xml"
-            target="create-${container.version}" inheritall="true"/>
+    <target name="cocoon:core-container" depends="cocoon:before-container">
+        <ant antfile="${cocoon.rep.container.dir}/container-build.xml"
+            target="cocoon:create-${cocoon.container.version}" inheritall="true"/>
     </target>
 
-    <target name="core-run" depends="before-run">
-        <!-- TODO support *nix here -->
-        <property file="${rep.container.dir}/build-conf/server.properties"/>
-        <exec executable="${build.container.dir}/${server.start.win}" spawn="true">
-          <env key="CATALINA_HOME" value="${build.container.dir}"/>
+	<!-- TODO: run and stop have to support *nix -->
+    <target name="cocoon:core-run" depends="cocoon:before-run">
+        <exec executable="${cocoon.build.container.dir}/${cocoon.container.run.win}" spawn="true">
+          <env key="CATALINA_HOME" value="${cocoon.build.container.dir}"/>
           <arg value="start"/>
         </exec>
     </target>
 
-    <target name="core-stop" depends="init, before-stop">
-        <!-- TODO support *nix here -->
-        <property file="${rep.container.dir}/build-conf/server.properties"/>
-        <exec executable="${build.container.dir}/${server.stop.win}" spawn="true">
-          <env key="CATALINA_HOME" value="${build.container.dir}"/>
+    <target name="cocoon:core-stop" depends="cocoon:init, cocoon:before-stop">
+        <exec executable="${cocoon.build.container.dir}/${cocoon.container.stop.win}" spawn="true">
+          <env key="CATALINA_HOME" value="${cocoon.build.container.dir}"/>
           <arg value="start"/>
         </exec>
     </target>
 
-    <target name="core-compile" depends="before-compile">
+    <target name="cocoon:core-compile" depends="cocoon:before-compile">
         <!-- TODO support more than one directory with Java classes -->
-        <path id="classpath">
-            <fileset dir="${rep.cocoon.lib.dir}">
+        <path id="cocoon:classpath">
+            <fileset dir="${cocoon.rep.cocoon.lib.dir}">
                 <include name="*.jar" />
             </fileset>
-            <fileset dir="${local.lib.dir}">
+            <fileset dir="${cocoon.local.lib.dir}">
                 <include name="*.jar" />
             </fileset>
-            <dirset dir="${rep.cocoon.classes.dir}" />
+            <dirset dir="${cocoon.rep.cocoon.classes.dir}" />
         </path>
-        <mkdir dir="${build.webapp.dir}/WEB-INF/classes"/>
-        <copy todir="${build.webapp.dir}/WEB-INF/classes" filtering="on">
-            <fileset dir="${local.src.dir}">
+        <mkdir dir="${cocoon.build.webapp.dir}/WEB-INF/classes"/>
+        <copy todir="${cocoon.build.webapp.dir}/WEB-INF/classes" filtering="on">
+            <fileset dir="${cocoon.local.src.dir}">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-        <javac classpathref="classpath"
-               compiler="${compiler}"
-               nowarn="${compiler.nowarn}"
-               source="${source.vm}"
-               target="${target.vm}"
-               deprecation="${compiler.deprecation}"
-               optimize="${compiler.optimize}"
-               debug="${compiler.debug}"
-               destdir="${build.webapp.dir}/WEB-INF/classes"
-               srcdir="${local.src.dir}" />
+        <javac classpathref="cocoon:classpath"
+               compiler="${cocoon.compiler}"
+               nowarn="${cocoon.compiler.nowarn}"
+               source="${cocoon.compiler.source.vm}"
+               target="${cocoon.compiler.target.vm}"
+               deprecation="${cocoon.compiler.deprecation}"
+               optimize="${cocoon.compiler.optimize}"
+               debug="${cocoon.compiler.debug}"
+               destdir="${cocoon.build.webapp.dir}/WEB-INF/classes"
+               srcdir="${cocoon.local.src.dir}" />
     </target>
 
-    <target name="core-clean" depends="before-clean">
+    <target name="cocoon:core-clean" depends="cocoon:before-clean">
         <delete includeEmptyDirs="true">
-          <fileset dir="${build.dir}">
+          <fileset dir="${cocoon.build.dir}">
               <include name="*_container/**"/>
               <include name="*_webapp/**"/>
           </fileset>
         </delete>
     </target>
 
-    <target name="core-clean-all" depends="before-clean-all">
-        <delete dir="${build.dir}"/>
+    <target name="cocoon:core-clean-all" depends="cocoon:before-clean-all">
+        <delete dir="${cocoon.build.dir}"/>
     </target>
 
     <!-- interception targets -->
-    <target name="before-setProperties" depends="init"/>
-    <target name="after-setProperties" depends="core-setProperties"/>
-    <target name="before-webapp" depends="init"/>
-    <target name="after-webapp" depends="core-webapp"/>
-    <target name="before-war" depends="webapp"/>
-    <target name="after-war" depends="core-war"/>
-    <target name="before-container" depends="init" if="cond.container.use"/>
-    <target name="after-container" depends="core-container" if="cond.container.use"/>
-    <target name="before-run" depends="init"/>
-    <target name="after-run" depends="core-run"/>
-    <target name="before-stop" depends="init"/>
-    <target name="after-stop" depends="core-stop"/>
-    <target name="before-compile" depends="init"/>
-    <target name="after-compile" depends="core-compile"/>
-    <target name="before-clean" depends="init"/>
-    <target name="after-clean" depends="core-clean"/>
-    <target name="before-clean-all" depends="init"/>
-    <target name="after-clean-all" depends="core-clean-all"/>
+    <target name="cocoon:before-setProperties" depends="cocoon:init"/>
+    <target name="cocoon:after-setProperties" depends="cocoon:core-setProperties"/>
+    <target name="cocoon:before-webapp" depends="cocoon:init"/>
+    <target name="cocoon:after-webapp" depends="cocoon:core-webapp"/>
+    <target name="cocoon:before-war" depends="cocoon:webapp"/>
+    <target name="cocoon:after-war" depends="cocoon:core-war"/>
+    <target name="cocoon:before-container" depends="cocoon:init" if="cond.container.use"/>
+    <target name="cocoon:after-container" depends="cocoon:core-container" if="cond.container.use"/>
+    <target name="cocoon:before-run" depends="cocoon:init"/>
+    <target name="cocoon:after-run" depends="cocoon:core-run"/>
+    <target name="cocoon:before-stop" depends="cocoon:init"/>
+    <target name="cocoon:after-stop" depends="cocoon:core-stop"/>
+    <target name="cocoon:before-compile" depends="cocoon:init"/>
+    <target name="cocoon:after-compile" depends="cocoon:core-compile"/>
+    <target name="cocoon:before-clean" depends="cocoon:init"/>
+    <target name="cocoon:after-clean" depends="cocoon:core-clean"/>
+    <target name="cocoon:before-clean-all" depends="cocoon:init"/>
+    <target name="cocoon:after-clean-all" depends="cocoon:core-clean-all"/>
 
-    <!-- public available targets -->
-    <target name="container" depends="after-container" if="cond.container.use" description="screate a container (uses the property 'container.version')"/>
-    <target name="webapp" depends="after-webapp" description="create the web application"/>
-    <target name="war" depends="after-war" description="create a web archive (WAR)"/>
-    <target name="run" depends="after-run" description="run the container (currently it only works on windows boxes)"/>
-    <target name="stop" depends="after-stop" description="run the container (currently it only works on windows boxes)"/>
-    <target name="compile" depends="after-compile" description="Compile Java classes"/>
-    <target name="clean" depends="after-clean" description="clean webapps and container"/>
-    <target name="clean-all" depends="after-clean-all" description="clean *everything* in the build dir"/>
+    <!-- public available targets 
+         DO NOT OVERRIDE THEM but use the before/after/core targets for this purpose
+    -->
+    <target name="cocoon:container" depends="cocoon:after-container" if="cond.container.use" description="screate a container (uses the property 'container.version')"/>
+    <target name="cocoon:webapp" depends="cocoon:after-webapp" description="create the web application"/>
+    <target name="cocoon:war" depends="cocoon:after-war" description="create a web archive (WAR)"/>
+    <target name="cocoon:run" depends="cocoon:after-run" description="run the container (currently it only works on windows boxes)"/>
+    <target name="cocoon:stop" depends="cocoon:after-stop" description="run the container (currently it only works on windows boxes)"/>
+    <target name="cocoon:compile" depends="cocoon:after-compile" description="Compile Java classes"/>
+    <target name="cocoon:clean" depends="cocoon:after-clean" description="clean webapps and container"/>
+    <target name="cocoon:clean-all" depends="cocoon:after-clean-all" description="clean *everything* in the build dir"/>
 
+	<!-- short versions for public cocoon:* targets - as these are very common names they might be
+	     overriden in a custom project build file -->
+    <target name="container" depends="cocoon:container" if="cond.container.use" description="short version for cocoon:container"/>
+    <target name="webapp" depends="cocoon:webapp" description="short version for cocoon:webapp"/>
+    <target name="war" depends="cocoon:war" description="short version for cocoon:war"/>
+    <target name="run" depends="cocoon:run" description="short version for cocoon:run"/>
+    <target name="stop" depends="cocoon:stop" description="short version for cocoon:stop"/>
+    <target name="compile" depends="cocoon:compile" description="short version for cocoon:compile"/>
+    <target name="clean" depends="cocoon:clean" description="short version for cocoon:clean"/>
+    <target name="clean-all" depends="cocoon:clean-all" description="short version for cocoon:clean-all"/>	
+	
     <!-- internally available targets -->
-    <target name="setProperties" depends="after-setProperties"/>
+    <target name="cocoon:setProperties" depends="cocoon:after-setProperties"/>
 
     <!-- empty targets to be overriden -->
-    <target name="setFilters"/>
-    <target name="complete-ant"/>
+    <target name="cocoon:setFilters"/>
+    <target name="cocoon:complete-ant"/>
 
 </project>
