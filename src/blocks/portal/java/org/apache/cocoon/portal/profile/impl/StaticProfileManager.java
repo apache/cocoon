@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,13 +45,14 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.11 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class StaticProfileManager extends AbstractProfileManager implements Configurable
 {
     protected String profilesPath;
 
     protected StaticBucketMap copletInstanceDataManagers = new StaticBucketMap();
+    protected StaticBucketMap copletDataManagers = new StaticBucketMap();
 
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
@@ -155,6 +157,14 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
 
     }
 
+    private CopletDataManager getCopletDataManager(PortalService service) 
+    throws Exception {
+        final String portalName = service.getPortalName();
+        // ensure that profile is loaded
+        this.getCopletInstanceDataManager(service);
+        return (CopletDataManager)this.copletDataManagers.get(portalName);
+    }
+    
     private CopletInstanceDataManager getCopletInstanceDataManager(PortalService service) 
     throws Exception {
         String portalName = service.getPortalName();
@@ -215,8 +225,11 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
                 copletFactory.prepare(cid);
             }
 
+            // store managers
             this.copletInstanceDataManagers.put(portalName, copletInstanceDataManager);
+            this.copletDataManagers.put(portalName, copletDataManager);
             return copletInstanceDataManager;
+            
         } finally {
             this.manager.release(service);
             this.manager.release(adapter);
@@ -326,5 +339,35 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
         Configuration child = configuration.getChild("profiles-path");
         this.profilesPath = child.getValue("cocoon:/profiles");
         //this.profilesPath = "context://samples/simple-portal/profiles";
+    }
+        
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDatas()
+     */
+    public Collection getCopletDatas() {
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            return this.getCopletDataManager(service).getCopletData().values();
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("Error in getCopletDatas.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceDatas()
+     */
+    public Collection getCopletInstanceDatas() {
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            return this.getCopletInstanceDataManager(service).getCopletInstanceData().values();
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("Error in getCopletInstanceDatas.", e);
+        } finally {
+            this.manager.release(service);
+        }
     }
 }

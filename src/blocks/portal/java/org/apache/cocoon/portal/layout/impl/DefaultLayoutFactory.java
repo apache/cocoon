@@ -123,7 +123,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.18 2004/04/28 13:58:16 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -286,6 +286,9 @@ public class DefaultLayoutFactory
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#newInstance(java.lang.String)
+     */
     public Layout newInstance(String layoutName) 
     throws ProcessingException {
         this.init();
@@ -343,6 +346,7 @@ public class DefaultLayoutFactory
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
                 eventManager.getRegister().unsubscribe( this );
             } catch (Exception ignore) {
+                // ignore
             } finally {
                 this.manager.release( eventManager ); 
             }
@@ -404,9 +408,10 @@ public class DefaultLayoutFactory
         if ( layout != null ) {
             this.init();
             if ( layout instanceof CompositeLayout ) {
-                Iterator itemIterator = ((CompositeLayout)layout).getItems().iterator();
-                while ( itemIterator.hasNext() ) {
-                    this.remove( ((Item)itemIterator.next()).getLayout());               
+                final CompositeLayout cl = (CompositeLayout)layout;
+                while ( cl.getItems().size() > 0 ) {
+                    final Item i = cl.getItem(0);
+                    this.remove( i.getLayout() );
                 }
             }
             Item parent = layout.getParent();

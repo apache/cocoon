@@ -50,7 +50,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.20 2004/06/07 10:29:10 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -115,7 +115,7 @@ public class AuthenticationProfileManager
             parameters.put("profiletype", "copletdata");
             parameters.put("objectmap", copletBaseDataManager.getCopletBaseData());
             copletDataManager = (CopletDataManager)this.getDeltaProfile(layoutKey, parameters, service, copletFactory, ((Boolean)result[1]).booleanValue());
-                    
+            service.setAttribute("CopletData:" + layoutKey, copletDataManager);        
         } finally {
             this.lock.releaseLocks();
         }
