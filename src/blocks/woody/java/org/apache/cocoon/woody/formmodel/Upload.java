@@ -69,20 +69,21 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.3 2004/02/04 17:25:57 sylvain Exp $
+ * @version CVS $Id: Upload.java,v 1.4 2004/02/09 11:28:34 sylvain Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
-    private UploadDefinition definition;
+    private UploadDefinition uploadDefinition;
     private Part part;
     private ValidationError validationError;
 
     public Upload(UploadDefinition uploadDefinition) {
-        this.definition = uploadDefinition;
+        this.uploadDefinition = uploadDefinition;
+        this.setDefinition(uploadDefinition);
         setLocation(uploadDefinition.getLocation());
     }
 
     public UploadDefinition getUploadDefinition() {
-        return this.definition;
+        return this.uploadDefinition;
     }
 
     public String getId() {
@@ -129,13 +130,13 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
 
     public boolean validate(FormContext formContext) {
         if (this.part == null) {
-            if (this.definition.isRequired()) {
+            if (this.uploadDefinition.isRequired()) {
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
             }
         } else {
-            String mimeTypes = this.definition.getMimeTypes();
+            String mimeTypes = this.uploadDefinition.getMimeTypes();
             if (mimeTypes != null) {
-                StringTokenizer tok = new StringTokenizer(this.definition.getMimeTypes(), ", ");
+                StringTokenizer tok = new StringTokenizer(this.uploadDefinition.getMimeTypes(), ", ");
                 this.validationError = new ValidationError(new I18nMessage("upload.invalid-type", Constants.I18N_CATALOGUE));
                 String contentType = this.part.getMimeType();
                 while (tok.hasMoreTokens()) {
@@ -176,9 +177,9 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        fieldAttrs.addCDATAAttribute("required", String.valueOf(definition.isRequired()));
-        if (definition.getMimeTypes() != null) {
-            fieldAttrs.addCDATAAttribute("mime-types", definition.getMimeTypes());
+        fieldAttrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
+        if (uploadDefinition.getMimeTypes() != null) {
+            fieldAttrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
         }
         contentHandler.startElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL, fieldAttrs);
 
