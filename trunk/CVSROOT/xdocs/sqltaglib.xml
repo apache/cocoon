@@ -5,7 +5,7 @@
 <document><header><title>SQL Taglib</title><authors><person name="Donald A. Ball Jr." email="balld@webslingerz.com"/></authors></header><body>
 
 	<s1 title="Description">
-		<p>SQL Taglib is an XSP taglibrary that performs sql queries and serializes their results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.</p>
+		<p>The SQL logicsheet is an XSP logicsheet that performs sql queries and serializes their results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.</p>
 	</s1>
 
 	<s1 title="Installation">
@@ -143,7 +143,9 @@
    ]]></source>
    </s1>
 
-	<s1 title="Column Formatting">
+	<s1 title="Column Names and Formatting">
+		<p>The SQL logicsheet will try to name the column elements with the names of the columns from the queries, applying case styling as indicated by the sql:tag-case element. You must ensure that those column names are valid XML element names - e.g. no spaces or strange characters. For instance, MAX(*) is forbidden. You must alias these columns with the AS command - MAX(*) AS THEMAX.
+		</p>
 		<p>Generally, column values are formatted naively - the taglib requests an Object from the ResultSet and invoked the toString() method. Some columns return byte or character arrays - in that case, we construct a new String using the array as a construction argument.</p>
 		<p>These defaults may be overridden by supplying one or more sql:column-format elements. Each sql:column-format element may contain these child elements:</p>
 		<dl>
