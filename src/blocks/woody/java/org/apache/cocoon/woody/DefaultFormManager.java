@@ -57,6 +57,9 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -68,13 +71,13 @@ import org.w3c.dom.Element;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.io.IOException;
 
 /**
  * Component implementing the {@link FormManager} role.
- *
  */
-public class DefaultFormManager implements FormManager, ThreadSafe, Composable, Disposable {
+public class DefaultFormManager implements FormManager, ThreadSafe, Composable, Disposable, Configurable {
     private ComponentManager componentManager;
     private Map widgetDefinitionBuilders = new HashMap();
     private FormDefinitionBuilder formDefinitionBuilder;
@@ -84,6 +87,31 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable, 
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.componentManager = componentManager;
         this.store = (Store)componentManager.lookup(Store.TRANSIENT_STORE);
+    }
+
+    public void configure(Configuration configuration) throws ConfigurationException {
+        // get available widgets from configuration
+        Configuration[] widgetConfs = configuration.getChild("widgets").getChildren("widget");
+        if (widgetConfs.length == 0)
+            throw new ConfigurationException("No widgets found in FormManager configuration.");
+
+        for (int i = 0; i < widgetConfs.length; i++) {
+            String name = widgetConfs[i].getAttribute("name");
+            String factoryClassName = widgetConfs[i].getAttribute("factory");
+            Class clazz;
+            try {
+                clazz = Class.forName(factoryClassName);
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not load class \"" + factoryClassName + "\" specified at " + configuration.getLocation(), e);
+            }
+            WidgetDefinitionBuilder widgetDefinitionBuilder;
+            try {
+                widgetDefinitionBuilder = (WidgetDefinitionBuilder)clazz.newInstance();
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not create WidgetDefinitionBuilder \"" + factoryClassName + "\"", e);
+            }
+            widgetDefinitionBuilders.put(name, widgetDefinitionBuilder);
+        }
     }
 
     public void lazyInitialize() throws Exception {
@@ -97,30 +125,11 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable, 
 
         LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, componentManager, null, null, null);
 
-        // TODO the stuff below must be done based on external configuration information
-
-        // Setup all the widget definition builders
-        WidgetDefinitionBuilder widgetDefinitionBuilder;
-
-        widgetDefinitionBuilder = new FieldDefinitionBuilder();
-        lifecycleHelper.setupComponent(widgetDefinitionBuilder);
-        widgetDefinitionBuilders.put("field", widgetDefinitionBuilder);
-
-        widgetDefinitionBuilder = new RepeaterDefinitionBuilder();
-        lifecycleHelper.setupComponent(widgetDefinitionBuilder);
-        widgetDefinitionBuilders.put("repeater", widgetDefinitionBuilder);
-
-        widgetDefinitionBuilder = new BooleanFieldDefinitionBuilder();
-        lifecycleHelper.setupComponent(widgetDefinitionBuilder);
-        widgetDefinitionBuilders.put("booleanfield", widgetDefinitionBuilder);
-
-        widgetDefinitionBuilder = new MultiValueFieldDefinitionBuilder();
-        lifecycleHelper.setupComponent(widgetDefinitionBuilder);
-        widgetDefinitionBuilders.put("multivaluefield", widgetDefinitionBuilder);
-
-        widgetDefinitionBuilder = new ButtonDefinitionBuilder();
-        lifecycleHelper.setupComponent(widgetDefinitionBuilder);
-        widgetDefinitionBuilders.put("button", widgetDefinitionBuilder);
+        Iterator widgetDefinitionBuilderIt = widgetDefinitionBuilders.values().iterator();
+        while (widgetDefinitionBuilderIt.hasNext()) {
+            WidgetDefinitionBuilder widgetDefinitionBuilder = (WidgetDefinitionBuilder)widgetDefinitionBuilderIt.next();
+            lifecycleHelper.setupComponent(widgetDefinitionBuilder);
+        }
 
         // special case
         formDefinitionBuilder = new FormDefinitionBuilder();

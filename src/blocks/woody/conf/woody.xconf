@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="woody">
+  <!--
+     | Woody's FormManager component
+     |-->
+  <woody-formmanager>
+    <widgets>
+      <widget name="field" factory="org.apache.cocoon.woody.formmodel.FieldDefinitionBuilder"/>
+      <widget name="repeater" factory="org.apache.cocoon.woody.formmodel.RepeaterDefinitionBuilder"/>
+      <widget name="booleanfield" factory="org.apache.cocoon.woody.formmodel.BooleanFieldDefinitionBuilder"/>
+      <widget name="multivaluefield" factory="org.apache.cocoon.woody.formmodel.MultiValueFieldDefinitionBuilder"/>
+      <widget name="button" factory="org.apache.cocoon.woody.formmodel.ButtonDefinitionBuilder"/>
+    </widgets>
+  </woody-formmanager>
+</xconf>
