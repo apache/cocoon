@@ -29,9 +29,9 @@
   <s1 title="Goal"><p>This document describes the usage of the StoreJanitor under 
   Apache Cocoon.</p></s1>
   <s1 title="Description">
-  <p>The implementation is quit simple! Every implementation of a Store can register in the 
-  StoreJanitor. He checks in a configurable interval if memory is running low. If low, 
-  he greps via Round Robin a victim (Store) and frees xx% of all emlements in this Store. 
+  <p>The implementation is quite simple! Every implementation of a Store can register in the 
+  StoreJanitor. It checks at a configurable interval if memory is running low. If low, 
+  it greps via Round Robin a victim (Store) and frees xx% of all elements in this Store. 
   After that the StoreJanitor sleeps and waits for the next iteration.</p>
   </s1>
   <s1 title="Configuration">
@@ -52,7 +52,7 @@
   -Xmx200000000 org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
     ]]></source> 
     <ul><li>StoreJanitor settings:</li></ul>
-    <p>The freememory and heapsize paramter always depends on the Xmx 
+    <p>The freememory and heapsize parameters always depend on the Xmx 
     parameter.</p>
     <source><![CDATA[
 <store-janitor logger="root.store">
@@ -64,17 +64,18 @@
 </store-janitor>
     ]]></source>
     <p>It is recommended to have <code>heapsize</code> equal to -Xmx, especially
-    on Sun's JVM which are unable to shrink its heap once it grows above minimum. 
-    <code>freememory</code> should be greater than amount of memory necessary for normal 
-    application operation.
+    on Sun's JVM which is unable to shrink its heap once it grows above the minimum. 
+    The <code>freememory</code> parameter should be greater than the amount
+    of memory necessary for normal application operation.
     </p>
-    <p> The <code>cleanupthreadinterval</code> defines the interval of the background 
-    thread which checks memory in seconds. Also this paramter should configured wisely. 
-    A to short interval can cause also a high system load. The 
-    <code>threadpriority</code> defines the priority of the background thread. 
-    1 is lowest level and 10 the highest.</p>
+    <p> The <code>cleanupthreadinterval</code> defines the interval
+    (in seconds)of the background 
+    thread which checks memory. Also this parameter should configured wisely. 
+    A too short interval can also cause a high system load. The 
+    <code>threadpriority</code> defines the priority of the background thread
+    (1 is the lowest level and 10 the highest).</p>
     <p>
-    The <code>percent_to_free</code> parameter describes, how much percent of the 
+    The <code>percent_to_free</code> parameter describes what percentage of the 
     elements of each registered Store shall be removed when low on memory.
     </p>
   </s2>
