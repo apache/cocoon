@@ -969,7 +969,7 @@
       The BeanUtils component provides easy-to-use wrappers around these capabilities.
     </description>
     <used-by>BetwixtTransformer</used-by>
-    <lib>scratchpad/lib/commons-beanutils-1.6.1.jar</lib>
+    <lib>scratchpad/lib/commons-beanutils-core-1.7.jar</lib>
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
