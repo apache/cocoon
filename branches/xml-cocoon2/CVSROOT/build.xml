@@ -80,12 +80,13 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <target name="init">
     <tstamp/>
-    <property name="Name"    value="Cocoon"/>
-    <property name="name"    value="cocoon"/>
-    <property name="version" value="2.0a2"/>
-    <property name="year"    value="1999-2000"/>
+    <property name="fullname" value="Apache Cocoon"/>
+    <property name="Name"     value="Cocoon"/>
+    <property name="name"     value="cocoon"/>
+    <property name="version"  value="2.0a2"/>
+    <property name="year"     value="1999-2000"/>
 
-    <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
+    <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
 
     <property name="debug"       value="on"/>
     <property name="optimize"    value="on"/>
@@ -119,8 +120,9 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="dist.dir"    value="${dist.root}/${name}-${version}"/>
     <property name="dist.target" value="${dist.root}"/>
 
-    <property name="site" value="../xml-site/targets/cocoon"/>
+    <property name="site" value="../xml-site/targets/${name}"/>
 
+    <filter token="name"    value="${fullname}"/>
     <filter token="year"    value="${year}"/>
     <filter token="version" value="${version}"/>
     <filter token="date"    value="${TODAY}"/>
@@ -224,17 +226,18 @@ NOTE: the "site" target is only useful for site mantainers.
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="on"/>
 
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
-      <exclude name="**/images/*"/>
-      <exclude name="README"/>
+      <exclude name="**/*.gif"/>
+      <exclude name="**/*.jpg"/>
+      <exclude name="**/*.png"/>
     </copydir>
 
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="off">
-      <include name="**/images/*"/>
+      <include name="**/*.gif"/>
+      <include name="**/*.jpg"/>
+      <include name="**/*.png"/>
     </copydir>
 
-    <jar jarfile="${build.dir}/${name}.war" 
-         basedir="${build.war}"
-         includes="**"/>
+    <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
