@@ -31,24 +31,9 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Notifier.java,v 1.4 2004/03/08 13:58:31 cziegeler Exp $
+ * @version CVS $Id: Notifier.java,v 1.5 2004/04/01 12:29:47 cziegeler Exp $
  */
 public class Notifier {
-
-    /*
-     * Generate notification information as a response.
-     * The notification is directly written to the OutputStream.
-     * @param  n The <code>Notifying</code> object
-     * @param outputStream The output stream the notification is written to
-     *        This could be <code>null</code>.
-     * @deprecated There is no way in which this method could understand what mime/type to use. Instead use void notify(Notifying n, OutputStream outputStream, String mimetype), where the mime/type is requested.
-     * @see #notify(Notifying n, OutputStream, String)
-
-    public static String notify(Notifying n, OutputStream outputStream) throws IOException {
-      notify(n, outputStream, "text/html") ;
-      return "text/html";
-    }
-     */
 
     /**
      * Generate notification information as a response.
@@ -108,16 +93,6 @@ public class Notifier {
         if (outputStream != null)
             outputStream.write(sb.toString().getBytes());
     }
-
-    /*
-     * Generate notification information in XML format.
-     * @deprecated Using a ContentHandler doesn't mean that a mimetype cannot be specified; it could be svg or
-     * @see #notify(Notifying, ContentHandler, String)
-
-    public static void notify(Notifying n, ContentHandler ch) throws SAXException {
-      notify(n, ch, "text/xml");
-    }
-     */
 
     /**
      * Generate notification information in XML format.
