@@ -49,12 +49,16 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * Parameters:
  *   <dl>
  *     <dt>&lt;width&gt;</dt>
- *     <dd>This parameter is optional. When specified it determines the width
- *         of the image that should be served.
+ *     <dd> This parameter is optional. When specified, it determines the
+ *          width of the binary image.
+ *          If no height parameter is specified, the aspect ratio
+ *          of the image is kept.
  *     </dd>
  *     <dt>&lt;height&gt;</dt>
- *     <dd>This parameter is optional. When specified it determines the height
- *         of the image that should be served.
+ *     <dd> This parameter is optional. When specified, it determines the
+ *          height of the binary image.
+ *          If no width parameter is specified, the aspect ratio
+ *          of the image is kept.
  *     </dd>
  *     <dt>&lt;scale(Red|Green|Blue)&gt;</dt>
  *     <dd>This parameter is optional. When specified it will cause the 
@@ -74,16 +78,16 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     <dd>This parameter is optional. By default, if the image is smaller
  *         than the specified width and height, the image will be enlarged.
  *         In some circumstances this behaviour is undesirable, and can be
- *         switched off by setting this parameter to "no" so that images will
- *         be reduced in size, but not enlarged. The default is "yes".
-
+ *         switched off by setting this parameter to "<code>false</code>" so that
+ *         images will be reduced in size, but not enlarged. The default is
+ *         "<code>true</code>".
  *     </dd>
  *   </dl>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.11 2004/06/24 06:28:00 cziegeler Exp $
+ * @version CVS $Id$
  */
 final public class ImageReader extends ResourceReader {
 
@@ -96,6 +100,9 @@ final public class ImageReader extends ResourceReader {
 
     private boolean enlarge;
     private final static String ENLARGE_DEFAULT = "true";
+
+    private boolean fitUniform;
+    private final static String FIT_DEFAULT = "false";
 
     private ColorConvertOp grayscaleFilter = null;
     private final static String GRAYSCALE_DEFAULT = "false";
@@ -140,15 +147,19 @@ final public class ImageReader extends ResourceReader {
         } else {
             grayscaleFilter = null;
         }   
+
         String enlargePar = par.getParameter("allow-enlarging", ENLARGE_DEFAULT);
         enlarge = BooleanUtils.toBoolean(enlargePar);
+
+        String fitUniformPar = par.getParameter("fit-uniform", FIT_DEFAULT);
+        fitUniform = BooleanUtils.toBoolean(fitUniformPar);
     }
 
     /** 
      * Returns the affine transform that implements the scaling.
      * The behavior is the following: if both the new width and height values
      * are positive, the image is rescaled according to these new values and
-     * the original aspect ration is lost.
+     * the original aspect ratio is lost.
      * Otherwise, if one of the two parameters is zero or negative, the
      * aspect ratio is maintained and the positive parameter indicates the
      * scaling.
@@ -158,7 +169,20 @@ final public class ImageReader extends ResourceReader {
     private AffineTransform getTransform(double ow, double oh, double nw, double nh) {
         double wm = 1.0d;
         double hm = 1.0d;
-        
+
+        if (fitUniform) {
+            //
+            // Compare aspect ratio of image vs. that of the "box"
+            // defined by nw and nh
+            //
+            if (ow/oh > nw/nh) {
+                nh = 0;    // Original image is proportionately wider than the box,
+                        // so scale to fit width
+            } else {
+                nw = 0;    // Scale to fit height
+            }
+        }
+
         if (nw > 0) {
             wm = nw / ow;
             if (nh > 0) {

@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="add" fixes-bug="30417">
+    Added best-fit-while-keeping-aspect-ratio option to the ImageReader
+   </action>
    <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
     Apply patch: Add support for calling webservices from within Flowscript.
    </action>   

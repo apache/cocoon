@@ -132,36 +132,55 @@
             <td>
               This parameter is optional. When specified it determines the
               width of the binary image.
-              If no height parameter is specified the aspect ratio
+              If no height parameter is specified, the aspect ratio
               of the image is kept.
             </td>
           </tr>
           <tr>
             <td>height</td>
             <td>Image height in pixels</td>
-            <td>
               This parameter is optional. When specified it determines the
               height of the binary image.
-              If no width parameter is specified the aspect ratio
+              If no width parameter is specified, the aspect ratio
               of the image is kept.
+            <td>
             </td>
           </tr>
           <tr>
             <td>allow-enlarging</td>
-            <td>Allow or prevent the enlarging of images</td>
+            <td>boolean</td>
             <td>
               This parameter is optional. The <code>width</code> and <code>height</code> parameters allow an image 
               to be resized. By default, if the image is smaller than the specified 
               width and height, the image will be enlarged. In some circumstances, this
               behaviour is undesirable, and can be switched off by setting this parameter
-              to "<code>no</code>". With this parameter set to "<code>no</code>", images will 
+              to "<code>false</code>". With this parameter set to "<code>false</code>", images will 
               be reduced in size, but not enlarged. The default for this parameter is 
-              "<code>yes</code>".
+              "<code>true</code>".
+            </td>
+          </tr>
+          <tr>
+            <td>fit-uniform</td>
+            <td>boolean</td>
+            <td>
+              This parameter is optional.  When set to
+              "<code>true</code>", it constrains the image size to the
+              dimensions of the specified width and height, while
+              preserving the original aspect ratio.  The value of
+              <code>&lt;allow-enlarging&gt;</code> is honored.  If
+              <code>&lt;allow-enlarging&gt;</code> is
+              "<code>true</code>", then the image will be enlarged as
+              much as possible while still fitting in the "box"; if 
+              <code>&lt;allow-enlarging&gt;</code> is
+              "<code>false</code>," the image may be reduced to fit the
+              box, but never enlarged.  The default
+              setting of <code>&lt;fit-uniform&gt;</code> is
+              "<code>false</code>".
             </td>
           </tr>
           <tr>
             <td>grayscale</td>
-            <td>Render the colour as a scale of gray.</td>
+            <td>boolean</td>
             <td>
               This parameter is optional. When specified and set to true it
               will cause each image pixel to be normalized.
@@ -170,21 +189,13 @@
           </tr>
           <tr>
             <td>scale(Red|Green|Blue)</td>
-            <td>Scale the RGB colour components by a multiplication factor.</td>
-            <td>
-              These parameters are optional. When specified it will cause the
-              specified color component in the image to be multiplied by the
-              specified floating point value.
-            </td>
+            <td>float</td>
+            <td>(Optional) Scale the RGB colour components by a multiplication factor.</td>
           </tr>
           <tr>
             <td>offset(Red|Green|Blue)</td>
-            <td>Scale the RGB colour components by an increment.</td>
-            <td>
-              These parameters are optional. When specified it will cause the
-              specified color component in the image to be incremented by the
-              specified floating point value.
-            </td>
+            <td>float</td>
+            <td>(Optional) Offset the RGB colour components by an increment.</td>
           </tr>
         </table>
         <p>
