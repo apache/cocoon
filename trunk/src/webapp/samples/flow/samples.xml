@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:13 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.4 2003/08/01 09:41:23 reinhard Exp $ -->
 
 <samples>
 
@@ -10,7 +10,7 @@
    </sample>
   </group>
 
-  <group name="Flowscript">
+  <group name="Cocoon Control Flow">
     <sample name="Calculator" href="calc/">
     A simple web-based calculator that uses javascript on the server side
     to describe the web application flow between screens in a coherent 
