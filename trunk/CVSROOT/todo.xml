@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.73 2001-03-01 16:24:17 greenrd Exp $
+  $Id: todo.xml,v 1.74 2001-03-08 10:24:19 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -70,6 +70,9 @@
   </action>
   <action context="code" bugid="73">
    Browsers object not available from Manager??
+  </action>
+  <action context="code">
+   Write and test Xalan 2 Transformer.
   </action>
   <action context="build" bugid="5" assigned-to="RDG">
    Work out how to integrate inline XSP docs (such as inline esql docs)
