@@ -1226,6 +1226,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="commons-jexl"/>
 
+    <work nested="build/cocoon-@@DATE@@/blocks/template/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -1233,6 +1234,7 @@
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -1344,6 +1346,5 @@
     <package>org.outerj.daisy.xmlutil</package>
     <jar name="src/blocks/forms/lib/daisy-util-1.1.jar"/>
   </project>      
-
 
 </module>
