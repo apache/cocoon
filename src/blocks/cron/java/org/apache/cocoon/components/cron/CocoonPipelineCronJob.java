@@ -36,7 +36,7 @@ import java.io.InputStreamReader;
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a>
  * @author <a href="http://apache.org/~jeremy/">Jeremy Quinn</a>
- * @version CVS $Id: CocoonPipelineCronJob.java 30941 2004-07-29 19:56:58Z vgritsenko $
+ * @version CVS $Id$
  *
  * @since 2.1.5
  */
