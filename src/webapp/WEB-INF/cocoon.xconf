@@ -106,15 +106,6 @@
       | in miliseconds using the "time-to-live" attribute of
       | the <continuations-manager> element.
       |
-      | If your site is sharing continuations between sitemaps you
-      | should refactor your application to keep a continuation bound to
-      | a single sitemap. The log will contain warnings which indicate
-      | where a continuation from a different sitemap is used.
-      |
-      | When you cannot do the refactoring in one blow you can turn on
-      | compatibility with shared continuations by setting the
-      | "continuation-sharing-bug-compatible" attribute to "true".
-      |
       | The <expirations-check> element specifies different policies for
       | expiring continuations. Currently only the "periodic" type is
       | supported.
@@ -127,8 +118,7 @@
       | 'session-bound-continuations' to true.
       +-->
   <continuations-manager logger="flow.manager" time-to-live="3600000" 
-                         session-bound-continuations="false" 
-                         continuation-sharing-bug-compatible="false">
+                         session-bound-continuations="false">
     <expirations-check type="periodic">
       <offset>180000</offset>
       <period>180000</period>

@@ -106,7 +106,6 @@ public class ContinuationsManagerImpl
     protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
     private String instrumentableName;
-    private boolean isContinuationSharingBugCompatible;
     private boolean bindContinuationsToSession;
 
     private ServiceManager serviceManager;
@@ -129,7 +128,6 @@ public class ContinuationsManagerImpl
 
     public void configure(Configuration config) {
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
-        this.isContinuationSharingBugCompatible = config.getAttributeAsBoolean("continuation-sharing-bug-compatible", false);
         this.bindContinuationsToSession = config.getAttributeAsBoolean( "session-bound-continuations", false );
         if (!this.bindContinuationsToSession)
             this.continuationsHolder = new WebContinuationsHolder();
@@ -193,34 +191,42 @@ public class ContinuationsManagerImpl
             return null;
         
         WebContinuation kont = (WebContinuation) continuationsHolder.get(id);
-        if ( kont != null ) {
-            boolean interpreterMatches = kont.interpreterMatches(interpreterId);
-            if (!interpreterMatches && getLogger().isWarnEnabled()) {
-                getLogger().warn("WK: Continuation (" + kont.getId() 
-                                 + ") lookup for wrong interpreter. Bound to: " 
-                                 + kont.getInterpreterId() + ", looked up for: " 
-                                 + interpreterId);
-            }
-            return interpreterMatches || isContinuationSharingBugCompatible ? kont : null;
+        if (kont == null)
+            return null;
+            
+        if (!kont.interpreterMatches(interpreterId)) {
+            getLogger().error(
+                    "WK: Continuation (" + kont.getId()
+                            + ") lookup for wrong interpreter. Bound to: "
+                            + kont.getInterpreterId() + ", looked up for: "
+                            + interpreterId);
+            return null;
         }
-        return null;
+        return kont;
     }
 
     /**
-     * Create <code>WebContinuation</code> and generate unique identifier
-     * for it. The identifier is generated using a cryptographically strong
+     * Create <code>WebContinuation</code> and generate unique identifier for
+     * it. The identifier is generated using a cryptographically strong
      * algorithm to prevent people to generate their own identifiers.
-     *
-     * <p>It has the side effect of interning the continuation object in
-     * the <code>idToWebCont</code> hash table.
-     *
-     * @param kont an <code>Object</code> value representing continuation
-     * @param parent value representing parent <code>WebContinuation</code>
-     * @param ttl <code>WebContinuation</code> time to live
-     * @param interpreterId id of interpreter invoking continuation creation
-     * @param disposer <code>ContinuationsDisposer</code> instance to use for
-     * cleanup of the continuation.
-     * @return the generated <code>WebContinuation</code> with unique identifier
+     * 
+     * <p>
+     * It has the side effect of interning the continuation object in the
+     * <code>idToWebCont</code> hash table.
+     * 
+     * @param kont
+     *            an <code>Object</code> value representing continuation
+     * @param parent
+     *            value representing parent <code>WebContinuation</code>
+     * @param ttl
+     *            <code>WebContinuation</code> time to live
+     * @param interpreterId
+     *            id of interpreter invoking continuation creation
+     * @param disposer
+     *            <code>ContinuationsDisposer</code> instance to use for
+     *            cleanup of the continuation.
+     * @return the generated <code>WebContinuation</code> with unique
+     *         identifier
      */
     private WebContinuation generateContinuation(Object kont,
                                                  WebContinuation parent,
