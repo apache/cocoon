@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.222 2004/06/04 08:59:21 antonio Exp $
+    | CVS $Id: jars.xml,v 1.223 2004/06/06 04:04:29 crossley Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -736,7 +736,8 @@
 
   <file>
     <title>Castor</title>
-    <description></description>
+    <description>Data binding framework for Java, including Java-to-XML
+     binding, Java-to-SQL persistence.</description>
     <used-by>CastorTransformer and precept</used-by>
     <lib>optional/castor-0.9.5.3-xml.jar</lib>
     <homepage>http://castor.exolab.org/</homepage>
