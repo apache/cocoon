@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.1 2004/03/09 10:33:48 reinhard Exp $
+    | CVS $Id: form1.xml,v 1.2 2004/04/03 12:18:02 joerg Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
@@ -281,6 +281,16 @@
           <fd:validation>
             <fd:email/>
           </fd:validation>
+        </fd:field>
+        <fd:field id="birthdate">
+          <fd:label>Birthdate (dd/MM/yyyy):</fd:label>
+          <fd:datatype base="date">
+            <fd:convertor>
+              <fd:patterns>
+                <fd:pattern>dd/MM/yyyy</fd:pattern>
+              </fd:patterns>
+            </fd:convertor>
+          </fd:datatype>
         </fd:field>
         <fd:booleanfield id="select">
           <fd:label>Select</fd:label>
