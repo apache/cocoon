@@ -75,8 +75,30 @@
 		<dd>The name of the attribute of the result doc element whose value will contain the actual number of rows updated (if this query was not a SELECT).</dd>
 		<dt><code>namespace</code></dt>
 		<dd>The namespace prefix to use when creating result elements. FIXME - we should ask for a namespace URI and prefix, right?</dd>
+		<dt><code>column-format</code></dt>
+		<dd>Indicates that a column needs special formatting. See the column formatting section.</dd>
 		</dl>
 		<p>Note that the query element may contain elements from other XSP-enabled namespaces, like request or session. The others may not right now, though I'm certainly willing to consider changing that if desired. I'm still new at this XSP thing too.</p>
+	</s1>
+	<s1 title="Column Formatting">
+		<p>Generally, column values are formatted naively - the taglib requests an Object from the ResultSet and invoked the toString() method. Some columns return InputStreams or Readers - in that case, we read the contents of the stream and format it as a String.</p>
+		<p>These defaults may be overridden by supplying one or more sql:column-format elements. Each sql:column-format element may contain these child elements:</p>
+		<dl>
+		<dt><code>name</code> <strong>(mandatory)</strong></dt>
+		<dd>The name of the column (after the case translation occurs) to which the formatting should be applied</dd>
+		<dt><code>class</code> <strong>(mandatory)</strong></dt>
+		<dd>The fully qualified class name of the formatter class. This must be a subclass of java.text.Format.</dd>
+		<dt><code>parameter</code></dt>
+		<dd>A construction parameter for the formatter class. There may be more than one parameters.</dd>
+		</dl>
+		<p>For each sql:column-format element, a new instance of the Format subclass specified by the sql:class element is constructed using the construction parameters specified by the sql:parameter elements. The constructor must accept only Strings as parameters; if other datatypes are required for a class you wish to use, you must provide your own decorator wrapper for that class. Values from the named column are formatting using the format method. Here is an example:</p>
+		<source><![CDATA[
+<sql:column-format>
+	<sql:name>my_date</sql:name>
+	<sql:class>java.text.SimpleDateFormat</sql:class>
+	<sql:parameter>MM/dd/yyyy</sql:parameter>
+</sql:column-format>
+]]></source>
 	</s1>
 
 </body></document>
