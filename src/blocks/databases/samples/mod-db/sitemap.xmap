@@ -136,7 +136,7 @@
          </map:act>
       </map:act>
 
-      <!-- add onw new group -->
+      <!-- add one new group -->
       <map:act type="req-params">
          <map:parameter name="parameters" value="add-group groups.gname"/>
          <map:act type="mod-db-add">
