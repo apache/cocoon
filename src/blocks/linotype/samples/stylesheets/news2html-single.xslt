@@ -60,7 +60,7 @@
         </div>
 
         <div id="sidebar">
-          <a href="{$home}/private/"><img alt="Linotype" src="{$home}/images/linotype.jpg" width="156px" height="207px" /></a>
+          <a href="{$home}/backend/"><img alt="Linotype" src="{$home}/images/linotype.jpg" width="156px" height="207px" /></a>
         </div>
 
         <div id="bottombar">

@@ -160,7 +160,7 @@
 
   <map:component-configurations>
     <global-variables>
-      <home>/~stefano/linotype</home>
+      <home>/samples/blocks/linotype</home>
       <count>3</count>
     </global-variables>
   </map:component-configurations>
@@ -314,14 +314,14 @@
       <map:serialize/>
     </map:match>
          
-    <map:match pattern="private/">
+    <map:match pattern="backend/">
       <map:redirect-to uri="news"/>
     </map:match>
 
-    <map:match pattern="private/edit/news/*/*">
+    <map:match pattern="backend/edit/news/*/*">
       <map:call function="main">
         <map:parameter name="page" value="edit"/>
-        <map:parameter name="root" value="{realpath:/}"/>
+        <map:parameter name="root" value="{realpath:/}{global:home}"/>
         <map:parameter name="base" value="{global:home}"/>
         <map:parameter name="id" value="{1}"/>
         <map:parameter name="type" value="news"/>
@@ -329,10 +329,10 @@
       </map:call>
     </map:match>
 
-    <map:match pattern="private/**">
+    <map:match pattern="backend/**">
       <map:call function="main">
         <map:parameter name="page" value="{1}"/>
-        <map:parameter name="root" value="{realpath:/}"/>
+        <map:parameter name="root" value="{realpath:/}{global:home}"/>
         <map:parameter name="base" value="{global:home}"/>
       </map:call>
     </map:match>
