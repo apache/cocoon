@@ -66,6 +66,7 @@ import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -101,6 +102,7 @@ import org.apache.excalibur.event.command.ThreadManager;
 import org.apache.excalibur.instrument.InstrumentManageable;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
 import org.apache.excalibur.xml.impl.XercesParser;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -113,7 +115,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.17 2003/10/08 20:18:34 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.18 2003/10/15 20:01:59 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -165,8 +167,11 @@ public class Cocoon
     private volatile int activeRequestCount = 0;
 
     /** the Processor if it is ThreadSafe */
-    private Processor threadSafeProcessor = null;
+    private Processor threadSafeProcessor;
 
+    /** The source resolver */
+    protected SourceResolver sourceResolver;
+    
     /**
      * Creates a new <code>Cocoon</code> instance.
      *
@@ -183,7 +188,8 @@ public class Cocoon
      *
      * @param manager the parent component manager. May be <code>null</code>
      */
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager)
+    throws ComponentException {
         this.parentComponentManager = manager;
     }
 
@@ -340,6 +346,7 @@ public class Cocoon
             this.componentManager.release(processor);
         }
 
+        this.sourceResolver = (SourceResolver)this.componentManager.lookup(SourceResolver.ROLE);
     }
 
     /** Dump System Properties */
@@ -505,8 +512,11 @@ public class Cocoon
             this.componentManager.release(this.threadSafeProcessor);
             this.threadSafeProcessor = null;
             
+            this.componentManager.release(this.sourceResolver);
+            this.sourceResolver = null;
+
             ContainerUtil.dispose(this.componentManager);
-            this.componentManager = null;
+            this.componentManager = null;            
         }
         
         this.context = null;
@@ -738,7 +748,7 @@ public class Cocoon
             }
 
             programGenerator = (ProgramGenerator) this.componentManager.lookup(ProgramGenerator.ROLE);
-            source = environment.resolveURI(fileName);
+            source = this.sourceResolver.resolveURI(fileName);
             CompiledComponent xsp = programGenerator.load(this.componentManager,
                     source,
                     markupLanguage, programmingLanguage, environment);
@@ -746,7 +756,7 @@ public class Cocoon
                 getLogger().debug("XSP generation complete:" + xsp);
             }
         } finally {
-            environment.release(source);
+            this.sourceResolver.release(source);
             this.componentManager.release(programGenerator);
         }
     }
