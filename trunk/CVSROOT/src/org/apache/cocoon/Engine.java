@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.19 2000-02-23 00:50:47 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.20 2000-03-17 16:46:59 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,6 +59,7 @@ import javax.servlet.http.*;
 import org.apache.cocoon.cache.*;
 import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
+import org.apache.cocoon.logger.*;
 import org.apache.cocoon.transformer.*;
 import org.apache.cocoon.producer.*;
 import org.apache.cocoon.formatter.*;
@@ -72,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.19 $ $Date: 2000-02-23 00:50:47 $
+ * @version $Revision: 1.20 $ $Date: 2000-03-17 16:46:59 $
  */
 
 public class Engine implements Defaults {
@@ -94,6 +95,7 @@ public class Engine implements Defaults {
     Transformer transformer;
     Cache cache;
     Store store;
+    Logger logger;
 
     ServletContext servletContext;
 
@@ -117,6 +119,10 @@ public class Engine implements Defaults {
 
             // register the context
             manager.setRole("context", context);
+
+            // use the context for the logger
+            logger = new ServletLogger(this.servletContext, (String) configurations.get(LOG_LEVEL));
+            manager.setRole("logger", logger);
         }
 
         // Create the parser and register it
@@ -216,6 +222,8 @@ public class Engine implements Defaults {
      */
     public void handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        if (LOG) logger.log(this, "Starting request", Logger.INFO);
+
         // if verbose mode is on, take a time snapshot for later evaluation
         long time = 0;
         if (VERBOSE) time = System.currentTimeMillis();
@@ -253,6 +261,8 @@ public class Engine implements Defaults {
         // disabled, we need to process it
         if (page == null) {
 
+            if (LOG) logger.log(this, "Creating page", Logger.DEBUG);
+
             // continue until the page is done.
             for (int i = 0; i < LOOPS; i++) {
                 // catch if any OutOfMemoryError is thrown
@@ -269,6 +279,8 @@ public class Engine implements Defaults {
                     // pass the produced stream to the parser
                     Document document = producer.getDocument(request);
 
+                    if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
+
                     // pass needed parameters to the processor pipeline
                     Hashtable environment = new Hashtable();
                     environment.put("path", producer.getPath(request));
@@ -282,6 +294,7 @@ public class Engine implements Defaults {
                         if (processor == null) break;
                         document = processor.process(document, environment);
                         page.setChangeable(processor);
+                        if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
                     }
 
                     // get the right formatter for the page
@@ -295,6 +308,8 @@ public class Engine implements Defaults {
                     StringWriter writer = new StringWriter();
                     formatter.format(document, writer, environment);
 
+                    if (LOG) logger.log(this, "Document formatted", Logger.DEBUG);
+
                     // fill the page bean with content
                     page.setContent(writer.toString());
                     page.setContentType(formatter.getMIMEType());
@@ -302,6 +317,7 @@ public class Engine implements Defaults {
                     // page is done without memory errors so exit the loop
                     break;
                 } catch (OutOfMemoryError e) {
+                    if (LOG) logger.log(this, "Triggered OutOfMemory", Logger.WARNING);
                     // force the cache to free some of its content.
                     cache.flush();
                     // reset the page to signal the error
@@ -311,6 +327,7 @@ public class Engine implements Defaults {
         }
 
         if (page == null) {
+            if (LOG) logger.log(this, "System is out of memory", Logger.EMERGENCY);
             throw new Exception("FATAL ERROR: the system ran out of memory when"
                 + " processing the request. Increase your JVM memory.");
         }
@@ -344,6 +361,8 @@ public class Engine implements Defaults {
             // send all content so that client doesn't wait while caching.
             out.flush();
         }
+
+        if (LOG) logger.log(this, "response sent to client", Logger.WARNING);
 
         // cache the created page.
         cache.setPage(page, request);

@@ -1,4 +1,4 @@
-/*-- $Id: Defaults.java,v 1.10 2000-02-14 00:59:17 stefano Exp $ --
+/*-- $Id: Defaults.java,v 1.11 2000-03-17 16:46:58 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,7 +54,7 @@ package org.apache.cocoon;
  * The Cocoon strings.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-02-14 00:59:17 $
+ * @version $Revision: 1.11 $ $Date: 2000-03-17 16:46:58 $
  */
 
 public interface Defaults {
@@ -72,6 +72,7 @@ public interface Defaults {
     public static final String STATUS_URL = "selfservlet.uri";
     public static final String STATUS_URL_DEFAULT = "/Cocoon.xml";
     public static final String ERROR_INTERNALLY = "handle.errors.internally";
+    public static final String LOG_LEVEL = "log.level";
 
     public static final String PARSER_PROP = "parser";
     public static final String PARSER_DEFAULT = "org.apache.cocoon.parser.XercesParser";
@@ -96,5 +97,7 @@ public interface Defaults {
 
     public static final int LOOPS = 10;
 
-    public static final boolean VERBOSE = true;
+    public static final boolean VERBOSE = @verbose@;
+    public static final boolean LOG = @log@;
+
 }
