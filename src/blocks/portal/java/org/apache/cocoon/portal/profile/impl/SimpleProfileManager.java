@@ -50,9 +50,11 @@
 */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -81,12 +83,15 @@ import org.apache.excalibur.source.SourceValidity;
 import org.exolab.castor.mapping.Mapping;
 
 /**
- *
+ * The profile manager using the authentication framework
+ * 
+ * FIXME - create abstract base class
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.12 2003/05/27 07:38:33 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.13 2003/05/27 09:15:07 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -506,8 +511,114 @@ public class SimpleProfileManager
 
             return copletInstanceDataManager.getCopletInstanceData(copletID);
         } catch (ComponentException e) {
-            // TODO
-            throw new CascadingRuntimeException("Arg", e);
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    public List getCopletInstanceData(CopletData data) {
+        List coplets = new ArrayList();
+        PortalService service = null;
+        String attribute = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+
+            attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
+
+            Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+            while ( iter.hasNext() ) {
+                CopletInstanceData current = (CopletInstanceData)iter.next();
+                if ( current.getCopletData().equals(data) ) {
+                    coplets.add( current );
+                }
+            }
+            return coplets;
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    public void register(CopletInstanceData coplet) {
+        PortalService service = null;
+        String attribute = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+
+            attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
+            
+            copletInstanceDataManager.putCopletInstanceData( coplet );
+            
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+    
+    public void unregister(CopletInstanceData coplet) {
+        PortalService service = null;
+        String attribute = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+
+            attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
+            
+            copletInstanceDataManager.getCopletInstanceData().remove(coplet.getId());
+            
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    public void register(Layout layout) {
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+
+            Map layoutMap = (Map)service.getAttribute("layout-map");
+            if ( layoutMap == null ) {
+                layout = (Layout)service.getAttribute(portalPrefix+"/Layout");
+                if (layout != null) {
+                    layoutMap = new HashMap();
+                    this.cacheLayouts(layoutMap, layout);
+                    service.setAttribute("layout-map", layoutMap);
+                }
+            }
+            
+            if ( layoutMap != null) {
+                layoutMap.put(layout.getId(), layout);
+            }
+            
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+    
+    public void unregister(Layout layout) {
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+
+            Map layoutMap = (Map)service.getAttribute("layout-map");
+            
+            if ( layoutMap != null) {
+                layoutMap.remove(layout.getId());
+            }
+            
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
         }

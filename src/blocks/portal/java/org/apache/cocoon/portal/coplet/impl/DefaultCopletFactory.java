@@ -75,13 +75,14 @@ import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  * This factory is for creating and managing coplet objects
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.3 2003/05/26 14:03:49 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.4 2003/05/27 09:15:07 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -175,7 +176,15 @@ public class DefaultCopletFactory
             this.manager.release( adapterSelector );
         }
         
-        // TODO - register
+        ProfileManager profileManager = null;
+        try {
+            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+            profileManager.register(instance);
+        } catch (ComponentException ce) {
+            throw new ProcessingException("Unable to lookup profile manager.", ce);
+        } finally {
+            this.manager.release( profileManager );
+        }
         return instance;
     }
     
@@ -260,7 +269,6 @@ public class DefaultCopletFactory
      */
     public void remove(CopletInstanceData copletInstanceData) 
     throws ProcessingException {
-        // TODO - unregister
         if ( copletInstanceData != null ) {
             // now lookup the adapter
             final String adapterName = copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName();
@@ -278,6 +286,16 @@ public class DefaultCopletFactory
                     adapterSelector.release( adapter );
                 }
                 this.manager.release( adapterSelector );
+            }
+            
+            ProfileManager profileManager = null;
+            try {
+                profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+                profileManager.unregister(copletInstanceData);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Unable to lookup profile manager.", ce);
+            } finally {
+                this.manager.release( profileManager );
             }
         }
     }

@@ -50,16 +50,22 @@
 */
 package org.apache.cocoon.portal.profile;
 
+import java.util.List;
+
 import org.apache.avalon.framework.component.Component;
+import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
- *
+ * The profile manager.
+ * Via this component you can get the profile (or parts of it) of the
+ * current 'user'.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.3 2003/05/23 09:42:50 cziegeler Exp $
+ * @version CVS $Id: ProfileManager.java,v 1.4 2003/05/27 09:15:07 cziegeler Exp $
  */
 public interface ProfileManager extends Component {
     
@@ -71,6 +77,19 @@ public interface ProfileManager extends Component {
     
     CopletInstanceData getCopletInstanceData(String copletID);
     
+    List getCopletInstanceData(CopletData data);
+    
+    void register(CopletInstanceData coplet);
+    
+    void unregister(CopletInstanceData coplet);
+
+    void register(Layout layout);
+    
+    void unregister(Layout layout);
+
+    /**
+     * Save the profile
+     */
     void saveUserProfiles();
     
 }
