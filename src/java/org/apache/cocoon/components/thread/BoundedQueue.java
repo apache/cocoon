@@ -59,7 +59,7 @@ public class BoundedQueue
     /**
      * DOCUMENT ME!
      *
-     * @return
+     * @return 
      */
     public int getQueueSize(  )
     {
