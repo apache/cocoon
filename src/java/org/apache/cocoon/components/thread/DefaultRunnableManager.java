@@ -30,18 +30,17 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 /**
  * The DefaultRunnableManager implements the {@link RunnableManager} interface
  * and is responsible to create {@link ThreadPool}s and run {@link Runnable}s
  * in them as background commands.
- * 
+ *
  * <p>
  * The configuration of the <code>DefaultRunnableManager</code>:
  * <pre>
  *   &lt;thread-factory&gt;org.apache.cocoon.components.thread.DefaultThreadFactory&lt;/thread-factory&gt;
  *   &lt;thread-pools&gt;
- *     &lt;thread-pool&gt;  
+ *     &lt;thread-pool&gt;
  *       &lt;name&gt;default&lt;/name&gt;
  *       &lt;priority&gt;NORM&lt;/priority&gt;
  *       &lt;daemon&gt;false&lt;/daemon&gt;
@@ -52,11 +51,11 @@ import java.util.TreeSet;
  *       &lt;block-policy&gt;RUN&lt;/block-policy&gt;
  *       &lt;shutdown-graceful&gt;false&lt;/shutdown-graceful&gt;
  *       &lt;shutdown-wait-time-ms&gt;-1&lt;/shutdown-wait-time-ms&gt;
- *     &lt;/thread-pool&gt; 
+ *     &lt;/thread-pool&gt;
  *   &lt;/thread-pools&gt;
  * </pre>
  * </p>
- * 
+ *
  * <p>
  * Have a look at
  * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html,
@@ -329,8 +328,8 @@ public class DefaultRunnableManager
         if( getLogger(  ).isDebugEnabled(  ) )
         {
             getLogger(  ).debug( "Command entered: " + command.toString(  ) +
-                                 ",pool=" + pool.getName(  ) + ",delay=" +
-                                 delay + ",interval=" + interval );
+                                 ", pool=" + pool.getName(  ) + ", delay=" +
+                                 delay + ", interval=" + interval );
         }
 
         new ExecutionInfo( pool, command, delay, interval, getLogger(  ) );
@@ -500,16 +499,15 @@ public class DefaultRunnableManager
      *
      * @throws Exception DOCUMENT ME!
      */
-    public void start(  )
-        throws Exception
+    public void start(  ) throws Exception
     {
         if( getLogger(  ).isDebugEnabled(  ) )
         {
-            getLogger(  ).debug( "starting heart" );
+            getLogger(  ).debug( "Starting the heart" );
         }
 
         m_keepRunning = true;
-        ( (ThreadPool)m_pools.get( DEFAULT_THREADPOOL_NAME ) ).execute( this );
+        ( (ThreadPool) m_pools.get( DEFAULT_THREADPOOL_NAME ) ).execute( this );
     }
 
     /**
@@ -578,7 +576,7 @@ public class DefaultRunnableManager
         int minPoolSize =
             config.getChild( "min-pool-size" ).getValueAsInteger( DEFAULT_MIN_POOL_SIZE );
 
-        // make sure we have enough threads for the default thread pool as we 
+        // make sure we have enough threads for the default thread pool as we
         // need one for ourself
         if( DEFAULT_THREADPOOL_NAME.equals( name ) &&
             ( ( minPoolSize > 0 ) && ( minPoolSize < DEFAULT_MIN_POOL_SIZE ) ) )
@@ -644,7 +642,6 @@ public class DefaultRunnableManager
         pool.setName( name );
 
         ThreadFactory factory = null;
-
         try
         {
             factory =
@@ -691,7 +688,6 @@ public class DefaultRunnableManager
         }
 
         printPoolInfo( pool );
-
         return pool;
     }
 
@@ -743,8 +739,7 @@ public class DefaultRunnableManager
      * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
      * @version $Id$
      */
-    private class ExecutionInfo
-        implements Comparable
+    private class ExecutionInfo implements Comparable
     {
         //~ Instance fields ----------------------------------------------------
 
@@ -810,8 +805,17 @@ public class DefaultRunnableManager
         public int compareTo( final Object other )
         {
             final ExecutionInfo otherInfo = (ExecutionInfo)other;
-
-            return (int)( m_nextRun - otherInfo.m_nextRun );
+            int diff = (int)( m_nextRun - otherInfo.m_nextRun );
+            if (diff == 0) {
+                if (this == other) {
+                    // Same object, return 0.
+                    return 0;
+                } else {
+                    // NOT the same object, MUST return non-0 value.
+                    return System.identityHashCode(this) - System.identityHashCode(other);
+                }
+            }
+            return diff;
         }
 
         /**
@@ -821,20 +825,16 @@ public class DefaultRunnableManager
         {
             if( m_logger.isDebugEnabled(  ) )
             {
-                m_logger.debug( "Hand over Command " +
-                                 m_command.toString(  ) + " to pool \"" +
-                                 m_pool.getName(  ) + "\" with delay=" + m_delay +
-                                 " and interval=" + m_interval );
+                m_logger.debug( "Executing command " + m_command + " in pool \"" +
+                                 m_pool.getName(  ) + "\", schedule with interval=" + m_interval );
             }
 
             synchronized( m_commandStack )
             {
                 m_commandStack.remove( this );
-                m_nextRun = ( ( m_interval > 0 )
-                              ? ( System.currentTimeMillis(  ) + m_interval ) : 0 );
-
-                if( m_nextRun > 0 )
+                if( m_interval > 0 )
                 {
+                    m_nextRun = System.currentTimeMillis(  ) + m_interval;
                     m_commandStack.add( this );
                 }
             }
@@ -847,12 +847,12 @@ public class DefaultRunnableManager
             {
                 if( m_logger.isDebugEnabled(  ) )
                 {
-                    m_logger.debug( m_command + " has been interrupted" );
+                    m_logger.debug( "Interrupted executing command + " + m_command );
                 }
             }
             catch( final Throwable t )
             {
-                m_logger.error( "Exception thrown by Command " + m_command, t );
+                m_logger.error( "Exception executing command " + m_command, t );
             }
         }
     }
