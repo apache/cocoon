@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.35 2000-11-30 21:53:03 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.36 2000-12-04 03:20:55 balld Exp $-->
 <!--
 
  ============================================================================
@@ -219,6 +219,7 @@
 <xsl:template match="esql:connection/esql:username"/>
 <xsl:template match="esql:connection/esql:password"/>
 <xsl:template match="esql:connection/esql:pool"/>
+<xsl:template match="esql:connection/esql:autocommit"/>
 
 <xsl:template match="esql:connection//esql:execute-query">
   <xsl:variable name="query"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:query"/></xsl:call-template></xsl:variable>
