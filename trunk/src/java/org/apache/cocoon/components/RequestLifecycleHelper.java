@@ -69,7 +69,7 @@ import java.util.*;
 class RequestLifecycleHelper
 {
     /** The key used to store the current process environment */
-    static final String PROCESS_KEY = CocoonComponentManager.class.getName();
+    static final String PROCESS_KEY = RequestLifecycleHelper.class.getName();
     /** The environment information */
     private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
 

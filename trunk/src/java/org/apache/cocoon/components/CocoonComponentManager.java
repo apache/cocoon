@@ -68,7 +68,7 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.26 2003/10/22 15:48:51 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.27 2003/10/24 07:29:56 cziegeler Exp $
  */
 public final class CocoonComponentManager
 implements ServiceManager
@@ -153,6 +153,17 @@ implements ServiceManager
         }
         parentAwareComponents = null;  // null to save memory, and catch logic bugs.
     }
+    
+    /**
+     * Get the current sitemap component manager.
+     * This method return the current sitemap component manager. This
+     * is the manager that holds all the components of the currently
+     * processed (sub)sitemap.
+     */
+    static public ServiceManager getSitemapComponentManager() {
+        return RequestLifecycleHelper.getSitemapComponentManager();
+    }
+    
 }
 
 
