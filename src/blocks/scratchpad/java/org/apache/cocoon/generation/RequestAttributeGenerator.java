@@ -34,8 +34,11 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: RequestAttributeGenerator.java,v 1.5 2004/05/07 17:32:59 joerg Exp $
+ * @version CVS $Id$
  *
+ * @cocoon.sitemap.component.documentation
+ * The <code>RequestAttributeGenerator</code> is a class that reads XML from a
+ * request attribute and generates SAX Events.
  * @cocoon.sitemap.component.name       req-attr
  * @cocoon.sitemap.component.label      content
  * @cocoon.sitemap.component.logger     sitemap.generator.req-attr
