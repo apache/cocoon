@@ -201,6 +201,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="remove">
+     Flowscript: Deprecated support for passing sitemap parameters into flowscript
+     function as positional arguments. Use cocoon.parameters instead. Support will
+     be removed completely in Cocoon 2.2.
+   </action>
    <action dev="RG" type="fix" fixes-bug="32159" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
      Portal: Request content length and content type are required in portlet ActionRequest 
      for custom upload handling.     
