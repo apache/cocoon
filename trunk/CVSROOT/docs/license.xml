@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE page SYSTEM "./dtd/page.dtd">
+<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
 
-<page title="Installing Cocoon">
+<document>
+ <header>
+  <title>Cocoon Public License</title>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
 
- <authors>
-  <author name="Stefano Mazzocchi" email="stefano@apache.org"/>
- </authors>
- 
-<section title="Cocoon Public License">
+<body>
+<s1 title="Cocoon Public License">
 <source><![CDATA[
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,5 +61,6 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 ]]></source>
-</section>
-</page>
+</s1>
+</body>
+</document>

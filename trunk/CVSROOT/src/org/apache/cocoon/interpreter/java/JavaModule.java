@@ -1,4 +1,4 @@
-/*-- $Id: JavaModule.java,v 1.3 1999-11-09 02:30:31 dirkx Exp $ -- 
+/*-- $Id: JavaModule.java,v 1.4 1999-11-30 16:30:08 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.interpreter.*;
 
 /**
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:31 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:08 $
  */
 
 public class JavaModule implements Module {
@@ -66,7 +66,7 @@ public class JavaModule implements Module {
     {},
     {Dictionary.class},
     {Dictionary.class, Node.class},
-    {Node.class, Dictionary.class, org.openxml.x3p.ProcessContext.class},
+    {Node.class, Dictionary.class},
     {Node.class},
   };
 

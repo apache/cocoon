@@ -1,4 +1,4 @@
-/*-- $Id: ProcessorFactory.java,v 1.3 1999-11-09 02:30:42 dirkx Exp $ -- 
+/*-- $Id: ProcessorFactory.java,v 1.4 1999-11-30 16:30:09 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,13 +61,15 @@ import org.apache.cocoon.framework.*;
  * associated to the produced document.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:42 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:09 $
  */
 
 public class ProcessorFactory extends Router implements Defaults {
 
     public Processor getProcessor(Document document) throws Exception {
         String type = getType(document);
+        if (type == null) return null;
+        
         Processor processor = (Processor) objects.get(type);
         if (processor == null) throw new Exception("No processor for type \"" + type + "\"");
         return processor;
@@ -75,12 +77,14 @@ public class ProcessorFactory extends Router implements Defaults {
 
     public String getType(Document document) {
     	ProcessingInstruction pi = Utils.getFirstPI(document, COCOON_PROCESS_PI, true);
+        
     	if (pi != null) {
 	        Hashtable attributes = Utils.getPIPseudoAttributes(pi);
 	        String type = (String) attributes.get("type");
 	        if (type != null) return type;
         }
-        throw new RuntimeException();
+        
+        return null;
     }
 
     public String getStatus() {

@@ -1,4 +1,4 @@
-/*-- $Id: AbstractProducer.java,v 1.3 1999-11-09 02:30:53 dirkx Exp $ -- 
+/*-- $Id: AbstractProducer.java,v 1.4 1999-11-30 16:30:10 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,6 +53,8 @@ package org.apache.cocoon.producer;
 import java.io.*;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
+import org.apache.cocoon.*;
+import org.apache.cocoon.parser.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.framework.*;
 
@@ -63,10 +65,10 @@ import org.apache.cocoon.framework.*;
  * seen as a transparent "mediator" between stream and DOM realms.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:53 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:10 $
  */
 
-public abstract class AbstractProducer extends AbstractActor implements Producer {
+public abstract class AbstractProducer extends AbstractActor implements Producer, Defaults {
     
     /**
      * This method is the only one called by the Cocoon engine. Producers
@@ -77,7 +79,10 @@ public abstract class AbstractProducer extends AbstractActor implements Producer
      * never called directly by Cocoon.
      */
     public Document getDocument(HttpServletRequest request) throws Exception {
-        return ((Parser) director.getActor("parser")).parse(getStream(request), getPath(request));
+        Parser parser = (Parser) director.getActor("parser");
+        org.xml.sax.InputSource input = new org.xml.sax.InputSource();
+        input.setCharacterStream(getStream(request));
+        return parser.parse(input);
     }
     
     /**

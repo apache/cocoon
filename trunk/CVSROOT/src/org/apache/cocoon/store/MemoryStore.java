@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.3 1999-11-09 02:30:57 dirkx Exp $ -- 
+/*-- $Id: MemoryStore.java,v 1.4 1999-11-30 16:30:10 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:57 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:10 $
  */
 
 public class MemoryStore extends AbstractActor implements Store, Configurable, Status {
@@ -116,7 +116,7 @@ public class MemoryStore extends AbstractActor implements Store, Configurable, S
         
         while (jvm.freeMemory() < memory) {
             Object worst = this.getWorst();
-            this.hashtable.remove(worst);
+            if (worst != null) this.hashtable.remove(worst);
             jvm.runFinalization();
             jvm.gc();            
         }
@@ -215,7 +215,7 @@ public class MemoryStore extends AbstractActor implements Store, Configurable, S
      */
     public String getStatus() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<b>Memory Object Storage System</b><br>");
+        buffer.append("Memory Object Storage System<br>");
         Enumeration e = list();
         while (e.hasMoreElements()) {
             buffer.append("<li>");

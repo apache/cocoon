@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-
 <?cocoon-process type="xsp"?>
 
-<xsp:page
-  language="java"
-  xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
->
-  <!-- A quick'n'dirty XML colorizer -->
-  <xsp:logic>
+<!-- Written by Ricardo Rocha <rrocha@plenix.org> -->
+
+<!-- A quick'n'dirty XML colorizer -->
+
+<xsp:page language="java" xmlns:xsp="http://apache.org/DTD/XSP/Layer1">
+
+  <xsp:logic><![CDATA[
     private static final String ATTR_NAME_COLOR = "brown";
     private static final String ATTR_VALUE_COLOR = "magenta";
     private static final String COMMENT_COLOR = "gray";
@@ -24,7 +24,6 @@
     protected Element colorize(Node node, Document factory) {
       Element element = factory.createElement("pre");
       DocumentFragment fragment = factory.createDocumentFragment();
-
       element.appendChild(doColorize(node, factory, 0));
       return element;
     }
@@ -39,7 +38,7 @@
         case Node.CDATA_SECTION_NODE:
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("&lt;"));
+          result.appendChild(factory.createTextNode("<"));
           fragment.appendChild(result);
 
           result = factory.createElement("font");
@@ -60,7 +59,7 @@
 
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("&lt;"));
+          result.appendChild(factory.createTextNode("<"));
           fragment.appendChild(result);
 
           break;
@@ -69,7 +68,7 @@
   
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("&lt;"));
+          result.appendChild(factory.createTextNode("<"));
           fragment.appendChild(result);
 
           String tagColor = ELEMENT_COLOR;
@@ -77,11 +76,9 @@
 
           if (tagName.startsWith("xsp:")) {
             tagColor = XSP_ELEMENT_COLOR;
-          }
-          else if (tagName.startsWith("xsl:")) {
+          } else if (tagName.startsWith("xsl:")) {
             tagColor = XSL_ELEMENT_COLOR;
-          }
-          else if (tagName.indexOf(':') &gt;= 0) {
+          } else if (tagName.indexOf(':') >= 0) {
             tagColor = CUSTOM_ELEMENT_COLOR;
           }
 
@@ -93,7 +90,7 @@
           NamedNodeMap attributes = element.getAttributes();
           int attributeCount = attributes.getLength();
   
-          for (int i = 0; i &lt; attributeCount; i++) {
+          for (int i = 0; i < attributeCount; i++) {
             Attr attribute = (Attr) attributes.item(i);
   
             result = factory.createElement("font");
@@ -116,7 +113,9 @@
   
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode((childCount == 0 ? "/" : "") + "&gt;"));
+          result.appendChild(
+            factory.createTextNode((childCount == 0 ? "/" : "") + ">")
+          );
           fragment.appendChild(result);
 
           String textColor = TEXT_COLOR;
@@ -126,17 +125,17 @@
           result = factory.createElement("font");
           result.setAttribute("color", textColor);
 
-          for (int i = 0; i &lt; childCount; i++) {
+          for (int i = 0; i < childCount; i++) {
             result.appendChild(
               doColorize(nodeList.item(i), factory, level + 1)
             );
           }
           fragment.appendChild(result);
 
-          if (childCount &gt; 0) {
+          if (childCount > 0) {
             result = factory.createElement("font");
             result.setAttribute("color", DELIMITER_COLOR);
-            result.appendChild(factory.createTextNode("&lt;/"));
+            result.appendChild(factory.createTextNode("</"));
             fragment.appendChild(result);
 
             result = factory.createElement("font");
@@ -146,7 +145,7 @@
 
             result = factory.createElement("font");
             result.setAttribute("color", DELIMITER_COLOR);
-            result.appendChild(factory.createTextNode("&gt;"));
+            result.appendChild(factory.createTextNode(">"));
             fragment.appendChild(result);
           }
   
@@ -157,7 +156,7 @@
           NodeList nodeList = node.getChildNodes();
           int childCount = nodeList.getLength();
   
-          for (int i = 0; i &lt; childCount; i++) {
+          for (int i = 0; i < childCount; i++) {
             fragment.appendChild(
               doColorize(nodeList.item(i), factory, level + 1)
             );
@@ -171,9 +170,7 @@
 
           result.appendChild(
             factory.createTextNode(
-              "&lt;!-- " +
-              node.getNodeValue() +
-              " --&gt;"
+              "<!-- " + node.getNodeValue() + " -->;"
             )
           );
 
@@ -185,7 +182,7 @@
 
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("&lt;?"));
+          result.appendChild(factory.createTextNode("<?"));
           fragment.appendChild(result);
   
           result = factory.createElement("font");
@@ -200,14 +197,16 @@
   
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
-          result.appendChild(factory.createTextNode("?&gt;\n"));
+          result.appendChild(factory.createTextNode("?>\n"));
           fragment.appendChild(result);
 
           break;
         case Node.ENTITY_REFERENCE_NODE:
           result = factory.createElement("font");
           result.setAttribute("color", ENTITY_REF_COLOR);
-          result.appendChild(factory.createTextNode("&lt;" + node.getNodeValue() + ";"));
+          result.appendChild(
+            factory.createTextNode("<" + node.getNodeValue() + ";")
+          );
           fragment.appendChild(result);
 
           break;
@@ -220,17 +219,17 @@
 
       return fragment;
     }
-  </xsp:logic>
+  ]]></xsp:logic>
 
   <html>
     <head>
       <title>Source Code</title>
     </head>
 
-    <!-- Let's do it -->
     <body>
       <xsp:logic>
         String filename = request.getParameter("filename");
+        String filepath = XSPUtil.relativeFilename(filename, request);
       </xsp:logic>
   
       <h3 style="color:navy; text-align: center">
@@ -239,14 +238,9 @@
   
       <xsp:expr>
         this.colorize(
-            this.xspParser.parse (
-              new FileReader(XSPUtil.relativeFilename(filename, request)),
-              filename
-            ),
-          document
+         this.xspParser.parse(new FileReader(filepath, filename), document
         )
       </xsp:expr>
-      <!-- That's all folks -->
     </body>
   </html>
 </xsp:page>

@@ -1,127 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE faq SYSTEM "./dtd/faq.dtd">
+<!DOCTYPE faqs SYSTEM "../dtd/faq-v10.dtd">
 
 <faqs title="Cocoon Frequently Asked Questions">
 
 <faq>
-<q>I don't find my question answered here, what do I do?</q>
-<a author="Stefano">
-  <p>First, checkout the Java Apache <a href="http://java.apache.org/faq/?file=54">FAQ-O-Matic</a>
-  that contains a Cocoon section. You may find what you're looking for there. If
-  not, you may consult the <a href="http://java.apache.org/main/mail.html#cocoon">mail
-  list digests and archives</a> (we are aware of the problems regarding lack of
-  searching capabilities in the mail list archive and, yes, we <i>are</i> trying
-  to solve them). Then, if your problem is still unresolved, you should send a
-  message describing your problem with very detailed information about your
-  system, your status and your issues and asking for advice.</p>
-  <p>Please, keep in mind that nobody gets paid to answer your questions and be
-  respectful of the time others are investing to answer you. Also, please,
-  respect individual privacy and time by submitting help requests only to the
-  mail lists and not directly to developers or individuals.</p>
-  <p>At the end, if you come up with a solution for your problem, please, don't
-  throw away your effort, share it with us by directly adding it to the FAQ-O-Matic
-  and post it to the mail list. Thanks.</p>
-</answer>
+ <question>How do I pipe my servlet output into Cocoon?</question>
+ <answer>
+  <p>Simple answer: <em>you don't!!!</em> read <connect href="dynamic.xml">this
+  document</connect> instead to find out equivalent ways to do what you need.</p>
+  <p>Complex answer: the Servlet API <em>was not</em> designed with servlet
+  chaining capabilities in mind. Servlet chaining was a night hack of the
+  original Java web server authors that allowed to pipe one servlet output
+  into the request of another. Currently (version 2.2) the Servlet API spec
+  doesn't allow a servlet to post-process the output of another servlet, so,
+  since Cocoon is a servlet, there is no portable way for it to call
+  your servlet and to process its output.</p>
+  <p>The Cocoon Project is in close contact with the Servlet API Expert Group at
+  Sun (being Stefano Mazzocchi a member of that board) and will propose 
+  post-processing hooks for inclusion in the next Servlet API specifications. 
+  Since this is work in progress, please, don't fill up the mail list with 
+  questions about this: Cocoon will reflect the API changes as soon as they 
+  are publicly available.</p>
+ </answer>
+</faq>
 
-<question>How do I pipe my servlet output into Cocoon?</strong></p>
-<answer>
-  <p>
-    Simple answer: <em>you don't!!!</em> read <a href="dynamic.html">this</a>
-    instead to find out equivalent ways to do what you need.<em><br>
-    <br>
-    </em>Complex answer: the Servlet API <em>was not</em> designed with servlet
-    chaining capabilities in mind. Servlet chaining was a night hack of the
-    original Java web server authors that allowed to pipe one servlet output
-    into the request of another. Currently (version 2.2) the Servlet API spec
-    doesn't allow a servlet to post-process the output of another servlet, so,
-    since Cocoon is a servlet, there is no portable way for it&nbsp; to call
-    your servlet and&nbsp; to process its output.<br>
-    <br>
-    The Cocoon Project is in close contact with the Servlet API Expert Group at
-    Sun (being Stefano Mazzocchi a member of that board) and will try to include
-    post-processing hooks in the next Servlet API specifications. Since this is
-    work in progress, please, don't fill up the mail list with questions about
-    this: Cocoon will reflect the API changes as soon as they are publicly
-    available.</p>
-</answer>
-<strong>Where do I get more information on XSL and XML?</strong>
-<answer>
+<faq>
+ <question>"Where do I get more information on XSL and XML?"</question>
+ <answer>
   <p>
     The web community is very exited about XML and XSL and many sources of
     information are coming up even if these languages are fairly new. Here is a list of
     locations you might be interested in to continue to gather resources on this
     state-of-the-art technology</p>
   <ul>
-    <li><a href="http://www.xml.org">http://www.xml.org</a> - A very nice site for XML
+    <li><link href="http://www.xml.org">http://www.xml.org</link> - A very nice site for XML
       information.</li>
-    <li><a href="http://www.w3.org/markup/xml/">http://www.w3.org/markup/xml/</a> - The XML
+    <li><link href="http://www.w3.org/markup/xml/">http://www.w3.org/markup/xml/</link> - The XML
       official home page at W3C</li>
-    <li><a href="http://www.w3.org/style/xsl">http://www.w3.org/style/xsl</a> - The XSL official
+    <li><link href="http://www.w3.org/style/xsl">http://www.w3.org/style/xsl</link> - The XSL official
       home page W3C</li>
-    <li><a href="http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html">http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html</a>
+    <li><link href="http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html">http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html</link>
       - XML Tutorial from IBM</li>
-    <li><a href="http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml">http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml</a>
+    <li><link href="http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml">http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml</link>
       - XSL Tutorial</li>
-    <li><a href="http://www.oasis-open.org/cover/xml.html">http://www.oasis-open.org/cover/xml.html</a>
-      -&nbsp; XML Resource Listing</li>
-    <li><a href="http://www.oasis-open.org/cover/xsl.html">http://www.oasis-open.org/cover/xsl.html</a>
+    <li><link href="http://www.oasis-open.org/cover/xml.html">http://www.oasis-open.org/cover/xml.html</link>
+      - XML Resource Listing</li>
+    <li><link href="http://www.oasis-open.org/cover/xsl.html">http://www.oasis-open.org/cover/xsl.html</link>
       - XSL Resource Listing</li>
-    <li><a href="http://www.xmlsoftware.com">http://www.xmlsoftware.com</a> -
+    <li><link href="http://www.xmlsoftware.com">http://www.xmlsoftware.com</link> -
       XML software listing</li>
-    <li><a href="http://www.xmlinfo.com">http://www.xmlinfo.com</a> - XML
+    <li><link href="http://www.xmlinfo.com">http://www.xmlinfo.com</link> - XML
       information updates on W3C status and others</li>
-    <li><a href="http://www.xslinfo.com">http://www.xslinfo.com</a> - XSL
+    <li><link href="http://www.xslinfo.com">http://www.xslinfo.com</link> - XSL
       information, updates, example stylesheets</li>
-    <li><a href="http://www.schema.net">http://www.schema.net</a> - Repository
+    <li><link href="http://www.schema.net">http://www.schema.net</link> - Repository
       of standard DTDs</li>
   </ul>
 </answer>
-<strong>The XSL book I found says the correct way of indicating the XSL stylesheet is by
+</faq>
+
+<faq>
+ <question>The XSL book I read says the correct way of indicating the XSL stylesheet is by
     using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
-    using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?</strong>
-<answer>
+    using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?
+ </question>
+ <answer>
   <p>The PI <code>&lt;?xml:stylesheet type=&quot;text/xsl&quot; href=&quot;&quot;?&gt;</code>
   is the old method of associating a stylesheet with an XML document. Unfortunately, this
   technology is rapidly changing and your books should warn you that the topic they are
   discussing is not even in W3C Recommendation state. Which means that more changes are on
-  their way.<br>
-  <br>
-  The current and proper way to associate a stylesheet with an XML document can be found at <a
-  href="http://www.w3.org/TR/xml-stylesheet">http://www.w3.org/TR/xml-stylesheet</a> and
+  their way.</p>
+  <p>The current and proper way to associate a stylesheet with an XML document can be found at 
+  <link href="http://www.w3.org/TR/xml-stylesheet">http://www.w3.org/TR/xml-stylesheet</link> and
   clearly indicates that <code>&lt;?xml-stylesheet ...?&gt;</code> is the proper way.</p>
-</answer>
-<strong>I think that using Processing Instructions to &quot;chain&quot;
+ </answer>
+</faq>
+
+<faq>
+ <question>
+    I think that using Processing Instructions to &quot;chain&quot;
     document layers somehow violates the context separation since I would like
     to be able to place style sensible information in sessions or request
-    parameters. What do you think about this?</strong>
-<answer>
+    parameters. What do you think about this?
+ </question>
+ <answer>
   <p>You are right, PI reaction breaks the context separation and it's, at the
     very end, the wrong approach. To follow a complete &quot;model, view,
     controller&quot; design pattern, one should be able to associate a different
     processing chain for each requested URI and for every possible request state
-    (with request parameters, session parameters and environment parameters).<br>
-    <br>
-    The proposed solution (as you read in the <a href="cocoon2.html">Cocoon2
-    outline</a>) is to have a regular expression based site map where site
+    (with request parameters, session parameters and environment parameters).</p>
+  <p>The proposed solution (as you read in the <connect href="cocoon2.xml">Cocoon2
+    outline</connect>) is to have a regular expression based site map where site
     managers decide what processing chain to apply to each possible request.
     This somehow follows the mod_rewrite model in the Apache Web Server, but
     rather than URL rewriting, the site map allows site designers to control the
     behavior of their documents in one place without having to modify every
-    single reactive PI in each source file.<br>
-    <br>
-    So, you've been warned: the PIs will go away, current functionality will
+    single reactive PI in each source file.</p>
+  <p>So, you've been warned: the PIs will go away, current functionality will
     remain but the processing management will be abstracted one layer up.</p>
 </answer>
-<strong>What is WAP and I do I browse WML?</strong>
+</faq>
+
+<faq>
+<question>What is WAP and I do I browse WML?</question>
 <answer>
-  <p>
-    WAP stands for Wireless Application Protocol and WML stands for Wireless
-    Markup Language. For more information about these two, please refer to the <a href="http://www.wapforum.org">WAP
-    Forum</a>. For a client able to browse WML 1.1 look for the <a href="http://www.nokia.com">Nokia
-    WAP Toolkit</a>.</p>
+  <p>WAP stands for Wireless Application Protocol and WML stands for Wireless
+    Markup Language. For more information about these two, please refer to the 
+    <link href="http://www.wapforum.org">WAP Forum</link>. For a client able 
+    to browse WML 1.1, Cocoon has been tested with the 
+    <link href="http://www.nokia.com">Nokia WAP Toolkit</link> which
+    emulates a Nokia WAP cell phone on your desktop.</p>
 </answer>
-<strong>When I compile Cocoon on my system, I get all a bunch of errors. What's wrong?</strong>
+</faq>
+
+<faq>
+<question>When I compile Cocoon on my system, I get all a bunch of errors. What's wrong?</question>
 <answer>
   <p>You probably didn't add all the needed packages to your compiler's
     classpath or used the wrong version of the servlet classes (Cocoon is
@@ -138,32 +132,22 @@
   makefiles after removing the unwanted wrapper classes for the packages you don't have or
   you don't want.</p>
 </answer>
-  <p><em>External XML entities don't get included in my documents. What's wrong?</em></p>
-<answer>
-  <p>This is a well known bug in Cocoon. External entities don't work if not
-  used in an absolute URL format, so you should either use an http:// or file://
-  URL with absolution location.</p>
-</answer>
-<p><em>My stylesheet doesn't sense the presence of my request parameters. How do
-I pass them to it?</em></p>
-<answer>
-  <p>&nbsp;Another well known bug. Cocoon is not yet able to pass request
-  parameters to the stylesheets. It will be fixed in future releases.</p>
-</answer>
-<strong>Why the name &quot;Cocoon&quot;?</strong>
-<answer>
-  <p>
-  (Cocoon's creator Stefano Mazzocchi answers): It's a pretty stupid reason and a funny
+</faq>
+
+<faq>
+ <question>Why the name &quot;Cocoon&quot;?</question>
+ <answer>
+  <p> (Cocoon's creator Stefano Mazzocchi answers): It's a pretty stupid reason and a funny
   story: I spent my 1998 Xmas vacation with my girlfriend up on the Alps at her cottage. One
-  night, I couldn't sleep and I woke up to watch some TV and finishing reading the XSL
+  night I couldn't sleep, I went to watch some TV and finishing reading the XSL
   documentation I brought with me. Being a science fiction <em>afficionado</em>, I found out
   that Ron Howard's movie Cocoon was on and I started watching it. The idea of the XSL
   rendering servlet stoke me like the alien &quot;cocoons&quot; in the pool stroke those old men in the
   movie and, while watching, I started paper-coding it right away. After a while the movie
   was over and the publishing framework designed. The name &quot;Cocoon&quot; seemed right
   for the thing, meaning to be a way to bring new life to old ideas as well as to create <em>cocoons</em>
-  for such new ideas to become beautiful butterflies. :-)<br>
-  </p>
+  for such new ideas to become beautiful butterflies. :-)</p>
 </answer>
+</faq>
 
 </faqs>

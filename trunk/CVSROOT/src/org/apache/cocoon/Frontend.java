@@ -1,4 +1,4 @@
-/*-- $Id: Frontend.java,v 1.3 1999-11-09 02:29:16 dirkx Exp $ -- 
+/*-- $Id: Frontend.java,v 1.4 1999-11-30 16:30:03 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * smart publishing behavior. (ECS may be used instead).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:16 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:03 $
  */
 
 public class Frontend {
@@ -141,7 +141,7 @@ public class Frontend {
             " </center>" +
             " <p align=\"center\">" +
             "   <font size=\"-1\">" +
-            "   Copyright (c) " + YEAR + " <a href=\"http://java.apache.org\">The Java Apache Project</a>.<br>" +
+            "   Copyright (c) " + YEAR + " <a href=\"http://xml.apache.org\">The Apache XML Project</a>.<br>" +
             "   All rights reserved. " +
             "  </font>" +
             " </p>" +

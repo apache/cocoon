@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="hello.page.vml.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<!-- Written by Theodore B. Achacoso <ted@groupserve.com> -->
+
+<page>
+ <title>Hello</title>
+ <content>
+  <paragraph>This is my first voice enabled Cocoon page!</paragraph>
+ </content>
+</page>

@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE page SYSTEM "./dtd/page.dtd">
+<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
 
-<page title="Cocoon">
- <authors>
-  <author name="Stefano Mazzocchi" email="stefano@apache.org"/>
- </authors>
+<?xml-stylesheet href="./stylesheet/simple.document.html.xsl" type="text/xsl"?>
 
- <section title="What is it?">
+<document>
+ <header>
+  <title>Cocoon</title>
+  <subtitle>XML Publishing Framework</subtitle>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="What is it?">	
   <p>
    Cocoon is a 100% pure Java publishing framework that relies on new W3C
    technologies (such as DOM, XML, and XSL) to provide web content.
@@ -26,9 +33,9 @@
    Read the <link href="technologies.html">Introduction on Cocoon
    technologies</link> white paper to find out more on the subject.
   </p>
- </section>
+ </s1>
  
- <section title="What does it do?">
+ <s1 title="What does it do?">
   <p>
    Web content generation is mostly based on HTML, but HTML doesn't separate
    the information from its presentation, mixing formatting tags, descriptive tags and
@@ -36,9 +43,9 @@
    allowing content, logic and style on different XML files and uses XSL transformation
    capabilities to merge them.
   </p>
- </section>
+ </s1>
  
- <section title="What does it change for me?">
+ <s1 title="What does it change for me?">
   <p>
    Even if the most common use of Cocoon is the automatic creation of HTML
    through the processing of statically or dynamically generated XML files, Cocoon is also
@@ -60,26 +67,26 @@
   <p>
    To do this, the Cocoon model divides the development of web content in three
    separate levels:
-   <list>
-    <item name="XML creation">
-     the XML file is created by the <em>content owners</em>. They do not
+  </p>
+  
+  <dl>
+    <dt>XML creation</dt>
+    <dd>the XML file is created by the <em>content owners</em>. They do not
      require specific knowledge on how the XML content is further processed rather than the
      particular chosen DTD/namespace. This layer is always performed by humans directly
-     through normal text editors or XML-aware tools/editors.
-    </item>
-    <item name="XML processing">
-     the requested XML file is processed and the logic contained in its 
+     through normal text editors or XML-aware tools/editors.</dd>
+    <dt>XML processing</dt>
+    <dd>the requested XML file is processed and the logic contained in its 
      logicsheet is applied. Unlike other dynamic content generators, the logic
-     is separated from the content file.
-    </item>
-    <item name="XSL rendering">the created document is then rendered by applying an XSL
-     stylesheet to it and formatting it to the specified resource type (HTML, PDF, XML, WML, XHTML)
-    </item>
-   </list>
-  </p>
- </section>
+     is separated from the content file.</dd>
+    <dt>XSL rendering</dt>
+    <dd>the created document is then rendered by applying an XSL
+     stylesheet to it and formatting it to the specified resource type 
+     (HTML, PDF, XML, WML, XHTML)</dd>
+  </dl>
+ </s1>
 
- <section title="Are there any known problems?">
+ <s1 title="Are there any known problems?">
   <p>
    The biggest known problem in this framework is the lack of XML/XSL
    knowledge, being relatively new formats. We do believe, though, that this publishing
@@ -112,7 +119,7 @@
    sites. In fact, the Cocoon projects aims to gather as much information as
    possible during it's first generation while its second generation, starting
    from Cocoon 2.0, will aim to be a usable and real-life publishing framework.
-   See the <link href="cocoon2.html">Cocoon 2 outline</link> to understand the 
+   See the <connect href="cocoon2.xml">Cocoon 2 outline</connect> to understand the 
    design plans already established.
   </p>
   <p>
@@ -122,16 +129,16 @@
    web browsers since the XSL rendering would be then
    performed on client side reducing the server work.
   </p>
- </section>
+ </s1>
 
- <section title="Where do I get it?">
+ <s1 title="Where do I get it?">
   <p>
-   Go to the <link href="http://java.apache.org/cocoon/dist/">download area</link>
+   Go to the <link href="http://xml.apache.org/dist/">download area</link>
    and be sure you read the release note in that page.
   </p>
- </section>
+ </s1>
  
- <section title="How do I Contribute?">
+ <s1 title="How do I Contribute?">
   <p>
    The Cocoon Project is an open volunteer project based on the spirit of the 
    <link href="http://www.apache.org">Apache Software Foundation</link> (ASF). 
@@ -147,7 +154,7 @@
    (follow the link for information on how to subscribe and to access the mail 
    list archives), to checkout the <link href="http://www.apache.com/cvsweb/index.cgi/cocoon/">
    latest and greatest code</link> (which you found in the xml-cocoon module in 
-   the xml.apache.org CVS code repository), control the <link href="todo.html">todo</link>
+   the xml.apache.org CVS code repository), control the <connect href="../todo.xml">todo</connect>
    list and jump in. Document writers are usually the most wanted people so if
    you like to help but you're not familiar with technical details, don't worry
    we have work for you.
@@ -172,5 +179,7 @@
   <p>
    Thank you very much.
   </p>
- </section>
-</page>
+  <img-block src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
+ </s1>
+ </body>
+</document>

@@ -1,58 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE todo SYSTEM "./docs/dtd/todo.dtd">
+<!DOCTYPE todo SYSTEM "./dtd/todo-v10.dtd">
+
+<!-- 
+  History of Cocoon changes
+  $Id: todo.xml,v 1.2 1999-11-30 16:29:50 stefano Exp $
+-->
 
 <todo title="Cocoon Things To Do">
-
- <action priority="high" assigned-to="Stefano">
-  Finish XML-ize the docs (changes.xml and faq.xml).
- </action>
-
- <action priority="high" assigned-to="Stefano">
-  Write the stylesheets for the docs.
- </action>
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
+  <person name="Ricardo Rocha" email="rrocha@plenix.org" id="RR"/>
+  <person name="Kenneth Murphy" email="murphyk@umsystem.edu" id="KM"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+ </devs>
  
- <action priority="high" assigned-to="Stefano">
-  Add support for Xalan e Xerces and new FOP.
+ <action priority="showstopper" assigned-to="SM" context="docs">
+  Finish XML-ize the docs (xsp-spec).
  </action>
 
- <action priority="high">
-  support external entities with relative URIs
+ <action priority="showstopper" assigned-to="SM" context="docs">
+  Write the stylesheets for the docs and traslations to stylebook DTD.
  </action>
 
- <action priority="high">
+ <action priority="showstopper" assigned-to="SM" context="docs">
+  Integrate docs with xml.apache.org.
+ </action>
+
+ <action priority="showstopper" context="code">
   pass request/session parameters to the XSLT processors for dynamic
-  stylesheet operation
+  stylesheet operation.
  </action>
 
- <action priority="medium" assigned-to="Stefano">
+ <action priority="showstopper" assigned-to="SM" context="build">
+  Finish Ant makefile to build instead of makefile.
+ </action>
+
+ <action priority="showstopper" assigned-to="SM" context="admin">
   Make sure you removed all the java.apache.org instances around.
  </action>
 
- <action priority="medium" assigned-to="Stefano">
+
+
+
+ <action priority="medium" assigned-to="SM" context="design">
+  Write SiteMap document.
+ </action>
+
+ <action priority="medium" assigned-to="SM" context="code">
   Play around with Tomcat.
  </action>
 
- <action priority="medium" assigned-to="Stefano|Pier">
+ <action priority="medium" assigned-to="SM" context="admin">
   Add the Cocoon2 branch with the Kali sources.
  </action>
 
- <action priority="medium" assigned-to="Stefano|Ricardo">
+ <action priority="medium" assigned-to="RR" context="code">
   Add the XSP compiler.
  </action>
 
- <action priority="medium" assigned-to="Pier|Stefano">
-  Write the NRG DTD WD and try to implement a formatter for this. (should we
-  create its own project? include with FOP?)
+ <action priority="medium" assigned-to="PF" context="design">
+  Merge stylebook technology with Cocoon
  </action>
  
- <action priority="medium">
+ 
+ 
+ 
+ 
+ <action priority="low" context="code">
   make the error page formatted with the wanted mime type and not only HTML
   (probably impossible in Cocoon1 model)
  </action>
- 
- <action priority="low" assigned-to="Stefano">
-  Use Ant to build instead of makefile.
- </action>
-   
+  
 </todo>

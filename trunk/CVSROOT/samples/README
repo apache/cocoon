@@ -9,11 +9,11 @@ how to XML-ize your web-serving environment.
       - hello ................. a simple hello world example
       - sites ................. some live Apache web sites XML-ized
       - fo .................... examples regarding XSL formatting objects
-      - wap ................... how to turn your site wireless ready
-      - multi ................. to show multiple xslt transformations
+      - wap ................... how to turn your site wireless ready with WML
+      - vml ................... how to turn your site voice ready with VoiceML
       - sql ................... how to XML-ize your legacy rational data
       - dcp ................... how to add dynamic PI evaluation
-      - xsp ................... examples to show XML compiled pages
+      - xsp ................... examples to show XML compiled server pages
 
 Filenames
 ---------
@@ -26,19 +26,19 @@ it doesn't indicate _which DTD_ the xml file is using.
 
 The pattern used in Cocoon's examples follows these rules:
 
- <name>.<doctype>.xml ....................... for XML files
- <name>.<from-doctype>.<to-doctype>.xsl ..... for XSLT transformation sheets
+ <name>-<doctype>.xml ....................... for XML files
+ <name>-<from-doctype>-<to-doctype>.xsl ..... for XSLT transformation sheets
  
 This allows you to understand without opening the file, if the stylesheet you
 are using matches and the processing pipe thus created is significant. For
 example, while the following is correct
 
-   correct.whatever.xml -> simple.whatever.somethingelse.xsl
+   correct-whatever.xml -> simple-whatever-somethingelse.xsl
    
 since the file "correct" uses the "whatever" doctype and the stylesheet "simple" 
 transforms "whatever" documents into "somethingelse" documents, this is not
 
-   wrong.whatever.xml -> simple.anything.somethingelse.xsl
+   wrong-whatever.xml -> simple-anything-somethingelse.xsl
    
 since the file "wrong" is a document of type "whatever" and the stylesheet
 "simple" doesn't know how to handle those documents but only "anything" 

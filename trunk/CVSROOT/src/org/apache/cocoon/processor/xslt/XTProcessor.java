@@ -1,4 +1,4 @@
-/*-- $Id: XTProcessor.java,v 1.3 1999-11-09 02:30:52 dirkx Exp $ -- 
+/*-- $Id: XTProcessor.java,v 1.4 1999-11-30 16:30:09 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,12 +77,9 @@ public class XTProcessor extends AbstractXSLTProcessor {
 
     public Document process(Document document, Dictionary parameters) throws Exception {
         try {
-            Document result=parser.createEmptyDocument();
-            
-            Transform transform = new XSLTransformEngine().createTransform(getStylesheet(document, parameters));
-
-            transform.transform(document, result);
-    
+            Document result = parser.createEmptyDocument();
+            Transform transformer = new XSLTransformEngine().createTransform(getStylesheet(document, parameters));
+            transformer.transform(document, result);
             return result;
         } catch(PINotFoundException e) {
             return document;
@@ -90,6 +87,6 @@ public class XTProcessor extends AbstractXSLTProcessor {
     }
 
     public String getStatus() {
-        return "XT XSLT Processor";
+        return "James Clark's XT XSLT Processor";
     }
 }

@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE page SYSTEM "./dtd/page.dtd">
+<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
 
-<page title="Dynamic XML in Cocoon">
- <linkuthors>
-  <linkuthor name="Stefano Mazzocchi" email="stefano@apache.org"/>
- </authors>
-
-<section title="Introduction">
+<document>
+ <header>
+  <title>Dynamic XML in Cocoon</title>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
+ <body>
+ 
+<s1 title="Introduction">
   <p>Web publishing is very limited without the ability to create
   dynamic content. For dynamic XML we refer to the content that is created as a
   function of request parameters or state of the requested resource. For this
   reason, a lot of work and design has been put into Cocoon to allow dynamic XML
   content to be generated.</p>
-</section>
+</s1>
 
-<section title="The Servlet/JSP model">
+<s1 title="The Servlet/JSP model">
   <p>People are used to write small Java programs to create their
   dynamic web content. Servlets, and Java in general, are very powerful, easy to
   write and fast to debug, but they impose (like any other pure-logic solution)
@@ -36,9 +40,9 @@
   dynamic XML content would be the perfect choice, unfortunately design issues
   impose that we take a second look to the technology and understand why this
   isn't so.</p>
-</section>
+</s1>
 
-<section title="Servlet Chaining Vs. Servlet Nesting">
+<s1 title="Servlet Chaining Vs. Servlet Nesting">
   <p>Java Servlets were introduced by the Java Web Server team as a
   way to allow users to create their own <em>web plug-ins</em>. They were designed
   to handle the HTTP protocol and all possible dynamic web content (including
@@ -57,9 +61,9 @@
   include a servlet output inside its own transparently. This allowed
   programmers to separate different logic on different servlets, thus removing
   the need for servlet chaining</p>
-</section>
+</s1>
 
-<section title="The limitations of Servlet Nesting">
+<s1 title="The limitations of Servlet Nesting">
   <p>While servlet nesting was a major advantage over servlet
   chaining because it allowed servlets to be somewhat modular without loosing
   the full API power, a common design pattern applies to the Servlet model in
@@ -74,9 +78,9 @@
   
   <p>In a few words, the Servlet API doesn't support <em>Servlet
   Piping</em>.</p>
-</section>
+</s1>
 
-<section title="The Cocoon model">
+<s1 title="The Cocoon model">
   <p>Rather than turning Cocoon into a servlet engine, thus
   limiting its portability, this documents outlines some solutions that allow
   Cocoon users to get the servlet-equivalent functionality with internal Cocoon
@@ -84,20 +88,20 @@
   
   <p>The Cocoon processing model is based on the separation of</p>
   
-  <list>
-    <item name="Production">where XML content is generated based on Request parameters (servlet equivalent)</item>
-    <item name="Processing">where the produced XML content is transformed/evaluated</item>
-    <item name="Formatting">where the XML content is finally formatted into the wanted output format for client use.</item>
-  </list>
+  <ul>
+    <li><strong>Production</strong>where XML content is generated based on Request parameters (servlet equivalent)</li>
+    <li><strong>Processing</strong>where the produced XML content is transformed/evaluated</li>
+    <li><strong>Formatting</strong>where the XML content is finally formatted into the wanted output format for client use.</li>
+  </ul>
   
   <p>This separation of working contexts allows Cocoon users to
   implement their own internal modules to add the functionality they require to
   the whole publishing system. In fact, while a few of these components are
   already shipped with Cocoon, the highly modular structure allows you to build
   your own to fit your particular needs.</p>
-</section>
+</s1>
 
-<section title="Writing Producers">
+<s1 title="Writing Producers">
   <p>Producers initiate the request handling phase. They are
   responsible to evaluate the HttpServletRequest parameters provided and create
   XML content that is fed into the processing reactor. A servlet logic should be
@@ -108,16 +112,16 @@
   <p>Here follows the code for an example producer distributed with
   Cocoon:</p>
   
-<source><![CDATA[
+<source>
 public class DummyProducer extends AbstractProducer implements Status {
           
-  String dummy = "<?xml version=\"1.0\"?>" 
-      + "<?cocoon:format type=\"text/html\"?>"
-      + "<html><body>"
-      + "<h1 align=\"center\">"
+  String dummy = "&lt;?xml version=\"1.0\"?&gt;" 
+      + "&lt;?cocoon:format type=\"text/html\"?&gt;"
+      + "&lt;html&gt;&lt;body&gt;"
+      + "&lt;h1 align=\"center\"&gt;"
           + "Hello from a dummy page"
-      + "</h1>"
-      + "</body></html>";
+      + "&lt;/h1&gt;"
+      + "&lt;/body&gt;&lt;/html&gt;";
       
   public Reader getStream(HttpServletRequest request) throws IOException {
       return new StringReader(dummy);
@@ -131,7 +135,7 @@ public class DummyProducer extends AbstractProducer implements Status {
       return "Dummy Producer";
   }
 }
-]]></source>
+</source>
 
   <p>The key method is <code>getStream()</code> which is responsible to create
   process the given servlet request and provide an output stream for reading the
@@ -142,11 +146,11 @@ public class DummyProducer extends AbstractProducer implements Status {
   you servlet code Cocoon-aware, the above example should tell you what to do.</p>
   
   <p>Please, look at the shipped producers source code for example
-  code and look at the <link href="guide.html">user guide</link> on how to install and
+  code and look at the <connect href="guide.xml">user guide</connect> on how to install and
   use your own producers.</p>
-</section>
+</s1>
 
-<section title="Writing Processors">
+<s1 title="Writing Processors">
   <p>If your servlet needs many parameters to work, it is more
   reasonable that you write a Processor instead. A Processor transforms a given
   XML document (which, in this case should contain the needed static parameters)
@@ -158,55 +162,55 @@ public class DummyProducer extends AbstractProducer implements Status {
   it may have been produced from a file, from other sources or dynamically, see
   the above paragraph):</p>
   
-<source><![CDATA[
-<?xml version="1.0"?>
-<page>
- <p>Current time is <time/></p>
-</page>
-]]></source>
+<source>
+&lt;?xml version="1.0"?&gt;
+&lt;page&gt;
+ &lt;p&gt;Current time is &lt;time/&gt;&lt;/p&gt;
+&lt;/page&gt;
+</source>
   
   <p>Our simple example processor will look for the %lg;time/%gt; tags and will 
   expand them to the current local time, creating this result document:</p>
   
-<source><![CDATA[
-<?xml version="1.0"?>
-<page>
- <p>Current time is 6:48PM</p>
-</page>
-]]></source>
+<source>
+&lt;?xml version="1.0"?&gt;
+&lt;page&gt;
+ &lt;p&gt;Current time is 6:48PM&lt;/p&gt;
+&lt;/page&gt;
+</source>
             
   <p>Please, look at the shipped processors source code for example
-  code and look at the <link href="guide.html">user guide</link> on how to install and
+  code and look at the <connect href="guide.xml">user guide</connect> on how to install and
   use your own processors.</p>
-</section>
+</s1>
 
-<section title="Using Cocoon processors">
+<s1 title="Using Cocoon processors">
   <p>The above example shows a very simple situation but needs
   non-trivial code to implement it. For this reason, the Cocoon distribution
   includes a number of processors that implement common needs and situations.
   These are:</p>
   
-  <list>
-    <item name="The XSLT processor">
+  <ul>
+    <li><strong>The XSLT processor</strong>
       the <em>XSLT</em> processor that applies XSLT
       transformations to the input document. XSLT allows you to solve your
       transformation needs as well as simple tag evaluation/processing due to
-      its extensible and programmable nature.</item>
-    <item name="The DCP processor">
+      its extensible and programmable nature.</li>
+    <li><strong>The DCP processor</strong>
       the <em>DCP</em> processor that evaluates XML processing
       instructions with multi-language (Java and EcmaScript) logic. This
       processor allows you to do programmatic substitution and inclusion
-      eliminating the need for complex processing logic. See the <link href="dcpprocessor.html">DCP
-      user guide</link> for more information.</item>
-    <item name="The SQL processor">
+      eliminating the need for complex processing logic. See the <connect href="dcpprocessor.xml">DCP
+      user guide</connect> for more information.</li>
+    <li><strong>The SQL processor</strong>
       the <em>SQL</em> processor that evaluates simple tags
       describing SQL queries to JDBC drivers and formats their result-set in XML
-      depending on given parameters. See the <link href="sqlprocessor.html">SQL
-      processor user guide</link> for more information.</item>
+      depending on given parameters. See the <connect href="sqlprocessor.html">SQL
+      processor user guide</connect> for more information.</li>
   </ul>
-</section>
+</s1>
 
-<section title="Future plans">
+<s1 title="Future plans">
   <p>While the above represents a complete set of usable components
   for dynamic XML content generation, the Cocoon project aims to separate all
   three layers (content, logic and style). While XSLT transformations allow a
@@ -214,9 +218,9 @@ public class DummyProducer extends AbstractProducer implements Status {
   separation between content and logic in dynamically generated XML pages is not
   achieved with current Cocoon features.</p>
   
-  <p>To fill this whole, the <link href="xsp/WD-xsp.html">XSP
-  (eXtensible Server Pages) technology</link> was proposed. While in the <em>working
+  <p>To fill this whole, the <connect href="xsp/WD-xsp.xml">XSP
+  (eXtensible Server Pages) technology</connect> was proposed. While in the <em>working
   draft</em> stage, we strongly believe that some of the issues expressed in that
   specification will be keys to the future of dynamic XML.</p>
-</section>
-</page>
+</s1>
+</body></document>

@@ -1,4 +1,4 @@
-/*-- $Id: Parser.java,v 1.3 1999-11-09 02:30:35 dirkx Exp $ -- 
+/*-- $Id: Parser.java,v 1.4 1999-11-30 16:30:08 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -48,10 +48,12 @@
  Software Foundation, please see <http://www.apache.org/>.
  
  */
+
 package org.apache.cocoon.parser;
 
 import java.io.*;
 import org.w3c.dom.*;
+import org.xml.sax.*;
 import org.apache.cocoon.framework.*;
 
 /**
@@ -59,15 +61,16 @@ import org.apache.cocoon.framework.*;
  * parsing capabilites in order to be used by Cocoon.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:35 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:08 $
  */
 
 public interface Parser extends Actor {
     
     /**
-     * Creates a DOM tree parsing the given input stream.
+     * Creates a DOM tree parsing the given input source and using the 
+     * given entity resolver.
      */
-    public Document parse(Reader in, String sourceURI) throws IOException;
+    public Document parse(InputSource input) throws SAXException, IOException;
     
     /**
      * Creates an empty DOM tree.

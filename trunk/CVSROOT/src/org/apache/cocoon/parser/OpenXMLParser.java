@@ -1,4 +1,4 @@
-/*-- $Id: OpenXMLParser.java,v 1.3 1999-11-09 02:30:33 dirkx Exp $ -- 
+/*-- $Id: OpenXMLParser.java,v 1.4 1999-11-30 16:30:08 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -48,32 +48,43 @@
  Software Foundation, please see <http://www.apache.org/>.
  
  */
+ 
 package org.apache.cocoon.parser;
 
 import java.io.*;
 import org.w3c.dom.*;
-import org.openxml.*;
+import org.xml.sax.*;
+import org.openxml.dom.*;
 import org.openxml.parser.*;
 import org.apache.cocoon.framework.*;
 
 /**
- * This class implements an XML parser using the OpenXML parser.
+ * This class implements an XML parser using the OpenXML 1.1 parser.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:33 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:08 $
  */
 
-public class OpenXMLParser extends AbstractActor implements Parser, Status {
+public class OpenXMLParser extends AbstractParser implements Status {
 
-    public Document parse(Reader in, String sourceURI) throws IOException {
-    	return new XMLParser(in, sourceURI).parseDocument();
+    /**
+     * Creates a DOM tree parsing the given input source.
+     */
+    public Document parse(InputSource input) throws SAXException, IOException {
+        XMLParser parser = new XMLParser();
+        // parser.setEntityResolver(resolver);
+        parser.parse(input);
+        return parser.getDocument();
     }
     
+    /**
+     * Creates an empty DOM tree.
+     */
     public Document createEmptyDocument() {
-        return new XMLDocument();
+        return new DocumentImpl();
     }
     
     public String getStatus() {
-        return "<b>OpenXML Parser</b>";
+        return "OpenXML 1.1 XML Parser";
     }
 }

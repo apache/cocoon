@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.3 1999-11-09 02:29:11 dirkx Exp $ -- 
+/*-- $Id: Engine.java,v 1.4 1999-11-30 16:30:03 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -71,7 +71,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:11 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:03 $
  */
 
 public class Engine implements Defaults {
@@ -104,7 +104,7 @@ public class Engine implements Defaults {
         manager.setRole("factory", manager);
 
         // Create the parser and register it
-        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP, PARSER_DEFAULT));
+        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP, PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
         manager.setRole("parser", parser);
 
         // Create the store and register it
@@ -202,13 +202,12 @@ public class Engine implements Defaults {
             environment.put("request", request);
 
             // process the document through the document processors
-            try {
-                while (true) {
-                    Processor processor = processors.getProcessor(document);
-                    document = processor.process(document, environment);
-                    page.setChangeable(processor);
-                }
-            } catch (RuntimeException processingDone) {}
+            while (true) {
+                Processor processor = processors.getProcessor(document);
+                if (processor == null) break;
+                document = processor.process(document, environment);
+                page.setChangeable(processor);
+            }
             
             // get the right formatter for the page
             Formatter formatter = formatters.getFormatter(document);
@@ -257,7 +256,7 @@ public class Engine implements Defaults {
         // cache the created page.
         cache.setPage(page, request);
     }
-
+    
     /**
      * Returns the value of the request flag
      */

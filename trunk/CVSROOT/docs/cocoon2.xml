@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE page SYSTEM "./dtd/page.dtd">
+<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
 
-<page title="Cocoon 2">
- <authors>
-  <author name="Stefano Mazzocchi" email="stefano@apache.org"/>
- </authors>
+<document>
+ <header>
+  <title>Cocoon 2</title>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
 
-<section title="Introduction">
+ <body>
+ <s1 title="Introduction">
   <p>The Cocoon Project has gone a long way since it's creation on
   January 1999. It started as a simple servlet for static XSL styling and became
   more and more powerful as new features were added. Unfortunately, design
@@ -26,9 +30,9 @@
   <p>In an era where services rather than software will be key for
   economical success, a better and less expensive model for web publishing will
   be a winner, especially if based on open standards.</p>
-</section>
+ </s1>
 
-<section title="Passive APIs vs. Active APIs">
+ <s1 title="Passive APIs vs. Active APIs">
   <p>Web serving environments must be fast and scalable to be
   useful. Cocoon1 was born as a &quot;proof of concept&quot; rather than a
   production software and had significant design restrictions based mainly on
@@ -57,43 +61,48 @@
   formatted in the response stream. This has significant impacts on performance
   and memory needs:</p>
   
-  <list>
-    <item name="">
-      <p><em>incremental operation</em>: the response is created
+  <ul>
+    <li>
+      <strong>incremental operation</strong>: the response is created
       during document production. Client's perceived performance is dramatically
       improved since clients can start receiving data as soon as it is created,
       not after all processing stages have been performed. In those cases where
       incremental operation is not possible (for example, element sorting),
       internal buffers store the events until the operation can be performed.
       However, even in these cases performance can be increased with the use of
-      tuned memory structures.</item>
-    <item name="">
-      <p><em>lowered memory consumption</em>: since most of the
+      tuned memory structures.
+    </li>
+    <li>
+      <strong>lowered memory consumption</strong>: since most of the
       server processing required in Cocoon is incremental, an incremental model
       allows XML production events to be transformed directly into output events
       and character written on streams, thus avoiding the need to store them in
-      memory.</item>
-    <item name="">
-      <p><em>easier scalability</em>: reduce memory needs allow more
+      memory.
+    </li>
+    <li>
+      <strong>easier scalability</strong>: reduce memory needs allow more
       concurrent operation to be possible, thus allowing the publishing system
-      to scale as the load increases.</item>
-    <item name="">
-      <p><em>more optimizable code model</em>: modern virtual
+      to scale as the load increases.
+    </li>
+    <li>
+      <strong>more optimizable code model</strong>: modern virtual
       machines are based on the idea of <em>hot spots</em>, code fragments that
       are used often and, if optimized, increase the process execution by far.
       This new event model allows easier detection of hot spots since it's a
       method driven operation, rather than a memory driven one. Hot methods can
-      be identified earlier and their optimization performed better.</item>
-    <item name="">
-      <p><em>reduced garbage collection</em>: even the most advanced
+      be identified earlier and their optimization performed better.
+    </li>
+    <li>
+      <strong>reduced garbage collection</strong>: even the most advanced
       and lightweight DOM implementation require at least three to five times
       (and sometimes much more than this) more memory than original document
       size. This does not only reduce the scalability of the operation, but also
       impact overall performance by increasing the number of memory garbage that
       must be collected after the response in sent to the client. Even if modern
       virtual machines reduced the overhead of garbage collection, less garbage
-      will always have performance and scalability impacts.</item>
-  </list>
+      will always have performance and scalability impacts.
+    </li>
+  </ul>
   
   <p>The above points, alone, would be enough for the Cocoon2
   paradigm shift, even if this event based model impacts not only the general
@@ -102,9 +111,9 @@
   require substantial work and maybe design reconsideration to be able to follow
   a pure event-based model. The Cocoon Project will work closely with the other
   component projects to be able to influence their operation in this direction.</p>
-</section>
+</s1>
 
-<section title="Reactors Reconsidered">
+<s1 title="Reactors Reconsidered">
   <p>Another design choice that should be revised is the reactor
   pattern that was introduced to allow components to be connected in more
   flexible way. In fact, opposed to the fixed pipe model used up to Cocoon
@@ -119,9 +128,9 @@
   
   <p>But even if the technical difficulties are solved, a key limitation
   remains: there is no single point of management.</p>
-</section>
+</s1>
 
-<section title="Management Considerations">
+<s1 title="Management Considerations">
   <p>The web was created to reduce information management costs by
   distributing them back on information owners. While this model is great for
   user communities (scientists, students, employees, or people in general) each
@@ -153,38 +162,46 @@
   <p>The model that Cocoon2 adopts is the &quot;pyramid model of
   web contracts&quot; which is outlined in the picture below</p>
   
-  <image src="images/pyramid-model.gif" title="The Cocoon2 Pyramid Model of Contracts">
+  <p><img src="images/pyramid-model.gif" alt="The Cocoon2 Pyramid Model of Contracts"/></p>
   
   <p>and is composed by four different working contexts (the rectangles)</p>
   
-  <list>
-    <item name="Management">
+  <dl>
+    <dt>Management</dt>
+    <dd>
       the people that decide what the site should
-      contain, how it should behave and how it should appear</item>
-    <item name="Conten">
+      contain, how it should behave and how it should appear
+    </dd>
+    <dt>Content</dt>
+    <dd>
       the people responsible to write, own and manage
       the site content. This context may contain several sub-contexts one
-      for each language used to express page content.</item>
-    <item name="Logi">
+      for each language used to express page content.
+    </dd>
+    <dt>Logic</dt>
+    <dd>
       the people responsible for integration with dynamic
-      content generation technologies and database systems.</item>
-    <item name="Style">
+      content generation technologies and database systems.
+    </dd>
+    <dt>Style</dt>
+    <dd>
       the people responsible for information
-      presentation, look &amp; feel, site graphics and its maintenance.</item>
-  </list>
+      presentation, look &amp; feel, site graphics and its maintenance.
+    </dd>
+  </dl>
   
   <p>and five contracts contexts (the lines)</p>
   
-  <list>
-    <item>management - content</item>
-    <item>management - logic</item>
-    <item>management - style</item>
-    <item>content - logic</item>
-    <item>content - style</item>
-  </list>
-</section>
+  <ul>
+    <li>management - content</li>
+    <li>management - logic</li>
+    <li>management - style</li>
+    <li>content - logic</li>
+    <li>content - style</li>
+  </ul>
+</s1>
 
-<section title="Overlapping contexts and Chain Mapping">
+<s1 title="Overlapping contexts and Chain Mapping">
   <p>The above model can be applied only if the different contexts
   never overlap, otherwise there is no chance of having a single management
   point. For example, if the W3C-recommended method to link stylesheets to XML
@@ -214,9 +231,9 @@
   into processors directly (XSLT stylesheet compilation) or compiled into
   producers using logicsheets and XSP which will remove totally the need for
   request-time interpretation solutions like DCP that will be removed.</p>
-</section>
+</s1>
 
-<section title="Pre-compilation, Pre-generation and Caching">
+<s1 title="Pre-compilation, Pre-generation and Caching">
   <p>The cache system in Cocoon1 will be ported with no important
   design changes since it's very flexible and was not polluted by early design
   constraints since it appeared in later versions. The issue regards static file
@@ -242,14 +259,15 @@
   <p>Also, it will be possible to avoid on-fly page and stylesheet
   compilation (which make debugging harder) with command line pre-compilation
   hooks that will work like normal compilers from a developer's point of view.</p>
-</section>
+</s1>
 
-<section title="Conclusions">
+<s1 title="Conclusions">
   <p>Cocoon2 is a big and very ambitious project, not only for the
   technological issues involved (which will require strong integration with XML
   components) but also for the significant paradigm shifts imposed by the new
   technologies. On the other hand, we strongly believe this to be the winner
   model for future web engineering and if you believe in this yourself, we
   invite you to join us or help us in any way you can provide.</p>
-</section>
-</page>
+</s1>
+</body>
+</document>

@@ -1,4 +1,4 @@
-/*-- $Id: CocoonCache.java,v 1.3 1999-11-09 02:29:28 dirkx Exp $ -- 
+/*-- $Id: CocoonCache.java,v 1.4 1999-11-30 16:30:04 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.framework.*;
  * statically and dynamically generated.
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $Date: 1999/11/09 02:20:50 $
+ * @version $Revision: 1.4 $Date: 1999/11/09 02:29:28 $
  */
 public class CocoonCache implements Cache, Status {
 
@@ -110,6 +110,6 @@ public class CocoonCache implements Cache, Status {
     }
 
     public String getStatus() {
-        return "<b>Cocoon Dynamic Cache System</b>";
+        return "Cocoon Dynamic Cache System";
     }
 }

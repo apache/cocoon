@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE page SYSTEM "./dtd/page.dtd">
+<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
 
-<page title="SQLProcessor User Guide">
- <authors>
-  <author name="Donald A. Ball Jr." email="balld@webslingerz.com"/>
- </authors>
+<document>
+ <header>
+  <title>SQLProcessor User Guide</title>
+  <authors>
+   <person name="Donald A. Ball Jr." email="balld@apache.org"/>
+  </authors>
+ </header>
 
- <section title="Introduction">
-  <p>Yet to be XML-ized!</p>
- </section>
-</page>
+ <body>
+  <s1 title="Introduction">
+   <p>Yet to be XML-ized!</p>
+  </s1>
+ </body>
+</document>

@@ -1,4 +1,4 @@
-/*-- $Id: AbstractXSLTProcessor.java,v 1.3 1999-11-09 02:30:50 dirkx Exp $ -- 
+/*-- $Id: AbstractXSLTProcessor.java,v 1.4 1999-11-30 16:30:09 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,17 +55,20 @@ import java.net.*;
 import java.util.*;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
-import org.apache.cocoon.*;
 import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.processor.*;
 import org.apache.cocoon.framework.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.EntityResolver;
+import org.apache.cocoon.Utils;
+import org.apache.cocoon.Defaults;
 
 /**
  * This class abstracts the XSL processor interface.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:50 $
+ * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:09 $
  */
 
 public abstract class AbstractXSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -135,13 +138,16 @@ public abstract class AbstractXSLTProcessor implements Actor, Processor, Status,
     }
 
     private Document getDocument(Object resource) throws Exception {
+        InputSource input = new InputSource();
         if (resource instanceof File) {
-            return this.parser.parse(new FileReader((File) resource), null);
+            input.setCharacterStream(new FileReader((File) resource));
         } else if (resource instanceof URL) {
-            return this.parser.parse(new InputStreamReader(((URL) resource).openStream()), null);
+            input.setCharacterStream(new InputStreamReader(((URL) resource).openStream()));
         } else {
             throw new ProcessorException("Could not handle resource: " + resource);
         }
+        
+        return this.parser.parse(input);
     }
     
     private Hashtable getStylesheetsForBrowsers(Document document, String path) throws MalformedURLException {

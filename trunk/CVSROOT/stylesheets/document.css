@@ -1,0 +1,105 @@
+/*
+
+   Documentation Stylesheet
+   
+   Based on W3C Specification Stylesheet.
+   
+   Written by Stefano Mazzocchi <stefano@apache.org>
+
+   $Id: document.css,v 1.1 1999-11-30 16:30:11 stefano Exp $
+*/
+
+/* Document-wide style ---------------------------------------------- */
+
+BODY {
+  margin: 2em 2em 2em 2em;
+  font-family: sans-serif;
+  color: black;
+  background: white;
+  background-position: top left;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Header ----------------------------------------------------------- */
+
+DIV.header { margin-bottom: 1em }
+DIV.header H1 { text-align: center }
+DIV.header H2 { text-align: center }
+DIV.header H3 { text-align: center }
+
+/* Body ------------------------------------------------------------- */
+
+DIV.body { margin-botton: 1em }
+
+/* Footer ----------------------------------------------------------- */
+
+DIV.footer { margin-botton: 1em }
+
+/* Blocks ----------------------------------------------------------- */
+
+H1, H2, H3, H4, H5 {
+  text-align: left;
+  font-family: sans-serif;
+  font-weight: normal;
+  margin-top: 0.6em; 
+  margin-bottom: 0;
+  color: #0050B2; 
+}
+
+P { 
+  text-align: justify; 
+}
+
+P.img-block { 
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+P.list { margin-left: 1em; margin-top: 1em }
+P.legal { font-size: small }
+P.source { margin-left: 2em }
+P.note { border: solid thin; margin-left: 1em }
+P.first:first-letter { color: #0050B2; font-size: 200% }
+
+PRE { font-family: monospace; margin-left: 2em }
+
+/* Text ------------------------------------------------------------- */
+
+EM { font-size: 100%; font-weight: normal; font-style: normal; }
+
+/* Links ------------------------------------------------------------ */
+
+A:link { color: #0050B2 }   /* unvisited link */
+A:visited { color: blue }   /* visited links */
+A:active { color: red }     /* active links */
+                  
+/* Lists ------------------------------------------------------------ */
+
+DT, DD { margin-top: 0; margin-bottom: 0; text-align: justify }
+DT { font-weight: bold }
+LI { text-align: justify } 
+
+/* Table ------------------------------------------------------------ */
+
+TH, TD {
+  font-family: sans-serif;
+}
+
+/* Screen media ----------------------------------------------------- */
+
+@media screen {
+}
+
+/* Aural media ------------------------------------------------------ */
+
+@media aural {  
+  H1, H2, H3 { stress: 20; richness: 90 }
+  .hide { speak: none }
+  P.legal { volume: x-soft; speech-rate: x-fast }
+  DT { pause-before: 20% }
+  PRE { speak-punctuation: code } 
+}
+
+/* end of stylesheet ------------------------------------------------ */
