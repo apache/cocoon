@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- The CForms Model for editing an advanced query -->
+<!-- $Id: advanced-model.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<fd:form 
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+>
+
+  <fd:widgets>
+
+    <fd:messages id="messages">
+      <fd:label><i18n:text i18n:catalogue="local">message.label</i18n:text></fd:label>
+    </fd:messages>
+
+		<fd:output id="id">
+			<fd:datatype base="string"/>
+		</fd:output>
+
+		<fd:field id="name" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">query.name.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">query.name.hint</i18n:text></fd:hint>
+			<fd:datatype base="string"/>
+		</fd:field>
+
+		<fd:output id="type">
+			<fd:datatype base="string"/>
+		</fd:output>
+
+		<fd:field id="bool" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">query.bool.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">query.bool.hint</i18n:text></fd:hint>
+			<fd:datatype base="string"/>
+			<!-- the @value(s) of this selection-list are bound to SimpleLuceneQuery -->
+			<fd:selection-list>
+				<fd:item value="or">
+					<fd:label><i18n:text i18n:catalogue="local">search.or.bool</i18n:text></fd:label>
+				</fd:item>
+				<fd:item value="and">
+					<fd:label><i18n:text i18n:catalogue="local">search.and.bool</i18n:text></fd:label>
+				</fd:item>
+			</fd:selection-list>
+		</fd:field>
+
+		<fd:field id="size" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">paging.size.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">paging.size.hint</i18n:text></fd:hint>
+			<fd:datatype base="long"/>
+			<fd:selection-list>
+				<fd:item value="10"/>
+				<fd:item value="20"/>
+				<fd:item value="30"/>
+				<fd:item value="40"/>
+				<fd:item value="50"/>
+			</fd:selection-list>
+		</fd:field>
+
+		<fd:field id="page" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">paging.page.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">paging.page.hint</i18n:text></fd:hint>
+			<fd:datatype base="long"/>
+		</fd:field>
+
+		<fd:output id="total">
+			<fd:label><i18n:text i18n:catalogue="local">paging.total.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">paging.total.hint</i18n:text></fd:hint>
+			<fd:datatype base="long"/>
+		</fd:output>
+
+		<fd:submit id="cancel" action-command="cancel" validate="false">
+			<fd:label><i18n:text i18n:catalogue="local">cancel.label</i18n:text></fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">cancel.hint</i18n:text></fd:hint>
+		</fd:submit> 
+
+		<fd:submit id="submit" action-command="submit" validate="true">
+			<fd:label><i18n:text i18n:catalogue="local">submit.label</i18n:text></fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">submit.hint</i18n:text></fd:hint>
+		</fd:submit> 
+
+    <fd:repeater id="criteria">
+      <fd:widgets>
+        
+        <fd:field id="value" required="true">
+          <fd:label><i18n:text i18n:catalogue="local">criterion.value.label</i18n:text>: </fd:label>
+          <fd:hint><i18n:text i18n:catalogue="local">criterion.value.hint</i18n:text></fd:hint>
+					<fd:datatype base="string"/>
+        </fd:field>
+				
+				<fd:field id="field" required="true">
+					<fd:label><i18n:text i18n:catalogue="local">criterion.field.label</i18n:text>: </fd:label>
+					<fd:hint><i18n:text i18n:catalogue="local">criterion.field.hint</i18n:text></fd:hint>
+					<fd:datatype base="string">
+						<fd:validation>
+							<fd:length min="2" max="64"/>
+						</fd:validation>
+					</fd:datatype>
+					<fd:selection-list src="screens/advanced-fields.xml"/>
+				</fd:field>
+
+				<fd:field id="match" required="true">
+					<fd:label><i18n:text i18n:catalogue="local">criterion.match.label</i18n:text>: </fd:label>
+					<fd:hint><i18n:text i18n:catalogue="local">criterion.match.hint</i18n:text></fd:hint>
+					<fd:datatype base="string"/>
+					<!-- the @value(s) of this selection-list are bound to SimpleLuceneCriterion -->
+					<fd:selection-list>
+						<fd:item value="any">
+							<fd:label><i18n:text i18n:catalogue="local">search.any.match</i18n:text></fd:label>
+						</fd:item>
+						<fd:item value="all">
+							<fd:label><i18n:text i18n:catalogue="local">search.all.match</i18n:text></fd:label>
+						</fd:item>
+						<fd:item value="like">
+							<fd:label><i18n:text i18n:catalogue="local">search.like.match</i18n:text></fd:label>
+						</fd:item>
+						<fd:item value="phrase">
+							<fd:label><i18n:text i18n:catalogue="local">search.phrase.match</i18n:text></fd:label>
+						</fd:item>
+						<fd:item value="not">
+							<fd:label><i18n:text i18n:catalogue="local">search.not.match</i18n:text></fd:label>
+						</fd:item>
+					</fd:selection-list>
+				</fd:field>
+
+				<fd:row-action id="delete" action-command="delete">
+					<fd:label><i18n:text i18n:catalogue="local">criterion.delete.label</i18n:text></fd:label>
+					<fd:hint><i18n:text i18n:catalogue="local">criterion.delete.hint</i18n:text></fd:hint>
+				</fd:row-action>
+
+      </fd:widgets>
+    </fd:repeater>
+    
+    <fd:repeater-action id="addcriterion" action-command="add-row" repeater="criteria">
+      <fd:label><i18n:text i18n:catalogue="local">criterion.add.label</i18n:text></fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">criterion.add.hint</i18n:text></fd:hint>
+    </fd:repeater-action>
+    
+  </fd:widgets>
+</fd:form>

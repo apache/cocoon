@@ -30,11 +30,11 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.8 2004/05/26 08:39:49 cziegeler Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.9 2004/06/21 10:00:23 jeremy Exp $
  */
 
 public final class ContextHelper {
-
+		
     /** Application <code>Context</code> Key for the current object model */
     public static final String CONTEXT_OBJECT_MODEL = "object-model";
 

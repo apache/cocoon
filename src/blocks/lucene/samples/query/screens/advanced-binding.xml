@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- The CForms Binding for editing an advanced query -->
+<!-- $Id: advanced-binding.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<fb:context 
+	xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	path="/"
+	>
+	
+  <fb:value id="name" path="name"/>
+  <fb:value id="type" path="type"/>
+  <fb:value id="bool" path="bool"/>
+
+  <fb:value id="size" path="size"/>
+  <fb:value id="page" path="page"/>
+  <fb:value id="total" path="total"/>
+
+  <fb:repeater id="criteria" parent-path="." row-path="criteria">
+  	<fb:identity><fb:value path="value" id="value"/></fb:identity>
+
+		<fb:on-bind>
+			<fb:value id="value" path="value"/>
+			<fb:value id="field" path="field"/>
+			<fb:value id="match" path="match"/>
+		</fb:on-bind>
+		
+    <fb:on-delete-row>
+      <fb:delete-node/>
+    </fb:on-delete-row>
+    <fb:on-insert-row>
+			<fb:insert-bean classname="org.apache.cocoon.bean.query.SimpleLuceneCriterionBean" addmethod="addCriterion"/>
+    </fb:on-insert-row>
+
+  </fb:repeater>
+
+</fb:context>

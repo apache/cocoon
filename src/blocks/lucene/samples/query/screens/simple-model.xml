@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- The CForms Model for editing a simple query -->
+<!-- $Id: simple-model.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+
+    <fd:messages id="messages">
+      <fd:label><i18n:text i18n:catalogue="local">message.label</i18n:text></fd:label>
+    </fd:messages>
+
+		<fd:output id="id">
+			<fd:datatype base="string"/>
+		</fd:output>
+
+		<fd:field id="name" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">query.name.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">query.name.hint</i18n:text></fd:hint>
+			<fd:datatype base="string"/>
+		</fd:field>
+
+		<fd:output id="type">
+			<fd:datatype base="string"/>
+		</fd:output>
+
+		<fd:output id="bool">
+			<fd:datatype base="string"/>
+		</fd:output>
+
+		<fd:field id="size" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">paging.size.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">paging.size.hint</i18n:text></fd:hint>
+			<fd:datatype base="long"/>
+			<fd:selection-list>
+				<fd:item value="10"/>
+				<fd:item value="20"/>
+				<fd:item value="30"/>
+				<fd:item value="40"/>
+				<fd:item value="50"/>
+			</fd:selection-list>
+		</fd:field>
+
+		<fd:output id="page">
+			<fd:label><i18n:text i18n:catalogue="local">paging.page.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">paging.page.hint</i18n:text></fd:hint>
+			<fd:datatype base="long"/>
+		</fd:output>
+
+		<fd:output id="total">
+			<fd:label><i18n:text i18n:catalogue="local">paging.total.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">paging.total.hint</i18n:text></fd:hint>
+			<fd:datatype base="long"/>
+		</fd:output>
+
+		<fd:submit id="cancel" action-command="cancel" validate="false">
+			<fd:label><i18n:text i18n:catalogue="local">cancel.label</i18n:text></fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">cancel.hint</i18n:text></fd:hint>
+		</fd:submit> 
+
+		<fd:submit id="submit" action-command="submit" validate="true">
+			<fd:label><i18n:text i18n:catalogue="local">submit.label</i18n:text></fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">submit.hint</i18n:text></fd:hint>
+		</fd:submit> 
+        
+		<fd:field id="value" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">criterion.value.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">criterion.value.hint</i18n:text></fd:hint>
+			<fd:datatype base="string"/>
+		</fd:field>
+		
+		<fd:field id="field" required="true">
+			<fd:label><i18n:text i18n:catalogue="local">criterion.field.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">criterion.field.hint</i18n:text></fd:hint>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:length min="2" max="64"/>
+				</fd:validation>
+			</fd:datatype>
+			<fd:selection-list src="screens/simple-fields.xml"/>
+		</fd:field>
+
+		<fd:output id="match">
+			<fd:label><i18n:text i18n:catalogue="local">criterion.match.label</i18n:text>: </fd:label>
+			<fd:hint><i18n:text i18n:catalogue="local">criterion.match.hint</i18n:text></fd:hint>
+			<fd:datatype base="string"/>
+		</fd:output>
+	
+  </fd:widgets>
+</fd:form>

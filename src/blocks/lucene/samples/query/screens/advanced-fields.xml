@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fd:selection-list
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- The field selectionlist for the CForms Model for editing an advanced query -->
+<!-- $Id: advanced-fields.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+
+<!-- 
+	Edit this list to suit the way your content is indexed.
+	
+	Make an fd:item for each field you want the user to be able to search
+	The @value represents the name of the Lucene Index field.
+	
+	The special value of "any" is reserved to mean "any field".
+-->
+	<fd:item value="any">
+		<fd:label><i18n:text i18n:catalogue="local">field.any.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="title">
+		<fd:label><i18n:text i18n:catalogue="local">field.title.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="question">
+		<fd:label><i18n:text i18n:catalogue="local">field.question.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="answer">
+		<fd:label><i18n:text i18n:catalogue="local">field.answer.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="source">
+		<fd:label><i18n:text i18n:catalogue="local">field.source.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="s1@title">
+		<fd:label><i18n:text i18n:catalogue="local">field.s1@title.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="s2@title">
+		<fd:label><i18n:text i18n:catalogue="local">field.s2@title.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="person@name">
+		<fd:label><i18n:text i18n:catalogue="local">field.person@name.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="p">
+		<fd:label><i18n:text i18n:catalogue="local">field.p.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="link">
+		<fd:label><i18n:text i18n:catalogue="local">field.link.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="code">
+		<fd:label><i18n:text i18n:catalogue="local">field.code.label</i18n:text></fd:label>
+	</fd:item>
+	<fd:item value="abstract">
+		<fd:label><i18n:text i18n:catalogue="local">field.abstract.label</i18n:text></fd:label>
+	</fd:item>
+</fd:selection-list>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- $Id: history.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<page
+	xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+	>
+	<title><i18n:text i18n:catalogue="local">history.page.title</i18n:text></title>
+	<content>
+		<jx:choose>
+			<jx:when test="${history!=null}">
+				<p class="history.title">
+					<i18n:text i18n:catalogue="local">history.queries.title</i18n:text>: 
+					<span class="history.count"><jx:out value="${history.size()}"/></span>
+				</p>
+				<p class="links"> 
+					<a href="simple.html" title="local:new.simple.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">new.simple.label</i18n:text></a>
+					<span> | </span>
+					<a href="advanced.html" title="local:new.advanced.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">new.advanced.label</i18n:text></a>
+					<span> | </span>
+					<a href="../query/" title="local:link.home.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">link.home.label</i18n:text></a>
+				</p>
+				<table width="100%" class="query.history" summary="Query History">
+					<tr>
+						<th align="left"><i18n:text i18n:catalogue="local">history.date.label</i18n:text></th>
+						<th align="left"><i18n:text i18n:catalogue="local">history.title.label</i18n:text></th>
+						<th align="left"><i18n:text i18n:catalogue="local">history.query.label</i18n:text></th>
+						<th align="left"><i18n:text i18n:catalogue="local">history.hits.label</i18n:text></th>
+					</tr>
+					<jx:forEach var="item" items="${history}">
+						<tr valign="top">
+							<td class="history.date">
+								<jx:if test="${item.query.date != null}">
+									<jx:formatDate value="${item.query.date}" type="time"/>
+								</jx:if>
+							</td><td class="history.name">
+								${item.query.name}
+							</td><td class="query.description">
+								<i18n:text i18n:catalogue="local">search.subject.title</i18n:text>
+								<span class="query.bool" title="local:query.bool.hint" i18n:attr="title">
+									<i18n:text i18n:catalogue="local">search.${item.query.bool}.bool</i18n:text>
+								</span>
+								<span class="query.criteria">
+									<jx:choose>
+										<jx:when test="${item.query.criteria.size() == 1}">
+											<i18n:text i18n:catalogue="local">search.criterion.label</i18n:text>:
+										</jx:when>
+										<jx:otherwise>
+											<i18n:text i18n:catalogue="local">search.criteria.label</i18n:text>:
+										</jx:otherwise>
+									</jx:choose>
+								</span>
+								<ul class="query.criteria">
+									<jx:forEach var="crit" items="${item.query.criteria}">
+										<li>
+											<span class="query.criterion-field" title="local:criterion.field.hint" i18n:attr="title">
+												<i18n:text i18n:catalogue="local">search.${crit.field}.field</i18n:text>
+											</span>
+											<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
+												<i18n:text i18n:catalogue="local">search.${crit.match}.match</i18n:text>
+											</span>
+											<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${crit.value}”</span>
+										</li>
+									</jx:forEach>
+								</ul>
+							</td><td class="query.hitcount">
+								${item.query.total}
+							</td><td>
+								<a href="${item.query.type}.html?id=${item.id}&amp;page=${item.query.page}" title="local:history.search.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">history.search.label</i18n:text></a>
+							</td><td>
+								<a href="${item.query.type}.html?id=${item.id}" title="local:history.edit.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">history.edit.label</i18n:text></a>
+							</td>
+						</tr>
+					</jx:forEach>
+				</table>
+			</jx:when>
+			<jx:otherwise>
+				<p class="history.queries-none"><i18n:text i18n:catalogue="local">history.none</i18n:text></p>
+			</jx:otherwise>
+		</jx:choose>
+	</content>
+</page>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- $Id: results.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<page
+	xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+	>
+	<title><i18n:text i18n:catalogue="local">${result.query.type}.page.title</i18n:text>: ${result.query.name}</title>
+	<content>
+		<!-- description of the query -->
+		<p class="query.description">
+			<i18n:text i18n:catalogue="local">search.subject.title</i18n:text>
+			<span class="query.bool" title="local:query.bool.hint" i18n:attr="title">
+				<i18n:text i18n:catalogue="local">search.${result.query.bool}.bool</i18n:text>
+			</span>
+			<span class="query.criteria">
+				<jx:choose>
+					<jx:when test="${result.query.criteria.size() == 1}">
+						<i18n:text i18n:catalogue="local">search.criterion.label</i18n:text>:
+					</jx:when>
+					<jx:otherwise>
+						<i18n:text i18n:catalogue="local">search.criteria.label</i18n:text>:
+					</jx:otherwise>
+				</jx:choose>
+			</span>
+			<ul class="query.criteria">
+				<jx:forEach var="item" items="${result.query.criteria}">
+					<li>
+						<span class="query.criterion-field" title="local:criterion.field.hint" i18n:attr="title">
+							<i18n:text i18n:catalogue="local">search.${item.field}.field</i18n:text>
+						</span>
+						<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
+							<i18n:text i18n:catalogue="local">search.${item.match}.match</i18n:text>
+						</span>
+						<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${item.value}”.</span>
+					</li>
+				</jx:forEach>
+			</ul>
+		</p>
+		<!-- links -->
+		<p class="links">
+			<a href="${result.query.type}.html?id=${result.id}" title="local:search.edit.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">search.edit.title</i18n:text></a>
+			<span> | </span>
+			<a href="history.html" title="local:search.history.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">search.history.title</i18n:text></a>
+			<span> | </span>
+			<a href="simple.html" title="local:new.simple.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">new.simple.label</i18n:text></a>
+			<span> | </span>
+			<a href="advanced.html" title="local:new.advanced.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">new.advanced.label</i18n:text></a>
+			<span> | </span>
+			<a href="../query/" title="local:link.home.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">link.home.label</i18n:text></a>
+		</p>
+		<!-- paging -->
+		<title><i18n:text i18n:catalogue="local">search.section.title</i18n:text></title>
+		<jx:choose>
+			<jx:when test="#{count(result/results) > 0}">
+				<jx:if test="#{count(result/nav/index) > 1}">
+					<div class="query.paging">
+						<p>
+							<span class="query.pagenumber"><i18n:text i18n:catalogue="local">search.pagenumber.label</i18n:text>: #{format-number(result/nav/page+1,'#')}.</span>
+							<span class="query.pagecount"><i18n:text i18n:catalogue="local">search.pagecount.label</i18n:text>: #{result/nav/pages}.</span>
+							<span class="query.hitcount"><i18n:text i18n:catalogue="local">search.recordcount.label</i18n:text>: #{result/nav/total}.</span>
+							<span class="query.pagesize"><i18n:text i18n:catalogue="local">search.pagesize.label</i18n:text>: #{result/nav/size}.</span>
+						</p>
+						<p class="query.navigation">
+							<jx:if test="#{result/nav/prev}">
+								<span class="query.prev">
+									<a href="${result.query.type}.html?page=#{result/nav/prev}&amp;id=${result.id}"><i18n:text i18n:catalogue="local">search.previous.label</i18n:text></a>&#160;
+								</span>
+							</jx:if>
+							<jx:if test="#{result/nav/firstIndex != 0}"><span class="query.prev-dots"> ... </span></jx:if>
+							<jx:set var="THIS" value="#{result/nav/page}"/>
+							<jx:forEach items="#{result/nav/index}">
+								<jx:choose>
+									<jx:when test="#{$THIS != .}"><span class="query.page-link"> <a href="${result.query.type}.html?page=#{.}&amp;id=${result.id}">#{format-number(.+1,'#')}</a> </span></jx:when>
+									<jx:otherwise><span class="query.this-page"> #{format-number(.+1,'#')} </span></jx:otherwise>
+								</jx:choose>
+							</jx:forEach>
+							<jx:if test="#{result/nav/lastIndex &lt; result/nav/pages - 1}"><span class="query.next-dots"> ... </span></jx:if>
+							<jx:if test="#{result/nav/next}">
+								<span class="query.next">
+									<a href="${result.query.type}.html?page=#{result/nav/next}&amp;id=${result.id}"><i18n:text i18n:catalogue="local">search.next.label</i18n:text></a>
+								</span>
+							</jx:if>
+						</p>
+					</div>
+				</jx:if>
+				<!-- results -->
+				<table class="query.results" summary="search results">
+					<tr>
+						<th align="left"><i18n:text i18n:catalogue="local">search.rank.label</i18n:text></th>
+						<th align="left"><i18n:text i18n:catalogue="local">search.score.label</i18n:text></th>
+						<th align="left"><i18n:text i18n:catalogue="local">search.title.label</i18n:text></th>
+					</tr>
+					<jx:forEach var="item" items="#{result/results}">
+						<jx:set var="score" value="${item[Packages.org.apache.cocoon.bean.query.SimpleLuceneQueryBean.SCORE_FIELD]}"/>
+						<jx:set var="index" value="${item[Packages.org.apache.cocoon.bean.query.SimpleLuceneQueryBean.INDEX_FIELD]}"/>
+						<jx:set var="url" value="${item[Packages.org.apache.cocoon.components.search.LuceneXMLIndexer.URL_FIELD]}"/>
+						<tr>
+							<td class="query.result-rank">#{format-number($index +1,'#')}</td>
+							<td class="query.result-score">#{format-number($score,'##%')}</td>
+							<td class="query.result-title"><a href="/docs/#{substring-before($url,'.xml')}.html"><jx:if test="#{string(title) = ''}"><span class="query.result-url">#{url}</span></jx:if>#{title}</a></td>
+						</tr>
+					</jx:forEach>
+				</table>
+			</jx:when>
+			<!-- no results -->
+			<jx:otherwise>
+				<p class="query.results-none"><i18n:text i18n:catalogue="local">search.norecords.note</i18n:text></p>
+			</jx:otherwise>
+		</jx:choose>
+	</content>
+</page>

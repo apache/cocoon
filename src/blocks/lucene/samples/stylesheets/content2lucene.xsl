@@ -36,10 +36,27 @@
   <xsl:template match="file">
     <lucene:document>
       <xsl:attribute name="url"><xsl:value-of select="name"/></xsl:attribute>
-      <xsl:copy-of select="include/*"/>
+      <xsl:apply-templates select="include/*"/>
     </lucene:document>
   </xsl:template>
-
-  <xsl:template match="@*|node()" priority="-1"></xsl:template>
-  <xsl:template match="text()" priority="-1"></xsl:template>
+  
+	<!-- store main titles -->
+	<xsl:template match="page/title|header/title">
+		<title lucene:store="true"><xsl:apply-templates/></title>
+	</xsl:template>
+	
+	<xsl:template match="faqs[@title]|book[@title]">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'title']"/>
+			<title lucene:store="true"><xsl:value-of select="@title"/></title>
+			<xsl:apply-templates/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="path"></xsl:template>
+	
+  <xsl:template match="@*|node()" priority="-2"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
+  <xsl:template match="text()" priority="-1"><xsl:value-of select="."/></xsl:template>
+  
+  
 </xsl:stylesheet> 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- The CForms Binding for editing a simple query -->
+<!-- $Id: simple-binding.xml,v 1.1 2004/06/21 10:00:20 jeremy Exp $ -->
+<fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" path="/">
+	
+  <fb:value id="name" path="name"/>
+  <fb:value id="type" path="type"/>
+  <fb:value id="bool" path="bool"/>
+
+  <fb:value id="size" path="size"/>
+  <fb:value id="page" path="page"/>
+  <fb:value id="total" path="total"/>
+
+  <fb:value id="value" path="criteria[1]/value"/>
+  <fb:value id="field" path="criteria[1]/field"/>
+  <fb:value id="match" path="criteria[1]/match"/>
+
+
+</fb:context>
