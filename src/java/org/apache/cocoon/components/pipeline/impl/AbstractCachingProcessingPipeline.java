@@ -540,6 +540,7 @@ public abstract class AbstractCachingProcessingPipeline
                     // we are valid, ok that's it
                     this.cachedResponse = response.getResponse();
                     this.cachedLastModified = response.getLastModified();
+                    this.toCacheSourceValidities = fromCacheValidityObjects;
                 } else {
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("validatePipeline: cached content is invalid for '" + environment.getURI() + "'.");
@@ -800,26 +801,35 @@ public abstract class AbstractCachingProcessingPipeline
      * Otherwise return <code>null</code>
      */
     public SourceValidity getValidityForEventPipeline() {
-        int vals = 0;
-
-        if ( null != this.toCacheKey
-             && !this.cacheCompleteResponse
-             && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
-             vals = this.toCacheKey.size();
-        } else if ( null != this.fromCacheKey
-                     && !this.completeResponseIsCached
-                     && this.firstProcessedTransformerIndex == super.transformers.size()) {
-             vals = this.fromCacheKey.size();
-        }
-        if ( vals > 0 ) {
+        if (this.cachedResponse != null && this.completeResponseIsCached) {
             final AggregatedValidity validity = new AggregatedValidity();
-            for(int i=0; i < vals; i++) {
-                validity.add(this.getValidityForInternalPipeline(i));
-                //validity.add(new DeferredPipelineValidity(this, i));
+            for (int i=0; i < this.toCacheSourceValidities.length; i++) {
+                validity.add(this.toCacheSourceValidities[i]);
             }
             return validity;
+
+        } else {
+            int vals = 0;
+    
+            if ( null != this.toCacheKey
+                 && !this.cacheCompleteResponse
+                 && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
+                 vals = this.toCacheKey.size();
+            } else if ( null != this.fromCacheKey
+                         && !this.completeResponseIsCached
+                         && this.firstProcessedTransformerIndex == super.transformers.size()) {
+                 vals = this.fromCacheKey.size();
+            }
+            if ( vals > 0 ) {
+                final AggregatedValidity validity = new AggregatedValidity();
+                for(int i=0; i < vals; i++) {
+                    validity.add(this.getValidityForInternalPipeline(i));
+                    //validity.add(new DeferredPipelineValidity(this, i));
+                }
+                return validity;
+            }
+            return null;
         }
-        return null;
     }
 
     /* (non-Javadoc)
