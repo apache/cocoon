@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -81,7 +81,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.27 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.28 2004/05/05 16:00:11 vgritsenko Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -338,11 +338,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     /**
      * Returns the JavaScript scope, a Scriptable object, from the user
-     * session instance. Each URI prefix, as returned by the {@link
-     * org.apache.cocoon.environment.Environment#getURIPrefix} method,
-     * can have a scope associated with it.
+     * session instance. Each sitemap can have a scope associated with it.
      *
-     * @param environment an <code>Environment</code> value
      * @return a <code>Scriptable</code> value
      */
     private ThreadScope getSessionScope() throws Exception {
@@ -354,10 +351,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
             if (userScopes != null) {
                 // Get the scope attached to the current context
-                Source src = this.sourceresolver.resolveURI(".");
-                String contextPrefix = src.getURI();
-                this.sourceresolver.release(src);
-                scope = (ThreadScope)userScopes.get(contextPrefix);
+                scope = (ThreadScope)userScopes.get(getSitemapPath());
             }
         }
         if (scope == null) {
@@ -374,15 +368,13 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     }
 
     /**
-     * Associates a JavaScript scope, a Scriptable object, with the URI
-     * prefix of the current sitemap, as returned by the {@link
-     * org.apache.cocoon.environment.Environment#getURIPrefix} method.
+     * Associates a JavaScript scope, a Scriptable object, with the
+     * directory path of the current sitemap, as resolved by the
+     * source resolver.
      *
-     * @param environment an <code>Environment</code> value
      * @param scope a <code>Scriptable</code> value
      */
-    private Scriptable setSessionScope(Scriptable scope)
-        throws Exception {
+    private Scriptable setSessionScope(Scriptable scope) throws Exception {
         Request request = ContextHelper.getRequest(this.avalonContext);
         Session session = request.getSession(true);
 
@@ -391,16 +383,22 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
+
         // Attach the scope to the current context
-        Source src = this.sourceresolver.resolveURI(".");
-        String contextPrefix = src.getURI();
-        this.sourceresolver.release(src);
-        userScopes.put(contextPrefix, scope);
+        userScopes.put(getSitemapPath(), scope);
         return scope;
     }
 
-    public static class ThreadScope extends ScriptableObject {
+    private String getSitemapPath() throws Exception {
+        Source src = this.sourceresolver.resolveURI(".");
+        try {
+            return src.getURI();
+        } finally {
+            this.sourceresolver.release(src);
+        }
+    }
 
+    public static class ThreadScope extends ScriptableObject {
         static final String[] builtinPackages = {"javax", "org", "com"};
 
         ClassLoader classLoader;
@@ -513,7 +511,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * newly create Scriptable object in the user's session, where it
      * will be retrieved from at the next invocation of {@link #callFunction}.</p>
      *
-     * @param environment an <code>Environment</code> value
      * @exception Exception if an error occurs
      */
     private void setupContext(Redirector redirector, Context context,
@@ -658,18 +655,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
-        FOM_Cocoon cocoon = null;
         ThreadScope thrScope = getSessionScope();
         synchronized (thrScope) {
-            ClassLoader savedClassLoader = 
+            ClassLoader savedClassLoader =
                 Thread.currentThread().getContextClassLoader();
+            FOM_Cocoon cocoon = null;
             try {
                 try {
                     setupContext(redirector, context, thrScope);
                     cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
-                    
+
                     // Register the current scope for scripts indirectly called from this function
                     FOM_JavaScriptFlowHelper.setFOM_FlowScope(cocoon.getObjectModel(), thrScope);
+
                     if (enableDebugger) {
                         if (!getDebugger().isVisible()) {
                             // only raise the debugger window if it isn't already visible
@@ -690,8 +688,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     cocoon.setParameters(parameters);
                     Object fun = ScriptableObject.getProperty(thrScope, funName);
                     if (fun == Scriptable.NOT_FOUND) {
-                        throw new ResourceNotFoundException(
-                                                            "Function \"javascript:" + funName + "()\" not found");
+                        throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
                     }
                     ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
                 } catch (JavaScriptException ex) {
@@ -705,8 +702,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     throw new CascadingRuntimeException(ee.getMessage(),
                                                         unwrapped);
                 } catch (EcmaError ee) {
-                    String msg = ToolErrorReporter.getMessage(
-                                                              "msg.uncaughtJSException", ee.toString());
+                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
                     if (ee.getSourceName() != null) {
                         Context.reportRuntimeError(msg, ee.getSourceName(),
                                                    ee.getLineNumber(), ee.getLineSource(),
@@ -751,7 +747,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Continuation k = (Continuation)wk.getContinuation();
         ThreadScope kScope = (ThreadScope)k.getParentScope();
         synchronized (kScope) {
-            ClassLoader savedClassLoader = 
+            ClassLoader savedClassLoader =
                 Thread.currentThread().getContextClassLoader();
             FOM_Cocoon cocoon = null;
             try {
@@ -760,9 +756,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 cocoon.pushCallContext(this, redirector, manager,
                                        avalonContext,
                                        getLogger(), wk);
+
                 // Register the current scope for scripts indirectly called from this function
                 FOM_JavaScriptFlowHelper.setFOM_FlowScope(cocoon.getObjectModel(), kScope);
-                
+
                 if (enableDebugger) {
                     getDebugger().setVisible(true);
                 }
@@ -792,8 +789,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     throw new CascadingRuntimeException(ee.getMessage(),
                                                         unwrapped);
                 } catch (EcmaError ee) {
-                    String msg = ToolErrorReporter.getMessage(
-                                                              "msg.uncaughtJSException", ee.toString());
+                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
                     if (ee.getSourceName() != null) {
                         Context.reportRuntimeError(msg, ee.getSourceName(),
                                                    ee.getLineNumber(), ee.getLineSource(),
@@ -805,7 +801,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 }
             } finally {
                 updateSession(kScope);
-                if (cocoon != null) cocoon.popCallContext();
+                if (cocoon != null) {
+                    cocoon.popCallContext();
+                }
                 Context.exit();
                 Thread.currentThread().setContextClassLoader(savedClassLoader);
             }
@@ -824,12 +822,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     }
 
     public void forwardTo(Scriptable scope, FOM_Cocoon cocoon, String uri,
-            Object bizData, FOM_WebContinuation fom_wk,
-            Redirector redirector) throws Exception {
+                          Object bizData, FOM_WebContinuation fom_wk,
+                          Redirector redirector) throws Exception {
         setupView(scope, cocoon, fom_wk);
         super.forwardTo(uri, bizData,
-                        fom_wk == null ? null :
-                           fom_wk.getWebContinuation(),
+                        fom_wk == null ? null : fom_wk.getWebContinuation(),
                         redirector);
     }
 
@@ -842,11 +839,13 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     private void setupView(Scriptable scope, FOM_Cocoon cocoon, FOM_WebContinuation kont) {
         Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+
         // Make the JS live-connect objects available to the view layer
         FOM_JavaScriptFlowHelper.setPackages(objectModel,
                (Scriptable)ScriptableObject.getProperty(scope, "Packages"));
         FOM_JavaScriptFlowHelper.setJavaPackage(objectModel,
                (Scriptable)ScriptableObject.getProperty(scope, "java"));
+
         // Make the FOM objects available to the view layer
         FOM_JavaScriptFlowHelper.setFOM_Request(objectModel,
                                             cocoon.jsGet_request());
@@ -864,6 +863,5 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         if (kont != null) {
             FOM_JavaScriptFlowHelper.setFOM_WebContinuation(objectModel, kont);
         }
-
     }
 }
