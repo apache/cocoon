@@ -16,11 +16,13 @@
     <sourceinspector class="org.apache.cocoon.components.source.impl.JPEGSourceInspector"/>
     <sourceinspector class="org.apache.cocoon.components.source.impl.GIFSourceInspector"/>
     
-    <!--
     <sourcedescriptor class="org.apache.cocoon.components.source.impl.SimpleJdbcSourceDescriptor">
-      <property name="meta" namespace="author" />
+      <!-- define your custom source properties here: -->
+      <property name="author" namespace="meta" />
+      <property name="keyword" namespace="meta" /> 
+      <!-- uses the personnel datasource from the database block for now -->
+      <datasource>personnel</datasource>
     </sourcedescriptor>
-    -->
     
   </component>
  
