@@ -21,12 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Enumeration;
-import java.util.ArrayList;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
@@ -36,157 +35,293 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.source.RestrictableSource;
-import org.apache.cocoon.components.source.helpers.SourceCredential;
-import org.apache.cocoon.components.source.helpers.SourcePermission;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.HttpURL;
+import org.apache.commons.httpclient.HttpsURL;
+import org.apache.commons.httpclient.URIException;
+import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
-import org.apache.webdav.lib.WebdavResource;
-import org.apache.webdav.lib.methods.DepthSupport;
 import org.apache.webdav.lib.Property;
 import org.apache.webdav.lib.PropertyName;
 import org.apache.webdav.lib.ResponseEntity;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
+import org.apache.webdav.lib.WebdavResource;
+import org.apache.webdav.lib.methods.DepthSupport;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
- *  A source implementation to get access to WebDAV repositories. Use it
- *  as webdav://[usr]:[password]@[host][:port]/path.
- *
- *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
- *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.22 2004/03/22 17:09:39 gcasper Exp $
+ * A source implementation to get access to WebDAV repositories.
+ * 
+ * <h2>Protocol syntax</h2>
+ * <p><code>webdav://[usr[:password]@]host[:port][/path][?cocoon:webdav-depth][&cocoon:webdav-action]</code></p>
+ * <p>
+ *  <ul>
+ *   <li>
+ *    <code>cocoon:webdav-depth</code> allows to specify the default depth
+ *    to use during initialization of the webdav resource.
+ *   </li>
+ *   <li>
+ *    <code>cocoon:webdav-action</code> allows to specify a default action
+ *    to take upon initialization of the webdav resource.
+ *   </li>
+ *  </ul>
+ * <p>
+ * 
+ * @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
+ * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
+ * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
+ * @version $Id: WebDAVSource.java,v 1.23 2004/03/27 15:49:41 unico Exp $
 */
-public class WebDAVSource extends AbstractLogEnabled implements Source,
-    RestrictableSource, ModifiableTraversableSource, InspectableSource {
-
+public class WebDAVSource extends AbstractLogEnabled 
+implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource {
 
     private static final String NAMESPACE = "http://apache.org/cocoon/webdav/1.0";
 
     private static final String PREFIX = "webdav";
-
     private static final String RESOURCE_NAME = "resource";
-
     private static final String COLLECTION_NAME = "collection";
-
-    private String systemId;
     
-    private String location;
-    private String principal;
-    private String password;
-
-    private SourceValidity validity = null;
-    private long cachedLastModificationDate;
-    private SourceCredential sourcecredential = null;
-
+    // the http url
+    private final HttpURL url;
+    
+    // the scheme name
+    private final String protocol;
+    
+    // cached uri and secureUri values
+    private String uri;
+    private String secureUri;
+    
+    // the SWCL resource
     private WebdavResource resource = null;
-    private String protocol;
+    
+    // current resource initialization values
+    private int depth = -1;
+    private int action = -1;
 
-    private WebDAVSource(
-        String location,
-        String principal,
-        String password,
-        String protocol,
-        boolean createNew)
-        throws HttpException, IOException {
-            
-        this.location = location;
-        this.principal = principal;
-        this.password = password;
+    /**
+     * Default constructor.
+     */
+    private WebDAVSource(HttpURL url, String protocol) throws URIException {
         this.protocol = protocol;
+        this.url = url;
         
-        this.systemId = "http://" + location;
-        
-        HttpURL httpURL = new HttpURL(this.systemId);
-        httpURL.setUserinfo(principal, password);
-        
-        if (createNew) {
-            this.resource = new WebdavResource(httpURL, 
-                WebdavResource.NOACTION, 
-                DepthSupport.DEPTH_1);
+        String qs = url.getQuery();
+        if (qs != null) {
+            final SourceParameters sp = new SourceParameters(qs);
+            
+            // parse optional start depth and start action qs parameters
+            this.depth = sp.getParameterAsInteger("cocoon:webdav-depth", DepthSupport.DEPTH_1);
+            this.action = sp.getParameterAsInteger("cocoon:webdav-action", WebdavResource.BASIC);
+            
+            // [UH] FIXME: Why this alternative way of passing in credentials?
+            String principal = url.getUser();
+            String password = url.getPassword();
+            if (principal == null || password == null) {
+                principal = sp.getParameter("cocoon:webdav-principal", principal);
+                password = sp.getParameter("cocoon:webdav-password", password);
+                if (principal != null) {
+                    url.setUser(principal);
+                    url.setPassword(password);
+                }
+            }
+
+            sp.removeParameter("cocoon:webdav-depth");
+            sp.removeParameter("cocoon:webdav-action");
+            sp.removeParameter("cocoon:webdav-principal");
+            sp.removeParameter("cocoon:webdav-password");
+            
+            // set the qs without WebdavSource specific parameters
+            url.setQuery(sp.getQueryString());
         }
-        else {
-            this.resource = new WebdavResource(httpURL);
-        }
-        
+    }
+
+    /**
+     * Constructor used by getChildren() method.
+     */
+    private WebDAVSource (WebdavResource resource, HttpURL url, String protocol) 
+    throws URIException {
+        this(url, protocol);
+        this.resource = resource;
+    }
+    
+    /**
+     * Initialize the SWCL WebdavResource.
+     * <p>
+     * The action argument specifies a set of properties to load during initialization. 
+     * Its value is one of WebdavResource.NOACTION, WebdavResource.NAME,
+     * WebdavResource.BASIC, WebdavResource.DEFAULT, WebdavResource.ALL.
+     * Similarly the depth argument specifies the depth header of the PROPFIND 
+     * method that is executed upon initialization.
+     * </p>
+     * <p>
+     * The different methods of this Source implementation call this method to 
+     * initialize the resource using their minimal action and depth requirements.
+     * For instance the WebDAVSource.getMimeType() method requires WebdavResource.BASIC
+     * properties and a search depth of 0 is sufficient.
+     * </p>
+     * <p>
+     * However it may be that a later call (eg. WebDAVSource.getChildren()) requires more
+     * information. In that case the WebdavResource would have to make another call to the Server.
+     * It would be more efficient if previous initialization had been done using depth 1 instead.
+     * In order give the user more control over this the WebDAVSource can be passed a minimal
+     * action and depth using cocoon:webdav-depth and cocoon:webdav-action query string parameters.
+     * By default the mimimum action is WebdavResource.BASIC (which loads all the following basic 
+     * webdav properties: DAV:displayname, DAV:getcontentlength, DAV:getcontenttype DAV:resourcetype,
+     * DAV:getlastmodified and DAV:lockdiscovery). The default minimum depth is 1.
+     * </p>
+     * 
+     * @param action  the set of propterties the WebdavResource should load.
+     * @param depth  the webdav depth.
+     * @throws SourceException
+     * @throws SourceNotFoundException
+     */
+    private void initResource(int action, int depth) throws SourceException, SourceNotFoundException {
+		try {
+            boolean update = false;
+            if (action > this.action) {
+                this.action = action;
+                update = true;
+            }
+            if (depth > this.depth) {
+                this.depth = depth;
+                update = true;
+            }
+			if (this.resource == null) {
+			    this.resource = new WebdavResource(this.url, this.action, this.depth);
+			}
+			else if (update) {
+			    this.resource.setProperties(this.action, this.depth);
+			}
+            if (this.action > WebdavResource.NOACTION) {
+                if (this.resource.isCollection()) {
+                    String path = this.url.getPath();
+                    if (path.charAt(path.length()-1) != '/') {
+                        this.url.setPath(path + "/");
+                    }
+                }
+            }
+ 		}
+		catch (HttpException e) {
+            if (e.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
+                throw new SourceNotFoundException("Not found: " + getSecureURI(), e);
+            }
+            final String msg = "Could not initialize webdav resource. Server responded " 
+                + e.getReasonCode() + " (" + e.getReason() + ") - " + e.getMessage();
+            throw new SourceException(msg, e);
+		}
+		catch (IOException e) {
+            throw new SourceException("Could not initialize webdav resource", e);
+		}
     }
 
     /**
      * Static factory method to obtain a Source.
      */
-    public static WebDAVSource newWebDAVSource(String location,
-                                               String principal,
-                                               String password,
+    public static WebDAVSource newWebDAVSource(HttpURL url,
                                                String protocol,
-                                               Logger logger) throws SourceException {
-        // FIXME: wild hack needed for writing to a new resource.
-        // if a resource doesn't exist, an exception
-        // will be thrown, unless such resource isn't created with the
-        // WebdavResouce.NOACTION flag. However, such flag cannot be
-        // used by default, since it won't allow to discover the
-        // properties of an exixting resource. So either we do this
-        // hack here or we fill properties on the fly when requested.
-        // This "solution" is scary, but the SWCL is pretty dumb.
-        WebDAVSource source;
-        try {
-            source = new WebDAVSource(location, principal, password, protocol, false);
-        }  catch (HttpException he) {
-            try {
-                source = new WebDAVSource(location, principal, password, protocol, true);
-            } catch (HttpException finalHe) {
-                final String message = "Error creating the source.";
-                throw new SourceException(message, finalHe);
-            } catch (IOException e) {
-                final String message = "Error creating the source.";
-                throw new SourceException(message, e);
-            }
-        } catch (IOException e) {
-            final String message = "Error creating the source.";
-            throw new SourceException(message, e);
-        }
+                                               Logger logger) 
+    throws URIException {
+        final WebDAVSource source = new WebDAVSource(url, protocol);
         source.enableLogging(logger);
         return source;
     }
-
+    
     /**
-     * Constructor used by the Traversable methods to build children.
+     * Static factory method to obtain a Source.
      */
-    private WebDAVSource (WebdavResource source, String principal, String password)
-    throws HttpException, IOException {
-        this.resource = source;
-        this.systemId = source.getHttpURL().getURI();
-        source.getHttpURL().setUserinfo(principal, password);
-
-        //fix trailing slash
-        if (this.resource.isCollection() && (this.systemId.endsWith("/") == false)) {
-            this.systemId = this.systemId+"/";
-            HttpURL httpURL = new HttpURL(this.systemId);
-            httpURL.setUserinfo(principal, password);
-            this.resource.setHttpURL(httpURL);
-        }
+    private static WebDAVSource newWebDAVSource(WebdavResource resource,
+                                                HttpURL url,
+                                                String protocol,
+                                                Logger logger) 
+    throws URIException {
+        final WebDAVSource source = new WebDAVSource(resource, url, protocol);
+        source.enableLogging(logger);
+        return source;
+    }
+    
+    // ---------------------------------------------------- Source implementation
+    
+    /**
+     * Get the scheme for this Source.
+     */
+    public String getScheme() {
+        return this.protocol;
     }
 
     /**
-     * Get the scheme for this Source (webdav://).
+     * Return the unique identifer for this source
      */
+    public String getURI() {
+        if (this.uri == null) {
+            String uri = this.url.toString();
+            final int index = uri.indexOf("://");
+            if (index != -1) {
+                uri = uri.substring(index+3);
+            }
+            final String userinfo = this.url.getEscapedUserinfo();
+            if (userinfo != null) {
+                uri = this.protocol + "://" + userinfo + "@" + uri;
+            }
+            else {
+                uri = this.protocol + "://" + uri;
+            }
+            this.uri = uri;
+        }
+        return this.uri;
+    }
+    
+    /**
+     * Return the URI securely, without username and password
+     */
+    protected String getSecureURI() {
+        if (this.secureUri == null) {
+            String uri = this.url.toString();
+            int index = uri.indexOf("://");
+            if (index != -1) {
+                uri = uri.substring(index+3);
+            }
+            uri = this.protocol + "://" + uri;
+            this.secureUri = uri;
+        }
+        return this.secureUri;
+    }
+    
+    /**
+     *  Get the Validity object. This can either wrap the last modification
+     *  date or the expires information or...
+     *  If it is currently not possible to calculate such an information
+     *  <code>null</code> is returned.
+     */
+    public SourceValidity getValidity() {
+        final long lm = getLastModified();
+        if (lm > 0) {
+            return new TimeStampValidity(lm);
+        }
+        return null;
+    }
 
-    public String getScheme() {
-        return this.protocol;
+    /**
+     * Refresh the content of this object after the underlying data
+     * content has changed.
+     */
+    public void refresh() {
+        this.resource = null;
     }
 
     /**
@@ -196,16 +331,18 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * from two different invocations.
      */
     public InputStream getInputStream() throws IOException, SourceException {
+        initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
         try {
             if (this.resource.isCollection()) {
-                WebdavResource[] resources =
-                    this.resource.listWebdavResources();
+                // [UH] FIXME: why list collection as XML here?
+                // I think its a concern for the TraversableGenerator.
+                WebdavResource[] resources = this.resource.listWebdavResources();
                 return resourcesToXml(resources);
             } else {
                 BufferedInputStream bi = null;
                 bi = new BufferedInputStream(this.resource.getMethodData());
                 if (!this.resource.exists()) {
-                    throw new HttpException(this.systemId + " does not exist");
+                    throw new HttpException(getSecureURI() + " does not exist");
                 }
                 return bi;
             }
@@ -217,77 +354,17 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
     }
 
     /**
-     * Return the unique identifer for this source
-     */
-    public String getURI() {
-        // Change http: to webdav:
-        //return "webdav:" + this.systemId.substring(5);
-        //add Source credentials
-        if (principal != null)
-            return "webdav://" + this.principal + ":" + this.password + "@" +  this.systemId.substring(7);
-        else
-            return "webdav://"  +  this.systemId.substring(7);
-    }
-    
-    /**
-     * Return the URI securely, without username and password
-     * 
-     */
-    protected String getSecureURI() {
-		return "webdav://"  +  this.systemId.substring(7);    	
-    }
-
-    /**
-     *  Get the Validity object. This can either wrap the last modification
-     *  date or the expires information or...
-     *  If it is currently not possible to calculate such an information
-     *  <code>null</code> is returned.
-     */
-    public SourceValidity getValidity() {
-    	// TODO: Implementation taken from HttpClientSource, who took it from URLSource: time for a separate impl?
-		final long lm = getLastModified();
-
-		if ( lm > 0 )
-		{
-			if ( lm == cachedLastModificationDate )
-			{
-				return validity;
-			}
-
-			cachedLastModificationDate = lm;
-			validity = new TimeStampValidity( lm );
-			return validity;
-		}
-		return null;
-    }
-
-    /**
-     * Refresh the content of this object after the underlying data
-     * content has changed.
-     */
-    public void refresh() {
-        try {
-            this.resource = new WebdavResource(this.systemId);
-
-            if (sourcecredential != null)
-                resource.setUserInfo(
-                    sourcecredential.getPrincipal(),
-                    sourcecredential.getPassword());
-        } catch (HttpException he) {
-            throw new IllegalStateException(he.getMessage());
-        } catch (IOException ioe) {
-            throw new IllegalStateException(ioe.getMessage());
-        }
-
-        this.validity = null;
-    }
-
-    /**
      * The mime-type of the content described by this object.
      * If the source is not able to determine the mime-type by itself
      * this can be <code>null</code>.
      */
     public String getMimeType() {
+        try {
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
+        }
+        catch (IOException e) {
+            return null;
+        }
         return this.resource.getGetContentType();
     }
 
@@ -296,6 +373,12 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * unknown
      */
     public long getContentLength() {
+        try {
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
+        }
+        catch(IOException e) {
+            return -1;
+        }
         if (this.resource.isCollection()) {
             return -1;
         }
@@ -308,34 +391,13 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      *         or 0 if it is unknown
      */
     public long getLastModified() {
+        try {
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
+        }
+        catch(IOException e) {
+            return 0;
+        }
         return this.resource.getGetLastModified();
-    }
-
-    /**
-     * Get the value of a parameter.
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public String getParameter(String name) {
-        return null;
-    }
-
-    /**
-     * Get the value of a parameter.
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public long getParameterAsLong(String name) {
-        return -1;
-    }
-
-    /**
-     * Get parameter names
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public Iterator getParameterNames() {
-        return null;
     }
 
     /**
@@ -344,135 +406,16 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @return true if the resource exists.
      */
     public boolean exists() {
-        return this.resource.getExistence();
-    }
-
-    /**
-     * Get an <code>InputStream</code> where raw bytes can be written to.
-     * The signification of these bytes is implementation-dependent and
-     * is not restricted to a serialized XML document.
-     *
-     * @return a stream to write to
-     */
-    public OutputStream getOutputStream() throws IOException {
-        return new WebDAVSourceOutputStream(this.resource);
-    }
-
-    /**
-     * Can the data sent to an <code>OutputStream</code> returned by
-     * {@link #getOutputStream()} be cancelled ?
-     *
-     * @return true if the stream can be cancelled
-     */
-    public boolean canCancel(OutputStream stream) {
-        return true;
-    }
-
-    /**
-     * Cancel the data sent to an <code>OutputStream</code> returned by
-     * {@link #getOutputStream()}.
-     * <p>
-     * After cancel, the stream should no more be used.
-     */
-    public void cancel(OutputStream stream) throws SourceException {
-        // The content will only be send, if outputstream.close() executed.
-    }
-
-    /** 
-     * Get the current credential for the source
-     */
-    public SourceCredential getSourceCredential() throws SourceException {
-        return this.sourcecredential;
-    }
-
-    /** 
-     * Set the credential for the source
-     */
-    public void setSourceCredential(SourceCredential sourcecredential)
-        throws SourceException {
-        this.sourcecredential = sourcecredential;
-        if (sourcecredential == null) return;
         try {
-            HttpURL httpURL = new HttpURL(this.systemId);
-            httpURL.setUserinfo(
-                sourcecredential.getPrincipal(),
-                sourcecredential.getPassword());
-            this.resource = new WebdavResource(httpURL);
-        } catch (HttpException he) {
-            throw new SourceException("Could not set credentials", he);
-        } catch (IOException ioe) {
-            throw new IllegalStateException(ioe.getMessage());
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
         }
-    }
-
-    /**
-     * Set a permission to this source
-     *
-     * @param sourcepermission Permission, which should be set
-     *
-     * @throws SourceException If an exception occurs during this operation
-     */
-    public void setSourcePermission(SourcePermission sourcepermission)
-        throws SourceException {
-        //FIXME
-    }
-
-    /**
-     * Returns a list of the existing permissions
-     *
-     * @return Array of SourcePermission
-     */
-    public SourcePermission[] getSourcePermissions() throws SourceException {
-        //FIXME
-        return null;
-    }
-
-    public class WebDAVSourceOutputStream extends ByteArrayOutputStream {
-
-        private WebdavResource resource = null;
-
-        protected WebDAVSourceOutputStream(WebdavResource resource) {
-            this.resource = resource;
+        catch (SourceNotFoundException e) {
+            return false;
         }
-
-        public void close() throws IOException {
-            super.close();
-
-            try {
-                this.resource.putMethod(toByteArray());
-            } catch (HttpException he) {
-                final String message =
-                    "Unable to close output stream. Server responded " +
-                    he.getReasonCode() + " (" + he.getReason() + ") - " 
-                    + he.getMessage();
-                getLogger().debug(message);
-                throw new IOException(he.getMessage());
-            }
+        catch(IOException e) {
+            return true;
         }
-    }
-
-    /**
-     * Add a permission to this source
-     *
-     * @param sourcepermission Permission, which should be set
-     *
-     * @throws SourceException If an exception occurs during this operation
-     **/
-    public void addSourcePermission(SourcePermission sourcepermission)
-        throws SourceException {
-        // FIXME
-    }
-
-    /**
-     * Remove a permission from this source
-     *
-     * @param sourcepermission Permission, which should be removed
-     *
-     * @throws SourceException If an exception occurs during this operation
-     **/
-    public void removeSourcePermission(SourcePermission sourcepermission)
-        throws SourceException {
-        // FIXME
+        return this.resource.getExistence();
     }
 
     private InputStream resourcesToXml(WebdavResource[] resources)
@@ -577,21 +520,27 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         }
     }
 
+    // ---------------------------------------------------- TraversableSource implementation
+    
     /**
      * Get a collection child.
      *
      * @see org.apache.excalibur.source.TraversableSource#getChild(java.lang.String)
      */
-    public Source getChild(String childName) throws SourceException {    	
-        String childLocation = this.location + "/" + childName;
-        WebDAVSource source = WebDAVSource.newWebDAVSource(
-            childLocation, 
-            this.principal, 
-            this.password, 
-            this.protocol, 
-            this.getLogger());
-        source.setSourceCredential(this.getSourceCredential());
-        return source;
+    public Source getChild(String childName) throws SourceException {
+        try {
+            HttpURL childURL;
+            if (this.url instanceof HttpsURL) {
+                childURL = new HttpsURL((HttpsURL) this.url, childName);
+            }
+            else {
+                childURL = new HttpURL(this.url, childName);
+            }
+            return WebDAVSource.newWebDAVSource(childURL, this.protocol, getLogger());
+        }
+        catch (URIException e) {
+            throw new SourceException("Failure creating child", e);
+        }        
     }
 
     /**
@@ -600,14 +549,27 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @see org.apache.excalibur.source.TraversableSource#getChildren()
      */
     public Collection getChildren() throws SourceException {
+        initResource(WebdavResource.BASIC, DepthSupport.DEPTH_1);
         ArrayList children = new ArrayList();
         try {
             WebdavResource[] resources = this.resource.listWebdavResources();
             for (int i = 0; i < resources.length; i++) {
-                WebDAVSource src = new WebDAVSource(resources[i], this.principal, this.password);
+                HttpURL childURL;
+                if (this.url instanceof HttpsURL) {
+                    childURL = new HttpsURL((HttpsURL) this.url,resources[i].getName());
+                }
+                else {
+                    childURL = new HttpURL(this.url,resources[i].getName());
+                }
+                WebDAVSource src = WebDAVSource.newWebDAVSource(resources[i],
+                                                                childURL,
+                                                                this.protocol,
+                                                                getLogger());
+                src.enableLogging(getLogger());
                 children.add(src);
             }
-        } catch (HttpException e) {
+        }
+        catch (HttpException e) {
             if (getLogger().isDebugEnabled()) {
                 final String message =
                     "Unable to get WebDAV children. Server responded " +
@@ -616,7 +578,11 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
                 getLogger().debug(message);
             }
             throw new SourceException("Failed to get WebDAV collection children.", e);
-        } catch (IOException e) {
+        } 
+        catch (SourceException e) {
+            throw e;
+        }
+        catch (IOException e) {
             throw new SourceException("Failed to get WebDAV collection children.", e);
         }
         return children;
@@ -627,24 +593,34 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @see org.apache.excalibur.source.TraversableSource#getName()
      */
     public String getName() {
-        return this.resource.getDisplayName();
+        try {
+            initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+        }
+        catch (IOException e) {
+            return "";
+        }
+        return this.resource.getName();
     }
 
     /**
      * Get the parent.
+     * 
      * @see org.apache.excalibur.source.TraversableSource#getParent()
      */
     public Source getParent() throws SourceException {
-        int last = this.location.lastIndexOf("/");
-        String myLocation = this.location.substring(0, last);
-        WebDAVSource wds = WebDAVSource.newWebDAVSource(
-                myLocation,
-                this.principal,
-                this.password,
-                this.protocol,
-                this.getLogger());
-        wds.setSourceCredential(this.getSourceCredential());
-        return wds;
+        try {
+            HttpURL parentURL;
+            if (url instanceof HttpsURL) {
+                parentURL = new HttpsURL((HttpsURL) this.url, ".");
+            }
+            else {
+                parentURL = new HttpURL(this.url, ".");
+            }
+            return WebDAVSource.newWebDAVSource(parentURL, this.protocol, getLogger());
+        }
+        catch (URIException e) {
+            throw new SourceException("Failure creating parent", e);
+        }
     }
 
     /**
@@ -652,7 +628,63 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @see org.apache.excalibur.source.TraversableSource#isCollection()
      */
     public boolean isCollection() {
+        try {
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
+        }
+        catch (IOException e) {
+            return false;
+        }
         return this.resource.isCollection();
+    }
+    
+    // ---------------------------------------------------- ModifiableSource implementation
+    
+    /**
+     * Get an <code>OutputStream</code> where raw bytes can be written to.
+     * The signification of these bytes is implementation-dependent and
+     * is not restricted to a serialized XML document.
+     *
+     * @return a stream to write to
+     */
+    public OutputStream getOutputStream() throws IOException {
+        return new WebDAVSourceOutputStream(this);
+    }
+
+    /**
+     * Can the data sent to an <code>OutputStream</code> returned by
+     * {@link #getOutputStream()} be cancelled ?
+     *
+     * @return true if the stream can be cancelled
+     */
+    public boolean canCancel(OutputStream stream) {
+        if (stream instanceof WebDAVSourceOutputStream) {
+            WebDAVSourceOutputStream wsos = (WebDAVSourceOutputStream) stream;
+            if (wsos.source == this) {
+                return wsos.canCancel();
+            }
+        }
+        throw new IllegalArgumentException("The stream is not associated to this source");
+    }
+
+    /**
+     * Cancel the data sent to an <code>OutputStream</code> returned by
+     * {@link #getOutputStream()}.
+     * <p>
+     * After cancel, the stream should no more be used.
+     */
+    public void cancel(OutputStream stream) throws SourceException {
+        if (stream instanceof WebDAVSourceOutputStream) {
+            WebDAVSourceOutputStream wsos = (WebDAVSourceOutputStream) stream;
+            if (wsos.source == this) {
+                try {
+                    wsos.cancel();
+                }
+                catch (Exception e) {
+                    throw new SourceException("Failure cancelling Source", e);
+                }
+            }
+        }
+        throw new IllegalArgumentException("The stream is not associated to this source");
     }
 
     /** 
@@ -660,7 +692,8 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @see org.apache.excalibur.source.ModifiableSource#delete()
      */
     public void delete() throws SourceException {
-    	try {
+    	initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+        try {
             this.resource.deleteMethod();
         } catch (HttpException e) {
         	throw new SourceException("Unable to delete source: " + getSecureURI(), e);
@@ -669,12 +702,56 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         }
     }
 
+    private static class WebDAVSourceOutputStream extends ByteArrayOutputStream {
+
+        private WebDAVSource source = null;
+        private boolean isClosed = false;
+
+        private WebDAVSourceOutputStream(WebDAVSource source) {
+            this.source = source;
+        }
+
+        public void close() throws IOException {
+            if (!isClosed) {
+                try {
+                    super.close();
+                    this.source.initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+                    this.source.resource.putMethod(toByteArray());
+                } catch (HttpException he) {
+                    final String message =
+                        "Unable to close output stream. Server responded " +
+                        he.getReasonCode() + " (" + he.getReason() + ") - " 
+                        + he.getMessage();
+                    this.source.getLogger().debug(message);
+                    throw new IOException(he.getMessage());
+                }
+                finally {
+                    this.isClosed = true;
+                }
+            }
+        }
+        
+        private boolean canCancel() {
+            return !isClosed;
+        }
+        
+        private void cancel() {
+            if (isClosed) {
+                throw new IllegalStateException("Cannot cancel: outputstrem is already closed");
+            }
+            this.isClosed = true;
+        }
+    }
+    
+    // ---------------------------------------------------- ModifiableTraversableSource implementation
+    
     /**
      * Create the collection, if it doesn't exist.
      * @see org.apache.excalibur.source.ModifiableTraversableSource#makeCollection()
      */
     public void makeCollection() throws SourceException {
-    	if (resource.exists()) return;
+        initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+        if (resource.exists()) return;
     	try {
             resource.mkcolMethod();
         } catch (HttpException e) {
@@ -684,6 +761,8 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         }
     }
     
+    // ---------------------------------------------------- InspectableSource implementation
+    
     /**
      * Returns a enumeration of the properties
      *
@@ -692,11 +771,13 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @throws SourceException If an exception occurs.
      */
      public SourceProperty[] getSourceProperties() throws SourceException {
-
+         
+         initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+         
          Vector sourceproperties = new Vector();
          Enumeration props= null;
          org.apache.webdav.lib.Property prop = null;
-        
+         
          try {
              Enumeration responses = this.resource.propfindMethod(0);
              while (responses.hasMoreElements()) {
@@ -730,27 +811,28 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      *
      * @throws SourceException If an exception occurs.
      */
-    public SourceProperty getSourceProperty (String namespace, String name)
-    throws SourceException {
-
-          Vector propNames = new Vector(1);
-          propNames.add(new PropertyName(namespace,name));
-          Enumeration props= null;
-          org.apache.webdav.lib.Property prop = null;
-          try {
-              Enumeration responses = this.resource.propfindMethod(0, propNames);
-              while (responses.hasMoreElements()) {
-                  ResponseEntity response = (ResponseEntity)responses.nextElement();
-                  props = response.getProperties();
-                  if (props.hasMoreElements()) {
-                      prop = (Property) props.nextElement();
-                      return new SourceProperty(prop.getElement());
-                  }
-              }
-          } catch (Exception e) {
-              throw new SourceException("Error getting property: "+name, e);
-          }
-          return null;
+    public SourceProperty getSourceProperty (String namespace, String name) throws SourceException {
+        
+        initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+        
+        Vector propNames = new Vector(1);
+        propNames.add(new PropertyName(namespace,name));
+        Enumeration props= null;
+        org.apache.webdav.lib.Property prop = null;
+        try {
+            Enumeration responses = this.resource.propfindMethod(0, propNames);
+            while (responses.hasMoreElements()) {
+                ResponseEntity response = (ResponseEntity) responses.nextElement();
+                props = response.getProperties();
+                if (props.hasMoreElements()) {
+                    prop = (Property) props.nextElement();
+                    return new SourceProperty(prop.getElement());
+                }
+            }
+        } catch (Exception e) {
+            throw new SourceException("Error getting property: "+name, e);
+        }
+        return null;
     }
 
     /**
@@ -763,7 +845,9 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      */
     public void removeSourceProperty(String namespace, String name)
     throws SourceException {
-
+        
+        initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+        
         try {
             this.resource.proppatchMethod(new PropertyName(namespace, name), "", false);
         } catch (Exception e) {
@@ -778,9 +862,10 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      *
      * @throws SourceException If an exception occurs during this operation
      */
-    public void setSourceProperty(SourceProperty sourceproperty)
-    throws SourceException {
-
+    public void setSourceProperty(SourceProperty sourceproperty) throws SourceException {
+        
+        initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
+        
         try {
 			Node node = null;
             NodeList list = sourceproperty.getValue().getChildNodes();
@@ -813,4 +898,26 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
             throw new SourceException("Could not set property ", e);
         }
     }
+    
+    /** 
+     * Get the current credential for the source
+     */
+//    public SourceCredential getSourceCredential() throws SourceException {
+//        if (this.principal != null) {
+//            return new SourceCredential(this.principal, this.password);
+//        }
+//        return null;
+//    }
+
+    /** 
+     * Set the credential for the source
+     */
+//    public void setSourceCredential(SourceCredential sourcecredential)
+//        throws SourceException {
+//        if (sourcecredential != null) {
+//            this.password = sourcecredential.getPassword();
+//            this.principal = sourcecredential.getPrincipal();
+//            refresh();
+//        }
+//    }
 }

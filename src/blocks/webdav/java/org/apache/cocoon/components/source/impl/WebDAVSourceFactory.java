@@ -19,13 +19,17 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.httpclient.HttpURL;
+import org.apache.commons.httpclient.HttpsURL;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
-import org.apache.excalibur.source.SourceParameters;
 
 /**
  *  A factory for WebDAV sources
@@ -33,46 +37,55 @@ import org.apache.excalibur.source.SourceParameters;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSourceFactory.java,v 1.7 2004/03/05 13:02:26 bdelacretaz Exp $
+ *  @version $Id: WebDAVSourceFactory.java,v 1.8 2004/03/27 15:49:41 unico Exp $
 */
-public class WebDAVSourceFactory
-    extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe {
+public class WebDAVSourceFactory extends AbstractLogEnabled 
+implements SourceFactory, Configurable, ThreadSafe {
 
+    private String protocol;
+    private boolean secure;
+    
+    /**
+     * Read the scheme name.
+     */
+    public void configure(Configuration configuration) throws ConfigurationException {
+        this.protocol = configuration.getAttribute("name");
+        
+        // parse parameters
+        Parameters parameters = Parameters.fromConfiguration(configuration);
+        this.secure = parameters.getParameterAsBoolean("secure", false);
+    }
+    
     /**
      * Get a <code>Source</code> object.
      * @param parameters This is optional.
      */
     public Source getSource(String location, Map parameters)
         throws MalformedURLException, IOException, SourceException {
-        if ((this.getLogger() != null)
-            && (this.getLogger().isDebugEnabled())) {
+        
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Creating source object for " + location);
         }
-
-        final String protocol = location.substring(0, location.indexOf(':'));
-
-		HttpURL url = new HttpURL("http://" + location.substring(location.indexOf(':')+3));       
-		String principal = url.getUser();
-		String password = url.getPassword();
-		location = url.getHost() + ":" + url.getPort();
-		if(url.getPathQuery() != null) location += url.getPathQuery();
-
-        if(principal == null || password == null) {
-			String queryString = url.getQuery();
-			SourceParameters locationParameters = new SourceParameters(queryString);
-			principal = locationParameters.getParameter("principal", principal);
-			password = locationParameters.getParameter("password", password);
+        
+        int index = location.indexOf(':');
+        if (index != -1) {
+            location = location.substring(index+3);
         }
-
-        WebDAVSource source =
-            WebDAVSource.newWebDAVSource(location, principal, password, protocol,getLogger());
-            
-        return source;
+        
+		HttpURL url;
+		if (this.secure) {
+		    url = new HttpsURL("https://" + location);
+		}
+		else {
+		    url = new HttpURL("http://" + location);
+		}
+        
+        return WebDAVSource.newWebDAVSource(url, this.protocol, getLogger());
     }
 
     public void release(Source source) {
         // do nothing
     }
+
 
 }
