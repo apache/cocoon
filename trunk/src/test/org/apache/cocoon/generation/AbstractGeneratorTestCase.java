@@ -74,7 +74,7 @@ import org.xml.sax.InputSource;
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.6 2003/07/10 00:25:25 ghoward Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.7 2003/08/04 03:06:30 joerg Exp $
  */
 public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 {
@@ -106,7 +106,6 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
         Generator generator = null;
         SourceResolver resolver = null;
         SAXParser parser = null;
-        Source assertionsource = null;
 
         Document document = null;
         try {
