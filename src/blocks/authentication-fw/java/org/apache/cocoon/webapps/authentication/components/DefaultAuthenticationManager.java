@@ -78,6 +78,7 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
@@ -94,7 +95,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.17 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.18 2003/10/23 11:29:36 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -252,6 +253,15 @@ implements AuthenticationManager,
             this.setState( state );
             state.initialize( this.resolver );
             
+            // And now load applications
+            Iterator applications = handler.getHandlerConfiguration().getApplications().values().iterator();
+
+            while ( applications.hasNext() ) {
+                ApplicationConfiguration appHandler = (ApplicationConfiguration)applications.next();
+                if ( !appHandler.getLoadOnDemand() ) {
+                    handler.getContext().loadApplicationXML( appHandler, this.resolver );
+                }
+            }
         }
         
  		return handler;
