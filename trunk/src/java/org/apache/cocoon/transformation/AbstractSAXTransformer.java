@@ -121,7 +121,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.2 2003/06/18 12:11:07 jefft Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -222,7 +222,7 @@ implements Composable, Configurable, Recyclable {
     throws ProcessingException,
            SAXException,
            IOException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN setup resolver="+resolver+
                                    ", objectModel="+objectModel+
                                    ", src="+src+
@@ -250,7 +250,7 @@ implements Composable, Configurable, Recyclable {
         this.ignoreWhitespaces = true;
         this.ignoreEmptyCharacters = false;
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END setup");
         }
     }
@@ -439,7 +439,7 @@ implements Composable, Configurable, Recyclable {
      */
     public void startRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startRecording");
         }
         DOMBuilder builder = new DOMBuilder();
@@ -449,7 +449,7 @@ implements Composable, Configurable, Recyclable {
 
         this.sendStartPrefixMapping();
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END startRecording");
         }
     }
@@ -461,7 +461,7 @@ implements Composable, Configurable, Recyclable {
      */
     public DocumentFragment endRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN endRecording");
         }
 
@@ -490,7 +490,7 @@ implements Composable, Configurable, Recyclable {
             }
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             Object serializedXML = null;
             try {
                 serializedXML = (recordedDocFrag == null ? "null" : XMLUtils.serializeNodeToXML(recordedDocFrag));
@@ -509,7 +509,7 @@ implements Composable, Configurable, Recyclable {
      */
     public void startTextRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startTextRecording");
         }
         XMLConsumer recorder = new TextRecorder();
@@ -517,7 +517,7 @@ implements Composable, Configurable, Recyclable {
 
         this.sendStartPrefixMapping();
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
            this.getLogger().debug("END startTextRecording");
         }
     }
@@ -528,7 +528,7 @@ implements Composable, Configurable, Recyclable {
      */
     public String endTextRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN endTextRecording");
         }
 
@@ -537,7 +537,7 @@ implements Composable, Configurable, Recyclable {
         TextRecorder recorder = (TextRecorder)this.removeRecorder();
         String text = recorder.getText();
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END endTextRecording text="+text);
         }
         return text;
@@ -552,12 +552,12 @@ implements Composable, Configurable, Recyclable {
      */
     public void startSerializedXMLRecording(Properties format)
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startSerializedXMLRecording format="+format);
         }
         this.stack.push((format == null ? XMLUtils.defaultSerializeToXMLFormat() : format));
         this.startRecording();
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END startSerializedXMLRecording");
         }
     }
@@ -569,12 +569,12 @@ implements Composable, Configurable, Recyclable {
      */
     public String endSerializedXMLRecording()
     throws SAXException, ProcessingException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN endSerializedXMLRecording");
         }
         DocumentFragment fragment = this.endRecording();
         String text = XMLUtils.serializeNode(fragment, (Properties)this.stack.pop());
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END endSerializedXMLRecording xml="+text);
         }
         return text;
@@ -589,7 +589,7 @@ implements Composable, Configurable, Recyclable {
      */
     public void startParametersRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startParametersRecording");
         }
         XMLConsumer recorder = new ParametersRecorder();
@@ -597,7 +597,7 @@ implements Composable, Configurable, Recyclable {
 
         this.sendStartPrefixMapping();
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END startParametersRecording");
         }
     }
@@ -611,14 +611,14 @@ implements Composable, Configurable, Recyclable {
      */
     public SourceParameters endParametersRecording(Parameters source)
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN endParametersRecording source="+source);
         }
         this.sendEndPrefixMapping();
         ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
         SourceParameters pars = recorder.getParameters(source);
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END endParametersRecording parameters="+pars);
         }
         return pars;
@@ -633,14 +633,14 @@ implements Composable, Configurable, Recyclable {
      */
     public SourceParameters endParametersRecording(SourceParameters source)
     throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN endParametersRecording source="+source);
         }
         this.sendEndPrefixMapping();
         ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
         SourceParameters pars = recorder.getParameters(source);
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END endParametersRecording parameters="+pars);
         }
         return pars;
@@ -658,14 +658,14 @@ implements Composable, Configurable, Recyclable {
      */
     public void setupTransforming()
     throws IOException, ProcessingException, SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN setupTransforming");
         }
         this.stack.clear();
         this.recorderStack.clear();
         this.ignoreWhitespaces = true;
         this.ignoreEmptyCharacters = false;
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END setupTransforming");
         }
     }
@@ -683,11 +683,11 @@ implements Composable, Configurable, Recyclable {
                                          String raw,
                                          Attributes attr)
     throws ProcessingException, IOException, SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ", attr=" + attr + ")");
         }
         if (this.ignoreEventsCount == 0) super.startElement(uri, name, raw, attr);
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END startTransformingElement");
         }
     }
@@ -703,11 +703,11 @@ implements Composable, Configurable, Recyclable {
                                        String name,
                                        String raw)
     throws ProcessingException, IOException, SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN endTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ")");
         }
         if (this.ignoreEventsCount == 0) super.endElement(uri, name, raw);
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END endTransformingElement");
         }
     }
