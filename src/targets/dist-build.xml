@@ -50,12 +50,12 @@
     <fixcrlf srcdir="${dist}" includes="**.sh" eol="lf"/>
     <fixcrlf srcdir="${dist}" includes="antRun" eol="lf"/>
     <fixcrlf srcdir="${dist}" includes="**.bat" eol="crlf"/>
-<!--
+
     <zip zipfile="${dist.target}/${dist.name}.zip" 
          basedir="${dist.root}" 
          includes="${dist.name}/**">
     </zip>
--->
+
 <!--    <tar tarfile="${dist.target}/${dist.name}.tar" 
          longfile="gnu"
          basedir="${dist.root}"
