@@ -57,11 +57,14 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.jelly.JellyContext;
+import org.apache.commons.jelly.Script;
 import org.apache.commons.jelly.XMLOutput;
+import org.apache.commons.jelly.impl.XMLParser;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
@@ -70,13 +73,17 @@ import org.xml.sax.SAXException;
  * as a Cocoon Generator. 
  *
  * @author <a href="mailto:amal.sirvisetti@sirvisetti.com">Amal Sirvisetti</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  */
-public class JellyGenerator extends ServiceableGenerator 
-{
+public class JellyGenerator 
+    extends AbstractGenerator {
 
     /** The Jelly Context */
     protected JellyContext jellyContext;  
 
+    /** The Jelly Parser */
+    protected XMLParser jellyParser = new XMLParser();
+    
     /**
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
@@ -90,7 +97,7 @@ public class JellyGenerator extends ServiceableGenerator
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters params) 
-                throws ProcessingException,SAXException,IOException {
+    throws ProcessingException,SAXException,IOException {
 
         super.setup(resolver, objectModel, src, params);
 
@@ -104,7 +111,8 @@ public class JellyGenerator extends ServiceableGenerator
     /**
      * Generate XML data from Jelly script.
      */
-    public void generate() throws IOException, SAXException, ProcessingException {
+    public void generate() 
+    throws IOException, SAXException, ProcessingException {
         Source scriptSource = null;
         try {
             
@@ -116,16 +124,18 @@ public class JellyGenerator extends ServiceableGenerator
             // Execute Jelly script
             XMLOutput xmlOutput = new XMLOutput(this.contentHandler, this.lexicalHandler);
             
-            // TODO - get the Jelly parser and feed an input stream into the parser
-            //        This allows us to use our own protocols (like cocoon:)
-            //        Compile the script and cache the compiled version
+            // TODO - Compile the script and cache the compiled version
             
             scriptSource = this.resolver.resolveURI(this.source);
+            
+            Script script = this.jellyParser.parse(SourceUtil.getInputSource(scriptSource));
+            script = script.compile();
+            
             // the script does not output startDocument/endDocument events
             this.contentHandler.startDocument();
-            this.jellyContext.runScript(scriptSource.getURI(), xmlOutput);
-            this.contentHandler.endDocument();
+            script.run(this.jellyContext, xmlOutput);
             xmlOutput.flush();
+            this.contentHandler.endDocument();
             
         } catch (IOException e) {
             getLogger().error("JellyGenerator.generate()", e);
