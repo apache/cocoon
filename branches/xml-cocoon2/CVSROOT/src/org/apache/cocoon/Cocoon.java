@@ -22,6 +22,8 @@ import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.Context;
+import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
@@ -30,6 +32,7 @@ import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Initializable;
 
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
@@ -47,12 +50,15 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.47 $ $Date: 2001-02-08 18:30:39 $
+ * @version CVS $Revision: 1.4.2.48 $ $Date: 2001-02-12 13:30:42 $
  */
 public class Cocoon
-  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Loggable {
+  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Loggable, Contextualizable {
 
     private Logger log;
+
+    /** The application context */
+    private Context context;
 
     /** The table of role-class */
     private HashMap components = new HashMap();
@@ -71,9 +77,6 @@ public class Cocoon
 
     /** The sitemap manager */
     private Manager sitemapManager;
-
-    /** The root uri/path */
-    private URL root;
 
     /** The classpath (null if not available) */
     private String classpath;
@@ -96,7 +99,7 @@ public class Cocoon
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(final URL configurationFile, final String classpath, File workDir, final String root)
+    public Cocoon(final URL configurationFile, final String classpath, File workDir)
     throws SAXException,
            IOException,
        ConfigurationException,
@@ -106,16 +109,19 @@ public class Cocoon
         this.classpath = classpath;
         this.workDir = workDir;
         this.configurationFile = configurationFile;
-
-        File rootFile = new File(root);
-        NetUtils.setRoot(rootFile);
-        this.root = rootFile.toURL();
     }
 
     public void setLogger(Logger logger) {
         if (this.log == null) {
             this.log = logger;
             this.componentManager.setLogger(this.log);
+        }
+    }
+
+    public void contextualize(Context context) {
+        if (this.context == null) {
+            this.context = context;
+            this.componentManager.contextualize(this.context);
         }
     }
 
@@ -148,15 +154,6 @@ public class Cocoon
         p.parse(is);
 
         this.configure(b.getConfiguration());
-    }
-
-    /**
-     * Set the cocoon root.
-     * @param root The new Cocoon root.
-     */
-    public void setRoot(URL root) {
-        log.debug("Root URL set to: " + root.toExternalForm());
-        this.root = root;
     }
 
     /**
@@ -243,7 +240,7 @@ public class Cocoon
      */
     public boolean process(Environment environment)
     throws Exception {
-        String file = new URL(environment.resolveEntity(null, this.sitemapFileName).getSystemId()).getFile();
+        String file = ((URLFactory)componentManager.lookup(Roles.URL_FACTORY)).getURL(environment.resolveEntity(null, this.sitemapFileName).getSystemId()).getFile();
         return this.sitemapManager.invoke(environment, "", file, true);
     }
 

@@ -12,6 +12,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
+import org.apache.avalon.Recyclable;
 
 /**
  * This abstract class provides default implementation of the methods specified
@@ -19,9 +20,9 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-22 21:56:54 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:47 $
  */
-public abstract class AbstractXMLProducer implements XMLProducer, Loggable {
+public abstract class AbstractXMLProducer implements XMLProducer, Loggable, Recyclable {
 
     protected Logger log;
 
@@ -70,5 +71,13 @@ public abstract class AbstractXMLProducer implements XMLProducer, Loggable {
      */
     public void setLexicalHandler(LexicalHandler handler) {
         this.lexicalHandler = handler;
+    }
+
+    /**
+     * Recycle the producer by removing references
+     */
+    public void recycle() {
+        this.contentHandler = null;
+        this.lexicalHandler = null;
     }
 }

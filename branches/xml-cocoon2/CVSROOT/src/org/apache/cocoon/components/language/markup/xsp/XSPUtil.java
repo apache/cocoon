@@ -29,6 +29,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -42,7 +44,7 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.6 $ $Date: 2001-02-09 15:05:55 $
+ * @version $Revision: 1.1.2.7 $ $Date: 2001-02-12 13:30:43 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {
@@ -205,14 +207,12 @@ public class XSPUtil {
   /* Logicsheet Utility Methods */
 
     // Inclusion
-    public static String getURLContents(String url) throws IOException {
-        return getContents(
-            new URL(url).openStream());
+    public static String getURLContents(String url, URLFactory urlFactory) throws IOException {
+        return getContents(urlFactory.getURL(url).openStream());
     }
 
-    public static String getURLContents(String url, String encoding) throws IOException {
-        return getContents(
-            new URL(url).openStream(), encoding);
+    public static String getURLContents(String url, String encoding, URLFactory urlFactory) throws IOException {
+        return getContents(urlFactory.getURL(url).openStream(), encoding);
     }
 
     public static String getFileContents(String filename) throws IOException {

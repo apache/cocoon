@@ -29,10 +29,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.DefaultContext;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -57,7 +59,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.51 $ $Date: 2001-02-09 04:19:27 $
+ * @version CVS $Revision: 1.1.4.52 $ $Date: 2001-02-12 13:30:45 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -72,10 +74,10 @@ public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon;
     private URL configFile;
     private Exception exception;
-    private ServletContext context;
+    private ServletContext servletContext;
+    private DefaultContext appContext = new DefaultContext();
     private String classpath;
     private File workDir;
-    private String root;
     private RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
 
     /**
@@ -95,23 +97,23 @@ public class CocoonServlet extends HttpServlet {
 
         super.init(conf);
 
-        this.context = conf.getServletContext();
+        this.servletContext = conf.getServletContext();
+        this.appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, this.servletContext);
 
-        this.initLogger(conf.getInitParameter("log-level"), this.context);
+        this.initLogger(conf.getInitParameter("log-level"), this.servletContext);
 
-        this.setClassPath(this.context);
+        this.setClassPath(this.servletContext);
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
-        this.workDir = (File) this.context.getAttribute("javax.servlet.context.tempdir");
+        this.workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
 
-        this.setConfigFile(conf.getInitParameter("configurations"), this.context);
+        this.setConfigFile(conf.getInitParameter("configurations"), this.servletContext);
 
-        this.root = this.context.getRealPath("/");
+        this.appContext.put(Constants.CONTEXT_ROOT_PATH, this.servletContext.getRealPath("/"));
 
         ClassUtils.setClassLoader(this.classloader);
-
-        NetUtils.setContext(this.context);
+        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.classloader);
 
         this.createCocoon();
     }
@@ -232,7 +234,7 @@ public class CocoonServlet extends HttpServlet {
         log.debug("Using configuration file: " + usedFileName);
 
         try {
-            this.configFile = this.context.getResource(usedFileName);
+            this.configFile = this.servletContext.getResource(usedFileName);
         } catch (Exception mue) {
             log.error("Servlet initialization argument 'configurations' not found at " + usedFileName, mue);
             throw new ServletException("Servlet initialization argument 'configurations' not found at " + usedFileName);
@@ -326,7 +328,7 @@ public class CocoonServlet extends HttpServlet {
                 uri = uri.substring(1);
             }
 
-            HttpEnvironment env = new HttpEnvironment(uri, req, res, this.context);
+            HttpEnvironment env = new HttpEnvironment(uri, req, res, this.servletContext);
             env.setLogger(this.log);
 
             if (!this.cocoon.process(env)) {
@@ -400,8 +402,9 @@ public class CocoonServlet extends HttpServlet {
     private void createCocoon() {
         try {
             log.info("Reloading from: " + this.configFile.toExternalForm());
-            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir, this.root);
+            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
             c.setLogger(this.log);
+            c.contextualize(this.appContext);
             c.init();
             this.creationTime = new Date().getTime();
             this.cocoon = c;

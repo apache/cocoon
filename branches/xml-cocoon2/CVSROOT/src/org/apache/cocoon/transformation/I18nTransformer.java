@@ -11,7 +11,9 @@ package org.apache.cocoon.transformation;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.acting.LangSelect;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
@@ -33,8 +35,6 @@ import java.util.Hashtable;
 
 import java.net.URL;
 import java.net.MalformedURLException;
-
-import org.apache.cocoon.acting.LangSelect;
 
 
 
@@ -145,9 +145,14 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
 
         String translations_file = parameters.getParameter("src", null);
 
-        URL tr =
-                new URL(resolver.resolveEntity(null,
-                translations_file).getSystemId());
+        URL tr = null;
+        try {
+            tr = ((URLFactory)manager.lookup(Roles.URL_FACTORY))
+                .getURL(resolver.resolveEntity(null, translations_file).getSystemId());
+        } catch (Exception e) {
+            log.error("cannot obtain the URLFactory", e);
+            throw new SAXException("cannot obtain the URLFactory", e);
+        }
         initialiseDictionary(tr);
     }
 

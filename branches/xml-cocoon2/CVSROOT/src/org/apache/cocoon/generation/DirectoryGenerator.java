@@ -24,7 +24,9 @@ import org.apache.avalon.Parameters;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.url.URLFactory;
 
 /**
  * Generates an XML directory listing.
@@ -59,7 +61,7 @@ import org.apache.cocoon.ResourceNotFoundException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-11 19:13:19 $ */
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-12 13:30:44 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -136,7 +138,12 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         File path;
 
         input = resolver.resolveEntity(null,super.source);
-            url = new URL(input.getSystemId());
+            try {
+                url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(input.getSystemId());
+            } catch (Exception e) {
+                log.error("cannot obtain the URLFactory");
+                throw new SAXException ("cannot obtain the URLFactory", e);
+            }
             path = new File(url.getFile());
 
             if (!path.isDirectory()) {

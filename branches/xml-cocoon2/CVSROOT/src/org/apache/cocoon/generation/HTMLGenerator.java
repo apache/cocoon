@@ -9,6 +9,7 @@ package org.apache.cocoon.generation;
 
 import org.apache.avalon.Poolable;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
@@ -28,7 +29,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-06 15:23:40 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:44 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
     /**
@@ -44,7 +45,7 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
             tidy.setXHTML(true);
 
             // Extract the document using JTidy and stream it.
-            URL url = new URL(this.source);
+            URL url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(this.source);
             org.w3c.dom.Document doc = tidy.parseDOM(new BufferedInputStream(url.openStream()), null);
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
             streamer.stream(doc);

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.io.IOException;
 
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Recyclable;
 
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.ProcessingException;
@@ -22,10 +23,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-11 19:13:19 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:44 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer
-implements Generator {
+implements Generator, Recyclable {
 
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
@@ -47,4 +48,15 @@ implements Generator {
         this.source=src;
         this.parameters=par;
     }
+
+    /**
+     * Recycle the generator by removing references
+     */
+    public void recycle() {
+        this.resolver = null;
+        this.objectModel = null;
+        this.source = null;
+        this.parameters = null;
+    }
+
 }

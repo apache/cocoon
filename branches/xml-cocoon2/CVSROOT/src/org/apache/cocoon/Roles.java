@@ -12,7 +12,7 @@ package org.apache.cocoon;
  * Created this interface to specify the Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-06 15:23:36 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-12 13:30:42 $
  */
 
 public interface Roles {
@@ -29,5 +29,6 @@ public interface Roles {
     String POOL_CONTROLLER      = "org.apache.avalon.util.pool.PoolController";
     String IMAGE_ENCODER        = "org.apache.cocoon.components.image.ImageEncoderSelector";
     String DB_CONNECTION        = "org.apache.avalon.util.datasource.DataSourceComponentSelector";
+    String URL_FACTORY          = "org.apache.cocoon.components.url.URLFactory";
 
 }

@@ -6,6 +6,11 @@
   <parser class="org.apache.cocoon.components.parser.JaxpParser"/>
   <store class="org.apache.cocoon.components.store.MemoryStore"/>
 
+  <url-factory>
+    <protocol name="resource" class="org.apache.cocoon.components.url.ResourceURLFactory"/>
+    <protocol name="context"  class="org.apache.cocoon.components.url.ContextURLFactory"/>
+  </url-factory>
+
   <programming-languages>
     <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
       <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
@@ -35,14 +40,14 @@
           <parameter name="uri" value="http://apache.org/xsp/response"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
         </builtin-logicsheet>
-<!--
-		<builtin-logicsheet>
-	  	  <parameter name="prefix" value="session"/>
-	  	  <parameter name="uri" value="http://apache.org/xsp/session"/>
-	  	  <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
-		</builtin-logicsheet>
--->
-   		<builtin-logicsheet>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="session"/>
+          <parameter name="uri" value="http://apache.org/xsp/session"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
+        </builtin-logicsheet>
+
+        <builtin-logicsheet>
           <parameter name="prefix" value="esql"/>
           <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>

@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.Map;
 import java.net.URL;
 import java.net.MalformedURLException;
-import javax.servlet.ServletContext;
 import org.apache.log.LogKit;
 
 /**
@@ -20,66 +19,10 @@ import org.apache.log.LogKit;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-01 21:22:25 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:47 $
  */
 
 public class NetUtils {
-    /** The root directory for relative resolution */
-    private static File root = null;
-
-    /**
-     * This is a write once function that Cocoon uses to register the
-     * root directory.
-     */
-    public static void setRoot(File directory) {
-        if (NetUtils.root == null) {
-            NetUtils.root = directory;
-        }
-    }
-
-    /** Temporary Hack until the protocols are actually working */
-    private static ServletContext context = null;
-
-    public static void setContext(ServletContext context) {
-        if (NetUtils.context == null) {
-            NetUtils.context = context;
-        }
-
-        org.apache.cocoon.util.url.context.Handler.setContext(context);
-    }
-
-    /**
-     * Create a URL from a location. This method supports the
-     * <i>resource://</i> pseudo-protocol for loading resources
-     * accessible to this same class' <code>ClassLoader</code>
-     *
-     * @param location The location
-     * @return The URL pointed to by the location
-     * @exception MalformedURLException If the location is malformed
-     */
-    public static URL getURL(String location) throws MalformedURLException {
-        if (location.startsWith("resource://")) {
-            URL u = ClassUtils.getResource(location.substring("resource://".length()));
-            if (u != null) return u;
-            else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
-        } else if (location.startsWith("context://")) {
-            URL u = NetUtils.context.getResource(location.substring("context://".length()));
-            if (u != null) return u;
-            else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
-        }
-
-        try {
-            return new URL(location);
-        } catch (MalformedURLException mue) {
-            LogKit.getLoggerFor("cocoon").debug("Making URL a File relative to context root", mue);
-
-            if (NetUtils.root != null) {
-                return (new File(NetUtils.root, location)).toURL();
-            }
-
-            return (new File(location)).toURL();
-        }
-    }
 
     /**
      * Returns the path of the given resource.
@@ -246,12 +189,5 @@ public class NetUtils {
             parameters.put(name, value);
         }
         return uri.substring(0, i);
-    }
-
-    public static void main(String[] args) {
-        String absoluteURI = absolutize(args[0], args[1]);
-        String normalizedURI = normalize(absoluteURI);
-        String relativeURI = relativize(args[0], normalizedURI);
-        System.out.println(absoluteURI + " --> " + normalizedURI + " --> " + relativeURI);
     }
 }

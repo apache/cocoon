@@ -24,6 +24,7 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
+import org.apache.cocoon.components.url.URLFactory;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -38,7 +39,7 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-05 16:23:10 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-12 13:30:44 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -106,7 +107,13 @@ public class ServerPagesGenerator
 
     String systemId = inputSource.getSystemId();
 
-    URL url = new URL(systemId);
+    URL url = null;
+    try {
+        url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(systemId);
+    } catch (Exception e) {
+        log.error ("cannot obtain the URLFactory");
+        throw new SAXException("cannot obtain the URLFactory", e);
+    }
     if (!url.getProtocol().equals("file")) {
       throw new ResourceNotFoundException("Not a file: " + url.toString());
     }

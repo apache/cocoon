@@ -28,6 +28,7 @@ import org.apache.avalon.util.cli.CLArgsParser;
 import org.apache.avalon.util.cli.CLOption;
 import org.apache.avalon.util.cli.CLOptionDescriptor;
 import org.apache.avalon.util.cli.CLUtil;
+import org.apache.avalon.DefaultContext;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -48,7 +49,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.19 $ $Date: 2001-01-31 15:48:35 $
+ * @version CVS $Revision: 1.1.4.20 $ $Date: 2001-02-12 13:30:42 $
  */
 
 public class Main {
@@ -191,8 +192,13 @@ public class Main {
             File work = getDir(workDir, "working");
             File context = getDir(contextDir, "context");
             File conf = getConfigurationFile(context);
-            Cocoon c = new Cocoon(conf.toURL(), null, work, context.getCanonicalPath());
+            DefaultContext appContext = new DefaultContext();
+            //appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, contextDir);
+            appContext.put(Constants.CONTEXT_ROOT_PATH, contextDir);
+            appContext.put(Constants.CONTEXT_CLASS_LOADER, Main.class.getClassLoader());
+            Cocoon c = new Cocoon(conf.toURL(), null, work);
             c.setLogger(log);
+            c.contextualize(appContext);
             c.init();
             Main main = new Main(c, context, dest);
             main.warmup();

@@ -25,13 +25,18 @@ import javax.servlet.ServletContext;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.url.URLFactory;
+
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Composer;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-05 16:23:14 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-12 13:30:45 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -47,7 +52,13 @@ import org.xml.sax.SAXException;
  *       </dd>
  *   </dl>
  */
-public class ResourceReader extends AbstractReader {
+public class ResourceReader extends AbstractReader implements Composer {
+
+    private ComponentManager manager;
+
+    public void compose (ComponentManager manager) {
+        this.manager = manager;
+    }
 
     /**
      * Generates the requested resource.
@@ -55,6 +66,14 @@ public class ResourceReader extends AbstractReader {
     public void generate() throws IOException, ProcessingException {
         HttpServletRequest req = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
         HttpServletResponse res = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);
+        URLFactory urlFactory = null;
+
+        try {
+            urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
+        } catch (Exception e) {
+            log.error("cannot obtain the URLFactory", e);
+            throw new ProcessingException ("cannot obtain the URLFactory");
+        }
 
         if (res == null) {
            throw new ProcessingException ("Missing a Response object in the objectModel");
@@ -71,7 +90,7 @@ public class ResourceReader extends AbstractReader {
         try {
             if(this.source.indexOf(":/") != -1) {
                 src = this.source;
-                url = new URL (src);
+                url = urlFactory.getURL (src);
                 conn = url.openConnection();
                 if (!modified (conn.getLastModified(), req, res)) {
                     return;
@@ -80,7 +99,7 @@ public class ResourceReader extends AbstractReader {
                 is = conn.getInputStream();
             } else {
                 src = this.resolver.resolveEntity (null,this.source).getSystemId();
-                url = new URL (src);
+                url = urlFactory.getURL (src);
                 file = new File (url.getFile());
                 if (!modified (file.lastModified(), req, res)) {
                     return;

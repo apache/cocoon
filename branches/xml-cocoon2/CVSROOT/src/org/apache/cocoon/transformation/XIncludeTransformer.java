@@ -31,6 +31,7 @@ import org.apache.avalon.Composer;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.xpath.XPathAPI;
@@ -48,11 +49,11 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-01-22 21:56:51 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-12 13:30:46 $ $Author: giacomo $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Loggable {
 
-    protected Logger log;
+    protected URLFactory urlFactory;
 
     protected ComponentManager manager = null;
 
@@ -82,19 +83,13 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
     protected Stack xmlbase_element_name_stack = new Stack();
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
     public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters)
             throws ProcessingException, SAXException, IOException {}
     /*
         try {
             log.debug("SOURCE: "+source);
-            base_xmlbase_uri = new URL(source);
+            base_xmlbase_uri = urlFactory.getURL(source);
             log.debug("SOURCE URI: "+base_xmlbase_uri.toString());
         } catch (MalformedURLException e) {
             log.debug("XincludeTransformer", e);
@@ -105,6 +100,11 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
     public void compose(ComponentManager manager) {
         this.manager = manager;
+        try {
+            this.urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
+        } catch (Exception e) {
+            log.error("cannot obtain URLFactory", e);
+        }
     }
 
     public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
@@ -146,7 +146,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
     public void setDocumentLocator(Locator locator) {
         try {
-            base_xmlbase_uri = new URL(locator.getSystemId());
+            base_xmlbase_uri = urlFactory.getURL(locator.getSystemId());
             if (current_xmlbase_uri == null) {
                 current_xmlbase_uri = base_xmlbase_uri;
             }
@@ -158,7 +158,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         if (current_xmlbase_uri != null) {
             xmlbase_stack.push(current_xmlbase_uri);
         }
-        current_xmlbase_uri = new URL(value);
+        current_xmlbase_uri = urlFactory.getURL(value);
 
         xmlbase_element_uri_stack.push(last_xmlbase_element_uri);
         last_xmlbase_element_uri = uri;
@@ -183,10 +183,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         String suffix;
         int index = href.indexOf('#');
         if (index < 0) {
-            url = new URL(current_xmlbase_uri,href);
+            url = urlFactory.getURL(current_xmlbase_uri,href);
             suffix = "";
         } else {
-            url = new URL(current_xmlbase_uri,href.substring(0,index));
+            url = urlFactory.getURL(current_xmlbase_uri,href.substring(0,index));
             suffix = href.substring(index+1);
         }
         log.debug("URL: "+url+"\nSuffix: "+suffix);

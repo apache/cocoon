@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-09 13:17:35 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-12 13:30:46 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Recyclable, Configurable {
@@ -286,6 +286,7 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
         } catch (Exception e){
             log.debug("Exception in recycle:", e);
         }
+        this.transformerHandler = null;
         super.recycle();    
     }
 }

@@ -16,12 +16,12 @@ import org.apache.cocoon.Cocoon;
  * that extends this to access SitemapComponents.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-12 05:56:49 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-12 13:30:43 $
  */
 public abstract class ComposerAction extends AbstractAction implements Composer {
 
     /** The component manager instance */
-    protected ComponentManager manager=null;
+    protected ComponentManager manager;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this

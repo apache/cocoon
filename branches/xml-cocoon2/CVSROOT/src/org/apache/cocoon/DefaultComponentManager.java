@@ -18,6 +18,8 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.Context;
+import org.apache.avalon.Contextualizable;
 import org.apache.avalon.SingleThreaded;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Poolable;
@@ -38,11 +40,15 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-01-22 21:56:32 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-12 13:30:42 $
  */
 public class DefaultComponentManager implements ComponentManager, Configurable, Loggable {
 
     protected Logger log;
+
+    /** The application context for components
+     */
+    private Context context;
 
     /** Hashmap of all components which this ComponentManager knows about.
      */
@@ -73,6 +79,12 @@ public class DefaultComponentManager implements ComponentManager, Configurable, 
     public void setLogger(Logger logger) {
         if (this.log == null) {
             this.log = logger;
+        }
+    }
+
+    public void contextualize(Context context) {
+        if (this.context == null) {
+            this.context = context;
         }
     }
 
@@ -108,9 +120,9 @@ public class DefaultComponentManager implements ComponentManager, Configurable, 
 
             this.components.put(role, componentClass);
 
-        if (Configurable.class.isAssignableFrom(componentClass)) {
-            this.configurations.put(role, new DefaultConfiguration("", "-"));
-        }
+            if (Configurable.class.isAssignableFrom(componentClass)) {
+                this.configurations.put(role, new DefaultConfiguration("", "-"));
+            }
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
@@ -288,6 +300,10 @@ public class DefaultComponentManager implements ComponentManager, Configurable, 
     throws ComponentManagerException {
         if ( c instanceof Loggable ) {
             ((Loggable)c).setLogger(this.log);
+        }
+
+        if ( c instanceof Contextualizable ) {
+            ((Contextualizable)c).contextualize(this.context);
         }
 
         if ( c instanceof Configurable ) {

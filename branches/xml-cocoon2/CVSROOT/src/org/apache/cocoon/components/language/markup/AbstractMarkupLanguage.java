@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Iterator;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -27,6 +28,7 @@ import org.xml.sax.XMLFilter;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
@@ -34,17 +36,19 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Parameters;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.components.store.MemoryStore;
-import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.avalon.AbstractLoggable;
+
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.components.store.MemoryStore;
+import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.util.IOUtils;
 
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-02-08 21:04:30 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-02-12 13:30:43 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -162,7 +166,8 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             logicsheet.setLogger(getLogger());
         }
 
-        logicsheetURL = NetUtils.getURL(logicsheetLocation);
+        URLFactory urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
+        logicsheetURL = urlFactory.getURL(logicsheetLocation);
 
         logicsheet.setInputSource(new InputSource(logicsheetURL.openStream()));
 
@@ -272,7 +277,13 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                 throw new SAXException("codeGenerator must never be null.");
             }
 
-            URL url = NetUtils.getURL(logicsheetLocation);
+            URL url = null;
+            try {
+                url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(logicsheetLocation);
+            } catch (Exception e) {
+                getLogger().error("cannot get logicsheet at " + logicsheetLocation);
+                new SAXException ("cannot get logicsheet at " + logicsheetLocation, e);
+            }
             getLogger().debug("Logicsheet Used:" + url.toExternalForm());
             inputSource = new InputSource(url.openStream());
 

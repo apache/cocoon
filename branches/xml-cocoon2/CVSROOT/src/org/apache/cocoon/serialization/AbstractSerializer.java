@@ -9,17 +9,17 @@
 package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
-
+import org.apache.avalon.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-27 16:15:33 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-12 13:30:45 $
  */
  
-public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer {
+public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer, Recyclable {
 
     /**
      * The <code>OutputStream</code> used by this serializer.
@@ -40,5 +40,12 @@ public abstract class AbstractSerializer extends AbstractXMLPipe implements Seri
      */
     public String getMimeType() {
         return null;
+    }
+
+    /**
+     * Recycle serializer by removing references 
+     */
+    public void recycle() {
+        this.output = null;
     }
 }

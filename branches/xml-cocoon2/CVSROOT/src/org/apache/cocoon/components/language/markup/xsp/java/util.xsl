@@ -133,7 +133,7 @@
       String __name = String.valueOf(<xsl:copy-of select="$href"/>);
 
       try {
-          URL __url = new URL(__name);
+          URL __url = ((org.apache.cocoon.components.url.URLFactory)manager.lookup(org.apache.cocoon.Roles.URL_FACTORY)).getURL(__name);
           InputSource __is = new InputSource(__url.openStream());
           __is.setSystemId(__url.toString());
           org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);

@@ -30,6 +30,7 @@ import org.apache.cocoon.xml.DocumentHandlerAdapter;
 import org.apache.cocoon.xml.DocumentHandlerWrapper;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.components.store.Store;
+import org.apache.cocoon.components.url.URLFactory;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -70,11 +71,14 @@ import org.apache.avalon.Loggable;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-22 21:56:51 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-12 13:30:46 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer, Loggable {
     private Logger log;
+
+    /** The component manager */
+    private ComponentManager manager = null;
 
     /** The store service instance */
     private Store store = null;
@@ -96,6 +100,8 @@ implements Transformer, Composer, Loggable {
      * <code>Composer</code>.
      */
     public void compose(ComponentManager manager) {
+        this.manager = manager;
+
         try {
             log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
@@ -131,6 +137,7 @@ implements Transformer, Composer, Loggable {
         if (store != null) {
             loaderprocessor = (XTProcessor) store.get(xsluri);
             loaderprocessor.setLogger(this.log);
+            loaderprocessor.compose(this.manager);
         }
 
         // If not in the store or if style sheet has changed, loads and stores it
@@ -276,7 +283,7 @@ implements Transformer, Composer, Loggable {
   * The XT processor.
   */
 
-class XTProcessor implements Cloneable, ParameterSet, Modifiable, Loggable {
+class XTProcessor implements Cloneable, ParameterSet, Modifiable, Loggable, Composer {
 
     protected Logger log;
     private XMLProcessorEx sheetLoader;
@@ -290,11 +297,16 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable, Loggable {
     private HashMap params = new HashMap();
     private File xslFile;
     private long lastModified;
+    private ComponentManager manager;
 
     public void setLogger(Logger logger) {
         if (this.log == null) {
             this.log = logger;
         }
+    }
+
+    public void compose(ComponentManager manager) {
+        this.manager = manager;
     }
 
     /**
@@ -330,7 +342,13 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable, Loggable {
     */
     public void loadStylesheet(InputSource sheetSource) throws SAXException, IOException {
         // Set the xslFile for the caching mechanism
-        URL url = new URL (sheetSource.getSystemId());
+        URL url = null;
+        try {
+            url = ((URLFactory)this.manager.lookup(Roles.URL_FACTORY)).getURL(sheetSource.getSystemId());
+        } catch (Exception e) {
+            log.error("cannot obtain the URLFactory", e);
+            throw new SAXException ("cannot obtain the URLFactory", e);
+        }
         this.xslFile = new File(url.getFile());
         lastModified = xslFile.lastModified();
 
