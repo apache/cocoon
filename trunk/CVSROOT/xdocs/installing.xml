@@ -546,7 +546,10 @@ servlets.properties:servlet.org.apache.cocoon.Cocoon.preload=false</source>
    </s3>
 
   <s3 title="JRun version 3.0">
-   <p>In addition to the instructions above <strong>and</strong> below, 
+   <p>In addition to the instructions given at
+    <link href="http://www.allaire.com/Handlers/index.cfm?ID=17501&Method=Full">
+     the JRun website</link>
+   <strong>and</strong> below, 
     you also need to do the following to 
     avoid conflicts with JRun 3.0's own XML classes.</p>
 
