@@ -75,7 +75,7 @@ import java.util.*;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.2 2003/03/24 14:33:55 stefano Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.3 2003/04/01 21:25:09 sylvain Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
@@ -161,6 +161,9 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     /** Are we currently building a view ? */
     private boolean isBuildingView = false;
 
+    /** Are we currently building a view ? */
+    private boolean isBuildingErrorHandler = false;
+
     /**
      * Pseudo-label for views <code>from-position="first"</code> (i.e. generator).
      */
@@ -178,6 +181,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         this.labelViews.clear();
         this.viewsNode = null;
         this.isBuildingView = false;
+        this.isBuildingErrorHandler = false;
     }
 
     /**
@@ -192,6 +196,20 @@ public class SitemapLanguage extends DefaultTreeBuilder {
      */
     public boolean isBuildingView() {
         return this.isBuildingView;
+    }
+
+    /**
+     * Set to <code>true</code> while building the internals of a &lt;map:handle-errors&gt;
+     */
+    public void setBuildingErrorHandler(boolean building) {
+        this.isBuildingErrorHandler = building;
+    }
+
+    /**
+     * Are we currently building an error handler ?
+     */
+    public boolean isBuildingErrorHandler() {
+        return this.isBuildingErrorHandler;
     }
 
     /**

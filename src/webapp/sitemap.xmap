@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.9 2003/03/30 12:48:33 ghoward Exp $
+    | CVS $Id: sitemap.xmap,v 1.10 2003/04/01 21:25:10 sylvain Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -58,6 +58,9 @@
     <map:generator label="content,data" logger="sitemap.generator.stream" name="stream" pool-grow="2" pool-max="16" pool-min="1" src="org.apache.cocoon.generation.StreamGenerator"/>
     <map:generator label="data" logger="sitemap.generator.status" name="status" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.StatusGenerator"/>
     <map:generator label="data" logger="sitemap.generator.proxy" name="proxy" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.WebServiceProxyGenerator"/>    
+    <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
+         representation of the exception that caused the error handler to be executed -->
+    <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
   </map:generators>
 
   <!--+
@@ -195,6 +198,21 @@
     <browser name="mozilla5" useragent="Netscape6/"/>
     <browser name="netscape" useragent="Mozilla"/>
    </map:selector>
+   
+   <!--+
+       | Exception selector : used in <map:handle> errors to build different pipelines
+       | depending on the error that occured.
+       | The configuration allows to associate a symbolic name to exception classes
+       | which is used in the <map:when> tests.
+       | An exception can also be "unrolled", meaning that cascaded exception will be checked.
+       +-->
+   <map:selector logger="sitemap.selector.exception" name="exception" src="org.apache.cocoon.selection.ExceptionSelector">
+     <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
+     <!-- The statement below tells the selector to unroll as much exceptions as possible -->
+     <exception class="java.lang.Throwable" unroll="true"/>
+   </map:selector>
+  
+
    <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
     <!-- Define now which request parameter to use; or do it later,
          when using this selector, via "parameter-name" parameter.
@@ -492,17 +510,33 @@
         | At the very end of a pipeline, you can catch the errors triggered
         | by the pipeline execution. The error handler is an internal sitemap
         | component that when triggered by an error takes over the normal
-        | pipeline execution and generates an XML representation
-        | of the error found and jump down here where you can futher
-        | manipulate the error screen.
+        | pipeline execution.
+        | You can here use the "notifying" generator that produces an XML
+        | representation and further manipulate this document for presentation
+        | on screen.
+        | You can also use any other generator you want if you don't want the
+        | error to be displayed on screen. The "exception" selector can help
+        | you to define different screens for different error types.
         +-->
     <map:handle-errors>
-      <map:transform src="stylesheets/system/error2html.xslt">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-	  </map:transform>
+      <map:select type="exception">
+      
+        <map:when test="not-found">
+          <map:generate src="not-found.xml"/>
+          <map:transform src="welcome.xslt"/>
+        </map:when>
+        
+        <map:otherwise>
+          <map:generate type="notifying"/>
+          <map:transform src="stylesheets/system/error2html.xslt">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+	      </map:transform>
+        </map:otherwise>
+      </map:select>
+      
       <map:serialize/>
+      
     </map:handle-errors>
-
   </map:pipeline>
 
  </map:pipelines>

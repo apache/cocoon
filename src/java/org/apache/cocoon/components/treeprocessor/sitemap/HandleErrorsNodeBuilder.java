@@ -60,7 +60,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  * Builds a &lt;map:handle-errors&gt;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: HandleErrorsNodeBuilder.java,v 1.1 2003/03/09 00:09:21 pier Exp $
+ * @version CVS $Id: HandleErrorsNodeBuilder.java,v 1.2 2003/04/01 21:25:09 sylvain Exp $
  */
 
 public class HandleErrorsNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
@@ -72,11 +72,17 @@ public class HandleErrorsNodeBuilder extends AbstractParentProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        HandleErrorsNode node = new HandleErrorsNode(config.getAttributeAsInteger("type", 500));
+        HandleErrorsNode node = new HandleErrorsNode(config.getAttributeAsInteger("type", -1));
         this.treeBuilder.setupNode(node, config);
+        
+        // Set a flag that will prevent redirects
+        ((SitemapLanguage)this.treeBuilder).setBuildingErrorHandler(true);
 
         // Get all children
         node.setChildren(buildChildNodes(config));
+
+        // And clear the flag
+        ((SitemapLanguage)this.treeBuilder).setBuildingErrorHandler(false);
 
         return node;
     }

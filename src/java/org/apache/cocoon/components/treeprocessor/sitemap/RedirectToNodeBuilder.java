@@ -65,7 +65,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToNodeBuilder.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: RedirectToNodeBuilder.java,v 1.2 2003/04/01 21:25:09 sylvain Exp $
  */
 
 public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
@@ -81,6 +81,11 @@ public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
         
+        if (((SitemapLanguage)this.treeBuilder).isBuildingErrorHandler()) {
+            throw new ConfigurationException("'map:redirect' is forbidden inside a 'map:handle-errors', at "
+            	+ config.getLocation());
+        }
+
         // Is it a redirect to resource ?
         this.resourceName = config.getAttribute("resource", null);
         if (this.resourceName != null) {
