@@ -122,6 +122,7 @@
     <map:selectors/>
     <map:matchers/>
     <map:actions/>
+    <map:pipes/>
   </map:components> ]]></source>
 
     <s3 title="Common Attributes of Components">

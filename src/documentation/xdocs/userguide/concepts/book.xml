@@ -14,7 +14,6 @@
     <menu-item label="Overview" href="index.html"/>
     <menu-item label="Views" href="views.html"/>
     <menu-item label="Actions" href="actions.html"/>
-    <menu-item label="Matchers and Selectors" href="matchers_selectors.html"/>
     <menu-item label="Entity Catalogs" href="catalog.html"/>
     <menu-item label="XMLSearching" href="xmlsearching.html"/>
     <menu-item label="XMLForm" href="xmlform.html"/>

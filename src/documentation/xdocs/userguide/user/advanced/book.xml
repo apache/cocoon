@@ -14,7 +14,8 @@
     <menu-item label="1.4.2 Aggregation" href="preface.html"/>
     <menu-item label="1.4.3 Redirects" href="preface.html"/>
     <menu-item label="1.4.4 Actions" href="actions.html"/>
-    <menu-item label="1.4.5 Error Handling" href="errorhandling.html"/>
+    <menu-item label="1.4.5 Matchers and Selectors" href="matchers_selectors.html"/>
+    <menu-item label="1.4.6 Error Handling" href="errorhandling.html"/>
   </menu>
   
 </book>
