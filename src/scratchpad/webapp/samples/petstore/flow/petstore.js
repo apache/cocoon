@@ -65,9 +65,25 @@ var accountForm = null;
 var cartForm = null;
 var categoryList = null;
 
+
+function main(funName) {
+    var fun = this[funName];
+    var args = new Array(arguments.length -1);
+    for (var i = 1; i < arguments.length; i++) {
+	args[i-1] = arguments[i];
+    }
+    getPetStore();
+    fun.apply(args);
+
+}
+
 function getPetStore() {
     if (petStore == null) {
-        petStore = new PetStore("hsql");
+        cocoon.createSession();
+        this.petStore = new PetStore("hsql");
+        this.cartForm = new CartForm();
+        this.accountForm = new AccountForm();
+	this.categoryList = getPetStore().getCategoryList();
     }
     return petStore;
 }
@@ -75,12 +91,7 @@ function getPetStore() {
 // Index page
 
 function index() {
-    if (petStore == null) {
-        cocoon.createSession();
-        cartForm = new CartForm();
-        accountForm = new AccountForm();
-    }
-    this.categoryList = getPetStore().getCategoryList();
+    getPetStore();
     sendPage("view/templates/index.vm", {
              accountForm: accountForm,
              categoryList: categoryList
@@ -118,7 +129,7 @@ function updateCartQuantities() {
     sendPage("view/templates/Cart.vm", {
              yoshi: yoshi, 
              accountForm: accountForm, 
-            cartForm:cartForm
+             cartForm:cartForm
     });
 }
 
@@ -195,12 +206,12 @@ function viewProduct() {
 function viewItem() {
     var itemId = cocoon.request.getParameter("itemId");
     var item = getPetStore().getItem(itemId);
-    sendPageAndWait("view/templates/Item.vm", {
-                    accountForm: accountForm, 
-                    cartForm: cartForm, 
-                    item: item, 
-                    product: item.product, 
-                    yoshi: yoshi
+    sendPage("view/templates/Item.vm", {
+             accountForm: accountForm, 
+             cartForm: cartForm, 
+             item: item, 
+             product: item.product, 
+             yoshi: yoshi
     });
 }
 
