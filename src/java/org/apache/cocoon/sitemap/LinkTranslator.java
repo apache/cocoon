@@ -68,9 +68,9 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.3 2003/09/05 11:40:41 cziegeler Exp $
+ * @version CVS $Id: LinkTranslator.java,v 1.4 2003/10/21 21:48:32 upayavira Exp $
  */
-public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
+public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {
     
     private Map links;
 
@@ -81,26 +81,6 @@ public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, Ca
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) 
     throws ProcessingException, SAXException, IOException {
         this.links = (Map)objectModel.get(Constants.LINK_OBJECT);
-    }
-
-    /**
-     * Generate the unique key.
-     * This key must be unique inside the space of this component.
-     *
-     * @return The generated key hashes the src
-     */
-    public java.io.Serializable getKey() {
-        return "1";
-    }
-
-    /**
-     * Generate the validity object.
-     *
-     * @return The generated validity object or <code>null</code> if the
-     *         component is currently not cacheable.
-     */
-    public SourceValidity getValidity() {
-        return NOPValidity.SHARED_INSTANCE;
     }
 
     public void simpleLink(String href, String role, String arcrole, 
