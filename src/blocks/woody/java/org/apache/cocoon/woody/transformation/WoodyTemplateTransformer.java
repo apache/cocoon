@@ -50,39 +50,28 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Map;
-
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.Transformer;
-import org.apache.commons.jxpath.JXPathContext;
+
+import org.apache.avalon.framework.parameters.Parameters;
+
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * See description of {@link WidgetReplacingPipe}.
  * 
- * @version CVS $Id: WoodyTemplateTransformer.java,v 1.9 2003/12/29 06:14:49 tim Exp $
+ * @version CVS $Id: WoodyTemplateTransformer.java,v 1.10 2004/01/05 16:59:39 vgritsenko Exp $
  */
 public class WoodyTemplateTransformer extends EffectWidgetReplacingPipe implements Transformer {
 
-    /** Name of the request attribute under which the Woody form is stored (optional). */
-    private String attributeName;
-    private Request request;
-    private JXPathContext jxpathContext;
-    /** Containts locale specified as a parameter to the transformer, if any. */
-    private Locale localeParameter;
-    /** The locale currently used by the transformer. */
-    private Locale locale;
-
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
 
-        // FIXME: Duplicate code above and in createConfig
-        WoodyPipelineConfig pipeContext = WoodyPipelineConfig.createConfig(objectModel, parameters); 
-        init(null, pipeContext);
+        WoodyPipelineConfig pipeContext = WoodyPipelineConfig.createConfig(objectModel, parameters);
+        super.init(null, pipeContext);
     }
 }
