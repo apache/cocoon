@@ -20,7 +20,7 @@ import javax.xml.transform.OutputKeys;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-12 04:39:01 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-12 10:57:21 $
  */
 
 public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
@@ -44,4 +44,13 @@ public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
             throw new RuntimeException(e.toString());
         }
     }
+
+    /**
+     * Recyce the serializer. GC instance variables
+     */
+    public void recycle() {
+        super.recycle();
+        this.handler = null;
+    }
+
 }

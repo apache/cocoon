@@ -20,7 +20,7 @@ import org.apache.avalon.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-12 04:39:02 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-12 10:57:23 $
  */
 
 public class XMLSerializer extends AbstractTextSerializer implements Poolable {
@@ -43,5 +43,13 @@ public class XMLSerializer extends AbstractTextSerializer implements Poolable {
             getLogger().error("XMLSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());
         }
+    }
+
+    /**
+     * Recyce the serializer. GC instance variables
+     */
+    public void recycle() {
+        super.recycle();
+        this.handler = null;
     }
 }
