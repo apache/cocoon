@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,13 +36,13 @@ import org.xml.sax.SAXException;
 
 /**
  * Simple Source include transformer.
- * 
+ *
  * <p>
  *  Triggers for the element <code>include</code> in the
  *  namespace <code>http://apache.org/cocoon/include/1.0</code>.
  *  Use <code>&lt;include src="scheme://path"/&gt;</code>
  * </p>
- * 
+ *
  * @cocoon.sitemap.component.name   include
  * @cocoon.sitemap.component.logger sitemap.transformer.include
  *
@@ -50,8 +50,9 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.pooling.max  16
  * @cocoon.sitemap.component.pooling.grow  2
  */
-public class IncludeTransformer extends AbstractTransformer 
-implements Serviceable, Transformer, CacheableProcessingComponent {
+public class IncludeTransformer extends AbstractTransformer
+                                implements Serviceable, Transformer,
+                                           CacheableProcessingComponent {
 
     private static final String NS_URI = "http://apache.org/cocoon/include/1.0";
     private static final String INCLUDE_ELEMENT = "include";
@@ -62,14 +63,13 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
     private MultiSourceValidity m_validity;
 
     public IncludeTransformer() {
-        super();
     }
 
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
     }
 
-    public void setup(SourceResolver resolver, Map om, String src, Parameters parameters) 
+    public void setup(SourceResolver resolver, Map om, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
         m_resolver = resolver;
         m_validity = null;
@@ -95,7 +95,7 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
         super.endDocument();
     }
 
-    public void startElement(String uri, String localName, String qName, Attributes atts) 
+    public void startElement(String uri, String localName, String qName, Attributes atts)
     throws SAXException {
         if (NS_URI.equals(uri)) {
             if (INCLUDE_ELEMENT.equals(localName)) {
@@ -104,23 +104,23 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
                 try {
                     source = m_resolver.resolveURI(src);
                     m_validity.addSource(source);
-                    SourceUtil.toSAX(m_manager, source, "text/xml", 
-                            new IncludeXMLConsumer(super.contentHandler));
-                }
-                catch (IOException e) {
+                    SourceUtil.toSAX(m_manager,
+                                     source,
+                                     "text/xml",
+                                     new IncludeXMLConsumer(super.contentHandler));
+                } catch (IOException e) {
                     throw new SAXException(e);
-                }
-                catch (ProcessingException e) {
+                } catch (ProcessingException e) {
                     throw new SAXException(e);
-                }
-                finally {
+                } finally {
                     if (source != null) {
                         m_resolver.release(source);
                     }
                 }
+            } else {
+                getLogger().warn("Unrecognized element <" + qName + ">");
             }
-        }
-        else {
+        } else {
             super.startElement(uri, localName, qName, atts);
         }
     }
@@ -132,7 +132,9 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
     }
 
     public Serializable getKey() {
-        return "IncludeTransformer";
+        // FIXME: In case of including "cocoon://" or other dynamic sources
+        // key has to be dynamic.
+        return "I";
     }
 
     public SourceValidity getValidity() {
@@ -141,5 +143,4 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
         }
         return m_validity;
     }
-
 }
