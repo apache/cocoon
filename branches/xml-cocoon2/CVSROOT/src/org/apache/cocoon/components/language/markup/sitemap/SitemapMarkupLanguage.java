@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-31 15:03:54 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-01 21:12:41 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -359,8 +359,9 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
                         // send all prefix namespace
                         String [] prefixArray;
-                        for (int i=0; i<startPrefix.size(); i++) {
-                            prefixArray = (String []) startPrefix.get(i);
+                        Iterator i = startPrefix.iterator();
+                        while (i.hasNext()) {
+                            prefixArray = (String []) i.next();
                             super.startPrefixMapping(
                                 prefixArray[0],
                                 prefixArray[1]
