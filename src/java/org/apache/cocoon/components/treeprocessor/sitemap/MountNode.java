@@ -35,7 +35,11 @@ import org.apache.cocoon.environment.Environment;
  * @version CVS $Id$
  */
 public class MountNode extends AbstractProcessingNode
-implements Disposable {
+                       implements Disposable {
+
+    /** The  key to get the pass_through value fron the Environment*/
+    protected final static String COCOON_PASS_THROUGH = "COCOON_PASS_THROUGH";
+
 
     /** The 'uri-prefix' attribute */
     private final VariableResolver prefix;
@@ -54,9 +58,6 @@ implements Disposable {
 
     /** The value of the 'pass-through' attribute */
     private final boolean passThrough;
-
-    /** The  key to get the pass_through value fron the Environment*/
-    protected final static String COCOON_PASS_THROUGH = new String("COCOON_PASS_THROUGH");
 
     public MountNode(VariableResolver prefix,
                      VariableResolver source,
