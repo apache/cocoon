@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.70 2001-02-26 17:27:09 greenrd Exp $
+  $Id: todo.xml,v 1.71 2001-02-28 18:11:53 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -39,6 +39,9 @@
    and every attribute); (3) How to write your own and use it; (4) How to
    specify logicsheet execution order with the as-yet-undocumented 
    &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
+  </action>
+  <action context="code" assigned-to="RDG">
+   Fix error reporting for resource:// logicsheets in cocoon.properties
   </action>
   <action context="code" assigned-to="RDG">
    Add XMLFragmentBase as described in docs.
