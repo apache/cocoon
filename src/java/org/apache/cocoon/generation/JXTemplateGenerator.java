@@ -55,6 +55,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.ExpressionFactory;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.util.Introspector;
@@ -71,6 +72,8 @@ import org.apache.commons.jxpath.JXPathContextFactory;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.jxpath.Variables;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -110,14 +113,12 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.44 2004/05/27 08:23:58 cziegeler Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.45 2004/06/24 20:35:07 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
     private static final JXPathContextFactory
         jxpathContextFactory = JXPathContextFactory.newInstance();
-
-    private static final char[] EMPTY_CHARS = "".toCharArray();
 
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
@@ -717,7 +718,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
      * (contained in #{})
      */
 
-    private static Expression compileExpr(String expr, String errorPrefix,
+    private static JXTExpression compileExpr(String expr, String errorPrefix,
                                    Locator location) throws SAXParseException {
         try {
             return compileExpr(expr);
@@ -731,7 +732,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
-    private static Expression compileExpr(String inStr) throws Exception {
+    private static JXTExpression compileExpr(String inStr) throws Exception {
         try {
             if (inStr == null) {
                 return null;
@@ -768,7 +769,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     // hack: invalid expression?
                     // just return the original and swallow exception
-                    return new Expression(inStr, null);
+                    return new JXTExpression(inStr, null);
                 }
             }
             if (inExpr) {
@@ -784,16 +785,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         } catch (IOException ignored) {
             ignored.printStackTrace();
         }
-        return new Expression(inStr, null);
+        return new JXTExpression(inStr, null);
     }
 
     /*
      * Compile an integer expression (returns either a Compiled Expression
      * or an Integer literal)
      */
-    private static Expression compileInt(String val, String msg,
+    private static JXTExpression compileInt(String val, String msg,
                                         Locator location) throws SAXException {
-        Expression res = compileExpr(val, msg, location);
+        JXTExpression res = compileExpr(val, msg, location);
         if (res != null) {
             if (res.compiledExpression == null) {
                 res.compiledExpression = Integer.valueOf(res.raw);
@@ -803,9 +804,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return null;
     }
 
-    private static Expression compileBoolean(String val, String msg,
+    private static JXTExpression compileBoolean(String val, String msg,
                                         Locator location) throws SAXException {
-        Expression res = compileExpr(val, msg, location);
+        JXTExpression res = compileExpr(val, msg, location);
         if (res != null) {
             if (res.compiledExpression == null) {
                 res.compiledExpression = Boolean.valueOf(res.raw);
@@ -815,7 +816,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return null;
     }
 
-    private static Expression compile(final String variable, boolean xpath)
+    private static JXTExpression compile(final String variable, boolean xpath)
                 throws Exception {
         Object compiled;
         if (xpath) {
@@ -823,10 +824,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         } else {
             compiled = ExpressionFactory.createExpression(variable);
         }
-        return new Expression(variable, compiled);
+        return new JXTExpression(variable, compiled);
     }
 
-    static private Object getValue(Expression expr, JexlContext jexlContext,
+    static private Object getValue(JXTExpression expr, JexlContext jexlContext,
                             JXPathContext jxpathContext, Boolean lenient)
         throws Exception {
         if (expr != null) {
@@ -843,9 +844,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     } finally {
                         jxpathContext.setLenient(oldLenient);
                     }
-                } else if (compiled instanceof org.apache.commons.jexl.Expression) {
-                    org.apache.commons.jexl.Expression e =
-                        (org.apache.commons.jexl.Expression)compiled;
+                } else if (compiled instanceof Expression) {
+                    Expression e = (Expression)compiled;
                     return e.evaluate(jexlContext);
                 }
                 return compiled;
@@ -861,11 +861,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
-    static private Object getValue(Expression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
+    static private Object getValue(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         return getValue(expr, jexlContext, jxpathContext, null);
     }
 
-    static private int getIntValue(Expression expr, JexlContext jexlContext,
+    static private int getIntValue(JXTExpression expr, JexlContext jexlContext,
                                 JXPathContext jxpathContext) throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
         if (res instanceof Number) {
@@ -874,7 +874,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return 0;
     }
 
-    static private Number getNumberValue(Expression expr, JexlContext jexlContext,
+    static private Number getNumberValue(JXTExpression expr, JexlContext jexlContext,
                                JXPathContext jxpathContext) throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
         if (res instanceof Number) {
@@ -886,7 +886,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return null;
     }
 
-    static private String getStringValue(Expression expr, JexlContext jexlContext,
+    static private String getStringValue(JXTExpression expr, JexlContext jexlContext,
                                 JXPathContext jxpathContext) throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
         if (res != null) {
@@ -898,7 +898,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return null;
     }
 
-    static private Boolean getBooleanValue(Expression expr, JexlContext jexlContext,
+    static private Boolean getBooleanValue(JXTExpression expr, JexlContext jexlContext,
                                     JXPathContext jxpathContext)
         throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
@@ -909,7 +909,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     // Hack: try to prevent JXPath from converting result to a String
-    private Object getNode(Expression expr, JexlContext jexlContext,
+    private Object getNode(JXTExpression expr, JexlContext jexlContext,
                            JXPathContext jxpathContext, Boolean lenient)
         throws Exception {
         try {
@@ -962,7 +962,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
-    private Object getNode(Expression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
+    private Object getNode(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         return getNode(expr, jexlContext, jxpathContext, null);
     }
 
@@ -1035,7 +1035,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                                 new ErrorHolder(err));
 
                                 }
-                                substitutions.add(new Expression(str,
+                                substitutions.add(new JXTExpression(str,
                                                                  compiledExpression));
                                 buf.setLength(0);
                                 inExpr = false;
@@ -1099,7 +1099,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 buf.getChars(0, buf.length(), charArray, 0);
                 substitutions.add(charArray);
             } else if (substitutions.size() == 0) {
-                substitutions.add(EMPTY_CHARS);
+                substitutions.add(ArrayUtils.EMPTY_CHAR_ARRAY);
             }
         }
         final List substitutions = new LinkedList();
@@ -1201,8 +1201,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final String value;
     }
 
-    static class Expression extends Subst {
-        Expression(String raw, Object expr) {
+    static class JXTExpression extends Subst {
+        JXTExpression(String raw, Object expr) {
             this.raw = raw;
             this.compiledExpression = expr;
         }
@@ -1226,7 +1226,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             this.namespaceURI = namespaceURI;
             this.localName = localName;
             this.raw = raw;
-            this.qname = "{"+namespaceURI+"}"+localName;
+            this.qname = "{" + namespaceURI + "}" + localName;
             StringBuffer buf = new StringBuffer();
             int len = attrs.getLength();
             for (int i = 0; i < len; i++) {
@@ -1255,7 +1255,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     }
                                 } else if (c == '}') {
                                     String str = buf.toString();
-                                    Expression compiledExpression;
+                                    JXTExpression compiledExpression;
                                     try {
                                         compiledExpression =
                                             compile(str, xpath);
@@ -1432,9 +1432,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartForEach extends StartInstruction {
-        StartForEach(StartElement raw, Expression items, Expression var,
-                Expression varStatus, Expression begin, Expression end,
-                Expression step, Boolean lenient) {
+        StartForEach(StartElement raw, JXTExpression items, JXTExpression var,
+                JXTExpression varStatus, JXTExpression begin, JXTExpression end,
+                JXTExpression step, Boolean lenient) {
             super(raw);
             this.items = items;
             this.var = var;
@@ -1444,21 +1444,21 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             this.step = step;
             this.lenient = lenient;
         }
-        final Expression items;
-        final Expression var;
-        final Expression varStatus;
-        final Expression begin;
-        final Expression end;
-        final Expression step;
+        final JXTExpression items;
+        final JXTExpression var;
+        final JXTExpression varStatus;
+        final JXTExpression begin;
+        final JXTExpression end;
+        final JXTExpression step;
         final Boolean lenient;
     }
 
     static class StartIf extends StartInstruction {
-        StartIf(StartElement raw, Expression test) {
+        StartIf(StartElement raw, JXTExpression test) {
             super(raw);
             this.test = test;
         }
-        final Expression test;
+        final JXTExpression test;
     }
 
     static class StartChoose extends StartInstruction {
@@ -1470,11 +1470,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartWhen extends StartInstruction {
-        StartWhen(StartElement raw, Expression test) {
+        StartWhen(StartElement raw, JXTExpression test) {
             super(raw);
             this.test = test;
         }
-        final Expression test;
+        final JXTExpression test;
         StartWhen nextChoice;
     }
 
@@ -1485,23 +1485,23 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartOut extends StartInstruction {
-        StartOut(StartElement raw, Expression expr, Boolean lenient) {
+        StartOut(StartElement raw, JXTExpression expr, Boolean lenient) {
             super(raw);
             this.compiledExpression = expr;
             this.lenient = lenient;
         }
-        final Expression compiledExpression;
+        final JXTExpression compiledExpression;
         final Boolean lenient;
     }
 
     static class StartImport extends StartInstruction {
-        StartImport(StartElement raw, AttributeEvent uri, Expression select) {
+        StartImport(StartElement raw, AttributeEvent uri, JXTExpression select) {
             super(raw);
             this.uri = uri;
             this.select = select;
         }
         final AttributeEvent uri;
-        final Expression select;
+        final JXTExpression select;
     }
 
     static class StartTemplate extends StartInstruction {
@@ -1517,11 +1517,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartEval extends StartInstruction {
-        StartEval(StartElement raw, Expression value) {
+        StartEval(StartElement raw, JXTExpression value) {
             super(raw);
             this.value = value;
         }
-        final Expression value;
+        final JXTExpression value;
     }
 
     static class StartDefine extends StartInstruction {
@@ -1594,13 +1594,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartSet extends StartInstruction {
-        StartSet(StartElement raw, Expression var, Expression value) {
+        StartSet(StartElement raw, JXTExpression var, JXTExpression value) {
             super(raw);
             this.var = var;
             this.value = value;
         }
-        final Expression var;
-        final Expression value;
+        final JXTExpression var;
+        final JXTExpression value;
     }
 
     // formatNumber tag (borrows from Jakarta taglibs JSTL)
@@ -1619,7 +1619,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             language = locale.substring(0, index);
             country = locale.substring(index+1);
         }
-        if (language == null || language.length() == 0) {
+        if (StringUtils.isEmpty(language)) {
             throw new IllegalArgumentException("No language in locale");
         }
         if (country == null) {
@@ -1646,19 +1646,19 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     static class StartFormatNumber extends StartInstruction {
 
-        Expression value;
-        Expression type;
-        Expression pattern;
-        Expression currencyCode;
-        Expression currencySymbol;
-        Expression isGroupingUsed;
-        Expression maxIntegerDigits;
-        Expression minIntegerDigits;
-        Expression maxFractionDigits;
-        Expression minFractionDigits;
-        Expression locale;
+        JXTExpression value;
+        JXTExpression type;
+        JXTExpression pattern;
+        JXTExpression currencyCode;
+        JXTExpression currencySymbol;
+        JXTExpression isGroupingUsed;
+        JXTExpression maxIntegerDigits;
+        JXTExpression minIntegerDigits;
+        JXTExpression maxFractionDigits;
+        JXTExpression minFractionDigits;
+        JXTExpression locale;
 
-        Expression var;
+        JXTExpression var;
 
         private static Class currencyClass;
 
@@ -1671,18 +1671,18 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
 
         public StartFormatNumber(StartElement raw,
-                                 Expression var,
-                                 Expression value,
-                                 Expression type,
-                                 Expression pattern,
-                                 Expression currencyCode,
-                                 Expression currencySymbol,
-                                 Expression isGroupingUsed,
-                                 Expression maxIntegerDigits,
-                                 Expression minIntegerDigits,
-                                 Expression maxFractionDigits,
-                                 Expression minFractionDigits,
-                                 Expression locale) {
+                                 JXTExpression var,
+                                 JXTExpression value,
+                                 JXTExpression type,
+                                 JXTExpression pattern,
+                                 JXTExpression currencyCode,
+                                 JXTExpression currencySymbol,
+                                 JXTExpression isGroupingUsed,
+                                 JXTExpression maxIntegerDigits,
+                                 JXTExpression minIntegerDigits,
+                                 JXTExpression maxFractionDigits,
+                                 JXTExpression minFractionDigits,
+                                 JXTExpression locale) {
             super(raw);
             this.var = var;
             this.value = value;
@@ -1718,8 +1718,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                       jexl, jxp);
             Number minFractionDigits = getNumberValue(this.minFractionDigits,
                                                       jexl, jxp);
-            String localeStr = getStringValue(this.locale,
-                                              jexl, jxp);
+            String localeStr = getStringValue(this.locale, jexl, jxp);
             Locale loc;
             if (localeStr != null) {
                 loc = parseLocale(localeStr, null);
@@ -1730,20 +1729,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             if (loc != null) {
                 // Create formatter
                 NumberFormat formatter = null;
-                if ((pattern != null) && !pattern.equals("")) {
+                if (StringUtils.isNotEmpty(pattern)) {
                     // if 'pattern' is specified, 'type' is ignored
                     DecimalFormatSymbols symbols = new DecimalFormatSymbols(loc);
                     formatter = new DecimalFormat(pattern, symbols);
                 } else {
-                    formatter = createFormatter(loc,
-                                                type);
-
+                    formatter = createFormatter(loc, type);
                 }
-                if (((pattern != null) && !pattern.equals(""))
+                if (StringUtils.isNotEmpty(pattern)
                     || CURRENCY.equalsIgnoreCase(type)) {
-                    setCurrency(formatter,
-                                currencyCode,
-                                currencySymbol);
+                    setCurrency(formatter, currencyCode, currencySymbol);
                 }
                 configureFormatter(formatter,
                                    isGroupingUsed,
@@ -1758,8 +1753,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             if (var != null) {
                 jexl.getVars().put(var, formatted);
-                jxp.getVariables().declareVariable(var,
-                                                   formatted);
+                jxp.getVariables().declareVariable(var, formatted);
                 return null;
             }
             return formatted;
@@ -1898,24 +1892,24 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         private static final String TIME = "time";
         private static final String DATETIME = "both";
 
-        Expression var;
-        Expression value;
-        Expression type;
-        Expression pattern;
-        Expression timeZone;
-        Expression dateStyle;
-        Expression timeStyle;
-        Expression locale;
+        JXTExpression var;
+        JXTExpression value;
+        JXTExpression type;
+        JXTExpression pattern;
+        JXTExpression timeZone;
+        JXTExpression dateStyle;
+        JXTExpression timeStyle;
+        JXTExpression locale;
 
         StartFormatDate(StartElement raw,
-                        Expression var,
-                        Expression value,
-                        Expression type,
-                        Expression pattern,
-                        Expression timeZone,
-                        Expression dateStyle,
-                        Expression timeStyle,
-                        Expression locale) {
+                        JXTExpression var,
+                        JXTExpression value,
+                        JXTExpression type,
+                        JXTExpression pattern,
+                        JXTExpression timeZone,
+                        JXTExpression dateStyle,
+                        JXTExpression timeStyle,
+                        JXTExpression locale) {
             super(raw);
             this.var = var;
             this.value = value;
@@ -1987,8 +1981,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             formatted = formatter.format(value);
             if (var != null) {
                 jexl.getVars().put(var, formatted);
-                jxp.getVariables().declareVariable(var,
-                                                   formatted);
+                jxp.getVariables().declareVariable(var, formatted);
                 return null;
             }
             return formatted;
@@ -2200,16 +2193,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 if (localName.equals(FOR_EACH)) {
                     String items = attrs.getValue("items");
                     String select = attrs.getValue("select");
-                    Expression begin = compileInt(attrs.getValue("begin"),
+                    JXTExpression begin = compileInt(attrs.getValue("begin"),
                                                   FOR_EACH, locator);
-                    Expression end = compileInt(attrs.getValue("end"),
+                    JXTExpression end = compileInt(attrs.getValue("end"),
                                                 FOR_EACH, locator);
-                    Expression step = compileInt(attrs.getValue("step"),
+                    JXTExpression step = compileInt(attrs.getValue("step"),
                                                  FOR_EACH,
                                                  locator);
-                    Expression var =
+                    JXTExpression var =
                         compileExpr(attrs.getValue("var"), null, locator);
-                    Expression varStatus =
+                    JXTExpression varStatus =
                         compileExpr(attrs.getValue("varStatus"),
                                 null, locator);
                     if (items == null) {
@@ -2219,7 +2212,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     } else if (select != null) {
                         throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified", locator, null);
                     }
-                    Expression expr =
+                    JXTExpression expr =
                         compileExpr(items == null ? select : items,
                                 null, locator);
                     String lenientValue = attrs.getValue("lenient");
@@ -2228,36 +2221,36 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             expr, var, varStatus, begin, end, step,lenient);
                     newEvent = startForEach;
                 } else if (localName.equals(FORMAT_NUMBER)) {
-                    Expression value = compileExpr(attrs.getValue("value"),
+                    JXTExpression value = compileExpr(attrs.getValue("value"),
                                     null, locator);
-                    Expression type = compileExpr(attrs.getValue("type"),
+                    JXTExpression type = compileExpr(attrs.getValue("type"),
                                     null, locator);
-                    Expression pattern = compileExpr(attrs.getValue("pattern"),
+                    JXTExpression pattern = compileExpr(attrs.getValue("pattern"),
                                     null, locator);
-                    Expression currencyCode =
+                    JXTExpression currencyCode =
                         compileExpr(attrs.getValue("currencyCode"),
                                     null, locator);
-                    Expression currencySymbol =
+                    JXTExpression currencySymbol =
                         compileExpr(attrs.getValue("currencySymbol"),
                                     null, locator);
-                    Expression isGroupingUsed =
+                    JXTExpression isGroupingUsed =
                         compileBoolean(attrs.getValue("isGroupingUsed"),
                                        null, locator);
-                    Expression maxIntegerDigits =
+                    JXTExpression maxIntegerDigits =
                         compileInt(attrs.getValue("maxIntegerDigits"),
                                    null, locator);
-                    Expression minIntegerDigits =
+                    JXTExpression minIntegerDigits =
                         compileInt(attrs.getValue("minIntegerDigits"),
                                    null, locator);
-                    Expression maxFractionDigits =
+                    JXTExpression maxFractionDigits =
                         compileInt(attrs.getValue("maxFractionDigits"),
                                    null, locator);
-                    Expression minFractionDigits =
+                    JXTExpression minFractionDigits =
                         compileInt(attrs.getValue("minFractionDigits"),
                                    null, locator);
-                    Expression var = compileExpr(attrs.getValue("var"),
+                    JXTExpression var = compileExpr(attrs.getValue("var"),
                                     null, locator);
-                    Expression locale = compileExpr(attrs.getValue("locale"),
+                    JXTExpression locale = compileExpr(attrs.getValue("locale"),
                                     null, locator);
                     StartFormatNumber startFormatNumber =
                         new StartFormatNumber(startElement,
@@ -2275,23 +2268,23 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                               locale);
                     newEvent = startFormatNumber;
                 } else if (localName.equals(FORMAT_DATE)) {
-                    Expression var = compileExpr(attrs.getValue("var"),
+                    JXTExpression var = compileExpr(attrs.getValue("var"),
                                     null, locator);
-                    Expression value = compileExpr(attrs.getValue("value"),
+                    JXTExpression value = compileExpr(attrs.getValue("value"),
                                     null, locator);
-                    Expression type = compileExpr(attrs.getValue("type"),
+                    JXTExpression type = compileExpr(attrs.getValue("type"),
                                     null, locator);
-                    Expression pattern = compileExpr(attrs.getValue("pattern"),
+                    JXTExpression pattern = compileExpr(attrs.getValue("pattern"),
                                     null, locator);
-                    Expression timeZone =
+                    JXTExpression timeZone =
                         compileExpr(attrs.getValue("timeZone"), null, locator);
-                    Expression dateStyle =
+                    JXTExpression dateStyle =
                         compileExpr(attrs.getValue("dateStyle"),
                                     null, locator);
-                    Expression timeStyle =
+                    JXTExpression timeStyle =
                         compileExpr(attrs.getValue("timeStyle"),
                                     null, locator);
-                    Expression locale =
+                    JXTExpression locale =
                         compileExpr(attrs.getValue("locale"), null, locator);
                     StartFormatDate startFormatDate =
                         new StartFormatDate(startElement,
@@ -2316,7 +2309,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     String test = attrs.getValue("test");
                     if (test != null) {
-                        Expression expr =
+                        JXTExpression expr =
                             compileExpr(test, "when: \"test\": ", locator);
                         StartWhen startWhen =
                             new StartWhen(startElement, expr);
@@ -2327,7 +2320,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(OUT)) {
                     String value = attrs.getValue("value");
                     if (value != null) {
-                        Expression expr =
+                        JXTExpression expr =
                             compileExpr(value, "out: \"value\": ", locator);
                         String lenientValue = attrs.getValue("lenient");
                         Boolean lenient = lenientValue == null ?
@@ -2350,7 +2343,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(IF)) {
                     String test = attrs.getValue("test");
                     if (test != null) {
-                        Expression expr =
+                        JXTExpression expr =
                             compileExpr(test, "if: \"test\": ", locator);
                         StartIf startIf =
                             new StartIf(startElement, expr);
@@ -2400,14 +2393,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     newEvent = new StartEvalBody(startElement);
                 } else if (localName.equals(EVAL)) {
                     String value = attrs.getValue("select");
-                    Expression valueExpr =
+                    JXTExpression valueExpr =
                             compileExpr(value, "eval: \"select\":", locator);
                     newEvent = new StartEval(startElement, valueExpr);
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
                     String value = attrs.getValue("value");
-                    Expression varExpr = null;
-                    Expression valueExpr = null;
+                    JXTExpression varExpr = null;
+                    JXTExpression valueExpr = null;
                     if (var != null) {
                         varExpr =
                             compileExpr(var, "set: \"var\":", locator);
@@ -2434,7 +2427,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         // If "context" is present then its value will be used
                         // as the context object in the imported template
                         String select = attrs.getValue("context");
-                        Expression expr = null;
+                        JXTExpression expr = null;
                         if (select != null) {
                             expr =
                                 compileExpr(select, "import: \"context\": ",
@@ -2778,13 +2771,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             if (subst instanceof char[]) {
                 chars = (char[])subst;
             } else {
-                Expression expr = (Expression)subst;
+                JXTExpression expr = (JXTExpression)subst;
                 try {
                     Object val = getValue(expr, jexlContext, jxpathContext);
                     if (val != null) {
                         chars = val.toString().toCharArray();
                     } else {
-                        chars = EMPTY_CHARS;
+                        chars = ArrayUtils.EMPTY_CHAR_ARRAY;
                     }
                 } catch (Exception e) {
                     throw new SAXParseException(e.getMessage(),
@@ -2963,7 +2956,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     if (subst instanceof char[]) {
                         chars = (char[])subst;
                     } else {
-                        Expression expr = (Expression)subst;
+                        JXTExpression expr = (JXTExpression)subst;
                         try {
                             Object val = getNode(expr, jexlContext,
                                     jxpathContext);
@@ -2996,7 +2989,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             if (val != null) {
                                 chars = val.toString().toCharArray();
                             } else {
-                                chars = EMPTY_CHARS;
+                                chars = ArrayUtils.EMPTY_CHAR_ARRAY;
                             }
                         } catch (Exception e) {
                             throw new SAXParseException(e.getMessage(),
@@ -3073,7 +3066,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 String var, varStatus;
                 try {
                     if (items != null) {
-                        Expression expr = (Expression)items;
+                        JXTExpression expr = (JXTExpression)items;
                         if (expr.compiledExpression instanceof CompiledExpression) {
                             CompiledExpression compiledExpression =
                                 (CompiledExpression)expr.compiledExpression;
@@ -3305,8 +3298,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                 (SubstituteAttribute)attrEvent;
                             if (substEvent.substitutions.size() == 1 &&
                                     substEvent.substitutions.get(0) instanceof
-                                    Expression) {
-                                Expression expr = (Expression)
+                                    JXTExpression) {
+                                JXTExpression expr = (JXTExpression)
                                     substEvent.substitutions.get(0);
                                 Object val;
                                 try {
@@ -3333,8 +3326,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     if (subst instanceof Literal) {
                                         Literal lit = (Literal)subst;
                                         buf.append(lit.value);
-                                    } else if (subst instanceof Expression) {
-                                        Expression expr = (Expression)subst;
+                                    } else if (subst instanceof JXTExpression) {
+                                        JXTExpression expr = (JXTExpression)subst;
                                         Object val;
                                         try {
                                             val = getValue(expr, jexlContext,
@@ -3415,8 +3408,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             if (subst instanceof Literal) {
                                 Literal lit = (Literal)subst;
                                 buf.append(lit.value);
-                            } else if (subst instanceof Expression) {
-                                Expression expr = (Expression)subst;
+                            } else if (subst instanceof JXTExpression) {
+                                JXTExpression expr = (JXTExpression)subst;
                                 Object val;
                                 try {
                                     val = getValue(expr, jexlContext,
@@ -3538,7 +3531,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     } else {
                         char[] ch;
                         if (val == null) {
-                            ch = EMPTY_CHARS;
+                            ch = ArrayUtils.EMPTY_CHAR_ARRAY;
                         } else {
                             ch = val.toString().toCharArray();
                         }
@@ -3551,7 +3544,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } else if (ev instanceof StartTemplate) {
             } else if (ev instanceof StartEval) {
                 StartEval startEval = (StartEval)ev;
-                Expression expr = startEval.value;
+                JXTExpression expr = startEval.value;
                 try {
                     Object val = getNode(expr, jexlContext, jxpathContext);
                     if (!(val instanceof StartElement)) {
@@ -3606,8 +3599,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         if (subst instanceof Literal) {
                             Literal lit = (Literal)subst;
                             buf.append(lit.value);
-                        } else if (subst instanceof Expression) {
-                            Expression expr = (Expression)subst;
+                        } else if (subst instanceof JXTExpression) {
+                            JXTExpression expr = (JXTExpression)subst;
                             Object val;
                             try {
                                 val = getValue(expr,
