@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,16 +26,20 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * RawRequestParameterModule accesses request parameters without 
- * decoding or casting. It uses the get() method instead of the getParameter() 
- * method of the {@link org.apache.cocoon.environment.Request Request} This is useful
- *  for example in conjunction with uploads.
- * If get() returns a Vector, getAttribute() will return the first element, otherwise it
- * will return the same as get(). getAttributeValues() will either convert the Vector to an array,
- * place the result in a new array, or return the array as is.
+ * RawRequestParameterModule accesses request parameters without
+ * decoding to the specified <code>form-encoding</code> or casting. It uses the
+ * {@link org.apache.cocoon.environment.Request#get} method instead of the
+ * {@link org.apache.cocoon.environment.Request#getParameter} method of the
+ * {@link org.apache.cocoon.environment.Request Request} This is useful for example
+ * in conjunction with uploads.
+ *
+ * <p>If <code>get()</code> returns a Vector, <code>getAttribute()</code> will return
+ * the first element, otherwise it will return the same as <code>get()</code>.
+ * <code>getAttributeValues()</code> will either convert the Vector to an array,
+ * place the result in a new array, or return the array as is.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RawRequestParameterModule.java,v 1.2 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RawRequestParameterModule extends AbstractInputModule implements ThreadSafe {
 
@@ -53,7 +57,7 @@ public class RawRequestParameterModule extends AbstractInputModule implements Th
         } else {
             return obj;
         }
-        
+
     }
 
 
@@ -65,9 +69,9 @@ public class RawRequestParameterModule extends AbstractInputModule implements Th
 
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
         throws ConfigurationException {
-        
+
         Object obj = getAttribute(name, modeConf, objectModel);
-        if (obj instanceof Vector) {   
+        if (obj instanceof Vector) {
            return ((Vector)obj).toArray();
         } else if (obj.getClass().isArray()) {
             return (Object[]) obj;
