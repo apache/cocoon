@@ -39,6 +39,6 @@
 <separator/>
   <external label="Code Repository" href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon/"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
-  <external label="Mail Archive" href="http://archives.real-time.com/rte-cocoon/"/>
+  <external label="Mail Archive" href="http://mail-archives.apache.org/"/>
   <!-- <external label="Bug Database" href="http://xml.apache.org/bugs/"/> -->
 </book>
