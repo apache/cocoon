@@ -75,6 +75,7 @@ implements ComponentHandler {
 
         final ServiceInfo info = new ServiceInfo();
         info.setServiceClass(componentClass);
+        info.setServiceClassName(componentClass.getName());
         info.setConfiguration(configuration);
         
         // Early check for Composable
@@ -105,13 +106,8 @@ implements ComponentHandler {
         }
 
         if ( numInterfaces == 0 ) {
-            // test configuration
-            final String model = configuration.getAttribute("model", null);
-            if ( "pooled".equals(model) ) {
-                info.setModel(ServiceInfo.MODEL_POOLED);
-            } else if ( "singleton".equals(model) ) {
-                info.setModel(ServiceInfo.MODEL_SINGLETON);
-            }
+            // this component does not use avalon interfaces, so get the info from the configuration
+            info.fill(configuration);
         }
         
         // Create the factory to use to create the instances of the Component.

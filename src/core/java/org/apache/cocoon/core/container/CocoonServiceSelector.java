@@ -27,6 +27,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Default component selector for Cocoon's components.
@@ -243,7 +244,8 @@ implements ServiceSelector, Serviceable, Configurable {
             if (compInstanceName == null) {
                 // component-instance implicitly defined by the presence of the 'class' attribute
                 if (classAttr == null) {
-                    className = this.roleManager.getDefaultClassNameForKey(roleName, instance.getName());
+                    final ServiceInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    className = info.getServiceClassName();
                 } else {
                     className = classAttr.trim();
                 }
@@ -253,7 +255,8 @@ implements ServiceSelector, Serviceable, Configurable {
                 if (compInstanceName.equals(instance.getName())) {
                     className = (classAttr == null) ? null : classAttr.trim();
                 } else {
-                    className = this.roleManager.getDefaultClassNameForKey(roleName, instance.getName());
+                    final ServiceInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    className = info.getServiceClassName();
                 }
             }
 

@@ -36,6 +36,7 @@ public class ServiceInfo {
     private String poolInMethodName;
     private String poolOutMethodName;
     private Class serviceClass;
+    private String serviceClassName;
     private Method initMethod;
     private Method destroyMethod;
     private Method poolInMethod;
@@ -164,6 +165,20 @@ public class ServiceInfo {
     }
     
     /**
+     * @return Returns the serviceClassName.
+     */
+    public String getServiceClassName() {
+        return serviceClassName;
+    }
+    
+    /**
+     * @param serviceClassName The serviceClassName to set.
+     */
+    public void setServiceClassName(String serviceClassName) {
+        this.serviceClassName = serviceClassName;
+    }
+    
+    /**
      * @param serviceClass The serviceClass to set.
      */
     public void setServiceClass(Class serviceClass) {
@@ -181,5 +196,27 @@ public class ServiceInfo {
      */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "ServiceInfo: {class=" + this.getServiceClassName()+"}";
+    }
+    
+    public void fill(Configuration attr) {
+        // test model
+        final String model = attr.getAttribute("model", null);
+        if ( "pooled".equals(model) ) {
+            this.setModel(ServiceInfo.MODEL_POOLED);
+            this.setPoolInMethodName(attr.getAttribute("pool-in", null));
+            this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
+        } else if ( "singleton".equals(model) ) {
+            this.setModel(ServiceInfo.MODEL_SINGLETON);
+        }
+        this.setInitMethodName(attr.getAttribute("init", null));
+        this.setDestroyMethodName(attr.getAttribute("destroy", null));
     }
 }
