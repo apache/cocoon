@@ -70,6 +70,7 @@
                 <fileset dir="${{lib}}">
                     <include name="core/*.jar"/>
                     <include name="local/*.jar"/>
+                    <include name="optional/*.jar"/>
                     <include name="endorsed/*.jar"/>
                 </fileset>
                 <!-- tools libs -->
