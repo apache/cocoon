@@ -75,16 +75,16 @@ import org.apache.cocoon.woody.formmodel.Repeater;
  *     &lt;/wd:booleanfield&gt;
  * &lt;/wd:repeater&gt;
  * 
- * &lt;wd:button id="removerows" action-command="remove-selected-rows"&gt;
+ * &lt;wd:action id="removerows" action-command="remove-selected-rows"&gt;
  *     &lt;wd:label&gt;DELETE&lt;/wd:label&gt;
- * &lt;/wd:button&gt;
+ * &lt;/wd:action&gt;
  * 
- * &lt;wd:button id="addrows" action-command="add-rows"&gt;
+ * &lt;wd:action id="addrows" action-command="add-rows"&gt;
  *     &lt;wd:label&gt;ADD&lt;/wd:label&gt;
- * &lt;/wd:button&gt;
+ * &lt;/wd:action&gt;
  * </pre>
  *
- * For which you can easily use this Handler by siimply passing
+ * For which you can easily use this Handler by simply passing
  * <code>FormHandler fh = new RepeaterHandler("myrows","add-rows",
  *                                   "remove-selected-rows","select")</code>
  * 
