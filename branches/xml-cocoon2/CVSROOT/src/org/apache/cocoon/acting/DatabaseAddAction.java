@@ -40,7 +40,7 @@ import org.apache.excalibur.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-17 03:55:09 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-18 01:11:53 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();
@@ -79,15 +79,15 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
                 if ("manual".equals(mode)) {
                     String selectQuery = this.getSelectQuery(keys[i]);
-
-                    ResultSet set = conn.createStatement().executeQuery(selectQuery);
+                    PreparedStatement select_statement = conn.prepareStatement(selectQuery);
+                    ResultSet set = select_statement.executeQuery();
                     set.next();
                     int value = set.getInt("maxid") + 1;
 
                     statement.setInt(currentIndex, value);
 
                     set.close();
-                    set.getStatement().close();
+                    select_statement.close();
                     currentIndex++;
                 } else if ("form".equals(mode)) {
                     this.setColumn(statement, currentIndex, request, values[i]);
