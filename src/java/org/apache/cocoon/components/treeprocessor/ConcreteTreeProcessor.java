@@ -291,7 +291,7 @@ implements Processor, Disposable {
         
         // Get the processor that should process this request
         ConcreteTreeProcessor processor;
-        if (newEnv.getRootContext() == newEnv.getContext()) {
+        if (newEnv.getRootContext().equals(newEnv.getContext())) {
             processor = ((TreeProcessor)getRootProcessor()).concreteProcessor;
         } else {
             processor = this;

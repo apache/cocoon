@@ -180,7 +180,7 @@ public class RequestAttributeOutputModule extends AbstractOutputModule implement
 
     protected String getName( String name ) {
         String prefix = (String) this.settings.get("key-prefix", PREFIX );
-        return (prefix == "" ? name : prefix+":"+name);
+        return (prefix.equals("") ? name : prefix + ":" + name);
     }
     
 }

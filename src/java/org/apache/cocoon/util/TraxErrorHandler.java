@@ -27,7 +27,7 @@ import javax.xml.transform.TransformerException;
  * Warnings and errors are ignored.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: TraxErrorHandler.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class TraxErrorHandler implements ErrorListener {
 
@@ -89,7 +89,7 @@ public class TraxErrorHandler implements ErrorListener {
 
         SourceLocator locator = exception.getLocator();
         if ( null != locator ) {
-            String id = ( locator.getPublicId() != locator.getPublicId() )
+            String id = ( !locator.getPublicId().equals(locator.getPublicId()))
                     ? locator.getPublicId()
                     : ( null != locator.getSystemId() )
                     ? locator.getSystemId() : "SystemId Unknown";
