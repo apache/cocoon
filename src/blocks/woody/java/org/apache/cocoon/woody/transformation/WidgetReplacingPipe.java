@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.18 2003/12/22 21:01:30 vgritsenko Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.19 2003/12/23 08:46:17 mpo Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -127,7 +127,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected boolean repeaterWidget;
 
     protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
-    protected WoodyPipeLineConfig pipeContext;
+    protected WoodyPipelineConfig pipeContext;
 
     /**
      * Have we encountered a <wi:style> element in a widget ?
@@ -140,7 +140,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected String namespacePrefix;
     
 
-    public void init(Widget newContextWidget, WoodyPipeLineConfig newPipeContext) {
+    public void init(Widget newContextWidget, WoodyPipelineConfig newPipeContext) {
         contextWidget = newContextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;

@@ -51,27 +51,21 @@
 package org.apache.cocoon.woody.transformation;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.i18n.I18nUtils;
-import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Variables;
 import org.xml.sax.SAXException;
 
 /**
  * See description of {@link WidgetReplacingPipe}.
  * 
- * @version CVS $Id: WoodyTemplateTransformer.java,v 1.7 2003/12/22 21:03:44 vgritsenko Exp $
+ * @version CVS $Id: WoodyTemplateTransformer.java,v 1.8 2003/12/23 08:46:17 mpo Exp $
  */
 public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer {
 
@@ -87,61 +81,8 @@ public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Tra
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
 
-        // create and set the jxpathContext...
-        Object flowContext = FlowHelper.getContextObject(objectModel);
-        WebContinuation wk = FlowHelper.getWebContinuation(objectModel);
-        JXPathContext jxpc = JXPathContext.newContext(flowContext);
-        Variables vars = jxpc.getVariables();
-        vars.declareVariable("continuation", wk);
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        vars.declareVariable("request", request);
-        Session session = request.getSession(false);
-        vars.declareVariable("session", session);
-        vars.declareVariable("parameters", parameters);
-
-        this.jxpathContext = jxpc;
-        this.attributeName = parameters.getParameter("attribute-name", null);
-        this.request = request;
-
-        String localeStr = parameters.getParameter("locale", null);
-        if (localeStr != null) {
-            localeParameter = I18nUtils.parseLocale(localeStr);
-        }
-
         // FIXME: Duplicate code above and in createConfig
-        WoodyPipeLineConfig pipeContext = WoodyPipeLineConfig.createConfig(objectModel, parameters); 
+        WoodyPipelineConfig pipeContext = WoodyPipelineConfig.createConfig(objectModel, parameters); 
         init(null, pipeContext);
-    }
-
-    public JXPathContext getJXPathContext() {
-        return jxpathContext;
-    }
-
-    public String getAttributeName() {
-        return attributeName;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public JXPathContext getJxpathContext() {
-        return jxpathContext;
-    }
-
-    public void setJxpathContext(JXPathContext jxpathContext) {
-        this.jxpathContext = jxpathContext;
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public Locale getLocaleParameter() {
-        return localeParameter;
     }
 }
