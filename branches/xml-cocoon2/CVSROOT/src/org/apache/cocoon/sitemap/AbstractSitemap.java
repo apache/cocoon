@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-16 00:20:21 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-28 19:14:05 $
  */
 public abstract class AbstractSitemap implements Sitemap {
     
@@ -36,7 +36,7 @@ public abstract class AbstractSitemap implements Sitemap {
     protected ComponentManager manager = null;
 
     /** The sitemap manager instance */
-    protected SitemapManager sitemapManager = null;
+    protected Manager sitemapManager = null;
 
     /** The creation date */
     protected static long dateCreated = -1L;

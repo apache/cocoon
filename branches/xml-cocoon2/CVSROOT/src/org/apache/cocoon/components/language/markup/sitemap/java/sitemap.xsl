@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.38 $ $Date: 2000-09-27 22:54:19 $
+ * @version CVS $Revision: 1.1.2.39 $ $Date: 2000-09-28 19:14:09 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -60,7 +60,7 @@
     import org.apache.cocoon.sitemap.ResourcePipeline;
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
-    import org.apache.cocoon.sitemap.SitemapManager;
+    import org.apache.cocoon.sitemap.Manager;
     import org.apache.cocoon.transformation.Transformer;
 
     import org.xml.sax.SAXException;
@@ -174,7 +174,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       Configuration cconf = null;
       AttributesImpl attr = new AttributesImpl();
 
-      this.sitemapManager = new SitemapManager();
+      this.sitemapManager = new Manager();
       this.sitemapManager.setComponentManager(this.manager);
       this.sitemapManager.setConfiguration(conf);
       try {
@@ -482,6 +482,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:with-param name="method">setGenerator</xsl:with-param>
       <xsl:with-param name="prefix">generator</xsl:with-param>
     </xsl:call-template>
+    <xsl:variable name="view-position-first-name">
+      <xsl:value-of select="/map:sitemap/map:views/map:view[@from-position='first']/@name"/>
+    </xsl:variable>
+    <xsl:if test="$view-position-first-name">
+      <xsl:if test="not(ancestor::map:view)">
+        if(true)return view_<xsl:value-of select="translate($view-position-first-name, '- ', '__')"/> (pipeline, listOfLists, environment);
+      </xsl:if>
+    </xsl:if>
   </xsl:template> <!-- match="map:generate" -->
 
   <xsl:template match="map:transform">
@@ -493,6 +501,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
   </xsl:template> <!-- match="map:transformer" -->
 
   <xsl:template match="map:serialize">
+    <xsl:variable name="view-position-last-name">
+      <xsl:value-of select="/map:sitemap/map:views/map:view[@from-position='last']/@name"/>
+    </xsl:variable>
+    <xsl:if test="$view-position-last-name">
+      <xsl:if test="not(ancestor::map:view)">
+        if(true)return view_<xsl:value-of select="translate($view-position-last-name, '- ', '__')"/> (pipeline, listOfLists, environment);
+      </xsl:if>
+    </xsl:if>
     <xsl:variable name="default-serializer-type">
       <xsl:value-of select="/map:sitemap/map:components/map:serializers/@default"/>
     </xsl:variable>
@@ -527,7 +543,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:if test="@status-code">
       environment.setStatus(<xsl:value-of select="@status-code"/>);
     </xsl:if>
-    if(1==1)return pipeline.process (environment);
+    if(true)return pipeline.process (environment);
   </xsl:template> <!-- match="map:serialize" -->
 
   <xsl:template match="map:read">
@@ -562,7 +578,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:with-param>
     </xsl:call-template>
-    if(1==1)return pipeline.process (environment);
+    if(true)return pipeline.process (environment);
   </xsl:template> <!-- match="map:read" -->
 
   <xsl:template match="map:mount">
@@ -585,18 +601,18 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='/'">
-        if(1==1)return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+        if(true)return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:when>
       <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='}'">
         String uri_prefix<xsl:value-of select="count(.)"/>=substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>");
         if (uri_prefix<xsl:value-of select="count(.)"/>.charAt(uri_prefix<xsl:value-of select="count(.)"/>.length()-1)=='/'){
-          if(1==1)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+          if(true)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
         } else {
-          if(1==1)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+          if(true)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
         }
       </xsl:when>
       <xsl:otherwise>
-        if(1==1)return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+        if(true)return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:mount" -->
@@ -604,11 +620,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
   <xsl:template match="map:redirect-to">
     <xsl:choose>
       <xsl:when test="@resource">
-        if(1==1)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment, cocoon_view);
+        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment, cocoon_view);
       </xsl:when>
       <xsl:when test="@uri">
         environment.redirect (substitute(listOfLists, "<xsl:value-of select="@uri"/>"));
-        if(1==1)return true;
+        if(true)return true;
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="error">
@@ -621,7 +637,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
   <xsl:template match="map:label">
     <xsl:apply-templates/>
     if ("<xsl:value-of select="@name"/>".equals(cocoon_view))
-      if(1==1)return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+      if(true)return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
   </xsl:template> <!-- match="map:label" -->
 
   <xsl:template match="map:pipeline//parameter">
@@ -808,7 +824,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:if test="$component-label">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-label=$component-label]">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            if(1==1)return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+            if(true)return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
           }
         </xsl:for-each>
       </xsl:if>

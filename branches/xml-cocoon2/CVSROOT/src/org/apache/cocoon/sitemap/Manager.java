@@ -22,7 +22,7 @@ import org.apache.avalon.Configuration;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.SitemapHandler;
+import org.apache.cocoon.sitemap.Handler;
 
 import org.xml.sax.SAXException;
 
@@ -32,9 +32,9 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-08-31 16:02:20 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-28 19:14:04 $
  */
-public class SitemapManager implements Configurable, Composer {
+public class Manager implements Configurable, Composer {
 
     /** The vectors of sub sitemaps */
     private HashMap sitemaps = new HashMap();
@@ -56,7 +56,7 @@ public class SitemapManager implements Configurable, Composer {
     public boolean invoke (Environment environment, String uri_prefix, 
                            String source, boolean check_reload) 
     throws Exception {
-        SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get(source);
+        Handler sitemapHandler = (Handler) sitemaps.get(source);
         
         if (sitemapHandler != null) {
             if (sitemapHandler.available()) {
@@ -69,7 +69,7 @@ public class SitemapManager implements Configurable, Composer {
                 sitemapHandler.regenerate(environment);
             }
         } else {
-            sitemapHandler = new SitemapHandler(source, check_reload);
+            sitemapHandler = new Handler(source, check_reload);
             if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager(this.manager);
             if (sitemapHandler instanceof Configurable) sitemapHandler.setConfiguration(this.conf); 
             sitemaps.put(source, sitemapHandler);
@@ -81,10 +81,10 @@ public class SitemapManager implements Configurable, Composer {
     }
 
     public boolean hasChanged() {
-        SitemapHandler sitemapHandler = null;
+        Handler sitemapHandler = null;
         Iterator iter = sitemaps.values().iterator();
         while (iter.hasNext()) {
-            sitemapHandler = (SitemapHandler) iter.next();
+            sitemapHandler = (Handler) iter.next();
             if ((sitemapHandler != null) && (sitemapHandler.hasChanged())) {
                 return true;
             }

@@ -31,9 +31,9 @@ import org.apache.avalon.ComponentManager;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-23 20:46:19 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-28 19:14:05 $
  */
-public class SitemapHandler implements Runnable, Configurable, Composer, Processor {
+public class Handler implements Runnable, Configurable, Composer, Processor {
 
     /** the configuration */
     private Configuration conf = null;
@@ -67,7 +67,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer, Process
         this.conf = conf;
     }
 
-    protected SitemapHandler (String source, boolean check_reload) 
+    protected Handler (String source, boolean check_reload)
     throws FileNotFoundException {
         this.check_reload = check_reload;
         String s = null;

@@ -31,7 +31,7 @@ import org.apache.avalon.SAXConfigurationBuilder;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.SitemapManager;
+import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.InputSource;
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.28 $ $Date: 2000-09-22 20:27:23 $
+ * @version CVS $Revision: 1.4.2.29 $ $Date: 2000-09-28 19:13:59 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -62,7 +62,7 @@ public class Cocoon
     private Configuration configuration;
     
     /** The sitemap manager */
-    private SitemapManager sitemapManager;
+    private Manager sitemapManager;
     
     /** The root uri/path */
     private URL root;
@@ -174,7 +174,7 @@ public class Cocoon
         if (sconf == null) {
             throw new ConfigurationException("No sitemap configuration", conf);
         }
-        this.sitemapManager = new SitemapManager();
+        this.sitemapManager = new Manager();
         this.sitemapManager.setComponentManager(this);
         this.sitemapManager.setConfiguration(conf);
         this.sitemapFileName = sconf.getAttribute("file");
