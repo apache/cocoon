@@ -128,11 +128,13 @@
       <map:match pattern="repo">
         <map:call function="selectMethod">
           <map:parameter name="page" value=""/>
+          <map:parameter name="requestURI" value="{request:requestURI}" />
         </map:call>
       </map:match>
       <map:match pattern="repo/**">
         <map:call function="selectMethod">
           <map:parameter name="page" value="{1}"/>
+          <map:parameter name="requestURI" value="{request:requestURI}" />
         </map:call>
       </map:match>
       
@@ -169,7 +171,7 @@
           <map:parameter name="version" value="false" />
         </map:generate>
         <map:transform src="styles/collection2propfind.xsl">
-          <map:parameter name="requestURI" value="{request:requestURI}" />
+          <map:parameter name="requestURI" value="{flow-attribute:requestURI}"/>
         </map:transform>
         <map:serialize type="xml" status-code="207" />
       </map:match>
