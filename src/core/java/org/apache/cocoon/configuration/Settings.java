@@ -1,12 +1,12 @@
 /*
  * Copyright 2005 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,7 @@ public class Settings {
 
     /** Name of the property specifying a user properties file */
     public static final String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
-    
+
     /**
      * Default value for {@link #isAllowReload()} parameter (false)
      */
@@ -50,8 +50,8 @@ public class Settings {
     public static final boolean SAVE_UPLOADS_TO_DISK = true;
     public static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
 
-    /** 
-     * Default value for {@link #isInitClassloader()} setting (false) 
+    /**
+     * Default value for {@link #isInitClassloader()} setting (false)
      */
     public static final boolean INIT_CLASSLOADER = false;
 
@@ -78,7 +78,7 @@ public class Settings {
     protected Map forceProperties = new HashMap();
     /** FIXME - implement the support for this key: */
     public static final String KEY_FORCE_PROPERTIES = "system.properties";
-    
+
     /**
      * This parameter points to the main configuration file for Cocoon.
      * Note that the path is specified in absolute notation but it will be
@@ -159,7 +159,7 @@ public class Settings {
 
     /**
      * Causes all files in multipart requests to be processed.
-     * Default is false for security reasons. 
+     * Default is false for security reasons.
      */
     protected boolean enableUploads = ENABLE_UPLOADS;
     public static final String KEY_UPLOADS_ENABLE = "uploads.enable";
@@ -172,7 +172,7 @@ public class Settings {
      */
     protected String uploadDirectory;
     public static final String KEY_UPLOADS_DIRECTORY = "uploads.directory";
-    
+
     /**
      * Causes all files in multipart requests to be saved to upload-dir.
      * Default is true for security reasons.
@@ -216,7 +216,7 @@ public class Settings {
     /**
      * This parameter allows to specify additional directories or jars
      * which Cocoon should put into it's own classpath.
-     * Note that absolute pathes are taken as such but relative pathes 
+     * Note that absolute pathes are taken as such but relative pathes
      * are rooted at the context root of the Cocoon servlet.
      */
     protected List extraClasspaths = new ArrayList();
@@ -227,7 +227,7 @@ public class Settings {
      * This parameter allows you to select the parent service manager.
      * The class will be instantiated via the constructor that takes a single
      * String as a parameter. That String will be equal to the text after the '/'.
-     * 
+     *
      * Cocoon honors the LogEnabled, Initializable and Disposable interfaces for
      * this class, if it implements them.
      */
@@ -286,7 +286,7 @@ public class Settings {
     public Settings() {
         // nothing to do
     }
-    
+
     /**
      * Fill from a properties object
      */
@@ -354,7 +354,7 @@ public class Settings {
             this.properties.add(props);
         }
     }
-    
+
     /**
      * @return Returns the hideShowTime.
      */
@@ -446,26 +446,27 @@ public class Settings {
         return this.extraClasspaths;
     }
     /**
-     * @param extraClasspaths The extraClasspaths to set.
+     * @param extraClasspath The extraClasspaths to set.
      */
     public void addToExtraClasspaths(String extraClasspath) {
         this.extraClasspaths.add(extraClasspath);
     }
-    
+
     /**
      * @return Returns the forceProperties.
      */
     public Map getForceProperties() {
         return this.forceProperties;
     }
-    
+
     /**
-     * @param forceProperties The forceProperties to set.
+     * @param key The forceProperties to set.
+     * @param value The forceProperties value to set.
      */
     public void addToForceProperties(String key, String value) {
         this.forceProperties.put(key, value);
     }
-    
+
     /**
      * @return Returns the formEncoding.
      */
@@ -499,7 +500,7 @@ public class Settings {
     }
 
     /**
-     * @param loadClasses The loadClasses to set.
+     * @param className The loadClasses to set.
      */
     public void addToLoadClasses(String className) {
         this.loadClasses.add(className);
@@ -626,7 +627,7 @@ public class Settings {
     public void setWorkDirectory(String workDirectory) {
         this.workDirectory = workDirectory;
     }
-    
+
     /**
      * @return Returns the log4jConfiguration.
      */
@@ -639,7 +640,7 @@ public class Settings {
     public void setLog4jConfiguration(String log4jConfiguration) {
         this.log4jConfiguration = log4jConfiguration;
     }
-    
+
     /**
      * @return Returns the accessLogger.
      */
@@ -652,14 +653,14 @@ public class Settings {
     public void setAccessLogger(String servletLogger) {
         this.accessLogger = servletLogger;
     }
-    
+
     /**
      * @return Returns the overrideLogLevel.
      */
     public String getOverrideLogLevel() {
         return this.overrideLogLevel;
     }
-    
+
     /**
      * @param overrideLogLevel The overrideLogLevel to set.
      */
@@ -675,9 +676,9 @@ public class Settings {
         } else {
             // either rename is specified or unsupported value - default to rename.
             return false;
-        }        
+        }
     }
-    
+
     public boolean isSilentlyRename() {
         if ("deny".equalsIgnoreCase(this.overwriteUploads)) {
             return false;
@@ -686,7 +687,7 @@ public class Settings {
         } else {
             // either rename is specified or unsupported value - default to rename.
             return true;
-        }                
+        }
     }
 
     /**
@@ -695,7 +696,7 @@ public class Settings {
     public long getConfigurationReloadDelay() {
         return configurationReloadDelay;
     }
-    
+
     /**
      * @param configurationReloadDelay The configurationReloadDelay to set.
      */
