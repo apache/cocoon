@@ -26,7 +26,7 @@ import java.io.Serializable;
  *      is unique inside the components space.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentCacheKey.java,v 1.2 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: ComponentCacheKey.java,v 1.3 2004/05/19 08:42:40 cziegeler Exp $
  */
 public final class ComponentCacheKey
     implements Serializable {
@@ -41,15 +41,15 @@ public final class ComponentCacheKey
     private static final String[] COMPONENTS = { "X", "G", "X", "T", "X", "S", "X", "R" };
 
     /** The component type */
-    private int type;
+    private final int type;
     /** The component identifier */
-    private String identifier;
+    private final String identifier;
     /** The unique key */
-    private Serializable key;
+    private final Serializable key;
     /** the hash code */
-    private int hashCode = 0;
+    private final int hashCode;
     /** cachePoint */
-    private boolean cachePoint = false;
+    private final boolean cachePoint;
 
     /**
      * Constructor
@@ -57,10 +57,7 @@ public final class ComponentCacheKey
     public ComponentCacheKey(int          componentType,
                              String       componentIdentifier,
                              Serializable cacheKey) {
-        this.type = componentType;
-        this.identifier = componentIdentifier;
-        this.key = cacheKey;
-
+        this(componentType, componentIdentifier, cacheKey, false);
     }
 
     /**
@@ -75,6 +72,9 @@ public final class ComponentCacheKey
         this.key = cacheKey;
         /** cachePoint */
         this.cachePoint = cachePoint;
+        this.hashCode = this.type +
+                (this.identifier.length() << 3) +
+                this.key.hashCode();
     }
 
     /**
@@ -96,12 +96,6 @@ public final class ComponentCacheKey
      * HashCode
      */
     public int hashCode() {
-        // FIXME - this is not very safe
-        if (this.hashCode == 0) {
-            this.hashCode = this.type +
-                            (this.identifier.length() << 3) +
-                            (this.key.hashCode() << 10);
-        }
         return this.hashCode;
     }
 
