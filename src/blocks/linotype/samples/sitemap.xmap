@@ -173,7 +173,7 @@
   
 <!-- ========================= Private Resources =========================== -->
 
-  <map:pipeline>
+  <map:pipeline internal-only="true">
 
     <map:match pattern="news">
      <map:generate src="cocoon:/news.xml"/>

@@ -251,5 +251,13 @@ public class MockEnvironment implements Environment {
     public void release(org.apache.excalibur.source.Source source) {
         resolver.release(source);
     }
+    
+    /**
+     * Always return <code>true</code>.
+     */
+    public boolean isExternal() {
+        return true;
+    }
+
 }
 

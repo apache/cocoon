@@ -63,7 +63,7 @@ import java.util.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.2 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.3 2003/07/06 20:37:48 sylvain Exp $
  */
 
 /*
@@ -371,8 +371,5 @@ public class CommandLineRequest implements Request {
     public void setCharacterEncoding(java.lang.String env)
                           throws java.io.UnsupportedEncodingException { characterEncoding = env; }
     public StringBuffer getRequestURL() { return null; }
-    
-    public boolean isInternal() {
-        return false;
-    }
+
 }
