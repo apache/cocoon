@@ -155,15 +155,15 @@ implements CacheableProcessingComponent  {
         /* Retrieve the parameters object and "parse" it, sending elements */
         char parameters[] = ((Parameters)this.getValidity()).array;
         int offset = 0;
-        int chunks = (int)parameters[offset++];
+        int chunks = parameters[offset++];
         for (int chunk = 0; chunk < chunks; chunk++) {
 
             /* How many strings do we have in this chunk? */
-            int strings = (int)parameters[offset++];
+            int strings = parameters[offset++];
             if (strings == 0) continue;
 
             /* Dump the parameter element with the name attribute */
-            int length = (int)parameters[offset++];
+            int length = parameters[offset++];
             String name = new String(parameters, offset, length);
             attributes.addAttribute("","name","name","CDATA", name);
             this.xmlConsumer.startElement(URI, E_PARAM_L, E_PARAM_Q, attributes);
@@ -172,7 +172,7 @@ implements CacheableProcessingComponent  {
 
             /* Dump out every remaining string in the chunk as a value element */
             for (int string = 1; string < strings; string++) {
-                length = (int)parameters[offset++];
+                length = parameters[offset++];
                 this.xmlConsumer.startElement(URI, E_VALUE_L, E_VALUE_Q, attributes);
                 this.xmlConsumer.characters(parameters, offset, length);
                 this.xmlConsumer.endElement(URI, E_VALUE_L, E_VALUE_Q);

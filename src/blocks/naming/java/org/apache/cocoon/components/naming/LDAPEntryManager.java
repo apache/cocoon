@@ -280,7 +280,7 @@ public class LDAPEntryManager
 			Iterator vals = ((List)map.get (key)).iterator ();
 			Attribute attr = new BasicAttribute (key);
 			while (vals.hasNext ()) {
-				attr.add ((String)vals.next ());
+				attr.add(vals.next());
 			}
 			attrs.put (attr);
 		}
