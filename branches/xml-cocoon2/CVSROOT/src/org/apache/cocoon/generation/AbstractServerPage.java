@@ -10,6 +10,7 @@ package org.apache.cocoon.generation;
 import java.io.File;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.environment.Request;
 import org.xml.sax.SAXException;
@@ -20,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-05-04 13:37:58 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-05-04 15:06:52 $
  */
 public abstract class AbstractServerPage
   extends ServletGenerator implements CompiledComponent, Cacheable
@@ -92,12 +93,12 @@ public abstract class AbstractServerPage
 
   /**
    * Generate the validity object.
-   * 
-   * @return The generated validity object or <code>null</code> if the
-   *         component is currently not cachable.
+   *
+   * @return The generated validity object, <code>NOPCacheValidity</code>
+   *         is the default.
    */
   public CacheValidity generateValidity() {
-    return null;
+    return new NOPCacheValidity();
   }
 
   // FIXME: Add more methods!

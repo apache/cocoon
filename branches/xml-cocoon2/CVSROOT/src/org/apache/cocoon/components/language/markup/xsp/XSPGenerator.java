@@ -13,6 +13,8 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.generation.AbstractServerPage;
 import org.apache.avalon.excalibur.pool.Poolable;
@@ -21,7 +23,7 @@ import org.apache.avalon.excalibur.pool.Poolable;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-30 14:17:09 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-05-04 15:06:42 $
  */
 public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Poolable {
 
@@ -37,5 +39,12 @@ public abstract class XSPGenerator extends AbstractServerPage implements Compile
    */
   public void compose(ComponentManager manager) {
     super.compose(manager);
+  }
+
+  /**
+   * Generate the Validity of this type of serverpage.
+   */
+  public CacheValidity generateValidity() {
+      return new TimeStampCacheValidity(this.dateCreated);
   }
 }

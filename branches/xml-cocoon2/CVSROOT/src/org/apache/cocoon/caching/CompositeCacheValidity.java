@@ -13,7 +13,7 @@ import java.util.HashMap;
  * A validation object using a Hashmap.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 18:18:24 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-05-04 15:06:23 $
  */
 public final class CompositeCacheValidity
 implements CacheValidity {
@@ -28,7 +28,7 @@ implements CacheValidity {
 
     public boolean isValid(CacheValidity validity) {
         if (validity instanceof CompositeCacheValidity) {
-            return (v1.isValid(((CompositeCacheValidity)validity).getValidity1()) && 
+            return (v1.isValid(((CompositeCacheValidity)validity).getValidity1()) &&
                     v2.isValid(((CompositeCacheValidity)validity).getValidity2()));
         }
         return false;
