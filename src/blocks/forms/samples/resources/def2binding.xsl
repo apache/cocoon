@@ -28,7 +28,7 @@
   - if a <fd:binding> is present, its content is copied as is with the @id of the enclosing widget
   
   @author Sylvain Wallez
-  @version CVS $Id: def2binding.xsl,v 1.2 2004/03/11 02:56:31 joerg Exp $
+  @version CVS $Id$
 -->
 
 <xsl:stylesheet
