@@ -20,15 +20,13 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.easymock.MockControl;
 
-
 /**
  * The $classType$ class ...
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati </a>
  * @version $Id$
  */
-public class DefaultRunnableManagerTestCase
-    extends AbstractTestCase
+public class DefaultRunnableManagerTestCase extends AbstractTestCase
 {
     //~ Constructors -----------------------------------------------------------
 
@@ -50,7 +48,7 @@ public class DefaultRunnableManagerTestCase
      * @throws Exception DOCUMENT ME!
      */
     public final void testConfigureDaemonPool(  )
-        throws Exception
+    throws Exception
     {
         final MockControl threadPoolConfigControl =
             createStrictControl( Configuration.class );
@@ -506,15 +504,15 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"default\" created with maximum queue-size=2147483647,max-pool-size=5,min-pool-size=5,priority=5,isDaemon=false,keep-alive-time-ms=60000,block-policy=\"RUN\",shutdown-wait-time-ms=-1" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "starting heart" );
+        logger.debug( "Starting the heart" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Entering loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable,pool=default,delay=0,interval=0" );
+        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable, pool=default, delay=0, interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Hand over Command EasyMock for interface java.lang.Runnable to pool \"default\" with delay=0 and interval=0" );
+        logger.debug( "Executing command EasyMock for interface java.lang.Runnable in pool \"default\", schedule with interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -603,15 +601,15 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"default\" created with maximum queue-size=2147483647,max-pool-size=5,min-pool-size=5,priority=5,isDaemon=false,keep-alive-time-ms=60000,block-policy=\"RUN\",shutdown-wait-time-ms=-1" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "starting heart" );
+        logger.debug( "Starting the heart" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Entering loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable,pool=default,delay=100,interval=0" );
+        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable, pool=default, delay=100, interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Hand over Command EasyMock for interface java.lang.Runnable to pool \"default\" with delay=100 and interval=0" );
+        logger.debug( "Executing command EasyMock for interface java.lang.Runnable in pool \"default\", schedule with interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -700,15 +698,15 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"default\" created with maximum queue-size=2147483647,max-pool-size=5,min-pool-size=5,priority=5,isDaemon=false,keep-alive-time-ms=60000,block-policy=\"RUN\",shutdown-wait-time-ms=-1" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "starting heart" );
+        logger.debug( "Starting the heart" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Entering loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable,pool=default,delay=100,interval=100" );
+        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable, pool=default, delay=100, interval=100" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Hand over Command EasyMock for interface java.lang.Runnable to pool \"default\" with delay=100 and interval=100" );
+        logger.debug( "Executing command EasyMock for interface java.lang.Runnable in pool \"default\", schedule with interval=100" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Exiting loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -805,7 +803,7 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"default\" created with maximum queue-size=2147483647,max-pool-size=5,min-pool-size=5,priority=5,isDaemon=false,keep-alive-time-ms=60000,block-policy=\"RUN\",shutdown-wait-time-ms=-1" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "starting heart" );
+        logger.debug( "Starting the heart" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Entering loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -815,9 +813,9 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"mypool\" created with maximum queue-size=230,max-pool-size=15,min-pool-size=12,priority=1,isDaemon=false,keep-alive-time-ms=15500,block-policy=\"DISCARD\",shutdown-wait-time-ms=22200" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable,pool=mypool,delay=0,interval=0" );
+        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable, pool=mypool, delay=0, interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Hand over Command EasyMock for interface java.lang.Runnable to pool \"mypool\" with delay=0 and interval=0" );
+        logger.debug( "Executing command EasyMock for interface java.lang.Runnable in pool \"mypool\", schedule with interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -922,7 +920,7 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"default\" created with maximum queue-size=2147483647,max-pool-size=5,min-pool-size=5,priority=5,isDaemon=false,keep-alive-time-ms=60000,block-policy=\"RUN\",shutdown-wait-time-ms=-1" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "starting heart" );
+        logger.debug( "Starting the heart" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Entering loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -932,9 +930,9 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"mypool\" created with maximum queue-size=230,max-pool-size=15,min-pool-size=12,priority=1,isDaemon=false,keep-alive-time-ms=15500,block-policy=\"DISCARD\",shutdown-wait-time-ms=22200" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable,pool=mypool,delay=100,interval=0" );
+        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable, pool=mypool, delay=100, interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Hand over Command EasyMock for interface java.lang.Runnable to pool \"mypool\" with delay=100 and interval=0" );
+        logger.debug( "Executing command EasyMock for interface java.lang.Runnable in pool \"mypool\", schedule with interval=0" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "No commands available. Will just wait for one" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -1039,7 +1037,7 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"default\" created with maximum queue-size=2147483647,max-pool-size=5,min-pool-size=5,priority=5,isDaemon=false,keep-alive-time-ms=60000,block-policy=\"RUN\",shutdown-wait-time-ms=-1" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "starting heart" );
+        logger.debug( "Starting the heart" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Entering loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
@@ -1049,9 +1047,9 @@ public class DefaultRunnableManagerTestCase
         loggerControl.expectAndReturn( logger.isInfoEnabled(  ), true );
         logger.info( "ThreadPool named \"mypool\" created with maximum queue-size=230,max-pool-size=15,min-pool-size=12,priority=1,isDaemon=false,keep-alive-time-ms=15500,block-policy=\"DISCARD\",shutdown-wait-time-ms=22200" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable,pool=mypool,delay=100,interval=100" );
+        logger.debug( "Command entered: EasyMock for interface java.lang.Runnable, pool=mypool, delay=100, interval=100" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Hand over Command EasyMock for interface java.lang.Runnable to pool \"mypool\" with delay=100 and interval=100" );
+        logger.debug( "Executing command EasyMock for interface java.lang.Runnable in pool \"mypool\", schedule with interval=100" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Exiting loop" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
