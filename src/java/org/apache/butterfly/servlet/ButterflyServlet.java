@@ -114,14 +114,17 @@ public class ButterflyServlet extends HttpServlet {
         try {
             Class pipelineClass = loader.parseClass(getClass().getResourceAsStream("Pipeline.groovy"));
             // Parse the main sitemap
-            System.err.println(this.servletContext.getResource("sitemap.groovy").getFile());
             FileInputStream fis = new FileInputStream(this.servletContext.getResource("sitemap.groovy").getFile());
             Class sitemapClass = loader.parseClass(fis);
             GroovyObject sitemap = (GroovyObject) sitemapClass.newInstance();
             sitemap.setProperty("beanFactory", this.applicationContext);
             Object[] args = { uri };
-            sitemap.invokeMethod("setup", args);
-            sitemap.invokeMethod("process", new Object[] { env });
+            Boolean retval = (Boolean) sitemap.invokeMethod("setup", args);
+            if (retval.booleanValue()) {
+                sitemap.invokeMethod("process", new Object[] { env });
+            } else {
+                logger.info("Sitemap has no match for URI [" + uri + "].");
+            }
         } catch (CompilationFailedException e) {
             logger.error("Cannot compile Groovy sitemap.", e);
             throw new ServletException(e);

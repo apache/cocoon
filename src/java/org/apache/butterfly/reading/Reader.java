@@ -26,8 +26,6 @@ import org.apache.butterfly.sitemap.SitemapOutputComponent;
  */
 public interface Reader extends SitemapOutputComponent {
 
-    String ROLE = Reader.class.getName();
-
     /**
      * Generate the response.
      */

@@ -73,5 +73,12 @@
       <value>UTF-8</value>
     </property>
   </bean>
+  
+  <bean id="resourceReader" class="org.apache.butterfly.reading.ResourceReader" singleton="false">
+    <property name="sourceResolver">
+      <ref bean="sourceResolver"/>
+    </property>  
+    <property name="bufferSize"><value>8192</value></property>
+  </bean>
     
 </beans>

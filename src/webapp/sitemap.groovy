@@ -15,14 +15,19 @@
  */
 class Sitemap extends Pipeline {
   
-    void setup(String requestPath) {
-        if (requestPath =~ ".*\.html") {
-            generate "testdata/welcome.xml"
-            transform "trax", "testdata/welcome.xslt" 
+    boolean setup(String requestPath) {
+        if (requestPath =~ "index\.html") {
+            // TODO: paths should be relative to the webapp context!
+            generate "build/webapp/welcome.xml"
+            transform "trax", "build/webapp/welcome.xslt" 
             serialize "xml"
+        } else if (requestPath =~ "images/.*\.gif") {
+            read "build/webapp/resources/images/powered.gif", "image/gif"
+        } else if (requestPath =~ "styles/.*\.css") {
+            read "build/webapp/resources/styles/main.css", "text/css"
+        } else {
+            return false;
         }
-        else {
-            println("No matches for URI [" + requestPath + "]");
-        }
+        return true;
     }
 }

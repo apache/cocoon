@@ -18,6 +18,7 @@
 package org.apache.butterfly.serialization;
 
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
@@ -36,6 +37,7 @@ import org.apache.butterfly.xml.xslt.TraxTransformerFactory;
 public class XMLSerializer extends AbstractXMLPipe implements Serializer {
 
     protected OutputStream output;
+    private Map objectModel;
     protected TraxTransformerFactory transformerFactory;
 
     /**
@@ -122,5 +124,12 @@ public class XMLSerializer extends AbstractXMLPipe implements Serializer {
      */
     public boolean shouldSetContentLength() {
         return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.butterfly.sitemap.SitemapOutputComponent#setObjectModel(java.util.Map)
+     */
+    public void setObjectModel(Map objectModel) {
+        this.objectModel = objectModel;
     }
 }

@@ -170,10 +170,11 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
         } else {
             this.preparePipeline(environment);
         }
-        if ( this.reader != null ) {
-            this.preparePipeline(environment);            
-        }
         */
+        if ( this.reader != null ) {
+            // TODO: implement this.preparePipeline(environment);   
+            reader.setObjectModel(environment.getObjectModel());
+        }
         
         // See if we need to set an "Expires:" header
         /*

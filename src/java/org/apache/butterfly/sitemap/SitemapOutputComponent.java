@@ -16,6 +16,7 @@
 package org.apache.butterfly.sitemap;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 /**
  * This interface marks a component as a sitemap component that produces
@@ -40,4 +41,6 @@ public interface SitemapOutputComponent {
      * Test if the component wants to set the content length
      */
     boolean shouldSetContentLength();
+    
+    void setObjectModel(Map objectModel);
 }
