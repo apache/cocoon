@@ -21,11 +21,9 @@
     <map:generators default="file">
       <map:generator name="xmidi" src="org.apache.cocoon.generation.XMidiGenerator" logger="midi.sitemap.generator"/>
     </map:generators>
-    <map:transformers default="xslt"/>
     <map:serializers default="html">
       <map:serializer name="xmidi" src="org.apache.cocoon.serialization.XMidiSerializer" logger="midi.sitemap.serializer"/>
     </map:serializers>
-    <map:matchers default="wildcard"/>
   </map:components>
 
 <!-- =========================== Views =================================== -->

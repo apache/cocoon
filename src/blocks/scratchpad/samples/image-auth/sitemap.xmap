@@ -16,31 +16,12 @@
 -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<map:components>
-    <map:generators default="file">
-        <map:generator label="content,data" logger="sitemap.generator.jxt" name="jxt"  src="org.apache.cocoon.generation.JXTemplateGenerator"/>
-    </map:generators>
 
-    <map:transformers default="xslt"/>
-
-    <map:serializers default="xhtml">
-        <map:serializer logger="sitemap.serializer.svg2png" mime-type="image/jpeg" name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
-            <parameter name="quality" type="float" value="0.9"/>
-        </map:serializer>
-    </map:serializers>
-
-    <map:matchers default="wildcard"/>
-
-</map:components>
-
-<map:views/>
-<map:resources/>
-
-<map:flow language="intercepted-javascript">
+  <map:flow language="intercepted-javascript">
     <map:script src="flow/image.js"/>
-</map:flow>
+  </map:flow>
 
-<map:pipelines>
+  <map:pipelines>
 
     <map:component-configurations>
         <global-variables/>
@@ -62,7 +43,7 @@
 
 
         <map:match pattern="*.jxt">
-            <map:generate type="jxt" src="documents/{1}.jxt"/>
+            <map:generate type="jx" src="documents/{1}.jxt"/>
             <map:serialize type="xhtml"/>
         </map:match>
 
@@ -79,12 +60,11 @@
 
     <map:pipeline internal-only="true">
         <map:match pattern="auth.jpg">
-            <map:generate type="jxt" src="documents/auth-jxt.svg"/>
+            <map:generate type="jx" src="documents/auth-jxt.svg"/>
             <map:serialize type="svg2jpeg"/>
         </map:match>  
     </map:pipeline>
 
-
-</map:pipelines>
+  </map:pipelines>
 
 </map:sitemap>

@@ -21,24 +21,6 @@
 
  <map:components>
 
-  <map:generators default="file">
-  </map:generators>
-
-  <map:transformers default="xslt">
-  </map:transformers>
-
-  <map:readers default="resource">
-  </map:readers>
-
-  <map:serializers default="html">
-  </map:serializers>
-
-  <map:matchers default="wildcard">
-  </map:matchers>
-
-  <map:selectors default="browser">
-  </map:selectors>
-
   <map:actions>
    <map:action name="dbAdd" logger="sitemap.tutorial.action.dbAdd"
                src="org.apache.cocoon.acting.DatabaseAddAction"/>
@@ -48,9 +30,6 @@
 
    <map:action name="dbUpd" logger="sitemap.tutorial.action.dbUpd"
                src="org.apache.cocoon.acting.DatabaseUpdateAction"/>
-
-   <map:action name="form"  logger="sitemap.tutorial.action.form"
-               src="org.apache.cocoon.acting.FormValidatorAction"/>
   </map:actions>
 
  </map:components>
@@ -59,20 +38,20 @@
 
  <map:action-sets>
   <map:action-set name="process">
-   <map:act type="form" action="Create Department">
+   <map:act type="form-validator" action="Create Department">
      <map:parameter name="validate-set" value="add"/>
      <map:act type="dbAdd"/>
    </map:act>
-   <map:act type="form" action="Update Department">
+   <map:act type="form-validator" action="Update Department">
      <map:parameter name="validate-set" value="update"/>
      <map:act type="dbUpd"/>
    </map:act>
    <map:act type="dbDel" action="Delete Department"/>
-   <map:act type="form" action="Create Employee">
+   <map:act type="form-validator" action="Create Employee">
      <map:parameter name="validate-set" value="add"/>
      <map:act type="dbAdd"/>
    </map:act>
-   <map:act type="form" action="Update Employee">
+   <map:act type="form-validator" action="Update Employee">
      <map:parameter name="validate-set" value="update"/>
      <map:act type="dbUpd"/>
    </map:act>

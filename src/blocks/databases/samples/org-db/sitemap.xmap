@@ -19,13 +19,6 @@
 <!-- ========================= Components ================================ -->
 
  <map:components>
-  <map:generators default="file"/>
-  <map:transformers default="xslt"/>
-  <map:readers default="resource"/>
-  <map:serializers default="html"/>
-  <map:matchers default="wildcard"/>
-  <map:selectors default="browser"/>
-
   <!-- original database actions -->
   <map:actions>
     <map:action logger="sitemap.action.add-employee" name="add-employee" src="org.apache.cocoon.acting.DatabaseAddAction"/>

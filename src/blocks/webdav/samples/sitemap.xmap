@@ -16,8 +16,6 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:components/>
-
   <map:views>
     <map:view from-label="content" name="content">
       <map:serialize type="xml"/>

@@ -16,44 +16,7 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
- <map:components>
-
-  <!--+
-      | In order to use simple form validation, we need to make this action
-      | available to the sitemap. Components are inherited, so this could have
-      | been done in a parent sitemap. However, to illustrate the usage, we
-      | do it here.
-      |
-      | Note, there are several different validator actions available in
-      | Cocoon. They share the same validation code but operate on different
-      | values. Here, we're interested in validating request parameters, thus
-      | the FormValidatorAction is the right choice.
-      |
-      | The action is the only component we need to declare - the logicsheet
-      | has been added to cocoon.xconf for you already.
-      +-->
-  <map:actions>
-   <map:action name="formval" 
-        	   logger="sitemap.action.form-validator" 
-        	   src="org.apache.cocoon.acting.FormValidatorAction"/>
-  </map:actions>
-
-
-
-  <!--+
-      | Validation should only occurr when data has been submitted. Therefore
-      | a selector is created that will be used to select upon the request method.
-      | This is optional if you don't mind to show validation results without
-      | user input.
-      |
-      +-->
-  <map:selectors>
-    <map:selector name="simple"
-                 logger="sitemap.matcher.wildcard"
-                 src="org.apache.cocoon.selection.SimpleSelector"/>
-  </map:selectors>
-
-
+  <map:components>
 
   <!--+ the SimpleFormTransformer acts upon HTML4 form element tags and replaces their
       | value attribute or their content in case of the textarea element with data obtained
@@ -116,44 +79,40 @@
     |
     +-->
 
-
  <map:pipelines>
 
   <map:pipeline>
-
 
    <!-- some redirections -->
    <map:match pattern="">
      <map:redirect-to uri="index"/>
    </map:match>
-   
-
 
    <map:match pattern="index">
     <!--+
         | Only validate when data was submitted
         +-->
-    <map:select type="simple">
+     <map:select type="simple">
        <map:parameter name="value" value="{request:method}"/>
        <map:when test="POST">
-       	  <!--+
-       	      | Check the request parameters using the FormValidatorAction 
-       	      +-->
-       	  <map:act type="formval">
-       	    <map:parameter name="descriptor" value="descriptor.xml"/>
-       	    <map:parameter name="validate-set" value="car-reservation"/>
-       	    <!--+
-       	        | this is the success case
-       	        |
-       	        +-->
-       	    <map:generate src="success.xml"/>
-       	    <map:transform type="simpleform"/>
-    		<map:call resource="static-page">
-    		  <map:parameter name="file" value="success"/>
-    		</map:call>
-       	    <!-- because of the resource above the "success" pipeline ends here. -->
-       	  </map:act>
-       </map:when>
+           <!--+
+               | Check the request parameters using the FormValidatorAction 
+               +-->
+           <map:act type="form-validator">
+             <map:parameter name="descriptor" value="descriptor.xml"/>
+             <map:parameter name="validate-set" value="car-reservation"/>
+             <!--+
+                 | this is the success case
+                 |
+                 +-->
+             <map:generate src="success.xml"/>
+             <map:transform type="simpleform"/>
+             <map:call resource="static-page">
+              <map:parameter name="file" value="success"/>
+             </map:call>
+             <!-- because of the resource above the "success" pipeline ends here. -->
+           </map:act>
+        </map:when>
      </map:select>
      <!--+
          | this branch contains the failed validation.
@@ -171,8 +130,6 @@
     </map:call>
    </map:match>
 
-
-
    <!-- some redirections -->
    <map:match pattern="*">
      <map:redirect-to uri="index"/>
@@ -182,5 +139,3 @@
  </map:pipelines>
 
 </map:sitemap>
-
-<!-- end of file -->

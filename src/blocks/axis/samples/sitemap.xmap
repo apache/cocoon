@@ -21,22 +21,13 @@
 
 <map:components>
 
-<map:generators default="file"/>
-<map:transformers default="xslt"/>
+  <map:readers default="resource">
 
-<map:readers default="resource">
+    <!-- Defines a SOAP RPC reader that will serve SOAP requests via HTTP-POST. -->
+    <map:reader logger="sitemap.reader.soap-rpc" name="soap-rpc"
+                src="org.apache.cocoon.reading.AxisRPCReader"/>
 
-  <!-- Defines a SOAP RPC reader that will serve SOAP requests via HTTP-POST. -->
-  <map:reader logger="sitemap.reader.soap-rpc" name="soap-rpc"
-              src="org.apache.cocoon.reading.AxisRPCReader"/>
-
-</map:readers>
-
-<map:serializers default="html"/>
-<map:matchers default="wildcard"/>
-<map:selectors default="browser"/>
-<map:actions/>
-
+  </map:readers>
 
 </map:components>
 

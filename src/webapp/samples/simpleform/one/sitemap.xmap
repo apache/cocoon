@@ -16,30 +16,6 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
- <map:components>
-
-  <!--+
-      | In order to use simple form validation, we need to make this action
-      | available to the sitemap. Components are inherited, so this could have
-      | been done in a parent sitemap. However, to illustrate the usage, we
-      | do it here.
-      |
-      | Note, there are several different validator actions available in
-      | Cocoon. They share the same validation code but operate on different
-      | values. Here, we're interested in validating request parameters, thus
-      | the FormValidatorAction is the right choice.
-      |
-      | The action is the only component we need to declare - the logicsheet
-      | has been added to cocoon.xconf for you already.
-      +-->
-  <map:actions>
-   <map:action name="formval" 
-        	   logger="sitemap.action.form-validator" 
-        	   src="org.apache.cocoon.acting.FormValidatorAction"/>
-  </map:actions>
-
- </map:components>
-
 <!--+
     | This is a standard resource for rendering a XSP page.
     +-->
@@ -97,7 +73,7 @@
 
 
    <map:match pattern="index">
-     <map:act type="formval">
+     <map:act type="form-validator">
         <map:parameter name="descriptor" value="descriptor.xml"/>
         <map:parameter name="validate-set" value="car-reservation"/>
         <!--+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><!-- -*- xsl -*- -->
 
-<!-- $Id: form-validator.xsl,v 1.1 2004/03/10 12:58:06 stephan Exp $ -->
+<!-- $Id: form-validator.xsl,v 1.2 2004/03/11 16:25:49 stephan Exp $ -->
 <!--
 
  ============================================================================
@@ -56,7 +56,7 @@
  * XSP Form-Validator logicsheet for the Java language
  *
  * @author <a href="mailto:haul@apache.org>Christian Haul</a>
- * @version CVS $Revision: 1.1 $ $Date: 2004/03/10 12:58:06 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/03/11 16:25:49 $
 -->
 
 <xsl:stylesheet
@@ -110,7 +110,7 @@
           </xsl:for-each>
         </xsl:for-each>
         <xsp:include>org.apache.cocoon.acting.ValidatorActionResult</xsp:include>
-        <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPFormValidatorHelper</xsp:include>
+        <xsp:include>org.apache.cocoon.transformation.helpers.FormValidatorHelper</xsp:include>
       </xsp:structure>
       <xsl:apply-templates/>
     </xsp:page>
@@ -150,7 +150,7 @@
     </xsl:variable>
     <xsp:logic>
       {
-      XSPFormValidatorHelper __formval_fvh = new XSPFormValidatorHelper(<xsl:copy-of select="$descriptor"/>, <xsl:copy-of select="$reloadable"/>, getLogger(), resolver, <xsl:copy-of select="$constraintset"/>);
+      FormValidatorHelper __formval_fvh = new FormValidatorHelper(<xsl:copy-of select="$descriptor"/>, <xsl:copy-of select="$reloadable"/>, getLogger(), resolver, <xsl:copy-of select="$constraintset"/>);
     </xsp:logic>
     <xsl:apply-templates/>
     <xsp:logic>
@@ -162,7 +162,7 @@
   <xspdoc:desc>
     Returns a Map containg all validation results.
   </xspdoc:desc>
-  <xsl:template match="xsp-formval:results"><xsp:expr>XSPFormValidatorHelper.getResults(objectModel)</xsp:expr></xsl:template>
+  <xsl:template match="xsp-formval:results"><xsp:expr>FormValidatorHelper.getResults(objectModel)</xsp:expr></xsl:template>
 
 
   <xspdoc:desc>
@@ -182,7 +182,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.OK)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.OK)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).equals(ValidatorActionResult.OK)</xsp:expr>
@@ -208,7 +208,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.OK)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.OK)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>
@@ -242,7 +242,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOSMALL)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOSMALL)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).equals(ValidatorActionResult.TOOSMALL)</xsp:expr>
@@ -270,7 +270,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOSMALL)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOSMALL)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>
@@ -304,7 +304,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).ge(ValidatorActionResult.ERROR)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).ge(ValidatorActionResult.ERROR)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).ge(ValidatorActionResult.ERROR)</xsp:expr>
@@ -332,7 +332,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).ge(ValidatorActionResult.ERROR)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).ge(ValidatorActionResult.ERROR)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>
@@ -366,7 +366,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOLARGE)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOLARGE)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).equals(ValidatorActionResult.TOOLARGE)</xsp:expr>
@@ -394,7 +394,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOLARGE)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.TOOLARGE)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>
@@ -428,7 +428,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOMATCH)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOMATCH)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).equals(ValidatorActionResult.NOMATCH)</xsp:expr>
@@ -456,7 +456,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOMATCH)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOMATCH)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>
@@ -490,7 +490,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.ISNULL)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.ISNULL)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).equals(ValidatorActionResult.ISNULL)</xsp:expr>
@@ -518,7 +518,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.ISNULL)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.ISNULL)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>
@@ -552,7 +552,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
-        <xsp:expr>XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOTPRESENT)</xsp:expr>
+        <xsp:expr>FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOTPRESENT)</xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <xsp:expr>__formval_fvh.getParamResult(objectModel).equals(ValidatorActionResult.NOTPRESENT)</xsp:expr>
@@ -580,7 +580,7 @@
     <xsl:choose>
       <xsl:when test="string($name)!='-1'">
         <xsp:logic>
-          if (XSPFormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOTPRESENT)) {
+          if (FormValidatorHelper.getParamResult(objectModel,<xsl:copy-of select="$name"/>).equals(ValidatorActionResult.NOTPRESENT)) {
              <xsp:content><xsl:apply-templates/></xsp:content>
           }
         </xsp:logic>

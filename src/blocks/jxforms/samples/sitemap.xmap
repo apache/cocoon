@@ -21,10 +21,7 @@
     <map:generators default="file">
       <map:generator name="jxforms" src="org.apache.cocoon.generation.JXFormsGenerator" logger="jxforms.sitemap.generator"/>
     </map:generators>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
   </map:components>
-
 
 <!-- =========================== Views =================================== -->
 

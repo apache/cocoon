@@ -15,20 +15,6 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <!-- ======================== Components =========================== -->
-  <map:components>
-    <map:transformers default="xslt">
-      <map:transformer name="jx" src="org.apache.cocoon.transformation.JXTemplateTransformer" logger="jx.sitemap.transformer"/>
-      <map:transformer name="forms" src="org.apache.cocoon.forms.transformation.FormsTemplateTransformer" logger="forms"/>
-    </map:transformers>
-    <map:generators default="file">
-      <map:generator logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.VelocityGenerator"/>
-      <map:generator logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
-      <map:generator name="forms" src="org.apache.cocoon.forms.generation.FormsGenerator" logger="forms"/>
-    </map:generators>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
-  </map:components>
   <!-- ======================== Views ================================ -->
   <!--
   The debug view can be used to output an intermediate
@@ -95,7 +81,7 @@
       </map:match>
       <map:match pattern="view/*.cforms">
         <map:generate src="view/forms/{1}_t.xml" label="debug"/>
-        <map:transform type="forms" label="debug1"/>
+        <map:transform type="form" label="debug1"/>
         <map:call resource="html"/>
       </map:match>
     </map:pipeline>

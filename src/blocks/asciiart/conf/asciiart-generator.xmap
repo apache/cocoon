@@ -14,11 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='html']">
-
-    <map:generator name="html" logger="sitemap.generator.html"
-                   src="org.apache.cocoon.generation.HTMLGenerator"
-                   label="content"/>
+<xmap xpath="/sitemap/components/generators" unless="generator[@name='asciiart-svg']">
+    <map:generator name="asciiart-svg" logger="sitemap.generator.asciiart-svg"
+                   src="org.apache.cocoon.generation.asciiart.AsciiArtSVGGenerator"/>
 </xmap>

@@ -16,7 +16,7 @@
 -->
 
 <!--
-  Version <![CDATA[ $Id: sitemap.xmap,v 1.2 2004/03/06 02:25:59 antonio Exp $ ]]>
+  Version <![CDATA[ $Id: sitemap.xmap,v 1.3 2004/03/11 16:25:48 stephan Exp $ ]]>
   
   Cocoon Webmail sitemap definition
 -->
@@ -27,89 +27,10 @@
 
 <map:components>
 
-  <!-- ===== generators =====
-  -->
-  <map:generators default="file">
-    <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"
-      label="content" 
-      logger="sitemap.generator.file" 
-      pool-max="32" pool-min="1" pool-grow="4"
-    />
-    <map:generator name="html" src="org.apache.cocoon.generation.HTMLGenerator"
-      label="content" 
-      logger="sitemap.generator.file" 
-      pool-max="32" pool-min="1" pool-grow="4"
-    />
-    <map:generator name="asciiart-svg" src="org.apache.cocoon.generation.asciiart.AsciiArtSVGGenerator"
-      label="content"
-      logger="sitemap.generator.asciiart-svg" 
-    />
-  </map:generators>
 
-  <!-- ===== transformers =====
-  -->
-  <map:transformers default="xslt">
-    <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer" 
-      logger="sitemap.transformer.xslt" pool-max="32" pool-min="1" pool-grow="2">
-      <use-request-parameters>false</use-request-parameters>
-      <use-browser-capabilities-db>false</use-browser-capabilities-db>
-      <use-deli>false</use-deli>
-    </map:transformer>
-    <!--map:transformer name="tofile" src="org.apache.cocoon.transformation.SourceWritingTransformer">
-      <map:parameter name="serializer" value="xml"/>
-    </map:transformer-->
-    <map:transformer name="paginate" src="org.apache.cocoon.transformation.pagination.Paginator"/>
-  </map:transformers>
-
-  <!-- ===== readers =====
-  -->
-  <map:readers default="resource">
-    <map:reader name="resource" src="org.apache.cocoon.reading.ResourceReader" logger="sitemap.reader.resource" pool-max="32" pool-min="1" pool-grow="4"/>
-  </map:readers>
-
-  <!-- ===== serializers =====
-  -->
-  <map:serializers default="html">
-    <map:serializer name="html" src="org.apache.cocoon.serialization.HTMLSerializer"
-      mime-type="text/html">
-      <encoding>iso8859-1</encoding>
-    </map:serializer>
-    <map:serializer name="wml" src="org.apache.cocoon.serialization.XMLSerializer"
-      mime-type="text/vnd.wap.wml"
-      logger="sitemap.serializer.wml">
-      <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
-      <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
-      <encoding>iso8859-1</encoding>
-      <omit-xml-declaration>no</omit-xml-declaration>
-    </map:serializer>
-    <map:serializer name="xml" src="org.apache.cocoon.serialization.XMLSerializer"
-      mime-type="text/xml">
-      <indent>yes</indent>
-    </map:serializer>
-    <map:serializer name="links" src="org.apache.cocoon.serialization.LinkSerializer"
-    />
-    <map:serializer name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer"
-      mime-type="image/jpeg">
-      <parameter name="quality" type="float" value="0.75"/>
-    </map:serializer>
-  </map:serializers>
-
-  <!-- ===== matchers =====
-  -->
-  <map:matchers default="wildcard">
-    <map:matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher" 
-      logger="sitemap.matcher.wildcard"/>
-    <map:matcher name="regexp" src="org.apache.cocoon.matching.RegexpURIMatcher" 
-      logger="sitemap.matcher.regexp"/>
-    <map:matcher name="regexp-defaults" src="org.apache.cocoon.matching.RegexpURIDefaultsMatcher" 
-      logger="sitemap.matcher.regexp"/>
-  </map:matchers>
-  
   <!-- ===== selectors =====
   -->
   <map:selectors default="parameter">
-    <map:selector name="parameter" src="org.apache.cocoon.selection.ParameterSelector"
-      logger="sitemap.selector.parameter"/>
     <map:selector name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector"
       logger="sitemap.selector.request-parameter">
       <parameter-name>cmd</parameter-name>
@@ -123,10 +44,6 @@
   <!-- ===== actions =====
   -->
   <map:actions>
-    <map:action name="simple-resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"
-      logger="sitemap.action.simple-resource-exists"/>
-    <map:action name="resource-exists" src="org.apache.cocoon.acting.ExtendedResourceExistsAction"
-      logger="sitemap.action.resource-exists"/>
     <map:action name="link-translator-map" src="org.apache.cocoon.acting.LinkTranslatorMapAction"
       logger="sitemap.action.link-translator-map"/>
     <map:action name="mail" src="org.apache.cocoon.mail.MailAction"

@@ -18,43 +18,6 @@
 
  <map:components>
 
-  <!--+
-      | In order to use simple form validation, we need to make this action
-      | available to the sitemap. Components are inherited, so this could have
-      | been done in a parent sitemap. However, to illustrate the usage, we
-      | do it here.
-      |
-      | Note, there are several different validator actions available in
-      | Cocoon. They share the same validation code but operate on different
-      | values. Here, we're interested in validating request parameters, thus
-      | the FormValidatorAction is the right choice.
-      |
-      | The action is the only component we need to declare - the logicsheet
-      | has been added to cocoon.xconf for you already.
-      +-->
-  <map:actions>
-   <map:action name="formval" 
-        	   logger="sitemap.action.form-validator" 
-        	   src="org.apache.cocoon.acting.FormValidatorAction"/>
-  </map:actions>
-
-
-
-  <!--+
-      | Validation should only occurr when data has been submitted. Therefore
-      | a selector is created that will be used to select upon the request method.
-      | This is optional if you don't mind to show validation results without
-      | user input.
-      |
-      +-->
-  <map:selectors>
-    <map:selector name="simple"
-                 logger="sitemap.matcher.wildcard"
-                 src="org.apache.cocoon.selection.SimpleSelector"/>
-  </map:selectors>
-
-
-
   <map:transformers default="xslt">
 
    <!--+ 
@@ -105,13 +68,13 @@
        | this instance has been instructed to ignore validation results because 
        | looking up the instance data requires to augment the element name with
        | the form name and thus differ from the validation result names.
-	   |
+       |
        | The instance extractor places the form instances into a map with the 
        | form name as key. Furthermore, it has been instructed to create a root
        |  element wrapping the instance data with the same name as the form. 
        | Hence we need to included the form's name twice in the element name 
        | used for the lookup.
-	   |
+       |
        | In addition, we may want to be able to select from a XSP if the form 
        | data should be replaced with values from the instance or from the 
        | request. Therefore, a different attribute is used to protect element 
@@ -176,17 +139,14 @@
 
  </map:views>
 
-
 <!--+
     | Pipelines
     |
     +-->
 
-
  <map:pipelines>
 
   <map:pipeline>
-
 
    <!-- some redirections -->
    <map:match pattern="">
@@ -202,23 +162,23 @@
     <map:select type="simple">
        <map:parameter name="value" value="{request:method}"/>
        <map:when test="POST">
-       	  <!--+
-       	      | Check the request parameters using the FormValidatorAction 
-       	      +-->
-       	  <map:act type="formval">
-       	    <map:parameter name="descriptor" value="descriptor.xml"/>
-       	    <map:parameter name="validate-set" value="car-reservation"/>
-       	    <!--+
-       	        | this is the success case
-       	        |
-       	        +-->
-       	    <map:generate src="success.xml"/>
-       	    <map:transform type="simpleform"/>
-    		<map:call resource="static-page">
-    		  <map:parameter name="file" value="success"/>
-    		</map:call>
-       	    <!-- because of the resource above the "success" pipeline ends here. -->
-       	  </map:act>
+           <!--+
+               | Check the request parameters using the FormValidatorAction 
+               +-->
+           <map:act type="form-validator">
+             <map:parameter name="descriptor" value="descriptor.xml"/>
+             <map:parameter name="validate-set" value="car-reservation"/>
+             <!--+
+                 | this is the success case
+                 |
+                 +-->
+             <map:generate src="success.xml"/>
+             <map:transform type="simpleform"/>
+        <map:call resource="static-page">
+          <map:parameter name="file" value="success"/>
+        </map:call>
+             <!-- because of the resource above the "success" pipeline ends here. -->
+           </map:act>
        </map:when>
      </map:select>
      <!--+
@@ -245,8 +205,6 @@
     </map:call>
    </map:match>
 
-
-
    <!-- some redirections -->
    <map:match pattern="*">
      <map:redirect-to uri="index"/>
@@ -256,5 +214,3 @@
  </map:pipelines>
 
 </map:sitemap>
-
-<!-- end of file -->

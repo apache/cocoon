@@ -29,12 +29,6 @@
       />
     </map:generators>
 
-    <map:transformers default="xslt"/>
-    <map:readers default="resource"/>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
-    <map:selectors default="browser"/>
-    
     <!--
     <map:pipes default="noncaching">
       <map:pipe name="event-caching" 

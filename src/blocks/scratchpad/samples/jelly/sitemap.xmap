@@ -16,7 +16,7 @@
 -->
 
 <!--
-  CVS $Id: sitemap.xmap,v 1.4 2004/03/06 02:25:57 antonio Exp $
+  CVS $Id: sitemap.xmap,v 1.5 2004/03/11 16:25:49 stephan Exp $
   
   Jelly Sample
 -->
@@ -26,11 +26,6 @@
     <map:generators default="file">
         <map:generator name="jelly" src="org.apache.cocoon.generation.JellyGenerator"/>
     </map:generators>
-    <map:transformers default="xslt"/>
-    <map:readers default="resource"/>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
-    <map:selectors default="browser"/>
   </map:components>
 
   <map:pipelines>

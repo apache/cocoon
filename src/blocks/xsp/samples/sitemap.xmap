@@ -96,7 +96,7 @@
 	<map:pipeline internal-only="true">
       <map:match pattern="view-source">
         <!-- colourize files that are known to be XML -->
-        <map:match type="filename" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
+        <map:match type="regexp" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
           <map:generate src="util/view-source.xsp" type="serverpages"/>
           <map:serialize/>
         </map:match>

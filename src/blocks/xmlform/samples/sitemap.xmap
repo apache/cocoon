@@ -31,10 +31,6 @@
       <map:action name="CalculatorAction" logger="xmlform.sitemap.action.Calculator"
                   src="org.apache.cocoon.samples.xmlform.CalculatorAction"/>
     </map:actions>
-
-    <map:serializers default="html"/>
-
-    <map:matchers default="wildcard"/>
   </map:components>
 
   <!-- =========================== Views =================================== -->
