@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: AbstractSerializer.java,v 1.2 2004/03/05 10:07:22 bdelacretaz Exp $
+ * @version CVS $Id: AbstractSerializer.java,v 1.3 2004/03/24 02:28:22 joerg Exp $
  */
 public abstract class AbstractSerializer implements Serializer, Locator {
 
@@ -408,7 +408,7 @@ public abstract class AbstractSerializer implements Serializer, Locator {
      * @param qual The fully-qualified name of the root element.
      * @param namespaces An array of <code>String</code> objects containing
      *                   the namespaces to be declared by this element.
-     * @param namespaces An array of <code>String</code> objects containing
+     * @param attributes An array of <code>String</code> objects containing
      *                   all attributes of this element.
      */
     public abstract void startElementImpl(String uri, String local, String qual,
