@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: components-samples.xml,v 1.2 2004/03/06 02:25:40 antonio Exp $ -->
+<!-- CVS $Id: components-samples.xml,v 1.3 2004/03/06 14:05:04 joerg Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Components Samples">
   
@@ -26,8 +26,11 @@
   </group>
 
   <group name="Generators">
-    <sample href="stream/order" name="B2B: Order Page" xlink:role="dynamic">
-      An example of B2B processing using StreamGenerator.
+    <sample href="stream/uploadstring" name="Stream parameter value" xlink:role="dynamic">
+      An example getting a parameter value streamed into a pipeline using StreamGenerator.
+    </sample>   
+    <sample href="stream/uploadfile" name="Stream upload file" xlink:role="dynamic">
+      An example getting an uploaded file streamed into a pipeline using StreamGenerator.
     </sample>   
     <sample href="request.html" name="Request Page">
       This example shows the usage of the RequestGenerator.
