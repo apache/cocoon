@@ -50,22 +50,21 @@
 */
 package org.apache.cocoon.woody.datatype.typeimpl;
 
-import org.apache.cocoon.woody.datatype.*;
-import org.apache.cocoon.woody.datatype.convertor.Convertor;
-import org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.util.SimpleServiceSelector;
-import org.apache.cocoon.woody.Constants;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.DatatypeBuilder;
+import org.apache.cocoon.woody.datatype.DatatypeManager;
+import org.apache.cocoon.woody.datatype.ValidationRule;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.util.SimpleServiceSelector;
 import org.w3c.dom.Element;
-import java.io.IOException;
 
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
