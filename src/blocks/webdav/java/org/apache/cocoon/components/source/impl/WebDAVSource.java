@@ -105,7 +105,7 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.13 2003/11/23 04:30:52 crossley Exp $
+ *  @version $Id: WebDAVSource.java,v 1.14 2003/12/17 13:42:14 gcasper Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -205,9 +205,18 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
     /**
      * Constructor used by the Traversable methods to build children.
      */
-    private WebDAVSource (WebdavResource source) {
+    private WebDAVSource (WebdavResource source)
+    throws HttpException, IOException {
     	this.resource = source;
     	this.systemId = source.getHttpURL().getURI();
+
+    	//fix trailing slash
+        if (this.resource.isCollection() && (this.systemId.endsWith("/") == false)) {
+            this.systemId = this.systemId+"/";
+            HttpURL httpURL = new HttpURL(this.systemId);
+            httpURL.setUserInfo(this.principal, this.password);
+            this.resource.setHttpURL(httpURL);
+        }
     }
 
     /**
