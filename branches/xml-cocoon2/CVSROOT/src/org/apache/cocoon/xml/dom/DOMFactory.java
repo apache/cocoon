@@ -5,7 +5,8 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.xml.util;
+ 
+package org.apache.cocoon.xml.dom;
 
 import org.w3c.dom.Document;
 
@@ -15,7 +16,7 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:44 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:31 $
  */
 public interface DOMFactory {
     /** 

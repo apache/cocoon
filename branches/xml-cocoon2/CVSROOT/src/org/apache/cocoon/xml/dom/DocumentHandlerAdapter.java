@@ -5,13 +5,17 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.xml.util;
+ 
+package org.apache.cocoon.xml.dom;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.NamespacesTable;
+
 import org.xml.sax.AttributeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DocumentHandler;
@@ -30,7 +34,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:44 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:32 $
  */
 public class DocumentHandlerAdapter extends AbstractXMLProducer
 implements DocumentHandler {

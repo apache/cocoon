@@ -11,7 +11,7 @@ package org.apache.cocoon.xml.xlink;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 
-import org.apache.cocoon.xml.AbstractXMLConsumer;
+import org.apache.cocoon.xml.XMLConsumerBridge;
 
 /**
  * This class implements a SAX consumer wrapper that transforms the
@@ -23,10 +23,10 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * NOTE: this is based on XLink W3C Candidate Recommendation 3 July 2000
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-23 22:44:30 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:37 $
  */
  
-public abstract class XLinkConsumer extends AbstractXMLConsumer implements XLinkHandler {
+public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements XLinkHandler {
 
 	public static final String XLINK_NAMESPACE_URI = "http://www.w3.org/1999/xlink";
 	public static final String XLINK_TYPE          = "type";
@@ -131,7 +131,9 @@ public abstract class XLinkConsumer extends AbstractXMLConsumer implements XLink
 		            throw new SAXException("An XLink title must be included into an 'extended', 'locator' or 'arc' element");
 		        }
 		        this.linkTitle();
-		    }
+		    } else {
+                super.startElement(uri, name, raw, attr);
+            }
 		}
 	}
 
@@ -148,6 +150,8 @@ public abstract class XLinkConsumer extends AbstractXMLConsumer implements XLink
 	        this.linkArcElementName = null;
 	        this.linkArcElementURI = null;
 	        this.endArc();
+	    } else {
+	        super.endElement(uri, name, raw);
 	    }
 	}
 

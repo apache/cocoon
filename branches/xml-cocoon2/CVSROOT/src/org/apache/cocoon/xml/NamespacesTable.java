@@ -5,7 +5,8 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.xml.util;
+ 
+package org.apache.cocoon.xml;
 
 import org.xml.sax.SAXException;
 
@@ -15,7 +16,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 16:42:34 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:30 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */

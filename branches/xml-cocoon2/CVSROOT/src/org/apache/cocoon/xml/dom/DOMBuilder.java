@@ -5,10 +5,14 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.xml.util;
+ 
+package org.apache.cocoon.xml.dom;
 
 import java.util.Vector;
+
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.NamespacesTable;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -21,6 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -32,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-29 18:30:44 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:31 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */
