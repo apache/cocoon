@@ -18,6 +18,7 @@ package org.apache.cocoon.kernel.configuration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p>The {@link Parameters} class defines a simple {@link Map} that can
@@ -35,7 +36,7 @@ import java.util.Map;
  * {@link Parameters} object.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class Parameters extends HashMap implements Map {
 
@@ -50,8 +51,16 @@ public class Parameters extends HashMap implements Map {
     }
 
     /**
-     * <p>Create a new {@link Parameters} instance from a {@link Configuration}
-     * instance.</p>
+     * <p>Create a new {@link Parameters} instance parsing all elements of a
+     * {@link Configuration} instance.</p>
+     * 
+     * <p>Elements of the configuration that will be parsed must look like
+     * this:</p>
+     * 
+     * <p><nobr><code>&lt;parameter
+     * name=&quot;<b>name</b>&quot;
+     * value=&quot;<b>value</b>&quot;
+     * <i>type=&quot;<b>type identifier</b>&quot;</i>/&gt;</code></nobr></p>
      *
      * @throws ConfigurationException if the instance cannot be created.
      */
@@ -76,10 +85,9 @@ public class Parameters extends HashMap implements Map {
             } else if ("long".equalsIgnoreCase(t)) {
                 this.put(n, c.getLongValue(c.getLongAttribute("value")));
             } else if ("configuration".equalsIgnoreCase(t)) {
-                if (c.size() == 1) this.put(n, c.get(0));
-                throw new ConfigurationException("Too many/few children for "
-                                                 + "parameter \"" + n + "\" of"
-                                                 + "type \"configuration\"", c);
+                Configuration k = new Configuration(n);
+                k.addAll(c);
+                this.put(n, k);
             } else {
                 this.put(n, c.getValue(c.getAttribute("value")));
             }
@@ -502,6 +510,25 @@ public class Parameters extends HashMap implements Map {
         }
     }
     
+    /* ====================================================================== */
+    
+    /**
+     * <p>Convert this {@link Parameters} instance into {@link Properties}.</p>
+     * 
+     * @return a <b>non null</b> {@link Properties} instance with all parameters
+     *         it was possible to convert into properties.
+     */
+    public Properties toProperties() {
+        Properties properties = new Properties();
+        Iterator iterator = this.keySet().iterator();
+        while (iterator.hasNext()) { 
+            String name = (String)iterator.next();
+            String value = this.getString(name, null);
+            if (value != null) properties.put(name, value);
+        }
+        return(properties);
+    }
+
     /* ====================================================================== */
     
     /**
