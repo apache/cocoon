@@ -59,14 +59,14 @@ import net.sourceforge.chaperon.process.LexicalProcessor;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -113,18 +113,17 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformer.java,v 1.9 2004/01/20 15:23:57 stephan Exp $
+ * @version CVS $Id: LexicalTransformer.java,v 1.10 2004/01/30 17:16:01 joerg Exp $
  */
-public class LexicalTransformer extends LexicalProcessor implements Transformer, LogEnabled,
-                                                                    Composable, Recyclable,
-                                                                    Disposable, Parameterizable,
-                                                                    CacheableProcessingComponent
+public class LexicalTransformer extends LexicalProcessor
+        implements Transformer, LogEnabled, Serviceable, Recyclable, Disposable,
+                   Parameterizable, CacheableProcessingComponent
 {
   private XMLConsumer consumer = null;
   private String lexicon = null;
   private Source lexiconSource = null;
   private Logger logger = null;
-  private ComponentManager manager = null;
+  private ServiceManager manager = null;
   private SourceResolver resolver = null;
 
   /**
@@ -141,12 +140,13 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
   }
 
   /**
-   * Pass the ComponentManager to the composer. The Composable implementation should use the
-   * specified ComponentManager to acquire the components it needs for execution.
+   * Pass the ServiceManager to the object. The Serviceable implementation
+   * should use the specified ServiceManager to acquire the services it needs
+   * for execution.
    *
-   * @param manager The ComponentManager which this Composable uses.
+   * @param manager The ServiceManager which this Serviceable uses.
    */
-  public void compose(ComponentManager manager)
+  public void service(ServiceManager manager)
   {
     this.manager = manager;
   }
@@ -242,9 +242,9 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
     {
       throw new ProcessingException("Error during resolving of '"+src+"'.", se);
     }
-    catch (ComponentException ce)
+    catch (ServiceException se)
     {
-      throw new ProcessingException("Could not lookup for component", ce);
+      throw new ProcessingException("Could not lookup for service", se);
     }
     finally
     {
