@@ -56,10 +56,12 @@ import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 import javax.naming.NamingException;
 
+import org.apache.avalon.framework.CascadingException;
+
 /**
  * JMSConnection properties container plus utilities.
  * 
- * @version CVS $Id: JMSConnection.java,v 1.1 2003/10/14 16:40:09 haul Exp $
+ * @version CVS $Id: JMSConnection.java,v 1.2 2003/10/19 02:30:17 ghoward Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
 public interface JMSConnection {
@@ -71,9 +73,14 @@ public interface JMSConnection {
      * 
      * @param listener
      * @param string
+     * 
+     * @throws CacadingException if the connection was not successfully 
+     * initialized, JMSException or NamingException if errors occur during 
+     * JMS methods.  It is up to the MessageListener to determine how to 
+     * handle this failure.
      */
     void registerListener(MessageListener listener, String selector)
-        throws JMSException, NamingException;
+        throws CascadingException, JMSException, NamingException;
         
     /**
      * Get a new TopicPublisher for this connection.
