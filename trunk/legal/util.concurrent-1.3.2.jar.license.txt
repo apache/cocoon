@@ -1,5 +1,0 @@
-Public Domain.
-
-Doug Lea's concurrency utils come with no warranty, nor ristrictions
-to use.
-
