@@ -46,6 +46,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * This transformer allows you to output to a ModifiableSource.
+ * 
+ * @cocoon.sitemap.component.name   write-source
+ * @cocoon.sitemap.component.logger sitemap.transformer.write-source
+ * 
  * This transformer allows you to output to a ModifiableSource.
  *
  * <p>Definition:</p>
@@ -223,7 +229,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.11 2004/03/17 12:09:52 cziegeler Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.12 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer

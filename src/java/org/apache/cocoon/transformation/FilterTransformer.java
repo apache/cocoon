@@ -29,6 +29,16 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * The filter transformer can be used to let only an amount of elements through in
+ * a given block.
+ * 
+ * @cocoon.sitemap.component.name   filter
+ * @cocoon.sitemap.component.logger sitemap.transformer.filter
+ * @cocoon.sitemap.component.documentation.caching
+ *               TBD
+ * 
+ * 
  * The filter transformer can be used to let only an amount of elements through in
  * a given block.
  *
@@ -46,7 +56,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FilterTransformer.java,v 1.5 2004/03/09 00:57:35 joerg Exp $
+ * @version CVS $Id: FilterTransformer.java,v 1.6 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class FilterTransformer
 extends AbstractTransformer

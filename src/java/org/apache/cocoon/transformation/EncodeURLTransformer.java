@@ -38,6 +38,18 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * The encodeURL transformer emits encoded URLs.
+ * 
+ * @cocoon.sitemap.component.name   encodeURL
+ * @cocoon.sitemap.component.logger sitemap.transformer.encodeURL
+ * @cocoon.sitemap.component.documentation.caching
+ *               TBD
+ * 
+ * @cocoon.sitemap.component.pooling.min   8
+ * @cocoon.sitemap.component.pooling.max  32
+ * @cocoon.sitemap.component.pooling.grow  4
+ * 
  * The encodeURL transformer emits encoded URLs.
  * <p>
  *   This transformer applies encodeURL method to URLs.
@@ -75,7 +87,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.7 2004/03/06 04:58:58 joerg Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.8 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -310,7 +322,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.7 2004/03/06 04:58:58 joerg Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.8 2004/06/17 14:55:24 cziegeler Exp $
      */
     public class ElementAttributeMatching {
         /**

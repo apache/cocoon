@@ -44,8 +44,13 @@ import java.util.List;
 import java.util.Map;
 
 /** 
+ * @cocoon.sitemap.component.documentation
  * Eliminates the need for XSP to use FormValidatorAction or HTML forms. 
  * Caveat: Select options need a value attribute to work correctly.
+ * 
+ * @cocoon.sitemap.component.name   simple-form
+ * @cocoon.sitemap.component.logger sitemap.transformer.simple-form
+ * 
  *
  * <p>This transformer fills all HTML 4 form elements with values from
  * an InputModule, e.g. request, with the same name. It handles select
@@ -140,7 +145,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.15 2004/03/28 22:03:02 antonio Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.16 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
