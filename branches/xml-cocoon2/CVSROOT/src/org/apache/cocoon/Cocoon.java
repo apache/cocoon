@@ -35,7 +35,7 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.DefaultComponentManager;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.avalon.AbstractLoggable;
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
@@ -49,7 +49,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.61 $ $Date: 2001-03-12 04:38:25 $
+ * @version CVS $Revision: 1.4.2.62 $ $Date: 2001-03-12 05:17:59 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -80,7 +80,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     private File workDir;
 
     /** The component manager. */
-    private DefaultComponentManager componentManager;
+    private CocoonComponentManager componentManager;
 
     /** Create a new <code>Cocoon</code> instance. */
     public Cocoon() throws ConfigurationException {
@@ -98,7 +98,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     }
 
     public void init() throws Exception {
-        this.componentManager = new DefaultComponentManager();
+        this.componentManager = new CocoonComponentManager();
         this.componentManager.contextualize(this.context);
         this.componentManager.setLogger(getLogger());
 

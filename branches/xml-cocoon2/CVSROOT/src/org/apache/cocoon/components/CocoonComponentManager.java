@@ -6,7 +6,7 @@
  * the LICENSE file.                                                         *
  *****************************************************************************/
 
-package org.apache.cocoon;
+package org.apache.cocoon.components;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,18 +33,16 @@ import org.apache.avalon.configuration.DefaultConfiguration;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.RoleUtils;
-import org.apache.cocoon.util.ComponentPool;
-import org.apache.cocoon.util.ComponentPoolController;
-import org.apache.cocoon.CocoonComponentSelector;
+import org.apache.cocoon.Roles;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-12 04:38:26 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 05:18:04 $
  */
-public class DefaultComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
+public class CocoonComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
     protected Logger log;
 
@@ -69,7 +67,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
 
     /** Construct a new default component manager.
      */
-    public DefaultComponentManager() {
+    public CocoonComponentManager() {
         // Setup the maps.
         components = Collections.synchronizedMap(new HashMap());
         configurations = Collections.synchronizedMap(new HashMap());
@@ -97,7 +95,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
         Component component;
 
         if ( role == null ) {
-            log.error("DefaultComponentManager Attempted to retrieve component with null role.");
+            log.error("CocoonComponentManager Attempted to retrieve component with null role.");
             throw new ComponentNotFoundException("Attempted to retrieve component with null role.");
         }
 
@@ -115,7 +113,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
             try {
                 componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
             } catch (Exception e) {
-                log.error("DefaultComponentManager Could not find component for role '" + role + "'.", e);
+                log.error("CocoonComponentManager Could not find component for role '" + role + "'.", e);
                 throw new ComponentNotFoundException("Could not find component for role '" + role + "'.", e);
             }
 
@@ -127,7 +125,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
-            log.error("DefaultComponentManager Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.");
+            log.error("CocoonComponentManager Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.");
             throw new ComponentNotAccessibleException(
                 "Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.",
                 null
@@ -143,13 +141,13 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-                log.error("DefaultComponentManager Could not access class " + componentClass.getName(), e);
+                log.error("CocoonComponentManager Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-                log.error("DefaultComponentManager Could not access class " + componentClass.getName(), e);
+                log.error("CocoonComponentManager Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -163,13 +161,13 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-                log.error("DefaultComponentManager Could not instantiate component " + componentClass.getName(), e);
+                log.error("CocoonComponentManager Could not instantiate component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-                log.error("DefaultComponentManager Could not access class " + componentClass.getName(), e);
+                log.error("CocoonComponentManager Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -358,7 +356,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
      * @param component the class of this component.
      * @param Configuration the configuration for this component.
      */
-    protected void addComponent(String role, Class component, Configuration config)
+    public void addComponent(String role, Class component, Configuration config)
     throws ConfigurationException,
            ComponentManagerException {
 

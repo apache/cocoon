@@ -27,7 +27,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.AbstractLoggable;
 
-import org.apache.cocoon.CocoonComponentSelector;
+import org.apache.cocoon.components.CocoonComponentSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-12 04:39:06 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-03-12 05:18:07 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;

@@ -6,7 +6,7 @@
  * the LICENSE file.                                                         *
  *****************************************************************************/
 
-package org.apache.cocoon;
+package org.apache.cocoon.components;
 
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.Pool;
@@ -29,7 +29,7 @@ import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-12 04:38:26 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 05:18:05 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     private Logger log;

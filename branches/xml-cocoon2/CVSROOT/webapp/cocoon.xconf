@@ -86,7 +86,7 @@
   </datasources>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
-  <pool-controller class="org.apache.cocoon.util.ComponentPoolController"/>
+  <pool-controller class="org.apache.cocoon.components.ComponentPoolController"/>
 
   <sax-connector class="org.apache.cocoon.components.saxconnector.NullSAXConnector"/>
 

@@ -6,7 +6,7 @@
  * the LICENSE file.                                                         *
  *****************************************************************************/
 
-package org.apache.cocoon;
+package org.apache.cocoon.components;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +32,6 @@ import org.apache.avalon.Disposable;
 import org.apache.avalon.Composer;
 
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.ComponentPool;
-import org.apache.cocoon.util.ComponentPoolController;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
@@ -41,7 +39,7 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-12 04:38:25 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 05:18:05 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;

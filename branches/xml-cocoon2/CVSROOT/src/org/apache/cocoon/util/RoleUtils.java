@@ -19,7 +19,7 @@ import java.util.Collections;
  * role aliases and the real Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-05 20:29:00 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 05:18:09 $
  */
 
 public class RoleUtils {
@@ -52,19 +52,19 @@ public class RoleUtils {
         setup.put(Roles.STORE, "org.apache.cocoon.components.store.MemoryStore");
         setup.put(Roles.REPOSITORY, "org.apache.cocoon.components.store.FilesystemStore");
         setup.put(Roles.SERVERPAGES, "org.apache.cocoon.components.language.generator.GeneratorSelector");
-        setup.put(Roles.PROGRAMMING_LANGUAGE, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.MARKUP_LANGUAGE, "org.apache.cocoon.CocoonComponentSelector");
+        setup.put(Roles.PROGRAMMING_LANGUAGE, "org.apache.cocoon.components.CocoonComponentSelector");
+        setup.put(Roles.MARKUP_LANGUAGE, "org.apache.cocoon.components.CocoonComponentSelector");
         setup.put(Roles.CLASS_LOADER, "org.apache.cocoon.components.classloader.ClassLoaderManagerImpl");
         setup.put(Roles.PROGRAM_GENERATOR, "org.apache.cocoon.components.language.generator.ProgramGeneratorImpl");
-        setup.put(Roles.DB_CONNECTION, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.POOL_CONTROLLER, "org.apache.cocoon.util.ComponentPoolController");
+        setup.put(Roles.DB_CONNECTION, "org.apache.cocoon.components.CocoonComponentSelector");
+        setup.put(Roles.POOL_CONTROLLER, "org.apache.cocoon.components.ComponentPoolController");
         setup.put(Roles.SAX_CONNECTOR, "org.apache.cocoon.components.saxconnector.NullSAXConnector");
         setup.put(Roles.URL_FACTORY, "org.apache.cocoon.components.url.URLFactoryImpl");
-        setup.put(Roles.ACTIONS, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.MATCHERS, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.SELECTORS, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.GENERATORS, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.TRANSFORMERS, "org.apache.cocoon.CocoonComponentSelector");
+        setup.put(Roles.ACTIONS, "org.apache.cocoon.components.CocoonComponentSelector");
+        setup.put(Roles.MATCHERS, "org.apache.cocoon.components.CocoonComponentSelector");
+        setup.put(Roles.SELECTORS, "org.apache.cocoon.components.CocoonComponentSelector");
+        setup.put(Roles.GENERATORS, "org.apache.cocoon.components.CocoonComponentSelector");
+        setup.put(Roles.TRANSFORMERS, "org.apache.cocoon.components.CocoonComponentSelector");
         setup.put(Roles.SERIALIZERS, "org.apache.cocoon.sitemap.SitemapComponentSelector");
         setup.put(Roles.READERS, "org.apache.cocoon.sitemap.SitemapComponentSelector");
 

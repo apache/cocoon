@@ -17,7 +17,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.CocoonComponentSelector;
+import org.apache.cocoon.components.CocoonComponentSelector;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -25,7 +25,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-21 16:11:51 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-12 05:18:06 $
  */
 public class GeneratorSelector extends CocoonComponentSelector {
     private ClassLoaderManager classManager;

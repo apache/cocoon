@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE file.
  */
-package org.apache.cocoon.util;
+package org.apache.cocoon.components;
 
 import java.util.Vector;
 
@@ -15,7 +15,7 @@ import org.apache.avalon.Loggable;
 import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.Recyclable;
-import org.apache.cocoon.ComponentFactory;
+import org.apache.cocoon.components.ComponentFactory;
 
 import org.apache.log.Logger;
 

@@ -6,7 +6,7 @@
  * the LICENSE file.                                                         *
  *****************************************************************************/
 
-package org.apache.cocoon.util;
+package org.apache.cocoon.components;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
@@ -23,7 +23,7 @@ import org.apache.cocoon.util.ClassUtils;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-12 04:39:17 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 05:18:06 $
  */
 public class ComponentPoolController implements PoolController, ThreadSafe, Component {
 
