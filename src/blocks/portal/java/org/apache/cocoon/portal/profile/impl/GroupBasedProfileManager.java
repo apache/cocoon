@@ -23,7 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
@@ -34,10 +42,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileLS;
-import org.apache.cocoon.webapps.authentication.AuthenticationManager;
-import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
-import org.apache.cocoon.webapps.authentication.user.RequestState;
-import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -65,7 +70,8 @@ import org.apache.excalibur.source.SourceNotFoundException;
  * @version CVS $Id: AbstractUserProfileManager.java 37123 2004-08-27 12:11:53Z cziegeler $
  */
 public class GroupBasedProfileManager 
-    extends AbstractProfileManager { 
+    extends AbstractProfileManager
+    implements Parameterizable, Contextualizable, Initializable, Disposable { 
 
     public static final String CATEGORY_GLOBAL = "global";
     public static final String CATEGORY_GROUP  = "group";
@@ -75,6 +81,49 @@ public class GroupBasedProfileManager
     
     protected Map copletBaseDatas;
     protected Map copletDatas;
+    
+    /** The userinfo provider - the connection to the authentication mechanism */
+    protected UserInfoProvider provider;
+    
+    /** The class name of the userinfo provider */
+    protected String userInfoProviderClassName;
+    
+    /** The component context */
+    protected Context context;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void parameterize(Parameters params) throws ParameterException {
+        this.userInfoProviderClassName = params.getParameter("userinfo-provider");
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        this.provider = (UserInfoProvider)ClassUtils.newInstance(this.userInfoProviderClassName);
+        ContainerUtil.enableLogging(this.provider, this.getLogger());
+        ContainerUtil.contextualize(this.provider, this.context);
+        ContainerUtil.service(this.provider, this.manager);
+        ContainerUtil.initialize(this.provider);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        ContainerUtil.dispose(this.provider);
+        this.provider = null;
+        this.manager = null;
+    }
     
     protected UserProfile getUserProfile(String layoutKey) {
         PortalService service = null;
@@ -333,64 +382,15 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * Return the user info about the current user.
-     * This implementation uses the authentication framework - if you
-     * want to use a different authentication method just overwrite this
-     * method.
-     */
-    protected UserInfo getUserInfo(String portalName, String layoutKey) 
-    throws Exception {
-        AuthenticationManager authManager = null;
-        try {
-            authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            final UserInfo info = new UserInfo(portalName, layoutKey);
-
-            final RequestState state = authManager.getState();
-            final UserHandler handler = state.getHandler();
-
-            info.setUserName(handler.getUserId());
-            try {
-                info.setGroup((String)handler.getContext().getContextInfo().get("group"));
-            } catch (ProcessingException pe) {
-                // ignore this
-            }
-
-            final ApplicationConfiguration ac = state.getApplicationConfiguration();        
-            if ( ac == null ) {
-                throw new ProcessingException("Configuration for portal not found in application configuration.");
-            }
-            final Configuration appConf = ac.getConfiguration("portal");
-            if ( appConf == null ) {
-                throw new ProcessingException("Configuration for portal not found in application configuration.");
-            }
-            final Configuration config = appConf.getChild("profiles");
-            final Configuration[] children = config.getChildren();
-            final Map configs = new HashMap();
-            if ( children != null ) {
-                for(int i=0; i < children.length; i++) {
-                    configs.put(children[i].getName(), children[i].getAttribute("uri"));
-                }
-            }
-            info.setConfigurations(configs);
-            return info;    
-        } catch (ServiceException ce) {
-            // ignore this here
-            return null;
-        } finally {
-            this.manager.release( authManager );
-        }
-    }
-        
-    /**
      * Load the profile
      */
     protected UserProfile loadProfile(final String layoutKey, final PortalService service) 
     throws Exception {
-        final UserInfo info = this.getUserInfo(service.getPortalName(), layoutKey);
+        final UserInfo info = this.provider.getUserInfo(service.getPortalName(), layoutKey);
         ProfileLS loader = null;
         try {
             loader = (ProfileLS)this.manager.lookup( ProfileLS.ROLE );
-        final UserProfile profile = new UserProfile();
+            final UserProfile profile = new UserProfile();
             this.storeUserProfile(layoutKey, service, profile);
         
             // first "load" the global data
@@ -414,7 +414,7 @@ public class GroupBasedProfileManager
                 }
             }
 
-        return profile;
+            return profile;
         } catch (ServiceException se) {
             throw new CascadingRuntimeException("Unable to get component profilels.", se);
         } finally {
@@ -465,8 +465,8 @@ public class GroupBasedProfileManager
                     this.copletDatas = ((CopletDataManager)loader.loadProfile(key, parameters)).getCopletData();                    
                     this.prepareObject(this.copletDatas, service);
                 }
-    }
-}
+            }
+        }
         return this.copletDatas;
     }
 
