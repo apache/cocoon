@@ -1,16 +1,27 @@
 <?xml version="1.0"?>
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
  <map:components>
   <map:generators default="file">
     <map:generator name="portal" src="org.apache.cocoon.portal.generation.PortalGenerator"/>
   </map:generators>
   <map:transformers default="xslt">
-    <map:transformer name="htmlroot" src="org.apache.cocoon.portal.transformation.HTMLRootTransformer" logger="sitemap.transformer.htmlroot" />
-    <map:transformer name="rss" src="org.apache.cocoon.portal.transformation.RSSTransformer" logger="sitemap.transformer.rss" />
+    <map:transformer name="htmlroot" src="org.apache.cocoon.portal.transformation.HTMLRootTransformer" 
+                     logger="sitemap.transformer.htmlroot" />
+    <map:transformer name="rss" src="org.apache.cocoon.portal.transformation.RSSTransformer" 
+                     logger="sitemap.transformer.rss" />
+    <map:transformer name="portal-proxy" src="org.apache.cocoon.portal.transformation.ProxyTransformer" 
+                     logger="sitemap.transformer.portal.proxy">
+        <parameter name="envelope-tag" value="div"/>
+    </map:transformer>
+    <map:transformer name="portal-new-eventlink" src="org.apache.cocoon.portal.transformation.NewEventLinkTransformer" 
+                     logger="sitemap.transformer.portal.eventlink" />
+    <map:transformer name="portal-html-eventlink" src="org.apache.cocoon.portal.transformation.HTMLEventLinkTransformer" 
+                     logger="sitemap.transformer.portal.eventlink.html"/>
   </map:transformers>
-  <map:readers default="resource"/>
+  <map:readers default="resource">
+    <map:reader name="portal-proxy" src="org.apache.cocoon.portal.reading.ProxyReader" 
+                logger="sitemap.reader.portal.proxy" />
+  </map:readers>
   <map:serializers default="html">
     <map:serializer name="html-include"
                     logger="sitemap.serializer.html" 
@@ -166,6 +177,7 @@
                 <map:parameter name="user" value="{ID}"/>
             </map:transform>
             <map:transform type="cinclude"/> 
+            <map:transform type="portal-coplet"/>
             <map:transform type="encodeURL"/>
 <!--
             <map:transform type="htmlroot" />

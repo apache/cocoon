@@ -75,8 +75,23 @@
       <coplet-data>Portlet2</coplet-data>
    </coplet-instance-data>
 
+
    <coplet-instance-data id="TestPortlet-1" name="standard">
       <coplet-data>TestPortlet1</coplet-data>
    </coplet-instance-data>
+
+   <coplet-instance-data id="app-test-1" name="standard">
+      <coplet-data>app-test-one</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-2" name="standard">
+      <coplet-data>app-test-one</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-3" name="standard">
+      <coplet-data>app-test-two</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-4" name="standard">
+      <coplet-data>app-test-two</coplet-data>
+   </coplet-instance-data>
+
 
 </coplets>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: content.xml,v 1.1 2004/02/12 09:32:00 cziegeler Exp $
+    | Author: Carsten Ziegeler (cziegeler@apache.org)
+    +-->
+
+<page>
+    <title>Your current input</title>
+    <content>
+      <para>Hello <strong>#{name}</strong>!</para>
+      <para>If you want to reenter your name, click <link href="clearform">here</link>.</para>
+    </content>
+</page>
