@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.168 2004/07/06 15:31:38 antonio Exp $
+    | CVS $Id: gump.xml,v 1.169 2004/07/08 10:11:38 upayavira Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -470,7 +470,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jtidy"/>
-
+    <depend project="nekohtml"/>
+    
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -1271,4 +1272,8 @@
     <jar name="lib/core/javacImpl-0.9.jar" id="impl"/>
   </project>
 
+  <project name="nekohtml">
+    <package>org.cyberneko.html</package>
+    <jar name="src/blocks/html/lib/nekohtml-0.9.2.jar" id="nekohtml"/>
+  </project>
 </module>

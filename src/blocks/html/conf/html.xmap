@@ -18,8 +18,11 @@
 <xmap xpath="/sitemap/components/generators"
       unless="generator[@name='html']">
 
-    <map:generator name="html" logger="sitemap.generator.html"
+    <map:generator name="html"
                    src="org.apache.cocoon.generation.HTMLGenerator"
+                   label="content"/>
+    <map:generator name="nekohtml"
+                   src="org.apache.cocoon.generation.NekoHTMLGenerator"
                    label="content">
       <!-- Tidy configuration file.
       <jtidy-config>context://WEB-INF/tidy.properties</jtidy-config>
