@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.lang.reflect.Method;
 
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
@@ -124,11 +125,11 @@ import org.xml.sax.SAXException;
  *
  * The &lt;xslt-processor-role&gt; configuration allows to specify the TrAX processor (defined in
  * the cocoon.xconf) that will be used to obtain the XSLT processor. This allows to have
- * several XSLT processors in the configuration (e.g. Xalan, XSTLC, Saxon, ...) and choose 
+ * several XSLT processors in the configuration (e.g. Xalan, XSTLC, Saxon, ...) and choose
  * one or the other depending on the needs of stylesheet specificities.<br>
  * If no processor is specified, this transformer will use the XSLT implementation
  * that Cocoon uses internally.
- * 
+ *
  * The &lt;transformer-factory&gt; configuration allows to specify the TrAX transformer factory
  * implementation that will be used to obtain the XSLT processor. This is only usefull for
  * compatibility reasons. Please configure the xslt processor in the cocoon.xconf properly
@@ -151,7 +152,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.4 2003/05/01 21:49:37 coliver Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.5 2003/05/02 15:25:23 bruno Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -195,6 +196,9 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
 
     /** Did we finish the processing (is endDocument() called) */
     private boolean finishedDocument = false;
+
+    /** Xalan's DTMManager.getIncremental() method. See recycle() method to see what we need this for. */
+    private Method xalanDtmManagerGetIncrementalMethod;
 
     /**
      * Configure this transformer.
@@ -244,6 +248,16 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
             }
         } catch (ComponentException e) {
             throw new ConfigurationException("Cannot load XSLT processor", e);
+        }
+
+        try {
+            // see the recyle() method to see what we need this for
+            Class dtmManagerClass = Class.forName("org.apache.xml.dtm.DTMManager");
+            xalanDtmManagerGetIncrementalMethod = dtmManagerClass.getMethod("getIncremental", null);
+        } catch (ClassNotFoundException e) {
+            // do nothing -- user does not use xalan, so we don't need the dtm manager
+        } catch (NoSuchMethodException e) {
+            throw new ConfigurationException("Was not able to get getIncremental method from Xalan's DTMManager.", e);
         }
     }
 
@@ -370,7 +384,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
             String[] params = par.getNames();
             if (params != null) {
                 for(int i = 0; i < params.length; i++) {
-                    String name = (String) params[i];
+                    String name = params[i];
                     if (isValidXSLTParameterName(name)) {
                         String value = par.getParameter(name,null);
                         if (value != null) {
@@ -477,8 +491,6 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      * Recyclable
      */
     public void recycle() {
-        this.transformerHandler = null;
-        this.transformerValidity = null;
         this.objectModel = null;
         if (this.inputSource != null) {
             this.resolver.release(this.inputSource);
@@ -487,12 +499,25 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         this.resolver = null;
         this.par = null;
         if (this.finishedDocument == false) {
-            try {
-                super.endDocument();
-            } catch (Exception ignore) {}
+            // This situation will only occur if an exception occured during pipeline execution.
+            // If Xalan is used in incremental mode, it is important that endDocument is called, otherwise
+            // the thread on which it runs the transformation will keep waiting.
+            // However, calling endDocument will cause the pipeline to continue executing, and thus the
+            // serializer will write output to the outputstream after what's already there (the error page),
+            // see also bug 13186.
+            if (xalanDtmManagerGetIncrementalMethod != null
+                    && transformerHandler.getClass().getName().equals("org.apache.xalan.transformer.TransformerHandlerImpl")) {
+                try {
+                    boolean incremental = ((Boolean)xalanDtmManagerGetIncrementalMethod.invoke(null, null)).booleanValue();
+                    if (incremental)
+                        super.endDocument();
+                } catch (Exception ignore) {}
+            }
         }
         this.finishedDocument = false;
         this.logicSheetParameters = null;
+        this.transformerHandler = null;
+        this.transformerValidity = null;
         super.recycle();
     }
 
