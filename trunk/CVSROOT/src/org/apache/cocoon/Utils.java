@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.18 2000-11-07 18:30:13 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.19 2000-11-16 23:44:37 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,8 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.18 $ $Date: 2000-11-07 18:30:13 $
+ * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
+ * @version $Revision: 1.19 $ $Date: 2000-11-16 23:44:37 $
  */
 
 public final class Utils {
@@ -241,7 +242,8 @@ public final class Utils {
         
         try {
             // detect if the engine supports at least Servlet API 2.2
-            request.getContextPath();
+            request.getClass ().getMethod ("getContextPath", null);
+
             // we need to check this in case we've been included in a servlet or jsp
             path = (String) request.getAttribute("javax.servlet.include.servlet_path");
             // otherwise, we find it out ourselves
@@ -256,21 +258,25 @@ public final class Utils {
             } else {
                 throw new RuntimeException("Cannot access non-file/war resources");
             }
-        } catch (NoSuchMethodError e) {
-            // if there is no such method we must be in Servlet API 2.1
-            if (request.getPathInfo() != null) {
-                // this must be Apache JServ
-                path = request.getPathTranslated();
-            } else {
-                // otherwise use the deprecated method on all other servlet engines.
-                path = request.getRealPath(request.getRequestURI());
-            }
-
-            return (path == null) ? "" : path.replace('\\','/');
+        } catch (NoSuchMethodException e) { // thrown from detection line
+            // if there is no such method we're not in Servlet API 2.2
+            return getBaseName_Old (request);
         } catch (NullPointerException e) {
             // if there is no context set, we must be called from the command line
             return request.getPathTranslated().replace('\\','/');
         }
+    }
+
+    private static String getBaseName_Old (HttpServletRequest request) {
+      String path;
+      if (request.getPathInfo() != null) {
+        // this must be Apache JServ
+        path = request.getPathTranslated();
+      } else {
+        // otherwise use the deprecated method on all other servlet engines.
+        path = request.getRealPath(request.getRequestURI());
+      }
+      return (path == null) ? "" : path.replace('\\','/');
     }
 
     /*
