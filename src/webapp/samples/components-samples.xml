@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: components-samples.xml,v 1.3 2004/03/06 14:05:04 joerg Exp $ -->
+<!-- CVS $Id: components-samples.xml,v 1.4 2004/03/09 01:33:14 joerg Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Components Samples">
   
@@ -41,11 +41,14 @@
     <sample href="paginator/" name="Paginator">
       Examples of Paginator transformer usage
     </sample> 
+    <sample href="filter/" name="FilterTransformer">
+      Examples of filter transformer usage
+    </sample> 
   </group>
 
   <group name="Readers">
     <sample href="imagereader/" name="Image Reader">
       Examples of ImageReader component usage
-    </sample> 
+    </sample>
   </group>
 </samples>
