@@ -43,7 +43,7 @@ import org.xmldb.api.DatabaseManager;
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.8 2004/04/19 14:53:50 cziegeler Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.9 2004/05/17 16:15:18 vgritsenko Exp $
  */
 public final class XMLDBSourceFactory extends AbstractLogEnabled
                                       implements SourceFactory, Contextualizable, Configurable, Serviceable, ThreadSafe {
@@ -95,17 +95,17 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
 
                 DatabaseManager.registerDatabase(db);
 
-            } catch (XMLDBException xde) {
-                String error = "Unable to connect to the XMLDB database. Error "
-                               + xde.errorCode + ": " + xde.getMessage();
-                getLogger().debug(error, xde);
-                throw new ConfigurationException(error, xde);
+            } catch (XMLDBException e) {
+                String msg = "Unable to connect to the XMLDB database '" + type + "'." +
+                             " Error " + e.errorCode + ": " + e.getMessage();
+                getLogger().debug(msg, e);
+                throw new ConfigurationException(msg, e);
 
             } catch (Exception e) {
-                getLogger().warn("There was a problem setting up the connection. "
-                                 + "Make sure that your driver is available");
-                throw new ConfigurationException("Problem setting up the connection to XML:DB: "
-                                                 + e.getMessage(), e);
+                String msg = "Unable to load XMLDB database driver '" + driver + "'." +
+                             " Make sure that the driver is available. Error: " + e.getMessage();
+                getLogger().debug(msg, e);
+                throw new ConfigurationException(msg, e);
             }
         }
     }
