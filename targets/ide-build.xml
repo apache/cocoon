@@ -47,6 +47,8 @@
     <path id="srcs">
       <!-- main source dir -->
       <pathelement path="${src}/java"/>
+      <!-- samples source dir -->
+      <pathelement path="${src}/samples"/>
       <!-- deprecated source dir -->
       <pathelement path="${src}/deprecated/java"/>
       <!-- test source dir -->
