@@ -205,7 +205,7 @@
   <changes>
   <release version="@version@" date="@date@">
   <action dev="AG" type="update">
-     Update ant to 1.6.2.
+     Update ant to 1.6.2, commons-jxpath to 1.2.
    </action>
    <action dev="CZ" type="fix">
      Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
