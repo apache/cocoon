@@ -19,7 +19,7 @@
     wi:group : default is to enclose items in a div
   -->
   <xsl:template match="wi:group">
-    <div title="{wi:help}">
+    <div title="{wi:hint}">
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates mode="group-layout" select="."/>
     </div>
@@ -46,7 +46,7 @@
     <xsl:variable name="state-widget" select="wi:state/wi:*/@id"/>
     <xsl:variable name="id" select="generate-id()"/>
 
-    <div id="{$id}">
+    <div id="{$id}" title="{wi:hint}">
       <!-- add an hidden input for the state -->
       <xsl:if test="$state-widget">
         <input type="hidden" name="{$state-widget}" value="{$active}"/>
@@ -102,7 +102,7 @@
     <xsl:variable name="id" select="generate-id()"/>
 
     <fieldset id="{$id}">
-      <legend>
+      <legend title="{wi:hint}">
         <xsl:apply-templates select="wi:label/node()"/>
         <select name="{$state-widget}" onchange="woody_showTab('{$id}', this.selectedIndex, {count(wi:items/*)}, '{$state-widget}')">
           <xsl:for-each select="wi:items/wi:*">
@@ -147,7 +147,7 @@
   -->
   <xsl:template match="wi:group[wi:styling/@type='fieldset']">
     <fieldset>
-      <xsl:copy-of select="wi:styling/@*[name() != 'type' and name() != 'layout']"/>
+      <xsl:apply-templates select="." mode="styling"/>
       <legend title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></legend>
       <xsl:apply-templates mode="group-layout" select="."/>
     </fieldset>

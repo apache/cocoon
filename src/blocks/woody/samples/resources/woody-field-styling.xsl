@@ -5,21 +5,14 @@
                 exclude-result-prefixes="wi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: woody-field-styling.xsl,v 1.41 2004/02/07 10:15:23 ugo Exp $
+      | Version CVS $Id: woody-field-styling.xsl,v 1.42 2004/02/18 21:11:44 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 
   <xsl:template match="head" mode="woody-field">
-    <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
-    <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
     <script src="{$resources-uri}/woody-lib.js" type="text/javascript"/>
-    <script type="text/javascript">
-      _editor_url = "<xsl:value-of select="concat($resources-uri, '/htmlarea/')"/>";
-      _editor_lang = "en";
-    </script>
-    <script type="text/javascript" src="{$resources-uri}/htmlarea/htmlarea.js"></script>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/woody.css"/>
   </xsl:template>
 
@@ -52,7 +45,8 @@
 
   <!--+
       | Handling the common styling. You may only add attributes to the output
-      | as following handling (e.g. checked/unchecked) might add attributes too.
+      | in this template as later processing might add attributes too, for
+      | example @checked or @selected
       +-->
   <xsl:template match="wi:*" mode="styling">
     <xsl:apply-templates select="wi:styling/@*" mode="styling"/>
@@ -60,8 +54,6 @@
     <!--+ 
         | @listbox-size needs to be handled separately as even if it is not
         | specified some output (@size) must be generated.
-        | Separating this out into this common styling looks a bit like
-        | over-separation, doesn't it?
         +-->
     <xsl:if test="self::wi:field[wi:selection-list][wi:styling/@list-type = 'listbox'] or
                   self::wi:multivaluefield[not(wi:styling/@list-type = 'checkbox')]">
@@ -86,7 +78,7 @@
   </xsl:template>
 
   <xsl:template match="wi:styling/@list-type | wi:styling/@list-orientation |
-                       wi:styling/@listbox-size | wi:styling/@format"
+                       wi:styling/@listbox-size | wi:styling/@format | wi:styling/@layout"
                 mode="styling">
     <!--+
         | Ignore marker attributes so they don't go into the resuling HTML.
@@ -103,25 +95,14 @@
                   select="'text hidden textarea checkbox radio password image reset submit'"/>
     <xsl:if test="normalize-space(.) and
                   contains(concat(' ', $validHTMLTypes, ' '), concat(' ', ., ' '))">
-      <xsl:copy-of select="."/>      
+      <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
 
-  <!--+
-      | 
-      +-->
-  <xsl:template match="wi:help">
-    <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
-      <xsl:apply-templates select="node()"/>
-    </div>
-    <script type="text/javascript">
-      var helpWin<xsl:value-of select="generate-id()"/> = woody_createPopupWindow('help<xsl:value-of select="generate-id()"/>');
-    </script>
-    <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
-  </xsl:template>
+  <xsl:template match="wi:help"/>
 
   <!--+
-      | 
+      |
       +-->
   <xsl:template match="wi:validation-message">
     <a href="#" class="woody-validation-message" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
@@ -238,19 +219,6 @@
       <xsl:copy-of select="translate(wi:value/node(), '&#13;', '')"/>
     </textarea>
     <xsl:apply-templates select="." mode="common"/>
-  </xsl:template>
-  
-  <!--
-    wi:field with @type 'htmlarea'
-  -->
-  <xsl:template match="wi:field[wi:styling[@type='htmlarea']]">
-    <textarea id="{@id}" name="{@id}" title="{wi:hint}">
-      <xsl:apply-templates select="." mode="styling"/>
-      <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
-      <xsl:copy-of select="translate(wi:value/node(), '&#13;', '')"/>
-    </textarea>
-    <xsl:apply-templates select="." mode="common"/>
-    <script language="JavaScript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>
   </xsl:template>
 
   <!--+

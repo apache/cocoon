@@ -6,25 +6,30 @@
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
       | It extends the 'woody-field-styling.xsl' with additional stylings.
-      | The calendar can also be seen as advanced field styling, it's only
-      | separated out of this file because of its much specific stuff.
+      | The very specific advanced stylings as the calendar or htmlarea (both
+      | also need additional JS files) are separated out of this file.
       +-->
 
   <xsl:import href="woody-field-styling.xsl"/>
   <xsl:include href="woody-calendar-styling.xsl"/>
+  <xsl:include href="woody-htmlarea-styling.xsl"/>
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 
   <xsl:template match="head" mode="woody-field">
     <xsl:apply-imports/>
+    <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
+    <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/OptionTransfer.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/selectbox.js" type="text/javascript"/>
     <xsl:apply-templates select="." mode="woody-calendar"/>
+    <xsl:apply-templates select="." mode="woody-htmlarea"/>
   </xsl:template>
 
   <xsl:template match="body" mode="woody-field">
     <xsl:apply-imports/>
     <xsl:apply-templates select="." mode="woody-calendar"/>
+    <xsl:apply-templates select="." mode="woody-htmlarea"/>
   </xsl:template>
 
   <!--+ This template should not be necessary as this stylesheet "inherits"
@@ -35,6 +40,20 @@
       +-->
   <xsl:template match="*">
     <xsl:apply-imports/>
+  </xsl:template>
+
+  <!--+
+      | 
+      +-->
+  <xsl:template match="wi:help">
+    <xsl:variable name="id" select="generate-id()"/>
+    <div class="woody-help" id="help{$id}" style="visibility:hidden; position:absolute;">
+      <xsl:apply-templates select="node()"/>
+    </div>
+    <script type="text/javascript">
+      var helpWin<xsl:value-of select="$id"/> = woody_createPopupWindow('help<xsl:value-of select="$id"/>');
+    </script>
+    <a id="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;"><img border="0" src="resources/help.gif"/></a>
   </xsl:template>
 
   <!--+
