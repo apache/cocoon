@@ -72,7 +72,7 @@
   </p>
 
   <note>
-   The Ant and Stylebook packages are only used in the build system and
+   The Ant, Stylebook and Servlet packages are only used in the build system and
    are <strong>not</strong> used by Cocoon at run-time. So you can safely
    ignore them in the installation.
   </note>
@@ -115,9 +115,7 @@ classpath lines
 wrapper.classpath=/usr/local/java/jdk/lib/tools.jar
 wrapper.classpath=/usr/local/java/cocoon/bin/cocoon.jar
 wrapper.classpath=/usr/local/java/cocoon/lib/xerces.jar
-wrapper.classpath=/usr/local/java/cocoon/lib/xalan.jar
-wrapper.classpath=/usr/local/java/cocoon/lib/fop.jar
-...
+[... and all the other required jar files in cocoon/lib]
 </source>
 
    <note>
@@ -126,7 +124,7 @@ wrapper.classpath=/usr/local/java/cocoon/lib/fop.jar
     We understand that this could be a flexibility limitation. 
     On JServ it is not yet possible to run
     multiple instances of Cocoon in the same virtual machine - if you
-    would like to do that, try using a different servlet engine.
+    would like to do that, try using a different servlet engine. (To be fixed soon.)
    </note>
 
    <note>
