@@ -24,9 +24,9 @@
                 This implementation of the Java interface 
                 <link href="/api/java/org/apache/cocoon/components/cron/JobScheduler.html">
                 <code>JobScheduler</code></link> 
-                is based on the <link href="http://quartz.sf.net">Quartz</link>
+                is based on the <link href="http://sourceforge.net/projects/quartz/">Quartz</link>
                 job scheduling project and the 
-                <code>RunnableManager</code></link> as a ThreadPool implementation for the Quartz Scheduler.
+                <code>RunnableManager</code> as a ThreadPool implementation for the Quartz Scheduler.
             </p>
             
             <p style="background-color: yellow">
@@ -111,7 +111,7 @@
                 </source>
                 <p>
                     As mentioned in the beginning, more information about the thread pool details base on the
-                    <code>RunnableManager#createPool(...)</code></link> method can be found there.
+                    <code>RunnableManager#createPool(...)</code> method can be found there.
                 </p>
             </section>
             
