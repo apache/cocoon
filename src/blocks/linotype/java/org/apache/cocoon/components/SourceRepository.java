@@ -24,18 +24,21 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import org.apache.cocoon.environment.Environment;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.ModifiableTraversableSource;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 
 /**
  * @author stefano
- * @version CVS $Id: SourceRepository.java,v 1.3 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: SourceRepository.java,v 1.4 2004/04/19 13:21:29 cziegeler Exp $
  */
 public class SourceRepository {
     
@@ -43,10 +46,10 @@ public class SourceRepository {
     
     private static SourceRepository instance;
     
-    private static Environment env;
+    private static ComponentManager manager;
     
     private SourceRepository() {
-    	env = CocoonComponentManager.getCurrentEnvironment();
+    	manager = CocoonComponentManager.getSitemapComponentManager();
     }
     
     public static SourceRepository getInstance() {
@@ -56,14 +59,29 @@ public class SourceRepository {
         return instance;
     }
 
+    private static Source resolve(String uri) 
+    throws MalformedURLException, IOException {
+        SourceResolver resolver = null;
+        TraversableSource source;
+        try {
+            resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+            source = (TraversableSource) resolver.resolveURI(uri);
+        } catch (ComponentException ce) {
+            throw new IOException("ComponentException");
+        } finally {
+            manager.release(resolver);
+        }
+        return source;
+    }
+
     private static TraversableSource getCollection(String colName) {
     	TraversableSource source;
         try {
-            source = (TraversableSource) env.resolveURI(colName);
+            source = (TraversableSource)resolve(colName);
         } catch (MalformedURLException e) {
-			throw new RuntimeException("'unable to resolve source: malformed URL");
+            throw new RuntimeException("'unable to resolve source: malformed URL");
         } catch (IOException e) {
-			throw new RuntimeException("'unable to resolve source: IOException");
+            throw new RuntimeException("'unable to resolve source: IOException");
         }
         if (!source.isCollection()) throw new RuntimeException(colName + " is not a collection!");
         return source;
@@ -84,14 +102,14 @@ public class SourceRepository {
                 if (!(collection instanceof ModifiableSource)) {
                 	throw new RuntimeException("Cannot modify the given source");
                 }	
-                result = (ModifiableTraversableSource)env.resolveURI(collection.getURI() + "/" + code);
+                result = (ModifiableTraversableSource)resolve(collection.getURI() + "/" + code);
                 
                 save(part, result);
             } else if (name.startsWith("delete:")) {
                 String value = request.getParameter(name);
                 if (value.length() > 0) {               
                     String code = name.substring(7);
-					result = (ModifiableTraversableSource)env.resolveURI(collection + "/" + code);
+					result = (ModifiableTraversableSource)resolve(collection + "/" + code);
                     remove(result);
                 }
             }
@@ -100,7 +118,7 @@ public class SourceRepository {
     
     public static void save(Request request, String param, String dest) throws Exception {
         Part part = (Part) request.get(param);
-        save(part, (ModifiableTraversableSource)env.resolveURI(dest));
+        save(part, (ModifiableTraversableSource)resolve(dest));
     }
     
     public static void save(Part part, ModifiableTraversableSource destination) throws Exception {
@@ -124,7 +142,7 @@ public class SourceRepository {
         String mainResource = collection + "/" + FILE_NAME + ".xml";
         String versionedResource = collection + "/" + FILE_NAME + "." + getVersionID(collection) + ".xml";
         copy(mainResource, versionedResource);
-        return ((ModifiableSource)env.resolveURI(mainResource)).getOutputStream();
+        return ((ModifiableSource)resolve(mainResource)).getOutputStream();
     }
 
     public static void revertFrom(String collection, int version) throws IOException {
@@ -237,7 +255,7 @@ public class SourceRepository {
     
     public static boolean remove(String resourceName) {
         try {
-            return remove((ModifiableTraversableSource)env.resolveURI(resourceName));
+            return remove((ModifiableTraversableSource)resolve(resourceName));
         } catch (MalformedURLException e) {
             return false;
         } catch (IOException e) {
@@ -272,7 +290,7 @@ public class SourceRepository {
     }
     
     public static void copy(String from, String to) throws IOException {
-        copy((ModifiableTraversableSource)env.resolveURI(from), (ModifiableTraversableSource)env.resolveURI(to));
+        copy((ModifiableTraversableSource)resolve(from), (ModifiableTraversableSource)resolve(to));
     }    
 
     public static void copy(ModifiableTraversableSource from, ModifiableTraversableSource to) throws IOException {
@@ -291,11 +309,11 @@ public class SourceRepository {
 			}
 			for (Iterator iter = contents.iterator(); iter.hasNext();) {
 				ModifiableTraversableSource src = (ModifiableTraversableSource) iter.next();
-				SourceUtil.copy(src, env.resolveURI(to.getURI() + "/" + src.getName()));				
+				SourceUtil.copy(src, resolve(to.getURI() + "/" + src.getName()));				
 
 			}
         } else {
-            to = (ModifiableTraversableSource)env.resolveURI(to.getURI());
+            to = (ModifiableTraversableSource)resolve(to.getURI());
             InputStream in = null;
             OutputStream out = null;
             try {
