@@ -85,7 +85,7 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.5 2003/10/21 13:46:01 cziegeler Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.6 2003/12/22 13:46:31 joerg Exp $
  */
 public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */
@@ -208,8 +208,8 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
     private HashSet excludeCrawlingURL;
     private HashSet includeCrawlingURL;
     // FIXME - The following two are never read, can we delete them?
-    private String userAgent = USER_AGENT_DEFAULT;
-    private String accept = ACCEPT_DEFAULT;
+    //private String userAgent = USER_AGENT_DEFAULT;
+    //private String accept = ACCEPT_DEFAULT;
 
     private HashSet crawled;
     private HashSet linksToProcess;
@@ -322,7 +322,7 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
                 this.linkViewQuery = value.trim();
             }
         }
-
+/*      FIXME: Also delete this if you delete the fields above.
         child = configuration.getChild(USER_AGENT_CONFIG, false);
         if (child != null) {
             value = child.getValue();
@@ -338,6 +338,7 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
                 this.accept = value;
             }
         }
+*/
     }
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
