@@ -206,7 +206,7 @@
      Update Deli to x031104 (include over 300 vendor, operator and third party profiles)
    </action>
    <action dev="AG" type="update">
-     Updated hsqldb to 1.7.3, lucene to 1.4.3, ehcache to 1.1.
+     Updated hsqldb to 1.7.3, lucene to 1.4.3, ehcache to 1.1, log4j 1.2.9.
    </action>
    <action dev="TC" type="add">
     paranoid: make the classloader implementation configurable
