@@ -273,7 +273,8 @@ a Java 1.2 compatible JVM is required for this target.
     <javac srcdir="${build.src}"
            destdir="${build.dest}"
            debug="${debug}"
-           optimize="${optimize}"/>
+           optimize="${optimize}"
+           deprecation="${deprecation}"/>
   </target>
 
   <!-- =================================================================== -->
