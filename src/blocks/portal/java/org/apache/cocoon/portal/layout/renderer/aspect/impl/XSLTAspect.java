@@ -55,11 +55,14 @@ import java.io.IOException;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.variables.VariableResolver;
+import org.apache.cocoon.components.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
@@ -79,7 +82,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.2 2003/05/16 11:39:11 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.3 2003/06/10 19:38:54 cziegeler Exp $
  */
 public class XSLTAspect 
     extends AbstractLogEnabled 
@@ -129,7 +132,23 @@ public class XSLTAspect
 
     protected String getStylesheetURI(RendererAspectContext context, Layout layout) {
         // FIXME Get the stylesheet either from a layout attribute or another aspect
-        return context.getAspectParameters().getParameter("style", "NOTFOUND");
+        String stylesheet =  context.getAspectParameters().getParameter("style", "NOTFOUND");
+        // TODO make this more faster
+        VariableResolverFactory factory = null;
+        try {
+            factory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
+            VariableResolver resolver = null;
+            try {
+                resolver = factory.lookup( stylesheet );
+                stylesheet = resolver.resolve();
+            } finally {
+                factory.release( resolver );
+            }
+        } catch (Exception ignore) {
+        } finally {
+            this.manager.release((Component)factory);
+        }
+        return stylesheet;
     }
 	/* (non-Javadoc)
 	 * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
