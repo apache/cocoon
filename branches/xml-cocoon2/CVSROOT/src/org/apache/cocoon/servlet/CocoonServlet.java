@@ -62,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.73 $ $Date: 2001-04-02 13:53:10 $
+ * @version CVS $Revision: 1.1.4.74 $ $Date: 2001-04-02 14:37:14 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -112,7 +112,14 @@ public class CocoonServlet extends HttpServlet {
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
-        File workDir = (File) context.getAttribute("javax.servlet.context.tempdir");
+        File workDir = null;
+        String workDirParam = conf.getInitParameter("work-directory");
+        if ((workDirParam != null) && (workDirParam.trim().equals("") == false)) {
+            workDir = IOUtils.createFile( new File(context.getRealPath("/")) , workDirParam);
+            workDir.mkdirs();
+        } else {
+            workDir = (File) context.getAttribute("javax.servlet.context.tempdir");
+        }
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
 		String uploadDirParam = conf.getInitParameter("upload-directory");
