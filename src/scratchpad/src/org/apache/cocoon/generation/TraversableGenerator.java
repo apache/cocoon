@@ -77,52 +77,56 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Generates an XML directory listing from a Traversable Source.
+ * Generates an XML source hierarchy listing from a Traversable Source.
  * <p>
  * The root node of the generated document will normally be a
- * <code>directory</code> node, and a directory node can contain zero
- * or more <code>file</code> or directory nodes. A file node has no
- * children. Each node will contain the following attributes:
+ * <code>collection</code> node and a collection node can contain zero or more
+ * <code>resource</code> or collection nodes. A resource node has no children.
+ * Each node will contain the following attributes:
  * <blockquote>
- *   <dl>
+ *  <dl>
  *   <dt> name
- *   <dd> the name of the file or directory
+ *   <dd> the name of the source
  *   <dt> lastModified
- *   <dd> the time the file was last modified, measured as the number of
- *   milliseconds since the epoch (as in java.io.File.lastModified)
+ *   <dd> the time the source was last modified, measured as the number of
+ *        milliseconds since the epoch (as in java.io.File.lastModified)
  *   <dt> size
- *   <dd> the file size, in bytes (as in java.io.File.length)
+ *   <dd> the source size, in bytes (as in java.io.File.length)
  *   <dt> date (optional)
- *   <dd> the time the file was last modified in human-readable form
- *   </dl>
+ *   <dd> the time the source was last modified in human-readable form
+ *  </dl>
  * </blockquote>
  * <p>
- * <b>Configuration options:</b>
- * <dl>
- * <dt> <i>depth</i> (optional)
- * <dd> Sets how deep DirectoryGenerator should delve into the
- * directory structure. If set to 1 (the default), only the starting
- * directory's immediate contents will be returned.
- * <dt> <i>sort</i> (optional)
- * <dd> Sort order in which the nodes are returned. Possible values are
- * name, size, time, directory. directory is the same as name,
- * except that the directory entries are listed first. System order is default.
- * <dt> <i>reverse</i> (optional)
- * <dd>	Reverse the order of the sort
- * <dt> <i>dateFormat</i> (optional)
- * <dd> Sets the format for the date attribute of each node, as
- * described in java.text.SimpleDateFormat. If unset, the default
- * format for the current locale will be used.
- * <dt> <i>refreshDelay</i> (optional)
- * <dd> Sets the delay (in seconds) between checks on the filesystem for changed content.
- * Defaults to 1 second.
- * </dl>
+ *  <b>Configuration options:</b>
+ *  <dl>
+ *   <dt> <i>depth</i> (optional)
+ *   <dd> Sets how deep TraversableGenerator should delve into the
+ *        source hierarchy. If set to 1 (the default), only the starting
+ *        collection's immediate contents will be returned.
+ *   <dt> <i>sort</i> (optional)
+ *   <dd> Sort order in which the nodes are returned. Possible values are
+ *        name, size, time, directory. directory is the same as name,
+ *        except that the directory entries are listed first. System order is
+ *        default. (TODO: Does "directory" still make sense?)
+ *   <dt> <i>reverse</i> (optional)
+ *   <dd> Reverse the order of the sort
+ *   <dt> <i>dateFormat</i> (optional)
+ *   <dd> Sets the format for the date attribute of each node, as
+ *        described in java.text.SimpleDateFormat. If unset, the default
+ *        format for the current locale will be used.
+ *   <dt> <i>refreshDelay</i> (optional)
+ *   <dd> Sets the delay (in seconds) between checks on the source hierarchy
+ *        for changed content. Defaults to 1 second.
+ *  </dl>
+ * </p>
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: TraversableGenerator.java,v 1.3 2003/07/10 16:46:09 gianugo Exp $
+ * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
+ * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
+ * @version CVS $Id: TraversableGenerator.java,v 1.4 2003/07/10 19:56:45 joerg Exp $
  */
 public class TraversableGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
@@ -155,7 +159,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      */
     protected List cacheKeyParList;
 
-    /** The depth parameter determines how deep the DirectoryGenerator should delve. */
+    /** The depth parameter determines how deep the TraversableGenerator should delve. */
     protected int depth;
     /**
      * The dateFormatter determines into which date format the lastModified
@@ -163,13 +167,14 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * FIXME: SimpleDateFormat is not supported by all locales!
      */
     protected SimpleDateFormat dateFormatter;
-    /** The delay between checks on updates to the filesystem. */
+    /** The delay between checks on updates to the source hierarchy. */
     protected long refreshDelay;
     /**
      * The sort parameter determines by which attribute the content of one
-     * directory should be sorted. Possible values are "name", "size", "time"
+     * collection should be sorted. Possible values are "name", "size", "time"
      * and "directory", where "directory" is the same as "name", except that
      * directory entries are listed first.
+     * (TODO: Does "directory" still make sense?)
      */
     protected String sort;
     /** The reverse parameter reverses the sort order. <code>false</code> is default. */
@@ -181,23 +186,24 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     /** The regular expression for the exclude pattern. */
     protected RE excludeRE;
     /**
-     * This is only set to true for the requested directory specified by the
+     * This is only set to true for the requested source specified by the
      * <code>src</code> attribute on the generator's configuration.
      */
-    protected boolean isRequestedDirectory;
+    protected boolean isRequestedSource;
 
     /**
      * Set the request parameters. Must be called before the generate method.
      *
      * @param resolver     the SourceResolver object
      * @param objectModel  a <code>Map</code> containing model object
-     * @param src          the directory to be XMLized specified as src attribute on &lt;map:generate/>
+     * @param src          the Traversable Source to be XMLized specified as
+     *                     <code>src</code> attribute on &lt;map:generate/>
      * @param par          configuration parameters
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         if (src == null) {
-            throw new ProcessingException("No src attribute pointing to a directory to be XMLized specified.");
+            throw new ProcessingException("No src attribute pointing to a traversable source to be XMLized specified.");
         }
         super.setup(resolver, objectModel, src, par);
 
@@ -256,10 +262,10 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
             }
         } catch (RESyntaxException rese) {
             throw new ProcessingException("Syntax error in regexp pattern '" 
-            			+ rePattern + "'", rese);
+            			                  + rePattern + "'", rese);
         }
 
-        this.isRequestedDirectory = false;
+        this.isRequestedSource = false;
         this.attributes = new AttributesImpl();
     }
 
@@ -277,11 +283,11 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
 
     /**
      * Gets the source validity, using a deferred validity object. The validity
-     * is initially empty since the files that define it are not known before
-     * generation has occured. So the returned object is kept by the generator
-     * and filled with each of the files that are traversed.
+     * is initially empty since the resources that define it are not known
+     * before generation has occured. So the returned object is kept by the
+     * generator and filled with each of the resources that is traversed.
      * 
-     * @see DirectoryGenerator.CollectionValidity
+     * @see TraversableGenerator.CollectionValidity
      */
     public SourceValidity getValidity() {
         if (this.validity == null) {
@@ -294,16 +300,16 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * Generate XML data.
      *
      * @throws  SAXException if an error occurs while outputting the document
-     * @throws  ProcessingException if the requsted URI isn't a directory on the local filesystem
+     * @throws  ProcessingException if something went wrong while traversing
+     *                              the source hierarchy 
      */
     public void generate() throws SAXException, ProcessingException {
-        String directory = super.source;
         TraversableSource inputSource = null;
         try {
-            inputSource = (TraversableSource) this.resolver.resolveURI(directory);
+            inputSource = (TraversableSource) this.resolver.resolveURI(this.source);
 
             if (!inputSource.isCollection()) {
-                throw new ResourceNotFoundException(directory + " is not a collection.");
+                throw new ResourceNotFoundException(this.source + " is not a collection.");
             }
 
             this.contentHandler.startDocument();
@@ -315,22 +321,25 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } catch (IOException ioe) {
-            throw new ResourceNotFoundException("Could not read directory " + directory, ioe);
+            throw new ResourceNotFoundException("Could not read collection "
+                                                + this.source, ioe);
         } catch (ClassCastException ce) {
-            throw new ResourceNotFoundException(directory + " is not a traversable source");
+            throw new ResourceNotFoundException(this.source
+                                                + " is not a traversable source");
         } finally {
             this.resolver.release(inputSource);
         }
     }
 
     /**
-     * Creates a stack containing the ancestors of File up to specified directory.
+     * Creates a stack containing the ancestors of a traversable source up to
+     * specific parent matching the root pattern.
      * 
-     * @param path the File whose ancestors shall be retrieved
+     * @param source the traversable source whose ancestors shall be retrieved
      * @return a Stack containing the ancestors.
      */
-    protected Stack getAncestors(TraversableSource path) throws IOException {
-        TraversableSource parent = path;
+    protected Stack getAncestors(TraversableSource source) throws IOException {
+        TraversableSource parent = source;
         Stack ancestors = new Stack();
 
         while ((parent != null) && !isRoot(parent)) {
@@ -347,46 +356,48 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     }
 
     /**
-     * Adds recursively the path from the directory matched by the root pattern
-     * down to the requested directory.
+     * Adds recursively the path from the source matched by the root pattern
+     * down to the requested source.
      * 
-     * @param path       the requested directory.
+     * @param source       the requested source.
      * @param ancestors  the stack of the ancestors.
      * @throws SAXException
+     * @throws ProcessingException
      */
-    protected void addAncestorPath(TraversableSource path, Stack ancestors)
-        throws SAXException {
+    protected void addAncestorPath(TraversableSource source, Stack ancestors)
+            throws SAXException, ProcessingException {
         if (ancestors.empty()) {
-            this.isRequestedDirectory = true;
-            addPath(path, depth);
+            this.isRequestedSource = true;
+            addPath(source, depth);
         } else {
             startNode(COL_NODE_NAME, (TraversableSource) ancestors.pop());
-            addAncestorPath(path, ancestors);
+            addAncestorPath(source, ancestors);
             endNode(COL_NODE_NAME);
         }
     }
 
     /**
      * Adds a single node to the generated document. If the path is a
-     * directory, and depth is greater than zero, then recursive calls
-     * are made to add nodes for the directory's children.
+     * collection and depth is greater than zero, then recursive calls
+     * are made to add nodes for the collection's children.
      *
-     * @param path   the file/directory to process
-     * @param depth  how deep to scan the directory
+     * @param source  the resource/collection to process
+     * @param depth   how deep to scan the collection hierarchy
      *
      * @throws SAXException  if an error occurs while constructing nodes
+     * @throws ProcessingException  if a problem occurs with the source
      */
-    protected void addPath(TraversableSource path, int depth)
-        throws SAXException {
-        if (path.isCollection()) {
-            startNode(COL_NODE_NAME, path);
+    protected void addPath(TraversableSource source, int depth)
+            throws SAXException, ProcessingException {
+        if (source.isCollection()) {
+            startNode(COL_NODE_NAME, source);
             if (depth > 0) {
 
-                Collection contents;
+                Collection contents = null;
                 try {
-                    contents = path.getChildren();
+                    contents = source.getChildren();
                 } catch (SourceException e) {
-                    throw new SAXException("Error adding paths", e);
+                    throw new ProcessingException("Error adding paths", e);
                 }
 
                 if (sort.equals("name")) {
@@ -417,6 +428,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
                         }
                     });
                 } else if (sort.equals("directory")) {
+                    //TODO: Does "directory" still make sense?
                     Arrays.sort(contents.toArray(), new Comparator() {
                         public int compare(Object o1, Object o2) {
                             TraversableSource ts1 = (TraversableSource) o1;
@@ -446,8 +458,8 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
             }
             endNode(COL_NODE_NAME);
         } else {
-            if (isIncluded(path) && !isExcluded(path)) {
-                startNode(RESOURCE_NODE_NAME, path);
+            if (isIncluded(source) && !isExcluded(source)) {
+                startNode(RESOURCE_NODE_NAME, source);
                 endNode(RESOURCE_NODE_NAME);
             }
         }
@@ -457,50 +469,42 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * Begins a named node and calls setNodeAttributes to set its attributes.
      *
      * @param nodeName  the name of the new node
-     * @param path      the file/directory to use when setting attributes
+     * @param source    the source a node with its attributes is added for
      * 
      * @throws SAXException  if an error occurs while creating the node
      */
-    protected void startNode(String nodeName, TraversableSource path)
-        throws SAXException {
+    protected void startNode(String nodeName, TraversableSource source)
+            throws SAXException {
         if (this.validity != null) {
-            this.validity.addSource(path);
+            this.validity.addSource(source);
         }
-        setNodeAttributes(path);
-        super.contentHandler.startElement(
-            URI,
-            nodeName,
-            PREFIX + ':' + nodeName,
-            attributes);
+        setNodeAttributes(source);
+        super.contentHandler.startElement(URI, nodeName, PREFIX + ':' + nodeName, attributes);
     }
 
     /**
-     * Sets the attributes for a given path. The default method sets attributes
-     * for the name of thefile/directory and for the last modification time
-     * of the path.
+     * Sets the attributes for a given source. For example attributes for the
+     * name, the size and the last modification date of the source are added.
      *
-     * @param path  the file/directory to use when setting attributes
-     *
-     * @throws SAXException  if an error occurs while setting the attributes
+     * @param source  the source attributes are added for
      */
-    protected void setNodeAttributes(TraversableSource path)
-        throws SAXException {
-        long lastModified = path.getLastModified();
+    protected void setNodeAttributes(TraversableSource source) {
+        long lastModified = source.getLastModified();
         attributes.clear();
         attributes.addAttribute("", RES_NAME_ATTR_NAME,RES_NAME_ATTR_NAME,
-            "CDATA", path.getName());
+                                "CDATA", source.getName());
         attributes.addAttribute("", LASTMOD_ATTR_NAME, LASTMOD_ATTR_NAME,
-            "CDATA", Long.toString(path.getLastModified()));
+                                "CDATA", Long.toString(source.getLastModified()));
         attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME,
-            "CDATA", dateFormatter.format(new Date(lastModified)));
+                                "CDATA", dateFormatter.format(new Date(lastModified)));
         attributes.addAttribute("", SIZE_ATTR_NAME, SIZE_ATTR_NAME,
-            "CDATA", Long.toString(path.getContentLength()));
-        if (this.isRequestedDirectory) {
+                                "CDATA", Long.toString(source.getContentLength()));
+        if (this.isRequestedSource) {
             attributes.addAttribute("", "sort", "sort", "CDATA", this.sort);
             attributes.addAttribute("", "reverse", "reverse", "CDATA",
-                String.valueOf(this.reverse));
+                                    String.valueOf(this.reverse));
             attributes.addAttribute("", "requested", "requested", "CDATA", "true");
-            this.isRequestedDirectory = false;
+            this.isRequestedSource = false;
         }
     }
 
@@ -516,39 +520,39 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     }
 
     /**
-     * Determines if a given File is the defined root.
+     * Determines if a given source is the defined root.
      *
-     * @param path  the File to check
+     * @param source  the source to check
      *
-     * @return true if the File is the root or the root pattern is not set,
+     * @return true if the source is the root or the root pattern is not set,
      *         false otherwise.
      */
-    protected boolean isRoot(TraversableSource path) {
-        return (this.rootRE == null) ? true : this.rootRE.match(path.getName());
+    protected boolean isRoot(TraversableSource source) {
+        return (this.rootRE == null) ? true : this.rootRE.match(source.getName());
     }
 
     /**
-     * Determines if a given File shall be visible.
+     * Determines if a given source shall be visible.
      *
-     * @param path  the File to check
+     * @param source  the source to check
      *
-     * @return true if the File shall be visible or the include Pattern is <code>null</code>,
+     * @return true if the source shall be visible or the include Pattern is not set,
      *         false otherwise.
      */
-    protected boolean isIncluded(TraversableSource path) {
-        return (this.includeRE == null) ? true : this.includeRE.match(path.getName());
+    protected boolean isIncluded(TraversableSource source) {
+        return (this.includeRE == null) ? true : this.includeRE.match(source.getName());
     }
 
     /**
-     * Determines if a given File shall be excluded from viewing.
+     * Determines if a given source shall be excluded from viewing.
      *
-     * @param path  the File to check
+     * @param source  the source to check
      *
-     * @return false if the given File shall not be excluded or the exclude Pattern is <code>null</code>,
+     * @return false if the given source shall not be excluded or the exclude Pattern is not set,
      *         true otherwise.
      */
-    protected boolean isExcluded(TraversableSource path) {
-        return (this.excludeRE == null) ? false : this.excludeRE.match(path.getName());
+    protected boolean isExcluded(TraversableSource source) {
+        return (this.excludeRE == null) ? false : this.excludeRE.match(source.getName());
     }
 
     /**
@@ -565,7 +569,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         super.recycle();
     }
 
-    /** Specific validity class, that holds all files that have been generated */
+    /** Specific validity class, that holds all resources that have been generated */
     public static class CollectionValidity implements SourceValidity {
 
         private long expiry;
@@ -588,7 +592,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
             for (int i = 0; i < len; i++) {
                 TraversableSource ts =  (TraversableSource) sources.get(i);
                 if (!ts.exists()) {
-                    return -1; // Sources was removed
+                    return -1; // Source was removed
                 }
 
                 long oldDate = ((Long) sourcesDates.get(i)).longValue();
