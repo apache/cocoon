@@ -15,29 +15,9 @@
                   label="content"/>
   </map:generators>
 
-  <map:transformers default="xslt">
-   <map:transformer name="session" logger="sitemap.transformer.session"
-                    src="org.apache.cocoon.webapps.session.transformation.SessionTransformer"/>
-   <map:transformer logger="sitemap.transformer.write-source" name="write-source"
-                    src="org.apache.cocoon.transformation.SourceWritingTransformer"/>
-   <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" 
-                    src="org.apache.cocoon.transformation.XIncludeTransformer"/>
-   <map:transformer name="log" src="org.apache.cocoon.transformation.LogTransformer"/>
-  </map:transformers>
-
+  <map:transformers default="xslt"/>
   <map:readers default="resource"/>
-  <map:serializers default="html">
-   <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml"
-                   src="org.apache.cocoon.serialization.XMLSerializer"/>
-
-   <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" 
-                   pool-grow="4" pool-max="32" pool-min="4" 
-                   src="org.apache.cocoon.serialization.HTMLSerializer">
-    <buffer-size>1024</buffer-size>
-   </map:serializer>
-  </map:serializers>
-
-
+  <map:serializers default="html"/>
   <map:matchers default="wildcard"/>
   <map:selectors default="browser"/>
 
@@ -64,18 +44,18 @@
 
  <map:views>
  
-     <map:view name="content" from-label="content">
-      <map:serialize type="xml"/>
-     </map:view>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
 
-     <map:view name="pretty-content" from-label="data">
-       <map:transform src="context://stylesheets/system/xml2html.xsl"/>
-       <map:serialize type="html"/>
-     </map:view>
+  <map:view name="pretty-content" from-label="data">
+   <map:transform src="context://stylesheets/system/xml2html.xsl"/>
+   <map:serialize type="html"/>
+  </map:view>
 
-     <map:view name="xml" from-label="content">
-       <map:serialize type="xml"/>
-     </map:view>
+  <map:view name="xml" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
      
  </map:views>
 
@@ -87,10 +67,10 @@
     <map:parameter name="repository" value="slide"/>
     <map:parameter name="namespace" value="myrepository"/>
     <map:parameter name="properties" value="true"/>
-       <map:parameter name="permissions" value="true"/>
-       <map:parameter name="locks" value="true"/>
-       <map:parameter name="depth" value="1"/>
-      </map:generate>
+     <map:parameter name="permissions" value="true"/>
+     <map:parameter name="locks" value="true"/>
+     <map:parameter name="depth" value="1"/>
+    </map:generate>
   </map:resource>
  </map:resources>
 
@@ -190,7 +170,6 @@
      <!-- ============= Source content ================== -->
      <map:match pattern="content/**">
       <map:act type="source-actions">
-       <map:parameter name="method" value="{request-param:method}"/>
        <map:parameter name="cocoon-source-principal" value="{../ID}"/>
       </map:act>
 
@@ -205,7 +184,6 @@
      <!-- ============= Source properties =============== -->
      <map:match pattern="properties/**">
       <map:act type="source-actions">
-       <map:parameter name="method" value="{request-param:method}"/>
        <map:parameter name="cocoon-source-principal" value="{../ID}"/>
       </map:act>
 
@@ -217,7 +195,6 @@
      <!-- ============= Source permissions ============== -->
      <map:match pattern="permissions/**">
       <map:act type="source-actions">
-       <map:parameter name="method" value="{request-param:method}"/>
        <map:parameter name="cocoon-source-principal" value="{../ID}"/>
       </map:act>
 
@@ -233,7 +210,6 @@
      <!-- ============= Source locks ==================== -->
      <map:match pattern="locks/**">
       <map:act type="source-actions">
-       <map:parameter name="method" value="{request-param:method}"/>
        <map:parameter name="cocoon-source-principal" value="{../ID}"/>
       </map:act>
 
@@ -251,7 +227,6 @@
      <!-- ============= Repository users =============== -->
      <map:match pattern="users/**">
       <map:act type="principal-actions">
-       <map:parameter name="method" value="{request-param:method}"/>
        <map:parameter name="cocoon-caller-principal-name" value="{../ID}"/>
       </map:act>
 

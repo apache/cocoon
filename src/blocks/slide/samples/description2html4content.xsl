@@ -160,9 +160,8 @@
                     select="source:properties/dav:getlastmodified"/></td>
                   <td align="right">
                    <form action="" method="post">
-                    <input type="hidden" name="method" value="doDeleteSource"/>
                     <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
-                    <input type="submit" name="cocoon-action-deletesource" value="Delete"/>
+                    <input type="submit" name="doDeleteSource" value="Delete"/>
                    </form>
                   </td>
                  </tr>
@@ -170,7 +169,6 @@
     
                 <tr>
                  <form action="" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="method" value="doUploadSource"/>
                   <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
                   <td align="left">
                    <input type="text" name="cocoon-source-name" size="15" maxlength="40"/>(optional)
@@ -180,14 +178,13 @@
                    <input type="file" name="cocoon-upload-file" size="15" maxlength="40"/>
                   </td>
                   <td align="right">
-                   <input type="submit" name="cocoon-action-upload" value="Upload File" />
+                   <input type="submit" name="doUploadSource" value="Upload File" />
                   </td>
                  </form>
                 </tr>
 
                 <tr>
                  <form action="" method="post">
-                  <input type="hidden" name="method" value="doCreateCollection"/>
                   <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
                   <td align="left" colspan="4">
                    <input type="text" name="cocoon-source-name" size="15" maxlength="40"/>
