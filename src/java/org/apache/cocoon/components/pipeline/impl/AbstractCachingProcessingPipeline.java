@@ -43,7 +43,7 @@ import java.util.Date;
 
 /**
  * This is the base class for all caching pipeline implementations
- * that check the different pipeline components.
+ * that check different pipeline components.
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
@@ -51,7 +51,7 @@ import java.util.Date;
  * @version CVS $Id$
  */
 public abstract class AbstractCachingProcessingPipeline
-    extends BaseCachingProcessingPipeline {
+        extends BaseCachingProcessingPipeline {
 
     /** The role name of the generator */
     protected String generatorRole;
@@ -67,8 +67,6 @@ public abstract class AbstractCachingProcessingPipeline
 
     /** The cached response */
     protected CachedResponse   cachedResponse;
-    /** The timestamp of the cached byte stream */
-    protected long             cachedLastModified;
 
     /** The index indicating the first transformer getting input from the cache */
     protected int firstProcessedTransformerIndex;
@@ -176,7 +174,7 @@ public abstract class AbstractCachingProcessingPipeline
         if (this.cachedResponse != null && this.completeResponseIsCached) {
 
             // Allow for 304 (not modified) responses in dynamic content
-            if (checkIfModified(environment, this.cachedLastModified)) {
+            if (checkIfModified(environment, this.cachedResponse.getLastModified())) {
                 return true;
             }
 
@@ -285,7 +283,6 @@ public abstract class AbstractCachingProcessingPipeline
 
         this.toCacheKey = null;
 
-        Serializable key = null;
         this.generatorIsCacheableProcessingComponent = false;
         this.serializerIsCacheableProcessingComponent = false;
         this.transformerIsCacheableProcessingComponent =
@@ -301,13 +298,7 @@ public abstract class AbstractCachingProcessingPipeline
         // to build a unique key of the request
 
         // is the generator cacheable?
-        if (super.generator instanceof CacheableProcessingComponent) {
-            key = ((CacheableProcessingComponent)super.generator).getKey();
-            this.generatorIsCacheableProcessingComponent = true;
-        } else if (super.generator instanceof Cacheable) {
-            key = new Long(((Cacheable)super.generator).generateKey());
-        }
-
+        Serializable key = getGeneratorKey();
         if (key != null) {
             this.toCacheKey = new PipelineCacheKey();
             this.toCacheKey.addKey(
@@ -319,18 +310,10 @@ public abstract class AbstractCachingProcessingPipeline
             final int transformerSize = super.transformers.size();
             boolean continueTest = true;
 
-            while (this.firstNotCacheableTransformerIndex < transformerSize
-                    && continueTest) {
+            while (this.firstNotCacheableTransformerIndex < transformerSize && continueTest) {
                 final Transformer trans =
-                    (Transformer)super.transformers.get(
-                            this.firstNotCacheableTransformerIndex);
-                key = null;
-                if (trans instanceof CacheableProcessingComponent) {
-                    key = ((CacheableProcessingComponent)trans).getKey();
-                    this.transformerIsCacheableProcessingComponent[this.firstNotCacheableTransformerIndex] = true;
-                } else if (trans instanceof Cacheable) {
-                    key = new Long(((Cacheable)trans).generateKey());
-                }
+                        (Transformer)super.transformers.get(this.firstNotCacheableTransformerIndex);
+                key = getTransformerKey(trans);
                 if (key != null) {
                     this.toCacheKey.addKey(
                             this.newComponentCacheKey(
@@ -347,15 +330,9 @@ public abstract class AbstractCachingProcessingPipeline
             // all transformers are cacheable => pipeline is cacheable
             // test serializer if this is not an internal request
             if (this.firstNotCacheableTransformerIndex == transformerSize
-                && super.serializer == this.lastConsumer) {
+                    && super.serializer == this.lastConsumer) {
 
-                key = null;
-                if (super.serializer instanceof CacheableProcessingComponent) {
-                    key = ((CacheableProcessingComponent)this.serializer).getKey();
-                    this.serializerIsCacheableProcessingComponent = true;
-                } else if (this.serializer instanceof Cacheable) {
-                    key = new Long(((Cacheable)this.serializer).generateKey());
-                }
+                key = getSerializerKey();
                 if (key != null) {
                     this.toCacheKey.addKey(
                             this.newComponentCacheKey(
@@ -428,29 +405,24 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Calculate the key that can be used to get something from the cache, and
      * handle expires properly.
-     *
      */
     protected void validatePipeline(Environment environment)
     throws ProcessingException {
         this.completeResponseIsCached = this.cacheCompleteResponse;
         this.fromCacheKey = this.toCacheKey.copy();
         this.firstProcessedTransformerIndex = this.firstNotCacheableTransformerIndex;
-        this.cachedLastModified = 0L;
 
         boolean finished = false;
-
         while (this.fromCacheKey != null && !finished) {
-
             finished = true;
-            final CachedResponse response = this.cache.get( this.fromCacheKey );
+
+            final CachedResponse response = this.cache.get(this.fromCacheKey);
 
             // now test validity
             if (response != null) {
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug(
-                        "Found cached response for '" + environment.getURI() +
-                        "' using key: " + this.fromCacheKey
-                    );
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Found cached response for '" + environment.getURI() +
+                                      "' using key: " + this.fromCacheKey);
                 }
 
                 boolean responseIsValid = true;
@@ -461,28 +433,22 @@ public abstract class AbstractCachingProcessingPipeline
                 Long responseExpires = response.getExpires();
 
                 if (responseExpires != null) {
-                    if (this.getLogger().isDebugEnabled()) {
-                       this.getLogger().debug(
-                       "Expires time found for " +
-                       environment.getURI());
+                    if (getLogger().isDebugEnabled()) {
+                       getLogger().debug("Expires time found for " + environment.getURI());
                     }
-                    if ( responseExpires.longValue() > System.currentTimeMillis()) {
-                        if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug(
-                                "Expires time still fresh for " +
-                                environment.getURI() +
-                                ", ignoring all other cache settings. This entry expires on "+
-                                new Date(responseExpires.longValue()));
+
+                    if (responseExpires.longValue() > System.currentTimeMillis()) {
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Expires time still fresh for " + environment.getURI() +
+                                              ", ignoring all other cache settings. This entry expires on "+
+                                              new Date(responseExpires.longValue()));
                         }
                         this.cachedResponse = response;
-                        this.cachedLastModified = response.getLastModified();
                         return;
                     } else {
-                        if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug(
-                                "Expires time has expired for " +
-                                environment.getURI() +
-                                " regenerating content.");
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Expires time has expired for " + environment.getURI() +
+                                              ", regenerating content.");
                         }
 
                         // If an expires parameter was provided, use it. If this parameter is not available
@@ -512,14 +478,14 @@ public abstract class AbstractCachingProcessingPipeline
                 int i = 0;
                 while (responseIsValid && i < fromCacheValidityObjects.length) {
                     boolean isValid = false;
+
                     // BH check if validities[i] is null, may happen
                     // if exception was thrown due to malformed content
                     SourceValidity validity = fromCacheValidityObjects[i];
                     int valid = validity != null ? validity.isValid() : -1;
-                    if ( valid == 0) { // don't know if valid, make second test
+                    if (valid == 0) { // don't know if valid, make second test
 
                         validity = this.getValidityForInternalPipeline(i);
-
                         if (validity != null) {
                             valid = fromCacheValidityObjects[i].isValid( validity );
                             if (valid == 0) {
@@ -531,34 +497,40 @@ public abstract class AbstractCachingProcessingPipeline
                     } else {
                         isValid = (valid == 1);
                     }
+
                     if (!isValid) {
                         responseIsValid = false;
                         // update validity
                         if (validity == null) {
                             responseIsUsable = false;
-                            if (this.getLogger().isDebugEnabled()) {
-                                this.getLogger().debug("validatePipeline: responseIsUsable is false, valid==" + valid + " at index " + i);
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().debug("validatePipeline: responseIsUsable is false, valid=" +
+                                                  valid + " at index " + i);
                             }
                         } else {
-                            if (this.getLogger().isDebugEnabled()) {
-                                this.getLogger().debug("validatePipeline: responseIsValid is false due to " + validity);
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().debug("validatePipeline: responseIsValid is false due to " +
+                                                  validity);
                             }
                         }
                     } else {
                         i++;
                     }
                 }
+
                 if (responseIsValid) {
-                    if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug("validatePipeline: using valid cached content for '" + environment.getURI() + "'.");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("validatePipeline: using valid cached content for '" +
+                                          environment.getURI() + "'.");
                     }
+
                     // we are valid, ok that's it
                     this.cachedResponse = response;
-                    this.cachedLastModified = response.getLastModified();
                     this.toCacheSourceValidities = fromCacheValidityObjects;
                 } else {
-                    if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug("validatePipeline: cached content is invalid for '" + environment.getURI() + "'.");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("validatePipeline: cached content is invalid for '" +
+                                          environment.getURI() + "'.");
                     }
                     // we are not valid!
 
@@ -682,7 +654,7 @@ public abstract class AbstractCachingProcessingPipeline
                 readerKey = new Long(((Cacheable)super.reader).generateKey());
             }
 
-            if ( readerKey != null) {
+            if (readerKey != null) {
                 // response is cacheable, build the key
                 pcKey = new PipelineCacheKey();
                 pcKey.addKey(new ComponentCacheKey(ComponentCacheKey.ComponentType_Reader,
@@ -691,25 +663,22 @@ public abstract class AbstractCachingProcessingPipeline
                             );
 
                 // now we have the key to get the cached object
-                CachedResponse cachedObject = this.cache.get( pcKey );
-
+                CachedResponse cachedObject = this.cache.get(pcKey);
                 if (cachedObject != null) {
-                    if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug(
-                            "Found cached response for '" +
-                            environment.getURI() + "' using key: " + pcKey);
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Found cached response for '" +
+                                          environment.getURI() + "' using key: " + pcKey);
                     }
+
                     SourceValidity[] validities = cachedObject.getValidityObjects();
                     if (validities == null || validities.length != 1) {
                         // to avoid getting here again and again, we delete it
                         this.cache.remove( pcKey );
-                        if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug(
-                                "Cached response for '" +
-                                environment.getURI() + "' using key: " +
-                                pcKey + " is invalid.");
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Cached response for '" + environment.getURI() +
+                                              "' using key: " + pcKey + " is invalid.");
                         }
-                        cachedResponse = null;
+                        this.cachedResponse = null;
                     } else {
                         SourceValidity cachedValidity = validities[0];
                         int result = cachedValidity.isValid();
@@ -737,8 +706,9 @@ public abstract class AbstractCachingProcessingPipeline
                         }
 
                         if (valid) {
-                            if (this.getLogger().isDebugEnabled()) {
-                                this.getLogger().debug("processReader: using valid cached content for '" + environment.getURI() + "'.");
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().debug("processReader: using valid cached content for '" +
+                                                  environment.getURI() + "'.");
                             }
                             byte[] response = cachedObject.getResponse();
                             if (response.length > 0) {
@@ -753,8 +723,9 @@ public abstract class AbstractCachingProcessingPipeline
                                 outputStream.write(response);
                             }
                         } else {
-                            if (this.getLogger().isDebugEnabled()) {
-                                this.getLogger().debug("processReader: cached content is invalid for '" + environment.getURI() + "'.");
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().debug("processReader: cached content is invalid for '" +
+                                                  environment.getURI() + "'.");
                             }
                             // remove invalid cached object
                             this.cache.remove(pcKey);
@@ -764,11 +735,12 @@ public abstract class AbstractCachingProcessingPipeline
             }
 
             if (!usedCache) {
-
-                if ( pcKey != null ) {
-                    if (this.getLogger().isDebugEnabled()) {
-                        this.getLogger().debug("processReader: caching content for further requests of '" + environment.getURI() + "'.");
+                if (pcKey != null) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("processReader: caching content for further requests of '" +
+                                          environment.getURI() + "'.");
                     }
+
                     if (readerValidity == null) {
                         if (isCacheableProcessingComponent) {
                             readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
@@ -779,6 +751,7 @@ public abstract class AbstractCachingProcessingPipeline
                             }
                         }
                     }
+
                     if (readerValidity != null) {
                         outputStream = environment.getOutputStream(this.outputBufferSize);
                         outputStream = new CachingOutputStream(outputStream);
@@ -787,7 +760,7 @@ public abstract class AbstractCachingProcessingPipeline
                     }
                 }
 
-                this.setMimeTypeForReader(environment);
+                setMimeTypeForReader(environment);
                 if (this.reader.shouldSetContentLength()) {
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     this.reader.setOutputStream(os);
@@ -796,7 +769,7 @@ public abstract class AbstractCachingProcessingPipeline
                     if (outputStream == null) {
                         outputStream = environment.getOutputStream(0);
                     }
-                    os.writeTo(environment.getOutputStream(0));
+                    os.writeTo(outputStream);
                 } else {
                     if (outputStream == null) {
                         outputStream = environment.getOutputStream(this.outputBufferSize);
@@ -807,13 +780,10 @@ public abstract class AbstractCachingProcessingPipeline
 
                 // store the response
                 if (pcKey != null) {
-                    final CachedResponse res = new CachedResponse( new SourceValidity[] {readerValidity},
+                    final CachedResponse res = new CachedResponse(new SourceValidity[] {readerValidity},
                             ((CachingOutputStream)outputStream).getContent());
                     res.setContentType(environment.getContentType());
-                    this.cache.store(
-                        pcKey,
-                        res
-                    );
+                    this.cache.store(pcKey, res);
                 }
             }
         } catch (Exception e) {
@@ -860,6 +830,48 @@ public abstract class AbstractCachingProcessingPipeline
             }
             return null;
         }
+    }
+
+    /**
+     * Get generator cache key (null if not cacheable)
+     */
+    private Serializable getGeneratorKey() {
+        Serializable key = null;
+        if (super.generator instanceof CacheableProcessingComponent) {
+            key = ((CacheableProcessingComponent)super.generator).getKey();
+            this.generatorIsCacheableProcessingComponent = true;
+        } else if (super.generator instanceof Cacheable) {
+            key = new Long(((Cacheable)super.generator).generateKey());
+        }
+        return key;
+    }
+
+    /**
+     * Get transformer cache key (null if not cacheable)
+     */
+    private Serializable getTransformerKey(final Transformer transformer) {
+        Serializable key = null;
+        if (transformer instanceof CacheableProcessingComponent) {
+            key = ((CacheableProcessingComponent)transformer).getKey();
+            this.transformerIsCacheableProcessingComponent[this.firstNotCacheableTransformerIndex] = true;
+        } else if (transformer instanceof Cacheable) {
+            key = new Long(((Cacheable)transformer).generateKey());
+        }
+        return key;
+    }
+
+    /**
+     * Get serializer cache key (null if not cacheable)
+     */
+    private Serializable getSerializerKey() {
+        Serializable key = null;
+        if (super.serializer instanceof CacheableProcessingComponent) {
+            key = ((CacheableProcessingComponent)this.serializer).getKey();
+            this.serializerIsCacheableProcessingComponent = true;
+        } else if (this.serializer instanceof Cacheable) {
+            key = new Long(((Cacheable)this.serializer).generateKey());
+        }
+        return key;
     }
 
     /* (non-Javadoc)
@@ -942,7 +954,6 @@ public abstract class AbstractCachingProcessingPipeline
 
         super.recycle();
     }
-
 }
 
 final class DeferredPipelineValidity implements DeferredValidity {
