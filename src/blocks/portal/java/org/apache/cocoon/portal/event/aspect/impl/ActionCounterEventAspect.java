@@ -22,6 +22,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
@@ -31,7 +32,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ActionCounterEventAspect.java,v 1.3 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id: ActionCounterEventAspect.java,v 1.4 2004/03/16 10:21:39 cziegeler Exp $
  */
 public class ActionCounterEventAspect
 	extends AbstractLogEnabled
@@ -78,7 +79,12 @@ public class ActionCounterEventAspect
                 context.invokeNext( service );
             }
         }
-        service.getComponentManager().getLinkService().addParameterToLink( requestParameterName, String.valueOf(actionCount));        
+        service.getComponentManager().getLinkService().addParameterToLink( requestParameterName, String.valueOf(actionCount));
+        
+        final Response response = ObjectModelHelper.getResponse( context.getObjectModel() );
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
 	}
 
 
