@@ -35,7 +35,7 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.6 2004/04/03 20:57:08 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.7 2004/04/04 06:38:16 upayavira Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -144,7 +144,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                             continue;
                     }
                 }
-                if (i != pos) {
+                if (i != pos || tokens.size()==0) {
                     // this colon isn't part of a module reference 
                     continue;
                 }
