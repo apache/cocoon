@@ -155,6 +155,7 @@
                 class="org.apache.cocoon.portal.layout.impl.CopletLayout">
             <renderers default="window">
                 <renderer name="window"/>
+                <renderer name="nowindow"/>
             </renderers>
         </layout>
         <layout name="link"

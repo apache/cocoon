@@ -6,6 +6,10 @@
     
   <map:pipeline>	
 
+	<map:match pattern="gallery/images/*.jpg">
+    	<map:read mime-type="image/jpg" src="gallery/samplepics/{1}.jpg"/>
+   	</map:match>
+
     <!-- this is a gallery coplet -->
     <map:match pattern="gallery">
         <map:generate type="directory" src="{coplet:copletData/attributes/image-dir}">
@@ -14,26 +18,18 @@
         <map:transform src="gallery/dir2pic.xsl">
             <map:parameter name="dirprefix" value="{coplet:copletData/attributes/image-uri-prefix}"/>
         </map:transform>
-        <map:transform type="xslt" src="gallery/picture.xsl">
-          <map:parameter name="pic" value="{coplet:attributes/picture}"/>
-          <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/>
+        <map:transform type="xslt" src="gallery/gallery.xsl">
+            <map:parameter name="pic" value="{coplet:attributes/picture}"/>
+            <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/>
         </map:transform>
         <map:transform type="portal-coplet"/>
         <map:serialize type="xml"/>
     </map:match>
     <map:match pattern="galleryviewer">
-        <map:generate type="directory" src="../../petstore/images">
-            <map:parameter name="include" value=".jpg"/>
-        </map:generate>
-        <map:transform src="gallery/dir2pic.xsl">
-            <map:parameter name="dirprefix" value="../petstore/images"/>
-        </map:transform>
+        <map:generate src="gallery/picture.xml"/>
         <map:transform type="xslt" src="gallery/picture.xsl">
-          <map:parameter name="pic" value="{coplet:attributes/picture}"/>
-          <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/>
-          <map:parameter name="navigation" value="false"/>
+            <map:parameter name="pic" value="{coplet:attributes/picture}"/>
         </map:transform>
-        <map:transform type="portal-coplet"/>
         <map:serialize type="xml"/>
     </map:match>
 
