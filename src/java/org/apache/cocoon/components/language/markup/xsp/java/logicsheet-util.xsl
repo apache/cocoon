@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: logicsheet-util.xsl,v 1.1 2003/03/09 00:08:57 pier Exp $-->
+<!-- $Id: logicsheet-util.xsl,v 1.2 2003/04/17 20:08:48 haul Exp $-->
 <!--
 
  ============================================================================
@@ -63,7 +63,8 @@
  * be set in the including logicsheet to its namespace URI.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:57 $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Revision: 1.2 $ $Date: 2003/04/17 20:08:48 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -274,6 +275,54 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
         <xsl:apply-templates select="$content/*"/>
       </xsl:when>
       <xsl:otherwise><xsl:value-of select="$content"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+<!--
+  Get a primitive object when :param is used, for @ a String is returned. Default is also String.
+  Without default, primitive value 'null' is returned
+  @name the name of the parameter
+  @default the default value
+  @required true if the parameter is required
+-->
+  <xsl:template name="get-ls-parameter">
+    <xsl:param name="name"/>
+    <xsl:param name="default"/>
+    <xsl:param name="required">false</xsl:param>
+
+    <!-- for some unknown reason this needs to be called every time,
+         otherwise only the first invocation uses a correct namespace
+         prefix. -->
+    <xsl:variable name="namespace-prefix"><xsl:call-template name="get-namespace-prefix"/></xsl:variable>
+
+    <xsl:variable name="qname">
+      <xsl:value-of select="concat($namespace-prefix, ':param')"/>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="@*[name(.) = $name]">"<xsl:value-of select="@*[name(.) = $name]"/>"</xsl:when>
+      <xsl:when test="(*[name(.) = $qname])[@name = $name]">
+        <xsl:call-template name="get-nested-content">
+          <xsl:with-param name="content" select="(*[name(.) = $qname])[@name = $name]"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="string-length($default) = 0">
+            <xsl:choose>
+              <xsl:when test="$required = 'true'">
+                <xsl:call-template name="error">
+                  <xsl:with-param name="message">[Logicsheet processor]
+Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value-of select="name(.)"/>&gt;
+                  </xsl:with-param>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>null</xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>"<xsl:copy-of select="$default"/>"</xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
