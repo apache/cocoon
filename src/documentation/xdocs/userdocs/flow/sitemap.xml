@@ -73,7 +73,7 @@ Example:
       <p>
 Example:
       <source><![CDATA[
-        <map:match pattern="*.form"/>
+        <map:match pattern="*.form">
           <map:call continuation="{1}"/>
         </map:match>
       ]]></source>
