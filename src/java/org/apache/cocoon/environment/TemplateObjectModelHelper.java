@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
@@ -98,26 +99,38 @@ public class TemplateObjectModelHelper {
 
         // first create the "cocoon object":
         final Map cocoon = new HashMap();
+
+        // Needed for the FOM wrappers
+        Context cx = Context.enter();
+        try {
+            //FIXME: we surely need to share the scope as this operation is time consuming
+            Scriptable scope = cx.initStandardObjects();
         
-        // cocoon.request
-        final Request request = ObjectModelHelper.getRequest( objectModel );
-        cocoon.put("request", request);
+            // cocoon.request
+            final Request request = ObjectModelHelper.getRequest( objectModel );
+            cocoon.put("request", new FOM_Cocoon.FOM_Request(scope, request));
+            
+            // cocoon.session
+            final Session session = request.getSession(false);
+            if (session != null) {
+                cocoon.put("session", new FOM_Cocoon.FOM_Session(scope, session));
+            }
         
-        // cocoon.session
-        final Session session = request.getSession(false);
-        if (session != null) {
-            cocoon.put("session", session);
+            // cocoon.context
+            final org.apache.cocoon.environment.Context context =
+                ObjectModelHelper.getContext( objectModel );
+            cocoon.put("context", new FOM_Cocoon.FOM_Context(scope, context));
+
+        } finally {
+            Context.exit();
         }
-        
-        // cocoon.context
-        cocoon.put("context", ObjectModelHelper.getContext(objectModel));
-        
+            
         // cocoon.continuation
         final Object cont = FlowHelper.getWebContinuation(objectModel);
         if ( cont != null ) {
             cocoon.put("continuation", cont);
         }
-        
+            
         // cocoon.parameters
         if ( parameters != null ) {
             cocoon.put("parameters", Parameters.toProperties(parameters));
