@@ -51,7 +51,7 @@
         Create an index by specifying a base url from which to start
         crawling (the indexer will follow the links to build its content).
         The base url should be 
-        <a href="../../docs/userdocs/concepts/views.html">cocoon-view</a>
+        <a href="../../../docs/userdocs/concepts/views.html">cocoon-view</a>
         aware of content-labels
         <strong>links</strong>, and <strong>content</strong>.
         For example you might use the base URL 
@@ -100,7 +100,7 @@
         <a href="http://jakarta.apache.org/lucene/">Jakarta Lucene</a>
         indexing and search engine.
         The Cocoon documentation
-        <a href="../../docs/userdocs/concepts/xmlsearching.html">explains</a> how it is implemented within Cocoon. Look behind the scenes of this
+        <a href="../../../docs/userdocs/concepts/xmlsearching.html">explains</a> how it is implemented within Cocoon. Look behind the scenes of this
         example to find out more.
       </p>
 

@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.7 2004/04/05 12:25:36 antonio Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.8 2004/04/22 07:33:45 crossley Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="web3 Block Samples">
   <group name="Back">
@@ -29,7 +29,7 @@
   </group>
 
   <group name="web3">
-    <sample name="Documentation" href="../../docs/developing/web3.html">
+    <sample name="Documentation" href="../../../docs/developing/web3.html">
       Documentation for this component.
     </sample>
     <sample name="Connect to SAP R/3" href="info.html">
