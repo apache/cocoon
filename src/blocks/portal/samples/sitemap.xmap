@@ -72,7 +72,10 @@
       <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
         <parameter name="src" value="resources/bookmarks.xml"/>
       </map:action>
-      <map:action src="org.apache.cocoon.portal.acting.PreparePortalAction" name="portal-prepare"/>
+      <map:action name="portal-prepare"
+                  src="org.apache.cocoon.portal.acting.PreparePortalAction"/>
+      <map:action name="portal-urlhelper"
+                  src="org.apache.cocoon.portal.acting.URLAction"/>
     </map:actions>
   </map:components>
 

@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:pipelines>
     <map:pipeline type="noncaching">	
@@ -32,7 +32,10 @@
       </map:match>
 
       <map:match pattern="application">
-        <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
+        <map:act type="portal-urlhelper" src="{coplet:temporaryAttributes/application-uri}">
+          <map:parameter name="copletid" value="{coplet:#}"/>
+          <map:generate src="{url}"/>
+        </map:act>
         <map:transform type="htmlroot">
           <map:parameter name="add-mode" value="false"/>
         </map:transform>
