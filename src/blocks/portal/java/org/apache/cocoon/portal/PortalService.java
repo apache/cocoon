@@ -101,4 +101,14 @@ public interface PortalService extends Component {
     void setEntryLayout(String layoutKey, Layout object);
     Layout getEntryLayout(String layoutKey);
     
+    /**
+     * Change the default layout key for most functions
+     */
+    void setDefaultLayoutKey(String layoutKey);
+    
+    /**
+     * Get the default layout key
+     */
+    String getDefaultLayoutKey();
+    
 }

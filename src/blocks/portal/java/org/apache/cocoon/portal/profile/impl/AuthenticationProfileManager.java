@@ -148,14 +148,14 @@ public class AuthenticationProfileManager
     }
     
     public void saveUserProfiles(String layoutKey) {
-        if ( layoutKey == null ) {
-            layoutKey = this.getDefaultLayoutKey();
-        }
 		ProfileLS adapter = null;
 		PortalService service = null;
 		try {
 			adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
 			service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            if ( layoutKey == null ) {
+                layoutKey = service.getDefaultLayoutKey();
+            }
             
             RequestState state = this.getRequestState();
             UserHandler handler = state.getHandler();

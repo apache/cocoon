@@ -15,16 +15,11 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -38,9 +33,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
-    implements Serviceable, Configurable, ProfileManager, ThreadSafe {
-
-    protected String defaultLayoutKey;
+    implements Serviceable, ProfileManager, ThreadSafe {
 
     protected ServiceManager manager;
 
@@ -87,47 +80,6 @@ public abstract class AbstractProfileManager
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#setDefaultLayoutKey(java.lang.String)
-     */
-    public void setDefaultLayoutKey(String layoutKey) {
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            if ( layoutKey == null ) {
-                service.removeAttribute("default-layout-key");
-            } else {
-                service.setAttribute("default-layout-key", layoutKey);
-            }
-        } catch (ServiceException ce) {
-            // this should never happen
-            throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getDefaultLayoutKey()
-     */
-    public String getDefaultLayoutKey() {
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            String defaultLayoutKey = (String)service.getAttribute("default-layout-key");
-            if ( defaultLayoutKey == null ) {
-                return this.defaultLayoutKey;
-            }
-            return defaultLayoutKey;
-        } catch (ServiceException ce) {
-            // this should never happen
-            throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
-        } finally {
-            this.manager.release(service);
-        }
-        
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#login()
      */
     public void login() {
@@ -139,15 +91,6 @@ public abstract class AbstractProfileManager
      */
     public void logout() {
         // overwrite in subclass
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration configuration) throws ConfigurationException {
-        Configuration child = configuration.getChild("default-layout-key");
-        // get configured default LayoutKey
-        this.defaultLayoutKey = child.getValue("portal");
     }
 
     /* (non-Javadoc)
