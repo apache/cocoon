@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.13 2003/03/15 23:43:50 stefano Exp $:
+       CVS: $Id: build.xml,v 1.14 2003/03/16 10:38:00 stefano Exp $:
 
 ============================================================================ -->
 
@@ -72,7 +72,13 @@
     <condition property="unless.exclude.deprecated">
       <istrue value="${exclude.deprecated}"/>
     </condition>
-
+    <condition property="unless.exclude.javadocs">
+      <istrue value="${exclude.javadocs}"/>
+    </condition>
+    <condition property="unless.exclude.idldocs">
+      <istrue value="${exclude.idldocs}"/>
+    </condition>
+        
     <filter token="Name"                value="${fullname}"/>
     <filter token="name"                value="${fullname}"/>
     <filter token="year"                value="${year}"/>
@@ -481,7 +487,7 @@
 <!-- Javadoc/IDLDoc Targets ================================================ -->
 
   <!-- Create IDL API documentation -->
-  <target name="idldocs" depends="prepare-core" description="Builds the IDL API documentation for non-java language bindings">
+  <target name="idldocs" depends="prepare-core" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
     <mkdir dir="${build.idldocs}"/>
     <java classname="org.openorb.compiler.doc.IdlDoc">
       <arg value="-I${idl}"/>
@@ -492,26 +498,22 @@
     </java>
   </target>
 
-  <!-- Set a variable if javadocs are already up-to-date. -->
-  <target name="javadocs_check">
+  <!-- Check if javadocs have to be generated -->
+  <target name="javadocs-check">
     <mkdir dir="${build.javadocs}"/>
-    <uptodate property="javadocs.notrequired" targetfile="${build.javadocs}/packages.html" >
-      <srcfiles dir= "${java}" includes="**/*.java,**/package.html"/>
-      <srcfiles dir= "${deprecated.src}" includes="**/*.java,**/package.html"/>
-    </uptodate>
-  </target>
-
-  <!-- If javadocs are already up-to-date, print a message saying so. -->
-  <target name="javadocs_done" depends="javadocs_check" if="javadocs.notrequired">
-    <echo message="-------------------------------------------------------------"/>
-    <echo message="Not rebuilding Javadocs, as they are up-to-date:"/>
-    <echo message="  ${build.javadocs}/packages.html is more recent than"/>
-    <echo message="  ${java}/**/*.java"/>
-    <echo message="-------------------------------------------------------------"/>
+    <condition property="javadocs.notrequired" value="true">
+     <or>
+      <uptodate targetfile="${build.javadocs}/packages.html" >
+       <srcfiles dir= "${java}" includes="**/*.java,**/package.html"/>
+       <srcfiles dir= "${deprecated.src}" includes="**/*.java,**/package.html"/>
+      </uptodate>
+      <istrue value="${unless.exclude.javadocs}"/>
+     </or>
+    </condition>
   </target>
 
   <!-- Creates Javadocs -->
-  <target name="javadocs" depends="prepare-core, javadocs_done" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
+  <target name="javadocs" depends="prepare-core, javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
 
     <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
       <equals arg1="1.4" arg2="${ant.java.version}"/>
@@ -742,7 +744,7 @@
       </fileset>
     </copy>
 
-    <!-- patch the welcome page to tell we have javadocs to show -->
+    <!-- patch the welcome page to tell we have documentation to show -->
     <xpatch directory="${documentation}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
   </target>
   
