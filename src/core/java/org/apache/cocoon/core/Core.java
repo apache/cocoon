@@ -16,9 +16,13 @@
  */
 package org.apache.cocoon.core;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
@@ -118,4 +122,60 @@ public class Core
         }
     }
 
+    /**
+     * Get the settings for Cocoon
+     * @param env This provides access to various parts of the used environment.
+     */
+    public static Settings createSettings(BootstrapEnvironment env) {
+        // create an empty settings objects
+        final Settings s = new Settings();
+
+        String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
+        
+        // read cocoon-settings.properties - if available
+        InputStream propsIS = env.getInputStream("cocoon-settings.properties");
+        if ( propsIS != null ) {
+            env.log("Reading settings from 'cocoon-settings.properties'");
+            final Properties p = new Properties();
+            try {
+                p.load(propsIS);
+                propsIS.close();
+                s.fill(p);
+                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);
+            } catch (IOException ignore) {
+                env.log("Unable to read 'cocoon-settings.properties'.", ignore);
+                env.log("Continuing initialization.");
+            }
+        }
+        // fill from the environment configuration, like web.xml etc.
+        env.configure(s);
+        
+        // read additional properties file
+        if ( additionalPropertyFile != null ) {
+            env.log("Reading user settings from '" + additionalPropertyFile + "'");
+            final Properties p = new Properties();
+            try {
+                FileInputStream fis = new FileInputStream(additionalPropertyFile);
+                p.load(fis);
+                fis.close();
+            } catch (IOException ignore) {
+                env.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
+                env.log("Continuing initialization.");
+            }
+        }
+        // now overwrite with system properties
+        s.fill(System.getProperties());
+
+        return s;        
+    }
+
+    public static interface BootstrapEnvironment {
+
+        void log(String message);
+        void log(String message, Throwable error);
+        
+        InputStream getInputStream(String path);
+        
+        void configure(Settings settings);
+    }
 }

@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -40,7 +41,10 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.impl.ComponentManager;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.regexp.RE;
 
@@ -93,16 +97,32 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         Thread currentThread = Thread.currentThread();
         ClassLoader oldClassLoader = currentThread.getContextClassLoader();
         currentThread.setContextClassLoader(newClassLoader);
-        CocoonServiceManager newManager;
+        ServiceManager newManager;
         
         try {
             newManager = new CocoonServiceManager(this.parentProcessorManager, newClassLoader);
     
             // Go through the component lifecycle
-            newManager.enableLogging(getLogger());
-            newManager.contextualize(context);
-            newManager.configure(config);
-            newManager.initialize();
+            ContainerUtil.enableLogging(newManager, this.getLogger());
+            ContainerUtil.contextualize(newManager, context);
+            ContainerUtil.configure(newManager, config);
+            ContainerUtil.initialize(newManager);
+
+            // check for an application specific container
+            Configuration appContainer = config.getChild("application-container", false);
+            if ( appContainer != null ) {
+                final String clazzName = appContainer.getAttribute("class");
+
+                ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
+                // Go through the component lifecycle
+                ContainerUtil.enableLogging(cl, this.getLogger());
+                ContainerUtil.contextualize(cl, context);
+                ContainerUtil.service(cl, newManager);
+                ContainerUtil.configure(cl, appContainer);
+                ContainerUtil.initialize(cl);
+                
+                newManager = new ComponentManager(newManager, cl);
+            }
         } finally {
             currentThread.setContextClassLoader(oldClassLoader);
         }

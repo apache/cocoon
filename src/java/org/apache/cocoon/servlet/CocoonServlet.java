@@ -16,7 +16,6 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -158,55 +157,7 @@ public class CocoonServlet extends HttpServlet {
 
     /** Settings */
     protected Settings settings;
-    
-    /**
-     * Get the settings for Cocoon
-     * If a subclass uses different default values for settings, this method
-     * can be overwritten
-     */
-    protected Settings getSettings() {
-        // create an empty settings objects
-        final Settings s = new Settings();
 
-        String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
-        
-        // read cocoon-settings.properties - if available
-        InputStream propsIS = this.getServletContext().getResourceAsStream("cocoon-settings.properties");
-        if ( propsIS != null ) {
-            this.servletContext.log("Reading settings from 'cocoon-settings.properties'");
-            final Properties p = new Properties();
-            try {
-                p.load(propsIS);
-                propsIS.close();
-                s.fill(p);
-                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);
-            } catch (IOException ignore) {
-                this.servletContext.log("Unable to read 'cocoon-settings.properties'.", ignore);
-                this.servletContext.log("Continuing initialization.");
-            }
-        }
-        // fill from the servlet parameters
-        SettingsHelper.fill(s, this.getServletConfig());
-        
-        // read additional properties file
-        if ( additionalPropertyFile != null ) {
-            this.servletContext.log("Reading user settings from '" + additionalPropertyFile + "'");
-            final Properties p = new Properties();
-            try {
-                FileInputStream fis = new FileInputStream(additionalPropertyFile);
-                p.load(fis);
-                fis.close();
-            } catch (IOException ignore) {
-                this.servletContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
-                this.servletContext.log("Continuing initialization.");
-            }
-        }
-        // now overwrite with system properties
-        s.fill(System.getProperties());
-
-        return s;        
-    }
-    
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
      * notice that I have broken the init into sub methods to make it
@@ -227,7 +178,10 @@ public class CocoonServlet extends HttpServlet {
         super.init(conf);
 
         // initialize settings
-        this.settings = this.getSettings();
+        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf);
+
+        this.settings = Core.createSettings(env);
+
         this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
         
         if (this.settings.isInitClassloader()) {
@@ -1340,4 +1294,32 @@ public class CocoonServlet extends HttpServlet {
     protected LoggerManager getLoggerManager() {
         return this.loggerManager;
     }
+
+    protected static final class ServletBootstrapEnvironment
+    implements Core.BootstrapEnvironment {
+
+        private final ServletConfig config;
+
+        public ServletBootstrapEnvironment(ServletConfig config) {
+            this.config = config;
+        }
+
+        public void log(String message) {
+            this.config.getServletContext().log(message);
+        }
+        
+        public void log(String message, Throwable error) {
+            this.config.getServletContext().log(message, error);            
+        }
+        
+        public InputStream getInputStream(String path) {
+            return this.config.getServletContext().getResourceAsStream(path);
+        }
+        
+        public void configure(Settings settings) {
+            // fill from the servlet parameters
+            SettingsHelper.fill(settings, this.config);                
+        }
+    }
+
 }
