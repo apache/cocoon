@@ -62,7 +62,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.2 2003/05/26 09:52:58 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.3 2003/07/09 17:59:43 cziegeler Exp $
  */
 
 public final class XMLByteStreamInterpreter
@@ -103,6 +103,7 @@ implements XMLDeserializer, Recyclable {
         if (!(saxFragment instanceof byte[])) {
             throw new SAXException("XMLDeserializer needs byte array for deserialization.");
         }
+        this.list.clear();
         this.input = (byte[])saxFragment;
         this.currentPos = 0;
         this.checkProlog();
