@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -32,6 +31,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
 import org.apache.cocoon.reading.ServiceableReader;
+import org.apache.cocoon.util.NetUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.6 2004/03/19 14:21:06 cziegeler Exp $
+ * @version CVS $Id: ProxyReader.java,v 1.7 2004/07/12 13:36:43 cziegeler Exp $
  */
 public class ProxyReader extends ServiceableReader {
 
@@ -177,9 +177,9 @@ public class ProxyReader extends ServiceableReader {
                         query.append('&');
                     }
 
-                    query.append(URLEncoder.encode(paramName));
+                    query.append(NetUtils.encode(paramName, null));
                     query.append('=');
-                    query.append(URLEncoder.encode(paramValues[i]));
+                    query.append(NetUtils.encode(paramValues[i], null));
 
                 }
             }
