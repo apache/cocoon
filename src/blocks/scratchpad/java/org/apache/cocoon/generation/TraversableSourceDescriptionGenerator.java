@@ -163,10 +163,7 @@ public class TraversableSourceDescriptionGenerator
         throws ProcessingException, SAXException, IOException {
         
         super.setup(resolver, objectModel, location, parameters);
-        
-        getLogger().debug("setup");
-        System.out.println("setup");
-        
+
         this.properties = parameters.getParameterAsBoolean("properties", true);
         this.permissions = parameters.getParameterAsBoolean("permissions", true);
         this.locks = parameters.getParameterAsBoolean("locks", true);
@@ -199,8 +196,6 @@ public class TraversableSourceDescriptionGenerator
      */
     private void pushSourceDescription(Source source) 
         throws SAXException, SourceException {
-        
-        getLogger().debug("pushSourceDescription(" + source.getURI() + ")");
         
         if (source == null) {
             return;
