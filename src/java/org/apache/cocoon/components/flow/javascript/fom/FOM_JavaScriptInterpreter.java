@@ -66,7 +66,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
@@ -538,9 +537,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         RE re = new RE(encodingRE);
         if (re.match(str)) {
             return re.getParen(1);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
