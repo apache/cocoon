@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.59 2001-01-19 02:21:59 greenrd Exp $
+  $Id: todo.xml,v 1.60 2001-01-19 16:13:27 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -127,6 +127,10 @@
   </action>
   <action context="code" bugid="28">
    XSP logicsheet dependency tracking.
+  </action>
+  <action context="code" bugid="40">
+   Provide optional conversion from Java line numbers back to XSP line numbers, to aid
+   debugging XSP pages.
   </action>
  </actions>
 
