@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<root>
+  <simple test="nothing">Simple</simple>
+  <readOnly>Read-Only</readOnly>
+  <writeonly>Write-Only</writeonly>
+  <diffIn>Diff-In/Out</diffIn>
+  <!-- diffOut doesn't need to exist since the binding
+       by default will create it. (not here though, but at the end...) -->
+  <onUpdate>On Update</onUpdate>
+  <updateCount>0</updateCount>
+  <bool>true</bool>
+  <date>19700506</date>
+</root>

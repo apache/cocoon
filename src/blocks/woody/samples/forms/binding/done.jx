@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+  <jx:macro name="dumpBean">
+    <jx:parameter name="bean"/>
+    <table cellspacing="2" cellpadding="1" bgcolor="#222222">
+      <jx:forEach select="#{$bean/*}">
+          <tr>
+            <td bgcolor="#eeeeee">#{local-name(.)}</td>
+            <td bgcolor="#ffffff">
+              <jx:choose>
+                <jx:when test="#{starts-with(.,'[object ')}">
+                  <dumpBean bean="#{.}" />
+                </jx:when>
+                <jx:otherwise>
+                  #{.}
+                </jx:otherwise>
+              </jx:choose>
+            </td>
+          </tr>
+      </jx:forEach>
+    </table>
+  </jx:macro>
+
+
+  <title>BindingSample :: Result</title>
+  <content>
+    <i>Contents of the #{./backendType} BEAN after using the binding for save():</i>
+    <br/>
+    
+    <blockquote>
+      <dumpBean bean="#{./bean}" />
+	  <!-- BEAN = #{./bean} -->
+	  <!-- BEAN-simple = #{./bean/simple} -->
+    </blockquote>
+    
+    <i>Same sample using different backend-models: 
+      <a href="./binding-#{./sampleCode}-JS.flow">JS</a> - 
+      <a href="./binding-#{./sampleCode}-Java.flow">Java</a> - 
+      <a href="./binding-#{./sampleCode}-XML.flow">XML</a>
+    </i>
+    
+    <br/>
+    
+    <i>Other <a href="./">binding samples</a></i>
+    
+  </content>
+</page>

@@ -30,6 +30,16 @@
   </note>
   <sample name="XML Binding" href="form2xml.flow">A form for just editing an XML file.</sample>
   <sample name="Bean Binding" href="form2bean.flow">A form for just editing a Java bean</sample>
+  <note>
+  	Step-by-step tutorial into individual binding features:
+  </note>
+  <sample name="1. Binding Simple Values" href="binding-01value.flow">wb:*/direction and wb:value/*</sample>
+  <sample name="2. Lenient Binding" href="binding-02lenient.flow">*/@lenient</sample>
+  <!-- TODO: provide more tutorial samples like these:
+  <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">wb:aggregate</sample>
+  <sample name="4. Repeater Binding" href="binding-04repeater.flow">wb:repeater</sample>
+  <sample name="5. JavaScript Binding" href="binding-05js.flow">wb:javascript</sample>
+  -->
  </group>
 
  <group name="Locales">
