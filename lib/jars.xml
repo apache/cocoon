@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.149 2004/01/18 18:36:07 coliver Exp $
+    | CVS $Id: jars.xml,v 1.150 2004/01/19 07:50:05 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -389,7 +389,7 @@
       HTTP standards and recommendations.
     </description>
     <used-by>SOAP logicsheet, WebServiceProxyGenerator, HttpProxyGenerator</used-by>
-    <lib>core/commons-httpclient-2.0-rc1.jar</lib>
+    <lib>core/commons-httpclient-2.0-rc3.jar</lib>
     <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
   </file>
 
@@ -914,7 +914,7 @@
       translators from grammatical descriptions containing Java, C#, or C++ actions
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/antlr-2.7.1.jar</lib>
+    <lib>ojb/lib/antlr-2.7.2.jar</lib>
     <homepage>http://www.antlr.org/</homepage>
   </file>
 
@@ -946,7 +946,7 @@
         for Java Objects against relational databases.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/db-ojb-1.0.rc5-20031227.jar</lib>
+    <lib>ojb/lib/db-ojb-1.0.rc5-20040118.jar</lib>
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
@@ -955,7 +955,7 @@
     <title>JMS Spec</title>
     <description>
       J2EE Java Message Service Specification.  This implentation
-      developed by the (currently incubating) Apache Geronimo project is an 
+      developed by the (currently incubating) Apache Geronimo project is an
       open source implementation from the original spec.  As such it is licensed 
       under the Apache license and therefore freely distributable.
     </description>

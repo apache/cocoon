@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.224 2004/01/16 14:01:22 unico Exp $:-->
+<!-- CVS $Id: status.xml,v 1.225 2004/01/19 07:50:04 antonio Exp $:-->
 
 <status>
  <developers>
@@ -92,7 +92,7 @@
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
   <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
  </developers>
-  
+
   <todo>
    <actions priority="high">
     <action context="code" assigned-to="all">
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+ <action dev="AG" type="update">
+     Updated commons-httpclient to the version 2.0-RC3
+   </action>
    <action dev="UH" type="update">
      Renamed JspGenerator to JSPGenerator to match JSPEngine and JSPReader naming convention.
    </action>
