@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<composite-layout static="true" name="tab">
+<composite-layout name="tab">
   <named-item name="Main">
     <composite-layout name="row">
       <item>
@@ -169,7 +169,7 @@
         </composite-layout>
     </named-item>
     <named-item name="TabDemo1">
-        <composite-layout static="true" name="tab">
+        <composite-layout name="tab">
 		    <named-item name="One">
                 <coplet-layout name="coplet">
                     <parameter name="title" value="ML's Weblog" />
