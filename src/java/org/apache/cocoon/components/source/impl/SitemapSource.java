@@ -91,7 +91,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.10 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.11 2003/10/08 10:33:01 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -304,13 +304,17 @@ implements Source, XMLizable {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
+            EnvironmentStack envStack = CocoonComponentManager.getCurrentEnvironmentStack();
+            int currentOffset = envStack.getOffset();
             try {
                 CocoonComponentManager.enterEnvironment(this.environment,
                                                         this.manager,
                                                         this.pipelineProcessor);
+                envStack.resetOffset(0);
                 this.processingPipeline.process(this.environment);
             } finally {
                 CocoonComponentManager.leaveEnvironment();
+                envStack.resetOffset(currentOffset);
             }
             return new ByteArrayInputStream(os.toByteArray());
 
@@ -394,6 +398,7 @@ implements Source, XMLizable {
                     CocoonComponentManager.enterEnvironment(this.environment,
                                                             this.manager,
                                                             this.pipelineProcessor);
+                    envStack.resetOffset(0);
                     this.processingPipeline.prepareInternal(this.environment);
                     this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
                     final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
@@ -464,6 +469,7 @@ implements Source, XMLizable {
                     CocoonComponentManager.enterEnvironment(this.environment,
                                                             this.manager,
                                                             this.pipelineProcessor);
+                    envStack.resetOffset(0);
                     this.processingPipeline.process(this.environment, new EnvironmentChanger(consumer, envStack));
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
