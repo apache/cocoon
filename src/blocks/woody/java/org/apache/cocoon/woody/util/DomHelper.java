@@ -85,7 +85,7 @@ import org.xml.sax.SAXNotSupportedException;
  * able to provide information about the location of elements in their source
  * XML file. See the {@link #getLocation(Element)} method.
  * 
- * @version CVS $Id: DomHelper.java,v 1.13 2004/02/29 09:21:33 antonio Exp $
+ * @version CVS $Id: DomHelper.java,v 1.14 2004/03/02 06:52:49 antonio Exp $
  */
 public class DomHelper {
 
@@ -196,6 +196,11 @@ public class DomHelper {
         return node;
     }
 
+    /**
+     * Returns the first child element with the given namespace and localName,
+     * or null if there is no such element and required flag is unset or
+     * throws an Exception if the "required" flag is set.
+     */
     public static Element getChildElement(Element element, String namespace, 
             String localName, boolean required) throws Exception {
         NodeList nodeList = element.getChildNodes();
