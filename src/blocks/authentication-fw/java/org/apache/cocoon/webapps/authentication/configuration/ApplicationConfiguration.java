@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * inside a handler configuration.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ApplicationConfiguration.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: ApplicationConfiguration.java,v 1.2 2003/11/07 11:21:50 cziegeler Exp $
 */
 public final class ApplicationConfiguration
 implements java.io.Serializable {
@@ -94,6 +94,9 @@ implements java.io.Serializable {
 
     /** The configuration fragments */
     private Map configurations;
+
+    /** Save the context on logout */
+    private boolean saveOnLogout = false;
 
     /**
      * Construct a new application handler
@@ -132,6 +135,7 @@ implements java.io.Serializable {
         if (child != null) {
             this.saveResource = child.getAttribute("uri");
             this.saveResourceParameters = SourceParameters.create(child);
+            this.saveOnLogout = child.getAttributeAsBoolean("saveOnLogout", false);
         }
 
         // get configurations (optional)
@@ -151,12 +155,16 @@ implements java.io.Serializable {
     /**
      * Get the application name.
      */
-    public String getName() { return name; }
+    public String getName() { 
+        return this.name; 
+    }
 
     /**
      * Get the handler
      */
-    public HandlerConfiguration getHandler() { return handler; }
+    public HandlerConfiguration getHandler() { 
+        return this.handler; 
+    }
 
     /**
      * Get the load resource
@@ -186,7 +194,14 @@ implements java.io.Serializable {
         return this.saveResourceParameters;
     }
 
-    public boolean getLoadOnDemand() { return loadOnDemand; }
+    /** Should we save on logout? */
+    public boolean saveOnLogout() { 
+        return this.saveOnLogout;
+    }
+
+    public boolean getLoadOnDemand() { 
+        return loadOnDemand; 
+    }
 
     /**
      * Get the configuration

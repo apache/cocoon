@@ -66,7 +66,7 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  This action logs the current user out of a given handler
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LogoutAction.java,v 1.5 2003/10/15 20:47:14 cziegeler Exp $
+ * @version CVS $Id: LogoutAction.java,v 1.6 2003/11/07 11:21:50 cziegeler Exp $
 */
 public final class LogoutAction
 extends ServiceableAction
@@ -105,8 +105,9 @@ implements ThreadSafe {
             
             final String handlerName = par.getParameter("handler",
                                                          (state == null ? null : state.getHandlerName()));
-            if ( null == handlerName )
+            if ( null == handlerName ) {
                 throw new ProcessingException("LogoutAction requires at least the handler parameter.");
+            }
             authManager.logout( handlerName , mode );
         } finally {
             this.manager.release( authManager );
