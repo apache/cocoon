@@ -67,6 +67,7 @@
   <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
   <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
   <person name="Ugo Cei" email="ugo@apache.org" id="UC"/>
+  <person name="Tony Collen" email="tony@apache.org" id="ATC"/>
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
@@ -197,22 +198,32 @@
     <action context="code" assigned-to="MPO">
       Remove ContainerWidget concept from cforms.
     </action>
-
    </actions>
   </todo>
 
   <changes>
-
  <release version="@version@" date="@date@">
    <action dev="AG" type="update">
      Updated Apache Ant to 1.6.2.
+   </action>
+    <action dev="CZ" type="fix">
+     Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
    </action>
    <action dev="VG" type="update">
      Portal: CocoonPortlet has new configuration parameter,
      default-session-scope.
    </action>
+   <action dev="CZ" type="fix" fixes-bug="29373">
+     Portal: Fix NPE when non-caching pipelines are used for the portal profile.
+   </action>
+   <action dev="CZ" type="fix">
+     Portal: Fix transformation of non-external html links (HTMLEventLinkTransformer)
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="28687">
+     Portal: Fix problem with bookmarks and CachingURICoplet
+   </action>
  </release>
- <release version="2.1.5.1" date="July 9 2004">
+<release version="2.1.5.1" date="July 9 2004">
    <action dev="CZ" type="update">
      The store/caching system now uses JCS instead of Jisp.
    </action>
