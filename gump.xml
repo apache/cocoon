@@ -18,6 +18,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
+    | $Id:$
     +-->
 <module name="cocoon">
   <url href="http://cocoon.apache.org/"/>
@@ -50,8 +51,7 @@
 
     <depend project="avalon-framework-api"/>
     <depend project="avalon-framework-legacy"/>
-    <depend project="avalon-framework-impl"/>
-    
+    <depend project="avalon-framework-impl"/>    
     <depend project="excalibur-legacy" id="compatibility"/>
     <depend project="excalibur-legacy" id="i18n"/>
     <depend project="excalibur-instrument-legacy"/>
@@ -78,11 +78,9 @@
     <depend project="rhino"/>
     <depend project="ehcache"/>
     <depend project="jing"/>
-    <depend project="pizza"/>
     <depend project="junit"/>
     <depend project="jmock"/>
     <depend project="easymock"/>
-    <depend project="eclipse" id="jdtcore"/>
     <depend project="concurrent"/>
 
     <depend project="xmlunit"/><!-- used by the testcases -->
@@ -127,6 +125,8 @@
     <depend project="xml-fop-maintenance"/>
     <depend project="cocoon-block-batik"/>
 
+    <library name="fop"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -162,6 +162,14 @@
     <depend project="cocoon-block-faces" type="samples"/>
     <depend project="cocoon-block-axis" type="samples"/>
     
+    <library name="velocity"/>
+    <library name="castor"/>
+    <library name="commons-jexl"/>
+    <library name="commons-betwixt"/>
+    <library name="commons-beanutils"/>
+    <library name="commons-digester"/>
+    <library name="apache-garbage"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -180,6 +188,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="xml-batik"/>
+
+    <library name="batik-all"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -203,6 +213,9 @@
     <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="castor"/>
 
+    <library name="chaperon"/>
+    <library name="castor"/>
+    
     <work nested="build/cocoon-@@DATE@@/blocks/chaperon/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/chaperon/test"/>
     <work nested="tools/anttasks"/>
@@ -224,6 +237,8 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="jfor"/>
 
+    <library name="jfor"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -241,6 +256,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="itext"/>
+
+    <library name="itext"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -320,6 +337,8 @@
     <depend project="excalibur-datasource"/>
     <depend project="cocoon-block-xsp"/>
 
+    <library name="excalibur-datasource"/>
+
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -341,6 +360,8 @@
     <depend project="cocoon-block-databases"/>
     <depend project="hsqldb"/>
 
+    <library name="hsqldb"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -359,6 +380,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-poi"/>
+
+    <library name="poi"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -379,6 +402,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jndi"/>
+
+    <library name="jndi"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -406,6 +431,7 @@
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
+
   <project name="cocoon-block-python" status="stable">
     <package>org.apache.cocoon</package>
 
@@ -439,6 +465,8 @@
     <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="cocoon-block-forms" type="samples"/>
 
+    <library name="lucene"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -459,6 +487,9 @@
     <depend project="jtidy"/>
     <depend project="nekohtml"/>
     
+    <library name="jtidy"/>
+    <library name="nekohtml"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -477,6 +508,11 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-bsf"/>
+
+    <library name="bsf"/>
+    <library name="groovy"/>
+    <library name="asm"/>
+    <library name="asm-util"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -514,6 +550,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-velocity"/>
+
+    <library name="velocity"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -580,6 +618,14 @@
     <depend project="commons-transaction"/>
     <depend project="commons-codec"/>
 
+    <library name="geronimo-spec-jta"/>
+    <library name="slide-kernel"/>
+    <library name="slide-stores"/>
+    <library name="slide-webdavservlet"/>
+    <library name="jdom"/>
+    <library name="commons-transaction"/>
+    <library name="commons-codec"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -598,6 +644,9 @@
 
     <depend project="commons-httpclient-2.0-branch"/>
     <depend project="cocoon" inherit="all"/>
+
+    <library name="commons-httpclient"/>
+    <library name="commons-logging"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -619,6 +668,12 @@
     <depend project="cocoon-block-databases"/>
     <depend project="xmldb"/>
 
+    <library name="xmldb-api"/>
+    <library name="xmldb-common"/>
+    <library name="xmldb-xupdate"/>
+    <library name="xmlrpc"/>
+    <library name="xindice"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -637,6 +692,11 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="deli"/>
+
+    <library name="deli"/>
+    <library name="jena"/>
+    <library name="icu4j"/>
+    <library name="log4j"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -680,6 +740,9 @@
     <depend project="javamail"/>
     <depend project="jaf"/>
 
+    <library name="javamail"/>
+    <library name="jaf"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -698,6 +761,12 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="xml-axis"/>
+
+    <library name="axis"/>
+    <library name="axis-saaj"/>
+    <library name="axis-jaxrpc"/>
+    <library name="wsdl4j"/>
+    <library name="commons-discovery"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -742,6 +811,13 @@
     <depend project="jakarta-oro"/>
     <depend project="cocoon-block-xsp" type="samples"/>
 
+    <library name="xreporter-expression"/>
+    <library name="jakarta-oro"/>
+    <library name="nekohtml"/>
+    <library name="nekodtd"/>
+    <library name="daisy-util"/>
+    <library name="daisy-htmlcleaner"/>
+
     <work nested="build/cocoon-@@DATE@@/blocks/forms/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
     <work nested="tools/anttasks"/>
@@ -765,6 +841,9 @@
     <depend project="jakarta-oro"/>
     <depend project="cocoon-block-xsp" type="samples"/>
 
+    <library name="xreporter-expression"/>
+    <library name="jakarta-oro"/>
+
     <work nested="build/cocoon-@@DATE@@/blocks/woody/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/woody/test"/>
     <work nested="tools/anttasks"/>
@@ -785,6 +864,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="qdox"/>
+
+    <library name="qdox"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -810,6 +891,12 @@
     <depend project="castor"/>
     <depend project="commons-collections"/>
     <depend project="jakarta-pluto" inherit="runtime"/>
+
+    <library name="jtidy"/>
+    <library name="castor"/>
+    <library name="commons-collections"/>
+    <library name="pluto"/>
+    <library name="portlet-api"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -853,6 +940,9 @@
     <depend project="commons-logging"/>
     <depend project="joost"/>
 
+    <library name="commons-logging"/>
+    <library name="joost"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -890,6 +980,9 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-repository"/>
     <depend project="jakarta-slide"/>
+
+    <library name="commons-httpclient"/>
+    <library name="jakarta-slide-webdavlib"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/test"/>
@@ -1014,6 +1107,9 @@
     <depend project="quartz"/>
     <depend project="excalibur-datasource"/>
 
+    <library name="quartz"/>
+    <library name="excalibur-datasource"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -1040,6 +1136,11 @@
     <depend project="commons-dbcp"/>
     <depend project="commons-pool"/>
 
+    <library name="db-ojb"/>
+    <library name="antlr"/>
+    <library name="commons-dbcp"/>
+    <library name="commons-pool"/>
+
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/ojb/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1063,6 +1164,8 @@
     <depend project="cocoon-block-databases" type="samples"/>
     <depend project="cocoon-block-hsqldb" inherit="all" type="samples"/>
     <depend project="jms"/>
+
+    <library name="geronimo-spec-jms"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1123,6 +1226,11 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="concurrent"/>
+    <depend project="pizza"/>
+    <depend project="jdtcore"/>
+
+    <library name="pizza"/>
+    <library name="jdtcore"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1147,7 +1255,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="blocks/serializers-block.jar"/>
+    <jar name="blocks/javaflow-block.jar"/>
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
@@ -1161,6 +1269,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+
+    <library name="cocoon-serializers-charsets"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1208,6 +1318,13 @@
     <depend project="commons-el" inherit="all"/>
     <depend project="jakarta-servletapi-4" inherit="all"/>
     <depend project="jsf"/>
+
+    <library name="commons-beanutils"/>
+    <library name="commons-digester"/>
+    <library name="commons-el"/>
+    <library name="jsp-api"/>
+    <library name="myfaces"/>
+    <library name="myfaces-jsf-api"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1301,6 +1418,15 @@
     </description>
     <home nested="src/blocks/itext/lib"/>
     <jar name="itext-1.1.jar"/>
+  </project>
+
+  <project name="jdtcore">
+    <url href="http://www.eclipse.org/"/>
+    <description>
+      Java Development Tools from the Eclipse IDE Project
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="jdtcore-3.0.1.jar"/>
   </project>
 
   <project name="xreporter-expression">
