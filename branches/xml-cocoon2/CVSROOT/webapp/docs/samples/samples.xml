@@ -45,6 +45,9 @@
    <sample name="iSyndicate.com" href="isyndicate/news.xml">
     Live XML News Feed from iSyndicate.com.
    </sample>
+   <sample name="Aggregation" href="news/aggregate.xml">
+    Single Web Page with News from all three sources above.
+   </sample>
   </group>
 
   <group name="Static Content">

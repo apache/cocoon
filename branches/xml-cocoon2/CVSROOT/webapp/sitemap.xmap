@@ -243,6 +243,14 @@
     <map:read src="http://images.slashdot.org/topics/{1}.jpg" mime-type="image/jpg"/>
    </map:match>
 
+   <map:match pattern="news/**.gif">
+    <map:read src="http://images.slashdot.org/topics/{1}.gif" mime-type="image/gif"/>
+   </map:match>
+
+   <map:match pattern="news/**.jpg">
+    <map:read src="http://images.slashdot.org/topics/{1}.jpg" mime-type="image/jpg"/>
+   </map:match>
+
    <map:match pattern="moreover/moreover.xml">
     <map:generate src="http://www.moreover.com/cgi-local/page?o=xml&amp;c=Developer%20news"/>
     <map:transform src="stylesheets/news/moreover.xsl"/>
@@ -252,6 +260,17 @@
    <map:match pattern="isyndicate/news.xml">
     <map:generate src="http://headlines.isyndicate.com/pages/cui/news.xml"/>
     <map:transform src="stylesheets/news/isyndicate.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+
+   <map:match pattern="news/aggregate.xml">
+    <map:aggregate element="page" ns="http://foo.bar.com/myspace">
+     <map:part src="slashdot/slashdot.xml" element="slashdot" ns="http://foo.bar.com/slashdot"/>
+     <map:part src="moreover/moreover.xml" element="moreover" ns="http://foo.bar.com/moreover"/>
+     <map:part src="isyndicate/news.xml" element="isyndicate" ns="http://foo.bar.com/isyndicate"/>
+    </map:aggregate>
+    <map:transform src="stylesheets/news/news.xsl"/>
     <map:serialize/>
    </map:match>
 
