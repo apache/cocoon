@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
 
-import org.apache.batik.dom.svg.SVGDocumentFactory;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.css.CSSDocumentHandler;
 
@@ -42,9 +42,9 @@ import org.apache.batik.css.CSSDocumentHandler;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-04 22:39:29 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-08 16:32:56 $
  */
-public class SVGBuilder extends SVGDocumentFactory implements XMLConsumer {
+public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer {
     protected Logger log = LogKit.getLoggerFor("cocoon");
 
     private static final String SAX_PARSER
