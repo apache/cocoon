@@ -204,34 +204,48 @@
             </not>
          </condition>
 
-         <javac
-            destdir="{string('${build.blocks}')}/{$block-name}/dest"
-            debug="{string('${compiler.debug}')}"
-            optimize="{string('${compiler.optimize}')}"
-            deprecation="{string('${compiler.deprecation}')}"
-            target="{string('${target.vm}')}"
-            nowarn="{string('${compiler.nowarn}')}"
-            compiler="{string('${compiler}')}">
+         <javac destdir="{string('${build.blocks}')}/{$block-name}/dest"
+                debug="{string('${compiler.debug}')}"
+                optimize="{string('${compiler.optimize}')}"
+                deprecation="{string('${compiler.deprecation}')}"
+                target="{string('${target.vm}')}"
+                nowarn="{string('${compiler.nowarn}')}"
+                compiler="{string('${compiler}')}">
             <src path="{string('${blocks}')}/{$block-name}/java"/>
             <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
             <classpath refid="{$block-name}.classpath" />
+            <exclude name="**/samples/**/*.java"/> 
          </javac>
          
          <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar">
             <fileset dir="{string('${build.blocks}')}/{$block-name}/dest">
-               <include name="org/**" />
-               <include name="META-INF/**" />
+               <include name="org/**"/>
+               <include name="META-INF/**"/>
             </fileset>
          </jar>
+
+         <!-- exclude sample classes from the block package -->
+         <mkdir dir="{string('${build.blocks}')}/{$block-name}/samples"/>
+         <javac destdir="{string('${build.blocks}')}/{$block-name}/samples"
+                debug="{string('${compiler.debug}')}"
+                optimize="{string('${compiler.optimize}')}"
+                deprecation="{string('${compiler.deprecation}')}"
+                target="{string('${target.vm}')}"
+                nowarn="{string('${compiler.nowarn}')}"
+                compiler="{string('${compiler}')}">
+            <src path="{string('${blocks}')}/{$block-name}/java"/>
+            <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
+            <classpath refid="{$block-name}.classpath" />
+            <include name="**/samples/**/*.java"/>
+         </javac>
       </target>
 
       <target name="{$block-name}-build" if="{$block-name}.has.build">
          <ant inheritAll="true"
               inheritRefs="false"
               target="main"
-              antfile="{string('${blocks}')}/{$block-name}/build.xml"
-              >
-              <property name="block.dir" value="{string('${blocks}')}/{$block-name}"/>
+              antfile="{string('${blocks}')}/{$block-name}/build.xml">
+            <property name="block.dir" value="{string('${blocks}')}/{$block-name}"/>
          </ant>
       </target>
 
@@ -239,16 +253,15 @@
 
          <mkdir dir="{string('${build.blocks}')}/{$block-name}/mocks"/>
 
-         <javac
-            srcdir="{string('${blocks}')}/{$block-name}/mocks"
-            destdir="{string('${build.blocks}')}/{$block-name}/mocks"
-            debug="{string('${compiler.debug}')}"
-            optimize="{string('${compiler.optimize}')}"
-            deprecation="{string('${compiler.deprecation}')}"
-            target="{string('${target.vm}')}"
-            nowarn="{string('${compiler.nowarn}')}"
-            compiler="{string('${compiler}')}">
-              <classpath refid="{$block-name}.classpath" />
+         <javac srcdir="{string('${blocks}')}/{$block-name}/mocks"
+                destdir="{string('${build.blocks}')}/{$block-name}/mocks"
+                debug="{string('${compiler.debug}')}"
+                optimize="{string('${compiler.optimize}')}"
+                deprecation="{string('${compiler.deprecation}')}"
+                target="{string('${target.vm}')}"
+                nowarn="{string('${compiler.nowarn}')}"
+                compiler="{string('${compiler}')}">
+            <classpath refid="{$block-name}.classpath" />
          </javac>
       </target>
 
@@ -285,6 +298,11 @@
          </copy>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xsamples" configuration="{string('${build.webapp}')}/samples/block-samples.xml"/>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="samplesxpipe" configuration="{string('${build.webapp}')}/samples/sitemap.xmap"/>
+
+         <!-- copy sample classes -->
+         <copy todir="{string('${build.webapp.classes}')}" filtering="off">
+           <fileset dir="{string('${build.blocks}')}/{$block-name}/samples"/>
+         </copy> 
       </target>
 
       <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
