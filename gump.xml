@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.20 2003/03/21 14:00:21 stefano Exp $
+  CVS $Id: gump.xml,v 1.21 2003/03/22 16:57:41 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -102,7 +102,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="fop-block.jar"/>
+    <jar name="blocks/fop-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -121,7 +121,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="batik-block.jar"/>
+    <jar name="blocks/batik-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -140,7 +140,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="chaperon-block.jar"/>
+    <jar name="blocks/chaperon-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -159,7 +159,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="swf-block.jar"/>
+    <jar name="blocks/swf-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -178,7 +178,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="jfor-block.jar"/>
+    <jar name="blocks/jfor-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -197,7 +197,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="itext-block.jar"/>
+    <jar name="blocks/itext-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -215,7 +215,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="session-fw-block.jar"/>
+    <jar name="blocks/session-fw-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -234,7 +234,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
 
-    <jar name="authentication-fw-block.jar"/>
+    <jar name="blocks/authentication-fw-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -254,7 +254,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="portal-fw-block.jar"/>
+    <jar name="blocks/portal-fw-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -273,7 +273,7 @@
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="databases-block.jar"/>
+    <jar name="blocks/databases-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -311,7 +311,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="precept-block.jar"/>
+    <jar name="blocks/precept-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -330,7 +330,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="poi-block.jar"/>
+    <jar name="blocks/poi-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -349,7 +349,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="naming-block.jar"/>
+    <jar name="blocks/naming-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -368,7 +368,7 @@
     <work nested="build/cocoon-@@DATE@@/blocks/jsp/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="jsp-block.jar"/>
+    <jar name="blocks/jsp-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -387,7 +387,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="php-block.jar"/>
+    <jar name="blocks/php-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -406,7 +406,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="python-block.jar"/>
+    <jar name="blocks/python-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -425,7 +425,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="lucene-block.jar"/>
+    <jar name="blocks/lucene-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -444,7 +444,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="html-block.jar"/>
+    <jar name="blocks/html-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -463,7 +463,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="bsf-block.jar"/>
+    <jar name="blocks/bsf-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -481,7 +481,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="profiler.jar"/>
+    <jar name="blocks/profiler.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -500,7 +500,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="velocity-block.jar"/>
+    <jar name="blocks/velocity-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -518,7 +518,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
     
-    <jar name="linkrewriter-block.jar"/>
+    <jar name="blocks/linkrewriter-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -539,7 +539,7 @@
     <work nested="build/cocoon-@@DATE@@/blocks/web3/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
     
-    <jar name="web3-block.jar"/>
+    <jar name="blocks/web3-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>  
@@ -558,7 +558,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="slide-block.jar"/>
+    <jar name="blocks/slide-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -578,7 +578,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="proxy-block.jar"/>
+    <jar name="blocks/proxy-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -598,7 +598,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="xmldb-block.jar"/>
+    <jar name="blocks/xmldb-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -617,7 +617,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="deli-block.jar"/>
+    <jar name="blocks/deli-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -635,7 +635,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="asciiart-block.jar"/>
+    <jar name="blocks/asciiart-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -655,7 +655,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="mail-block.jar"/>
+    <jar name="blocks/mail-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -674,7 +674,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="axis-block.jar"/>
+    <jar name="blocks/axis-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -692,7 +692,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="taglib-block.jar"/>
+    <jar name="blocks/taglib-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
