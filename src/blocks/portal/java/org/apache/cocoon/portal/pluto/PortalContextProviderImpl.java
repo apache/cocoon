@@ -62,7 +62,7 @@ import org.apache.pluto.services.information.PortalContextProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortalContextProviderImpl.java,v 1.1 2004/01/22 14:01:21 cziegeler Exp $
+ * @version CVS $Id: PortalContextProviderImpl.java,v 1.2 2004/01/23 01:26:04 crossley Exp $
  */
 public class PortalContextProviderImpl 
 implements PortalContextProvider {
@@ -94,9 +94,9 @@ implements PortalContextProvider {
     /**
      * Constructor
      */
-    public PortalContextProviderImpl(Map objectModel) {        // these are the minimum modes that the portal needs to support        this.modes = this.getDefaultModes();
-        // these are the minimum states that the portal needs to support        this.states = this.getDefaultStates(); 
-        // set info        this.info = "Apache Cocoon/1.0";
+    public PortalContextProviderImpl(Map objectModel) {        // these are the minimum modes that the portal needs to support        this.modes = this.getDefaultModes();
+        // these are the minimum states that the portal needs to support        this.states = this.getDefaultStates(); 
+        // set info        this.info = "Apache Cocoon/1.0";
         this.properties = new HashMap();
         this.init(objectModel);
     }
