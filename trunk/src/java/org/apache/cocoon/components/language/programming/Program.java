@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.context.Context;
-
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 
 /**
@@ -60,7 +57,7 @@ import org.apache.cocoon.components.language.generator.CompiledComponent;
  * For compilable languages this is the wrapper for a Java Class object.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: Program.java,v 1.2 2003/10/22 18:14:48 bloritsch Exp $
+ * @version CVS $Id: Program.java,v 1.3 2003/10/30 12:42:15 cziegeler Exp $
  */
 public interface Program {
 

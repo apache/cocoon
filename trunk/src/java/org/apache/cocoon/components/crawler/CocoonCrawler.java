@@ -51,8 +51,6 @@
 package org.apache.cocoon.components.crawler;
 
 
-import org.apache.avalon.framework.component.Component;
-
 import java.net.URL;
 import java.util.Iterator;
 
@@ -60,7 +58,7 @@ import java.util.Iterator;
  * The avalon behavioural component interface of crawling.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonCrawler.java,v 1.4 2003/10/22 22:04:25 unico Exp $
+ * @version CVS $Id: CocoonCrawler.java,v 1.5 2003/10/30 12:42:15 cziegeler Exp $
  */
 public interface CocoonCrawler
 {
