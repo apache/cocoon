@@ -18,11 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import org.apache.cocoon.components.parser.Parser;
-
-import org.apache.avalon.Poolable;
 import org.apache.avalon.Component;
+import org.apache.avalon.Poolable;
+
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -33,7 +35,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-19 16:58:19 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-20 12:03:25 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 
@@ -113,7 +115,16 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
     /**
      * Generate XML data from PHP.
      */
-    public void generate() throws IOException, SAXException {
+    public void generate() throws IOException, SAXException, ProcessingException {
+
+        // ensure that we are running in a servlet environment
+        HttpServletResponse httpResponse =
+            (HttpServletResponse)this.objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+        HttpServletRequest httpRequest =
+            (HttpServletRequest)this.objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+        if (httpResponse == null || httpRequest == null) {
+            throw new ProcessingException("HttpServletRequest or HttpServletResponse object not available");
+        }
 
         // ensure that we are serving a file...
         InputSource inputSource = this.resolver.resolveEntity(null, this.source);
@@ -128,11 +139,11 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
 
             // start PHP producing results into the pipe
             PhpServlet php = new PhpServlet();
-            php.init(new config((ServletContext)context));
+            php.init(new config((ServletContext)this.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT)));
             php.setInput(systemId.substring(6));
             php.setOutput(new PipedOutputStream(input));
-            php.setRequest((HttpServletRequest)request);
-            php.setResponse((HttpServletResponse)response);
+            php.setRequest(httpRequest);
+            php.setResponse(httpResponse);
             new Thread(php).start();
 
             // pipe the results into the parser

@@ -28,6 +28,10 @@ import org.xml.sax.SAXException;
 
 public class HttpEnvironment extends AbstractEnvironment {
 
+    public static final String HTTP_REQUEST_OBJECT = "httprequest";
+    public static final String HTTP_RESPONSE_OBJECT= "httpresponse";
+    public static final String HTTP_SERVLET_CONTEXT= "httpservletcontext";
+
     /** The HttpRequest */
     private HttpRequest request = null;
 
@@ -57,6 +61,10 @@ public class HttpEnvironment extends AbstractEnvironment {
         this.objectModel.put(Constants.REQUEST_OBJECT, this.request);
         this.objectModel.put(Constants.RESPONSE_OBJECT, this.response);
         this.objectModel.put(Constants.CONTEXT_OBJECT, this.context);
+        // This is a hack for the Php Generator
+        this.objectModel.put(HTTP_REQUEST_OBJECT, req);
+        this.objectModel.put(HTTP_RESPONSE_OBJECT, res);
+        this.objectModel.put(HTTP_SERVLET_CONTEXT, servletContext);
     }
 
    /**
