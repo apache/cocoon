@@ -1,0 +1,679 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE specification SYSTEM "./dtd/specification-v10.dtd">
+
+<specification>
+ <header>
+  <title>eXtensible Server Pages</title>
+  <version>2000-01-09</version>
+  <type>Working Draft</type>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+   <person name="Ricardo Rocha" email="ricardo@apache.org"/>
+  </authors>
+  <notice>
+    This is an Apache Working Draft for review by all interested
+    parties. It is a draft document and may be updated, replaced, or obsoleted by other
+    documents at any time. It is inappropriate to use Working Drafts as reference material or
+    to cite them as other than &quot;work in progress&quot;. This work is part of the <link
+    href="http://xml.apache.org/cocoon/">Apache Cocoon Project</link>
+  </notice>
+  <abstract>
+    This document specifies an XML namespace that addresses a complete
+    region of web publishing, that of logic-based, dynamic content generation. This language
+    is introduced to fill an existing gap between the W3C specifications and working draft and
+    the increasing demand for a flexible server side approach based on the new XML paradigm.
+  </abstract>
+ </header>
+ 
+ <body>
+  <s1 title="Introduction">
+   <p>This document specifies both an XML document type definition and a development
+   methodology to generate dynamic XML by server side processing of client's requests. Such a
+   specification is useful to define an open and standard way to develop and maintain dynamic
+   XML server pages. The technology described in this document was designed to complete the
+   XML-based publishing framework defined by the Cocoon Project and it's mainly targeted
+   on this project, even if the final goal of this effort is to submit a request to a standard
+   body (such as W3C) for final recommendation.</p>
+   
+   <s2 title="Origins">
+   <p>The need for an open language to standardizing server side programmatic XML generation
+  was observed when XML-based web publishing frameworks emerged and no available technology
+  was detailed, stable, useful and open enough to be used. XSP, by mixing Turing-complete
+  programming logic with page content, provide a flexible yet fully portable and extensible
+  way to develop dynamic XML content. Moreover, being completely XML-based, XSP are fully
+  integrated with XML-based web architectures that allow XSL-transformation to obtain the
+  context separation that is needed for complex sites to increase their management
+  parallelism.</p>
+  
+  <p>Being based on an XML paradigm from the beginning, XSP don't suffer limitations other
+  server pages technologies do: the ability to XSL-transform XSP directly and recursively
+  allows a more compact and precise DTD to be designed since content/logic/style separation
+  is performed by the architecture and not by the language itself. For this reason, XSP are
+  completely transparent to the namespaces/document-types used.</p>
+   </s2>
+ 
+<s2 title="Layer Separation">
+  <p>Being a rather complex technology, the XSP specification will be separated into layers.
+  These layers will have different goals and restrictions and will allow faster development
+  cycles and a better defined development model. Every layer will define its own document
+  type definition which may extend the one of the previous layer or completely change it,
+  depending on layer goals. Layers should be seen as levels of abstraction, much like
+  programming languages range from higher-levels to lower-levels.</p>
+</s2>
+
+<s2 title="General Goals">
+  <p>Following is a summary of the design principles governing the general XSP specification:</p>
+  <ol>
+   <li>should integrate completely with existing W3C recommendations and working drafts</li>
+   <li>should be programming language independent</li>
+   <li>should be aimed to programmers but should be relatively easy to understand</li>
+   <li>should allow pages to be compiled (into Java servlets or other equivalent technology)</li>
+   <li>should not aim to replace existing technologies</li>
+   <li>should be document oriented</li>
+   <li>should allow easy reusability of page code</li>
+   <li>should allow complete separation of knowledge contexts (content, logic and style)</li>
+   <li>should be transparent to all but page programmers</li>
+   <li>specification should be open to all but controlled directly by the Cocoon Project</li>
+  </ol>
+</s2>
+
+<s2 title="Layer 1 Goals">
+  <p>Following is a summary of the design principles governing the Layer 1 of the XSP
+  specification:</p>
+  <ol>
+    <li>should define the complete element set</li>
+    <li>should be aimed to machine generations so:
+     <sl>
+      <li>reducing the number of elements to a minimum is of maximal importance</li>
+      <li>verbosity of the generated documents is of minimal importance</li>
+     </sl>
+    </li>
+    <li>should be human readable/editable so:
+     <sl>
+      <li>terseness and readability are of maximal importance</li>
+      <li>indenting and formattation are of maximal importance</li>
+     </sl>
+    </li>
+    <li>should be possibly XSLT transformed directly into programming language source code</li>
+    <li>should define the relations to the programming languages (object models, variable scopes)</li>
+  </ol>
+</s2>
+
+<s2 title="Layer 2 Goals">
+  <p>Following is a summary of the design principles governing the Layer 2 of the XSP
+  specification:</p>
+  
+  <ol>
+   <li>should define a human oriented element set</li>
+   <li>should be aimed to human generations so:
+    <sl>
+     <li>reducing the number of elements to a minimum is of minimal importance</li>
+     <li>reducing verbosity of the documents is of maximal importance</li>
+    </sl>
+   </li>
+   <li>should be aimed to medium-low knowledged programmers:
+    <sl>
+     <li>automatization of complex operations is of maximal importance</li>
+     <li>tendency to hide page logic is of maximal importance</li>
+    </sl>
+   </li>
+   <li>should be possibly XSLT transformed into XSP Layer 1 documents</li>
+  </ol>
+</s2>
+
+<s2 title="Final Goals">
+  <p>The XSP specification would eventually evolve into a single specification with a single
+  document type definition. This will happen when the working draft phase will be terminated
+  and all involved parties will agree on the specification stability. The Layer 1 will be
+  the first to be developed and tested in a working implementation. Subsequent layers will
+  probably need several evolution stages to reach their final shape.</p>
+</s2>
+
+<s2 title="Relationship to Existing Standards">
+  <p>Three standards have been especially influential:</p>
+  <dl>
+    <dt>JSP</dt>
+    <dd>defines a way to embed programmatic logic into web documents.</dd>
+    <dt>XSLT</dt>
+    <dd>defines a way to transform XML documents.</dd>
+    <dt>XML</dt>
+    <dd>defines a flexible still highly structured paradigm for web
+      content generation and distribution.</dd>
+  </dl>
+  <p>Many server side dynamic web content generators have been evaluated and confronted,
+  especially WebMacro and GSP.</p>
+</s2>
+
+<s2 title="Terminology">
+  <p>The following basic terms apply in this document:</p>
+  <dl>
+    <dt>document</dt>
+    <dd>
+      a document is the final result of the client request phase and they can be obtain from a
+      single file that is read from disk/cache or by processing several ones. Documents are said
+      <em>static</em> if their content doesn't change with user request parameters nor time.
+      Documents are said <em>dynamic</em> if they do.
+    </dd>
+    <dt>page</dt>
+    <dd>
+      a page is the entity that is requested by the client and drives the document creation
+      process. In the simplest case, a document is created reading the page and sending it
+      directly without further processing. In case of compiled pages, a binary object is
+      executed and it's content is used as page content. Pages are said <em>compiled</em> if
+      they are translated into binary code. Note that compiled pages may be created from normal
+      pages the first time the page is requested and executed as binary code in further requests
+      for performance reasons.
+    </dd>
+    <dt>sheet</dt>
+    <dd>
+      a sheet is the processing unit of the document creation chain. Each sheet is a file and
+      they contain the instructions to transform the requested page into the document sent to
+      the requesting client. Sheets are said <em>style sheets</em> if they are the last of the
+      chain and no further processing in performed, <em>logic sheets</em> if they contain XSP
+      elements. Both types are said <em>transformation sheets</em> since they contain XSLT
+      elements.
+    </dd>
+    <dt>document type</dt>
+    <dd>
+      a document type is a unique name that identifies the type of the document being
+      generated. This term has the same meaning as in the XML specification. Note how a document
+      has only one document type but this could change during processing since transformation
+      sheets allow the transformation from one document type into another.
+    </dd>
+  </dl>
+</s2>
+</s1>
+
+<s1 title="XSP Syntax and DTD">
+
+<s2 title="Defined External Entities">
+
+  <p>The XSP specification defines some external entities that may be used to reduce the
+  verbosity of XSP document, allowing the inclusion the default DTD via entity mapping. The
+  standard way to include the XSP DTD into XSP documents is:</p>
+
+<source><![CDATA[
+<!DOCTYPE page PUBLIC 
+   "-//Apache//DTD XSP//EN" 
+   "http://www.apache.org/1999/XSP/Core"
+>
+]]></source>
+
+</s2>
+
+<s2 title="The XSP Layer 1 Document Type Definition">
+  <p>The XSP DTD was designed with simplicity in mind. The number of elements and attributes
+  was reduced to a minimum to allow a fast and easy learning process. On the other hand, no
+  special helper elements were defined in Layer 1 to reduce the spec development time and to
+  favor early feedback from both implementers and users.</p>
+  
+  <p>The following is the complete DTD. It must be noted that this DTD can hardly be used
+  (alone) to validate any XSP due to the fact that XSP are namespace orthogonal and are
+  designed to include as content mark-up elements that belong to other namespaces.
+  The XSchema effort will allow multi-namespace validation.</p>
+
+<source><![CDATA[
+
+<!ENTITY % elements "xsp:expr | 
+                     xsp:element | 
+                     xsp:pi | 
+                     xsp:comment">
+
+<!ELEMENT xsp:page (xsp:structure?, xsp:logic?, xsp:content)>
+<!ATTLIST xsp:page
+  language CDATA #REQUIRED
+  indent-result (yes|no) "no"
+  xmlns:xsp CDATA #FIXED "http://www.apache.org/1999/XSP/Core"
+  xml:space (default|preserve) "preserve"
+>
+
+<!ELEMENT xsp:structure (xsp:dtd?, xsp:include*)>
+
+<!ELEMENT xsp:dtd (#PCDATA)>
+<!ELEMENT xsp:include (#PCDATA)>
+
+<!ELEMENT xsp:content (#PCDATA | xsp:logic | %elements;)*>
+
+<!ELEMENT xsp:logic (#PCDATA | xsp:content | %element;)*>
+<!ATTLIST xsp:logic xml:space (default|preserve) "preserve">
+
+<!ELEMENT xsp:element
+          (#PCDATA | 
+          xsp:attribute | 
+          xsp:element | 
+          xsp:logic)*>
+<!ATTLIST xsp:element
+          name CDATA #REQUIRED>
+
+<!ELEMENT xsp:attribute (#PCDATA)>
+<!ATTLIST xsp:attribute 
+          name CDATA #REQUIRED
+          xml:space (default|preserve) "preserve">
+
+<!ELEMENT xsp:pi (#PCDATA | xsp:expr>
+<!ELEMENT xsp:comment (#PCDATA | xsp:expr)>
+<!ELEMENT xsp:expr (#PCDATA)>  
+
+]]></source>
+  
+</s2>
+</s1>
+
+<s1 title="Example of Usage">
+  <p>Consider the following XML source document:</p>
+
+  <source><![CDATA[
+    <?xml version="1.0"?>
+
+    <page>
+      <title>A Simple XSP Page</title>
+      <p>Hi, I've been hit <counter/> times.</p>
+    </page>  
+  ]]></source>
+
+  <p>This simple example shows the power of content/logic/style separation. While the <code>&lt;title&gt;</code>
+  tag has a very special meaning in the <em>page</em> document type, indicating the page
+  title, the <code>&lt;counter&gt;</code> element is needs to be dynamically substituted by
+  the number of times the document has been requested. The logic that performs such behavior
+  is included in tag itself, but unlike other existing server side technologies, the
+  behavior is not defined in the page itself, but on the logic sheet that is applied to
+  evaluate this behavior. In fact, the same page may have a totally different behavior
+  depending on the logicsheet that is applied to the page. Note that it's beyond the scope
+  of this specification to define a way to associate transformation sheets to pages. The
+  associated logicsheet that uses the Java language as logic definition may look like:</p>
+  
+<source><![CDATA[
+<?xml version="1.0"?>
+<xsl:transform
+ xmlns:xsl="http://www.w3.org/1999/XSL/Tranform" 
+ xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+   
+ <xsl:template match="page">
+  <xsp:page language="java">
+
+   <xsp:structure>
+    <xsp:include>java.lang.*</xsp:include>
+   </xsp:structure>
+     
+   <xsp:logic>
+    private static int counter = 0;
+         
+    private synchronized int currentCount() {
+      return ++counter;
+    }
+   </xsp:logic>
+      
+   <xsp:content>
+    <page>
+     <xsl:apply-templates/>
+    </page>
+   </xsp:content>
+  </xsp:page>
+ </xsl:template>
+    
+ <xsl:template match="counter">    
+  <xsp:expr>currentCount()</xsp:expr>
+ </xsl:template>
+
+ <!-- Transcribe everything else verbatim -->
+ <xsl:template match="*|@*|comment()|pi()|text()">
+  <xsl:copy>
+   <xsl:apply-templates/>
+  </xsl:copy>
+ </xsl:template>
+</xsl:transform>
+]]></source>
+    
+  <p>After applying the above logic sheet, the resulting document would be equivalent to the
+  following:</p>
+  
+<source><![CDATA[
+<xsp:page 
+ result-ns="http://www.dummy.org/SimpleHomepageDTD"
+ language="java">
+
+ <xsp:structure>
+  <xsp:include>java.lang.*</xsp:include>
+ </xsp:structure>
+
+ <xsp:logic>
+  private static int counter = 0;
+        
+  private synchronized int currentCount() {
+    return ++counter;
+  }
+ </xsp:logic>
+
+ <xsp:content>
+  <page>
+   <title>A Sample XSP Page</title>
+   <p>
+    Hi, I've been hit 
+     <xsp:expr>currentCount()</xsp:expr>
+    times.
+   </p>
+  </page>
+ </xsp:content>
+</xsp:page>     
+]]></source>
+  
+  <p>At this point it's worth to note that from an XSP point of view, there is 
+     no difference in how the XSP page was created, either directly written or 
+     created with n levels of transformation. So, independently of whether an 
+     XSL stylesheet or a special algorithm was used to generate the final 
+     source code, it may look like this [<em>Note</em>: many key issues regarding 
+     servlets were omitted for simplicity and this example must not be 
+     considered mandating as a way to format XSP into servlet source code]</p>
+  
+<source><![CDATA[
+// package automatically created from the full request URL...
+package org.apache.cocoon.xsp.example;
+
+// packages imported automatically by source code generator
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.w3c.dom.*;
+  
+// packages imported due to XSP structure
+import java.lang.*;
+
+// class name automatically created from the 
+// request URI file name...
+public class Counter extends HttpServlet {
+
+  public void init(ServletConfig config) 
+    throws ServletException
+  {
+    super.init(config);
+  }
+
+  private static int counter = 0;
+            
+  private synchronized int currentCount() {
+    return ++counter;
+  }
+ 
+  public void service(HttpServletRequest request, 
+       HttpServletResponse response) throws IOException 
+  {
+    Document document = parser.createEmptyDocument();
+    Element root = document.createElement("page");
+    document.appendChild(root);
+  
+    Element element_1 = document.createElement("title");
+    root.appendChild(element_1);
+    Text textNode_1 = document.createTextNode("A Sample XSP Page");
+    element_1.appendChild(textNode_1);
+
+    Element element_2 = document.createElement("p");
+    root.appendChild(element_2);
+    Text textNode_2 = document.createTextNode("Hi, I've been hit ");
+    element_2.appendChild(textNode_2);
+    StringBuffer buffer_1 = new StringBuffer.append(currentCount());
+    Text textNode_3 = document.createTextNode(string_1.toString());
+    element_2.appendChild(textNode_3);
+    Text textNode_4 = document.createTextNode("times.");
+    element_2.appendChild(textNode_4);
+  
+    // Produce generated DOM tree on output as an XML stream
+    ((Child) document).toXMLString(response.getWriter());
+  }
+}  
+]]></source>  
+ 
+  <p>Note that in this example the XML document is being generated as a <em>stream</em>
+  but a DOM tree is used to create it. The DOM tree can't be passed directly to
+  the servlet engine for further processing because the current servlet specification
+  (2.2) does not allow for content generation in a format other than a stream. A rather undesirable consequence
+  of this is that the resulting XML document would need to be re-parsed in case a final XSL
+  stylesheet or other post-transformation must be applied.</p>
+  
+  <p>To solve this problem and speed up the execution on server side XML
+  processing, the XSP can be compiled into something like this:</p>
+
+<source><![CDATA[
+// package automatically created from the full request URL...
+package org.apache.cocoon.xsp.example;
+
+// packages imported automatically by source code generator
+import java.io.*;
+import java.util.*;
+import org.xml.sax.*;
+import org.apache.cocoon.*;
+  
+// packages imported due to XSP structure
+import java.lang.*;
+
+// class name automatically created from the 
+// request URI file name...
+public class Counter extends AbstractProducer {
+
+  private static final char[] chars_0 = 
+   {'A',' ','S','i','m','p','l','e',' ','X','S','P',' ','P','a','g','e'};
+  private static final char[] chars_1 = 
+   {'H','i',' ','I','\'','v','e',' ','b','e','e','n',' ','h','i','t',' '};
+  private static final char[] chars_3 = 
+   {' ','t','i','m','e','s'};
+
+  private static int counter = 0;
+            
+  private synchronized int currentCount() {
+    return ++counter;
+  }
+ 
+  public void toSAX(Request request, DocumentHandler handler) 
+    throws SAXException 
+  {
+    handler.startDocument();
+      handler.startElement("page", null);
+        handler.startElement("title", null);
+          handler.characters(chars_0, 0, 17);
+        handler.endElement("title");
+        handler.startElement("p", null);
+          handler.characters(chars_1, 0, 17);
+          String string_0 = (new StringBuffer.append(
+            currentCount()
+          )).toString();
+          int string_0_length = string_0.length();
+          char[] chars_2 = char[string_0_length];
+          string_0.getChars(0, string_0_length, chars_2, 0);
+          handler.characters(chars_3, 0, 6);
+        handler.endElement("p");
+      handler.endElement("page");
+    handler.endDocument();
+  }
+}  
+]]></source>
+
+  <p>The above shows one of the best features of XSP: output independence.
+  Since the output objects are not accessible directly from the internal page
+  logic (unlike other similar technologies, such as JSP), the page compiler can
+  choose between a great variety of possible ways to generate and forward the
+  page content. In fact, while the first example uses DOM as a construction set
+  and a stream as output method, the exact same page is compiled in the second
+  example to use a SAX event-based model and a document handler as output.</p>
+  
+  <p>Finally, It is beyond the scope of this specification to define how XSP are translated
+  into binary code and how these interact with the publishing frameworks that handle
+  them, but it is mandated that this should be completely transparent to the
+  page programmer and an XSP page should behave exactly the same (modulo
+  performance) in every XSP engine.</p>
+</s1>
+
+<s1 title="XSP and JSP">
+  <p>XSP and JSP might appear as overlapping at a first glance since they both:</p>
+  
+  <ul>
+    <li>follow the <em>compiled server pages</em> model, allowing server pages to
+      be compiled into binary code for faster execution.</li>
+    <li>can be parsed and validated by regular XML parsers</li>
+    <li>can be transformed by XSLT processors</li>
+    <li>aim to programming language abstraction</li>
+  </ul>
+  
+  <p>While these are very important points were the two specifications <em>do</em>
+  overlap, there are significant differences described hereafter.</p>
+
+<s2 title="Output Exposure">
+  <p>In all different server pages technologies, some data regarding the status
+  of the resource are available to page logic. Since JSP follow the Servlet API
+  model, expecting JSP pages to be compiled into servlets, the same data
+  available to servlet is available to page logic. This allows the page logic to
+  obtain access to the output channel (being either an OutputStream or a Writer
+  for servlets).</p>
+  
+  <p>While this is not a problem for normal web operation when no further server
+  side processing is performed, for XML generation (where further server side
+  processing may be needed, depending on client capabilities) the Servlet/JSP
+  limitations impose on the server pages engine a parsing stage that is
+  completely avoided in XSP.</p>
+  
+  <p>In fact, in XSP, page logic has <em>not</em> direct access to the output
+  channel and it's the page compiler responsibility to choose the preferred
+  method to compile the page, depending on processing needs and server
+  requirements.</p>
+  <p>It should be noted how XSP spec provides three different contexts: <code>content</code>,
+  <code>logic</code> and <code>eval</code>. These three contexts never overlap
+  since <code>content</code> is used to create static markup content, <code>logic</code>
+  to indicate programming logic and <code>eval</code> to bridge the two domains,
+  allowing a logic component to be evaluated without exposing the output channel
+  to the logic context.</p>
+  <p>This is a very significant difference since it allows XSP page compiler to <em>hardcode</em>
+  pre-parsed XML content thus removing the request time parsing overhead that
+  JSP always require.</p>
+</s2>
+
+<s2 title="Page Readability">
+  <p>For these reasons, XSP, unlike JSP, uses the XML feature of <em>syntax
+  orthogonalily</em> that allows almost any programming language code to be
+  easily distinguishable between markup elements, while JSP needs to enclose
+  programming code by <code>scriptlet</code> tags. The following is an example to show
+  the different results based on the same logic and code.</p>
+  
+<source><![CDATA[
+<xsp:logic>
+ e = request.getParameterNames(); 
+ if ((e != null) &amp;&amp; (e.hasMoreElements())) {
+  <xsl:content>
+   <list>
+    <title>Servlet Parameters</title>
+    <xsp:logic>
+     while (e.hasMoreElements()) { 
+      String k = (String) e.nextElement();
+      String val = request.getParameter(k); 
+      String vals[] = request.getParameterValues(k);
+      <xsp:element name="element">
+       <xsp:attribute name="name">
+        <xsp:expr>k</xsp:expr>
+       </xsp:attribute>
+       <xsp:logic>
+        for(int i = 0; i &lt; vals.length; i++) {
+         <item>
+          <xsp:expr>vals[i]</xsp:expr>
+         </item>
+        }
+       </xsp:logic>
+      </xsp:element>
+     }
+    </xsp:logic>
+   </list>
+  </xsl:content>
+ } 
+</xsp:logic>  
+]]></source>
+
+  <p>This is the JSP equivalent:</p>
+  
+<source><![CDATA[
+<jsp:scriplet>
+ e = request.getParameterNames(); 
+ if ((e != null) &amp;&amp; (e.hasMoreElements())) {
+</jsp:scriplet>
+  <list>
+   <title>Servlet Parameters</title>
+   <jsp:scriplet>
+     while (e.hasMoreElements()) { 
+      String k = (String) e.nextElement();
+      String val = request.getParameter(k); 
+      String vals[] = request.getParameterValues(k);
+      out.println("&lt;element name=\"name\"&gt;");
+   </jsp:scriplet>
+      <jsp:expression>k</jsp:expression>
+      <jsp:scriplet>
+       out.println("&lt;/element&gt;");
+       for(int i = 0; i &lt; vals.length; i++) {
+      </jsp:scriplet>
+        <item>
+         <jsp:expression>vals[i]</jsp:expression>
+        </item>
+      <jsp:scriplet>}</jsp:scriplet>
+    <jsp:scriplet>}</jsp:scriplet>
+  </list>
+<jsp:scriplet>}</jsp:scriplet>  
+]]></source>
+
+  <p>It must be noted the use of the <code>out</code> object in the JSP example while
+  XSP provide specific tags to avoid that.</p>
+</s2>
+</s1>
+</body>
+
+<appendices>
+
+<s1 title="Normative References">
+<bl>
+  <bi name="DOM" 
+      href="http://www.w3.org/TR/REC-DOM-Level-1" 
+      title="Document Object Model (DOM) Level 1 Specification"
+      authors="Lauren Wood et al."
+      date="1 October 1998"/>
+      
+  <bi name="RFC2119" 
+      href="http://www.ietf.org/rfc/rfc2119.txt"
+      title="Key words for use in RFCs to Indicate Requirement Levels"
+      authors="S. Bradner"
+      date="March 1997"/>
+      
+  <bi name="RFC2376" 
+      href="http://www.ietf.org/rfc/rfc2376.txt"
+      title="XML Media Types"
+      authors="E. Whitehead, M. Murata"
+      date="July 1998"/>
+      
+  <bi name="RFC2396"
+      href="http://www.ietf.org/rfc/rfc2396.txt"
+      title="Uniform Resource Identifiers (URI): Generic Syntax"
+      authors="T. Berners-Lee, R. Fielding, L. Masinter"
+      date="August 1998"/>
+      
+  <bi name="XML" 
+      href="http://www.w3.org/TR/REC-xml"
+      title="Extensible Markup Language (XML) 1.0 Specification"
+      authors="T. Bray, J. Paoli, C. M. Sperberg-McQueen"
+      date="10 February 1998"/>
+      
+  <bi name="XMLNAMES"
+      href="http://www.w3.org/TR/REC-xml-names"
+      title="Namespaces in XML"
+      authors="T. Bray, D. Hollander, A. Layman"
+      date="14 January 1999"/>
+      
+  <bi name="XSLT"
+      href="http://www.w3.org/TR/xslt"
+      title="XSL Transformations (XSLT) Specification Version 1.0"
+      authors="J. Clark"
+      date="16 November 1999"/>
+      
+  <bi name="SAX"
+      href="http://www.megginson.com/SAX/"
+      title="The Simple API for XML (Java implementation) version 1.0"
+      authors="D.Megginson"/>
+</bl>
+</s1>
+</appendices>
+</specification>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="hello-page-html.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<!DOCTYPE page [
+ <!ELEMENT page (title?, content)>
+ <!ELEMENT title (#PCDATA)>
+ <!ELEMENT content (paragraph+)>
+ <!ELEMENT paragraph (#PCDATA)>
+]>
+
+<!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
+
+<page>
+ <title>Hello</title>
+ <content>
+  <paragraph>This is my first Cocoon page!</paragraph>
+ </content>
+</page>
