@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.119 2003/08/13 17:12:25 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.120 2003/08/13 20:03:13 joerg Exp $:-->
 <status>
 
  <developers>
@@ -202,7 +202,7 @@
   <changes>
 
  <release version="@version@" date="@date@">
-   <action dev="SW" type="fix">
+   <action dev="SW" type="fix" fixes-bug="20445">
      Update the I18nTransformer so that it also accepts the 2.0 namespace. This ensures backwards compatibility
      for 2.0 applications. Additionally, attributes on "i18n:" elements can now be in the default namespace (meaning
      we can now write &lt;i8n:text key="foo"&gt; instead of &lt;i18n:text i18n:key="foo"&gt;)
