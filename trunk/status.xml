@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.160 2003/10/01 14:50:15 haul Exp $:-->
+<!-- CVS $Id: status.xml,v 1.161 2003/10/01 18:24:04 antonio Exp $:-->
 
 <status>
  <developers>
@@ -191,6 +191,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+ <action dev="AG" type="add">
+     Woody block: New integer Datatype.
+   </action>
    <action dev="CH" type="add">
      SimpleFormTransformer: multiple values not repeatedly inserted anymore,
      value is consumed instead. Add repeater tag. Make transformer inherit from
