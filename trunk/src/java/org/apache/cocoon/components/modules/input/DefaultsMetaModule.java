@@ -51,20 +51,19 @@
 package org.apache.cocoon.components.modules.input;
 
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Old name for {@link DefaultsModule}.
  * @deprecated Use DefaultsModule instead; this is not a 'meta' module and is
  * thus misnamed.
- * @version CVS $Id: DefaultsMetaModule.java,v 1.2 2003/03/19 08:19:12 jefft Exp $
+ * @version CVS $Id: DefaultsMetaModule.java,v 1.3 2003/03/20 12:32:18 cziegeler Exp $
  */
 
 /* Deprecated 2003-03-19. Suggest we keep this class for compat with 2.0.x
