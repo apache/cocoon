@@ -70,7 +70,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.45 $ $Date: 2000-10-08 21:05:02 $
+     * @version CVS $Revision: 1.1.2.46 $ $Date: 2000-10-09 06:43:57 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -181,7 +181,6 @@
         private Configuration selector_config_<xsl:value-of select="translate(./@name, '- ', '__')"/> = null;
       </xsl:for-each>
 
-<!--
       /** The generated matchers (for backward compatability. Should be removed in the future) */
       <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher[@factory]">
         <xsl:variable name="factory" select="@factory"/>
@@ -226,7 +225,6 @@
           </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
--->
 
       /** The actions */
       <xsl:for-each select="/map:sitemap/map:components/map:actions/map:action">
