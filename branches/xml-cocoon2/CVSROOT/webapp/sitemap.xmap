@@ -78,7 +78,9 @@
   </map:matchers>
 
   <map:actions>
-   <map:action name="add-employee" src="org.apache.cocoon.acting.AddEmployeeAction"/>
+   <map:action name="add-employee" src="org.apache.cocoon.acting.AddEmployeeAction">
+     <use-connection>personnel</use-connection>
+   </map:action>
    <map:action name="del-employee" src="org.apache.cocoon.acting.DelEmployeeAction"/>
    <map:action name="upd-employee" src="org.apache.cocoon.acting.UpdEmployeeAction"/>
   </map:actions>
