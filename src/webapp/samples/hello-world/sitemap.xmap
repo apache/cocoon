@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.7 2003/05/08 05:05:22 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.8 2003/05/08 20:42:17 vgritsenko Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -76,6 +76,25 @@
     <map:generate src="content/hello.xml"/>
     <map:transform src="style/xsl/page2sxw.xsl"/>
     <map:serialize type="sxw"/>
+   </map:match>
+            
+   <map:match pattern="hello.sxc">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/page2sxc.xsl"/>
+    <map:serialize type="sxc"/>
+   </map:match>
+            
+   <map:match pattern="hello.sxi">
+    <map:generate src="content/hello.xml"/>
+    <!-- FIXME: XSLTC fails on this stylesheet -->
+    <map:transform type="xalan" src="style/xsl/page2sxi.xsl"/>
+    <map:serialize type="sxi"/>
+   </map:match>
+   
+   <map:match pattern="hello.sxd">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/page2sxd.xsl"/>
+    <map:serialize type="sxd"/>
    </map:match>
    
   </map:pipeline>

@@ -21,6 +21,7 @@
        <exclude name="**/*.gif"/>
        <exclude name="**/*.png"/>
        <exclude name="i18n/**"/> <!-- filtering breaks UTF-8 files -->
+       <exclude name="hello-world/style/xsl/**"/> <!-- filtering breaks UTF-8 files -->
       </fileset>
     </copy>
 
@@ -30,6 +31,7 @@
        <include name="**/*.gif"/>
        <include name="**/*.png"/>
        <include name="i18n/**"/>
+       <include name="hello-world/style/xsl/**"/>
       </fileset>
     </copy>
 
