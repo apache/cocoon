@@ -112,7 +112,7 @@ import org.apache.cocoon.util.StringUtils;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.26 2003/12/29 21:49:25 unico Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.27 2003/12/30 11:24:41 unico Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -496,6 +496,7 @@ public class CocoonServlet extends HttpServlet {
         {
             throw new ServletException("Could not start up cocoon", e);
         }
+        this.creationTime = System.currentTimeMillis();
     }
 
     /**
@@ -1391,6 +1392,7 @@ public class CocoonServlet extends HttpServlet {
                     }
                 }
                 processor = cocoonBean.getRootProcessor();
+                this.creationTime = System.currentTimeMillis();
             }
         }
 
