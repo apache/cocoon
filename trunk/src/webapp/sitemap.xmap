@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.10 2003/04/01 21:25:10 sylvain Exp $
+    | CVS $Id: sitemap.xmap,v 1.11 2003/04/19 20:38:22 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -78,16 +78,7 @@
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
-      <transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>
-      <!--
-        Interpreted Xalan
-      <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
-        Old (6.5.2) Saxon:
-      <transformer-factory>com.icl.saxon.TransformerFactoryImpl</transformer-factory>
-        New (7.x?) Saxon: 
-      <transformer-factory>net.sf.saxon.TransformerFactoryImpl</transformer-factory>
-       -->
-
+      <xslt-processor-role>xsltc</xslt-processor-role>
     </map:transformer>
 
     <!-- NOTE: This used to be the default XSLT processor. The default now is XSLTC -->
@@ -95,7 +86,7 @@
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
-      <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+      <xslt-processor-role>xalan</xslt-processor-role>
     </map:transformer>
 
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
