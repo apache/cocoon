@@ -48,80 +48,76 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.user;
+package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
-import org.apache.excalibur.source.SourceResolver;
-
+import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
+import org.apache.cocoon.webapps.authentication.components.Manager;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
 
 /**
- * The state of the user for the current request.
- * This object holds the information which handler and application
- * is currently used for this request.
+ *  This action logs the current user out of a given handler
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestState.java,v 1.2 2003/04/27 14:45:03 cziegeler Exp $
+ * @version CVS $Id: NewLogoutAction.java,v 1.1 2003/04/27 14:45:03 cziegeler Exp $
 */
-public final class RequestState
-implements java.io.Serializable {
+public final class NewLogoutAction
+extends ComposerAction
+implements ThreadSafe {
 
-    private static final String KEY = RequestState.class.getName();
-    
-    /** The handlers */
-    private UserHandler handler;
-        
-    /** The application */
-    private String application;
-    
-    public static RequestState getState() {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        return (RequestState)objectModel.get(KEY);
-    }
-    
-    public static void setState(RequestState status) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        if ( status != null ) {
-            objectModel.put( KEY, status);
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String source,
+                   Parameters par)
+    throws Exception {
+        if (this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("BEGIN act resolver="+resolver+
+                                   ", objectModel="+objectModel+
+                                   ", source="+source+
+                                   ", par="+par);
+        }
+
+        int mode;
+        final String modeString = par.getParameter("mode", "if-not-authenticated");
+        if ( modeString.equals("if-not-authenticated") ) {
+            mode = AuthenticationConstants.LOGOUT_MODE_IF_NOT_AUTHENTICATED;
+        } else if ( modeString.equalsIgnoreCase("if-unused") ) {
+            mode = AuthenticationConstants.LOGOUT_MODE_IF_UNUSED;
+        } else if ( modeString.equalsIgnoreCase("immediately") ) {
+            mode = AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY;
         } else {
-            objectModel.remove( KEY );
+           throw new ProcessingException("Unknown mode " + modeString);
         }
-    }
-    
-    /**
-     * Create a new handler object.
-     */
-    public RequestState(UserHandler handler, String app, SourceResolver resolver) 
-    throws ProcessingException {
-        this.handler = handler;
-        this.application = app;
-        if ( this.application != null && !this.handler.getApplicationsLoaded()) {
-            ApplicationConfiguration conf = (ApplicationConfiguration) this.handler.getHandlerConfiguration().getApplications().get(this.application);
-            if ( !this.handler.isApplicationLoaded( conf ) ) {
-                this.handler.createContext().loadApplicationXML( conf, resolver );
-            }
+
+        // logout
+        Manager authManager = null;
+        try {
+            RequestState state = RequestState.getState();
+            
+            authManager = (Manager) this.manager.lookup(Manager.ROLE);
+            final String handlerName = par.getParameter("handler",
+                                                         (state == null ? null : state.getHandlerName()));
+            if ( null == handlerName )
+                throw new ProcessingException("LogoutAction requires at least the handler parameter.");
+            authManager.logout( handlerName , mode );
+        } finally {
+            this.manager.release( (Component)authManager );
         }
+
+        if (this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("END act map={}");
+        }
+
+        return EMPTY_MAP;
     }
 
-    public String getApplicationName() {
-        return this.application;
-    }
-    
-    public UserHandler getHandler() {
-        return this.handler;
-    }
-    
-    public String getHandlerName() {
-        return this.handler.getHandlerName();
-    }
-    
-    public ApplicationConfiguration getApplicationConfiguration() {
-        if ( this.application != null ) {
-            return (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get(this.application);
-        }
-        return null;
-    }
 }

@@ -50,14 +50,21 @@
 */
 package org.apache.cocoon.webapps.authentication.context;
 
-import org.apache.avalon.framework.component.ComponentException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.webapps.authentication.components.ApplicationHandler;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
-import org.apache.cocoon.webapps.authentication.components.Handler;
+import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
+import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.context.SessionContext;
+import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
@@ -69,61 +76,32 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * This is the implementation for the authentication context
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.2 2003/04/27 14:45:03 cziegeler Exp $
 */
 public final class AuthenticationContext
 implements SessionContext {
 
     private String          name;
+    private UserHandler     handler;
     private SessionContext  authContext;
-    private String          loadResource;
-    private String          saveResource;
-    private String          authLoadResource;
-    private String          authSaveResource;
-    private SourceParameters loadResourceParameters;
-    private SourceParameters saveResourceParameters;
-    private SourceParameters authLoadResourceParameters;
-    private SourceParameters authSaveResourceParameters;
     private String          handlerName;
     private String          applicationName;
 
-    public AuthenticationContext(SessionContext context,
-                              String         contextName,
-                              String          handlerName,
-                              String          applicationName,
-                              SourceResolver  resolver,
-                              ComponentManager manager)
-    throws ProcessingException {
-        AuthenticationManager authManager = null;
-        try {
-            authManager = (AuthenticationManager)manager.lookup(AuthenticationManager.ROLE);
-            Handler handler = authManager.getHandler();
-            this.name = contextName;
-            this.authContext = context;
-            this.handlerName = handlerName;
-            this.applicationName = applicationName;
-            this.authLoadResource = handler.getLoadResource();
-            this.authSaveResource = handler.getSaveResource();
-            this.authLoadResourceParameters = handler.getLoadResourceParameters();
-            this.authSaveResourceParameters = handler.getSaveResourceParameters();
-            if (this.applicationName != null) {
-                ApplicationHandler appHandler = (ApplicationHandler)handler.getApplications().get(this.applicationName);
-                this.loadResource = appHandler.getLoadResource();
-                this.saveResource = appHandler.getSaveResource();
-                this.loadResourceParameters = appHandler.getLoadResourceParameters();
-                this.saveResourceParameters = appHandler.getSaveResourceParameters();
-            }
+    public AuthenticationContext() {
+        this.name = AuthenticationConstants.SESSION_CONTEXT_NAME;
 
-        } catch (ComponentException ce) {
-            throw new ProcessingException("Unable to lookup the resource connector.", ce);
-        } finally {
-            manager.release(authManager);
+        RequestState state = RequestState.getState();
+        this.handler = state.getHandler();
+        this.handlerName = this.handler.getHandlerName();
+        this.applicationName = state.getApplicationName();
+        try {
+            this.authContext = new SimpleSessionContext();
+        } catch (ProcessingException pe) {
+            throw new CascadingRuntimeException("Unable to create simple context.", pe);
         }
     }
 
@@ -132,6 +110,7 @@ implements SessionContext {
      *  In addition a load and a save resource can be provided.
      */
     public void setup(String value, String load, String save) {
+        // this is not used, everything is set in the constructor
     }
 
     /**
@@ -156,9 +135,9 @@ implements SessionContext {
 
         DocumentFragment frag = null;
 
-        if (path.equals("/") == true) {
+        if ( path.equals("/") ) {
             // get all: first authentication then application
-            frag = this.authContext.getXML("/" + this.handlerName + "/authentication");
+            frag = this.authContext.getXML("/authentication");
 
             if (frag != null) {
                 // now add root node authentication
@@ -174,12 +153,12 @@ implements SessionContext {
 
             if (this.applicationName != null) {
                 // join
-                DocumentFragment appFrag = this.authContext.getXML("/" + this.handlerName + "/applications/" + this.applicationName);
+                DocumentFragment appFrag = this.authContext.getXML("/applications/" + this.applicationName);
                 if (appFrag != null) {
                     // now add root node application
                     Node root = appFrag.getOwnerDocument().createElementNS(null, "application");
                     Node child;
-                    while (appFrag.hasChildNodes() == true) {
+                    while (appFrag.hasChildNodes() ) {
                         child = appFrag.getFirstChild();
                         appFrag.removeChild(child);
                         root.appendChild(child);
@@ -189,7 +168,7 @@ implements SessionContext {
                     if (frag == null) {
                         frag = appFrag;
                     } else {
-                        while (appFrag.hasChildNodes() == true) {
+                        while (appFrag.hasChildNodes() ) {
                             child = appFrag.getFirstChild();
                             appFrag.removeChild(child);
                             child = frag.getOwnerDocument().importNode(child, true);
@@ -199,70 +178,24 @@ implements SessionContext {
                 }
             }
 
-        } else if (path.startsWith("/authentication") == true) {
-            frag = this.authContext.getXML("/" + this.handlerName + path);
+        } else if (path.startsWith("/authentication") ) {
+            frag = this.authContext.getXML("/" + path);
 
-        } else if (path.equals("/application") == true || path.startsWith("/application/") == true) {
+        } else if (path.equals("/application") || path.startsWith("/application/") ) {
             if (this.applicationName != null) {
                 String appPath;
-                if (path.equals("/application") == true) {
+                if (path.equals("/application")) {
                     appPath ="/";
                 } else {
                     appPath = path.substring("/application".length());
                 }
-                frag = this.authContext.getXML("/" + this.handlerName + "/applications/" + this.applicationName + appPath);
+                frag = this.authContext.getXML("/applications/" + this.applicationName + appPath);
             }
         } else {
-            frag = this.authContext.getXML("/" + this.handlerName + path);
+            frag = this.authContext.getXML("/" + path);
         }
 
         return frag;
-    }
-
-    /**
-     * Convert the authentication XML of a handler to parameters.
-     * The XML is flat and consists of elements which all have exactly one text node:
-     * <parone>value_one<parone>
-     * <partwo>value_two<partwo>
-     * A parameter can occur more than once with different values.
-     */
-    public void addParametersFromAuthenticationXML(String handlerName,
-                                                   String path,
-                                                   SourceParameters parameters)
-    throws ProcessingException {
-        final DocumentFragment fragment = this.authContext.getXML("/" + handlerName + "/authentication" + path);
-        if (fragment != null) {
-            NodeList   childs = fragment.getChildNodes();
-            if (childs != null) {
-                Node current;
-                for(int i = 0; i < childs.getLength(); i++) {
-                    current = childs.item(i);
-
-                    // only element nodes
-                    if (current.getNodeType() == Node.ELEMENT_NODE) {
-                        current.normalize();
-                        NodeList valueChilds = current.getChildNodes();
-                        String   key;
-                        StringBuffer   valueBuffer;
-                        String         value;
-
-                        key = current.getNodeName();
-                        valueBuffer = new StringBuffer();
-                        for(int m = 0; m < valueChilds.getLength(); m++) {
-                            current = valueChilds.item(m); // attention: current is reused here!
-                            if (current.getNodeType() == Node.TEXT_NODE) { // only text nodes
-                                if (valueBuffer.length() > 0) valueBuffer.append(' ');
-                                valueBuffer.append(current.getNodeValue());
-                            }
-                        }
-                        value = valueBuffer.toString().trim();
-                        if (key != null && value != null && value.length() > 0) {
-                            parameters.setParameter(key, value);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -277,7 +210,7 @@ implements SessionContext {
         if (path == null) {
             throw new ProcessingException("setXML: Path is required");
         }
-        if (path.startsWith("/") == false) path = '/' + path;
+        if (!path.startsWith("/")) path = '/' + path;
 
         if ( path.equals("/") ) {
             // set all is not allowed with "/"
@@ -286,10 +219,10 @@ implements SessionContext {
         } else if ( path.startsWith("/authentication") ) {
 
             this.cleanParametersCache();
-            this.authContext.setXML('/' + this.handlerName + path, fragment);
+            this.authContext.setXML('/' + path, fragment);
 
-        } else if (path.equals("/application") == true
-                   || path.startsWith("/application/") == true) {
+        } else if (path.equals("/application") 
+                   || path.startsWith("/application/") ) {
 
             if (this.applicationName == null) {
                 throw new ProcessingException("Application is required");
@@ -300,23 +233,11 @@ implements SessionContext {
             } else {
                 appPath = path.substring("/application".length());
             }
-            this.authContext.setXML("/" + this.handlerName + "/applications/" + this.applicationName + appPath, fragment);
+            this.authContext.setXML("/applications/" + this.applicationName + appPath, fragment);
 
         } else {
-            this.authContext.setXML("/" + this.handlerName + path, fragment);
+            this.authContext.setXML("/" + path, fragment);
         }
-    }
-
-    /**
-     * Set the XML for an application
-     */
-    public void setApplicationXML(String setHandlerName,
-                                  String setApplicationName,
-                                  String path,
-                                  DocumentFragment fragment)
-    throws ProcessingException {
-        path = "/" + setHandlerName + "/applications/" + setApplicationName + path;
-        this.authContext.setXML(path, fragment);
     }
 
     /**
@@ -332,7 +253,7 @@ implements SessionContext {
         if (path == null) {
             throw new ProcessingException("appendXML: Path is required");
         }
-        if (path.startsWith("/") == false) path = '/' + path;
+        if (!path.startsWith("/") ) path = '/' + path;
 
         if ( path.equals("/") ) {
             // set all is not allowed with "/"
@@ -341,24 +262,24 @@ implements SessionContext {
         } else if ( path.startsWith("/authentication") ) {
 
             this.cleanParametersCache();
-            this.authContext.appendXML('/' + this.handlerName + path, fragment);
+            this.authContext.appendXML('/' + path, fragment);
 
-        } else if (path.equals("/application") == true
-                   || path.startsWith("/application/") == true) {
+        } else if (path.equals("/application")
+                   || path.startsWith("/application/") ) {
 
             if (this.applicationName == null) {
                 throw new ProcessingException("Application is required");
             }
             String appPath;
-            if (path.equals("/application") == true) {
+            if (path.equals("/application") ) {
                 appPath = "/";
             } else {
                 appPath = path.substring("/application".length());
             }
-            this.authContext.appendXML("/" + this.handlerName + "/applications/" + this.applicationName + appPath, fragment);
+            this.authContext.appendXML("/applications/" + this.applicationName + appPath, fragment);
 
         } else {
-            this.authContext.appendXML("/" + this.handlerName + path, fragment);
+            this.authContext.appendXML("/" + path, fragment);
         }
     }
 
@@ -373,31 +294,31 @@ implements SessionContext {
         if (path == null) {
             throw new ProcessingException("removeXML: Path is required");
         }
-        if (path.startsWith("/") == false) path = '/' + path;
+        if (!path.startsWith("/") ) path = '/' + path;
 
-        if (path.equals("/") == true) {
+        if (path.equals("/") ) {
             this.cleanParametersCache();
-            this.authContext.removeXML("/" + this.handlerName);
+            this.authContext.removeXML("/");
 
-        } else if (path.startsWith("/authentication") == true) {
+        } else if (path.startsWith("/authentication") ) {
 
             this.cleanParametersCache();
-            this.authContext.removeXML("/" + this.handlerName + path);
+            this.authContext.removeXML("/" + path);
 
-        } else if (path.equals("/application") == true
-                   || path.startsWith("/application/") == true) {
+        } else if (path.equals("/application") 
+                   || path.startsWith("/application/") ) {
             if (this.applicationName == null) {
                 throw new ProcessingException("removeXML: Application is required for path " + path);
             }
             String appPath;
-            if (path.equals("/application") == true) {
+            if (path.equals("/application") ) {
                 appPath = "/";
             } else {
                 appPath = path.substring("/application".length());
             }
-            this.authContext.removeXML("/" + this.handlerName + "/applications/" + this.applicationName + appPath);
+            this.authContext.removeXML("/applications/" + this.applicationName + appPath);
         } else {
-            this.authContext.removeXML("/" + this.handlerName + path);
+            this.authContext.removeXML("/" + path);
         }
     }
 
@@ -490,36 +411,36 @@ implements SessionContext {
         if (path == null) {
             throw new ProcessingException("streamXML: Path is required");
         }
-        if (path.startsWith("/") == false) path = '/' + path;
+        if (!path.startsWith("/") ) path = '/' + path;
 
-        if (path.equals("/") == true) {
+        if (path.equals("/") ) {
             // get all: first authentication then application
             contentHandler.startElement(null, "authentication", "authentication", new AttributesImpl());
-            this.authContext.streamXML('/' + this.handlerName + "/authentication", contentHandler, lexicalHandler);
+            this.authContext.streamXML("/authentication", contentHandler, lexicalHandler);
             contentHandler.endElement(null, "authentication", "authentication");
 
             if (this.applicationName != null) {
                 contentHandler.startElement(null, "application", "application", new AttributesImpl());
-                this.authContext.streamXML('/' + this.handlerName + "/applications/" + this.applicationName, contentHandler, lexicalHandler);
+                this.authContext.streamXML("/applications/" + this.applicationName, contentHandler, lexicalHandler);
                 contentHandler.endElement(null, "application", "application");
             }
             return true;
 
-        } else if (path.startsWith("/authentication") == true) {
-            return this.authContext.streamXML('/' + this.handlerName + path, contentHandler, lexicalHandler);
+        } else if (path.startsWith("/authentication") ) {
+            return this.authContext.streamXML('/' + path, contentHandler, lexicalHandler);
 
-        } else if (path.equals("/application") == true || path.startsWith("/application/") == true) {
+        } else if (path.equals("/application") || path.startsWith("/application/") ) {
             if (this.applicationName != null) {
                 String appPath;
-                if (path.equals("/application") == true) {
+                if (path.equals("/application") ) {
                     appPath ="/";
                 } else {
                     appPath = path.substring("/application".length());
                 }
-                return this.authContext.streamXML('/' + this.handlerName + "/applications/" + this.applicationName + appPath, contentHandler, lexicalHandler);
+                return this.authContext.streamXML("/applications/" + this.applicationName + appPath, contentHandler, lexicalHandler);
             }
         } else {
-            return this.authContext.streamXML('/' + this.handlerName + path, contentHandler, lexicalHandler);
+            return this.authContext.streamXML('/' + path, contentHandler, lexicalHandler);
         }
         return false;
     }
@@ -535,9 +456,9 @@ implements SessionContext {
                         SourceResolver     resolver,
                         ComponentManager   manager)
     throws SAXException, ProcessingException, IOException {
-        if (path.startsWith("/") == false) path = '/' + path;
+        if (!path.startsWith("/") ) path = '/' + path;
 
-        if (path.equals("/") == true) {
+        if (path.equals("/") ) {
             // load all: first authentication then application
             this.loadAuthenticationXML("/authentication",
                                        parameters,
@@ -587,9 +508,9 @@ implements SessionContext {
                         SourceResolver     resolver,
                         ComponentManager   manager)
     throws SAXException, ProcessingException, IOException {
-        if (path.startsWith("/") == false) path = '/' + path;
+        if (!path.startsWith("/") ) path = '/' + path;
 
-        if (path.equals("/") == true) {
+        if (path.equals("/") ) {
             // save all: first authentication then application
             this.saveAuthenticationXML("/authentication",
                                        parameters,
@@ -633,17 +554,7 @@ implements SessionContext {
      */
     private void cleanParametersCache()
     throws ProcessingException {
-        this.authContext.setAttribute("cachedparameters_" + this.handlerName, null);
-        this.authContext.setAttribute("cachedmap_" + this.handlerName, null);
-    }
-
-    /**
-     * Clean the parameters cache
-     */
-    public void cleanParametersCache(String handlerName)
-    throws ProcessingException {
-        this.authContext.setAttribute("cachedparameters_" + handlerName, null);
-        this.authContext.setAttribute("cachedmap_" + handlerName, null);
+        this.authContext.setAttribute("cachedmap" , null);
     }
 
     /**
@@ -655,7 +566,10 @@ implements SessionContext {
                                        SourceResolver     resolver,
                                        ComponentManager   manager)
     throws ProcessingException {
-        if (this.authSaveResource == null) {
+        String authSaveResource = this.handler.getHandlerConfiguration().getSaveResource();
+        SourceParameters authSaveResourceParameters = this.handler.getHandlerConfiguration().getSaveResourceParameters();
+
+        if (authSaveResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support saving.");
         }
 
@@ -667,15 +581,14 @@ implements SessionContext {
             }
             if (parameters != null) {
                 parameters = (SourceParameters)parameters.clone();
-                parameters.add(this.authSaveResourceParameters);
-            } else if (this.authSaveResourceParameters != null) {
-                parameters = (SourceParameters)this.authSaveResourceParameters.clone();
+                parameters.add(authSaveResourceParameters);
+            } else if (authSaveResourceParameters != null) {
+                parameters = (SourceParameters)authSaveResourceParameters.clone();
             }
             parameters = this.createParameters(parameters,
-                                               this.handlerName,
                                                path,
-                                               null);
-            SourceUtil.writeDOM(this.authSaveResource,
+                                               false);
+            SourceUtil.writeDOM(authSaveResource,
                                 null,
                                 parameters,
                                 fragment,
@@ -693,7 +606,10 @@ implements SessionContext {
                                        SourceResolver     resolver,
                                        ComponentManager   manager)
     throws ProcessingException {
-        if (this.authLoadResource == null) {
+        String authLoadResource = this.handler.getHandlerConfiguration().getLoadResource();
+        SourceParameters authLoadResourceParameters = this.handler.getHandlerConfiguration().getLoadResourceParameters();
+        
+        if (authLoadResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support loading.");
         }
 
@@ -701,17 +617,16 @@ implements SessionContext {
 
             if (parameters != null) {
                 parameters = (SourceParameters)parameters.clone();
-                parameters.add(this.authLoadResourceParameters);
-            } else if (this.authLoadResourceParameters != null) {
-                parameters = (SourceParameters)this.authLoadResourceParameters.clone();
+                parameters.add(authLoadResourceParameters);
+            } else if (authLoadResourceParameters != null) {
+                parameters = (SourceParameters)authLoadResourceParameters.clone();
             }
             parameters = this.createParameters(parameters,
-                                               this.handlerName,
                                                path,
-                                               null);
+                                               false); 
             DocumentFragment frag;
             
-            frag = SourceUtil.readDOM(this.authLoadResource, 
+            frag = SourceUtil.readDOM(authLoadResource, 
                                       null, 
                                       parameters, 
                                       resolver);
@@ -730,7 +645,10 @@ implements SessionContext {
                                     SourceResolver     resolver,
                                     ComponentManager   manager)
     throws ProcessingException {
-        if (this.loadResource == null) {
+        final ApplicationConfiguration conf = (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get( this.applicationName );
+        String loadResource = conf.getLoadResource();
+        SourceParameters loadResourceParameters = conf.getLoadResourceParameters();
+        if (loadResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support loading.");
         }
         // synchronized
@@ -738,16 +656,15 @@ implements SessionContext {
 
             if (parameters != null) {
                 parameters = (SourceParameters)parameters.clone();
-                parameters.add(this.loadResourceParameters);
-            } else if (this.loadResourceParameters != null) {
-                parameters = (SourceParameters)this.loadResourceParameters.clone();
+                parameters.add(loadResourceParameters);
+            } else if (loadResourceParameters != null) {
+                parameters = (SourceParameters)loadResourceParameters.clone();
             }
             parameters = this.createParameters(parameters,
-                                               this.handlerName,
                                                path,
-                                               this.applicationName);
+                                               true);
             DocumentFragment fragment;
-            fragment = SourceUtil.readDOM(this.loadResource, 
+            fragment = SourceUtil.readDOM(loadResource, 
                                           null, 
                                           parameters, 
                                           resolver);
@@ -766,7 +683,11 @@ implements SessionContext {
                                     SourceResolver     resolver,
                                     ComponentManager   manager)
     throws ProcessingException {
-        if (this.saveResource == null) {
+        final ApplicationConfiguration conf = (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get( this.applicationName );
+        String saveResource = conf.getSaveResource();
+        SourceParameters saveResourceParameters = conf.getSaveResourceParameters();
+
+        if (saveResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support saving.");
         }
         // synchronized
@@ -774,21 +695,20 @@ implements SessionContext {
 
             if (parameters != null) {
                 parameters = (SourceParameters)parameters.clone();
-                parameters.add(this.saveResourceParameters);
-            } else if (this.saveResourceParameters != null) {
-                parameters = (SourceParameters)this.saveResourceParameters.clone();
+                parameters.add(saveResourceParameters);
+            } else if (saveResourceParameters != null) {
+                parameters = (SourceParameters)saveResourceParameters.clone();
             }
             parameters = this.createParameters(parameters,
-                                               this.handlerName,
                                                path,
-                                               this.applicationName);
+                                               true);
             DocumentFragment fragment = this.getXML("/application" + path);
             if (fragment == null) {
                 // create empty fake fragment
                 fragment = DOMUtil.createDocument().createDocumentFragment();
             }
 
-            SourceUtil.writeDOM(this.saveResource,
+            SourceUtil.writeDOM(saveResource,
                                 null,
                                 parameters,
                                 fragment,
@@ -802,29 +722,126 @@ implements SessionContext {
     /**
      * Build parameters for loading and saving of application data
      */
-    public SourceParameters createParameters(SourceParameters parameters,
-                                               String             myHandler,
-                                               String             path,
-                                               String             appName)
+    private SourceParameters createParameters(SourceParameters parameters,
+                                               String           path,
+                                               boolean         appendAppInfo)
     throws ProcessingException {
         if (parameters == null) parameters = new SourceParameters();
 
         // add all elements from inside the handler data
-        this.addParametersFromAuthenticationXML(myHandler,
-                                                "/data",
+        this.addParametersFromAuthenticationXML("/data",
                                                 parameters);
 
         // add all top level elements from authentication
-        this.addParametersFromAuthenticationXML(myHandler,
-                                                "",
+        this.addParametersFromAuthenticationXML("",
                                                 parameters);
 
         // add application and path
-        parameters.setSingleParameterValue("handler", myHandler);
-        if (appName != null) parameters.setSingleParameterValue("application", appName);
+        parameters.setSingleParameterValue("handler", this.handlerName);
+        if ( appendAppInfo ) {
+            if (this.applicationName != null) parameters.setSingleParameterValue("application", this.applicationName);
+        }
         if (path != null) parameters.setSingleParameterValue("path", path);
 
         return parameters;
+    }
+
+    /**
+     * Convert the authentication XML of a handler to parameters.
+     * The XML is flat and consists of elements which all have exactly one text node:
+     * <parone>value_one<parone>
+     * <partwo>value_two<partwo>
+     * A parameter can occur more than once with different values.
+     */
+    private void addParametersFromAuthenticationXML(String path,
+                                                     SourceParameters parameters)
+    throws ProcessingException {
+        final DocumentFragment fragment = this.authContext.getXML("/authentication" + path);
+        if (fragment != null) {
+            NodeList   childs = fragment.getChildNodes();
+            if (childs != null) {
+                Node current;
+                for(int i = 0; i < childs.getLength(); i++) {
+                    current = childs.item(i);
+
+                    // only element nodes
+                    if (current.getNodeType() == Node.ELEMENT_NODE) {
+                        current.normalize();
+                        NodeList valueChilds = current.getChildNodes();
+                        String   key;
+                        StringBuffer   valueBuffer;
+                        String         value;
+
+                        key = current.getNodeName();
+                        valueBuffer = new StringBuffer();
+                        for(int m = 0; m < valueChilds.getLength(); m++) {
+                            current = valueChilds.item(m); // attention: current is reused here!
+                            if (current.getNodeType() == Node.TEXT_NODE) { // only text nodes
+                                if (valueBuffer.length() > 0) valueBuffer.append(' ');
+                                valueBuffer.append(current.getNodeValue());
+                            }
+                        }
+                        value = valueBuffer.toString().trim();
+                        if (key != null && value != null && value.length() > 0) {
+                            parameters.setParameter(key, value);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public Map getContextInfo() 
+    throws ProcessingException {
+        Map map = (Map)this.authContext.getAttribute( "cachedmap" );
+        if (map == null) {
+            map = new HashMap(20);
+            Parameters pars = this.createParameters(null, null, false).getFirstParameters();
+            String[] names = pars.getNames();
+            if (names != null) {
+                String key;
+                String value;
+                for(int i=0;i<names.length;i++) {
+                    key = names[i];
+                    value = pars.getParameter(key, null);
+                    if (value != null) map.put(key, value);
+                }
+            }
+            this.authContext.setAttribute("cachedmap", map);
+        }
+        return map;
+    }
+    
+    /**
+     * Load XML of an application
+     */
+    public void loadApplicationXML(ApplicationConfiguration appConf, 
+                                    SourceResolver resolver)
+    throws ProcessingException {
+        String loadResource = appConf.getLoadResource();
+        SourceParameters loadResourceParameters = appConf.getLoadResourceParameters();
+        if ( !this.handler.isApplicationLoaded(appConf) && loadResource != null ) {
+            synchronized (this.authContext) {
+        
+                SourceParameters parameters;
+                if (loadResourceParameters != null) {
+                    parameters = (SourceParameters)loadResourceParameters.clone();
+                } else {
+                    parameters = new SourceParameters();
+                }
+                parameters = this.createParameters(parameters,
+                                                   null,
+                                                   true);
+                DocumentFragment fragment;
+                fragment = SourceUtil.readDOM(loadResource, 
+                                              null, 
+                                              parameters, 
+                                              resolver);
+                this.setXML("/", fragment);
+        
+            } // end synchronized
+        }
+        this.handler.setApplicationIsLoaded(appConf);
     }
 
 }

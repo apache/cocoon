@@ -69,7 +69,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContextProvider;
@@ -78,13 +77,14 @@ import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.authentication.user.UserState;
 import org.apache.cocoon.webapps.session.components.SessionManager;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
 
 /**
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.5 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.6 2003/04/27 14:45:04 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -101,6 +101,9 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
     
     /** The authenticator used to authenticate a user */
     private Authenticator authenticator;
+    
+    /** The Source Resolver */
+    private SourceResolver resolver;
     
     /** Init the class,
      *  add the provider for the authentication context
@@ -235,7 +238,7 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
             this.updateUserState();
         
             // update RequestState
-            RequestState state = new RequestState( handler, applicationName );
+            RequestState state = new RequestState( handler, applicationName, this.resolver );
             RequestState.setState( state );
         }
         
@@ -271,7 +274,7 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
             redirector.globalRedirect(false, SourceUtil.appendParameters(redirectURI, parameters));
         } else {
             // update state
-            RequestState state = new RequestState( handler, applicationName );
+            RequestState state = new RequestState( handler, applicationName, this.resolver );
             RequestState.setState( state );
         }
         
@@ -341,6 +344,7 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
         this.authenticator = new Authenticator();
         this.authenticator.enableLogging( this.getLogger() );
         this.authenticator.service( this.manager );
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 	}
 
 	/* (non-Javadoc)
@@ -351,7 +355,11 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
             this.authenticator.dispose();
             this.authenticator = null;
 		}
-        this.manager = null;
+        if ( this.manager != null) {
+            this.manager.release( this.resolver );
+            this.manager = null;
+            this.resolver = null;
+        }
 	}
 
 }
