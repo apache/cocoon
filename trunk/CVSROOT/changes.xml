@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.109 2000-09-16 16:04:28 greenrd Exp $
+  $Id: changes.xml,v 1.110 2000-09-16 19:06:47 greenrd Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Changed &lt;xsp:pi&gt; back to use target= instead of name= in order
+   not to break existing users' code (which there is a lot of!).
+   Changed XSP docs to reflect correct usage.
+  </action>
   <action dev="RDG" type="add">
    Added very primitive profiler (see cocoon.properties)
   </action>
@@ -35,7 +40,7 @@
    Fixed encoding problem with xinclude processor
   </action>
   <action dev="SM" type="fix" due-to="Kevin Sonney" due-to-email="kevin@webslingerz.com">
-   Fixed problem with XSP and namespaces (now follows the correct name="xml-stylesheet" syntax)
+   Fixed problem with XSP and PIs (now follows the correct name="xml-stylesheet" syntax)
   </action>
   <action dev="SM" type="update">
    Upgraded Xerces to 1.2 because previous version had a bug which meant it couldn't build

@@ -1188,7 +1188,7 @@ xspCurrentNode.appendChild(
            for example:
           </p>
 
-          <source>&lt;xsp:pi name="xml-stylesheet"&gt;
+          <source>&lt;xsp:pi target="xml-stylesheet"&gt;
   href="&lt;xsp:expr&gt;request.getQueryString()&lt;/xsp:expr&gt;"
   type="text/xsl"
 &lt;/xsp:pi&gt;
