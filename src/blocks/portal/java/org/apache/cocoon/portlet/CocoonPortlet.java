@@ -85,7 +85,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.7 2004/06/22 20:41:08 vgritsenko Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.8 2004/06/23 19:48:04 vgritsenko Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -102,7 +102,7 @@ public class CocoonPortlet extends GenericPortlet {
     // Used by "show-time"
     static final float SECOND = 1000;
     static final float MINUTE = 60 * SECOND;
-    static final float HOUR = 60 * MINUTE;
+    static final float HOUR   = 60 * MINUTE;
 
     private Logger log;
     private LoggerManager loggerManager;
@@ -470,8 +470,8 @@ public class CocoonPortlet extends GenericPortlet {
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
-
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
+
         this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
         this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
@@ -632,10 +632,10 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         buildClassPath.append(File.pathSeparatorChar)
-                .append(System.getProperty("java.class.path"));
+                      .append(System.getProperty("java.class.path"));
 
         buildClassPath.append(File.pathSeparatorChar)
-                .append(getExtraClassPath());
+                      .append(getExtraClassPath());
         return buildClassPath.toString();
     }
 
@@ -788,7 +788,7 @@ public class CocoonPortlet extends GenericPortlet {
      * file.
      */
     protected void initLogger() {
-        String logLevel = getInitParameter("log-level", "INFO");
+        final String logLevel = getInitParameter("log-level", "INFO");
 
         final String accesslogger = getInitParameter("servlet-logger");
 
@@ -857,7 +857,8 @@ public class CocoonPortlet extends GenericPortlet {
      *
      * @throws PortletException
      */
-    private URL getConfigFile(final String configFileName) throws PortletException {
+    private URL getConfigFile(final String configFileName)
+    throws PortletException {
         final String usedFileName;
 
         if (configFileName == null) {
@@ -889,7 +890,7 @@ public class CocoonPortlet extends GenericPortlet {
 
         if (result == null) {
             File resultFile = new File(usedFileName);
-            if (resultFile.isFile())
+            if (resultFile.isFile()) {
                 try {
                     result = resultFile.getCanonicalFile().toURL();
                 } catch (Exception e) {
@@ -897,6 +898,7 @@ public class CocoonPortlet extends GenericPortlet {
                     getLogger().error(msg, e);
                     throw new PortletException(msg, e);
                 }
+            }
         }
 
         if (result == null) {
@@ -1445,8 +1447,10 @@ public class CocoonPortlet extends GenericPortlet {
      * @return the parent component manager, or <code>null</code>.
      */
     protected synchronized ComponentManager getParentComponentManager() {
-        if (parentComponentManager != null && parentComponentManager instanceof Disposable)
+        if (parentComponentManager != null && parentComponentManager instanceof Disposable) {
             ((Disposable) parentComponentManager).dispose();
+        }
+        
         parentComponentManager = null;
         if (parentComponentManagerClass != null) {
             try {
