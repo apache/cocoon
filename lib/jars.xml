@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.58 2003/07/05 04:23:38 joerg Exp $
+    | CVS $Id: jars.xml,v 1.59 2003/07/05 16:33:06 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -426,12 +426,11 @@
  <file>
   <title>XML FO processor</title>
   <description>
-   FOP is a Java application that reads a formatting object tree
-   conforming to the XSL candidate release and then turns it into a PDF
-   document or allows you to preview it directly on screen.
+   FOP is a Java application that reads a formatting object tree conforming to
+   the XSL recommendation and then turns it into a PDF document.
   </description>
   <used-by>FOP serializer (fop block)</used-by>
-  <lib>fop/lib/fop-0.20.4.jar</lib>
+  <lib>fop/lib/fop-0.20.5rc3a.jar</lib>
   <homepage>http://xml.apache.org/fop/</homepage>
  </file>
 
