@@ -27,9 +27,9 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-14 21:24:56 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-15 13:56:05 $
  */
-public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable, Loggable {
+public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable {
 
     /** The current <code>ContentHandler</code>. */
     protected ContentHandler documentHandler=null;

@@ -21,14 +21,15 @@ import java.lang.reflect.Method;
 import org.apache.cocoon.environment.Request;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.Disposable;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
-import org.apache.avalon.Disposable;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.Parameters;
 
 import org.apache.cocoon.Constants;
@@ -64,7 +65,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-14 21:24:56 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-15 13:56:03 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -309,7 +310,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
 
         super.setContentHandler(transformerHandler);
         if(transformerHandler instanceof Loggable) {
-            ((Loggable)transformerHandler).setLogger(this.log);
+            ((Loggable)transformerHandler).setLogger(getLogger());
         }
         if(transformerHandler instanceof org.xml.sax.ext.LexicalHandler)
             this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)transformerHandler);
