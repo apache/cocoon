@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,12 +72,8 @@ public final class SitemapTask extends AbstractQdoxTask {
     /** Caching info (optional) */
     public static final String CACHING_INFO_TAG = "cocoon.sitemap.component.documentation.caching";
 
-    /** Pooling min (optional) */
-    public static final String POOL_MIN_TAG = "cocoon.sitemap.component.pooling.min";
     /** Pooling max (optional) */
     public static final String POOL_MAX_TAG = "cocoon.sitemap.component.pooling.max";
-    /** Pooling grow (optional) */
-    public static final String POOL_GROW_TAG = "cocoon.sitemap.component.pooling.grow";
     
     private static final String LINE_SEPARATOR = "\n";
     
@@ -536,9 +532,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             // pooling?
             if ( this.javaClass.isA(POOLABLE) ) {
                 // TODO - Think about default values
-                this.addAttribute(node, POOL_MIN_TAG, "pool-min", null);
                 this.addAttribute(node, POOL_MAX_TAG, "pool-max", null);
-                this.addAttribute(node, POOL_GROW_TAG, "pool-grow", null);
             }
             
             // mime-type
