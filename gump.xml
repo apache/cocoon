@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.26 2003/03/27 23:41:00 asavory Exp $
+  CVS $Id: gump.xml,v 1.27 2003/03/30 12:00:31 rubys Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -56,7 +56,7 @@
 
     <depend project="jdom" version="supplied"/>
     <depend project="castor" version="supplied"/>
-    <depend project="rhino" version="supplied"/>
+    <depend project="rhino-cocoondev" version="supplied"/>
     <depend project="jisp" version="supplied"/>
     <depend project="jaxen" inherit="runtime"/>
     <depend project="jing"/>
