@@ -64,6 +64,16 @@
     <th>Contact</th>
    </tr>
    <tr>
+    <td><link href="http://www.geocities.com/SiliconValley/Monitor/7464/emacs/xslt-process/">
+     XSLT-process</link></td>
+    <td>Development Environment</td>
+    <td>A minor mode for (X)Emacs that allows you to invoke an XSLT processor, or Cocoon on a buffer,
+     thus yielding a fast turnaround time.</td>
+    <td>Supports Xalan, Cocoon, Saxon</td>
+    <td>?</td>
+    <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
+   </tr>
+   <tr>
     <td><link href="http://www.plenix.com/dbprism/">DB Prism</link></td>
     <td>Servlet/CMS</td>
     <td>"A Servlet which emulates Oracle Web Application Server plsql Cartridge or the newest Oracle IAS mod_plsql.
