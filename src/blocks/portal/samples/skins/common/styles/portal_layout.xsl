@@ -5,7 +5,7 @@
 <xsl:template match="/">
 
 <html>
-<body>
+<body style="background-color: #FFFFFF; margin: 0px 0px 0px 0px; font-family: Verdana, Helvetica, sans-serif;	font-size : 100%;">
   <xsl:apply-templates/>
 </body>
 </html>

@@ -11,12 +11,12 @@
         <xsl:value-of select="@border" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>1</xsl:text>
+        <xsl:text>0</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
 
-  <table border="{$border}" cellSpacing="0" width="100%">
+  <table border="{$border}" cellSpacing="0" cellpadding="0" width="100%">
     <xsl:if test="@bgcolor">
       <xsl:attribute name="bgcolor">
         <xsl:value-of select="@bgcolor" /> 
