@@ -63,6 +63,10 @@
         <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-lib</xsl:for-each></xsl:attribute>
       </target>
 
+      <target name="tests">
+        <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-tests</xsl:for-each></xsl:attribute>
+      </target>
+
       <xsl:apply-templates select="project[contains(@name,'-block')]" />
    </xsl:template>
 
@@ -180,14 +184,14 @@
               available - to the usual java source directory.
               If someone knows a better solution...
          -->
-	     <condition property="dependend.vm" value="{string('${target.vm}')}">
-	       <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
-	     </condition>
-	     <condition property="dependend.vm" value="">
-	       <not>
-	         <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
-	       </not>
-	     </condition>
+         <condition property="dependend.vm" value="{string('${target.vm}')}">
+	          <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
+         </condition>
+         <condition property="dependend.vm" value="">
+            <not>
+	             <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
+            </not>
+         </condition>
 
          <javac
             destdir="{string('${build.blocks}')}/{$block-name}/dest"
@@ -197,9 +201,9 @@
             target="{string('${target.vm}')}"
             nowarn="{string('${compiler.nowarn}')}"
             compiler="{string('${compiler}')}">
-              <src path="{string('${blocks}')}/{$block-name}/java"/>
-              <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
-              <classpath refid="{$block-name}.classpath" />
+            <src path="{string('${blocks}')}/{$block-name}/java"/>
+            <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
+            <classpath refid="{$block-name}.classpath" />
          </javac>
          
          <jar jarfile="{string('${build.blocks}')}/{$block-name}-block.jar">
@@ -259,7 +263,7 @@
          </copy>
       </target>
 
-	  <target name="{$block-name}-roles">
+      <target name="{$block-name}-roles">
          <xpatch directory="{string('${blocks}')}/{$block-name}/conf" extension="xroles" configuration="{string('${build.dest}/org/apache/cocoon/cocoon.roles')}"/>
       </target>
       
@@ -275,6 +279,54 @@
          </copy>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xsamples" configuration="{string('${build.webapp}')}/samples/block-samples.xml"/>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="samplesxpipe" configuration="{string('${build.webapp}')}/samples/sitemap.xmap"/>
+      </target>
+
+      <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
+         <xsl:if test="depend">
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of
+select="@project"/>-tests</xsl:for-each></xsl:attribute>
+         </xsl:if>
+
+         <!-- Test if this block has tests -->
+         <available property="{$block-name}.has.tests" file="{string('${blocks}')}/{$block-name}/test"/>
+
+         <antcall target="{$block-name}-tests"/>
+      </target>
+
+      <target name="{$block-name}-tests" depends="{$block-name}-compile" if="{$block-name}.has.tests">
+         <mkdir dir="{string('${build.blocks}')}/{$block-name}/test"/>
+
+         <copy todir="{string('${build.blocks}')}/{$block-name}/test" filtering="on">
+            <fileset dir="{string('${blocks}')}/{$block-name}/test" excludes="**/*.java"/>
+         </copy>
+
+         <javac srcdir="{string('${blocks}')}/{$block-name}/test"
+                destdir="{string('${build.blocks}')}/{$block-name}/test"
+                fork="true">
+            <classpath refid="{$block-name}.classpath"/>
+            <classpath>
+               <pathelement location="{string('${build.test}')}"/>
+            </classpath>
+         </javac>
+
+         <junit printsummary="yes" haltonfailure="yes" fork="yes">
+            <classpath refid="{$block-name}.classpath" />
+            <classpath>
+               <pathelement path="{string('${java.class.path}')}"/>
+               <pathelement location="{string('${build.test}')}"/>
+               <pathelement location="{string('${build.blocks}')}/{$block-name}/test"/>
+            </classpath>
+            <formatter type="plain" usefile="no"/>
+            <batchtest>
+               <fileset dir="{string('${build.blocks}')}/{$block-name}/test">
+                  <include name="**/*TestCase.class"/>
+                  <include name="**/*Test.class"/>
+                  <exclude name="**/AllTest.class"/>
+                  <exclude name="**/*$$*Test.class"/>
+                  <exclude name="**/Abstract*.class"/>
+               </fileset>
+            </batchtest>
+         </junit>
       </target>
    </xsl:template>
 </xsl:stylesheet>
