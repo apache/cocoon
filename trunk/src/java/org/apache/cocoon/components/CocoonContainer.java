@@ -53,7 +53,6 @@ import org.apache.avalon.fortress.impl.DefaultContainer;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Cocoon;
 
 /**
  * CocoonContainer does XYZ

@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,22 +66,20 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Cocoon Component Manager.
  * This manager extends the {@link ExcaliburComponentManager}
  * by a special lifecycle handling for a {@link RequestLifecycleComponent}
- * and by handling the lookup of the {@link SourceResolver}.
+ * 
  * WARNING: This is a "private" Cocoon core class - do NOT use this class
  * directly - and do not assume that a {@link org.apache.avalon.framework.service.ServiceManager} you get
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.20 2003/10/19 15:58:15 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.21 2003/10/19 17:31:13 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -561,7 +557,7 @@ final class EnvironmentDescription {
             final Iterator iter = this.requestLifecycleComponents.values().iterator();
             while (iter.hasNext()) {
                 final Object[] o = (Object[])iter.next();
-                final Object component = (Object)o[0];
+                final Object component = o[0];
                 ((CocoonComponentManager)o[1]).releaseRLComponent( component );
             }
             this.requestLifecycleComponents.clear();
@@ -569,13 +565,13 @@ final class EnvironmentDescription {
 
         for(int i = 0; i < autoreleaseComponents.size(); i++) {
             final Object[] o = (Object[])autoreleaseComponents.get(i);
-            final Object component = (Object)o[0];
+            final Object component = o[0];
             if (o[1] instanceof ServiceManager) {
                 ((ServiceManager)o[1]).release( component );
             } else {
                 ((ServiceSelector)o[1]).release( component );
                 if (o[2] != null) {
-                    ((ServiceManager)o[2]).release( (Object)o[1] );
+                    ((ServiceManager)o[2]).release( o[1] );
                 }
             }
         }
@@ -632,7 +628,7 @@ final class EnvironmentDescription {
         }
         final Object[] o = (Object[])this.requestLifecycleComponents.get(role);
         if ( null != o ) {
-            return (Object)o[0];
+            return o[0];
         }
         return null;
     }
@@ -643,7 +639,7 @@ final class EnvironmentDescription {
     Object getGlobalRequestLifecycleComponent(final String role) {
         final Object[] o = (Object[])this.getGlobalRequestLifcecycleComponents().get(role);
         if ( null != o ) {
-            return (Object)o[0];
+            return o[0];
         }
         return null;
     }
