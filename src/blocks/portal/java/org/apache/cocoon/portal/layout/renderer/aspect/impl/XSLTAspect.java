@@ -57,15 +57,10 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.variables.VariableResolver;
 import org.apache.cocoon.components.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
@@ -82,14 +77,11 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.3 2003/06/10 19:38:54 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.4 2003/06/14 17:55:43 cziegeler Exp $
  */
 public class XSLTAspect 
-    extends AbstractLogEnabled 
-    implements RendererAspect, ThreadSafe, Composable {
+    extends AbstractAspect {
 
-    protected ComponentManager manager;
-    
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
@@ -150,11 +142,5 @@ public class XSLTAspect
         }
         return stylesheet;
     }
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-	 */
-	public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-	}
 
 }

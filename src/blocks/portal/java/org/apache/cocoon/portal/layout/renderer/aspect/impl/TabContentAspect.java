@@ -50,11 +50,14 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
@@ -70,7 +73,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.6 2003/05/23 14:20:09 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.7 2003/06/14 17:55:43 cziegeler Exp $
  */
 public class TabContentAspect extends CompositeContentAspect {
 
@@ -99,7 +102,7 @@ public class TabContentAspect extends CompositeContentAspect {
                 CompositeLayout tabLayout = (CompositeLayout) layout;
 
                 // selected tab
-                Integer data = (Integer) layout.getAspectData("tab");
+                Integer data = (Integer) layout.getAspectData(context.getAspectParameters().getParameter("aspect-name", "tab"));
                 int selected = data.intValue();
                 
                 // loop over all tabs
@@ -133,6 +136,20 @@ public class TabContentAspect extends CompositeContentAspect {
         }
 
 
+    }
+
+    /**
+     * Return the aspects required for this renderer
+     * @return An iterator for the aspect descriptions or null.
+     */
+    public Iterator getAspectDescriptions(Parameters configuration) {
+        DefaultAspectDescription desc = new DefaultAspectDescription();
+        desc.setName(configuration.getParameter("aspect-name", "tab"));
+        desc.setClassName("java.lang.Integer");
+        desc.setPersistence(configuration.getParameter("store", "session"));
+        desc.setAutoCreate(true);
+        
+        return Collections.singletonList(desc).iterator();
     }
 
 }

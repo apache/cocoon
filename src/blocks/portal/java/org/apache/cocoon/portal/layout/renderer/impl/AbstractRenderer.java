@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.portal.layout.renderer.impl;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -78,7 +81,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractRenderer.java,v 1.2 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: AbstractRenderer.java,v 1.3 2003/06/14 17:55:43 cziegeler Exp $
  */
 public abstract class AbstractRenderer
     extends AbstractLogEnabled
@@ -176,5 +179,12 @@ public abstract class AbstractRenderer
     }
         
     protected abstract void process(Layout layout, PortalService service, ContentHandler handler) throws SAXException;
+
+    /**
+     * Return the aspects required for this renderer
+     */
+    public Iterator getAspectDescriptions() {
+        return Collections.EMPTY_LIST.iterator();
+    }
     
 }
