@@ -56,6 +56,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.excalibur.source.SourceParameters;
 
 
@@ -67,7 +68,7 @@ import org.apache.excalibur.source.SourceParameters;
  * actions perform all required tasks.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationManager.java,v 1.4 2003/05/23 12:13:15 cziegeler Exp $
+ * @version CVS $Id: AuthenticationManager.java,v 1.5 2003/05/27 12:19:30 cziegeler Exp $
 */
 public interface AuthenticationManager {
 
@@ -112,4 +113,13 @@ public interface AuthenticationManager {
      * Get the current state of authentication
      */
     RequestState getState();
+
+    /**
+     * Create Application Context.
+     * This context is destroyed when the user logs out of the handler
+     */
+    SessionContext createApplicationContext(String name,
+                                            String loadURI,
+                                            String saveURI)
+    throws ProcessingException;
 }

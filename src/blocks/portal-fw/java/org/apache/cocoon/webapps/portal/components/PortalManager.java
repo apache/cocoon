@@ -95,7 +95,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.5 2003/05/23 12:13:13 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.6 2003/05/27 12:19:30 cziegeler Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -307,7 +307,7 @@ extends AbstractSessionComponent {
 
                     // create new context
                     
-                    context = this.getRequestState().getHandler().createApplicationContext(attrName, null, null);
+                    context = this.getAuthenticationManager().createApplicationContext(attrName, null, null);
 
                 }
             } // end synchronized

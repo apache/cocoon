@@ -51,6 +51,8 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -80,15 +82,17 @@ import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.authentication.user.UserState;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.SessionManager;
+import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
+import org.xml.sax.SAXException;
 
 /**
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.11 2003/05/23 12:35:32 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.12 2003/05/27 12:19:30 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -305,7 +309,25 @@ implements AuthenticationManager,
         UserHandler handler = this.getUserHandler( handlerName );
         // we don't throw an exception if we are already logged out!
         if ( handler != null ) {
-            handler.terminate();
+            List applicationContexts = handler.getApplicationContexts();
+            if ( applicationContexts != null ) {
+                ContextManager contextManager = null;
+
+                try {
+                    contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
+
+                    Iterator i = applicationContexts.iterator();
+                    while ( i.hasNext() ) {
+                        final String current = (String)i.next();
+                        contextManager.deleteContext( current );
+                    }
+                } catch (ServiceException ce) {
+                    throw new ProcessingException("Unable to create session context.", ce);
+                } finally {
+                    this.manager.release( (Component)contextManager);
+                }
+            }
+    
             UserState status = this.getUserState();
             status.removeHandler( handlerName );
             this.updateUserState();
@@ -396,6 +418,40 @@ implements AuthenticationManager,
         }
     }
     
+    /**
+     * Create Application Context.
+     * This context is destroyed when the user logs out of the handler
+     */
+    public SessionContext createApplicationContext(String name,
+                                                   String loadURI,
+                                                   String saveURI)
+    throws ProcessingException {
+        RequestState state = this.getState();
+        UserHandler handler = state.getHandler();
+        
+        SessionContext context = null;
+
+        if ( handler != null ) {
+            ContextManager contextManager = null;
+            try {
+                contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
+                // create new context
+                context = contextManager.createContext(name, loadURI, saveURI);
+                handler.addApplicationContext( name );
+
+            } catch (ServiceException ce) {
+                throw new ProcessingException("Unable to create session context.", ce);
+            } catch (IOException ioe) {
+                throw new ProcessingException("Unable to create session context.", ioe);
+            } catch (SAXException saxe) {
+                throw new ProcessingException("Unable to create session context.", saxe);
+            } finally {
+                manager.release( (Component)contextManager);
+            }
+        }
+
+        return context;
+    }
 
 }
 
