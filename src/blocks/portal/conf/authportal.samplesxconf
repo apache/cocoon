@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 
-  CVS $Id: portlet.xml 30932 2004-07-29 17:35:38Z vgritsenko $
+  SVN $Id$
 -->
 <samplesxconf xpath="/cocoon/*[@role='org.apache.cocoon.portal.PortalService']/portals" unless="portal[@name='portal']">
 

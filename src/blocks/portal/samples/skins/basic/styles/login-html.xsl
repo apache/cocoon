@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!--+ $Id: login-html.xsl,v 1.4 2004/03/06 02:25:45 antonio Exp $ 
+<!--+ $Id$ 
     |
     | Description: Login page to HTML
     |

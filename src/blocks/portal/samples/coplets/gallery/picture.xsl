@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: picture.xsl,v 1.3 2004/03/06 02:25:57 antonio Exp $ 
+<!-- $Id$ 
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
