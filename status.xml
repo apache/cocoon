@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.284 2004/03/17 09:29:14 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.285 2004/03/18 07:42:11 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="27764" due-to="Corin Moss" due-to-email="cmoss@tvnz.co.nz">
+     DefaultIncludeCacheManager did not release xml-serializer under some circumstances.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="27681" due-to="Peter Brant" due-to-email="peter.brant@courts.state.wi.us">
      DOMFactory can now create a document element.
    </action>
