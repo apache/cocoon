@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.73 2003/08/06 12:59:13 bdelacretaz Exp $
+  CVS $Id: gump.xml,v 1.74 2003/08/07 07:27:01 bdelacretaz Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -978,6 +978,23 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-midi" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="midi"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/midi-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
 
   <!--
     ********************************************

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xmap xpath="/sitemap/components/generators" unless="generator[@name='midi']">
+
+    <map:generator name="midi"
+                   src="org.apache.cocoon.generation.MIDIGenerator"
+                   label="content"/>
+</xmap>

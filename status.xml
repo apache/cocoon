@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.108 2003/08/07 07:00:24 bdelacretaz Exp $:-->
+<!-- CVS $Id: status.xml,v 1.109 2003/08/07 07:27:01 bdelacretaz Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BD" type="add" due-to="Mark Leicester" due-to.email="mark.leicester@energyintellect.com">
+    midi block added
+  </action>
   <action dev="BD" type="add">
     slop block added (Simple Line Oriented Parser)
   </action>
