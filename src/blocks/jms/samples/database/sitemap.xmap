@@ -16,7 +16,7 @@
 -->
 
 <!--
-  CVS $Id: sitemap.xmap,v 1.3 2004/03/11 16:25:48 stephan Exp $
+  CVS $Id$
 
   Event Cache Sample
 -->
@@ -27,14 +27,17 @@
         <map:matcher name="host-matcher"
                      logger="sitemap.matcher.wildcard"
                      src="org.apache.cocoon.matching.modular.CachingWildcardMatcher">
-            <input-module name="request"/>
-            <parameter-name>serverName</parameter-name>
+          <input-module name="request"/>
+          <parameter-name>serverName</parameter-name>
         </map:matcher>
     </map:matchers>
     <map:actions>
       <map:action name="cacheevent" src="org.apache.cocoon.acting.CacheEventAction"/>
-      <map:action name="jmsevent" src="org.apache.cocoon.components.jms.JMSPublisherAction">
-          <parameter name="connection" value="OpenJMS-demo"/>
+      <map:action name="jmsevent"
+                  src="org.apache.cocoon.acting.JMSPublisherAction"
+                  logger="sitemap.actions.jms">
+        <parameter name="connection" value="local-topics"/>
+        <parameter name="topic" value="topic1"/>
       </map:action>
     </map:actions>
 
