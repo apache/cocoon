@@ -60,7 +60,7 @@ import java.sql.DriverManager;
  * This is the Cocoon2 specific part of an AbstractEsqlConnection.
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: Cocoon2EsqlConnection.java,v 1.2 2003/05/01 13:03:50 tcurdt Exp $
+ * @version CVS $Id: Cocoon2EsqlConnection.java,v 1.3 2003/05/13 12:41:49 haul Exp $
  */
 
 final public class Cocoon2EsqlConnection extends AbstractEsqlConnection {
@@ -89,7 +89,7 @@ final public class Cocoon2EsqlConnection extends AbstractEsqlConnection {
         this.datasource = datasource;
     }
 
-    protected Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         if (connection != null) {
             return(connection);
         }
