@@ -63,7 +63,7 @@ import java.util.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.5 2003/11/16 00:52:08 vgritsenko Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.6 2003/12/21 22:48:56 upayavira Exp $
  */
 
 /*
@@ -184,6 +184,8 @@ public class CommandLineRequest implements Request {
         final Object value = this.parameters.get(name);
         if (value instanceof String) {
             return (String)value;
+        } else if (value == null) {
+            return null;
         } else {
             final String[] values = (String[]) value;
             if (values.length == 0) {
