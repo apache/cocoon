@@ -57,7 +57,7 @@
   <map:component-configurations>
 	<authentication-manager>
 		<handlers>
-			<handler name="portalhandler">
+			<handler name="portal-handler">
 				<redirect-to uri="cocoon:/login"/>
 				<authentication uri="cocoon:raw:/sunrise-authuser"/>
 				<applications>
@@ -150,12 +150,12 @@
 
     <!-- Do an auto login as anonymous -->
     <map:act type="auth-loggedIn">
-        <map:parameter name="handler" value="portalhandler"/> 
+        <map:parameter name="handler" value="portal-handler"/> 
         <map:parameter name="application" value="portal"/> 
         <map:parameter name="negate-result" value="true"/>
 
         <map:act type="auth-login">
-            <map:parameter name="handler" value="portalhandler"/>
+            <map:parameter name="handler" value="portal-handler"/>
             <map:parameter name="application" value="portal"/> 
     
             <map:parameter name="parameter_name" value="anonymous"/>
@@ -167,7 +167,7 @@
     <!-- Test pipeline for layout engine -->
     <map:match pattern="portal">
         <map:act type="auth-protect">
-            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="handler" value="portal-handler"/> 
             <map:parameter name="application" value="portal"/> 
 
             <map:generate type="portal" label="content">
@@ -190,7 +190,7 @@
     <!-- Test pipeline for bookmark -->
     <map:match pattern="bookmark">
         <map:act type="auth-protect">
-            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="handler" value="portal-handler"/> 
             <map:parameter name="application" value="portal"/> 
 
             <map:act type="portal-bookmark">
@@ -203,7 +203,7 @@
 
     <map:match pattern="portalxml">
         <map:act type="auth-protect">
-            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="handler" value="portal-handler"/> 
             <map:parameter name="application" value="portal"/> 
 
             <map:generate type="portal" label="content">
@@ -220,17 +220,17 @@
              - if we are any other use, redirect to loggedin
         -->
         <map:act type="auth-loggedIn">
-            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="handler" value="portal-handler"/> 
             
 	        <map:act type="auth-protect">
-	            <map:parameter name="handler" value="portalhandler"/> 
+	            <map:parameter name="handler" value="portal-handler"/> 
 	            <map:parameter name="application" value="portal"/> 
 
 		    	<map:select type="parameter" >
 		    		<map:parameter name="parameter-selector-test" value="{ID}"/>
 		    		<map:when test="anonymous">
 		    		    <map:act type="auth-logout">
-	                        <map:parameter name="handler" value="portalhandler"/> 
+	                        <map:parameter name="handler" value="portal-handler"/> 
 		    		    </map:act>
 		    		</map:when>
 		    		<map:otherwise>
@@ -242,7 +242,7 @@
         
         <!-- Start the authentication process -->
         <map:act type="auth-login">
-            <map:parameter name="handler" value="portalhandler"/>
+            <map:parameter name="handler" value="portal-handler"/>
             <map:parameter name="application" value="portal"/> 
             <map:parameter name="parameter_name" value="{request-param:name}"/>
             <map:parameter name="parameter_password" value="{request-param:password}"/>
@@ -266,7 +266,7 @@
 
     <map:match pattern="loggedin">
 		<map:act type="auth-protect">
-		  <map:parameter name="handler" value="portalhandler"/> 
+		  <map:parameter name="handler" value="portal-handler"/> 
           <map:parameter name="application" value="portal"/> 
 		  
           <map:generate src="resources/logged-in.xml"/>
@@ -279,7 +279,7 @@
 
     <map:match pattern="logout">
 		<map:act type="auth-protect">
-		    <map:parameter name="handler" value="portalhandler"/> 
+		    <map:parameter name="handler" value="portal-handler"/> 
             <map:parameter name="application" value="portal"/> 
 <!--
             <map:act type="portal-save-profile">
