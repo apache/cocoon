@@ -58,10 +58,12 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.source.impl.PartSource;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.TraversableSource;
 
 /**
  * The CopySourceAction copies the content of it's "src" attribute to its "dest" parameter.
@@ -76,7 +78,7 @@ import org.apache.excalibur.source.SourceResolver;
  *</pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: CopySourceAction.java,v 1.1 2003/11/05 17:18:00 sylvain Exp $
+ * @version CVS $Id: CopySourceAction.java,v 1.2 2003/12/20 14:29:19 sylvain Exp $
  */
 public class CopySourceAction extends ServiceableAction implements ThreadSafe
 {
@@ -98,6 +100,20 @@ public class CopySourceAction extends ServiceableAction implements ThreadSafe
         // Check that dest is writeable
         if (! (dest instanceof ModifiableSource)) {
             throw new IllegalArgumentException("Non-writeable URI : " + dest.getURI());
+        }
+        
+        if (dest instanceof TraversableSource) {
+            TraversableSource trDest = (TraversableSource) dest;
+            if (trDest.isCollection()) {
+                if (src instanceof TraversableSource) {
+                    dest = trDest.getChild(((TraversableSource)src).getName());
+                } else if (src instanceof PartSource){
+                    // FIXME : quick hack to store "upload://xxx" sources into directories
+                    // it would be better for the PartSource to be Traversable, or to
+                    // create a new "NamedSource" interface
+                    dest = trDest.getChild(((PartSource)src).getPart().getFileName());
+                }
+            }
         }
         
         ModifiableSource wdest = (ModifiableSource)dest;
