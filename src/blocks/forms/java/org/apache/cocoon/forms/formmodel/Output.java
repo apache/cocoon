@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
+ * @version $Id: Output.java,v 1.8 2004/04/30 12:19:01 bruno Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     
@@ -58,7 +58,7 @@ public class Output extends AbstractWidget implements DataWidget {
         // do nothing
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         return true;
     }
 

@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.8 2004/04/28 16:34:12 bruno Exp $
+ * @version $Id: MultiValueField.java,v 1.9 2004/04/30 12:19:01 bruno Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -93,7 +93,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         }
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         if (values != null)
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else

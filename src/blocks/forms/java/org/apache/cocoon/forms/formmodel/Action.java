@@ -28,7 +28,7 @@ import org.apache.cocoon.forms.event.*;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.8 2004/04/28 13:11:10 bruno Exp $
+ * @version $Id: Action.java,v 1.9 2004/04/30 12:19:01 bruno Exp $
  */
 public class Action extends AbstractWidget implements ActionListenerEnabled {
     private final ActionDefinition definition;
@@ -86,9 +86,9 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     /**
      * Always return <code>true</code> (an action has no validation)
      * 
-     * @todo is there a use case for actions having validators?
+     * TODO is there a use case for actions having validators?
      */
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         return true;
     }
 

@@ -33,7 +33,7 @@ import org.apache.commons.collections.list.CursorableLinkedList;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.12 2004/04/28 16:34:12 bruno Exp $
+ * @version CVS $Id: Form.java,v 1.13 2004/04/30 12:19:01 bruno Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -289,7 +289,7 @@ public class Form extends AbstractContainerWidget {
         super.readFromRequest(formContext); 
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         throw new UnsupportedOperationException("Please use Form.process()");
     }
 

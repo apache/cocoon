@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.10 2004/04/28 16:34:12 bruno Exp $
+ * @version $Id: Repeater.java,v 1.11 2004/04/30 12:19:01 bruno Exp $
  */
 public class Repeater extends AbstractWidget 
 //implements ContainerWidget 
@@ -224,12 +224,12 @@ public class Repeater extends AbstractWidget
         }
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         boolean valid = true;
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
             RepeaterRow row = (RepeaterRow)rowIt.next();
-            valid = valid & row.validate(formContext);
+            valid = valid & row.validate();
         }
         return valid ? super.validate() : false;
     }
@@ -349,7 +349,7 @@ public class Repeater extends AbstractWidget
             throw new RuntimeException("Parent of RepeaterRow is fixed, and cannot be set.");
         }
 
-        public boolean validate(FormContext formContext) {
+        public boolean validate() {
             // Validate only child widtgets, as the definition's validators are those of the parent repeater
             return widgets.validate();
         }
