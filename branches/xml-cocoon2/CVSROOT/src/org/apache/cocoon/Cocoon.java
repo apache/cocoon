@@ -41,29 +41,11 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.21 $ $Date: 2000-08-31 15:58:54 $
+ * @version CVS $Revision: 1.4.2.22 $ $Date: 2000-08-31 16:41:02 $
  */
 public class Cocoon
-  implements Component, Configurable, ComponentManager, Modifiable, Processor {
+  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
 
-    /* Cocoon Default Strings */
-    public static final String NAME               = "@name@";
-    public static final String VERSION            = "@version@";
-    public static final String CONF_VERSION       = "2.0";
-    public static final String YEAR               = "@year@";
-    public static final String RELOAD_PARAM       = "cocoon-reload";
-    public static final String SHOWTIME_PARAM     = "cocoon-showtime";
-    public static final String VIEW_PARAM         = "cocoon-view";
-    public static final String TEMPDIR_PROPERTY   = "org.apache.cocoon.properties.tempdir";
-    public static final String DEFAULT_CONF_FILE  = "cocoon.xconf";
-    public static final String DEFAULT_DEST_DIR   = "./site";
-    public static final String DEFAULT_TEMP_DIR   = "./work";
-    public static final String LINK_CONTENT_TYPE  = "x-application/x-cocoon-links";
-    public static final String LINK_VIEW          = "links";
-    public static final String LINK_CRAWLING_ROLE = "static";
-    public static final String PARSER_PROPERTY    = "org.apache.cocoon.components.parser.Parser";
-    public static final String DEFAULT_PARSER     = "org.apache.cocoon.components.parser.XercesParser";
-    
     /** The table of role-class */
     private Hashtable components = new Hashtable();
     
