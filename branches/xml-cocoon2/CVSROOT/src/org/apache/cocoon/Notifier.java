@@ -32,7 +32,7 @@ import org.xml.sax.ContentHandler;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-15 20:28:29 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-02 11:49:42 $
  */
 
 public class Notifier {
@@ -94,28 +94,28 @@ public class Notifier {
         // Root element.
         AttributesImpl atts = new AttributesImpl();
 
-        atts.addAttribute(URI, "type", "error:type", "CDATA", n.getType());
-        atts.addAttribute(URI, "sender", "error:sender", "CDATA", n.getSender());
-        ch.startElement(URI, "notify", "error:notify", atts);
-        ch.startElement(URI, "title", "error:title", new AttributesImpl());
+        atts.addAttribute(URI, "type", PREFIX+":type", "CDATA", n.getType());
+        atts.addAttribute(URI, "sender", PREFIX+":sender", "CDATA", n.getSender());
+        ch.startElement(URI, "notify", PREFIX+":notify", atts);
+        ch.startElement(URI, "title", PREFIX+":title", new AttributesImpl());
         ch.characters(n.getTitle().toCharArray(), 0, n.getTitle().length());
-        ch.endElement(URI, "title", "error:title");
-        ch.startElement(URI, "source", "error:source", new AttributesImpl());
+        ch.endElement(URI, "title", PREFIX+":title");
+        ch.startElement(URI, "source", PREFIX+":source", new AttributesImpl());
         ch.characters(n.getSource().toCharArray(), 0, n.getSource().length());
-        ch.endElement(URI, "source", "error:source");
-        ch.startElement(URI, "message", "error:message", new AttributesImpl());
+        ch.endElement(URI, "source", PREFIX+":source");
+        ch.startElement(URI, "message", PREFIX+":message", new AttributesImpl());
 
         if (n.getMessage() != null) {
             ch.characters(n.getMessage().toCharArray(), 0,
                           n.getMessage().length());
         }
 
-        ch.endElement(URI, "message", "error:message");
-        ch.startElement(URI, "description", "error:description",
+        ch.endElement(URI, "message", PREFIX+":message");
+        ch.startElement(URI, "description", PREFIX+":description",
                         new AttributesImpl());
         ch.characters(n.getDescription().toCharArray(), 0,
                       n.getDescription().length());
-        ch.endElement(URI, "description", "error:description");
+        ch.endElement(URI, "description", PREFIX+":description");
 
         HashMap  extraDescriptions = n.getExtraDescriptions();
         Iterator keyIter           = extraDescriptions.keySet().iterator();
@@ -125,17 +125,17 @@ public class Notifier {
 
             atts = new AttributesImpl();
 
-            atts.addAttribute(URI, "description", "error:description", "CDATA",
+            atts.addAttribute(URI, "description", PREFIX+":description", "CDATA",
                               key);
-            ch.startElement(URI, "extra", "error:extra", atts);
+            ch.startElement(URI, "extra", PREFIX+":extra", atts);
             ch.characters(extraDescriptions.get(key).toString().toCharArray(),
                           0, (extraDescriptions.get(key).toString())
                               .length());
-            ch.endElement(URI, "extra", "error:extra");
+            ch.endElement(URI, "extra", PREFIX+":extra");
         }
 
         // End root element.
-        ch.endElement(URI, "notify", "error:notify");
+        ch.endElement(URI, "notify", PREFIX+":notify");
 
         // End the document.
         ch.endPrefixMapping(PREFIX);
