@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- ========================= Components ================================ -->
@@ -69,8 +69,6 @@
                   src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
       <map:action name="portal-save-profile"
                   src="org.apache.cocoon.portal.acting.SaveAction"/>
-      <map:action name="portal-bookmark"
-                  src="org.apache.cocoon.portal.acting.BookmarkAction"/>
       <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
         <parameter name="src" value="resources/bookmarks.xml"/>
       </map:action>
