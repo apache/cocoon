@@ -94,7 +94,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/weblog.rss</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/Weblog.rss</value>
       </attribute>
    </coplet-data>
 
