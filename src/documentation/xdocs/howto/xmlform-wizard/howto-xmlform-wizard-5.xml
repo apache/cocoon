@@ -112,7 +112,7 @@
   <map:pipeline>
 
 	<map:match pattern="">
-	  <map:redirect-to uri="wizard.html"/>
+	  <map:redirect-to uri="howto-wizard.html"/>
 	</map:match>
 
 	<!-- A non-trivial example - Feedback Wizard -->
@@ -143,7 +143,7 @@
 		<!-- XMLForm parameters for the HowtoWizardAction -->
 		<map:parameter name="xmlform-validator-schema-ns" value="http://www.ascc.net/xml/schematron"/>
 		<map:parameter name="xmlform-validator-schema" value="howto/schematron/howto-xmlform-sch-report.xml"/>
-		<map:parameter name="xmlform-id" value="form-howto"/>
+		<map:parameter name="xmlform-id" value="form-feedback"/>
 		<map:parameter name="xmlform-scope" value="session"/>
 		<map:parameter name="xmlform-model" value="org.apache.cocoon.samples.xmlform.howto.HowToBean"/>
 
