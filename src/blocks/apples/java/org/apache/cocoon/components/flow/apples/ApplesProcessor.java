@@ -86,9 +86,10 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         getLogger().debug("Pulling fresh apple through the lifecycle... | continuationid=" + wk.getId());
         
-        //TODO: also add the componentManager for Apples that took the other approach
-        LifecycleHelper.setupComponent(app, getLogger(), appleContext, this.serviceManager, null, null, null);
-
+        LifecycleHelper.setupComponent( app, getLogger(), appleContext, 
+                                        this.serviceManager, super.manager,  
+                                        null, null, null, true);
+        
         processApple(params, env, app, wk);
     }
 
