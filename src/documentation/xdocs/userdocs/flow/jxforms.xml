@@ -104,14 +104,35 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p/>
  </s2>
  <s2 title="select">
- <p/>
+   <p>
+    </p>
+ <p>JXForms <code>&lt;select&gt;</code> is modelled after the <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectMany">W3C XForms &lt;select&gt;</link> element. It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>id</code></li>
+   <li><code>appearance</code></li>
+ </ul>
  </s2>
  <s2 title="select1">
  <p/>
  </s2>
  <s2 title="submit">
- <p/>
- </s2>
+ <p>JXForms <code>&lt;submit&gt;</code> differs from that of W3C XForms. It supports the following attributes:</p>
+ <ul>
+   <li><code>id</code></li>
+   <li><code>continuation</code></li>
+   <li><code>class</code></li>
+ </ul>
+ <p>Example: Submit
+ </p>
+<source>
+&lt;submit submission="timecard"&gt;
+  &lt;label&gt;Submit Timecard&lt;/label&gt;
+&lt;/submit&gt;
+</source>
+ <p>
+ </p>
+</s2>
  <s2 title="group">
  <p/>
  </s2>
