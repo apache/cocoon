@@ -15,8 +15,13 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import org.xml.sax.Locator;
 
 public abstract class StartInstruction extends Event {
+    public StartInstruction(Locator locator) {
+        super(locator);
+        startElement = null;
+    }
 
     public StartInstruction(StartElement startElement) {
         super(startElement.getLocation());
