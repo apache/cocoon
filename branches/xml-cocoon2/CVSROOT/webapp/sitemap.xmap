@@ -205,7 +205,7 @@
    </map:match>
 
    <map:match pattern="svg">
-    <map:generate src="docs/samples/opac.svg"/>
+    <map:generate src="docs/samples/svg/henryV.svg"/>
     <map:serialize type="svg2png"/>
    </map:match>
 
