@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.32 2003/10/15 14:18:40 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.33 2003/10/28 20:04:58 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -82,6 +82,7 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xalan</xslt-processor-role>
+      <check-includes>true</check-includes>
     </map:transformer>
 
     <!-- NOTE: This is the same as the default processor but with a different name (for compatibility) -->
@@ -90,6 +91,7 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xalan</xslt-processor-role>
+      <check-includes>true</check-includes>
     </map:transformer>
 
     <!-- NOTE: You can also try XSLTC as the default processor. If you use Xalan extensions, use the "xalan" transformer. -->
@@ -98,6 +100,7 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xsltc</xslt-processor-role>
+      <check-includes>true</check-includes>
     </map:transformer>
 
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
