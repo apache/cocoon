@@ -18,8 +18,14 @@ import org.apache.cocoon.Processor;
  * Base interface for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.4.13 $ $Date: 2001-02-16 22:07:47 $
+ * @version CVS $Revision: 1.1.4.14 $ $Date: 2001-02-19 21:57:51 $
  */
 public interface Sitemap extends CompiledComponent, Configurable, Contextualizable, Processor {
-    void setParentSitemapComponentManager (SitemapComponentManager sitemapComponentManager);
+    int GENERATOR = 1;
+    int TRANSFORMER = GENERATOR << 1;
+    int SERIALIZER = TRANSFORMER << 1;
+    int READER = SERIALIZER << 1;
+    int ACTION = READER << 1;
+    int MATCHER = ACTION << 1;
+    int SELECTOR = MATCHER << 1;
 }

@@ -40,7 +40,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-16 22:07:46 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-19 21:57:50 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
     private Context context;
@@ -50,9 +50,6 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
 
     /** the component manager */
     private ComponentManager manager;
-
-    /** the parent sitemap component manager */
-    private SitemapComponentManager parentSitemapComponentManager;
 
     /** the source of this sitemap */
     private String source;
@@ -94,9 +91,8 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         this.context = context;
     }
 
-    protected Handler (SitemapComponentManager sitemapComponentManager, String source, boolean check_reload)
+    protected Handler (String source, boolean check_reload)
     throws FileNotFoundException {
-        this.parentSitemapComponentManager = sitemapComponentManager;
         this.check_reload = check_reload;
         this.source = source;
     }
@@ -175,8 +171,9 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         try {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
-            smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
-            if (smap instanceof Configurable) smap.configure(this.conf);
+            smap.contextualize(this.context);
+            smap.compose(this.manager);
+            smap.configure(this.conf);
 
             this.sitemap = smap;
             getLogger().debug("Sitemap regeneration complete");

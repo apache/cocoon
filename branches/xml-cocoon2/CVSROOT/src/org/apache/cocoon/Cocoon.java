@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.56 $ $Date: 2001-02-17 19:08:46 $
+ * @version CVS $Revision: 1.4.2.57 $ $Date: 2001-02-19 21:57:45 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -157,7 +157,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         getLogger().debug("Setting up the sitemap.");
         // Create the sitemap
         Configuration sconf = conf.getChild("sitemap");
-        this.sitemapManager = new Manager(null);
+        this.sitemapManager = new Manager();
         this.sitemapManager.contextualize(this.context);
         this.sitemapManager.setLogger(getLogger());
         this.sitemapManager.compose(this.componentManager);

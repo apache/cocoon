@@ -19,7 +19,7 @@ import java.util.Collections;
  * role aliases and the real Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-19 18:10:38 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-19 21:57:54 $
  */
 
 public class RoleUtils {
@@ -62,8 +62,8 @@ public class RoleUtils {
         setup.put(Roles.SELECTORS, "org.apache.cocoon.CocoonComponentSelector");
         setup.put(Roles.GENERATORS, "org.apache.cocoon.CocoonComponentSelector");
         setup.put(Roles.TRANSFORMERS, "org.apache.cocoon.CocoonComponentSelector");
-        setup.put(Roles.SERIALIZERS, "org.apache.cocoon.SitemapComponentSelector");
-        setup.put(Roles.READERS, "org.apache.cocoon.SitemapComponentSelector");
+        setup.put(Roles.SERIALIZERS, "org.apache.cocoon.sitemap.SitemapComponentSelector");
+        setup.put(Roles.READERS, "org.apache.cocoon.sitemap.SitemapComponentSelector");
 
         classname = Collections.unmodifiableMap(setup);
     }

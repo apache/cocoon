@@ -25,7 +25,7 @@ import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 20:28:54 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-19 21:57:45 $
  */
 public class ComponentFactory implements ObjectFactory, PoolClient, ThreadSafe, Loggable {
     private Logger log;
@@ -90,12 +90,12 @@ public class ComponentFactory implements ObjectFactory, PoolClient, ThreadSafe, 
             ((Loggable)comp).setLogger(this.log);
         }
 
-        if ( comp instanceof Configurable ) {
-            ((Configurable)comp).configure(this.conf);
-        }
-
         if ( comp instanceof Composer) {
             ((Composer)comp).compose(this.manager);
+        }
+
+        if ( comp instanceof Configurable ) {
+            ((Configurable)comp).configure(this.conf);
         }
 
         if ( comp instanceof PoolClient) {

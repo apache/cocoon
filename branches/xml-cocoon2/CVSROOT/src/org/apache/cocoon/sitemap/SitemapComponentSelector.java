@@ -23,7 +23,7 @@ import org.apache.cocoon.components.url.URLFactory;
 
 /** Default component manager for Cocoon's sitemap components.
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: SitemapComponentSelector.java,v 1.1.2.1 2001-02-19 18:21:05 bloritsch Exp $
+ * @version CVS $Id: SitemapComponentSelector.java,v 1.1.2.2 2001-02-19 21:57:52 bloritsch Exp $
  */
 public class SitemapComponentSelector extends CocoonComponentSelector {
     HashMap mime_types;
@@ -39,10 +39,10 @@ public class SitemapComponentSelector extends CocoonComponentSelector {
         return (String) this.mime_types.get(role);
     }
 
-    protected void addSitemapComponent(String type, Class component, Configuration conf, String mime_type)
+    protected void addSitemapComponent(Object hint, Class component, Configuration conf, String mime_type)
     throws ComponentManagerException,
            ConfigurationException {
-        super.addComponent(type, component, conf);
-        this.mime_types.put(type, mime_type);
+        super.addComponent(hint, component, conf);
+        this.mime_types.put(hint, mime_type);
     }
 }

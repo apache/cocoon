@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.78 2001-02-16 22:07:35 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.79 2001-02-19 21:57:47 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -190,14 +190,14 @@
        * &lt;code&gt;Configurable&lt;/code&gt; class.
        */
       public void configure(Configuration conf) throws ConfigurationException {
-        this.sitemapManager = new Manager(super.sitemapComponentManager);
+        this.sitemapManager = new Manager();
         this.sitemapManager.setLogger(getLogger());
         this.sitemapManager.compose(this.manager);
         this.sitemapManager.configure(conf);
         try {
           <!-- configure well known components first -->
-          load_component ("!generator:error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", new DefaultConfiguration("", LOCATION), null);
-          load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration("", LOCATION), null);
+          load_component (Sitemap.GENERATOR, "!error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", new DefaultConfiguration("", LOCATION), null);
+          load_component (Sitemap.TRANSFORMER, "!link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration("", LOCATION), null);
 
           Configurer configurer = new Configurer(this, LOCATION);
           configurer.configGenerators();
@@ -373,7 +373,8 @@
       throws Exception {
         /* the &lt;code&gt;ResourcePipeline&lt;/code&gt; used to collect the sitemap
            components to produce the requested resource */
-        ResourcePipeline pipeline = new ResourcePipeline (super.sitemapComponentManager);
+        ResourcePipeline pipeline = new ResourcePipeline ();
+        pipeline.compose(this.manager);
         /* the &lt;code&gt;List&lt;/code&gt; objects to hold the replacement values
            delivered from matchers and selectors to replace occurences of
            XPath kind expressions in values of src attribute used with
@@ -419,11 +420,12 @@
         <xsl:if test="(./map:handle-errors)">
           private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e)
           throws Exception {
-            ResourcePipeline pipeline = new ResourcePipeline (super.sitemapComponentManager);
+            ResourcePipeline pipeline = new ResourcePipeline ();
+            pipeline.compose(this.manager);
             List listOfMaps = (List)(new ArrayList());
             Map map;
             Parameters param;
-            pipeline.setGenerator ("!generator:error-notifier!", e.getMessage(), emptyParam, e);
+            pipeline.setGenerator ("!error-notifier!", e.getMessage(), emptyParam, e);
             <xsl:apply-templates select="./map:handle-errors/*"/>
             return false;
           }
@@ -488,7 +490,7 @@
           <xsl:value-of select="$matcher-name2"/>
         </xsl:when>
         <xsl:otherwise>
-          ((Matcher)super.sitemapComponentManager.lookup("matcher:<xsl:value-of select="$matcher-type"/>")).match
+          ((Matcher)this.matchers.select("<xsl:value-of select="$matcher-type"/>")).match
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -561,7 +563,7 @@
             <xsl:value-of select="$selector-name2"/>
           </xsl:when>
           <xsl:otherwise>
-            ((Selector)super.sitemapComponentManager.lookup("selector:<xsl:value-of select="$selector-type"/>")).select
+            ((Selector)this.selectors.select("<xsl:value-of select="$selector-type"/>")).select
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -606,7 +608,7 @@
 
     <!-- gets the string how the action is to be invoced in java code -->
     <xsl:variable name="action-name">
-      ((Action)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).act
+      ((Action)this.actions.select("<xsl:value-of select="$action-type"/>")).act
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->
@@ -666,7 +668,7 @@
 
     <!-- gets the string how the action is to be invoced in java code -->
     <xsl:variable name="action-name">
-      ((Action)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).act
+      ((Action)this.actions.select("<xsl:value-of select="$action-type"/>")).act
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->
@@ -888,6 +890,10 @@
     <xsl:param name="name"/>
     <xsl:param name="components"/>
 
+    <xsl:variable name="type">
+      <xsl:value-of select="translate($name, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+    </xsl:variable>
+
     <xsl:variable name="qname">
       <xsl:value-of select="concat($nsprefix, ':value')"/>
     </xsl:variable>
@@ -916,10 +922,10 @@
 
         <xsl:choose>
           <xsl:when test="@mime-type">
-            sitemap.load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, "<xsl:value-of select="@mime-type"/>");
+            sitemap.load_component (Sitemap.<xsl:value-of select="$type"/>, "<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, "<xsl:value-of select="@mime-type"/>");
           </xsl:when>
           <xsl:otherwise>
-            sitemap.load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, null);
+            sitemap.load_component (Sitemap.<xsl:value-of select="$type"/>, "<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, null);
           </xsl:otherwise>
         </xsl:choose>
     }
@@ -993,7 +999,7 @@
         </xsl:for-each>
         // performing link translation
         if (environment.getObjectModel().containsKey(Constants.LINK_OBJECT)) {
-            pipeline.addTransformer ("!transformer:link-translator!", null, emptyParam);
+            pipeline.addTransformer ("!link-translator!", null, emptyParam);
         }
       </xsl:if>
     </xsl:if>
@@ -1041,12 +1047,12 @@
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
             getLogger().debug("Mime-type: <xsl:value-of select="$mime-type"/>");
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
+            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
               null, <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>"
             );
           </xsl:when>
           <xsl:otherwise>
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
+            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
               null, <xsl:value-of select="$component-param"/>
             );
           </xsl:otherwise>
@@ -1057,12 +1063,12 @@
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
             getLogger().debug("Mime-type: <xsl:value-of select="$mime-type"/>");
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
+            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
                 substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>");
           </xsl:when>
           <xsl:otherwise>
-            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
+            pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$component-type"/>",
                 substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>);
           </xsl:otherwise>

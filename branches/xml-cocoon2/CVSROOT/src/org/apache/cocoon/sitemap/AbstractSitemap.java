@@ -26,6 +26,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 
+import org.apache.cocoon.CocoonComponentSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
@@ -33,7 +34,6 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 import org.apache.cocoon.components.language.generator.AbstractCompiledComponent;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.SitemapComponentManager;
 import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.SAXException;
@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-17 19:55:41 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-19 21:57:49 $
  */
 public abstract class AbstractSitemap extends AbstractCompiledComponent implements Sitemap {
     private Context context;
@@ -51,9 +51,6 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
 
     /** The component manager instance */
     protected ComponentManager manager;
-
-    /** The sitemap component manager instance */
-    protected SitemapComponentManager sitemapComponentManager;
 
     /** The sitemap manager instance */
     protected Manager sitemapManager;
@@ -64,16 +61,13 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
     /** The creation date */
     protected static long dateCreated = -1L;
 
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
-     */
-    public void setParentSitemapComponentManager(SitemapComponentManager parentSitemapComponentManager) {
-        this.sitemapComponentManager = new SitemapComponentManager (parentSitemapComponentManager);
-        this.sitemapComponentManager.contextualize(this.context);
-        this.sitemapComponentManager.setLogger(getLogger());
-        this.sitemapComponentManager.compose(this.manager);
-    }
+    protected CocoonComponentSelector generators;
+    protected CocoonComponentSelector transformers;
+    protected SitemapComponentSelector serializers;
+    protected SitemapComponentSelector readers;
+    protected CocoonComponentSelector actions;
+    protected CocoonComponentSelector matchers;
+    protected CocoonComponentSelector selectors;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -83,9 +77,16 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
         this.manager = manager;
 
         try {
-            this.urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
+            this.urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
+            this.generators = (CocoonComponentSelector) this.manager.lookup(Roles.GENERATORS);
+            this.transformers = (CocoonComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
+            this.serializers = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);
+            this.readers = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
+            this.actions = (CocoonComponentSelector) this.manager.lookup(Roles.ACTIONS);
+            this.matchers = (CocoonComponentSelector) this.manager.lookup(Roles.MATCHERS);
+            this.selectors = (CocoonComponentSelector) this.manager.lookup(Roles.SELECTORS);
         } catch (Exception e) {
-            getLogger().error("cannot obtain the URLFactory", e);
+            getLogger().error("cannot obtain the Component", e);
             throw new ComponentNotFoundException ("cannot obtain the URLFactory", e);
         }
     }
@@ -121,7 +122,7 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
       * Loads a class specified in a sitemap component definition and
       * initialize it
       */
-    public void load_component(String type, String classURL, Configuration configuration, String mime_type)
+    public void load_component(int type, Object hint, String classURL, Configuration configuration, String mime_type)
     throws Exception {
         Class clazz;
         //FIXME(GP): Is it true that a class name containing a colon should be an URL?
@@ -136,14 +137,29 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
             throw new IllegalAccessException ("Object " + classURL + " is not a Component");
         }
 
-        if (this.sitemapComponentManager == null) {
-            this.sitemapComponentManager = new SitemapComponentManager();
-            this.sitemapComponentManager.contextualize(this.context);
-            this.sitemapComponentManager.setLogger(getLogger());
-            this.sitemapComponentManager.compose(this.manager);
+        switch (type) {
+            case Sitemap.GENERATOR:
+                this.generators.addComponent(hint, clazz, configuration);
+                break;
+            case Sitemap.TRANSFORMER:
+                this.transformers.addComponent(hint, clazz, configuration);
+                break;
+            case Sitemap.SERIALIZER:
+                this.serializers.addSitemapComponent(hint, clazz, configuration, mime_type);
+                break;
+            case Sitemap.READER:
+                this.readers.addSitemapComponent(hint, clazz, configuration, mime_type);
+                break;
+            case Sitemap.ACTION:
+                this.actions.addComponent(hint, clazz, configuration);
+                break;
+            case Sitemap.MATCHER:
+                this.matchers.addComponent(hint, clazz, configuration);
+                break;
+            case Sitemap.SELECTOR:
+                this.selectors.addComponent(hint, clazz, configuration);
+                break;
         }
-
-        this.sitemapComponentManager.addSitemapComponent(type, clazz, configuration, mime_type);
     }
 
     private byte [] getByteArrayFromStream (InputStream stream) {

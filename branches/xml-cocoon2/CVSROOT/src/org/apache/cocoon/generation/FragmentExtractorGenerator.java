@@ -29,12 +29,12 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-19 21:13:31 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-19 21:57:48 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator implements PoolClient {
 
     /** The fragment store. */
-    private static Map fragmentStore;
+    private static Map fragmentStore = new HashMap();
 
     private Pool pool;
 
@@ -51,35 +51,39 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
      * per-instance.
      */
     public FragmentExtractorGenerator() {
-        synchronized(this) {
-            if ( fragmentStore == null ) {
-                fragmentStore = Collections.synchronizedMap(new HashMap());
-            }
-        }
     }
 
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver,objectModel,src,par);
-        if ( fragmentStore.get(source) == null ) {
-            throw new ResourceNotFoundException("Could not find fragment " + source + ".");
-        }
 
+        synchronized (FragmentExtractorGenerator.fragmentStore) {
+            if ( FragmentExtractorGenerator.fragmentStore.get(source) == null ) {
+                throw new ResourceNotFoundException("Could not find fragment " + source + ".");
+            }
+        }
     }
 
     public void generate() throws SAXException {
         // Obtain the fragmentID  (which is simply the filename portion of the source)
         getLogger().debug("FragmentExtractorGenerator retrieving document " + source + ".");
-        Document doc = (Document) fragmentStore.get(source);
-        DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
 
-        streamer.stream(doc);
-        fragmentStore.remove(source);
+        synchronized (FragmentExtractorGenerator.fragmentStore) {
+            Document doc = (Document) FragmentExtractorGenerator.fragmentStore.get(source);
+            DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
+
+            streamer.stream(doc);
+            FragmentExtractorGenerator.fragmentStore.remove(source);
+        }
     }
 
     public static String store(Document doc) {
         String id = (new UID()).toString();
-        fragmentStore.put(id,doc);
+
+        synchronized (FragmentExtractorGenerator.fragmentStore) {
+            fragmentStore.put(id,doc);
+        }
+
         return id;
     }
 }

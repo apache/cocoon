@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-16 22:07:46 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-19 21:57:50 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 
@@ -50,13 +50,6 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
 
     /** The component manager */
     private ComponentManager manager;
-
-    /** The parent sitemap component manager */
-    private SitemapComponentManager parentSitemapComponentManager;
-
-    public Manager (SitemapComponentManager sitemapComponentManager) {
-        this.parentSitemapComponentManager = sitemapComponentManager;
-    }
 
     public void configure (Configuration conf) {
         this.conf = conf;
@@ -92,7 +85,7 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
                 sitemapHandler.regenerate(environment);
             }
         } else {
-            sitemapHandler = new Handler(parentSitemapComponentManager, source, check_reload);
+            sitemapHandler = new Handler(source, check_reload);
             sitemapHandler.contextualize(this.context);
             sitemapHandler.setLogger(getLogger());
             sitemapHandler.compose(this.manager);

@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Parameters;
@@ -26,6 +27,7 @@ import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.PoolClient;
+import org.apache.cocoon.Roles;
 
 import org.apache.cocoon.sitemap.ErrorNotifier;
 
@@ -34,7 +36,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-19 15:58:10 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-19 21:57:50 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;
@@ -58,13 +60,6 @@ public class ResourcePipeline implements Composer {
     /** the component manager */
     private ComponentManager manager;
 
-    /** the sitemap component manager */
-    private SitemapComponentManager sitemapComponentManager;
-
-    public ResourcePipeline (SitemapComponentManager sitemapComponentManager) {
-        this.sitemapComponentManager = sitemapComponentManager;
-    }
-
     public void compose (ComponentManager manager) {
         this.manager = manager;
     }
@@ -80,7 +75,8 @@ public class ResourcePipeline implements Composer {
         if (this.generator != null) {
             throw new ProcessingException ("Generator already set. You can only select one Generator (" + role + ")");
         }
-        this.generator = (Generator)sitemapComponentManager.lookup(role);
+        ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
+        this.generator = (Generator) selector.select(role);
         this.generatorSource = source;
         this.generatorParam = param;
     }
@@ -95,11 +91,12 @@ public class ResourcePipeline implements Composer {
         if (this.reader != null) {
             throw new ProcessingException ("Reader already set. You can only select one Reader (" + role + ")");
         }
-        this.reader = (Reader)sitemapComponentManager.lookup(role);
+        SitemapComponentSelector selector = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
+        this.reader = (Reader)selector.select(role);
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
-        this.sitemapReaderMimeType = this.sitemapComponentManager.getMimeTypeForRole(role);
+        this.sitemapReaderMimeType = selector.getMimeTypeForRole(role);
     }
 
     public void setSerializer (String role, String source, Parameters param)
@@ -112,16 +109,18 @@ public class ResourcePipeline implements Composer {
         if (this.serializer != null) {
             throw new ProcessingException ("Serializer already set. You can only select one Serializer (" + role + ")");
         }
-        this.serializer = (Serializer)sitemapComponentManager.lookup(role);
+        SitemapComponentSelector selector = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);
+        this.serializer = (Serializer)selector.select(role);
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
-        this.sitemapSerializerMimeType = this.sitemapComponentManager.getMimeTypeForRole(role);
+        this.sitemapSerializerMimeType = selector.getMimeTypeForRole(role);
     }
 
     public void addTransformer (String role, String source, Parameters param)
     throws Exception {
-        this.transformers.add ((Transformer)sitemapComponentManager.lookup(role));
+        ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
+        this.transformers.add ((Transformer)selector.select(role));
         this.transformerSources.add (source);
         this.transformerParams.add (param);
     }
