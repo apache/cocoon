@@ -1,5 +1,5 @@
 //
-// CVS $Id: xmlForm.js,v 1.5 2003/03/22 22:51:35 coliver Exp $
+// CVS $Id: xmlForm.js,v 1.6 2003/03/28 22:56:18 coliver Exp $
 //
 // XMLForm Support
 //
@@ -160,17 +160,8 @@ XForm.prototype.sendView = function(phase, uri, validator) {
         }
         // reset the view in case this is a re-invocation of a continuation
         cocoon.request.setAttribute("view", view);
-        try {
-            this.form.save(cocoon.environment.objectModel, "request");
-        } catch (e if (e instanceof java.lang.IllegalStateException)) {
-            if (cocoon.session.getAttribute(this.id) != null) {
-                // someone else has taken my session
-                this.dead = true;
-                handleInvalidContinuation();
-                suicide();
-            }
-            throw e;
-        }
+	this.form.remove(this.id);
+	this.form.save(cocoon.environment.objectModel, "request");
         this._sendView(uri, k);
         // _sendView creates a continuation, the invocation of which
         // will return right here: it is used to implement 
