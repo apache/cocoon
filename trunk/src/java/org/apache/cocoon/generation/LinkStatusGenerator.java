@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.9 2004/03/08 14:02:44 cziegeler Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.10 2004/03/08 21:21:10 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type=Generator
@@ -448,7 +448,8 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
                 getLogger().debug("Content-type: " + content_type);
             }
 
-            if (content_type.equals(linkContentType)) {
+            if (content_type.equals(linkContentType) ||
+                content_type.startsWith(linkContentType + ";")) {
                 url_links = new ArrayList();
 
                 InputStream is = conn.getInputStream();

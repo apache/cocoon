@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.185 2004/03/06 14:34:40 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.186 2004/03/08 21:21:10 joerg Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="26851" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
+     LinkStatusGenerator now handles also links with a specified charset.
+   </action>
    <action dev="JH" type="fix" fixes-bug="25594" due-to="Gernot Koller" due-to-email="grizzly@gmx.at">
      Allow streaming of uploaded files into a pipeline using StreamGenerator.
    </action>
