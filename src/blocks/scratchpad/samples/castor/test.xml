@@ -14,11 +14,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<zoo xmlns:castor="http://castor.exolab.org/cocoontransfomer">
-	<castor:InsertBean name="Mouse"/> 
-	<castor:InsertBean name="Lion"/> 
-	<castor:InsertBean name="Hamster" mapping="castor-mappings/test-mapping_de.xml"/>
-	<castor:InsertBean name="Wale"/>
-	<castor:InsertBean name="Elefant" scope="session"/> 
-	<castor:InsertBean name="Elefant" scope="request"/> 
+
+<zoo xmlns:castor="http://apache.org/cocoon/castor/1.0">
+  <castor:marshal name="Mouse"/> 
+  <castor:marshal name="Lion"/> 
+  <castor:marshal name="Hamster" mapping="castor-mappings/test-mapping_de.xml"/>
+  <castor:marshal name="Wale"/>
+  <castor:marshal name="Elefant" scope="session"/> 
+  <castor:marshal name="Elefant" scope="request"/> 
 </zoo>
