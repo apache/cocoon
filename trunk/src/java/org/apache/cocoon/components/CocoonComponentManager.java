@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.7 2003/04/15 13:10:27 giacomo Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.8 2003/04/24 09:02:15 bdelacretaz Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -357,6 +357,13 @@ implements SourceResolver
     }
 
     /**
+     * Release a RequestLifecycleComponent
+     */
+    protected void releaseRLComponent( final Component component ) {
+        super.release( component );
+    }
+
+    /**
      * Add an automatically released component
      */
     public static void addComponentForAutomaticRelease(final ComponentSelector selector,
@@ -483,7 +490,7 @@ final class EnvironmentDescription {
         while (iter.hasNext()) {
             final Object[] o = (Object[])iter.next();
             final Component component = (Component)o[0];
-            ((ComponentManager)o[1]).release( component );
+            ((CocoonComponentManager)o[1]).releaseRLComponent( component );
         }
         
         for(int i = 0; i < autoreleaseComponents.size(); i++) {
