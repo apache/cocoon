@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+    <content>
+        <h2>Dynamic PDF generation</h2>
+        <p>
+            In this example we will generate a PDF document containing
+            text received in the HTTP request parameters.
+        </p>
+        <p>
+            To run the example, submit this form, after changing the provided
+            text if you want to:
+            <form method="get" action="../pdf-example/pdf-example.pdf">
+                <table width="100%">
+                    <tr>
+                        <td>Title</td>
+                        <td><input name="title" size="60" value="Here's your title"/></td>
+                    </tr>
+                    <tr>
+                        <td>Text</td>
+                        <td>
+                            <textarea style="width:100%" name="text">Most quick brown foxes like to jump over lazy dogs.</textarea>
+                        </td>
+                    </tr>
+                </table>
+                <input type="submit" value="Generate PDF"/>
+            </form>
+
+            <p>
+                If your browser has problems with PDF coming out of a form
+                submit use
+                <a href="../pdf-example/pdf-example.pdf?title=PDF+test&amp;text=Text+for+the+PDF+test">
+                    this link
+                </a> instead.
+            </p>
+        </p>
+
+        <h2>The sitemap</h2>
+        <p>
+            The <em>FOPSerializer</em> requires a document in the <em>XSL-FO</em> vocabulary
+            for input, and converts this to PDF, handling fonts, page layout, etc.
+        </p>
+        <p>
+            Our sitemap will then apply an XSL transform to the output of the <em>RequestGenerator</em>
+            to convert it to XSL-FO, using request parameter values provided by the generator.
+        </p>
+        <p>
+            Errors in the XSL-FO document can happen when implementing such a transform, and to make
+            debugging easier we use a <em>view</em> in the sitemap, to access the intermediate
+            document before it is processed by the <em>FOPSerializer</em>.
+        </p>
+        <p>
+            Here are the view and pipeline definitions:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/multi-channel/sitemap.xmap/view"/>
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/multi-channel/sitemap.xmap/pdf"/>
+        </p>
+        <p>
+            These definitions allow the intermediate XSL-FO document to be retrieved by adding the
+            <em>cocoon-view=xsl-fo</em> parameter at the end of the URL, for example:
+            <br/>
+            <a href="../pdf-example/pdf-example.pdf?title=PDF+test&amp;text=Text+for+the+PDF+test&amp;cocoon-view=xsl-fo">
+                ../pdf-example/pdf-example.pdf?title=....&amp;cocoon-view=xsl-fo
+             </a>
+        </p>
+
+        <h2>XSL transformation</h2>
+        <p>
+            This transformation converts the <em>RequestGenerator</em> output in XSL-FO, inserting
+            the value of the <em>text</em> and <em>title</em> request parameters in the output document:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/multi-channel/pdf-example/pdf-example.xsl/main"/>
+        </p>
+    </content>
+</page>

@@ -1,4 +1,5 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
+
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,18 +16,23 @@
   limitations under the License.
 -->
 
-<page>
- <title>Login page</title>
- <content>
-   <linkbar/>
-   <para>
-     This page serves as an example of the authentication framework.
-   </para>
-   <para>Please log in using your name (cocoon will work)</para>
-   <form target="do-login" method="post">
-     <input type="text" name="username"/>
-     <input type="submit">Login</input>
-   </form>
- </content>
-</page>
+<!-- copy an xpath-specified excerpt or our input -->
 
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <xsl:param name="idToSelect" select="'x21'"/>
+
+    <!-- by default copy everything -->
+    <xsl:template match="*">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
+
+    <!-- apply given xpath on root -->
+    <xsl:template match="/">
+        <xsl:apply-templates select="//*[@id=$idToSelect]"/>
+    </xsl:template>
+
+</xsl:stylesheet>

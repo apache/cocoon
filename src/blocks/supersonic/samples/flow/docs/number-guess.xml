@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+    <content>
+        <p>
+            In this example, an HTML
+            form is shown repeatedly, until the user guesses the correct number.
+        </p>
+        <p>
+            Start the game <a href="../number-guess/startGuessNumber">here</a>.
+        </p>
+
+        <h2>The sitemap</h2>
+        <p>
+            At the sitemap level, Flowscript applications need four things:
+            <ul>
+                <li>The flowscript code must be made available to the sitemap</li>
+                <li>
+                    A <em>map:call function</em> instruction must start
+                    the Flowscript function when the "application start"
+                    request is received
+                </li>
+                <li>
+                    A pipeline must use <em>map:call continuation</em> to activate
+                    continuations when their IDs are received in requests
+                </li>
+                <li>
+                    A "view" pipeline must use the (flowscript-aware) JXTemplate generator
+                    to insert data provided by Flowscript into pages.
+                </li>
+            </ul>
+            The corresponding excerpts of our sitemap are shown below.
+        </p>
+        <h3>Flowscript declaration</h3>
+        <p>Note that this already contains the declaration of the next example's flowscript.</p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/flow"/>
+
+        <h3>map:call function</h3>
+        <p>
+            Here we use variables to allow any Flowscript function to be called, with a simple security
+            restriction: the function name must start with the <em>public_</em> prefix.
+        </p>
+        <p>
+            The maxValue parameter is used by our Flowscript <em>public_startGuessNumber</em> function,
+            but doesn't hurt if it's passed to other functions (like in the next example).
+        </p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/start"/>
+
+        <h3>map:call continue</h3>
+        <p>
+            This activates a Flowscript continuation when an URL ending with a continuation ID and the
+            <em>.continue</em> suffix is received.
+        </p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/continue"/>
+
+        <h3>View pipeline using JXTemplageGenerator</h3>
+        <p>
+            To be able to include data provided by Flowscript in our forms and views, we
+            use the flowscript-aware JXTemplateGenerator
+        </p>
+        <p>Here's the pipeline</p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/views"/>
+
+        <p>Which uses this resource to convert the page to HTML</p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/html"/>
+
+        <p>And here's the JXTemplate component declaration</p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/generators"/>
+
+        <h2>Flowscript code</h2>
+        <p>
+            Here's the complete Flowscript code that drives the number-guessing game.
+            (sorry about the lost indentation, the Slop block, which generates these listings, has been
+            improved in the meantime).
+        </p>
+        <cinclude:include element="flowscript-code" src="cocoon:/text-file/flow/number-guess/guess-number.js"/>
+
+        <h2>JXTemplate view</h2>
+        <p>
+            The JXTemplateGenerator makes Flowscript variables (like the
+            <em>toGuess</em> and <em>hint</em> attributes of the <em>sendPageAndWait</em>
+            call above) accessible using a simple substitution syntax.
+        </p>
+        <p>
+            Here's the page definition for our number-guessing form.
+            JXTemplate codes like <em>${continuation.id}</em>, will by replaced
+            by values provided in the FlowScript <em>sendPageAndWait</em> function call.
+        </p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/number-guess/guess.xml/page"/>
+
+        <h2>That's it!</h2>
+        <p>
+            We have now seen the complete code of our flowscript application:
+            <ul>
+                <li>A few sitemap declarations, which will be very similar for other Flowscript-based applications</li>
+                <li>A JXTemplate-based view, a "normal" page with some substitution codes</li>
+                <li>The Flowscript itself</li>
+            </ul>
+            We didn't have to write much code to implement this,
+            and more importantly <em>all the code that we wrote is application-specific</em>.
+            The Cocoon framework provides all the infrastructure.
+        </p>
+
+    </content>
+</page>

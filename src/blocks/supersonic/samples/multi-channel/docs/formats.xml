@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <p>
+            Through its many <em>Serializers</em>, Cocoon can transform
+            XML data into many output formats, including, but not limited to:
+            <ul>
+                <li>XML (obviously)</li>
+                <li>HTML</li>
+                <li>PDF</li>
+                <li>RTF</li>
+                <li>HSSF (Excel's Horrible SpreadSheet Format)</li>
+                <li>WAP/WML</li>
+                <li>SVG</li>
+                <li>PNG, JPEG</li>
+                <li>OpenOffice Write, Draw and Calc formats</li>
+                <li>ZIP archives</li>
+                <li>MIDI files</li>
+                <li>Flash animations</li>
+                <li>Plain text</li>
+                <li>VRML</li>
+            </ul>
+        </p>
+        <p>
+            I say <em>not limited to</em>, because I might have forgotten some,
+            but also because it is fairly easy for a Java programmer to implement
+            any output format by writing a new <em>Serializer</em> or extending
+            an existing one.
+        </p>
+        <p>
+            The <em>Hello world</em> samples of Cocoon give simple examples
+            of how these formats are generated.
+        </p>
+        <p>
+            Our simple example will let you input some text and create
+            a PDF document out of it, using the PDFSerializer based on
+            the Apache FOP project.
+        </p>
+    </content>
+</page>
