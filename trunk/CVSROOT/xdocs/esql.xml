@@ -74,6 +74,9 @@ the esql taglib and will be stripped from the output.</p>
           written in the W3C standard language XML Schema, of every single esql element and attribute.
           It is fairly human-readable and includes comments for the purpose of each tag.</p>
 
+          <p>The ultimate reference, is of course the source code, which is an XSLT logicsheet contained in the
+          file <code>src/org/apache/cocoon/processor/xsp/library/sql/esql.xsl</code></p>
+
           <p>Of course, we would be very grateful for any improvements on this documentation
             or further examples - please send them to
            <link href="mailto:cocoon-users@xml.apache.org">cocoon-users@xml.apache.org</link>!</p>
