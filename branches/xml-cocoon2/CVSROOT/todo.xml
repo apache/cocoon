@@ -1,10 +1,10 @@
-<?xml version="1.0"i encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.28 2001-04-18 21:27:27 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.29 2001-04-19 06:48:20 cziegeler Exp $
 -->
 
 
@@ -22,7 +22,7 @@
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
-  <person name="Gerhard Fröhlich" email="g-froehlich@gmx.de" id="GF"/>
+  <person name="Gerhard Fr&#246;hlich" email="g-froehlich@gmx.de" id="GF"/>
   <person name="Volunteer needed" email="giacomo@apache.org" id="open"/>
  </devs>
 
