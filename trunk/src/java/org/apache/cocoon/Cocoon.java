@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.12 2003/08/06 10:45:31 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.13 2003/08/16 13:30:04 sylvain Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -710,6 +710,14 @@ public class Cocoon
      */
     public Map getComponentConfigurations() {
         return Collections.EMPTY_MAP;
+    }
+    
+    /**
+     * Return this (Cocoon is always at the root of the processing chain).
+     * @since 2.1.1
+     */
+    public Processor getRootProcessor() {
+        return this;
     }
 
     /**

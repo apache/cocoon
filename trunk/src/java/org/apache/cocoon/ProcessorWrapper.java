@@ -62,7 +62,7 @@ import org.apache.cocoon.environment.Environment;
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.3 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.4 2003/08/16 13:30:04 sylvain Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Component, Disposable, ThreadSafe {
@@ -101,6 +101,14 @@ implements Processor, Component, Disposable, ThreadSafe {
      */
     public Map getComponentConfigurations() {
         return this.processor.getComponentConfigurations();
+    }
+    
+    /**
+     * Get the root parent processor of this processor
+     * @since 2.1.1
+     */
+    public Processor getRootProcessor() {
+        return this.processor.getRootProcessor();
     }
 
 }
