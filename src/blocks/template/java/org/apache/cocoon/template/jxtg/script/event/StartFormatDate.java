@@ -21,10 +21,9 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.TimeZone;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jxpath.JXPathContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -61,17 +60,16 @@ public class StartFormatDate extends StartInstruction {
         this.locale = JXTExpression.compileExpr(attrs.getValue("locale"), null, locator);
     }
 
-    public String format(JexlContext jexl, JXPathContext jxp) throws Exception {
-        String var = this.var.getStringValue(jexl, jxp);
-        Object value = this.value.getValue(jexl, jxp);
-        Object locVal = this.locale.getValue(jexl, jxp);
-        String pattern = this.pattern.getStringValue(jexl,
-                jxp);
-        Object timeZone = this.timeZone.getValue(jexl, jxp);
+    public String format(ExpressionContext expressionContext) throws Exception {
+        String var = this.var.getStringValue(expressionContext);
+        Object value = this.value.getValue(expressionContext);
+        Object locVal = this.locale.getValue(expressionContext);
+        String pattern = this.pattern.getStringValue(expressionContext);
+        Object timeZone = this.timeZone.getValue(expressionContext);
 
-        String type = this.type.getStringValue(jexl, jxp);
-        String timeStyle = this.timeStyle.getStringValue(jexl, jxp);
-        String dateStyle = this.dateStyle.getStringValue(jexl, jxp);
+        String type = this.type.getStringValue(expressionContext);
+        String timeStyle = this.timeStyle.getStringValue(expressionContext);
+        String dateStyle = this.dateStyle.getStringValue(expressionContext);
 
         String formatted = null;
 
@@ -113,8 +111,7 @@ public class StartFormatDate extends StartInstruction {
         }
         formatted = formatter.format(value);
         if (var != null) {
-            jexl.getVars().put(var, formatted);
-            jxp.getVariables().declareVariable(var, formatted);
+            expressionContext.put(var, formatted);
             return null;
         }
         return formatted;

@@ -47,7 +47,7 @@ public class FlowObjectModelHelper {
     /** Avoid instantiation */
     private FlowObjectModelHelper() {}
 
-    private static void fillContext(Object contextObject, Map map) {
+    public static void fillContext(Object contextObject, Map map) {
         // Hack: I use jxpath to populate the context object's properties
         // in the jexl context
         final JXPathBeanInfo bi =

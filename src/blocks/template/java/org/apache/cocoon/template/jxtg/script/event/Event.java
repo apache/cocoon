@@ -23,9 +23,10 @@ public class Event {
     protected final Locator location;
     protected Event next; // in document order
 
+    public static final Locator NULL_LOCATOR = new LocatorImpl();
+
     public Event(Locator locator) {
-        this.location = locator != null ? new LocatorImpl(locator)
-                : JXTemplateGenerator.NULL_LOCATOR;
+        this.location = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
     }
 
     public final Locator getLocation() {

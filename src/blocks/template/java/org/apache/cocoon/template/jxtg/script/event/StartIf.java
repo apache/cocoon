@@ -35,6 +35,8 @@ public class StartIf extends StartInstruction {
         String test = attrs.getValue("test");
         if (test != null) {
             this.test = JXTExpression.compileExpr(test, "if: \"test\": ", locator);
+            // Why is test lenient?
+            this.test.setLenient(Boolean.TRUE);
         } else {
             throw new SAXParseException("if: \"test\" is required", locator, null);
         }
