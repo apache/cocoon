@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  * characters events
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: TextRecorder.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ * @version CVS $Id: TextRecorder.java,v 1.2 2003/05/06 07:17:28 cziegeler Exp $
 */
 public final class TextRecorder
 extends NOPRecorder {
@@ -71,12 +71,7 @@ extends NOPRecorder {
 
     public void characters(char ary[], int start, int length)
     throws SAXException {
-        String value = new String(ary, start, length).trim();
-        if (value.length() > 0) {
-            buffer.append(value);
-        } else {
-            buffer.append(' ');
-        }
+        buffer.append(new String(ary, start, length));
     }
 
     public String getText() {
