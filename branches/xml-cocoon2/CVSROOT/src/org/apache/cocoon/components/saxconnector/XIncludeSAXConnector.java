@@ -40,12 +40,9 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-05-04 11:02:05 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-05-04 15:29:02 $
  */
-public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
-
-    /** Stacks namespaces during processing */
-    private ArrayList currentNS = new ArrayList();
+public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector {
 
     /** The sitemap we manipulate */
     private Sitemap sitemap;
@@ -78,8 +75,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
     }
 
     public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
-        String value;
-
         if (uri != null && name != null && uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
             String src = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE);
             String element = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_ELEMENT_ATTRIBUTE);
@@ -94,25 +89,20 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
                 getLogger().debug("XIncludeSAXConnector", e);
                 throw new SAXException(e);
             }
-            return;
-        }
 
-        if (uri == null || uri.equals("")) {
-            uri = (String)this.getNS();
+        } else {
+            super.startElement(uri, name, raw, attr);
         }
-        this.pushNS(uri);
-        super.startElement(uri, name, raw, attr);
     }
 
     public void endElement(String uri, String name, String raw) throws SAXException {
         if (uri != null && name != null && uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
             return;
         }
-        super.endElement((String)this.popNS(),name,raw);
+        super.endElement(uri, name, raw);
     }
 
     private void startElem(String namespaceURI, String prefix, String name) throws SAXException {
-        this.pushNS(namespaceURI);
         AttributesImpl attrs = new AttributesImpl();
         String qname = name;
         if (!namespaceURI.equals("")) {
@@ -121,32 +111,11 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         super.startElement(namespaceURI, name, name, attrs);
     }
 
-    private void endElem(String prefix, String name) throws SAXException {
-        String ns = this.popNS();
-        super.endElement(ns, name, name);
-        if (!ns.equals("")) {
+    private void endElem(String namespaceURI, String prefix, String name) throws SAXException {
+        super.endElement(namespaceURI, name, name);
+        if (!namespaceURI.equals("")) {
             super.endPrefixMapping(prefix);
         }
-    }
-
-    private String pushNS(String ns) {
-        currentNS.add(ns);
-        return ns;
-    }
-
-    private String popNS() {
-        int last = currentNS.size()-1;
-        String ns = (String)currentNS.get(last);
-        currentNS.remove(last);
-        return ns;
-    }
-
-    private String getNS() {
-        int last = currentNS.size()-1;
-        String ns = "";
-        if (last >= 0)
-            ns = (String)currentNS.get(last);
-        return ns;
     }
 
     public void setDocumentLocator(Locator locator) {
@@ -186,7 +155,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             this.environment.popURI();
 
             if (!"".equals(element))
-                this.endElem(prefix, element);
+                this.endElem(ns, prefix, element);
         } catch (Exception e) {
             getLogger().error("Error selecting sitemap",e);
         } finally {
@@ -197,14 +166,10 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         }
     }
 
-    public void dispose() {
-    }
-
     /**
      * Recycle the producer by removing references
      */
     public void recycle () {
-        this.currentNS.clear();
         this.sitemap = null;
     }
 }
