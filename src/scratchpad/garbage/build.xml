@@ -61,19 +61,37 @@
     <echo message="Compiling with J2SDK version ${ant.java.version}"/>
 
     <!--
-     | Set the "javadoc.uptodate" if the API documentation is up to date.
-     +-->
-    <uptodate property="javadoc.uptodate">
-      <srcfiles dir="${dir.source.java}" includes="**/*.java"/>
-      <mapper type="merge" to="${dir.build.apidocs}/index.html"/>
-    </uptodate>
-
-    <!--
      | Set the "javacc.uptodate" property if the parser doesn't need to be
      | rebuilt from its "JavaCC" grammar.
      +-->
     <uptodate property="javacc.uptodate" srcfile="${javacc.grammar}">
       <mapper type="glob" from="*.jj" to="*.java"/>
+    </uptodate>
+
+    <!--
+     | Set the "javacc.available" property if the JavaCC class is available.
+     +-->
+    <available property="javacc.available" classname="javacc">
+      <classpath refid="classpath"/>
+    </available>
+
+    <!--
+     | Set the "javacc.required" property if JavaCC is not available in the
+     | current classpath, and a JavaCC recompilation is necessary.
+     +-->
+    <condition property="javacc.required">
+      <and>
+        <not><isset property="javacc.available"/></not>
+        <not><isset property="javacc.uptodate"/></not>
+      </and>
+    </condition>
+
+    <!--
+     | Set the "javadoc.uptodate" if the API documentation is up to date.
+     +-->
+    <uptodate property="javadoc.uptodate">
+      <srcfiles dir="${dir.source.java}" includes="**/*.java"/>
+      <mapper type="merge" to="${dir.build.apidocs}/index.html"/>
     </uptodate>
 
     <!--
@@ -106,9 +124,27 @@
 
 
   <!-- ========================================================================
+   | Fail if JavaCC is required (and therefore we don't have it)
+   +-->
+  <target name="javacc.check" depends="prepare" if="javacc.required">
+    <echo message="The JavaCC-generated sources for the Garbage parser are"/>
+    <echo message="not up-to-date. The build system requires to re-generate"/>
+    <echo message="the parser Java sources, but it appears that JavaCC is"/>
+    <echo message="not currently available. Please check your classpath, and"/>
+    <echo message="if you need to download JavaCC, please visit:"/>
+    <echo message="    "/>
+    <echo message="    http://www.experimentalstuff.com/Technologies/JavaCC"/>
+    <echo message="    "/>
+    <echo message="Then place a copy of the 'javacc.jar' java archive your"/>
+    <echo message="'${dir.tools}' directory."/>
+    <fail message="JavaCC unavailable"/>
+  </target>
+
+
+  <!-- ========================================================================
    | Invoke JavaCC to build the parser from the JJ Grammar.
    +-->
-  <target name="javacc" depends="prepare" unless="javacc.uptodate">
+  <target name="javacc" depends="javacc.check" unless="javacc.uptodate">
 
     <!--
      | Compile the parser from the original JavaCC grammar if necessary.
