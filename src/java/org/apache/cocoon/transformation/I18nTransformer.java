@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * $Id: I18nTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * $Id: I18nTransformer.java,v 1.2 2003/03/13 05:58:29 jefft Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -844,7 +844,7 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     /**
-     * Implemenation of CachableProcessingComponents.
+     * Implemenation of CacheableProcessingComponents.
      * Generates unique key for the current locale.
      */
     public java.io.Serializable generateKey() {
@@ -852,9 +852,9 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     /**
-     * Implementation of CachableProcessingComponent.
+     * Implementation of CacheableProcessingComponent.
      * Generates validity object for this transformer or <code>null</code>
-     * if this instance is not cachable.
+     * if this instance is not cacheable.
      */
     public SourceValidity generateValidity() {
         return I18N_NOP_VALIDITY;
