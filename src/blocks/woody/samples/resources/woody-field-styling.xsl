@@ -364,7 +364,7 @@
       </xsl:choose>
     </xsl:variable>
 
-    <span title="{wi:hint}">
+    <span  class="woody-doubleList" title="{wi:hint}">
       <table>
       <tr>
           <td>
@@ -384,7 +384,7 @@
           <!-- command buttons -->
       		<!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
       		<xsl:text>&#160;</xsl:text>
-      		<input type="button" value="&#160;&gt;&#160;" onclick="opt{generate-id()}.transferRight()"/>
+      		<input type="button" value="&gt;" onclick="opt{generate-id()}.transferRight()"/>
       		<xsl:text>&#160;</xsl:text>
       		<br/>
       		<xsl:text>&#160;</xsl:text>
@@ -392,7 +392,7 @@
       		<xsl:text>&#160;</xsl:text>
       		<br/>
       		<xsl:text>&#160;</xsl:text>
-      		<input type="button" value="&#160;&lt;&#160;" onclick="opt{generate-id()}.transferLeft()"/>
+      		<input type="button" value="&lt;" onclick="opt{generate-id()}.transferLeft()"/>
       		<xsl:text>&#160;</xsl:text>
       		<br/>
       		<xsl:text>&#160;</xsl:text>
