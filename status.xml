@@ -209,6 +209,9 @@
      current sitemap even if you are in a sub sitemap. Added an abstract request
      wrapper class as well.
    </action>
+   <action dev="CZ" type="add">
+     Add scoped request attributes (global/request).
+   </action>
    <action dev="CZ" type="update">
      Update to servlet specification 2.3.
    </action>
@@ -301,6 +304,10 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="update">
+     Updated rhino to 1.5r4-20040629T1232,
+     xreporter-expression to 20040701, ehcache to 0.9,
+   </action>
    <action dev="CZ" type="fix" fixes-bug="26854">
      A redirect is now possible, if it's called from flow. This also fixes bug #26571.
    </action>
@@ -347,9 +354,6 @@
    </action>
    <action dev="AG" type="update">
      Update lucene to 1.4.
-   </action>
-   <action dev="CZ" type="add">
-     Add scoped request attributes (global/request).
    </action>
    <action dev="UH" type="add">
      Enhanced JMS support by adding a JMSConnectionManager component to the JMS block.
