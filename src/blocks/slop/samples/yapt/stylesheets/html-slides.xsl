@@ -2,7 +2,7 @@
 
 <!--
     Generate the HTML for one or many slides
-    $Id: html-slides.xsl,v 1.3 2003/09/27 18:46:34 bdelacretaz Exp $
+    $Id: html-slides.xsl,v 1.4 2003/09/27 19:12:05 bdelacretaz Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -80,23 +80,17 @@
 
         <xsl:if test="$prev">
             <div class="navItem">
-                <a href="{concat('slide-',$prev)}">
-                    previous
-                </a>
+                <a href="{concat('slide-',$prev)}">previous</a>
             </div>
         </xsl:if>
 
         <div class="navItem">
-            <a href="index">
-                index
-            </a>
+            <a href="index">index</a>
         </div>
 
         <xsl:if test="$next">
             <div class="navItem">
-                <a href="{concat('slide-',$next)}">
-                    next
-                </a>
+                <a href="{concat('slide-',$next)}">next</a>
             </div>
         </xsl:if>
 
