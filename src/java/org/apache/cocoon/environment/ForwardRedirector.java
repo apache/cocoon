@@ -62,7 +62,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.9 2003/10/29 14:52:09 vgritsenko Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.10 2003/11/14 18:57:43 unico Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
@@ -144,4 +144,13 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
     public boolean hasRedirected() {
         return this.hasRedirected;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Redirector#sendStatus(int)
+     */
+    public void sendStatus(int sc) {
+        env.setStatus(sc);
+        this.hasRedirected = true;
+    }
+
 }

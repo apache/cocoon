@@ -68,7 +68,7 @@ import org.apache.cocoon.util.NetUtils;
 /**
  * 
  * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
- * @version CVS $Id: HttpEnvironment.java,v 1.13 2003/10/30 16:42:58 vgritsenko Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.14 2003/11/14 18:57:44 unico Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -133,6 +133,11 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
 
     public void permanentRedirect(boolean sessionmode, String newURL) throws IOException {
         doRedirect(sessionmode, newURL, true);
+    }
+
+    public void sendStatus(int sc) {
+        setStatus(sc);
+        this.hasRedirected = true;
     }
 
    /**

@@ -83,5 +83,9 @@ public class MockRedirector implements Redirector {
         redirect = null;
         hasRedirected = false;
     }
+    
+    public void sendStatus(int sc) {
+        hasRedirected = true;
+    }
 }
 
