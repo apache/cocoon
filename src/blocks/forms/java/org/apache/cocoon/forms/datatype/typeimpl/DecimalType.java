@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.datatype.typeimpl;
 /**
  * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation
  * for decimal numbers (backed by the java.math.BigDecimal class).
- * @version $Id: DecimalType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version $Id$
  */
 public class DecimalType extends AbstractDatatype {
     public Class getTypeClass() {

@@ -21,7 +21,7 @@ package org.apache.cocoon.forms.formmodel;
  * one tries to add a WidgetDefinition that has the same id as another,
  * previously added, WidgetDefinition.
  * 
- * @version $Id: DuplicateIdException.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class DuplicateIdException extends Exception {
     public DuplicateIdException(String message) {

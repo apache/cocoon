@@ -26,7 +26,7 @@ import org.apache.avalon.framework.service.ServiceException;
 /**
  * Abstract base class for Cocoon Forms actions.
  * 
- * @version $Id: AbstractFormsAction.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
+ * @version $Id$
  */
 public abstract class AbstractFormsAction 
   implements Action, ThreadSafe, Serviceable, Disposable {

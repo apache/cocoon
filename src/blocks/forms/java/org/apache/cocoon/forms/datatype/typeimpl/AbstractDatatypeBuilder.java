@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
- * @version $Id: AbstractDatatypeBuilder.java,v 1.4 2004/04/21 13:20:27 bruno Exp $
+ * @version $Id$
  */
 public abstract class AbstractDatatypeBuilder extends AbstractLogEnabled implements DatatypeBuilder, Serviceable, Configurable, Contextualizable {
     protected ServiceManager serviceManager;

@@ -34,7 +34,7 @@ import java.util.Date;
  * meant to illustrate how you can prepopulate a Form instance before its
  * initial display.
  * 
- * @version $Id: InitForm1Action.java,v 1.4 2004/05/07 16:43:43 mpo Exp $
+ * @version $Id$
  */
 public class InitForm1Action extends AbstractFormsAction {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)

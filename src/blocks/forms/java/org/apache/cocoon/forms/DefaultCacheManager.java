@@ -34,7 +34,7 @@ import org.apache.excalibur.source.SourceValidity;
 /**
  * Component implementing the {@link CacheManager} role.
  * 
- * @version $Id: DefaultCacheManager.java,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+ * @version $Id$
  */
 public class DefaultCacheManager 
   extends AbstractLogEnabled 

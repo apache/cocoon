@@ -25,7 +25,7 @@ import org.apache.cocoon.environment.Request;
 
 /**
  * cforms flowscript integration helper class.
- * @version $Id: Form.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
+ * @version $Id$
  */
 public class Form extends ScriptableObject {
     FOM_Cocoon cocoon;

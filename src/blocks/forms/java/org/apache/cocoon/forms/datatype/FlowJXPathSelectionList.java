@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class FlowJXPathSelectionList implements SelectionList {
 

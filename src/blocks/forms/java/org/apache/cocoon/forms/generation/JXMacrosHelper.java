@@ -104,18 +104,14 @@ public class JXMacrosHelper {
      * @param currentWidget
      * @param id
      */
-    public Widget getWidget(Widget currentWidget, String id) {
-        Widget result = null;
-
-        if (currentWidget instanceof ContainerWidget) {
-            result = ((ContainerWidget)currentWidget).getChild(id);
-        }
+    public Widget getWidget(Widget currentWidget, String path) {
+        Widget result = currentWidget.lookupWidget(path);
 
         if (result != null) {
             return result;
         } else {
             throw new IllegalArgumentException("Widget '" + currentWidget +
-                                               "' has no child named '" + id + "'");
+                                               "' has no child named '" + path + "'");
         }
     }
 

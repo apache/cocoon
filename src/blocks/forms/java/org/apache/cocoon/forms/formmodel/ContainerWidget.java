@@ -22,7 +22,7 @@ import java.util.Iterator;
  * widget, the {@link ContainerWidget}s being the branches/forks, and the
  * {@link Widget}s with values being the leaves.
  *
- * @version $Id: ContainerWidget.java,v 1.5 2004/05/07 16:43:42 mpo Exp $
+ * @version $Id$
  */
 public interface ContainerWidget extends Widget {
     

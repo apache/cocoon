@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RowAction.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id$
  */
 public class RowAction extends Action {
     public RowAction(RowActionDefinition definition) {

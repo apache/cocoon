@@ -50,7 +50,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     }
 
     public void setSelectionList(SelectionList selectionList) {
-        if (selectionList.getDatatype() != getDatatype())
+        if (selectionList != null && selectionList.getDatatype() != getDatatype())
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         this.selectionList = selectionList;
     }

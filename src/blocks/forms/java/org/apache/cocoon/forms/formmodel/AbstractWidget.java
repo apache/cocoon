@@ -63,9 +63,18 @@ public abstract class AbstractWidget implements Widget {
      * Storage for the widget allocated attributes
      */
     private Map attributes;
-
+ 
     protected AbstractWidget(AbstractWidgetDefinition definition) {
         this.state = definition.getState();
+    }
+
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization, such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize() {
+        // Do nothing.
     }
 
     /**
@@ -165,7 +174,7 @@ public abstract class AbstractWidget implements Widget {
 
     public Widget lookupWidget(String path) {
 
-        if (path == null && path.equals(""))
+        if (path == null || path.equals(""))
             return this;
 
         Widget relativeWidget;

@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.formmodel;
  * the value of a required field, when that required field does not yet have
  * a value.
  * 
- * @version $Id: CannotYetResolveWarning.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class CannotYetResolveWarning extends  RuntimeException {
     public String getMessage() {

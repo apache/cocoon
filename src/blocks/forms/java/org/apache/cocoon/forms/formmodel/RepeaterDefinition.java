@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} part of a Repeater widget, see {@link Repeater} for more information.
  * 
- * @version $Id: RepeaterDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class RepeaterDefinition extends AbstractContainerDefinition {
     private int initialSize = 0;

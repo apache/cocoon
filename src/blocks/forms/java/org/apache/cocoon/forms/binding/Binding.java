@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * information elements from some back-end model (2nd argument) to and from
  * a existing Cocoon Form Widget.
  *
- * @version CVS $Id: Binding.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id$
  */
 public interface Binding {
 

@@ -25,7 +25,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * The {@link WidgetDefinition} part of a Form widget, see {@link Form} for more information.
  * 
- * @version $Id: FormDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class FormDefinition extends AbstractContainerDefinition {
     private ProcessingPhaseListener listener;

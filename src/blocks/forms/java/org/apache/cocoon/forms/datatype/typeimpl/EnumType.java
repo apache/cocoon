@@ -41,7 +41,7 @@ package org.apache.cocoon.forms.datatype.typeimpl;
  * different, you should also provide a fromString(String, Locale)
  * method to convert those strings back to instances.
  *  
- * @version CVS $Id: EnumType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version CVS $Id$
  */
 public class EnumType extends AbstractDatatype {
     

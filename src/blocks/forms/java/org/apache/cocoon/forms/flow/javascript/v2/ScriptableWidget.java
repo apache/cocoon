@@ -462,7 +462,7 @@ public class ScriptableWidget extends ScriptableObject {
     public String jsFunction_getId() {
         return delegate.getId();
     }
-
+    
     public WidgetState jsGet_state() {
         return delegate.getState();
     }

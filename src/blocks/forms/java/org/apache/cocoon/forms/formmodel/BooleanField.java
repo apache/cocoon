@@ -40,6 +40,11 @@ import org.apache.cocoon.forms.validation.ValidationError;
  * @version $Id$
  */
 public class BooleanField extends AbstractWidget implements ValidationErrorAware, ValueChangedListenerEnabled {
+
+    private static final String BOOLEAN_FIELD_EL = "booleanfield";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     // FIXME(SW) : should the initial value be false or null ? This would allow
     // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
@@ -102,10 +107,6 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     public void setValidationError(ValidationError error) {
         this.validationError = error;
     }
-
-    private static final String BOOLEAN_FIELD_EL = "booleanfield";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
 
     /**
      * @return "booleanfield"

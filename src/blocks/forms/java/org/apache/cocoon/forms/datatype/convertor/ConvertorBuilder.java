@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * but attributes and content of the element can vary depending on the
  * ConvertorBuilder implementation.
  *
- * @version CVS $Id: ConvertorBuilder.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id$
  */
 public interface ConvertorBuilder {
     /**

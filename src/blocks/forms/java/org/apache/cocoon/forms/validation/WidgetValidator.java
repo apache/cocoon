@@ -35,7 +35,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * traversal of the widget tree).
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetValidator.java,v 1.4 2004/04/29 08:46:19 cziegeler Exp $
+ * @version CVS $Id$
  */
 public interface WidgetValidator {
     

@@ -25,7 +25,7 @@ import java.math.BigDecimal;
  * Convertor for {@link java.math.BigDecimal}s that does not do any
  * (locale-dependent) formatting.
  *
- * @version CVS $Id: PlainDecimalConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id$
  */
 public class PlainDecimalConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
