@@ -38,7 +38,7 @@
       ]]></source>
         <p>
           The text Serializer sets the <code>method</code> property
-          to <code>text</code>.
+          of the XML serializer to the value <code>text</code>.
         </p>
     </s2>
     <s2 title="Pipeline Usage">
@@ -59,13 +59,19 @@
         The pipeline snippet above serializes the SAX events of the
         announcment document resource to plain text. 
       </p>
+      <p>
+        Input document of the text serializer must be valid XML document. It
+        should have at least one element, root element, which will contain
+        all the text of the document. Root element will be ignored by text
+        serializer and will not go into the output stream.
+      </p>
     </s2>
     <s2 title="Further Reading">
       <p>
         As text Serializer uses the XML serializer internally, you might 
         want to read the complete list of valid XML configuration parameters.
         It is available at <link href="xml-serializer.html">XML serializer</link>
-        user docuementation.
+        user documentation.
       </p>
     </s2>
   </s1>
