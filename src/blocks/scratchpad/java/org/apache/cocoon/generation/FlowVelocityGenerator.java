@@ -30,13 +30,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -139,7 +139,7 @@ import org.xml.sax.SAXParseException;
  * Child Elements:
  *
  * <dl>
- * <dt>&lt;property key="propertyKey" value="propertyValue"/&gt; (optional; 0..n)</dt>
+ * <dt>&lt;property name="propertyName" value="propertyValue"/&gt; (optional; 0..n)</dt>
  * <dd>An additional property to pass along to the Velocity template
  * engine during initialization</dd>
  *
@@ -152,7 +152,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.6 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.7 2004/03/06 00:11:07 joerg Exp $
  */
 public class FlowVelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
@@ -1052,7 +1052,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
         } catch (SAXException e) {
             getLogger().error("VelocityGenerator.generate()", e);
             throw e;
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
         } catch (ProcessingException e) {
