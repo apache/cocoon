@@ -453,14 +453,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         setSelectionList(getFieldDefinition().buildSelectionListFromModel(model, valuePath, labelPath));
     }
 
-    /**
-     * Delete this field's selection list.
-     */
-    public void removeSelectionList() {
-    	this.selectionList = null;
-    	getFieldDefinition().setSelectionList(null);
-    }
-
     public Datatype getDatatype() {
         return getFieldDefinition().getDatatype();
     }

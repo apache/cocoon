@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.binding;
 import org.apache.cocoon.forms.formmodel.Struct;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Pointer;
 
 /**
  * StructJXPathBinding provides an implementation of a {@link Binding}
@@ -30,9 +31,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  * @version $Id$
  */
-public class StructJXPathBinding extends ComposedJXPathBindingBase {
-
-    private final String xpath;
+public class StructJXPathBinding extends ContextJXPathBinding {
 
     private final String widgetId;
 
@@ -43,9 +42,8 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      * @param childBindings
      */
     public StructJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
-        super(commonAtts, childBindings);
+        super(commonAtts, xpath, childBindings);
         this.widgetId = widgetId;
-        this.xpath = xpath;
     }
 
     /**
@@ -55,11 +53,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Struct structWidget = (Struct)selectWidget(frmModel, this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        super.doLoad(structWidget, subContext);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading " + toString());
-        }
+        super.doLoad(structWidget, jxpc);
     }
 
     /**
@@ -69,14 +63,10 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Struct structWidget = (Struct)selectWidget(frmModel, this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        super.doSave(structWidget, subContext);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString());
-        }
+        super.doSave(structWidget, jxpc);
     }
 
     public String toString() {
-        return "StructJXPathBinding [widget=" + this.widgetId + ", xpath=" + this.xpath + "]";
+        return "StructJXPathBinding [widget=" + this.widgetId + ", xpath=" + getXPath() + "]";
     }
 }

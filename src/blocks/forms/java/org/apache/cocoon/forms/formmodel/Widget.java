@@ -146,24 +146,6 @@ public interface Widget {
     public Widget lookupWidget(String path);
 
     /**
-     * Controls whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for this widget and its children.
-     */
-    public void setProcessRequests(boolean processRequests);
-
-    /**
-     * Controls whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for this widget.
-     */
-    public void setProcessMyRequests(boolean processMyRequests);
-
-    /**
-     * Controls whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for children of this widget.
-     */
-    public void setProcessChildRequests(boolean processChildRequests);
-
-    /**
      * Lets this widget read its data from a request. At this point the Widget
      * may try to convert the request parameter to its native datatype (if it
      * is not a string), but it should not yet generate any validation errors.

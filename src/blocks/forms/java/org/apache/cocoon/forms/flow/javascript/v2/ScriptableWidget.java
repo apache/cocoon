@@ -683,12 +683,6 @@ public class ScriptableWidget extends ScriptableObject {
         }
     }
 
-    public void jsFunction_removeSelectionList() {
-    	if (delegate instanceof SelectableWidget) {
-    		((SelectableWidget)delegate).removeSelectionList();
-    	}
-    }
-
     static final Object[] WIDGET_CLASS_MAP = {
         Form.class, "Form",
         Field.class, "Field",

@@ -86,7 +86,7 @@ public class Form extends AbstractContainerWidget {
      * Fire the events that have been queued.
      * Note that event handling can fire new events.
      */
-    public void fireEvents() {
+    private void fireEvents() {
         if (this.events != null) {
             CursorableLinkedList.Cursor cursor = this.events.cursor();
             while(cursor.hasNext()) {
@@ -248,7 +248,7 @@ public class Form extends AbstractContainerWidget {
      * @param redisplayForm indicates if the form should be redisplayed to the user.
      */
     public void endProcessing(boolean redisplayForm) {
-        this.endProcessing = new Boolean(!redisplayForm);
+        this.endProcessing = Boolean.valueOf(!redisplayForm);
     }
 
     /**

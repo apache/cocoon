@@ -610,13 +610,19 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (isVisible(widget)) {
                     contextWidgets.addFirst(contextWidget);
                     contextWidget = widget;
-                    return this;
+                    //Don't output fi:struct
+                    // out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
+                    // out.attributes();
+                    // out.startElement();      
+                   return this;
                 } else {
                     return nullHandler;
                 }
             case EVENT_ELEMENT:
                 return nestedTemplate();
             case EVENT_END_ELEMENT:
+                // don't output fi:struct
+                // out.endElement();
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 return this;
             default:
@@ -822,7 +828,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 // Insert the continuation id
                 // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
-                Object idObj = pipeContext.evaluateExpression("$continuation/id");
+                Object idObj = pipeContext.evaluateExpression("$cocoon/continuation/id");
                 if (idObj == null) {
                     throwSAXException("No continuation found");
                 }

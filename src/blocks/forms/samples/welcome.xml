@@ -37,6 +37,7 @@
   <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form.</sample>
   <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
+  <sample name="XHR Car selector" href="xhr_carselector">Same sample, using XmlHttpRequest to reduce client/server roundtrips.</sample>
   <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
@@ -60,6 +61,7 @@
   <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">fb:aggregate</sample>
   <sample name="4. Heavy Form" href="binding-04heavy-XML.flow">Form with lots of select boxes - test memory utilization, performance</sample>
   <sample name="5. Custom Bindings using Java or Javascript" href="binding-05custom.flow">fb:javascript and fb:custom</sample>
+  <sample name="6. XML binding using namespaces" href="binding-06namespaced-XML.flow">Using XML binding with complex namespaced XML</sample>
   <!-- TODO: provide more tutorial samples like these:
   <sample name="6. MultiValue/Repeater Binding" href="binding-03multi.flow">fb:multi-value</sample>
   <sample name="7. Repeater Binding" href="binding-06repeater.flow">fb:repeater</sample>

@@ -69,12 +69,8 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         validationError = null;
         Object oldValue = value;
         String param = formContext.getRequest().getParameter(getRequestParameterName());
-        if (param != null && param.equalsIgnoreCase("true"))
-            value = Boolean.TRUE;
-        else
-            value = Boolean.FALSE;
-
-        if (value != oldValue) {
+        value = Boolean.valueOf(param);
+        if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
@@ -148,7 +144,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
 
         Object oldValue = value;
         value = (Boolean)object;
-        if (value != oldValue) {
+        if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
