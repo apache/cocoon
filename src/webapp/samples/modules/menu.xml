@@ -3,7 +3,7 @@
 
 <book software="Apache Cocoon" 
       title="Apache Cocoon Input Modules Samples" 
-      copyright="1999-2003 The Apache Software Foundation"
+      copyright="@year@ The Apache Software Foundation"
 >
 
   <menu label="Overview">
@@ -24,8 +24,8 @@
   </menu>
 
   <menu label="Documentation">
-    <external label="Input Modules Docs" href="../../docs/userdocs/concepts/modules.html"/>   
-    <external label="API Docs" href="../../docs/apidocs/org/apache/cocoon/components/modules/input/package-summary.html"/>   
+    <external label="Input Modules Docs" href="http://cocoon.apache.org/userdocs/concepts/modules.html"/>   
+    <external label="API Docs" href="http://cocoon.apache.org/sapidocs/org/apache/cocoon/components/modules/input/package-summary.html"/>   
   </menu>
   
   <menu label="Credits">

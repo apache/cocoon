@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS $Id: samples.xml,v 1.1 2003/03/26 21:21:44 stefano Exp $ -->
+
+<samples>
+
+  <group name="Sites">
+   <sample name="jakarta.apache.org" href="jakarta.apache.org/">
+    jakarta
+   </sample>
+   <sample name="java.apache.org" href="java.apache.org/">
+    java
+   </sample>
+  </group>
+   
+</samples>

@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.2 2003/03/19 08:19:12 jefft Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.3 2003/03/26 21:21:48 stefano Exp $ -->
 <!--
 Input Modules sample sitemap.
 
 Author: Konstantin Piroumian "kpiroumian@apache.org" 
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
   <!-- =========================== Resources =============================== -->
   <map:resources>
     <!-- This resource is used to create a composite page from menu and content -->
@@ -21,7 +22,6 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
     </map:resource>
   </map:resources>
 
-
   <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
     <map:pipeline>
@@ -35,7 +35,6 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       <map:match pattern="*.xsp">
         <map:call resource="composite" />
       </map:match>                
-
 
       <map:match pattern="content/index.xsp">
         <map:generate src="index.xhtml"/>
@@ -230,7 +229,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       <!-- Display this sitemap source-->
       <map:match pattern="sitemap.xmap">
         <map:generate src="sitemap.xmap"/>
-        <map:serialize type="xml"/>
+        <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+        <map:serialize/>
       </map:match>            
 
       <map:match pattern="*.css">
@@ -244,4 +244,3 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
     </map:pipeline>                
   </map:pipelines>
 </map:sitemap>
-<!-- end of file -->

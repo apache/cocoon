@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS $Id: samples.xml,v 1.1 2003/03/26 21:21:48 stefano Exp $ -->
+
+<samples>
+
+  <group name="SOAP">
+   <sample name="Fortune" href="fortune">
+   </sample>
+   <sample name="Joke" href="joke">
+   </sample>
+   <sample name="Temperature" href="temperature">
+   </sample>
+   <sample name="Quote" href="getquote">
+   </sample>   
+  </group>
+   
+  <group name="XScript">
+   <sample name="Simple Sample" href="simple">
+       A simple sample for XScript.
+   </sample>
+   <sample name="SOAP Stock Quote Example 1" href="getquote1">
+       This page demonstrates the SOAP logicsheet for
+       Cocoon. It accesses a SOAP service that provides stock quotes
+       and displays the result.
+   </sample>
+   <sample name="SOAP Sample 2" href="getquote2">
+       This example uses an inline XSLT stylesheet and an
+       XScript transform instruction to extract the stock
+       price.
+   </sample>
+   <sample name="SOAP Sample 3" href="getquote3">
+       This is yet another example of the XScript and SOAP
+       logicsheets. This sample is very similar with
+       SOAP Sample 2, except that the stylesheet is defined in an external file.
+   </sample>
+   <sample name="Test" href="test">
+   </sample> 
+  </group>
+ 
+</samples>

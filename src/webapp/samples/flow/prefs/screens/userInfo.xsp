@@ -33,7 +33,7 @@
           </jpath:otherwise>
         </jpath:choose>
 
-        <form><xsp:attribute name="action"><xsp:expr>"../kont/" + <jpath:continuation/></xsp:expr></xsp:attribute>
+        <form method="post"><xsp:attribute name="action"><xsp:expr>"kont/" + <jpath:continuation/></xsp:expr></xsp:attribute>
 
           <p>
             <jpath:choose>

@@ -20,12 +20,6 @@
     <omit-xml-declaration>yes</omit-xml-declaration>
    </map:serializer>
 
-   <map:serializer name="svgxml" mime-type="image/svg-xml"    logger="sitemap.serializer.svgxml"
-                   src="org.apache.cocoon.serialization.XMLSerializer">
-    <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
-    <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
-   </map:serializer>
-
    <map:serializer name="xhtml" mime-type="text/html"         logger="sitemap.serializer.xhtml"
                    src="org.apache.cocoon.serialization.XMLSerializer"
                    pool-max="64" pool-min="2" pool-grow="2">
@@ -36,24 +30,16 @@
 
    <map:serializer name="text"   mime-type="text/plain"        logger="sitemap.serializer.text"
                    src="org.apache.cocoon.serialization.TextSerializer"/>
-   <map:serializer name="svg2jpeg" logger="sitemap.serializer.svg2jpeg"
-                   src="org.apache.cocoon.serialization.SVGSerializer" mime-type="image/jpeg"/>
-   <map:serializer name="fo2pdf"  logger="sitemap.serializer.fo2pdf"
-                   src="org.apache.cocoon.serialization.FOPSerializer" mime-type="application/pdf"/>
-   <map:serializer name="fo2ps"  logger="sitemap.serializer.fo2ps"
-                   src="org.apache.cocoon.serialization.FOPSerializer" mime-type="application/postscript"/>
-   <map:serializer name="xls" logger="sitemap.serializer.xls"
-                   src="org.apache.cocoon.serialization.HSSFSerializer" mime-type="application/vnd.ms-excel"/>
-   <map:serializer name="itext2pdf"  logger="sitemap.serializer.itext2pdf"
-                   src="org.apache.cocoon.serialization.iTextSerializer" mime-type="application/pdf"/>
-   <map:serializer name="swf"  logger="sitemap.serializer.swf"
-                   src="org.apache.cocoon.serialization.SWFSerializer" mime-type="application/x-shockwave-flash"/>
 
+   <map:serializer logger="sitemap.serializer.svgxml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer" mime-type="image/svg-xml">
+    <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
+    <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
+   </map:serializer>
+   
   </map:serializers>               
   
   <map:matchers default="wildcard"/>
   <map:selectors default="browser"/>
-  <!-- <map:actions/> -->
   
  </map:components>
 
@@ -81,55 +67,35 @@
 
  <map:pipelines>
 
-  <!-- Utility for viewing source xml or html -->
-  <map:pipeline>
-   <map:match pattern="**.source">
-    <map:generate src="cocoon:/{1}" />
-    <map:transform src="style/xsl/simple-xml2html.xsl"/>
-    <map:serialize/>
-   </map:match>
-  </map:pipeline>
-
-   <!-- ================  Hello  =========================== -->
+ <!-- ================  Hello  =========================== -->
 
   <map:pipeline>
+
    <map:match pattern="hello.html">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
-       <map:parameter name="servletPath" value="{request:servletPath}"/>
-       <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-       <map:parameter name="file" value="content/xml/hello-page.xml"/>
-       <map:parameter name="remove" value="{0}"/>
-    </map:transform>
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/simple-page2html.xsl"/>
     <map:serialize type="html"/>
    </map:match>
 
+   <map:match pattern="hello.html">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/simple-page2html.xsl"/>
+    <map:serialize type="xhtml"/>
+   </map:match>
+
    <map:match pattern="hello.txt">
-    <map:generate src="content/xml/hello-page.xml"/>
+    <map:generate src="content/hello.xml"/>
     <map:serialize type="text"/>
    </map:match>
 
    <map:match pattern="hello.service">
-    <map:generate src="content/xml/hello-page.xml"/>
+    <map:generate src="content/hello.xml"/>
     <map:serialize type="xml"/>
    </map:match>
    
    <map:match pattern="hello.service/WSDL">
     <map:generate src="webservice/HelloWorld.wsdl"/>
     <map:serialize type="xml"/>
-   </map:match>
-
-   <map:match pattern="hello.xhtml">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
-       <map:parameter name="servletPath" value="{request:servletPath}"/>
-       <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-       <map:parameter name="file" value="content/xml/hello-page.xml"/>
-       <map:parameter name="remove" value="{0}"/>
-    </map:transform>
-    <map:serialize type="xhtml"/>
    </map:match>
    
    <map:match pattern="hello.wml">
@@ -149,58 +115,15 @@
     <map:transform src="style/xsl/simple-page2svg.xsl"/>
     <map:serialize type="svgxml"/>
    </map:match>
-
-   <map:match pattern="hello.jpg">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2svg.xsl"/>
-    <map:serialize type="svg2jpeg"/>
-   </map:match>
       
    <map:match pattern="hello.wrl">
     <map:generate src="content/xml/hello-page.xml"/>
     <map:transform src="style/xsl/simple-page2vrml.xsl"/>
     <map:serialize type="vrml"/>
    </map:match>
-
-   <map:match pattern="hello.pdf">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2fo.xsl"/>
-    <map:serialize type="fo2pdf"/>
-   </map:match>
-
-   <map:match pattern="hello2.pdf">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2itext.xsl"/>
-    <map:serialize type="itext2pdf"/>
-   </map:match>
-   
-   <map:match pattern="hello.rtf">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2fo.xsl"/>
-    <map:serialize type="fo2rtf"/>
-   </map:match>
-   
-   <map:match pattern="hello.ps">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2fo.xsl"/>
-    <map:serialize type="fo2ps"/>
-   </map:match>
-
-   <map:match pattern="hello.swf">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2swf.xsl"/>
-    <map:serialize type="swf"/>
-   </map:match>
-
-   <map:match pattern="hello.xls">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2xls.xsl"/>
-    <map:serialize type="xls"/>
-   </map:match>
          
   </map:pipeline>
+  
  </map:pipelines>
 
 </map:sitemap>
-
-<!-- end of file -->

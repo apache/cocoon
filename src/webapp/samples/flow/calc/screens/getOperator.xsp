@@ -18,7 +18,7 @@
     </header>
     <body>
       <s1 title="Calculator">
-        <form><xsp:attribute name="action"><xsp:expr><jpath:continuation/></xsp:expr></xsp:attribute>
+        <form  method="post"><xsp:attribute name="action"><xsp:expr><jpath:continuation/></xsp:expr></xsp:attribute>
           <p>a = <strong><jpath:value-of select="a"/></strong></p>
           <p>b = <strong><jpath:value-of select="b"/></strong></p>
           <p>Enter operator
