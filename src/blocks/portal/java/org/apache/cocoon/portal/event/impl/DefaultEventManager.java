@@ -60,6 +60,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -80,13 +81,14 @@ import org.apache.cocoon.portal.event.Register;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.10 2003/10/20 13:36:42 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.11 2003/12/10 14:04:15 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -159,8 +161,43 @@ public class DefaultEventManager
             this.getLogger().debug("Initialising eventClass " + eventClass);
         }
 
-        // FIXME (CZ,HIGH) : Make this configurable
-        this.subscribe(new DefaultChangeAspectDataEventSubscriber(this.manager));
+        // FIXME - the following configuration is not portal specific, it's global!
+        // subscribe all configured roles
+        Configuration roles = this.configuration.getChild("subscriber-roles", false);
+        if ( roles != null ) {
+            Configuration[] rolesConf = roles.getChildren("role");
+            if ( rolesConf != null ) {
+                for(int i=0; i<rolesConf.length;i++) {
+                    final Configuration current = rolesConf[i];
+                    final String name = current.getAttribute("name");
+                    
+                    Subscriber subscriber = null;
+                    try {
+                        subscriber = (Subscriber) this.manager.lookup(name);
+                        this.subscribe(subscriber);
+                    } finally {
+                        this.manager.release(subscriber);
+                    }
+                }
+            }
+        }
+        // subscribe all configured classes
+        Configuration classes = this.configuration.getChild("subscriber-classes", false);
+        if ( classes != null ) {
+            Configuration[] classesConf = classes.getChildren("class");
+            if ( classesConf != null ) {
+                for(int i=0; i<classesConf.length;i++) {
+                    final Configuration current = classesConf[i];
+                    final String name = current.getAttribute("name");
+                    
+                    Subscriber subscriber = (Subscriber) ClassUtils.newInstance(name);
+                    ContainerUtil.enableLogging(subscriber, this.getLogger());
+                    ContainerUtil.service(subscriber, this.manager );
+                    ContainerUtil.initialize(subscriber);
+                    this.subscribe(subscriber);
+                }
+            }
+        }
     }
 
     public void publish( final Event event ) {

@@ -18,6 +18,14 @@
         <aspect type="full-screen-coplet"/>
         <aspect type="request-parameter"/>
     </event-aspects>
+    <!-- add a new instance of each class as a subscriber: -->
+    <subscriber-classes>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber"/>
+    </subscriber-classes>
+    <!-- add each component as a subscriber (the component should be thread safe): -->
+    <subscriber-roles>
+        <!-- <role name="AVALON-ROLE"/> -->
+    </subscriber-roles>
  </component>
 
  <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
