@@ -154,7 +154,6 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="skins.dir" value="./skins"/>
     <property name="images.dir" value="./xdocs/images"/>
     <property name="samples.dir" value="./samples"/>
-    <property name="version.file" value="org/apache/cocoon/Defaults.java"/>
     <property name="packages" value="org.apache.cocoon.*"/>
 
     <property name="skin" value="./skins/xml.apache.org/"/>
@@ -290,8 +289,8 @@ a Java 1.2 compatible JVM is required for this target.
     <copyfile src="changes.xml" dest="${docs.dir}/changes.xml" filtering="on"/>
     <copyfile src="todo.xml" dest="${docs.dir}/todo.xml"/>
 
-    <replace file="${docs.dir}/changes.xml" token="./docs/dtd/" value="dtd/"/>
-    <replace file="${docs.dir}/todo.xml" token="./docs/dtd/" value="dtd/"/>
+    <replace file="${docs.dir}/changes.xml" token="./xdocs/dtd/" value="dtd/"/>
+    <replace file="${docs.dir}/todo.xml" token="./xdocs/dtd/" value="dtd/"/>
   </target>
 
   <!-- =================================================================== -->

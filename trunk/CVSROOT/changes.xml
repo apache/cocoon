@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE changes SYSTEM "./docs/dtd/changes-v10.dtd">
+<!DOCTYPE changes SYSTEM "./xdocs/dtd/changes-v10.dtd">
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.42 2000-03-17 16:43:59 stefano Exp $
+  $Id: changes.xml,v 1.43 2000-03-19 00:57:26 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,15 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add" due-to="Gopinath M.R." due-to-email="gopi@aztecsoft.com">
+   Added XML doclet (consider it alpha).
+  </action>
+  <action dev="SM" type="add" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+   Fix in string tokenizers missing single CR or LF.
+  </action>
+  <action dev="SM" type="add" due-to="Peter Mor&aacute;vek" due-to-email="moravek@pobox.sk">
+   Added StringTokenizer replacement due to a bug in java.util.StringTokenizer.
+  </action>
   <action dev="SM" type="add" fixes-bug="45" due-to="jon@stimmel.net" due-to-email="jon@stimmel.net">
    Fixed bug on XSPUtil.cloneNode choking on comments.
   </action>
