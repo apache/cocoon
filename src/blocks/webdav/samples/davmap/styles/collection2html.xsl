@@ -4,6 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:collection="http://apache.org/cocoon/collection/1.0">
   
+  <xsl:param name="footer" />
   <xsl:param name="requestURI"></xsl:param>
   <xsl:variable name="adjustedRequestURI">
     <xsl:choose>
@@ -39,7 +40,7 @@
           </xsl:apply-templates>
           <tr>
             <td colspan="4" bgcolor="#cccccc">
-              <font size="-1">Powered by Cocoon</font>
+              <font size="-1"><xsl:value-of select="$footer" /></font>
             </td>
           </tr>
         </table>
