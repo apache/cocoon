@@ -14,16 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
-<!-- mind how xpatch oddly requires the file extension to 
-	be equal to the root elm -->
-	
+
+<!--+
+    | $Id$
+    +-->
 <xlog xpath="/logkit/categories" 
       unless="category[@name='portal']">
     
     <category log-level="ERROR" name="portal">
       <log-target id-ref="portal" />
-      <log-target id-ref="error"/>
     </category>
     
 </xlog>
