@@ -32,7 +32,7 @@
     element-name + "/@" + attribute-name.
    </p>
    <p>
-    The EncodeURLTransformer has serveral configuration options. These options
+    The EncodeURLTransformer has several configuration options. These options
     may be specified in the sitemap, or by each request.
    </p>
    <dl>
