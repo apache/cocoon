@@ -1,4 +1,4 @@
-/*-- $Id: XalanTransformer.java,v 1.8 2000-02-23 00:49:06 stefano Exp $ --
+/*-- $Id: XalanTransformer.java,v 1.9 2000-03-04 02:36:00 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -69,23 +69,29 @@ import org.xml.sax.SAXException;
  * Xalan XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-02-23 00:49:06 $
+ * @version $Revision: 1.9 $ $Date: 2000-03-04 02:36:00 $
  */
 
 public class XalanTransformer extends AbstractActor implements Transformer, Status {
 
-    XSLTProcessor processor;
+    Parser parser;
 
     public void init(Director director) {
         super.init(director);
-        this.processor = XSLTProcessorFactory.getProcessor(
-            new XMLParser(
-                (Parser) director.getActor("parser")
-            )
-        );
+        this.parser = (Parser) director.getActor("parser");
     }
 
-    public Document transform(Document in, String inBase, Document sheet, String sheetBase, Document out) throws Exception {
+    public Document transform(Document in, String inBase, Document sheet,
+        String sheetBase, Document out, Hashtable params)
+    throws Exception {
+        XSLTProcessor processor = XSLTProcessorFactory.getProcessor(new XMLParser(parser));
+
+        Enumeration enum = params.keys();
+        while (enum.hasMoreElements()) {
+            String name = (String) enum.nextElement();
+            processor.setStylesheetParam(name, processor.createXString((String) params.get(name)));
+        }
+
         XSLTInputSource i = new XSLTInputSource(in);
         // inBase not used for now (external entities are already included at parse time)
         XSLTInputSource s = new XSLTInputSource(sheet);
