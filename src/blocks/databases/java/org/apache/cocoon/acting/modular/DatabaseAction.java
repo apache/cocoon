@@ -87,13 +87,13 @@ import org.apache.commons.lang.BooleanUtils;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.8 2004/04/27 22:23:08 haul Exp $
+ * @version CVS $Id$
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
  * @see org.apache.cocoon.util.JDBCTypeConversions
  */
-public abstract class DatabaseAction  extends AbstractComplementaryConfigurableAction implements Configurable, Disposable, ThreadSafe {
+public abstract class DatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable, ThreadSafe {
 
     // ========================================================================
     // constants
@@ -133,7 +133,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
     /**
      * Structure that takes all processed data for one column.
      */
-    protected class Column {
+    protected static class Column {
         boolean isKey = false;
         boolean isSet = false;
         boolean isAutoIncrement = false;
@@ -147,7 +147,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      * Structure that takes all processed data for a table depending
      * on current default modes
      */
-    protected class CacheHelper {
+    protected static class CacheHelper {
         /**
          * Generated query string
          */
@@ -180,7 +180,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      * operations and table configuration data. Used to access parsed
      * configuration data.
      */
-    protected class LookUpKey {
+    protected static class LookUpKey {
         public Configuration tableConf = null;
         public Map modeTypes = null;
 
