@@ -32,7 +32,7 @@ import java.util.Locale;
  * Some convertors need to build and configure parser or formatting objects,
  * which can be expensive if it needs to be done repeatedly.
  *
- * @version CVS $Id: Convertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id$
  */
 public interface Convertor {
     

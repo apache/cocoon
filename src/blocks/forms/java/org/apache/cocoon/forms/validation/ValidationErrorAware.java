@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.validation;
  * can hold a validation error.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ValidationErrorAware.java,v 1.2 2004/03/09 11:31:10 joerg Exp $
+ * @version CVS $Id$
  */
 public interface ValidationErrorAware {
     

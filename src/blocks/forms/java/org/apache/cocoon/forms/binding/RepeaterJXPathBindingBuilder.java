@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.5 2004/07/07 22:20:37 joerg Exp $
+ * @version CVS $Id$
  */
 public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

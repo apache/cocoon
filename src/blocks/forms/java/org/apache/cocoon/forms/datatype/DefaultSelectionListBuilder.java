@@ -38,9 +38,6 @@ import java.util.Locale;
 /**
  * Builds {@link SelectionList}s from an XML description or an URL.
  *
- * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
- * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
- *
  * <p>Note: the class {@link DynamicSelectionList} also interprets the same
  * <code>fd:selection-list</code> XML, so if anything changes here to how
  * that XML is interpreted, it also needs to change over there and vice

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
  * will derive from this class.
- * @version $Id: AbstractDatatype.java,v 1.5 2004/05/06 14:59:44 bruno Exp $
+ * @version $Id$
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();

@@ -32,7 +32,7 @@ import org.mozilla.javascript.Scriptable;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.8 2004/06/24 11:32:47 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 

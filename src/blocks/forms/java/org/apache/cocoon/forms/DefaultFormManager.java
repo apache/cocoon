@@ -67,7 +67,7 @@ public class DefaultFormManager
         return this.avalonContext;
     }
 
-	public void service(ServiceManager manager) throws ServiceException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.cacheManager = (CacheManager)manager.lookup(CacheManager.ROLE);
     }

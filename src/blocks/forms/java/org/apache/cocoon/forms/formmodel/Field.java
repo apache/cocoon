@@ -117,6 +117,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
 
     public Field(FieldDefinition fieldDefinition) {
+        super(fieldDefinition);
         this.fieldDefinition = fieldDefinition;
     }
 
@@ -175,14 +176,16 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessMyRequests() == true) {
-            String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
-            // FIXME: Should we consider only non-null values, which allows to
-            // split a form across several screens?
-            //if (newEnteredValue != null) {
-                readFromRequest(newEnteredValue);
-            //}
-        }
+        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+            return;
+
+        String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
+        // FIXME: Should we consider only non-null values, which allows to
+        // split a form across several screens?
+        //if (newEnteredValue != null) {
+        readFromRequest(newEnteredValue);
+        //}
+
     }
 
     protected void readFromRequest(String newEnteredValue) {
@@ -198,19 +201,24 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
-            if (hasValueChangedListeners()) {
-                // Throw an event that will parse the new value only if needed.
-    	        getForm().addWidgetEvent(new DeferredValueChangedEvent(this, getValue()));
-            }
-
             enteredValue = newEnteredValue;
             validationError = null;
+            Object oldValue = value;
             value = null;
             this.valueState = VALUE_UNPARSED;
+
+            if (hasValueChangedListeners()) {
+                // Throw an event that will parse the value only if needed.
+                // This event holds the old value and will lazily compute the new one if needed
+                getForm().addWidgetEvent(new DeferredValueChangedEvent(this, oldValue));
+    	        }
         }
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (this.valueState == VALUE_UNPARSED) {
             doParse();
         }
@@ -283,7 +291,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 // Field is required
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
             } else {
-                if (super.validate()) {
+                if (super.validate() && value != null) {
                     // New-style validators were successful. Check the old-style ones.
                     this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
                 }

@@ -24,7 +24,7 @@ import org.outerj.expression.ExpressionException;
  * Returns true if argument is null.
  *  
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
- * @version CVS $Id: IsNullFunction.java,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+ * @version CVS $Id$
  */
 public class IsNullFunction extends AbstractExpression {
 

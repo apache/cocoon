@@ -23,7 +23,7 @@ import org.outerj.expression.Expression;
 /**
  * Builds {@link AssertValidationRule}s.
  * 
- * @version $Id: AssertValidationRuleBuilder.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id$
  */
 public class AssertValidationRuleBuilder extends AbstractValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception {

@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * A container {@link Widget} which can hold zero or more child widgets.
  *
- * @version $Id: Struct.java,v 1.4 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id$
  */
 public class Struct extends AbstractContainerWidget {
     private static final String STRUCT_EL = "struct";
@@ -27,6 +27,7 @@ public class Struct extends AbstractContainerWidget {
     private final StructDefinition definition; 
 
     public Struct(StructDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
     

@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.samples;
 /**
  * Contact belongs to the {@link Form2Bean} demo.
  * 
- * @version $Id: Contact.java,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+ * @version $Id$
  */
 public class Contact {
     private long id;

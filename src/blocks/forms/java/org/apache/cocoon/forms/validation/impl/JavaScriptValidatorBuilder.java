@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * 
  * @see org.apache.cocoon.forms.validation.impl.JavaScriptValidator
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptValidatorBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptValidatorBuilder implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
     

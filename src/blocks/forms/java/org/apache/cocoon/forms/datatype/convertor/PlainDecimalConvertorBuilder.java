@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 
 /**
  *
- * @version CVS $Id: PlainDecimalConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class PlainDecimalConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

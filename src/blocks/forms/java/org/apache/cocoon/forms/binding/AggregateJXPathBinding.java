@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: AggregateJXPathBinding.java,v 1.2 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id$
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 

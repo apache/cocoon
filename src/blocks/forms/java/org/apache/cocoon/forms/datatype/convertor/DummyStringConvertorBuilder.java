@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link DummyStringConvertor}s.
  *
- * @version CVS $Id: DummyStringConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class DummyStringConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

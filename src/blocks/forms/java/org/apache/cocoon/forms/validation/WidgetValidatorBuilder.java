@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetValidatorBuilder.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version CVS $Id$
  */
 public interface WidgetValidatorBuilder {
     

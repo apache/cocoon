@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: EmptySelectionList.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class EmptySelectionList implements SelectionList {
     private String text;

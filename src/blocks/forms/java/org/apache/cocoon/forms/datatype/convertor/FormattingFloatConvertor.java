@@ -27,7 +27,7 @@ import java.text.ParseException;
  * <p>This class is mostly the same as the {@link FormattingDecimalConvertor},
  * so see there for more information.
  *
- * @version CVS $Id: FormattingFloatConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id$
  */
 public class FormattingFloatConvertor extends FormattingDecimalConvertor {
 

@@ -43,7 +43,7 @@ import java.math.BigInteger;
  * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDecimalConvertor.java,v 1.5 2004/05/26 01:41:21 joerg Exp $
+ * @version CVS $Id$
  */
 public class FormattingDecimalConvertor implements Convertor {
     private int variant;

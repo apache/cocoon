@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
  * Builds {@link PlainIntegerConvertor}s.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PlainIntegerConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class PlainIntegerConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.4 2004/04/29 08:46:19 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptHelper {
 

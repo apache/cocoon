@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * An event raised when a widget is created, once it has been fully set up. For
  * container widgets, this occurs after child widgets, if any, have been created.
  * 
- * @version CVS $Id: CreateEvent.java,v 1.1 2004/06/15 07:33:43 sylvain Exp $
+ * @version CVS $Id$
  */
 public class CreateEvent extends WidgetEvent {
     

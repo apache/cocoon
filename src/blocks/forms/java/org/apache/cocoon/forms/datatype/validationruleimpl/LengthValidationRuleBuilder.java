@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link LengthValidationRule}s.
  * 
- * @version $Id: LengthValidationRuleBuilder.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id$
  */
 public class LengthValidationRuleBuilder extends AbstractValidationRuleBuilder {
     public ValidationRule build(Element validationRuleElement) throws Exception {

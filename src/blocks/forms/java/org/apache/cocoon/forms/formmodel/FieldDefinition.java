@@ -20,7 +20,7 @@ import org.apache.cocoon.forms.event.CreateEvent;
 /**
  * The {@link WidgetDefinition} part of a Field widget, see {@link Field} for more information.
  * 
- * @version $Id: FieldDefinition.java,v 1.2 2004/06/15 07:33:44 sylvain Exp $
+ * @version $Id$
  */
 public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
     private boolean required;

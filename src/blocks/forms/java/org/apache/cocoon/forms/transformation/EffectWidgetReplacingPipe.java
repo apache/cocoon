@@ -203,6 +203,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             throwWrongWidgetType("RepeaterWidgetLabelHandler", input.loc, "repeater");
         }
     }
+    
+    protected boolean isVisible(Widget widget) {
+        return widget.getCombinedState().isDisplayingValues();
+    }
 
     public void throwWrongWidgetType(String pipeName, String element, String widget) throws SAXException {
         throwSAXException(pipeName + ": Element \"" + element + "\" can only be used for " + widget + " widgets.");
@@ -301,6 +305,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     input.removeAttribute(LOCATION);
                 }
                 contextWidget = pipeContext.findForm(formJXPath);
+
+                if (!isVisible(contextWidget)) {
+                    // Skip widget and its content
+                    return nullHandler;
+                }
 
                 // ====> Determine the Locale
                 //TODO pull this locale stuff also up in the Config object?
@@ -405,10 +414,15 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 widgetPath = getWidgetId(input.attrs);
                 widget = getWidget(widgetPath);
-                gotStylingElement = false;
-                out.bufferInit();
-                return this;
 
+                if (isVisible(widget)) {
+                    gotStylingElement = false;
+                    out.bufferInit();
+                    return this;
+                } else {
+                    // Skip widget and its content
+                    return nullHandler;
+                }
             case EVENT_ELEMENT:
                 if (Constants.INSTANCE_NS.equals(input.uri) && STYLING_EL.equals(input.loc)) {
                     gotStylingElement = true;
@@ -478,8 +492,12 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             switch(event) {
             case EVENT_START_ELEMENT:
                 getRepeaterWidget("RepeaterWidgetHandler");
-                out.bufferInit();
-                return this;
+                if (isVisible(widget)) {
+                  out.bufferInit();
+                  return this;
+                } else {
+                    return nullHandler;
+                }
             case EVENT_ELEMENT:
                 return bufferHandler;
             case EVENT_END_ELEMENT:
@@ -491,7 +509,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 for (int i = 0; i < rowCount; i++) {
                     Repeater.RepeaterRow row = repeater.getRow(i);
                     contextWidget = row;
-                    out.getBuffer().toSAX(EffectWidgetReplacingPipe.this);
+                    if (isVisible(contextWidget)) {
+                      out.getBuffer().toSAX(EffectWidgetReplacingPipe.this);
+                    }
                 }
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 handler = (Handler)handlers.removeFirst();
@@ -514,9 +534,14 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (!(widget instanceof AggregateField)) {
                     throwWrongWidgetType("AggregateWidgetHandler", input.loc, "aggregate");
                 }
-                contextWidgets.addFirst(contextWidget);
-                contextWidget = widget;
-                return this;
+
+                if (isVisible(widget)) {
+                    contextWidgets.addFirst(contextWidget);
+                    contextWidget = widget;
+                    return this;
+                } else {
+                    return nullHandler;
+                }
             case EVENT_ELEMENT:
                 return nestedTemplate();
             case EVENT_END_ELEMENT:
@@ -538,9 +563,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (!(widget instanceof Struct)) {
                     throwWrongWidgetType("StructHandler", input.loc, "struct");
                 }
-                contextWidgets.addFirst(contextWidget);
-                contextWidget = widget;
-                return this;
+                if (isVisible(widget)) {
+                    contextWidgets.addFirst(contextWidget);
+                    contextWidget = widget;
+                    return this;
+                } else {
+                    return nullHandler;
+                }
             case EVENT_ELEMENT:
                 return nestedTemplate();
             case EVENT_END_ELEMENT:
@@ -636,9 +665,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (!(widget instanceof Union)) {
                     throwWrongWidgetType("UnionHandler", input.loc, "union");
                 }
-                contextWidgets.addFirst(contextWidget);
-                contextWidget = widget;
-                return this;
+                if (isVisible(widget)) {
+                    contextWidgets.addFirst(contextWidget);
+                    contextWidget = widget;
+                    return this;
+                } else {
+                    return nullHandler;
+                }
             case EVENT_ELEMENT:
                 if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if ("case".equals(input.loc)) {

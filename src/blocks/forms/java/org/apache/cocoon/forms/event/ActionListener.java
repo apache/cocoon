@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.event;
  * Listeners for {@link ActionEvent}s
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ActionListener.java,v 1.1 2004/03/09 10:33:45 reinhard Exp $
+ * @version CVS $Id$
  */
 
 public interface ActionListener extends WidgetListener {

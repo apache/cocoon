@@ -36,6 +36,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     private ActionListener listener;
 
     public Action(ActionDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -44,35 +45,36 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     public void readFromRequest(final FormContext formContext) {
-        if(getProcessMyRequests() == true) {
-            Form form = getForm();
+        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+            return;
 
-            // Set the submit widget if we can determine it from the request
-            String fullId = getRequestParameterName();
-            Request request = formContext.getRequest();
+        Form form = getForm();
 
-            String value = request.getParameter(fullId);
-            if (value != null && value.length() > 0) {
+        // Set the submit widget if we can determine it from the request
+        String fullId = getRequestParameterName();
+        Request request = formContext.getRequest();
+
+        String value = request.getParameter(fullId);
+        if (value != null && value.length() > 0) {
+            form.setSubmitWidget(this);
+
+        } else {
+            // Special workaround an IE bug for <input type="image" name="foo"> :
+            // in that case, IE only sends "foo.x" and "foo.y" and not "foo" whereas
+            // standards-compliant browsers such as Mozilla do send the "foo" parameter.
+            //
+            // Note that since actions are terminal widgets, there's no chance of conflict
+            // with a child "x" or "y" widget.
+            value = request.getParameter(fullId + ".x");
+            if ((value != null) && value.length() > 0) {
                 form.setSubmitWidget(this);
-
-            } else {
-                // Special workaround an IE bug for <input type="image" name="foo"> :
-                // in that case, IE only sends "foo.x" and "foo.y" and not "foo" whereas
-                // standards-compliant browsers such as Mozilla do send the "foo" parameter.
-                //
-                // Note that since actions are terminal widgets, there's no chance of conflict
-                // with a child "x" or "y" widget.
-                value = request.getParameter(fullId + ".x");
-                if ((value != null) && value.length() > 0) {
-                    form.setSubmitWidget(this);
-                }
             }
+        }
 
-            if (form.getSubmitWidget() == this) {
-                form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
+        if (form.getSubmitWidget() == this) {
+            form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
 
-                handleActivate();
-            }
+            handleActivate();
         }
     }
 

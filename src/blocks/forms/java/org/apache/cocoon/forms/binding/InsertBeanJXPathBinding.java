@@ -31,7 +31,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * <li>This expects the back-end model to be a Java Bean model.</li>
  * </ol>
  *
- * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 

@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * variable.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListenerBuilder.java,v 1.3 2004/06/15 07:33:43 sylvain Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe, Contextualizable {
 

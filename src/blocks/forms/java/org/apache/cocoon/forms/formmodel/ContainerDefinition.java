@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Interface to be implemented by WidgetDefinitions for Widgets which contain other widgets.
  *
- * @version $Id: ContainerDefinition.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public interface ContainerDefinition extends WidgetDefinition {
 

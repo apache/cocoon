@@ -20,7 +20,7 @@ import java.util.Locale;
 import org.apache.cocoon.environment.Request;
 
 /**
- * @version $Id: FormContext.java,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+ * @version $Id$
  * 
  */
 public class FormContext {

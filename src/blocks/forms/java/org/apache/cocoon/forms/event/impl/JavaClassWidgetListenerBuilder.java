@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaClassWidgetListenerBuilder.java,v 1.2 2004/04/27 12:02:13 bruno Exp $
+ * @version CVS $Id$
  */
 public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe {
 

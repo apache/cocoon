@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.util.DomHelper;
  * The ButtonDefinitionBuilder has been replaced by {@link ActionDefinitionBuilder}. This implementation
  * is only left here to give a warning to users.
  * 
- * @version $Id: ButtonDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class ButtonDefinitionBuilder implements WidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {

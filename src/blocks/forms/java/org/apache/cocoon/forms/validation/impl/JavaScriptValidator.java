@@ -34,7 +34,7 @@ import org.mozilla.javascript.Function;
  * flowscript, can use the flow's global values and fonctions and the <code>cocoon</code> object.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptValidator.java,v 1.4 2004/04/28 16:34:13 bruno Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptValidator implements WidgetValidator {
     

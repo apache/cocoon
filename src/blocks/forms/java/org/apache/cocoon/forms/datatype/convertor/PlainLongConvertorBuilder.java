@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link PlainLongConvertor}s.
  *
- * @version CVS $Id: PlainLongConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class PlainLongConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

@@ -54,6 +54,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     protected ValidationError validationError;
 
     public BooleanField(BooleanFieldDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -62,18 +63,19 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessMyRequests() == true) {
-            validationError = null;
-            Object oldValue = value;
-            String param = formContext.getRequest().getParameter(getRequestParameterName());
-            if (param != null && param.equalsIgnoreCase("true"))
-                value = Boolean.TRUE;
-            else
-                value = Boolean.FALSE;
+        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+            return;
 
-            if (value != oldValue) {
-                getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
-            }
+        validationError = null;
+        Object oldValue = value;
+        String param = formContext.getRequest().getParameter(getRequestParameterName());
+        if (param != null && param.equalsIgnoreCase("true"))
+            value = Boolean.TRUE;
+        else
+            value = Boolean.FALSE;
+
+        if (value != oldValue) {
+            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
 

@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link StringType}s.
- * @version $Id: StringTypeBuilder.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version $Id$
  */
 public class StringTypeBuilder extends AbstractDatatypeBuilder {
 
