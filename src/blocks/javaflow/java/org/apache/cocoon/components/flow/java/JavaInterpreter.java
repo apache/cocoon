@@ -26,19 +26,19 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.javascript.JavaScriptCompilingClassLoader;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ReflectionUtils;
 import org.apache.commons.jxpath.JXPathIntrospector;
+import org.apache.javaflow.Continuable;
+import org.apache.javaflow.Continuation;
 
 /**
  * Implementation of the java flow interpreter.
@@ -48,8 +48,6 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
-    private boolean initialized = false;
-
     private int timeToLive = 600000;
 
     /**
@@ -57,143 +55,70 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
      */
     public static final String USER_GLOBAL_SCOPE = "JAVA GLOBAL SCOPE";
 
-    private ContinuationClassLoader continuationclassloader;
-
-    private Map methods = new HashMap();
-
-    private JavaScriptCompilingClassLoader javascriptclassloader;
-
     static {
         JXPathIntrospector.registerDynamicClass(VarMap.class, VarMapHandler.class);
     }
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        
-        javascriptclassloader = new JavaScriptCompilingClassLoader(Thread.currentThread().getContextClassLoader());
-        try {
-            javascriptclassloader.service(this.manager);
-        } catch (ServiceException e) {
-            throw new ConfigurationException(e.getMessage());
-        }
-        continuationclassloader = new ContinuationClassLoader(javascriptclassloader);
-        continuationclassloader.setDebug(config.getAttributeAsBoolean("debug", true));
-
-        Configuration[] includes = config.getChildren("include");
-        for (int i = 0; i < includes.length; i++)
-            continuationclassloader.addIncludeClass(includes[i].getAttribute("class"));
     }
 
-    public synchronized void initialize() throws Exception {
-
-        if (initialized) {
-            return;
-        }
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("initialize java flow interpreter");
-
-        for (Iterator scripts = needResolve.iterator(); scripts.hasNext();) {
-
-            String name = (String) scripts.next();
-
-            if (name.endsWith(".js")) {
-                javascriptclassloader.addSource(name);
-                name = JavaScriptCompilingClassLoader.getClassName(name);
-            }
-
-            System.out.println("registered java class \"" + name + "\" for flow");
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("registered java class \"" + name + "\" for flow");
-            
-            Class clazz = continuationclassloader.loadClass(name);
-
-            if (!ContinuationCapable.class.isAssignableFrom(clazz)) {
-                getLogger().error("java class \"" + name + "\" doesn't implement Continuable");
-                continue;
-            }
-
-            //Class clazz = continuationclassloader.loadClass(name);
-
-            try {
-                final Map m = ReflectionUtils.discoverMethods(clazz);
-                methods.putAll(m);
-            } catch (Exception e) {
-                throw new ConfigurationException("cannot get methods by reflection", e);
-            }
-
-        }
-        
-        initialized = true;
+    public void initialize() throws Exception {
     }
 
-    /**
-     * Calls a Java function, passing <code>params</code> as its
-     * arguments. In addition to this, it makes available the parameters
-     * through the <code>cocoon.parameters</code> Java array
-     * (indexed by the parameter names).
-     *
-     * @param function a <code>String</code> value
-     * @param params a <code>List</code> value
-     * @param redirector
-     * @exception Exception if an error occurs
-     */
-    public void callFunction(String function, List params, Redirector redirector) throws Exception {
+    public void continueFlow( final WebContinuation parentwk, final List params, final Redirector redirector, final Continuation parentContinuation, final CocoonContinuationContext context) throws Exception {
 
-        if (!initialized)
-            initialize();
-
-        Method method = (Method) methods.get(function);
-
-        if (method == null) {
-            throw new ProcessingException("No method '" + function + "' found. " + methods);
-        }
-
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("calling method \"" + method + "\"");
-
-        Request request = ContextHelper.getRequest(this.avalonContext);
-        Session session = request.getSession(true);
-        HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
-        if (userScopes == null)
-            userScopes = new HashMap();
-
-        ContinuationCapable flow = (ContinuationCapable) userScopes.get(method.getDeclaringClass());
-
-        ContinuationContext context = new ContinuationContext();
-        context.setObject(flow);
-        context.setMethod(method);
         context.setAvalonContext(avalonContext);
         context.setLogger(getLogger());
         context.setServiceManager(manager);
         context.setRedirector(redirector);
-        Parameters parameters = new Parameters();
-        for(Iterator i=params.iterator(); i.hasNext();) {
-        	Argument argument = (Argument)i.next();
-        	parameters.setParameter(argument.name, argument.value);
+
+        final Parameters parameters = new Parameters();
+        for(Iterator i = params.iterator(); i.hasNext();) {
+            final Argument argument = (Argument)i.next();
+            parameters.setParameter(argument.name, argument.value);
         }
         context.setParameters(parameters);
 
-        Continuation continuation = new Continuation(context);
+        final Continuation continuation = (parentContinuation != null)
+        ? new Continuation(parentContinuation, context)
+        : new Continuation(context);
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(
-                continuation, null, timeToLive, getInterpreterID(), null);
+        System.out.println("created new continuation " + continuation);
+        if (getLogger().isDebugEnabled()) { 
+            getLogger().debug("created new continuation " + continuation);
+        }
+
+        final WebContinuation wk = continuationsMgr.createWebContinuation(
+                continuation, parentwk, timeToLive, getInterpreterID(), null);
+
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
-
+                
         continuation.registerThread();
-        try {
-            if (flow == null) {
-                if (getLogger().isDebugEnabled())
-                    getLogger().debug("create new instance of \"" + method.getDeclaringClass() + "\"");
 
-                flow = (ContinuationCapable) method.getDeclaringClass().newInstance();
-                context.setObject(flow);
+        if (parentContinuation != null) {
+            System.out.println("resuming continuation " + continuation + continuation.getStack());
+            if (getLogger().isDebugEnabled()) { 
+                getLogger().debug("resuming continuation " + continuation + continuation.getStack());
+            }            
+        }
+        
+        try {
+            System.out.println("calling " + context.getMethod());
+            if (getLogger().isDebugEnabled()) { 
+                getLogger().debug("calling " + context.getMethod());
             }
 
-            method.invoke(flow, new Object[0]);
+            context.getMethod().invoke(context.getObject(), new Object[0]);
+
+            System.out.println("back from " + context.getMethod());
+            if (getLogger().isDebugEnabled()) { 
+                getLogger().debug("back from " + context.getMethod());
+            }
 
         } catch (InvocationTargetException ite) {
             if (ite.getTargetException() != null) {
-                if (ite.getTargetException() instanceof Exception)
+                if (ite.getTargetException() instanceof Exception) 
                     throw (Exception) ite.getTargetException();
                 else if (ite.getTargetException() instanceof Error)
                     throw new ProcessingException("An internal error occured", ite.getTargetException());
@@ -207,83 +132,109 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         } finally {
             // remove last object reference, which is not needed to
             // reconstruct the invocation path
-            if (continuation.isCapturing())
+
+            if (continuation.isCapturing()) {
                 continuation.getStack().popReference();
+            }
+
             continuation.deregisterThread();
+
+            System.out.println("state saved in continuation" + continuation + continuation.getStack());                
+            if (getLogger().isDebugEnabled()) { 
+                getLogger().debug("state saved in continuation" + continuation + continuation.getStack());
+            }
         }
-        userScopes.put(method.getDeclaringClass(), flow);
-        session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
+        
+    }
+    
+    public void callFunction(String function, List params, Redirector redirector) throws Exception {
+
+        final Map methods = new HashMap();
+
+        // REVISIT: this is ugly as hell!
+        // but something better would require an
+        // imcompatible change of the flow handling.
+        // Make sure you don't have overlapping method
+        // names you want to call
+        
+        for (Iterator it = needResolve.iterator(); it.hasNext();) {
+            final String clazzName = (String) it.next();
+
+            System.out.println("loading " + clazzName);
+            if (getLogger().isDebugEnabled()) { 
+                getLogger().debug("loading " + clazzName);
+            }        
+
+            final Class clazz = Thread.currentThread().getContextClassLoader().loadClass(clazzName);
+            final Map m = ReflectionUtils.discoverMethods(clazz);
+            methods.putAll(m);
+        }
+
+        final Method method = (Method) methods.get(function);
+
+        if (method == null) {
+            throw new ProcessingException("no method '" + function + "' found. " + methods);
+        }
+
+        if (getLogger().isDebugEnabled()) { 
+            getLogger().debug("setting up continuation context");
+        }
+
+        final Request request = ContextHelper.getRequest(this.avalonContext);
+        final Session session = request.getSession(true);
+
+        HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
+        if (userScopes == null) {
+            userScopes = new HashMap();
+        }
+
+        final CocoonContinuationContext context = new CocoonContinuationContext();
+        
+        Continuable flow = null; //(Continuable) userScopes.get(method.getDeclaringClass());
+
+        if (flow == null) {
+            
+            if (getLogger().isDebugEnabled()) { 
+                getLogger().debug("creating flow class " + method.getDeclaringClass().getName());
+            }
+
+            flow = (Continuable) method.getDeclaringClass().newInstance();
+
+            userScopes.put(method.getDeclaringClass(), flow);
+            //session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
+        }
+
+        context.setObject(flow);
+        context.setMethod(method);
+
+        continueFlow(null, params, redirector, null, context);
     }
 
-    public void handleContinuation(String id, List params, Redirector redirector) throws Exception {
-        if (!initialized)
-            initialize();
+    public void handleContinuation(String id, List params, Redirector redirector)
+            throws Exception {
 
-        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
+        final WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
 
         if (parentwk == null) {
-        /*
-         * Throw an InvalidContinuationException to be handled inside the
-         * <map:handle-errors> sitemap element.
-         */
-        throw new InvalidContinuationException("The continuation ID " + id + " is invalid."); }
+            /*
+             * Throw an InvalidContinuationException to be handled inside the
+             * <map:handle-errors> sitemap element.
+             */
+            throw new InvalidContinuationException("Invalid continuation id " + id);
+        }
 
-        Continuation parentContinuation = (Continuation) parentwk.getContinuation();
-        ContinuationContext parentContext = (ContinuationContext) parentContinuation.getContext();
-        ContinuationContext context = new ContinuationContext();
+        if (getLogger().isDebugEnabled()) { 
+            getLogger().debug("continue with continuation " + id);
+        }
+
+        final CocoonContinuationContext context = new CocoonContinuationContext();
+
+        final Continuation parentContinuation = (Continuation) parentwk.getContinuation();
+        final CocoonContinuationContext parentContext = (CocoonContinuationContext) parentContinuation.getContext();
         context.setObject(parentContext.getObject());
         context.setMethod(parentContext.getMethod());
-        context.setAvalonContext(avalonContext);
-        context.setLogger(getLogger());
-        context.setServiceManager(manager);
-        context.setRedirector(redirector);
-        Parameters parameters = new Parameters();
-        for(Iterator i=params.iterator(); i.hasNext();) {
-        	Argument argument = (Argument)i.next();
-        	parameters.setParameter(argument.name, argument.value);
-        }
-        context.setParameters(parameters);
-        
-        Continuation continuation = new Continuation(parentContinuation, context);
 
-        Request request = ContextHelper.getRequest(this.avalonContext);
-        Session session = request.getSession(true);
-        HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
-
-        ContinuationCapable flow = (ContinuationCapable) context.getObject();
-        Method method = context.getMethod();
-
-        WebContinuation wk = continuationsMgr.createWebContinuation(
-                continuation, parentwk, timeToLive, getInterpreterID(), null);
-        FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
-
-        continuation.registerThread();
-        try {
-
-            method.invoke(flow, new Object[0]);
-
-        } catch (InvocationTargetException ite) {
-            if (ite.getTargetException() != null) {
-                if (ite.getTargetException() instanceof Exception)
-                    throw (Exception) ite.getTargetException();
-                else if (ite.getTargetException() instanceof Error)
-                    throw new ProcessingException("An internal error occured", ite.getTargetException());
-                else if (ite.getTargetException() instanceof RuntimeException)
-                    throw (RuntimeException) ite.getTargetException();
-                else
-                    throw ite;
-            } else {
-                throw ite;
-            }
-        } finally {
-            // remove last object reference, which is not needed to reconstruct
-            // the invocation path
-            if (continuation.isCapturing())
-                continuation.getStack().popReference();
-            continuation.deregisterThread();
-        }
-
-        userScopes.put(method.getDeclaringClass(), flow);
-        session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
+        continueFlow(parentwk, params, redirector, parentContinuation, context);
     }
+        
 }

@@ -202,6 +202,14 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="add">
+     javaflow: auto-compilation for javaflow.
+     factored out javaflow and the auto-compilation (jci)
+     into separate projects.
+   </action>
+   <action dev="TC" type="add">
+    esql: added support for derby
+   </action>
    <action dev="LG" type="add">
      ContinuationsManager default implementation can now store continuations in user session. 
      Continuations are not available outside user session and invalidated automatically 

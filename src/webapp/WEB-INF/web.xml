@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   Copyright 1999-2004 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!--+
     | This is the Cocoon web-app configurations file
     +-->
@@ -48,8 +46,14 @@
 
     <!--
       The regular servlet class (trusts the servlet container classloader)
-      -->
     <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+      -->
+
+    <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
+    <init-param>
+      <param-name>classloader-class</param-name>
+      <param-value>org.apache.javaflow.ContinuationClassLoader</param-value>
+    </init-param>
 
     <!--
       This parameter tells cocoon to set the thread's context classloader to
@@ -177,6 +181,7 @@
         org.apache.cocoon.samples.parentcm.Configurator -->
         <!-- For IBM WebSphere:
         com.ibm.servlet.classloader.Handler -->
+      
       </param-value>
     </init-param>
 

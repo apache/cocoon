@@ -22,7 +22,7 @@ import java.util.Map;
  * Simplified version of a map.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: VarMap.java,v 1.2 2004/04/04 06:35:08 antonio Exp $
+ * @version CVS $Id$
  */
 public class VarMap {
     private HashMap map = new HashMap();

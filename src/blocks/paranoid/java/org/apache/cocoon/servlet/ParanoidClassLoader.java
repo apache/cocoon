@@ -21,13 +21,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
-/**
+/*
  * The <code>ParanoidClassLoader</code> reverses the search order for
  * classes.  It checks this classloader before it checks its parent.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidClassLoader.java,v 1.2 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class ParanoidClassLoader extends URLClassLoader {
@@ -54,33 +54,32 @@ public class ParanoidClassLoader extends URLClassLoader {
     }
 
     /**
-     * Alternate constructor to define a parent and initial
-     * <code>URL</code>s.
+     * Alternate constructor to define a parent and initial <code>URL</code>
+     * s.
      */
     public ParanoidClassLoader(final URL[] urls, final ClassLoader parent) {
         this(urls, parent, null);
     }
 
     /**
-     * Alternate constructor to define a parent, initial
-     * <code>URL</code>s, and a default
-     * <code>URLStreamHandlerFactory</code>.
+     * Alternate constructor to define a parent, initial <code>URL</code>s,
+     * and a default <code>URLStreamHandlerFactory</code>.
      */
     public ParanoidClassLoader(final URL[] urls, final ClassLoader parent, final URLStreamHandlerFactory factory) {
         super(urls, parent, factory);
     }
 
     /**
-     * Extends <code>URLClassLoader</code>'s initialization methods so
-     * we return a <code>ParanoidClassLoad</code> instead.
+     * Extends <code>URLClassLoader</code>'s initialization methods so we
+     * return a <code>ParanoidClassLoad</code> instead.
      */
     public static final URLClassLoader newInstance(final URL[] urls) {
         return new ParanoidClassLoader(urls);
     }
 
     /**
-     * Extends <code>URLClassLoader</code>'s initialization methods so
-     * we return a <code>ParanoidClassLoad</code> instead.
+     * Extends <code>URLClassLoader</code>'s initialization methods so we
+     * return a <code>ParanoidClassLoad</code> instead.
      */
     public static final URLClassLoader newInstance(final URL[] urls, final ClassLoader parent) {
         return new ParanoidClassLoader(urls, parent);
@@ -98,21 +97,19 @@ public class ParanoidClassLoader extends URLClassLoader {
      * @return    the resulting <code>Class</code> object
      * @exception ClassNotFoundException if the class could not be found
      */
-    public final Class loadClass(String name, boolean resolve)
-      throws ClassNotFoundException
-    {
+    public final Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // First check if it's already loaded
         Class clazz = findLoadedClass(name);
-        
+
         if (clazz == null) {
-            
+
             try {
                 clazz = findClass(name);
                 //System.err.println("Paranoid load : " + name);
             } catch (ClassNotFoundException cnfe) {
                 ClassLoader parent = getParent();
                 if (parent != null) {
-                     // Ask to parent ClassLoader (can also throw a CNFE).
+                    // Ask to parent ClassLoader (can also throw a CNFE).
                     clazz = parent.loadClass(name);
                 } else {
                     // Propagate exception
@@ -120,14 +117,14 @@ public class ParanoidClassLoader extends URLClassLoader {
                 }
             }
         }
-        
+
         if (resolve) {
             resolveClass(clazz);
         }
-        
+
         return clazz;
     }
-    
+
     /**
      * Gets a resource from this <code>ClassLoader</class>.  If the
      * resource does not exist in this one, we check the parent.
@@ -150,19 +147,20 @@ public class ParanoidClassLoader extends URLClassLoader {
 
     /**
      * Adds a new directory of class files.
-     *
-     * @param file for jar or directory
+     * 
+     * @param file
+     *            for jar or directory
      * @throws IOException
      */
     public final void addDirectory(File file) throws IOException {
         this.addURL(file.getCanonicalFile().toURL());
     }
-    
+
     /**
      * Adds a new URL
      */
-    
+
     public void addURL(URL url) {
-    	super.addURL(url);
+        super.addURL(url);
     }
 }

@@ -33,7 +33,9 @@
  <map:flow language="java">
   <map:script src="org.apache.cocoon.samples.flow.java.CalculatorFlow"/>
   <map:script src="org.apache.cocoon.samples.flow.java.FormFlow"/>
+<!--
   <map:script src="org.apache.cocoon.samples.flow.java.PersistenceFlow"/>
+-->
  </map:flow>
 
  <map:pipelines>
