@@ -25,8 +25,7 @@ function login() {
 
   if (auth_isAuthenticated(handler)) {
     success();
-  }
-  if (auth_login(handler, null, cocoon.parameters)) {
+  } else if (auth_login(handler, null, cocoon.parameters)) {
     success();
   } else {
     failure();
