@@ -25,7 +25,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.8 2004/03/28 20:51:23 antonio Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.9 2004/06/04 07:44:39 tcurdt Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -152,13 +152,14 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
                      database.indexOf("access") > -1 ||
                      database.indexOf("sap db") > -1 ||
                      database.indexOf("firebird") > -1 ||
+                     database.indexOf("informix-online") > -1 ||
                      database.indexOf("sybase sql server") > -1) {
                 query = new JdbcEsqlQuery(getConnection(),queryString);
             }
             else {
                 getLogger().warn("Your database [" + String.valueOf(database) + "] is not being recognized yet." +
                                  " Using the generic [jdbc] query as default. " +
-                                 " Please report this to cocoon-dev or to tcurdt.at.apache.org directly.");
+                                 " Please report this to dev@cocoon.apache.org");
 
                 query = new JdbcEsqlQuery(getConnection(),queryString);
             }
