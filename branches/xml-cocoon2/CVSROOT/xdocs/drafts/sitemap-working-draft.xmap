@@ -118,6 +118,9 @@ The following goals were identified as engineering constraints:
 ============================================================================ -->
  
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+             xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"
+             xsi:schemaLocation="sitemap-working-draft.xsd">
+<!--         xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0/schema"> -->
 
 <!-- =========================== Components ================================ --> 
 
@@ -212,6 +215,10 @@ The following goals were identified as engineering constraints:
    </map:matcher>
 
    <map:matcher type="uri-regexp" src="class:///org.apache.cocoon.matcher.RegexpURIMatcher">
+    ...
+   </map:matcher>
+
+   <map:matcher type="browser" src="class:///org.apache.cocoon.matcher.BrowserMatcher">
     ...
    </map:matcher>
   </map:matchers>
@@ -403,7 +410,7 @@ The following goals were identified as engineering constraints:
        Example to show the notion of pipeline labels for view generation.
      -->
    <map:match pattern="labelled/*">
-    <map:label name="links"
+    <map:label name="links">
      <map:label name="content">
       <map:generate src="./slides/{1}"/>
      </map:label>
