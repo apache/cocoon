@@ -16,10 +16,8 @@
 -->
 
 <!--+
-    | CVS: $Id: content.xml,v 1.2 2004/03/06 02:25:38 antonio Exp $
-    | Author: Carsten Ziegeler (cziegeler@apache.org)
+    | SVN $Id$
     +-->
-
 <page>
     <title>Your current input</title>
     <content>
