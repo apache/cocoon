@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
 
 <!--
-  $Id: release.xml,v 1.6 2003/10/07 08:52:20 cziegeler Exp $
+  $Id: release.xml,v 1.7 2003/10/20 06:48:24 cziegeler Exp $
 -->
 
 <document>
@@ -32,6 +32,8 @@
   <li>Move to a new Avalon container implementation (Fortress)</li>
   <li>Implement parameters for selectors (closed bug #14745)</li>
  </ul>
+ <p>The <link href="updating.html">updating to 2.2</link> document contains more information
+   on how to prepare your application for the next major release.</p>
  </s1>
  <s1 title="General tasks for a release">
   <ul>
