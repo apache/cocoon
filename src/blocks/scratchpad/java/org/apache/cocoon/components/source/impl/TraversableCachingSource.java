@@ -47,7 +47,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     public String getName() {
         
         try {
-            initMetaResponse(false);
+            initMetaResponse();
         }
         catch (IOException e) {
             if (getLogger().isDebugEnabled()) {
@@ -62,7 +62,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     public boolean isCollection() {
         
         try {
-            initMetaResponse(false);
+            initMetaResponse();
         }
         catch (IOException e) {
             if (getLogger().isDebugEnabled()) {
@@ -78,7 +78,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         
         Source child;
         try {
-            initMetaResponse(false);
+            initMetaResponse();
             child = this.tsource.getChild(name);
         }
         catch (SourceException e) {
@@ -98,7 +98,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     public Collection getChildren() throws SourceException {
         
         try {
-            initMetaResponse(false);
+            initMetaResponse();
         }
         catch (SourceException e) {
             throw e;
@@ -132,7 +132,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         
         Source parent;
         try {
-            initMetaResponse(false);
+            initMetaResponse();
             parent = this.tsource.getParent();
         }
         catch (SourceException e) {

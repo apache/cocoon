@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
  * 
  * <h2>Syntax for Protocol</h2>
  * <p>
- * cached:http://www.apache.org[?cocoon:cache-expires=60&cocoon:cache-name=main]
+ * cached:http://www.apache.org/[?cocoon:cache-expires=60&cocoon:cache-name=main]
  * </p>
  * <p>
  * The above examples show how the real source <code>http://www.apache.org</code>
@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  * always. <code>0</code> can be used to achieve the exact opposite. That is to say, 
  * the cached contents will be thrown out and updated immediately and unconditionally.
  * <p>
- * @version CVS $Id: CachingSource.java,v 1.8 2004/03/23 16:28:54 unico Exp $
+ * @version CVS $Id: CachingSource.java,v 1.9 2004/03/24 15:19:20 unico Exp $
  */
 public class CachingSource extends AbstractLogEnabled
 implements Source, Serviceable, Initializable, XMLizable {
@@ -150,14 +150,69 @@ implements Source, Serviceable, Initializable, XMLizable {
      * Initialize the Source.
      */
     public void initialize() throws Exception {
+        
+        boolean checkValidity = true;
+        if (this.expires == -1) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Using cached response if available.");
+            }
+            checkValidity = false;
+        }
+        
+        if (this.async && this.expires != 0) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Not invalidating cached response " +                    "for asynch source " + getSourceURI());
+            }
+            checkValidity = false;
+        }
+
         this.response = (CachedSourceResponse) this.cache.get(this.cacheKey);
-        if (this.response != null && (!this.async || expires == 0)) {
-            // check if the source is cached, throw it out if invalid
-            final SourceValidity validity = this.response.getValidityObjects()[0];
-            if (expires != -1 && (expires == 0 || validity.isValid() != SourceValidity.VALID)) {
+        if (this.response == null) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("No cached response found " +                    "for source " + getSourceURI());
+            }
+            checkValidity = false;
+        }
+        
+        if (checkValidity) {
+            
+            final ExpiresValidity cacheValidity = (ExpiresValidity) this.response.getValidityObjects()[0];
+            final SourceValidity sourceValidity = this.response.getValidityObjects()[1];
+            
+            boolean remove = false;
+            if (this.expires == 0) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Invalid cached response for source " + getSourceURI());
+                    getLogger().debug("Force invalidation of cached response" +                        " of source " + getSourceURI());
                 }
+                remove = true;
+            }
+            else {
+                boolean expired = cacheValidity.isValid() != SourceValidity.VALID;
+                if (expired) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Cached response of source " 
+                            + getSourceURI() + " is expired.");
+                    }
+                    boolean invalid = !isValid(sourceValidity, this.source);
+                    if (invalid) {
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Cached response of source "
+                                + getSourceURI() + " is invalid.");
+                        }
+                        remove = true;
+                    }
+                    else {
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Cached response of source " 
+                                + getSourceURI() + " is still valid.");
+                        }
+                        // set new expiration period
+                        this.response.getValidityObjects()[0] = new ExpiresValidity(getExpiration());
+                    }
+                }
+            }
+            
+            if (remove) {
                 this.response = null;
                 // remove it if it no longer exists
                 if (!exists()) {
@@ -165,7 +220,7 @@ implements Source, Serviceable, Initializable, XMLizable {
                 }
             }
         }
-        if (this.async && expires > 0) {
+        if (this.async && this.expires > 0) {
             // schedule it with the refresher
             this.refresher.refresh(this.cacheKey,
                                    getSourceURI(),
@@ -193,14 +248,21 @@ implements Source, Serviceable, Initializable, XMLizable {
      * @param refresh  whether to force refresh
      * @throws IOException  if an the binary response could not be initialized
      */
-    protected void initMetaResponse(boolean refresh) throws IOException {
+    protected void initMetaResponse() throws IOException {
         boolean storeResponse = false;
         CachedSourceResponse response = this.response;
         if (response == null) {
-            response = new CachedSourceResponse(new ExpiresValidity(getExpiration()));
-            storeResponse = true;
+            if (this.expires != 0) {
+                final SourceValidity cacheValidity = new ExpiresValidity(getExpiration());
+                final SourceValidity sourceValidity = source.getValidity();
+                response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
+                storeResponse = true;
+            }
+            else {
+                response = new CachedSourceResponse(null);
+            }
         }
-        if (response.getExtra() == null || refresh) {
+        if (response.getExtra() == null) {
             response.setExtra(readMeta(this.source));
             this.freshMeta = true;
         }
@@ -221,15 +283,22 @@ implements Source, Serviceable, Initializable, XMLizable {
      * @param refresh  whether to force refresh
      * @throws IOException  if an the binary response could not be initialized
      */
-    protected void initBinaryResponse(boolean refresh) throws IOException {
+    protected void initBinaryResponse() throws IOException {
         boolean storeResponse = false;
         /* delay caching the response until we have a valid new one */
         CachedSourceResponse response = this.response;
         if (response == null) {
-            response = new CachedSourceResponse(new ExpiresValidity(getExpiration()));
-            storeResponse = true;
+            if (this.expires != 0) {
+                final SourceValidity cacheValidity = new ExpiresValidity(getExpiration());
+                final SourceValidity sourceValidity = source.getValidity();
+                response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
+                storeResponse = true;
+            }
+            else {
+                response = new CachedSourceResponse(null);
+            }
         }
-        if (response.getBinaryResponse() == null || refresh) {
+        if (response.getBinaryResponse() == null) {
             response.setBinaryResponse(readBinaryResponse(this.source));
             if (!this.freshMeta) {
                 /* always refresh meta in this case */
@@ -260,8 +329,15 @@ implements Source, Serviceable, Initializable, XMLizable {
         /* delay caching the response until we have a valid new one */
         CachedSourceResponse response = this.response;
         if (response == null) {
-            response = new CachedSourceResponse(new ExpiresValidity(getExpiration()));
-            storeResponse = true;
+            if (this.expires != 0) {
+                final SourceValidity cacheValidity = new ExpiresValidity(getExpiration());
+                final SourceValidity sourceValidity = source.getValidity();
+                response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
+                storeResponse = true;
+            }
+            else {
+                response = new CachedSourceResponse(null);
+            }
         }
         if (response.getXMLResponse() == null || refresh) {
             byte[] binary = response.getBinaryResponse();
@@ -306,7 +382,7 @@ implements Source, Serviceable, Initializable, XMLizable {
      */
     public long getLastModified() {
         try {
-            initMetaResponse(false);
+            initMetaResponse();
         } catch (IOException io) {
             return 0;
         }
@@ -320,7 +396,7 @@ implements Source, Serviceable, Initializable, XMLizable {
      */
     public String getMimeType() {
         try {
-            initMetaResponse(false);
+            initMetaResponse();
         } catch (IOException io) {
             return null;
         }
@@ -332,7 +408,7 @@ implements Source, Serviceable, Initializable, XMLizable {
      */
     public InputStream getInputStream() throws IOException, SourceException {
         try {
-            initBinaryResponse(false);
+            initBinaryResponse();
         } catch (IOException se) {
             throw new SourceException("Failure getting input stream", se);
         }
@@ -425,7 +501,7 @@ implements Source, Serviceable, Initializable, XMLizable {
     protected long getExpiration() {
         return this.expires * 1000;
     }
-        
+    
     /**
      * Read XML content from source.
      * 
@@ -537,6 +613,13 @@ implements Source, Serviceable, Initializable, XMLizable {
         meta.setMimeType(source.getMimeType());
         
         return meta;
+    }
+    
+    protected static boolean isValid(SourceValidity validity, Source source) {
+        if (validity == null) return false;
+        return validity.isValid() == SourceValidity.VALID || 
+              (validity.isValid() == SourceValidity.UNKNOWN && 
+               validity.isValid(source.getValidity()) == SourceValidity.VALID);
     }
     
     /**
