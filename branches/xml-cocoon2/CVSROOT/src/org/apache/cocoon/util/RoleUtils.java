@@ -19,7 +19,7 @@ import java.util.Collections;
  * role aliases and the real Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-18 16:17:02 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-08 12:24:22 $
  */
 
 public class RoleUtils {
@@ -46,7 +46,7 @@ public class RoleUtils {
 
         setup = new HashMap();
 
-        setup.put(Roles.PARSER, "org.apache.cocoon.components.parser.XercesParser");
+        setup.put(Roles.PARSER, "org.apache.cocoon.components.parser.JaxpParser");
         setup.put(Roles.STORE, "org.apache.cocoon.components.store.MemoryStore");
         setup.put(Roles.PROGRAMMING_LANGUAGE, "org.apache.cocoon.CocoonComponentSelector");
         setup.put(Roles.MARKUP_LANGUAGE, "org.apache.cocoon.CocoonComponentSelector");

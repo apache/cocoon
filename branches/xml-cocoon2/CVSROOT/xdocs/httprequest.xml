@@ -102,7 +102,7 @@
 <!-- ===================== General Components =========================== -->
 
   <component role="org.apache.cocoon.components.parser.Parser" 
-             class="org.apache.cocoon.components.parser.XercesParser"/>
+             class="org.apache.cocoon.components.parser.JaxpParser"/>
   <component role="org.apache.cocoon.components.store.Store"  
              class="org.apache.cocoon.components.store.MemoryStore"/>
 
@@ -220,7 +220,7 @@
 					 gets a default parser out of the System properties (this refers to the
 					 environment variable <code>$org.apache.cocoon.components.parser.Parser</code>
 					 of the OS). If no parser is defined in the environment, Cocoon will use
-					 <code>org.apache.cocoon.components.parser.XercesParser</code> (a hard-coded
+					 <code>org.apache.cocoon.components.parser.JaxpParser</code> (a hard-coded
 					 default).</li> 
 				  <li>Get the components: Cocoon uses roles (refer to
 					 <link href="avalon.html">Avalon</link>) as its working classes. Each role is
