@@ -35,6 +35,8 @@ public class FormattingLongConvertor extends FormattingDecimalConvertor {
     }
 
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+        // Some locales (e.g. "fr") produce non-breaking spaces sent back as space by the browser
+        value = value.replace(' ', (char)160);
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
         try {
             Number decimalValue = decimalFormat.parse(value);
