@@ -66,14 +66,12 @@ import org.apache.cocoon.processor.xsp.*;
 
 public class XSPResponseLibrary {
   // ServletResponse
-  public Element getCharacterEncoding(HttpServletResponse response, Document document) {
+  public static Element getCharacterEncoding(HttpServletResponse response, Document document) {
     Element element = document.createElement("response:get-character-encoding");
     element.appendChild(document.createTextNode(response.getCharacterEncoding()));
     return element;
   }
 
-  // Not supported by JSDK versions prior to 2.2
-  /*
   public static Element getLocale(HttpServletResponse response, Document document) {
     Element property = null;
     Locale locale = response.getLocale();
@@ -93,11 +91,8 @@ public class XSPResponseLibrary {
 
     return element;
   }
-  */
 
   // HttpServletResponse
-  // Not supported by JSDK versions prior to 2.2
-  /*
   public static void addDateHeader(HttpServletResponse response, String name, long date) {
     response.addDateHeader(name, date);
   }
@@ -117,21 +112,20 @@ public class XSPResponseLibrary {
   public static void addDateHeader(HttpServletResponse response, String name, String date, DateFormat format) throws ParseException {
     response.addDateHeader(name, format.parse(date).getTime());
   }
-  */
 
-  public Element containsHeader(HttpServletResponse response, String name, Document document) {
+  public static Element containsHeader(HttpServletResponse response, String name, Document document) {
     Element element = document.createElement("response:contains-header");
     element.appendChild(document.createTextNode(String.valueOf(response.containsHeader(name))));
     return element;
   }
 
-  public Element encodeRedirectURL(HttpServletResponse response, String url, Document document) {
+  public static Element encodeRedirectURL(HttpServletResponse response, String url, Document document) {
     Element element = document.createElement("response:encode-redirect-url");
     element.appendChild(document.createTextNode(response.encodeRedirectURL(url)));
     return element;
   }
 
-  public Element encodeURL(HttpServletResponse response, String url, Document document) {
+  public static Element encodeURL(HttpServletResponse response, String url, Document document) {
     Element element = document.createElement("response:encode-url");
     element.appendChild(document.createTextNode(response.encodeURL(url)));
     return element;
