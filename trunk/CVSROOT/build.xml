@@ -94,6 +94,7 @@ These are the meaningful targets for this build file:
 
  - package [default] -> creates ./build/cocoon.jar
  - docs -> generates the HTML documentation in ./build/docs
+ - printer-docs -> generates printer friendly HTML documentation in ./build/printer-docs
  - javadocs -> generates the API documentation in ./build/javadocs
  - dist-zip -> generates the Cocoon distribution
  - dist-tgz -> generates the Cocoon distribution
@@ -197,14 +198,15 @@ a Java 1.2 compatible JVM is required for this target.
     <echo message=""/>
     <echo message=" available targets are:"/>
     <echo message=""/>
-    <echo message="   package  --> generates the cocoon.jar file (default)"/>
-    <echo message="   compile  --> compiles the source code"/>
-    <echo message="   docs     --> generates the HTML documentation"/>
-    <echo message="   javadocs --> generates the API documentation (java 1.2 only)"/>
-    <echo message="   dist-zip --> generates the Cocoon distribution as .zip"/>
-    <echo message="   dist-tgz --> generates the Cocoon distribution as .tar.gz"/>
-    <echo message="   clean    --> cleans up the directory"/>
-    <echo message="   site     --> generates the Cocoon web site"/>
+    <echo message="   package      --> generates the cocoon.jar file (default)"/>
+    <echo message="   compile      --> compiles the source code"/>
+    <echo message="   docs         --> generates the HTML documentation"/>
+    <echo message="   printer-docs --> generates printer-friendly HTML documentation"/>
+    <echo message="   javadocs     --> generates the API documentation (java 1.2 only)"/>
+    <echo message="   dist-zip     --> generates the Cocoon distribution as .zip"/>
+    <echo message="   dist-tgz     --> generates the Cocoon distribution as .tar.gz"/>
+    <echo message="   clean        --> cleans up the directory"/>
+    <echo message="   site         --> generates the Cocoon web site"/>
     <echo message=""/>
     <echo message=" See the comments inside the build.xml file for more details."/>
     <echo message="-------------------------------------------------------------"/>
@@ -332,7 +334,7 @@ a Java 1.2 compatible JVM is required for this target.
     <delete file="${docs.dir}/book.xml"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
-          args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
+          args="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -365,6 +367,7 @@ a Java 1.2 compatible JVM is required for this target.
     <mkdir dir="${dist.dir}/conf"/>
     <mkdir dir="${dist.dir}/docs"/>
     <mkdir dir="${dist.dir}/docs/api"/>
+    <mkdir dir="${dist.dir}/docs/printer"/>
     <mkdir dir="${dist.dir}/samples"/>
     <mkdir dir="${dist.dir}/skins"/>
     <mkdir dir="${dist.dir}/xdocs"/>
@@ -375,6 +378,7 @@ a Java 1.2 compatible JVM is required for this target.
     <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
     <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
+    <copydir src="${build.docs.printer}" dest="${dist.dir}/docs/printer"/>
     <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
     <copydir src="${docs.dir}" dest="${dist.dir}" includes="changes.xml, todo.xml"/>
     <copydir src="${skins.dir}" dest="${dist.dir}/skins"/>
