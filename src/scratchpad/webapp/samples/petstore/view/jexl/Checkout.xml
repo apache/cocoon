@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
-    <site signOn="${accountForm.signOn}" view="jexl">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
+    <site signOn="${accountForm.signOn}" view="c">
         <cart name="Checkout Summary">
             <backpointer name="Shopping Cart" do="viewCart.do" />
-            <jexl:forEach var="cartItem" items="${cartItems}" >
+            <c:forEach var="cartItem" items="${cartItems}" >
                 <item product-id="${cartItem.item.productId}" id="${cartItem.item.itemId}">
                     <desc>
-                        <jexl:out value="${cartItem.item.attr1}"/> 
-                        <jexl:out value="${cartItem.item.attr2}"/> 
-                        <jexl:out value="${cartItem.item.attr3}"/> 
-                        <jexl:out value="${cartItem.item.attr4}"/> 
-                        <jexl:out value="${cartItem.item.attr5}"/> 
-                        <jexl:out value="${cartItem.item.product.name}"/> 
+                        ${cartItem.item.attr1} 
+                        ${cartItem.item.attr2} 
+                        ${cartItem.item.attr3} 
+                        ${cartItem.item.attr4} 
+                        ${cartItem.item.attr5} 
+                        ${cartItem.item.product.name} 
                     </desc>
-                    <price><jexl:out value="${cartItem.item.listPrice}"/></price>
-                    <quantity><jexl:out value="${cartItem.quantity}"/></quantity>
+                    <price>${cartItem.item.listPrice}</price>
+                    <quantity>${cartItem.quantity}</quantity>
                 </item>
-            </jexl:forEach>
-            <total><jexl:out value="${cartForm.cart.subTotal}"/></total>
+            </c:forEach>
+            <total>${cartForm.cart.subTotal}</total>
             <nextpointer img="images/button_continue.gif" do="${continuation.id}.kont"/>
         </cart>
     </site>

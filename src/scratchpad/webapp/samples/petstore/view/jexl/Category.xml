@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
-    <site signOn="${accountForm.signOn}" view="jexl">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
+    <site signOn="${accountForm.signOn}" view="c">
         <backpointer name="Main Menu" do="index.do" />
         <category name="${category.name}">
-            <jexl:forEach var="prod" items="${productList}" >
+            <c:forEach var="prod" items="${productList}" >
                 <product name="${prod.name}" id="${prod.productId}"/>
-            </jexl:forEach>
+            </c:forEach>
             <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${continuation.id}"/>
         </category>
     </site>

@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 
-<page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="#{accountForm/signOn}" view="jxpath">
         <cart name="Checkout Summary">
             <backpointer name="Shopping Cart" do="viewCart.do" />
-            <jxpath:for-each select="cartItems" >
+            <c:forEach select="#{cartItems}" >
                 <item product-id="#{item/productId}" id="#{item/itemId}">
                     <desc>
-                        <jxpath:value-of select="item/attr1"/> 
-                        <jxpath:value-of select="item/attr2"/> 
-                        <jxpath:value-of select="item/attr3"/> 
-                        <jxpath:value-of select="item/attr4"/> 
-                        <jxpath:value-of select="item/attr5"/> 
-                        <jxpath:value-of select="item/product/name"/> 
+                        <c:out value="#{item/attr1}"/> 
+                        <c:out value="#{item/attr2}"/> 
+                        <c:out value="#{item/attr3}"/> 
+                        <c:out value="#{item/attr4}"/> 
+                        <c:out value="#{item/attr5}"/> 
+                        <c:out value="#{item/product/name}"/> 
                     </desc>
-                    <price><jxpath:value-of select="item/listPrice"/></price>
-                    <quantity><jxpath:value-of select="quantity"/></quantity>
+                    <price><c:out value="#{item/listPrice}"/></price>
+                    <quantity><c:out value="#{quantity}"/></quantity>
                 </item>
-            </jxpath:for-each>
-            <total><jxpath:value-of select="cartForm/cart/subTotal"/></total>
+            </c:forEach>
+            <total><c:out value="#{cartForm/cart/subTotal}"/></total>
             <nextpointer img="images/button_continue.gif" do="#{$continuation/id}.kont"/>
         </cart>
     </site>

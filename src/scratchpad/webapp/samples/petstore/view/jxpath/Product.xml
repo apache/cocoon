@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 
-<page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="#{accountForm/signOn}" view="jxpath">
         <backpointer name="#{product/category}" do="viewCategory.do?categoryId=#{product/category}"/>
         <product name="#{product/name}">
-            <jxpath:for-each select="itemList" >
+            <c:forEach select="#{itemList}" >
                 <item productId="#{productId}" id="#{itemId}">
                     <desc>
-                        <jxpath:value-of select="attr1"/> 
-                        <jxpath:value-of select="attr2"/> 
-                        <jxpath:value-of select="attr3"/> 
-                        <jxpath:value-of select="attr4"/> 
-                        <jxpath:value-of select="attr5"/> 
+                        #{attr1}
+                        #{attr2}
+                        #{attr3}
+                        #{attr4}
+                        #{attr5}
                     </desc>
-                    <price><jxpath:value-of select="listPrice"/></price>
+                    <price>#{listPrice}</price>
                 </item>
-            </jxpath:for-each>
+            </c:forEach>
             <situation firstPage="#{firstPage}" lastPage="#{lastPage}" continuation="#{$continuation/id}"/>
         </product>
     </site>

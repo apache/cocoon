@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
             <welcome>
-                <jexl:if test="${!accountForm.signOn}">
-                    <firstName><jexl:out value="${accountForm.account.firstName}"/></firstName>
-                </jexl:if>
+                <c:if test="${!accountForm.signOn}">
+                    <firstName>${accountForm.account.firstName}</firstName>
+                </c:if>
                 <menu>
-                    <jexl:forEach var="item" items="${categoryList}" >
-                        <category name="${item.name}" id="${item.catId}"/>
-                    </jexl:forEach>
+                   <c:forEach var="item" items="${categoryList}" >
+                      <category name="${item.name}" id="${item.catId}"/>
+                   </c:forEach>
                 </menu>
             </welcome>
     </site>

@@ -1,4 +1,4 @@
-<t:template xmlns:t="http://cocoon.apache.org/transformation/jxpath/1.0">
+<t:template xmlns:t="http://cocoon.apache.org/generation/jx/1.0">
 
 <center>
 <a href="viewCategory.do?categoryId=FISH">

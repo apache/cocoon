@@ -1,54 +1,54 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="Main Menu" do="index.do" />
         <message></message>
         <panel header="Order #${order.orderId}" subheader="${order.orderDate}">
             <panel label="Payment Details">
-                <field label="Card Type"><jexl:out value="${order.cardType}" /></field>
-                <field label="Card Number"><jexl:out value="${order.creditCard}" /></field>
-                <field label="Expiry Date (MM/YYYY)"><jexl:out value="${order.expiryDate}" /></field>
+                <field label="Card Type"><${order.cardType}</field>
+                <field label="Card Number"><${order.creditCard}</field>
+                <field label="Expiry Date (MM/YYYY)"><${order.expiryDate}</field>
             </panel>
             <panel label="Billing Address">
-                <field label="First name"><jexl:out value="${order.billToFirstName}"/></field>
-                <field label="Last name" ><jexl:out value="${order.billToLastName}"/></field>
-                <field label="Address 1" ><jexl:out value="${order.billAddress1}"/></field>
-                <field label="Address 2" ><jexl:out value="${order.billAddress2}"/></field>
-                <field label="City" ><jexl:out value="${order.billCity}"/></field>
-                <field label="State" ><jexl:out value="${order.billState}"/></field>
-                <field label="Zip" ><jexl:out value="${order.billZip}"/></field>
-                <field label="Country" ><jexl:out value="${order.billCountry}"/></field>
+                <field label="First name"><${order.billToFirstName}</field>
+                <field label="Last name" ><${order.billToLastName}</field>
+                <field label="Address 1" ><${order.billAddress1}</field>
+                <field label="Address 2" ><${order.billAddress2}</field>
+                <field label="City" ><${order.billCity}</field>
+                <field label="State" ><${order.billState}</field>
+                <field label="Zip" ><${order.billZip}</field>
+                <field label="Country" ><${order.billCountry}</field>
             </panel>
             <panel label="Shipping Address">
-                <field label="First name"><jexl:out value="${order.shipToFirstName}"/></field>
-                <field label="Last name" ><jexl:out value="${order.shipToLastName}"/></field>
-                <field label="Address 1" ><jexl:out value="${order.shipAddress1}"/></field>
-                <field label="Address 2" ><jexl:out value="${order.shipAddress2}"/></field>
-                <field label="City" ><jexl:out value="${order.shipCity}"/></field>
-                <field label="State" ><jexl:out value="${order.shipState}"/></field>
-                <field label="Zip" ><jexl:out value="${order.shipZip}"/></field>
-                <field label="Country" ><jexl:out value="${order.shipCountry}"/></field>
-                <field label="Courier" ><jexl:out value="${order.courier}"/></field>
+                <field label="First name"><${order.shipToFirstName}</field>
+                <field label="Last name" ><${order.shipToLastName}</field>
+                <field label="Address 1" ><${order.shipAddress1}</field>
+                <field label="Address 2" ><${order.shipAddress2}</field>
+                <field label="City" ><${order.shipCity}</field>
+                <field label="State" ><${order.shipState}</field>
+                <field label="Zip" ><${order.shipZip}</field>
+                <field label="Country" ><${order.shipCountry}</field>
+                <field label="Courier" ><${order.courier}</field>
             </panel>
             <panel label="Status">
                 <field empty="2">
                     <cart name="Status">
-                        <jexl:forEach var ="cartItem" items="${itemList}" >
+                        <c:forEach var ="cartItem" items="${itemList}" >
                             <item product-id="${cartItem.item.productId}" id="${cartItem.item.itemId}">
                                 <desc>
-                                    <jexl:out value="${cartItem.item.attr1}"/> 
-                                    <jexl:out value="${cartItem.item.attr2}"/> 
-                                    <jexl:out value="${cartItem.item.attr3}"/> 
-                                    <jexl:out value="${cartItem.item.attr4}"/> 
-                                    <jexl:out value="${cartItem.item.attr5}"/> 
-                                    <jexl:out value="${cartItem.item.product.name}"/> 
+                                    <${cartItem.item.attr1} 
+                                    <${cartItem.item.attr2} 
+                                    <${cartItem.item.attr3} 
+                                    <${cartItem.item.attr4} 
+                                    <${cartItem.item.attr5} 
+                                    <${cartItem.item.product.name} 
                                 </desc>
-                                <price><jexl:out value="${cartItem.listPrice}"/></price>
-                                <quantity><jexl:out value="${cartItem.quantity}"/></quantity>
+                                <price><${cartItem.listPrice}</price>
+                                <quantity><${cartItem.quantity}</quantity>
                             </item>
-                        </jexl:forEach>
-                        <total><jexl:out value="${order.totalPrice}"/></total>
+                        </c:forEach>
+                        <total><${order.totalPrice}</total>
                     </cart>
                 </field>
             </panel>

@@ -1,4 +1,4 @@
-<c:template xmlns:c="http://cocoon.apache.org/transformation/jexl/1.0">
+<c:template xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
 <br />
 <c:if test="${accountForm.account != null}">
   <c:if test="${accountForm.account.username != null}">
@@ -8,7 +8,7 @@
 <c:if test="${accountForm.account.bannerName != null}"> 
       <center>
           <image>
-          <c:out value="${accountForm.account.bannerName}"/>
+          ${accountForm.account.bannerName}
 	  </image>
       </center>
 </c:if>
