@@ -56,7 +56,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.1 2004/03/10 12:58:08 stephan Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.1 2004/03/10 15:20:51 unico Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.transformation.helpers;
+package org.apache.cocoon.transformation.helpers;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -37,7 +37,7 @@ import java.util.Map;
  * The <code>ValidatorActionResult</code> object helper
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FormValidatorHelper.java,v 1.1 2004/03/10 12:58:13 stephan Exp $
+ * @version CVS $Id: FormValidatorHelper.java,v 1.2 2004/03/10 15:19:32 unico Exp $
  */
 public class FormValidatorHelper {
 
