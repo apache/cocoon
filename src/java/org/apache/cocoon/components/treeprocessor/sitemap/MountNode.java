@@ -70,7 +70,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.9 2003/11/11 10:31:04 unico Exp $
+ * @version CVS $Id: MountNode.java,v 1.10 2004/02/05 07:55:23 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -157,11 +157,14 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             }
             
             SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            Source src = resolver.resolveURI(actualSource);
             try {
-                processor = this.parentProcessor.createChildProcessor(this.manager, this.language, src);
+                Source src = resolver.resolveURI(actualSource);
+                try {
+                    processor = this.parentProcessor.createChildProcessor(this.manager, this.language, src);
+                } finally {
+                    resolver.release(src);
+                }
             } finally {
-                resolver.release(src);
                 this.manager.release(resolver);
             }
 
