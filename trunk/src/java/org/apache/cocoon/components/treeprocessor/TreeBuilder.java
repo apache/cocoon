@@ -51,32 +51,57 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 
 import java.util.List;
 
 /**
+ * The TreeBuilder represents a particular language such as "sitemap".  It provides
+ * all the necessary functionality to create new instances of a TreeProcessor.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.3 2003/08/07 08:42:20 sylvain Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.4 2003/10/24 21:05:27 bloritsch Exp $
  */
 
-public interface TreeBuilder extends Component {
+public interface TreeBuilder
+        extends Component
+{
 
-    void setProcessor(TreeProcessor processor);
+    /**
+     * Set the TreeProcessor for this TreeBuilder.
+     * <p/>
+     * ?? Is there a better way ??
+     * ?? What exactly is this used for ??
+     *
+     * @param processor the TreeProcesor
+     */
+    void setProcessor( TreeProcessor processor );
 
+    /**
+     * Get the TreeProcessor from this TreeBuilder.
+     * <p/>
+     * ?? What exactly is this used for ??
+     *
+     * @return the TreeProcessor
+     */
     TreeProcessor getProcessor();
 
     /**
      * Returns the language that is being built (e.g. "sitemap").
+     *
+     * @return the language name
      */
     String getLanguage();
 
     /**
-     * Returns the name of the parameter element.
+     * Returns the name of the parameter element.  For example, do we refer to a parameter
+     * with the name "parameter", "property", or "preference"?  It is used to assemble
+     * {@link ParameterizableProcessingNode}s.
+     *
+     * @return parameter's name
      */
     String getParameterName();
 
@@ -84,34 +109,70 @@ public interface TreeBuilder extends Component {
      * Register a <code>ProcessingNode</code> under a given name.
      * For example, <code>ResourceNodeBuilder</code> stores here the <code>ProcessingNode</code>s
      * it produces for use by sitemap pipelines. This allows to turn the tree into a graph.
+     *
+     * @param name The name used to look up the node
+     * @param node The node being registered
      */
-    void registerNode(String name, ProcessingNode node);
+    void registerNode( String name, ProcessingNode node );
 
     /**
-     * @throws IllegalStateException
+     * Get a node we registered under a specific name earlier.
+     *
+     * @throws IllegalStateException ??if the name is not registered??
      */
-    ProcessingNode getRegisteredNode(String name);
+    ProcessingNode getRegisteredNode( String name );
 
-    ProcessingNodeBuilder createNodeBuilder(Configuration config) throws Exception;
+    /**
+     * Create a ProcessingNodeBuilder for a particular configuration.
+     * <p/>
+     * ?? How does this fit into the overall picture ??
+     * ?? Is this for a particular sitemap file ??
+     *
+     * @param config the configuration used to create the node builder
+     * @return the generated node builder
+     * @throws Exception if there was a problem generating the node builder
+     */
+    ProcessingNodeBuilder createNodeBuilder( Configuration config ) throws Exception;
 
     /**
      * Get the namespace URI that builders should use to find their nodes.
+     *
+     * @return the namespace URI
      */
     String getNamespace();
 
     /**
      * Build a processing tree from a <code>Configuration</code>.
+     *
+     * @param tree the Configuration to build the tree
+     * @return the processing node
+     * @throws Exception if there is a problem building the processing tree
      */
-    ProcessingNode build(Configuration tree) throws Exception;
+    ProcessingNode build( Configuration tree ) throws Exception;
 
-    ProcessingNode build(Source source) throws Exception;
+    /**
+     * Build a processing tree from a Source object.  This method essentially converts the
+     * Source into a Configuration, and calls the {@link #build(Configuration)} method.
+     *
+     * @param source The Source object referencing the configuration file
+     * @return the processing node
+     * @throws Exception if there was a problem building the processing tree or reading the Source
+     */
+    ProcessingNode build( Source source ) throws Exception;
 
+    /**
+     * Get the default filename to look for to build processing trees.
+     *
+     * @return the default filename
+     */
     String getFileName();
 
     /**
      * Return the list of <code>ProcessingNodes</code> part of this tree that are
      * <code>Disposable</code>. Care should be taken to properly dispose them before
      * trashing the processing tree.
+     *
+     * @return the list of {@link ProcessingNode}s that are disposable
      */
     List getDisposableNodes();
 
@@ -119,11 +180,16 @@ public interface TreeBuilder extends Component {
      * Setup a <code>ProcessingNode</code> by setting its location, calling all
      * the lifecycle interfaces it implements and giving it the parameter map if
      * it's a <code>ParameterizableNode</code>.
-     * <p>
+     * <p/>
      * As a convenience, the node is returned by this method to allow constructs
      * like <code>return treeBuilder.setupNode(new MyNode(), config)</code>.
+     *
+     * @param node   the ProcessingNode to setup
+     * @param config the configuration element for the node
+     * @return the active ProcessingNode
+     * @throws Exception if there was a problem setting up the node
      */
-    ProcessingNode setupNode(ProcessingNode node, Configuration config) throws Exception;
+    ProcessingNode setupNode( ProcessingNode node, Configuration config ) throws Exception;
 
 
     /**
@@ -131,22 +197,33 @@ public interface TreeBuilder extends Component {
      * and otherwhise the default hint for the <code>ComponentSelector</code> identified by
      * the role <code>role</code>.
      *
+     * @param statement the statement
+     * @param role      the role
+     * @return the type name
      * @throws ConfigurationException if the default type could not be found.
      */
-    String getTypeForStatement(Configuration statement, String role) throws ConfigurationException;
+    String getTypeForStatement( Configuration statement, String role ) throws ConfigurationException;
 
     /**
-     * Return the sitemap component manager
+     * Return the sitemap service manager.
+     *
+     * @return the service manager
      */
-    ComponentManager getSitemapComponentManager();
-    
+    ServiceManager getSitemapServiceManager();
+
     /**
-     * Add an attribute. Useful to transmit information between distant (in the tree) node builders
+     * Add an attribute. Useful to transmit information between distant (in the tree) node builders.
+     *
+     * @param name  the attribute name
+     * @param value the attribute value
      */
-    void setAttribute(String name, Object value);
-    
+    void setAttribute( String name, Object value );
+
     /**
      * Get the value of an attribute.
+     *
+     * @param name the attribute name
+     * @return the attribute value
      */
-    Object getAttribute(String name);
+    Object getAttribute( String name );
 }
