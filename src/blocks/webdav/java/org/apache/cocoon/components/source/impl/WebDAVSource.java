@@ -105,7 +105,7 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.12 2003/11/22 13:03:38 gcasper Exp $
+ *  @version $Id: WebDAVSource.java,v 1.13 2003/11/23 04:30:52 crossley Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -652,7 +652,8 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         } catch (HttpException e) {
             if (getLogger().isDebugEnabled()) {
                 final String message =
-                    "Unable to get WebDAV children. Server responded " +                    e.getReasonCode() + " (" + e.getReason() + ") - " 
+                    "Unable to get WebDAV children. Server responded " +
+                    e.getReasonCode() + " (" + e.getReason() + ") - " 
                     + e.getMessage();
                 getLogger().debug(message);
             }
