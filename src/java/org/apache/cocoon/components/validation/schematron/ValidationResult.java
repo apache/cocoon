@@ -102,8 +102,6 @@ public class ValidationResult {
 	/**
 	 * adds all errors to a sorted list
 	 * Key is XPath of each error location
-	 *
-	 * @todo implement this method !!!
 	 * @return SortedSet
 	 */
 	public List toList() {

@@ -83,7 +83,7 @@ public class SchematronFactory extends SchemaFactory {
 	 */
 	private String defaultSchemaPrefix_ = "sch";
 
-	/*
+	/**
 	 * private logger
 	 */
 	private Logger logger = setupLogger();
@@ -290,7 +290,7 @@ public class SchematronFactory extends SchemaFactory {
 			jxpContext.setLenient(false);
 
 			// now read the report message
-			// @todo: The current implementation does not 
+			// TODO: The current implementation does not 
 			// read xml tags used within the assert message.
 			// Solution is to use JXPath NodePointer to get 
 			// to the DOM node and then convert it to a String.
@@ -430,10 +430,10 @@ public class SchematronFactory extends SchemaFactory {
 		}
 	}
 
-	/*
+	/**
 	 * Replace all occurances of sch: with the actual Schema prefix used in the document
 	 *
-	 * @todo fix this implementaion. There are problems with DOM.
+	 * TODO: fix this implementaion. There are problems with DOM.
 	 * Returns null instead of the actual namespace prefix (e.g. "sch") as expected.
 	 */
 	protected String fixns(String path) {

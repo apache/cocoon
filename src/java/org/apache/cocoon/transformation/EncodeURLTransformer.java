@@ -110,17 +110,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version    CVS $Id: EncodeURLTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
- *
- * @cocoon:name encodeURL
- * @cocoon:status scratchpad
- * @cocoon:parameter name="exclude-name"
- *   default-value="img/@src"
- *   description="RE pattern for excluding attributes from encode URL rewriting"
- * @cocoon:parameter name="include-name"
- *   default-value=".&asterik;/@href|.&asterik;/@src|.&asterik;/@action"
- *   description="RE pattern for including attributes from encode URL rewriting"
- *
+ * @version    CVS $Id: EncodeURLTransformer.java,v 1.2 2003/03/15 20:21:00 stefano Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -360,7 +350,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.2 2003/03/15 20:21:00 stefano Exp $
      */
     public class ElementAttributeMatching {
         /**
