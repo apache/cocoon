@@ -47,7 +47,6 @@
      </td>
     </tr>
 
-    <xsl:apply-templates select="source"/>
     <xsl:apply-templates select="description"/>
 
     <tr>
@@ -63,19 +62,24 @@
 </html>
 </xsl:template>
 
+
+  <xsl:template match="message">
+   <font face="arial,helvetica,sanserif"><xsl:value-of select="."/></font>
+  </xsl:template>
+
   <xsl:template match="description">
    <tr>
      <td valign="top">
        <font color="#ffffff" face="arial,helvetica,sanserif">Description</font>
      </td>
      <td bgcolor="#ffffff">
-      <font face="arial,helvetica,sanserif"><xsl:apply-templates/></font>
+      <font face="arial,helvetica,sanserif"><xsl:value-of select="."/></font>
     </td>
    </tr>
   </xsl:template>
 
   <xsl:template match="message">
-   <font face="arial,helvetica,sanserif"><xsl:apply-templates/></font>
+   <font face="arial,helvetica,sanserif"><xsl:value-of select="."/></font>
   </xsl:template>
 
   <xsl:template match="extra">
