@@ -34,7 +34,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.9 2004/06/14 14:53:56 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.10 2004/06/14 15:08:35 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -168,7 +168,7 @@ public class ContinuationClassLoader extends ClassLoader {
             }
         }
         
-        byte[] changed = clazz.getJavaClass().getBytes();
+        /*byte[] changed = clazz.getJavaClass().getBytes();
         try {
             java.io.FileOutputStream out = new java.io.FileOutputStream(clazz.getClassName() + ".rewritten.class");
             out.write(changed);
@@ -176,7 +176,7 @@ public class ContinuationClassLoader extends ClassLoader {
             out.close();
         } catch (java.io.IOException ioe) {
             ioe.printStackTrace();
-        }
+        }*/
         
         clazz.addInterface(CONTINUATIONCAPABLE_CLASS);
         return clazz.getJavaClass().getBytes();
