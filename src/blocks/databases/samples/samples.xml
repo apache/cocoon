@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: samples.xml,v 1.3 2003/03/20 05:31:30 crossley Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.4 2004/02/07 13:57:27 joerg Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="database block">
+
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
 
   <group name="SQL Transformer">
      <sample name="Documentation" href="../../docs/userdocs/transformers/sql-transformer.html">
        Documentation for this component.
      </sample>
-     <sample name="SQL Transformator" href="transform/sql-page" xlink:role="dynamic">
+     <sample name="SQL Transformer" href="transform/sql-page" xlink:role="dynamic">
        Simple example using the SQL transformer.
      </sample>
   </group>
