@@ -14,15 +14,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <project name="tools">
   <description>
     Tools provided by Ant which could be helpful
   </description>
 
-  <target 
-    name="correctLinefeed" 
+  <target
+    name="correctLinefeed"
     description="Make sure LF is used as line feed">
-    
+
     <echo message="-------------------------------------------------------------------------------"/>
     <echo message="Make sure you don't have any binaries (except *.jpg, *.gif, *.jar and *.zip  in the directory (or any subdirectory) which you want to correct."/>
     <echo message="-------------------------------------------------------------------------------"/>
@@ -30,11 +31,11 @@
     <input message="Please enter the basedir which should be corrected:" addproperty="target.dir"/>
 
     <fixcrlf srcdir="${target.dir}"
-       eol="lf" 
+       eol="lf"
        includes="**/*"
        excludes="**/*.jpg,**/*.gif,**/*.jar,**/*.zip"
     />
-      
+
   </target>
 
 </project>
