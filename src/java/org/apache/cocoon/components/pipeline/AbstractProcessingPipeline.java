@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,8 +61,8 @@ import java.util.StringTokenizer;
  * @version CVS $Id$
  */
 public abstract class AbstractProcessingPipeline
-  extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable {
+        extends AbstractLogEnabled
+        implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable {
 
     // Generator stuff
     protected Generator generator;
@@ -86,14 +86,12 @@ public abstract class AbstractProcessingPipeline
     protected String readerSource;
     protected String readerMimeType;
 
-    /**
-     * True when pipeline has been prepared.
-     */
+    /** True when pipeline has been prepared. */
     private boolean prepared;
 
     /**
      * This is the last component in the pipeline, either the serializer
-     * or a custom xmlconsumer for the cocoon: protocol etc.
+     * or a custom XML consumer in case of internal processing.
      */
     protected XMLConsumer lastConsumer;
 
@@ -106,20 +104,20 @@ public abstract class AbstractProcessingPipeline
     /** The configuration */
     protected Parameters configuration;
 
-    /** The parameters */
-    protected Parameters parameters;
-
-    /** Expires value */
-    protected long expires;
-
     /** Configured Expires value */
     protected long configuredExpires;
 
     /** Configured Output Buffer Size */
     protected int  configuredOutputBufferSize;
 
+    /** The parameters */
+    protected Parameters parameters;
+
+    /** Expires value */
+    protected long expires;
+
     /** Output Buffer Size */
-    protected int  outputBufferSize;
+    protected int outputBufferSize;
 
     /** The current Processor */
     protected Processor processor;
@@ -169,18 +167,18 @@ public abstract class AbstractProcessingPipeline
     }
 
     /**
+     * Informs pipeline we have come across a branch point.
+     * Default behaviour is do nothing.
+     */
+    public void informBranchPoint() {
+        // this can be overwritten in subclasses
+    }
+
+    /**
      * Get the generator - used for content aggregation
      */
     public Generator getGenerator() {
         return this.generator;
-    }
-
-    /**
-     * Informs pipeline we have come across a branch point
-     * Default Behaviour is do nothing
-     */
-    public void informBranchPoint() {
-        // this can be overwritten in subclasses
     }
 
     /**
@@ -198,11 +196,11 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         if (this.generator != null) {
             throw new ProcessingException ("Generator already set. Cannot set generator '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         if (this.reader != null) {
             throw new ProcessingException ("Reader already set. Cannot set generator '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         try {
             this.generator = (Generator) this.newManager.lookup(Generator.ROLE + '/' + role);
@@ -229,11 +227,11 @@ public abstract class AbstractProcessingPipeline
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
             throw new ProcessingException ("Reader already set. Cannot add transformer '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         if (this.generator == null) {
             throw new ProcessingException ("Must set a generator before adding transformer '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         try {
             this.transformers.add(this.newManager.lookup(Transformer.ROLE + '/' + role));
@@ -253,16 +251,16 @@ public abstract class AbstractProcessingPipeline
         if (this.serializer != null) {
             // Should normally not happen as adding a serializer starts pipeline processing
             throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
             throw new ProcessingException ("Reader already set. Cannot set serializer '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         if (this.generator == null) {
             throw new ProcessingException ("Must set a generator before setting serializer '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
 
         try {
@@ -285,12 +283,12 @@ public abstract class AbstractProcessingPipeline
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
             throw new ProcessingException ("Reader already set. Cannot set reader '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
         if (this.generator != null) {
             // Should normally never happen as setting a reader starts pipeline processing
             throw new ProcessingException ("Generator already set. Cannot use reader '" + role +
-                "' at " + getLocation(param));
+                                           "' at " + getLocation(param));
         }
 
         try {
@@ -302,6 +300,7 @@ public abstract class AbstractProcessingPipeline
         this.readerParam = param;
         this.readerMimeType = mimeType;
     }
+
 
     /**
      * Sanity check
@@ -453,8 +452,8 @@ public abstract class AbstractProcessingPipeline
     }
 
     /**
-     * Prepare an internal processing
-     * @param environment          The current environment.
+     * Prepare an internal processing.
+     * @param environment The current environment.
      * @throws ProcessingException
      */
     public void prepareInternal(Environment environment)
@@ -470,7 +469,6 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
 
         setMimeTypeForSerializer(environment);
-
         try {
             if (this.lastConsumer == null) {
                 // internal processing
@@ -498,6 +496,7 @@ public abstract class AbstractProcessingPipeline
             // TODO: Unwrap SAXException ?
             throw new ProcessingException("Failed to execute pipeline.", e);
         }
+
         return true;
     }
 
@@ -537,12 +536,15 @@ public abstract class AbstractProcessingPipeline
         //     the reader can use MIME type declared in WEB-INF/web.xml or
         //     by the server.
         if ( this.readerMimeType != null ) {
+            // there was a mime-type defined on map:read in the sitemap
             environment.setContentType(this.readerMimeType);
         } else {
             final String mimeType = this.reader.getMimeType();
             if (mimeType != null) {
                 environment.setContentType(mimeType);
             }
+            // If no mimeType available, leave to to upstream proxy
+            // or browser to deduce content-type from URL extension.
         }
     }
 
@@ -577,7 +579,7 @@ public abstract class AbstractProcessingPipeline
     }
 
     protected boolean checkIfModified(Environment environment,
-                                        long lastModified)
+                                      long lastModified)
     throws ProcessingException {
         // has the read resource been modified?
         if(!environment.isResponseModified(lastModified)) {
@@ -652,7 +654,7 @@ public abstract class AbstractProcessingPipeline
 
     /**
      * Process the given <code>Environment</code>, but do not use the
-     * serializer. Instead the sax events are streamed to the XMLConsumer.
+     * serializer. Instead all SAX events are streamed to the XMLConsumer.
      */
     public boolean process(Environment environment, XMLConsumer consumer)
     throws ProcessingException {
@@ -660,6 +662,7 @@ public abstract class AbstractProcessingPipeline
         if (this.reader != null) {
             throw new ProcessingException("Streaming of an internal pipeline is not possible with a reader.");
         }
+
         connectPipeline(environment);
         return processXMLPipeline(environment);
     }
@@ -673,6 +676,17 @@ public abstract class AbstractProcessingPipeline
     public SourceValidity getValidityForEventPipeline() {
         return null;
     }
+
+    /**
+     * Return the key for the event pipeline
+     * If the "event pipeline" (= the complete pipeline without the
+     * serializer) is cacheable and valid, return a key.
+     * Otherwise return <code>null</code>
+     */
+    public String getKeyForEventPipeline() {
+        return null;
+    }
+
 
     /**
      * Parse the expires parameter
@@ -744,13 +758,6 @@ public abstract class AbstractProcessingPipeline
         }
 
         return expires;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getKeyForEventPipeline()
-     */
-    public String getKeyForEventPipeline() {
-        return null;
     }
 
     protected String getLocation(Parameters param) {
