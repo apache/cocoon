@@ -22,7 +22,7 @@ import java.net.URLEncoder;
 import org.hsqldb.Trigger;
 
 /**
- * @version CVS $Id: HTTPTrigger.java,v 1.6 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id$
  * @author <a href="mailto:chaul@apache.org">chaul</a>
  */
 public class HTTPTrigger implements Trigger {
@@ -49,6 +49,14 @@ public class HTTPTrigger implements Trigger {
             // not much we can do here.
             throw new RuntimeException("Cannot execute trigger: "+e.getMessage());
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.hsqldb.Trigger#fire(int, java.lang.String, java.lang.String, java.lang.Object[], java.lang.Object[])
+     */
+    public void fire(int arg0, String arg1, String arg2, Object[] arg3, Object[] arg4) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
