@@ -39,7 +39,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.15 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.16 2004/05/24 11:15:40 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -278,17 +278,6 @@ public class EnvironmentWrapper
 
     /**
      * Get the output stream
-     * @deprecated use {@link #getOutputStream(int)} instead.
-     */
-    public OutputStream getOutputStream()
-    throws IOException {
-      return this.outputStream == null
-        ? this.environment.getOutputStream()
-        : this.outputStream;
-    }
-
-    /**
-     * Get the output stream
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
@@ -305,35 +294,33 @@ public class EnvironmentWrapper
         this.outputStream = stream;
     }
 
-    /**
-     * Reset the response if possible. This allows error handlers to have
-     * a higher chance to produce clean output if the pipeline that raised
-     * the error has already output some data.
-     *
-     * @return true if the response was successfully reset
-    */
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#tryResetResponse()
+     */
     public boolean tryResetResponse()
     throws IOException {
-        if (getOutputStream() != null
-            && getOutputStream() instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)getOutputStream()).clearBuffer();
+        final OutputStream os = this.getOutputStream(-1);
+        if (os != null
+            && os instanceof BufferedOutputStream) {
+            ((BufferedOutputStream)os).clearBuffer();
             return true;
+        } else {
+            return super.tryResetResponse();
         }
-        else
-          return super.tryResetResponse();
     }
 
-    /**
-     * Commit the response
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#commitResponse()
      */
     public void commitResponse() 
     throws IOException {
-        if (getOutputStream() != null
-            && getOutputStream() instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)getOutputStream()).realFlush();
+        final OutputStream os = this.getOutputStream(-1);
+        if (os != null
+            && os instanceof BufferedOutputStream) {
+            ((BufferedOutputStream)os).realFlush();
+        } else {
+            super.commitResponse();
         }
-        else
-          super.commitResponse();
     }
 
     /**

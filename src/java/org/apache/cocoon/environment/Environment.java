@@ -26,7 +26,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.7 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.8 2004/05/24 11:15:40 cziegeler Exp $
  */
 public interface Environment
     extends SourceResolver {
@@ -99,16 +99,9 @@ public interface Environment
 
     /**
      * Get the output stream where to write the generated resource.
-     * @deprecated Use {@link #getOutputStream(int)} instead.
-     */
-    OutputStream getOutputStream() throws IOException;
-
-    /**
-     * Get the output stream where to write the generated resource.
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
      */
     OutputStream getOutputStream(int bufferSize) throws IOException;
 
