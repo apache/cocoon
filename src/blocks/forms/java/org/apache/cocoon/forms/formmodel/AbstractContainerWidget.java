@@ -82,7 +82,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *                    of the contained widgets.
      */
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessChildRequests() == true) {
             widgets.readFromRequest(formContext);
         }
     }

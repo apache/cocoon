@@ -62,7 +62,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessMyRequests() == true) {
             validationError = null;
             Object oldValue = value;
             String param = formContext.getRequest().getParameter(getRequestParameterName());

@@ -119,16 +119,34 @@ public interface Widget {
     public Widget lookupWidget(String path);
 
     /**
+     * Controls whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for this widget and its children.
+     */
+    public void setProcessRequests(boolean processRequests);
+
+    /**
      * Returns whether {@link #readFromRequest(FormContext formContext)}
      * processes the request parameter(s) for this widget.
      */
-    public boolean getProcessRequests();
+    public boolean getProcessMyRequests();
 
     /**
      * Controls whether {@link #readFromRequest(FormContext formContext)}
      * processes the request parameter(s) for this widget.
      */
-    public void setProcessRequests(boolean processRequests);
+    public void setProcessMyRequests(boolean processMyRequests);
+
+    /**
+     * Returns whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for children of this widget.
+     */
+    public boolean getProcessChildRequests();
+
+    /**
+     * Controls whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for children of this widget.
+     */
+    public void setProcessChildRequests(boolean processChildRequests);
 
     /**
      * Lets this widget read its data from a request. At this point the Widget
