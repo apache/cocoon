@@ -337,9 +337,19 @@
       </xsl:if>
 
       <!-- Test if this block has samples -->
-      <available property="{$block-name}.has.samples" file="${{blocks}}/{$block-name}/samples/sitemap.xmap"/>
+      <if>
+        <available file="${{blocks}}/{$block-name}/samples/sitemap.xmap"/>
+        <then>
+          <copy filtering="on" todir="${{build.webapp}}/samples/{$block-name}">
+            <fileset dir="${{blocks}}/{$block-name}/samples"/>
+          </copy>
 
-      <antcall target="{$block-name}-samples"/>
+          <!-- copy sample classes -->
+          <copy todir="${{build.webapp.classes}}" filtering="off">
+            <fileset dir="${{build.blocks}}/{$block-name}/samples"/>
+          </copy>
+        </then>
+      </if>
     </target>
 
     <target name="{@name}-lib" unless="unless.exclude.block.{$block-name}">
@@ -354,13 +364,30 @@
       </xsl:if>
 
       <!-- Test if this block has libraries -->
-      <available property="{$block-name}.has.lib" type="dir" file="${{blocks}}/{$block-name}/lib/"/>
+      <if>
+        <available type="dir" file="${{blocks}}/{$block-name}/lib/"/>
+        <then>
+          <copy filtering="off" todir="${{build.webapp.lib}}">
+            <fileset dir="${{blocks}}/{$block-name}/lib">
+              <include name="*.jar"/>
+              <exclude name="servlet*.jar"/>
+            </fileset>
+          </copy>
+        </then>
+      </if>
 
       <!-- Test if this block has global WEB-INF files -->
-      <available property="{$block-name}.has.webinf" type="dir" file="${{blocks}}/{$block-name}/WEB-INF/"/>
+      <if>
+        <available type="dir" file="${{blocks}}/{$block-name}/WEB-INF/"/>
+        <then>
+          <copy filtering="on" todir="${{build.webapp.webinf}}">
+            <fileset dir="${{blocks}}/{$block-name}/WEB-INF/">
+              <include name="**"/>
+            </fileset>
+          </copy>
+        </then>
+      </if>
 
-      <antcall target="{$block-name}-lib"/>
-      <antcall target="{$block-name}-webinf"/>
     </target>
 
     <target name="{$block-name}-prepare" unless="unless.exclude.block.{$block-name}">
@@ -475,23 +502,6 @@
       </javac>
     </target>
 
-    <target name="{$block-name}-lib" if="{$block-name}.has.lib">
-      <copy filtering="off" todir="${{build.webapp.lib}}">
-        <fileset dir="${{blocks}}/{$block-name}/lib">
-          <include name="*.jar"/>
-          <exclude name="servlet*.jar"/>
-        </fileset>
-      </copy>
-    </target>
-
-    <target name="{$block-name}-webinf" if="{$block-name}.has.webinf">
-      <copy filtering="on" todir="${{build.webapp.webinf}}">
-        <fileset dir="${{blocks}}/{$block-name}/WEB-INF/">
-          <include name="**"/>
-        </fileset>
-      </copy>
-    </target>
-
     <target name="{$block-name}-roles" unless="unless.exclude.block.{$block-name}">
       <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xroles"/>
@@ -511,17 +521,6 @@
       <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xweb"/>
       </xpatch>
-    </target>
-
-    <target name="{$block-name}-samples" if="{$block-name}.has.samples">
-      <copy filtering="on" todir="${{build.webapp}}/samples/{$block-name}">
-        <fileset dir="${{blocks}}/{$block-name}/samples"/>
-      </copy>
-
-      <!-- copy sample classes -->
-      <copy todir="${{build.webapp.classes}}" filtering="off">
-        <fileset dir="${{build.blocks}}/{$block-name}/samples"/>
-      </copy>
     </target>
 
     <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
