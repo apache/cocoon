@@ -26,7 +26,6 @@ import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Script;
 import org.w3c.dom.Element;
 
 /**
@@ -66,7 +65,7 @@ import org.w3c.dom.Element;
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.3 2004/06/15 07:33:43 sylvain Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.4 2004/06/24 11:32:47 cziegeler Exp $
  */
 public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase implements Contextualizable {
 

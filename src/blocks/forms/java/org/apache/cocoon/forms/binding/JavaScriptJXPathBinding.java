@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.binding;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -23,19 +22,17 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.javascript.ScriptableMap;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.7 2004/06/15 07:33:43 sylvain Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.8 2004/06/24 11:32:47 cziegeler Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 

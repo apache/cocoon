@@ -34,7 +34,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -72,7 +71,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.13 2004/06/11 20:32:19 vgritsenko Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.14 2004/06/24 11:31:38 cziegeler Exp $
  */
 public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
