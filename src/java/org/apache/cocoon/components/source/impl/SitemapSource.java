@@ -89,7 +89,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.6 2003/06/07 20:49:24 bruno Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.7 2003/06/24 12:55:13 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -294,12 +294,6 @@ implements Source, XMLizable {
      * Return the unique identifer for this source
      */
     public String getURI() {
-        if (this.needsRefresh) {
-            this.refresh();
-        }
-        if (this.redirectSource != null) {
-            return this.systemId;
-        }
         return this.systemIdForCaching;
     }
 
