@@ -1,5 +1,4 @@
-/*-- $Id: Utils.java,v 1.3 1999-11-09 02:30:48 dirkx Exp $ -- 
-
+/*
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
@@ -46,21 +45,21 @@
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
  Software Foundation, please see <http://www.apache.org/>.
- 
  */
+
 package org.apache.cocoon.processor.sql;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.StringCharacterIterator;
-import java.util.Properties;
+import java.util.*;
 import org.w3c.dom.*;
+import javax.servlet.http.*;
 
 /**
  * Utility methods for this processor.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:48 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-02 09:07:46 $
  */
 
 public class Utils {
@@ -72,7 +71,7 @@ public class Utils {
     public static final String ERROR_STACKTRACE_ELEMENT = "error-stacktrace-element";
     public static final String ERROR_MESSAGE_TEXT = "error-message-text";
 
-    public static Element createErrorElement(Document document, Properties props, Exception e) {
+    public static Element createErrorElement(Document document, String namespace, Properties props, Exception e) {
         Element element = document.createElement(props.getProperty(ERROR_ELEMENT));
         String message_attribute = props.getProperty(ERROR_MESSAGE_ATTRIBUTE);
         String message_element = props.getProperty(ERROR_MESSAGE_ELEMENT);
@@ -88,7 +87,7 @@ public class Utils {
         String stacktrace_attribute = props.getProperty(ERROR_STACKTRACE_ATTRIBUTE);
         String stacktrace_element = props.getProperty(ERROR_STACKTRACE_ELEMENT);
         String stacktrace = null;
-        if (!stacktrace_attribute.equals("") && !stacktrace_element.equals("")) {
+        if (!stacktrace_attribute.equals("") || !stacktrace_element.equals("")) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
@@ -111,5 +110,69 @@ public class Utils {
                 if (c == target) sb.append(replacement); else sb.append(c);
         return sb.toString();
     }
+
+	public static Element createElement(Document document, String namespace, String name) {
+		if (namespace == null)
+			return document.createElement(name);
+		return document.createElement(namespace+':'+name);
+	}
+
+	public static Hashtable getValues(HttpServletRequest req) {
+		Hashtable table = new Hashtable();
+		Enumeration e = req.getParameterNames();
+		while (e.hasMoreElements()) {
+			String name = (String)e.nextElement();
+			String values[] = req.getParameterValues(name);
+			if (values.length == 1) table.put(name,values[0]);
+			else table.put(name,values);
+		}
+		return table;
+	}
+
+	public static Properties getAttributes(Element element, HttpServletRequest req, Properties master) {
+		Properties props;
+		if (master == null) props = new Properties();
+		else props = new Properties(master);
+		NamedNodeMap attributes = element.getAttributes();
+		for (int i=0; i<attributes.getLength(); i++) {
+			Node attribute = attributes.item(i);
+			props.put(attribute.getNodeName(),attribute.getNodeValue());
+		}
+		if (req != null) {
+			Enumeration e = req.getParameterNames();
+			while (e.hasMoreElements()) {
+				String name = (String)e.nextElement();
+				props.put(name,req.getParameter(name));
+			}
+		}
+		return props;
+	}
+
+	public static Vector split(String source, char seperator) {
+		Vector results = new Vector();
+		if (source == null) return results;
+		StringBuffer sb = new StringBuffer();
+		StringCharacterIterator iter = new StringCharacterIterator(source);
+		char c;
+        for (c = iter.first(); c != iter.DONE; c = iter.next())
+			if (c == seperator) { 
+				results.addElement(sb.toString());
+				sb = new StringBuffer();
+			} else sb.append(c);
+		if (c != seperator) results.addElement(sb.toString());
+		return results;
+	}
+
+	public static String join(Vector vector, char joiner) {
+		Enumeration e = vector.elements();
+		StringBuffer sb = new StringBuffer();
+		if (e.hasMoreElements()) sb.append(e.nextElement());
+		while (e.hasMoreElements()) {
+			sb.append(joiner);
+			sb.append(e.nextElement());
+		}
+		return sb.toString();
+	}
+
 
 }

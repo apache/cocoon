@@ -1,5 +1,4 @@
-/*-- $Id: ConnectionCreator.java,v 1.3 1999-11-09 02:30:47 dirkx Exp $ -- 
-
+/*
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
@@ -46,8 +45,8 @@
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
  Software Foundation, please see <http://www.apache.org/>.
- 
- */
+*/
+
 package org.apache.cocoon.processor.sql;
 
 import java.sql.*;
@@ -57,7 +56,7 @@ import java.util.*;
  * Utility methods for this processor.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:47 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-02 09:07:45 $
  */
 
 public class ConnectionCreator {

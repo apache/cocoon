@@ -1,5 +1,4 @@
-/*-- $Id: SQLProcessor.java,v 1.3 1999-11-09 02:30:47 dirkx Exp $ -- 
-
+/*
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
@@ -46,12 +45,13 @@
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
  Software Foundation, please see <http://www.apache.org/>.
- 
  */
+
 package org.apache.cocoon.processor.sql;
 
 import java.net.URLEncoder;
 import java.sql.*;
+import java.text.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import org.w3c.dom.*;
@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:47 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-02 09:07:46 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -169,9 +169,15 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
         String query_attribute = query_props.getProperty("query-attribute");
         String skip_rows_attribute = query_props.getProperty("skip-rows-attribute");
         String max_rows_attribute = query_props.getProperty("max-rows-attribute");
+        String update_rows_attribute = query_props.getProperty("update-rows-attribute");
         String query = query_props.getProperty("query");
+        String namespace = query_props.getProperty("namespace");
+		DateFormat timestamp_format = null;
+		String timestamp_format_string = query_props.getProperty("timestamp_format");
+		if (timestamp_format_string != null)
+			timestamp_format = new SimpleDateFormat(timestamp_format_string);
         try {
-            if (query.equals("")) {
+            if (query == null || query.equals("")) {
                 SQLQueryCreator query_creator;
                 if (query_creator_name != null) {
                     if (query_creators.containsKey(query_creator_name)) {
@@ -193,14 +199,14 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                 }
                 query = query_creator.getQuery(conn,query_buffer.toString(),query_element,query_props,parameters);
             }
-			System.err.println("QUERY IS "+query);
             Statement st = conn.createStatement();
             ResultSet rs;
             Node results_node;
+            Element results_element = null;
             if (doc_element_name.equals("")) {
                 results_node = document.createDocumentFragment();
             } else {
-                Element results_element = document.createElement(doc_element_name);
+                results_element = Utils.createElement(document,namespace,doc_element_name);
                 results_node = results_element;
                 if (!count_attribute.equals("")) {
                     String count_query = getCountQuery(query);
@@ -218,71 +224,85 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                 if (!max_rows_attribute.equals(""))
                     results_element.setAttribute(max_rows_attribute,""+max_rows);
             }
-            rs = st.executeQuery(query);
-            ResultSetMetaData md = rs.getMetaData();
-            Column columns[] = getColumns(md,tag_case);
-            int id_attribute_column_index = -1;
-            if (create_id_attribute) {
-                for (int i=0; i<columns.length; i++) {
-                    if (columns[i].name.equals(id_attribute_column)) {
-                        id_attribute_column_index = i;
+            if (!update_rows_attribute.equals("")) {
+                int update_rows = st.executeUpdate(query);
+                if (results_element != null)
+                    results_element.setAttribute(update_rows_attribute,""+update_rows);
+            } else {
+                rs = st.executeQuery(query);
+                ResultSetMetaData md = rs.getMetaData();
+                Column columns[] = getColumns(md,tag_case);
+                int id_attribute_column_index = -1;
+                if (create_id_attribute) {
+                    for (int i=0; i<columns.length; i++) {
+                        if (columns[i].name.equals(id_attribute_column)) {
+                            id_attribute_column_index = i;
+                        }
                     }
                 }
-            }
+                int null_mode = OMIT_NULLS;
+                if (null_indicator.equals("y")) {
+                    null_mode = ATTRIBUTE_NULLS;
+                } else if (null_indicator.equals("yes")) {
+                    null_mode = ATTRIBUTE_NULLS;
+                }
 
-            int null_mode = OMIT_NULLS;
-            if (null_indicator.equals("y")) {
-                null_mode = ATTRIBUTE_NULLS;
-            } else if (null_indicator.equals("yes")) {
-                null_mode = ATTRIBUTE_NULLS;
-            }
+                Element column_element;
+                Node row_node = results_node;
+                Element row_element = null;
+                String value;
+                int count = 0;
+                if (skip_rows > 0) {
+                    while (rs.next()) {
+                        count++;
+                        if (count == skip_rows) break;
+                    }
+                }
 
-            Element column_element;
-            Node row_node = results_node;
-            Element row_element = null;
-            String value;
-            int count = 0;
-            if (skip_rows > 0) {
                 while (rs.next()) {
+                    if (create_row_elements) {
+                        row_element = Utils.createElement(document,namespace,row_element_name);
+                        row_node = row_element;
+                        if (create_id_attribute && id_attribute_column_index == -1) {
+                            row_element.setAttribute(id_attribute,"" + count);
+                        }
+                    }
+
+                    for (int i=0; i<columns.length; i++) {
+						switch(columns[i].type) {
+							case Types.TIMESTAMP:
+								if (timestamp_format != null)
+									value = timestamp_format.format(rs.getDate(i+1));
+								else
+                        			value = rs.getString(i+1);
+								break;
+							default:
+								value = rs.getString(i+1);
+						}
+                        if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
+                            row_element.setAttribute(id_attribute,value);
+                            continue;
+                        }
+                        if (value == null && null_mode == OMIT_NULLS) continue;
+                        column_element = Utils.createElement(document,namespace,columns[i].name);
+                        if (value == null && null_mode == ATTRIBUTE_NULLS) {
+                            column_element.setAttribute("NULL","YES");
+                            column_element.appendChild(document.createTextNode(""));
+                        } else {
+                            column_element.appendChild(document.createTextNode(value));
+                        }
+                        row_node.appendChild(column_element);
+                    }
+                    if (create_row_elements) results_node.appendChild(row_node);
+                    if (count-skip_rows == max_rows-1) break;
                     count++;
-                    if (count == skip_rows) break;
                 }
+                rs.close();
             }
-
-            while (rs.next()) {
-                if (create_row_elements) {
-                    row_element = document.createElement(row_element_name);
-                    row_node = row_element;
-                    if (create_id_attribute && id_attribute_column_index == -1) {
-                        row_element.setAttribute(id_attribute,"" + count);
-                    }
-                }
-
-                for (int i=0; i<columns.length; i++) {
-                    value = rs.getString(i+1);
-                    if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
-                        row_element.setAttribute(id_attribute,value);
-                        continue;
-                    }
-                    if (value == null && null_mode == OMIT_NULLS) continue;
-                    column_element = document.createElement(columns[i].name);
-                    if (value == null && null_mode == ATTRIBUTE_NULLS) {
-                        column_element.setAttribute("NULL","YES");
-                        column_element.appendChild(document.createTextNode(""));
-                    } else {
-                        column_element.appendChild(document.createTextNode(value));
-                    }
-                    row_node.appendChild(column_element);
-                }
-                if (create_row_elements) results_node.appendChild(row_node);
-                if (count-skip_rows == max_rows-1) break;
-                count++;
-            }
-
-            rs.close(); st.close(); conn.commit();
+            st.close(); conn.commit();
             query_element.getParentNode().replaceChild(results_node,query_element);
         } catch (SQLException e) {
-            Element error_element = Utils.createErrorElement(document,query_props,e);
+            Element error_element = Utils.createErrorElement(document,namespace,query_props,e);
             query_element.getParentNode().replaceChild(error_element,query_element);
             conn.rollback();
         } finally {

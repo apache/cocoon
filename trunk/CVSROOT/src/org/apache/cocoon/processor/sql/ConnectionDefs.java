@@ -1,5 +1,4 @@
-/*-- $Id: ConnectionDefs.java,v 1.3 1999-11-09 02:30:47 dirkx Exp $ -- 
-
+/*
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
@@ -46,8 +45,8 @@
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
  Software Foundation, please see <http://www.apache.org/>.
- 
  */
+
 package org.apache.cocoon.processor.sql;
 
 import org.w3c.dom.*;
@@ -58,7 +57,7 @@ import java.util.*;
  * Default connection values.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:47 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-02 09:07:46 $
  */
 
 public class ConnectionDefs {
@@ -93,6 +92,7 @@ public class ConnectionDefs {
         master_default_query_props.put("query-attribute","");
         master_default_query_props.put("skip-rows-attribute","");
         master_default_query_props.put("max-rows-attribute","");
+        master_default_query_props.put("update-rows-attribute","");
         master_default_query_props.put("variable-left-delimiter","{@");
         master_default_query_props.put("variable-right-delimiter","}");
         master_default_query_props.put("session-variable-left-delimiter","{@session.");
@@ -179,12 +179,15 @@ public class ConnectionDefs {
         return creator.getConnection();
     }
 
-    public Properties getQueryProperties() { return default_query_props; }
-
+    public Properties getQueryProperties() { 
+		return (Properties)default_query_props.clone(); 
+	}
 
     public Properties getQueryProperties(String name) {
-        if (name == null) return default_query_props;
-        return (Properties)query_props_table.get(name);
+        if (name == null || name.equals("")) return getQueryProperties();
+		Properties props = (Properties)query_props_table.get(name);
+		if (props != null) return getQueryProperties();
+		return (Properties)props.clone();
     }
 
 }
