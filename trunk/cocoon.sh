@@ -1,8 +1,22 @@
 #!/bin/sh
+#  Copyright 1999-2004 The Apache Software Foundation
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.10 2004/03/05 02:24:35 joerg Exp $
+# $Id: cocoon.sh,v 1.11 2004/03/10 08:43:23 cziegeler Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -100,6 +114,7 @@ fi
 if [ "$JAVA_PROFILE_ARGS" = "" ] ; then
   JAVA_PROFILE_ARGS='-Xrunhprof:heap=all,cpu=samples,thread=y,depth=3'
 fi
+
 
 # ----- Set platform specific variables
 

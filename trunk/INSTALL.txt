@@ -9,8 +9,13 @@
   
   Great, this file is for you.
   
+ 1) Unpack the distribution
+  Obviously you've done this already, but if you got errors when unpacking
+  the archive with tar, you might need to use gnutar instead. Our archives
+  contain long paths and filenames which cause problems with some versions
+  of the tar command.
  
- 1) Set your JAVA_HOME environment
+ 2) Set your JAVA_HOME environment
   
   You have to set your JAVA_HOME environment to point to the root directory of
   the Java Virtual Machine (JDK 1.3.x or later) installed on your machine. 
@@ -23,11 +28,11 @@
   your mileage may vary depending on your shell, but you know how to setup 
   environments, right?
   
- 2) Build Cocoon by typing "build" or "./build.sh"
+ 3) Build Cocoon by typing "build" or "./build.sh"
 
- 3) Run Cocoon by typing "cocoon servlet" or "./cocoon.sh servlet"
+ 4) Run Cocoon by typing "cocoon servlet" or "./cocoon.sh servlet"
  
- 4) Open http://localhost:8888/ with your browser
+ 5) Open http://localhost:8888/ with your browser
 
 
 That's it!  

@@ -1,8 +1,22 @@
 @echo off
+rem  Copyright 1999-2004 The Apache Software Foundation
+rem
+rem  Licensed under the Apache License, Version 2.0 (the "License");
+rem  you may not use this file except in compliance with the License.
+rem  You may obtain a copy of the License at
+rem
+rem      http://www.apache.org/licenses/LICENSE-2.0
+rem
+rem  Unless required by applicable law or agreed to in writing, software
+rem  distributed under the License is distributed on an "AS IS" BASIS,
+rem  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+rem  See the License for the specific language governing permissions and
+rem  limitations under the License.
+rem
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.17 2004/03/05 02:24:35 joerg Exp $
+:: $Id: cocoon.bat,v 1.18 2004/03/10 08:43:23 cziegeler Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -43,7 +57,7 @@ goto end
 
 if not "%EXEC%" == "" goto gotExec
 if not "%OS%" == "Windows_NT" goto noExecNT
-set EXEC=start "Cocoon" /D. /MAX
+set EXEC=start "Cocoon" /D.
 goto gotExec
 :noExecNT
 set EXEC=
@@ -78,6 +92,10 @@ echo cocoon.bat: using %JETTY_WEBAPP% as the webapp directory
 if not "%JAVA_DEBUG_PORT%" == "" goto gotDebugPort
 set JAVA_DEBUG_PORT=8000
 :gotDebugPort
+
+:: ----- Ensure desktop.ini is activated ---------------------------------------
+
+attrib +s %COCOON_HOME%
 
 :: ----- Set Up The Classpath --------------------------------------------------
 
