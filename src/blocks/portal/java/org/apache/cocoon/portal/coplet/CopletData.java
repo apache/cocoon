@@ -15,12 +15,16 @@
  */
 package org.apache.cocoon.portal.coplet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.cocoon.portal.factory.impl.AbstractProducible;
 import org.apache.cocoon.portal.util.DeltaApplicable;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -28,7 +32,7 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.10 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CopletData 
 extends AbstractProducible
@@ -40,6 +44,10 @@ implements DeltaApplicable {
 
     protected Map attributes = new HashMap();
 
+    protected String roles;
+    
+    protected transient List rolesList;
+    
 	/**
 	 * Signals whether a delta has been applied.
 	 */
@@ -153,4 +161,83 @@ implements DeltaApplicable {
 	public boolean deltaApplied() {
 		return this.deltaApplied;
 	}
+    
+    /**
+     * @return Returns the roles.
+     */
+    public String getRoles() {
+        return roles;
+    }
+    /**
+     * @param roles The roles to set.
+     */
+    public void setRoles(String roles) {
+        this.roles = roles;
+        this.rolesList = null;
+    }
+    
+    /**
+     * Return the list of roles that are allowed to access this coplet
+     * @return A list of roles or null if everyone is allowed.
+     */
+    public List getAllowedRoles() {
+        if ( StringUtils.isBlank(this.roles) ) {
+            return null;
+        }
+        if ( this.rolesList == null ) {
+            this.rolesList = new ArrayList();
+            final StringTokenizer tokenizer = new StringTokenizer(this.roles, ",");
+            while ( tokenizer.hasMoreElements() ) {
+                String token = (String)tokenizer.nextElement();
+                this.rolesList.add(token);
+            }
+            if ( this.rolesList.size() == 0 ) {
+                this.roles = null;
+                this.rolesList = null;
+            }
+        }
+        return this.rolesList;
+    }
+    
+    public void addAllowedRole(String role) {
+        List l = this.getAllowedRoles();
+        if ( l == null ) {
+            l = new ArrayList();
+            l.add(role);
+        } else {
+            if ( !l.contains(role) ) {
+                l.add(role);
+            }
+        }
+        this.buildRolesString(l);
+    }
+    
+    public void removeAllowedRole(String role) {
+        List l = this.getAllowedRoles();
+        if ( l != null && l.contains(role) ) {
+            l.remove(role);
+            if ( l.size() == 0 ) {
+                this.roles = null;
+                this.rolesList = null;
+            } else {
+                this.buildRolesString(l);
+            }
+        }
+    }
+    
+    protected void buildRolesString(List fromList) {
+        this.rolesList = fromList;
+        StringBuffer buffer = new StringBuffer();
+        boolean first = true;
+        Iterator i = fromList.iterator();
+        while ( i.hasNext() ) {
+            String role = (String)i.next();
+            if ( !first ) {
+                buffer.append(',');
+            }
+            first = false;
+            buffer.append(role);
+        }
+        this.roles = buffer.toString();
+    }
 }
