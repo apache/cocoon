@@ -1324,13 +1324,13 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-taglib"/>
     <depend project="cocoon-block-portal"/>
-    <depend project="commons-beanutils-core"/>
+    <depend project="commons-beanutils"/>
     <depend project="commons-digester"/>
     <depend project="commons-el"/>
     <depend project="jakarta-servletapi-5"/>
     <depend project="myfaces"/>
 
-    <library name="commons-beanutils-core"/>
+    <library name="commons-beanutils"/>
     <library name="commons-digester"/>
     <library name="commons-el"/>
     <library name="jsp-api"/>
