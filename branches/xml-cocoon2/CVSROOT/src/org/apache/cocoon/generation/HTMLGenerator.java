@@ -11,6 +11,7 @@ import org.apache.avalon.Poolable;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.xml.dom.DOMStreamer;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
@@ -26,7 +27,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:39:36 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-20 23:12:46 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
     /**
@@ -36,28 +37,16 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
     throws IOException, SAXException, ProcessingException {
         try
         {
-            URL url = new URL(this.source);
-            ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-
-             // Setup an instance of Tidy.
+            // Setup an instance of Tidy.
             Tidy tidy = new Tidy();
             tidy.setXmlOut(true);
             tidy.setXHTML(true);
 
-            // FIXME (DIMS): Using DOMStreamer will eliminate the need for an
-            // intermediate ByteArrayOutput Stream. But the document created
-            // by JTidy has problems. So for now we use the ByteArrayOutputStream.
-            tidy.parseDOM(new BufferedInputStream(url.openStream()),
-                            new BufferedOutputStream(ostream));
-
-            log.debug("Looking up " + Roles.PARSER);
-            // Pipe the results into the parser
-            Parser parser=(Parser) this.manager.lookup(Roles.PARSER);
-            parser.setContentHandler(this.contentHandler);
-            parser.setLexicalHandler(this.lexicalHandler);
-            parser.parse(new InputSource
-                            (new ByteArrayInputStream
-                            (ostream.toByteArray())));
+            // Extract the document using JTidy and stream it.
+            URL url = new URL(this.source);
+            org.w3c.dom.Document doc = tidy.parseDOM(new BufferedInputStream(url.openStream()), null);
+            DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
+            streamer.stream(doc);
         } catch (IOException e){
             log.error("HTMLGenerator.generate()", e);
             throw(e);
