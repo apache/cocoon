@@ -72,7 +72,7 @@ import java.io.IOException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.9 2003/10/22 20:31:19 joerg Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.10 2003/11/20 12:46:52 joerg Exp $
  */
 public class JspGenerator extends ServletGenerator {
 
@@ -104,7 +104,12 @@ public class JspGenerator extends ServletGenerator {
                 String servletPath = httpRequest.getServletPath();
                 // remove sitemap URI part
                 String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-                servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
+                if (sitemapURI != null) {
+                    servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
+                } else {
+                    // for example when using cocoon:/ pseudo protocol
+                    servletPath = servletPath.substring(0, servletPath.lastIndexOf("/") + 1);
+                }
                 url = servletPath + url;
             }
 
