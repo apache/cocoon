@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.7 1999-12-11 14:23:44 stefano Exp $
+  $Id: todo.xml,v 1.8 1999-12-12 11:07:30 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -19,9 +19,7 @@
   Finish XML-ize the docs (DCP, SQL).
  </action>
 
- <action priority="showstopper" assigned-to="SM" context="admin">
-  Write the user selectable error page.
- </action>
+
 
  <action priority="high" context="code">
   Implement "xsl:output" instead of "cocoon-format" PI and redesign
@@ -41,13 +39,6 @@
   Integrate Ricardo's XSP compiler.
  </action>
 
- <action priority="high" assigned-to="SM" context="code">
-  Check tomcat installation.
- </action>
-
- <action priority="medium" assigned-to="SM" context="admin">
-  Add the Cocoon2 branch with the new interface.
- </action>
 
 
  <action priority="medium" assigned-to="SM" context="design">

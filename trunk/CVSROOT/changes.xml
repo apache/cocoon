@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.9 1999-12-10 22:34:49 stefano Exp $
+  $Id: changes.xml,v 1.10 1999-12-12 11:07:30 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,9 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="SM" type="add">
+    Added the ability to return HTTP error messages from Cocoon.
+  </action>
   <action dev="DB" type="fix" due-to="Brett McLaughlin" due-to-email="martinguitar@hotmail.com">
   	Added dummy methods to EngineWrapper for JSDK 2.2 compatibility
   </action>
