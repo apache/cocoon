@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  * 
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: ParamSaxBuffer.java,v 1.4 2004/03/17 16:20:08 vgritsenko Exp $
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -51,7 +51,7 @@ public class ParamSaxBuffer extends SaxBuffer {
      * substitution.
      */
     public void characters(char ch[], int start, int length) throws SAXException {
-        int end = start + length;
+        final int end = start + length;
         for (int i = start; i < end; i++) {
             if (ch[i] == '{') {
                 // Send any collected characters so far
@@ -68,7 +68,7 @@ public class ParamSaxBuffer extends SaxBuffer {
                     }
                     name.append(ch[j]);
                 }
-                if (j == length) {
+                if (j == end) {
                     throw new SAXException("Unclosed '}'");
                 }
                 addBit(new Parameter(name.toString()));
