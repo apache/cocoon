@@ -109,6 +109,15 @@ public class WidgetState extends ValuedEnum {
         return this.getValue() > INVISIBLE_VALUE;
     }
 
+    /**
+     * Does this state validate widget values?
+     * 
+     * @return <code>true</code> if this state validates widget values.
+     */
+    public boolean isValidatingValues() {
+        return this.getValue() == ACTIVE_VALUE;
+    }
+
 // Potential features provided by ValuedEnum that don't seem to be needed now
 //
 //    public static WidgetState stateForValue(int stateValue) {

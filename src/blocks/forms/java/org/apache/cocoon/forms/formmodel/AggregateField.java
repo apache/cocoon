@@ -190,7 +190,7 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         if (enteredValue != null && !fieldsHaveValues()) {

@@ -217,7 +217,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         if (this.valueState == VALUE_UNPARSED) {

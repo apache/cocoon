@@ -106,7 +106,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         if (this.part == null) {

@@ -109,7 +109,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         if (values != null)

@@ -270,8 +270,8 @@ public abstract class AbstractWidget implements Widget {
 
     public boolean validate() {
 
-        // Consider widget valid if it doesn't accept user inputs
-        if (!getCombinedState().isAcceptingInputs()) {
+        // Consider widget valid if it is not validating values.
+        if (!getCombinedState().isValidatingValues()) {
             return true;
         }
 
