@@ -85,12 +85,13 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.14 2003/09/10 17:42:04 proyal Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.15 2003/10/15 18:02:53 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -136,7 +137,7 @@ public class TreeProcessor
     protected long lastModified = 0;
 
     /** The source of the tree definition */
-    protected Source source;
+    protected DelayedRefreshSourceWrapper source;
 
     /** Delay for <code>sourceLastModified</code>. */
     protected long lastModifiedDelay;
@@ -158,6 +159,9 @@ public class TreeProcessor
     
     /** The component manager for the sitemap */
     protected ComponentManager sitemapComponentManager;
+    
+    /** The source resolver */
+    protected SourceResolver resolver;
     
     /**
      * Create a TreeProcessor.
@@ -187,7 +191,7 @@ public class TreeProcessor
 
         // We have our own CM
         this.manager = manager;
-
+        
         // Other fields are setup in initialize()
     }
 
@@ -217,6 +221,7 @@ public class TreeProcessor
 
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     public void setRoleManager(RoleManager rm) {
@@ -250,16 +255,14 @@ public class TreeProcessor
 
         // Read the builtin languages definition file
         Configuration builtin;
-        org.apache.excalibur.source.SourceResolver resolver = null;
         try {
-            resolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-            org.apache.excalibur.source.Source source = resolver.resolveURI( xconfURL );
+            Source source = this.resolver.resolveURI( xconfURL );
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
                 SourceUtil.toSAX( this.manager, source, null, handler);
                 builtin = handler.getConfiguration();
             } finally {
-                resolver.release( source );
+                this.resolver.release( source );
             }
         } catch(Exception e) {
             String msg = "Error while reading " + xconfURL + ": " + e.getMessage();
@@ -503,7 +506,7 @@ public class TreeProcessor
             }
 
             if (this.source == null) {
-                this.source = new DelayedRefreshSourceWrapper(env.resolveURI(this.fileName), lastModifiedDelay);
+                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName), lastModifiedDelay);
             }
             root = builder.build(this.source);
 
@@ -530,6 +533,15 @@ public class TreeProcessor
         if (this.parent == null) {
             // root processor : dispose the builder selector
             this.builderSelector.dispose();
+        }
+        if ( this.manager != null ) {
+            if ( this.source != null ) {
+                this.resolver.release(this.source.getSource());
+                this.source = null;
+            }
+            this.manager.release(this.resolver);
+            this.resolver = null;
+            this.manager = null;
         }
     }
 
