@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.64 2001-02-06 18:59:59 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.65 2001-02-15 20:14:51 balld Exp $-->
 <!--
 
  ============================================================================
@@ -430,7 +430,7 @@
           try {
             _esql_query.prepared_statement = _esql_connection.connection.prepareStatement(_esql_query.query);
           } catch (SQLException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-            throw new RuntimeException("Error preparing statement: "+_esql_query.query);
+            throw new RuntimeException("Error preparing statement: "+_esql_query.query+": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage());
           }
           _esql_query.statement = _esql_query.prepared_statement;
           <xsl:for-each select="esql:query//esql:parameter">
@@ -559,10 +559,10 @@
           Node _esql_node = document.createElement(
             <xsl:choose>
               <xsl:when test="$tagcase='lower'">
-                _esql_query.resultset_metadata.getColumnName(_esql_i).toLowerCase();
+                _esql_query.resultset_metadata.getColumnName(_esql_i).toLowerCase()
               </xsl:when>
               <xsl:when test="$tagcase='upper'">
-                _esql_query.resultset_metadata.getColumnName(_esql_i).toUpperCase();
+                _esql_query.resultset_metadata.getColumnName(_esql_i).toUpperCase()
               </xsl:when>
               <xsl:otherwise>
                 _esql_query.resultset_metadata.getColumnName(_esql_i)
@@ -630,7 +630,7 @@
 <xsl:template match="esql:row-results//esql:get-date">
   <xsl:choose>
     <xsl:when test="@format">
-      <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
+      <xsp:expr><xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>) == null ? "" : new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
     </xsl:when>
     <xsl:otherwise>
       <xsp:expr><xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>)</xsp:expr>
@@ -642,7 +642,7 @@
 <xsl:template match="esql:row-results//esql:get-time">
   <xsl:choose>
     <xsl:when test="@format">
-      <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>))</xsp:expr>
+      <xsp:expr><xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>) == null ? "" : new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>))</xsp:expr>
     </xsl:when>
     <xsl:otherwise>
       <xsp:expr><xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>)</xsp:expr>
@@ -654,7 +654,7 @@
 <xsl:template match="esql:row-results//esql:get-timestamp">
   <xsl:choose>
     <xsl:when test="@format">
-      <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>))</xsp:expr>
+      <xsp:expr><xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>) == null ? "" : new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>))</xsp:expr>
     </xsl:when>
     <xsl:otherwise>
       <xsp:expr><xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>)</xsp:expr>
