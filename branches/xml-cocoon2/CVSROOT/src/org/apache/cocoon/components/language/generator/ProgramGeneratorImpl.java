@@ -21,9 +21,10 @@ import org.apache.avalon.NamedComponentManager;
 
 import org.apache.avalon.utils.Parameters;
 
+import org.apache.cocoon.environment.Environment;
+
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.store.FilesystemStore;
-
 
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.MarkupLanguage;
@@ -48,7 +49,7 @@ import java.io.FileNotFoundException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:31 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-27 21:48:37 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -111,7 +112,8 @@ public class ProgramGeneratorImpl
    * @exception Exception If an error occurs during generation or loading
    */
   public Object load(
-    File file, String markupLanguageName, String programmingLanguageName
+    File file, String markupLanguageName, String programmingLanguageName,
+    Environment environment
   ) throws Exception {
     // Get markup and programming languages
     MarkupLanguage markupLanguage = (MarkupLanguage)
@@ -181,7 +183,7 @@ public class ProgramGeneratorImpl
 	  DOMUtils.DOMParse(new InputSource(new FileReader(file)));
         String encoding = markupLanguage.getEncoding(document);
         String code = markupLanguage.generateCode(
-          document, normalizedName, programmingLanguage
+          document, normalizedName, programmingLanguage, environment
         );
   
 	// Format source code if applicable

@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * request...
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:00 $
  */
 public class PhpGenerator extends ComposerGenerator {
 
@@ -199,7 +199,7 @@ public class PhpGenerator extends ComposerGenerator {
         parser.setLexicalHandler(this.lexicalHandler);
         
         // ensure that we are serving a file...
-        String systemId = cocoon.resolveEntity(this.source).getSystemId();
+        String systemId = environment.resolveEntity(this.source).getSystemId();
         if (!systemId.startsWith("file:/"))
             throw new IOException("protocol not supported: " + systemId);
 

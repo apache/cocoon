@@ -11,6 +11,8 @@ import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
 
+import org.apache.avalon.ConfigurationException;
+
 import org.w3c.dom.DocumentFragment;
  
 /** 
@@ -18,42 +20,50 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:49 $ 
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:49:03 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
-    public String generateClassLevel (String prefix, String pattern, DocumentFragment conf) throws Exception {
+    public String generateClassSource (String prefix, String pattern, 
+                                       DocumentFragment conf) 
+    throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
-        RECompiler r = new RECompiler();
-        String name         = prefix;
-        String instructions = name + "PatternInstructions";
-        sb.append("\n    // Pre-compiled regular expression '")
-          .append(pattern).append("'\n")
-          .append("    static char[] ");
-        sb.append(instructions).append(" = \n    {");
-        REProgram program = r.compile(pattern);
-        int numColumns = 7;
-        char[] p = program.getInstructions();
-        for (int j = 0; j < p.length; j++) {
-            if ((j % numColumns) == 0) {
-                sb.append("\n        ");
+        try {
+            RECompiler r = new RECompiler();
+            String name         = prefix;
+            String instructions = name + "PatternInstructions";
+            sb.append("\n    // Pre-compiled regular expression '")
+              .append(pattern).append("'\n")
+              .append("    static char[] ");
+            sb.append(instructions).append(" = \n    {");
+            REProgram program = r.compile(pattern);
+            int numColumns = 7;
+            char[] p = program.getInstructions();
+            for (int j = 0; j < p.length; j++) {
+                if ((j % numColumns) == 0) {
+                    sb.append("\n        ");
+                }
+                String hex = Integer.toHexString(p[j]);
+                while (hex.length() < 4) {
+                    hex = "0" + hex;
+                }
+                sb.append("0x").append(hex).append(", ");
             }
-            String hex = Integer.toHexString(p[j]);
-            while (hex.length() < 4) {
-                hex = "0" + hex;
-            }
-            sb.append("0x").append(hex).append(", ");
+            sb.append("\n    };")
+              .append("\n    static org.apache.regexp.RE ") 
+              .append(name)
+              .append("Pattern = new org.apache.regexp.RE(new org.apache.regexp.REProgram(")
+              .append(instructions)
+              .append("));");
+            return sb.toString();
+        } catch (RESyntaxException rse) {
+            throw new ConfigurationException (rse.getMessage(), null);
         }
-        sb.append("\n    };")
-          .append("\n    static org.apache.regexp.RE ") 
-          .append(name)
-          .append("Pattern = new org.apache.regexp.RE(new org.apache.regexp.REProgram(")
-          .append(instructions)
-          .append("));");
-        return sb.toString();
     }
 
-    public String generateMethodLevel (String prefix, String pattern, DocumentFragment conf) throws Exception {
+    public String generateMethodSource (String prefix, String pattern, 
+                                        DocumentFragment conf) 
+    throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         String name         = prefix;
         String instructions = name + "PatternInstructions";

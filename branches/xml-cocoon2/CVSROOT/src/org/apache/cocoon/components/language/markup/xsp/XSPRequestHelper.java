@@ -9,7 +9,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.util.Enumeration;
 
-import org.apache.cocoon.Request;
+import org.apache.cocoon.environment.http.HttpRequest;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
@@ -17,10 +17,10 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.SAXException;
 
 /**
- * The XSP <code>Request</code> object helper
+ * The XSP <code>HttpRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:37 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:48:49 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -32,19 +32,19 @@ public class XSPRequestHelper extends XSPObjectHelper {
   }
 
   /**
-   * Output the uri associated with the given <code>Request</code>
+   * Output the uri associated with the given <code>HttpRequest</code>
    *
    * @param request The Cocoon request
    * @param contentHandler The SAX content handler
    * @exception SAXException If a SAX error occurs
    */
   public static void getUri(
-    Request request,
+    HttpRequest request,
     ContentHandler contentHandler
   )
     throws SAXException
   {
-    elementData(contentHandler, "uri", request.getUri());
+    elementData(contentHandler, "uri", request.getRequestURI());
   }
 
   /**
@@ -56,7 +56,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @param defaultValue Value to substitute in absence of a parameter value
    */
   public static String getParameter(
-    Request request,
+    HttpRequest request,
     String name,
     String defaultValue
   ) {
@@ -80,7 +80,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @exception SAXException If a SAX error occurs
    */
   public static void getParameter(
-    Request request,
+    HttpRequest request,
     ContentHandler contentHandler,
     String name,
     String defaultValue
@@ -106,7 +106,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @exception SAXException If a SAX error occurs
    */
   public static void getParameterValues(
-    Request request,
+    HttpRequest request,
     ContentHandler contentHandler,
     String name
   )
@@ -136,7 +136,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @exception SAXException If a SAX error occurs
    */
   public static void getParameterNames(
-    Request request,
+    HttpRequest request,
     ContentHandler contentHandler
   )
     throws SAXException
@@ -159,7 +159,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @param name The parameter name
    */
   public static String getHeader(
-    Request request,
+    HttpRequest request,
     String name
   ) {
     return request.getHeader(name);
@@ -174,7 +174,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @exception SAXException If a SAX error occurs
    */
   public static void getHeader(
-    Request request,
+    HttpRequest request,
     ContentHandler contentHandler,
     String name
   )
@@ -204,7 +204,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @exception SAXException If a SAX error occurs
    */
   public static void getHeaderNames(
-    Request request,
+    HttpRequest request,
     ContentHandler contentHandler
   )
     throws SAXException

@@ -15,6 +15,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.traversal.TreeWalker;
 import org.w3c.dom.traversal.NodeFilter;
 
+import org.apache.avalon.ConfigurationException;
+
 import org.apache.xerces.dom.TreeWalkerImpl;
  
 /** 
@@ -22,11 +24,13 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-22 20:41:49 $ 
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-27 21:49:02 $ 
  */ 
 
 public class BrowserMatcherFactory implements MatcherFactory {
-    public String generateMethodLevel (String prefix, String test_expression, DocumentFragment conf) throws Exception {
+    public String generateMethodSource (String prefix, String test_expression, 
+                                        DocumentFragment conf)
+    throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
         TreeWalker tw = new TreeWalkerImpl (conf, NodeFilter.SHOW_ALL, null, false);
         Node node = null;
@@ -54,7 +58,9 @@ public class BrowserMatcherFactory implements MatcherFactory {
         return sb.append("*/\nreturn null;").toString();
     }
 
-    public String generateClassLevel (String prefix, String pattern, DocumentFragment conf) throws Exception {
+    public String generateClassSource (String prefix, String pattern, 
+                                       DocumentFragment conf)
+    throws ConfigurationException {
         return "";
     }
 }

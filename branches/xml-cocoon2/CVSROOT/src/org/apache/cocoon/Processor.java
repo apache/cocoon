@@ -18,7 +18,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:41:29 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-27 21:48:31 $
  */
 public interface Processor {
     /**
@@ -26,5 +26,5 @@ public interface Processor {
      * specified <code>OutputStream</code>.
      */
     public boolean process(Environment environment, OutputStream out)
-    throws SAXException, IOException, ProcessingException, InterruptedException;
+    throws Exception;
 }

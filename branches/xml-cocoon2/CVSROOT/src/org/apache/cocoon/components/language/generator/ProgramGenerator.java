@@ -9,13 +9,14 @@ package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
 import org.apache.avalon.Component;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * This interface defines a loader for programs automatically built from XML
  * documents writeen in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:41:31 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-27 21:48:37 $
  */
 public interface ProgramGenerator extends Component {
   /**
@@ -31,6 +32,7 @@ public interface ProgramGenerator extends Component {
    * @exception Exception If an error occurs during generation or loading
    */
   public Object load(
-    File file, String markupLanguage, String programmingLanguage
+    File file, String markupLanguage, String programmingLanguage,
+    Environment environment
   ) throws Exception;
 }

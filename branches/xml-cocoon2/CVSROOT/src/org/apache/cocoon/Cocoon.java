@@ -40,10 +40,11 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.14 $ $Date: 2000-07-25 18:48:24 $
+ * @version CVS $Revision: 1.4.2.15 $ $Date: 2000-07-27 21:48:31 $
  */
 public class Cocoon
-implements Component, Configurable, ComponentManager, Modifiable, Processor {
+implements Component, Configurable, ComponentManager, Modifiable, 
+           Processor {
 
     /** The table of role-class */
     private Hashtable components=new Hashtable();
@@ -93,12 +94,6 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
         p.parse(is);
         this.setConfiguration(b.getConfiguration());
         this.root=this.configurationFile.getParentFile().toURL();
-/*
-        try {
-            generateSitemap ("/opt/giacomo/java/CVS/xml-cocoon2/test/xdocs/drafts/sitemap.xmap"); 
-        } catch (org.apache.cocoon.ProcessingException pe) {
-            throw new IOException (pe.getMessage());
-        } */
     }
 
     /**
@@ -115,7 +110,7 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
     public Component getComponent(String role)
     throws ComponentNotFoundException, ComponentNotAccessibleException {
         if (role==null) throw new ComponentNotFoundException("Null role");
-        if (role.equals("cocoon")) return(this);
+        if (role.equals("cocoon")) return (this);
         Class c=(Class)this.components.get(role);
         if (c==null)
             throw new ComponentNotFoundException("Can't find component "+role);
@@ -170,7 +165,8 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
      * Queries the class to estimate its ergodic period termination.
      */
     public boolean modifiedSince(long date) {
-        return(date<this.configurationFile.lastModified());
+        return(date<this.configurationFile.lastModified() 
+            || sitemapManager.hasChanged());
     }
 
     /**
@@ -178,35 +174,16 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
      * specified <code>OutputStream</code>.
      */
     public boolean process(Environment environment, OutputStream out) 
-    throws SAXException, IOException, ProcessingException, 
-           InterruptedException  {
-        return (this.sitemapManager.invoke (environment, "",
-                                    this.sitemapFileName, true, out));
-    }
-
-    /**
-     * Resolve an entity.
-     */
-    private InputSource resolveEntityXXX(String systemId)
-    throws SAXException, IOException {
-        return(this.resolveEntityXXX(null,systemId));
-    }
-
-    /**
-     * Resolve an entity.
-     */
-    private InputSource resolveEntityXXX(String publicId, String systemId)
-    throws SAXException, IOException {
-        System.out.println ("Cocoon.resolveEntity(\""+publicId+"\",\""+systemId+"\")");
-        if (systemId==null) throw new SAXException("Invalid System ID");
-
-        if (systemId.length()==0)
-            return new InputSource(this.root.toExternalForm());
-        if (systemId.indexOf(":/")>0)
-            return new InputSource(systemId);
-        if (systemId.charAt(0)=='/')
-            return new InputSource(this.root.getProtocol()+":"+systemId);
-        return(new InputSource(new URL(this.root,systemId).toExternalForm()));
+    throws Exception  {
+        String s = environment.resolveEntity(this.sitemapFileName).getSystemId();
+        if (s.startsWith("file:")) {
+            if (s.startsWith("file://")) 
+                s = s.substring(7);
+            else
+                s = s.substring(5);
+        }
+        return this.sitemapManager.invoke (environment, "",
+                          s, true, out);
     }
 
     /** Get a new class */

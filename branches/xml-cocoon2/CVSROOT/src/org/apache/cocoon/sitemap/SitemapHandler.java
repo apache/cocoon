@@ -28,7 +28,7 @@ import org.apache.avalon.ComponentManager;
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-25 18:48:45 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-27 21:49:05 $
  */
 public class SitemapHandler implements Runnable, Configurable, Composer {
 
@@ -46,10 +46,12 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
 
     /** the managed sitemap */
     private Sitemap sitemap = null;
+    private boolean check_reload = true;
  
     /** the regenerating thread */ 
     private Thread regeneration = null; 
     private boolean isRegenerationRunning = false;
+    private Environment environment = null;
  
     /** the sitemaps base path */ 
     private String basePath = null; 
@@ -62,16 +64,18 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         this.conf = conf;
     }
 
-    protected SitemapHandler (String source) throws FileNotFoundException {
+    protected SitemapHandler (String source, boolean check_reload) throws FileNotFoundException {
         System.out.println("SitemapHandler: Instantiating sitemap \""+source+"\"");
-        System.out.println("SitemapHandler: last char of source is \""+source.charAt(source.length()-1)+"\"");
+        this.check_reload = check_reload;
         String s = null;
-        if (source.charAt(source.length()-1) == '/') {
+System.out.println("SitemapHandler: source=\""+source+"\"");
+        if (source.charAt(source.length()-1) == File.separatorChar) {
             s = source+"sitemap.xmap";
             this.sourceFile = new File (s);
         } else {
             sourceFile = new File (source);
             if (!sourceFile.isFile()) {
+System.out.println("SitemapHandler: source=\""+source+"\" is not a file");
                 s = source+File.separatorChar+"sitemap.xmap";
                 sourceFile = new File (s);
             }
@@ -110,8 +114,12 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
     protected boolean hasChanged () {
         System.out.print("SitemapHandler.hasChanged() = ");
         if (sitemap != null) {
-            System.out.println((sitemap.modifiedSince(this.sourceFile.lastModified())?"true":"false"));
-            return sitemap.modifiedSince(this.sourceFile.lastModified());
+            if (check_reload) {
+                System.out.println((sitemap.modifiedSince(this.sourceFile.lastModified())?"true":"false"));
+                return sitemap.modifiedSince(this.sourceFile.lastModified());
+            }
+            System.out.println("false");
+            return false;
         }
         System.out.println("true");
         return true;
@@ -122,22 +130,24 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         return isRegenerationRunning; 
     }
 
-    protected void regenerateAsynchroniously () {
+    protected synchronized void regenerateAsynchroniously (Environment environment) {
         System.out.println("SitemapHandler.regenerateAsynchroniously()");
         if (!this.isRegenerationRunning) {
             isRegenerationRunning = true;
             regeneration = new Thread (this);
+            this.environment = environment;
             regeneration.start();
         }
     }
 
-    protected void regenerate () 
+    protected synchronized void regenerate (Environment environment) 
     throws ProcessingException, SAXException, IOException, InterruptedException { 
         System.out.println("SitemapHandler.regenerate()");
         if (!this.isRegenerationRunning) {
             System.out.println("SitemapHandler.regenerate(): regenerating");
             isRegenerationRunning = true;
             regeneration = new Thread (this);
+            this.environment = environment;
             regeneration.start();
             regeneration.join();
             throwError();
@@ -147,7 +157,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
     }
 
     public boolean process (Environment environment, OutputStream out) 
-    throws ProcessingException, SAXException, IOException, InterruptedException {
+    throws Exception {
         System.out.println("SitemapHandler.process()");
         this.throwError();
         return sitemap.process (environment, out);
@@ -156,12 +166,8 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
     /** Generate the Sitemap class */
     public void run() {
         System.out.println("SitemapHandler.run()");
-/*
-    private void generateSitemap (String sitemapName) 
-            throws java.net.MalformedURLException, IOException, 
-                   org.apache.cocoon.ProcessingException {
-*/
 
+        Sitemap smap = null;
         InputSource inputSource = new InputSource (sourceFile.getPath());
         String systemId = inputSource.getSystemId();
         System.out.println ("C2 generateSitemap: "+systemId);
@@ -179,11 +185,12 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
 
         System.out.println ("C2 generateSitemap: obtaining generator");
         try {
-            sitemap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage);
+            smap = (Sitemap) programGenerator.load(file, markupLanguage, 
+                                 programmingLanguage, environment);
             System.out.println ("C2 generateSitemap: generator obtained");
-            if (sitemap instanceof Composer) sitemap.setComponentManager(this.manager);
-            if (sitemap instanceof Configurable) sitemap.setConfiguration(this.conf);
-            sitemap.setBasePath (basePath);
+            if (smap instanceof Composer) smap.setComponentManager(this.manager);
+            if (smap instanceof Configurable) smap.setConfiguration(this.conf);
+            this.sitemap = smap;
             System.out.println ("C2 generateSitemap: generator called");
         } catch (Exception e) {
             synchronized (this.exception) {
@@ -192,6 +199,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         } finally {
             System.out.println("SitemapHandler.run(): finally");
             regeneration = null;
+            environment = null;
             isRegenerationRunning = false;
         }
     }

@@ -27,13 +27,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (this.request.getUri())
+          (this.environment.getUri())
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
 	<!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getUri(this.request, this.contentHandler);
+          XSPRequestHelper.getUri(((HttpEnvironment)this.environment).getRequest(), this.contentHandler);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -65,13 +65,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (XSPRequestHelper.getParameter(this.request, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
+          (XSPRequestHelper.getParameter(((HttpEnvironment)this.environment).getRequest(), <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
 	<!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getParameter(this.request, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
+          XSPRequestHelper.getParameter(((HttpEnvironment)this.environment).getRequest(), this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -83,13 +83,13 @@
     </xsl:variable>
 
      <xsp:logic>
-        XSPRequestHelper.getParameterValues(this.request, this.contentHandler, <xsl:copy-of select="$name"/>);
+        XSPRequestHelper.getParameterValues(((HttpEnvironment)this.environment).getRequest(), this.contentHandler, <xsl:copy-of select="$name"/>);
      </xsp:logic>
   </xsl:template>
 
   <xsl:template match="xsp-request:get-parameter-names">
      <xsp:logic>
-        XSPRequestHelper.getParameterNames(this.request, this.contentHandler);
+        XSPRequestHelper.getParameterNames(((HttpEnvironment)this.environment).getRequest(), this.contentHandler);
      </xsp:logic>
   </xsl:template>
 
@@ -107,13 +107,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (XSPRequestHelper.getHeader(this.request, <xsl:copy-of select="$name"/>))
+          (XSPRequestHelper.getHeader(((HttpEnvironment)this.environment).getRequest(), <xsl:copy-of select="$name"/>))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
 	<!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getHeader(this.request, this.contentHandler, <xsl:copy-of select="$name"/>);
+          XSPRequestHelper.getHeader(((HttpEnvironment)this.environment).getRequest(), this.contentHandler, <xsl:copy-of select="$name"/>);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -121,7 +121,7 @@
 
   <xsl:template match="xsp-request:get-header-names">
      <xsp:logic>
-        XSPRequestHelper.getHeaderNames(this.request, this.contentHandler);
+        XSPRequestHelper.getHeaderNames(((HttpEnvironment)this.environment).getRequest(), this.contentHandler);
      </xsp:logic>
   </xsl:template>
 

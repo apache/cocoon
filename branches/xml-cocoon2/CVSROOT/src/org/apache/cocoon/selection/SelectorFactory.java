@@ -7,6 +7,8 @@
  *****************************************************************************/ 
 package org.apache.cocoon.selection; 
 
+import org.apache.avalon.ConfigurationException;
+
 import org.w3c.dom.DocumentFragment;
  
 /** 
@@ -18,10 +20,13 @@ import org.w3c.dom.DocumentFragment;
  * sitemap code generation.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:41:52 $ 
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-27 21:49:04 $ 
  */ 
 
 public interface SelectorFactory {
-    public String generateClassLevel (String test, String prefix, DocumentFragment conf) throws Exception;
-    public String generateMethodLevel (String test, String prefix, DocumentFragment conf) throws Exception;
+    public String generateClassSource (String test, String prefix, DocumentFragment conf) 
+    throws ConfigurationException;
+
+    public String generateMethodSource (String test, String prefix, DocumentFragment conf) 
+    throws ConfigurationException;
 }

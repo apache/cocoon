@@ -17,11 +17,8 @@ import org.apache.cocoon.Processor;
  * Base interface for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.4.8 $ $Date: 2000-07-22 20:41:57 $
+ * @version CVS $Revision: 1.1.4.9 $ $Date: 2000-07-27 21:49:05 $
  */
 public interface Sitemap
          extends Composer, Configurable, Processor, Modifiable { 
-
-    /** set the base path of a sitemap */
-    public void setBasePath (String basePath);
 } 

@@ -52,7 +52,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $ */
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:00 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
@@ -123,7 +123,7 @@ public class DirectoryGenerator extends ComposerGenerator {
 	URL url;
 	File path;
 
-	resolver = (EntityResolver)super.manager.getComponent("cocoon");
+	resolver = (EntityResolver)this.environment;
 	input = resolver.resolveEntity(null,super.source);
         url = new URL(input.getSystemId());
         path = new File(url.getFile());

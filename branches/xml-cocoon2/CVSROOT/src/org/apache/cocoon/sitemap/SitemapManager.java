@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException; 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.apache.avalon.ComponentManager;
@@ -30,7 +31,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-25 18:48:45 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:49:05 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -52,12 +53,13 @@ public class SitemapManager implements Configurable, Composer {
 
     public void setComponentManager (ComponentManager manager) {
         this.manager = manager;
+System.out.println ("SitemapManager.setComponentManager: manager is "
++((this.manager == null)?"null":"set"));
     }
 
     public boolean invoke (Environment environment, String uri_prefix, 
                            String source, boolean check_reload, OutputStream out) 
-    throws SAXException, ProcessingException, IOException, InterruptedException,
-           FileNotFoundException {
+    throws Exception {
         SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get (source);
         System.out.println ("SitemapManager.invoke(\""+uri_prefix+"\",\""+source+"\")");
         if (sitemapHandler != null) {
@@ -67,26 +69,42 @@ public class SitemapManager implements Configurable, Composer {
                 if (check_reload 
                  && sitemapHandler.hasChanged()
                  && !sitemapHandler.isRegenerating()) {
-                    sitemapHandler.regenerateAsynchroniously();
+                    sitemapHandler.regenerateAsynchroniously(environment);
                 }
                 environment.changeContext (uri_prefix, source);
                 return sitemapHandler.process (environment, out);
             } else {
-                sitemapHandler.regenerate();
+                sitemapHandler.regenerate(environment);
             }
             System.out.println ("SitemapManager.invoke: setting uri prefix");
             environment.changeContext (uri_prefix, source);
             return sitemapHandler.process (environment, out);
         } else {
             System.out.println ("SitemapManager.invoke: instantiating SitemapHandler");
-            sitemapHandler = new SitemapHandler(source);
+            sitemapHandler = new SitemapHandler(source, check_reload);
             if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager (this.manager);
             if (sitemapHandler instanceof Configurable) sitemapHandler.setConfiguration (this.conf); 
             sitemaps.put(source, sitemapHandler);
-            sitemapHandler.regenerate(); 
+            sitemapHandler.regenerate(environment); 
             System.out.println ("SitemapManager.invoke: setting uri prefix");
             environment.changeContext (uri_prefix, source);
             return sitemapHandler.process (environment, out);
         }
+    }
+
+    public boolean hasChanged () {
+        System.out.print("SitemapManager.hasChanged() = ");
+        SitemapHandler sitemapHandler = null;
+        Enumeration enum = sitemaps.elements();
+        while (enum.hasMoreElements()) {
+            sitemapHandler = (SitemapHandler) enum.nextElement ();
+            if (sitemapHandler != null) {
+                System.out.println((sitemapHandler.hasChanged()?"true":"false"));
+                if (sitemapHandler.hasChanged())
+                    return true;
+            }
+        }
+        System.out.println("true");
+        return true;
     }
 }

@@ -19,6 +19,4 @@ public interface Environment extends EntityResolver {
         throws MalformedURLException;
     public String getView ();
     public String getUri (); 
-    public InputSource resolveEntity (String systemId) 
-        throws SAXException, IOException; 
 }

@@ -35,6 +35,7 @@ import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.components.store.MemoryStore;
+import org.apache.cocoon.environment.Environment;
 
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
@@ -49,7 +50,7 @@ import java.net.MalformedURLException;
  * (as opposed to Cocoon2's standard SAX events)
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:32 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:48:40 $
  */
 public abstract class AbstractMarkupLanguage
   extends AbstractNamedComponent
@@ -248,7 +249,8 @@ e.printStackTrace();
    * @exception Exception If an error occurs during code generation
    */
   public String generateCode(
-    Document document, String filename, ProgrammingLanguage programmingLanguage
+    Document document, String filename, ProgrammingLanguage programmingLanguage,
+    Environment environment
   ) throws Exception {
     String languageName = programmingLanguage.getName();
 
@@ -270,7 +272,7 @@ e.printStackTrace();
     // Add user-defined logicsheets
     String[] logicsheetNames = this.getLogicsheets(document);
     for (int i = 0; i < logicsheetNames.length; i++) {
-      this.addLogicsheet(codeGenerator, logicsheetNames[i], document);
+      this.addLogicsheet(codeGenerator, logicsheetNames[i], document, environment);
     }
 
     // Add namespace-mapped logicsheets
@@ -286,13 +288,13 @@ e.printStackTrace();
         String namedLogicsheetName = language.getNamedLogicsheet(prefix);
 
         if (namedLogicsheetName != null) {
-          this.addLogicsheet(codeGenerator, namedLogicsheetName, document);
+          this.addLogicsheet(codeGenerator, namedLogicsheetName, document, environment);
         }
       }
     }
 
     // Add language-specific logicsheet (always last!)
-    this.addLogicsheet(codeGenerator, language.getLogicsheet(), document);
+    this.addLogicsheet(codeGenerator, language.getLogicsheet(), document, environment);
 
     return codeGenerator.generateCode(document, filename);
   }
@@ -310,7 +312,8 @@ e.printStackTrace();
   protected void addLogicsheet(
     LogicsheetCodeGenerator codeGenerator,
     String logicsheetLocation,
-    Document document
+    Document document,
+    Environment environemnt
   ) throws MalformedURLException, IOException, SAXException
   {
     String systemId = null;

@@ -33,7 +33,7 @@ import org.apache.cocoon.ProcessingException;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:01 $
  */
 public class ServerPagesGenerator
   extends ComposerGenerator
@@ -92,9 +92,7 @@ public class ServerPagesGenerator
    * @exception ProcessingException Error during load/execution
    */
   public void generate() throws IOException, SAXException, ProcessingException {
-    EntityResolver resolver =
-      (EntityResolver) this.manager.getComponent("cocoon");
-    InputSource inputSource = resolver.resolveEntity(null, this.source);
+    InputSource inputSource = this.environment.resolveEntity(null, this.source);
 
     String systemId = inputSource.getSystemId();
 
@@ -120,7 +118,7 @@ public class ServerPagesGenerator
 
     try {
       generator = (Generator)
-        programGenerator.load(file, markupLanguage, programmingLanguage);
+        programGenerator.load(file, markupLanguage, programmingLanguage, environment);
     } catch (Exception e) {
 e.printStackTrace();
       throw new ProcessingException(e.getMessage());

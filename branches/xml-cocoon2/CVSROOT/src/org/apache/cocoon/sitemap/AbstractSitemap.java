@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-23 00:04:11 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-27 21:49:05 $
  */
 public abstract class AbstractSitemap
          implements Sitemap {      
@@ -37,9 +37,6 @@ public abstract class AbstractSitemap
  
     /** The sitemap manager instance */  
     protected SitemapManager sitemapManager=null;  
- 
-    /** The base path of this sitemap */ 
-    protected String basePath = null; 
 
     /** The creation date */
     protected static long dateCreated = -1L;
@@ -49,14 +46,8 @@ public abstract class AbstractSitemap
      * <code>Composer</code>.  
      */  
     public void setComponentManager(ComponentManager manager) {  
+System.out.println ("AbstractSitemap.setComponentManager manager = "+(manager==null?"null":"set"));
         this.manager=manager;  
-    }  
-  
-    /**  
-     * Set the current base path.  
-     */  
-    public void setBasePath(String basePath) {  
-        this.basePath=basePath;  
     }  
 
     /**
@@ -68,7 +59,7 @@ public abstract class AbstractSitemap
     public final boolean modifiedSince(long date) {
         if (dateCreated < date) {
             return true;
-        }
+        }
         return false;
     }
 
@@ -103,7 +94,7 @@ public abstract class AbstractSitemap
     } 
 
      /** 
-      * Replaces occurences of xpath like expressions ina argument String
+      * Replaces occurences of xpath like expressions in an argument String
       * with content from a List of Lists
       */ 
     protected String substitute (List list, String expr) 
@@ -150,20 +141,10 @@ public abstract class AbstractSitemap
     }
 
     /**
-     * Make a relative source absolute.
-     */
-    protected String makeAbsolute(String source) { 
-        if (source.charAt(0) != '/') {
-           return basePath+source;
-        }
-        return(source); 
-    } 
-
-    /**
      * Constructs a resource to the supplied <code>OutputStream</code>
      * for the <code>Request</code> and <code>Response</code> arguments.
      * This method is supplied by the generated Sitemap.
      */
     public abstract boolean process (Environment environment, OutputStream out)
-    throws SAXException, IOException, ProcessingException;
+    throws Exception;
 } 
