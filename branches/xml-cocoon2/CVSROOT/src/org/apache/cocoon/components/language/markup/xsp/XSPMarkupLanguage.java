@@ -27,6 +27,8 @@ import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetCodeGenerator;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
+import org.apache.cocoon.Constants;
+
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -37,7 +39,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-12 16:44:04 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-22 15:27:13 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -275,9 +277,9 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
                 // Quote the string depending on the programming language
                 String value = this.language.quoteString(String.valueOf(ch, start, length));
                 // Create a new element <xsp:text that wrap the quoted PCDATA
-                super.startElement(tag[0], "text", "xsp:text", new AttributesImpl() );
+                super.startElement(Constants.XSP_URI, "text", "xsp:text", new AttributesImpl() );
                 super.characters(value.toCharArray(), 0, value.length());
-                super.endElement(tag[0], "text", "xsp:text");
+                super.endElement(Constants.XSP_URI, "text", "xsp:text");
             }
 
         }
