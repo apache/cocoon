@@ -65,6 +65,73 @@
         <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-tests</xsl:for-each></xsl:attribute>
       </target>
 
+      <!-- Check if javadocs have to be generated -->
+      <target name="javadocs-check">
+        <mkdir dir="{string('${build.javadocs}')}"/>
+        <condition property="javadocs.notrequired" value="true">
+          <or>
+            <uptodate targetfile="{string('${build.javadocs}')}/packages.html" >
+              <srcfiles dir="{string('${java}')}" includes="**/*.java,**/package.html"/>
+              <srcfiles dir="{string('${deprecated.src}')}" includes="**/*.java,**/package.html"/>
+              <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+                <srcfiles dir="{string('${blocks}')}/{substring-after(@name,'cocoon-block-')}/java" includes="**/*.java,**/package.html"/>             
+              </xsl:for-each>
+            </uptodate>
+            <istrue value="{string('${unless.exclude.javadocs}')}"/>
+          </or>
+        </condition>
+      </target>
+
+      <!-- Creates Javadocs -->
+      <target name="javadocs" 
+              unless="javadocs.notrequired">
+        <xsl:attribute name="depends">init, javadocs-check<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="substring-after(@name,'cocoon-block-')"/>-prepare</xsl:for-each></xsl:attribute>
+
+        <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
+          <equals arg1="1.4" arg2="{string('${ant.java.version}')}"/>
+        </condition>
+        <condition property="javadoc.additionalparam" value="">
+          <not><equals arg1="1.4" arg2="{string('${ant.java.version}')}"/></not>
+        </condition>
+
+        <javadoc destdir="{string('${build.javadocs}')}"
+	             author="true"
+	             version="true"
+	             use="true"
+	             noindex="false"
+	             splitindex="true"
+	             windowtitle="{string('${Name}')} API {string('${version}')} [{string('${TODAY}')}]"
+	             doctitle="{string('${Name}')} API {string('${version}')}"
+	             bottom="Copyright &#169; {string('${year}')} Apache Software Foundation. All Rights Reserved."
+	             stylesheetfile="{string('${resources.javadoc}')}/javadoc.css"
+	             useexternalfile="yes"
+	             additionalparam="{string('${javadoc.additionalparam}')}"
+	             maxmemory="128m">
+		
+	      <link offline="true" href="http://avalon.apache.org/api"                  packagelistloc="${resources.javadoc}/avalon"/>
+	      <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"  packagelistloc="${resources.javadoc}/xerces"/>
+	      <link offline="true" href="http://xml.apache.org/xalan-j/apidocs"         packagelistloc="${resources.javadoc}/xalan"/>
+	      <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api"       packagelistloc="${resources.javadoc}/j2se"/>
+	      <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources.javadoc}/j2ee"/>
+		
+	      <packageset dir="{string('${java}')}">
+	        <include name="**"/>
+	      </packageset>
+	      <packageset dir="{string('${deprecated.src}')}">
+	        <include name="**"/>
+	      </packageset>
+          <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+            <packageset dir="{string('${blocks}')}/{substring-after(@name,'cocoon-block-')}/java">
+  	          <include name="**"/>
+            </packageset>
+          </xsl:for-each>
+          <classpath refid="classpath"/>
+          <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+	        <classpath refid="{substring-after(@name,'cocoon-block-')}.classpath"/>
+          </xsl:for-each>
+	    </javadoc>
+      </target>
+
       <xsl:apply-templates select="project[contains(@name,'-block')]" />
 
       <target name="patch-roles" depends="init">
@@ -282,57 +349,6 @@
             <classpath refid="{$block-name}.classpath" />
             <include name="**/samples/**/*.java"/>
          </javac>
-      </target>
-
-	  <!-- Check if javadocs have to be generated -->
-	  <target name="{$block-name}-javadoc-check">
-	    <mkdir dir="{string('${build.javadocs}')}"/>
-	    <condition property="{$block-name}.javadocs.notrequired" value="true">
-	     <or>
-	      <uptodate targetfile="{string('${build.javadocs}')}/packages.html" >
-	       <srcfiles dir= "{string('${blocks}')}/{$block-name}/java" includes="**/*.java,**/package.html"/>
-	      </uptodate>
-	      <istrue value="{string('${unless.exclude.javadocs}')}"/>
-	     </or>
-	    </condition>
-	  </target>
-	  
-      <target name="{$block-name}-javadoc" 
-              depends="{$block-name}-prepare, {$block-name}-javadoc-check" 
-              unless="{$block-name}.javadocs.notrequired" description="Builds the API documentation for {$block-name} (javadocs)">
-
-        <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
-          <equals arg1="1.4" arg2="${ant.java.version}"/>
-        </condition>
-        <condition property="javadoc.additionalparam" value="">
-          <not><equals arg1="1.4" arg2="{string('${ant.java.version}')}"/></not>
-        </condition>
-
-        <javadoc destdir="{string('${build.javadocs}')}"
-		             author="true"
-		             version="true"
-		             use="true"
-		             noindex="false"
-		             splitindex="true"
-		             windowtitle="{string('${Name}')} API {string('${version}')} [{string('${TODAY}')}]"
-		             doctitle="{string('${Name}')} API {string('${version}')}"
-		             bottom="Copyright &#169; {string('${year}')} Apache Software Foundation. All Rights Reserved."
-		             stylesheetfile="{string('${resources.javadocs}')}/javadoc.css"
-		             useexternalfile="yes"
-		             additionalparam="{string('${javadoc.additionalparam}')}">
-		
-		      <link offline="true" href="http://avalon.apache.org/api"                  packagelistloc="${resources.javadoc}/avalon"/>
-		      <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"  packagelistloc="${resources.javadoc}/xerces"/>
-		      <link offline="true" href="http://xml.apache.org/xalan-j/apidocs"         packagelistloc="${resources.javadoc}/xalan"/>
-		      <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api"       packagelistloc="${resources.javadoc}/j2se"/>
-		      <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources.javadoc}/j2ee"/>
-		
-		      <packageset dir="{string('${blocks}')}/{$block-name}/java">
-		        <include name="**"/>
-		      </packageset>
-		      <classpath refid="{$block-name}.classpath"/>
-		    </javadoc>
-		
       </target>
 
       <target name="{$block-name}-build" if="{$block-name}.has.build">
