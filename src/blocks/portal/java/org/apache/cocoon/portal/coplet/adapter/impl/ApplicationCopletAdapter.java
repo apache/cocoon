@@ -74,7 +74,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: ApplicationCopletAdapter.java,v 1.2 2003/10/20 13:36:41 cziegeler Exp $
+ * @version CVS $Id: ApplicationCopletAdapter.java,v 1.3 2004/02/09 13:39:42 cziegeler Exp $
  */
 public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 
@@ -95,41 +95,33 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event e) {
-        if (e instanceof CopletLinkEvent) {
-            getLogger().info(
-                "CopletLinkEvent " + e + " caught by ApplicationCopletAdapter");
-            handleCopletLinkEvent(e);
-        }
-    }
-
     /**
      * This adapter listens for CopletLinkEvents. If it catches one the link uri is saved in
      * the coplet instance data for further handling in the ProxyTransformer.
      * There is a special CopletLinkEvent with the uri "createNewCopletInstance", which is the
      * trigger to create a new instance of the one that is the target of the event.
      */
-    public void handleCopletLinkEvent(Event e) {
-        CopletLinkEvent event = (CopletLinkEvent) e;
-        super.handleCopletLinkEvent(event);
-        CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
-        String link = event.getLink();
-
-        if ("createNewCopletInstance".equals(link)) {
-            try {
-                createNewInstance(coplet);
+    public void handleCopletInstanceEvent(Event e) {
+        super.handleCopletInstanceEvent(e);
+        
+        if ( e instanceof CopletLinkEvent ) {
+            CopletLinkEvent event = (CopletLinkEvent) e;
+            CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
+            String link = event.getLink();
+    
+            if ("createNewCopletInstance".equals(link)) {
+                try {
+                    createNewInstance(coplet);
+                }
+                catch (ProcessingException ex) {
+                    getLogger().error("Could not create new coplet instance", ex);
+                }
             }
-            catch (ProcessingException ex) {
-                getLogger().error("Could not create new coplet instance", ex);
+            else {
+                // this is a normal link event, so save the url in the instance data
+                // for ProxyTransformer
+                coplet.setAttribute(ProxyTransformer.LINK, event.getLink());
             }
-        }
-        else {
-            // this is a normal link event, so save the url in the instance data
-            // for ProxyTransformer
-            coplet.setAttribute(ProxyTransformer.LINK, event.getLink());
         }
     }
 
