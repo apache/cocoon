@@ -112,6 +112,10 @@ Other properties that you can change are:
      debuggers (for example, Eclipse's).
 
 
+Note that the "standalone-demo" build target prepares a directory that you can
+move elsewhere to run "cocoon servlet" outside of the build tree.
+
+
 
 All right, that's it for now. 
 
