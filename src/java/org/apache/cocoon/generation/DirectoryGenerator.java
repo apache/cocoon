@@ -123,7 +123,7 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.8 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.9 2003/09/25 17:28:38 joerg Exp $
  */
 public class DirectoryGenerator 
     extends ServiceableGenerator 
@@ -318,10 +318,12 @@ public class DirectoryGenerator
             }
 
             this.contentHandler.startDocument();
+            this.contentHandler.startPrefixMapping(PREFIX, URI);
 
             Stack ancestors = getAncestors(directoryFile);
             addAncestorPath(directoryFile, ancestors);
 
+            this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
         } catch (SourceException se) {
             throw SourceUtil.handle(se);

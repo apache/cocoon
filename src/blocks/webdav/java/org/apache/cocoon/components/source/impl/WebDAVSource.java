@@ -102,7 +102,7 @@ import org.w3c.dom.NodeList;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.8 2003/09/24 22:34:52 cziegeler Exp $
+ *  @version $Id: WebDAVSource.java,v 1.9 2003/09/25 17:28:38 joerg Exp $
 */
 public class WebDAVSource implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -502,16 +502,13 @@ public class WebDAVSource implements Source,
         StreamResult result = new StreamResult(bOut);
         th.setResult(result);
         th.startDocument();
-        th.startElement(
-            NAMESPACE,
-            COLLECTION_NAME,
-            PREFIX + ":" + COLLECTION_NAME,
-            new AttributesImpl());
+        th.startPrefixMapping(PREFIX, NAMESPACE);
+        th.startElement(NAMESPACE, COLLECTION_NAME,
+                        PREFIX + ":" + COLLECTION_NAME, new AttributesImpl());
         this.resourcesToSax(resources, th);
-        th.endElement(
-            NAMESPACE,
-            COLLECTION_NAME,
-            PREFIX + ":" + COLLECTION_NAME);
+        th.endElement(NAMESPACE, COLLECTION_NAME,
+                      PREFIX + ":" + COLLECTION_NAME);
+        th.endPrefixMapping(PREFIX);
         th.endDocument();
         return new ByteArrayInputStream(bOut.toByteArray());
     }

@@ -127,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.1 2003/09/04 12:42:40 cziegeler Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.2 2003/09/25 17:28:38 joerg Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -313,10 +313,12 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             }
 
             this.contentHandler.startDocument();
+            this.contentHandler.startPrefixMapping(PREFIX, URI);
 
             Stack ancestors = getAncestors(inputSource);
             addAncestorPath(inputSource, ancestors);
 
+            this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
             if (this.validity != null) {
                 this.validity.close();

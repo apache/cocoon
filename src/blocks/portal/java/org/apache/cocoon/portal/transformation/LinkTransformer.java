@@ -89,7 +89,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: LinkTransformer.java,v 1.2 2003/09/09 18:52:33 joerg Exp $
+ * @version CVS $Id: LinkTransformer.java,v 1.3 2003/09/25 17:28:38 joerg Exp $
  */
 public class LinkTransformer
     extends AbstractTransformer
@@ -99,11 +99,6 @@ public class LinkTransformer
      * Namespace prefix usef vor NewEventLinkTransformer-Namespace
      */
     public static final String NAMESPACE_PREFIX = "ev";
-
-    /**
-     * Flag telling if prefix mapping has already be sent
-     */
-    protected boolean prefixMappingSent = false;
 
     /**
      * Used for appending a request parameter containing the coplet id
@@ -174,7 +169,6 @@ public class LinkTransformer
     public void recycle() {
         copletInstanceData = null;
         elementStack.clear();
-        prefixMappingSent = false;
         copletIdParamString = null;
         portalNameParamString = null;
     }
@@ -185,8 +179,9 @@ public class LinkTransformer
     public void startDocument() throws SAXException {
         super.startDocument();
         documentBase =
-            (String) copletInstanceData.getAttribute(
-                ProxyTransformer.DOCUMENT_BASE);
+        (String)copletInstanceData.getAttribute(ProxyTransformer.DOCUMENT_BASE);
+        super.startPrefixMapping(NAMESPACE_PREFIX,
+                                 NewEventLinkTransformer.NAMESPACE_URI);
     }
 
     /**
@@ -200,18 +195,9 @@ public class LinkTransformer
     /**
      * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)
      */
-    public void startElement(
-        String uri,
-        String name,
-        String raw,
-        Attributes attributes)
+    public void startElement(String uri, String name, String raw,
+                             Attributes attributes)
         throws SAXException {
-        if (!prefixMappingSent) {
-            super.startPrefixMapping(
-                NAMESPACE_PREFIX,
-                NewEventLinkTransformer.NAMESPACE_URI);
-            prefixMappingSent = true;
-        }
 
         if ("form".equalsIgnoreCase(name)) {
             handleTag(
