@@ -134,7 +134,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Felix Knecht
  * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
  * @author <a href="mailto:yuryx@mobicomk.donpac.ru">Yury Mikhienko</a>
- * @version CVS $Id: LDAPTransformer.java,v 1.6 2003/09/20 17:13:33 cziegeler Exp $
+ * @version CVS $Id: LDAPTransformer.java,v 1.7 2003/10/21 10:56:22 joerg Exp $
  */
 public class LDAPTransformer extends AbstractTransformer {
 
@@ -1860,7 +1860,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                                 newAttrValue = recodeToLDAPEncoding(newAttrValue);
 
                                                 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                                                                               new BasicAttribute(attrID, new String(newAttrValue)));
+                                                                               new BasicAttribute(attrID,newAttrValue));
 
                                                 // Perform the requested modifications on the named object
                                                 ctx.modifyAttributes(
@@ -1918,7 +1918,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             newAttrValue = recodeToLDAPEncoding(newAttrValue);
 
                                             mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                                                                           new BasicAttribute(attrID, new String(newAttrValue)));
+                                                                           new BasicAttribute(attrID, newAttrValue));
 
                                             // Perform the requested modifications on the named object
                                             ctx.modifyAttributes(searchbase, mods);
@@ -2014,7 +2014,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                                 // Specify the changes to make
                                                 ModificationItem[] mods = new ModificationItem[1];
 
-                                                String attrValue = recodeFromLDAPEncoding((String)attrMap.get(attrID));
+                                                String attrValue = recodeToLDAPEncoding((String)attrMap.get(attrID));
                                                 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
                                                                                new BasicAttribute(attrID, attrValue));
                                                 // Perform the requested modifications on the named object
@@ -2038,7 +2038,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             ModificationItem[] mods = new ModificationItem[1];
                                             for (int i = 0; i < attrList.length; i++) {
                                                 if (attrMap.containsKey(attrList[i])) {
-                                                    String attrValue = recodeFromLDAPEncoding((String)attrMap.get(attrList[i]));
+                                                    String attrValue = recodeToLDAPEncoding((String)attrMap.get(attrList[i]));
                                                     mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                                                                                    new BasicAttribute(attrList[i], attrValue));
                                                     // Perform the requested modifications on the named object
@@ -2084,7 +2084,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             // Specify the changes to make
                                             ModificationItem[] mods = new ModificationItem[1];
 
-                                            String attrValue = recodeFromLDAPEncoding((String)attrMap.get(attrID));
+                                            String attrValue = recodeToLDAPEncoding((String)attrMap.get(attrID));
                                             mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
                                                                            new BasicAttribute(attrID,  attrValue));
                                             // Perform the requested modifications on the named object
@@ -2104,7 +2104,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                         ModificationItem[] mods = new ModificationItem[1];
                                         for (int i = 0; i < attrList.length; i++) {
                                             if (attrMap.containsKey(attrList[i])) {
-                                                String attrValue = recodeFromLDAPEncoding((String)attrMap.get(attrList[i]));
+                                                String attrValue = recodeToLDAPEncoding((String)attrMap.get(attrList[i]));
                                                 mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                                                                                new BasicAttribute(attrList[i], attrValue));
                                                 // Perform the requested modifications on the named object
