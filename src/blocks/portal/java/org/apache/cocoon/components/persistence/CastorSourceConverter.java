@@ -47,12 +47,13 @@ import org.xml.sax.InputSource;
 
 /**
  * This is a component that converts the profiles (= object tree) to XML and vice-versa
- * using Castor.
+ * using Castor. It could be used to persist objects as a XML representation.
  * 
  * In order to work properly the methods provided by this interface require some 
  * parameters:
  * objectmap : containing a map of objects for resolving references during load
- * profiletype: specifying the mapping (this is one of layout, copletinstancedata, copletdata or copletbasedata
+ * profiletype: specifying the mapping (e.g. in the portal this is one of layout, copletinstancedata, copletdata or copletbasedate)
+ * suppressXSIType: Sets whether or not the xsi:type attributes should appear on the marshalled document.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
@@ -69,7 +70,8 @@ public class CastorSourceConverter
     private Map mappingSources = new HashMap();
     private ServiceManager manager;
     private Map mappings = new HashMap();
-
+    private boolean defaultSuppressXSIType;
+    
     public Object getObject(InputStream stream, Map parameters) throws ConverterException {
         try {
             ReferenceFieldHandler.setObjectMap((Map)parameters.get(ProfileLS.PARAMETER_OBJECTMAP));
@@ -89,6 +91,12 @@ public class CastorSourceConverter
 		try {
 			Marshaller marshaller = new Marshaller( writer );
 			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)));
+            boolean suppressXSIType = this.defaultSuppressXSIType;
+            Boolean value = (Boolean)parameters.get("suppressXSIType");
+            if (value != null) {
+                suppressXSIType = value.booleanValue();
+            }
+            marshaller.setSuppressXSIType(suppressXSIType);
 			marshaller.marshal(object);
 			writer.close();
 		} catch (MappingException e) {
@@ -114,6 +122,7 @@ public class CastorSourceConverter
     		Configuration mappingSource = children[i];
     		this.mappingSources.put(mappingSource.getAttribute("source"), mappingSource.getValue());
     	}
+        this.defaultSuppressXSIType = config.getChild("suppressXSIType").getValueAsBoolean(false);
     }
 
     /* (non-Javadoc)
