@@ -83,7 +83,7 @@ import java.util.Set;
  * attribute name.</p>
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: SimpleMappingMetaModule.java,v 1.2 2003/05/17 06:01:25 jefft Exp $
+ * @version CVS $Id: SimpleMappingMetaModule.java,v 1.3 2004/02/15 19:09:38 haul Exp $
  */
 public class SimpleMappingMetaModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -175,7 +175,7 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         String rmPrefix = this.rmPrefix;
         String rmSuffix = this.rmSuffix;
 
-        if (modeConf!=null) {
+        if (modeConf!=null && modeConf.getChildren().length > 0) {
             inputName   = modeConf.getChild("input-module").getAttribute("name",null);
             if (inputName != null) {
                 inputConfig = modeConf.getChild("input-module");
@@ -236,7 +236,7 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         String rmPrefix = this.rmPrefix;
         String rmSuffix = this.rmSuffix;
 
-        if (modeConf!=null) {
+        if (modeConf!=null && modeConf.getChildren().length > 0) {
             inputName   = modeConf.getChild("input-module").getAttribute("name",null);
             if (inputName != null) {
                 inputConfig = modeConf.getChild("input-module");
@@ -293,7 +293,7 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         String suffix = this.suffix;
         String rmPrefix = this.rmPrefix;
         String rmSuffix = this.rmSuffix;
-        if (modeConf!=null) {
+        if (modeConf!=null && modeConf.getChildren().length > 0) {
             inputName   = modeConf.getChild("input-module").getAttribute("name",null);
             if (inputName != null) {
                 inputConfig = modeConf.getChild("input-module");
