@@ -72,7 +72,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessMyRequests() == true) {
             enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
             validationError = null;
             values = null;

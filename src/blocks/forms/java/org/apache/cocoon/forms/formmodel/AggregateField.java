@@ -95,26 +95,28 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
-            String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
-            if (newEnteredValue != null) {
-                // There is one aggregated entered value. Read it and split it.
+        String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
+        if (newEnteredValue != null) {
+            // There is one aggregated entered value. Read it and split it.
+            if(getProcessMyRequests() == true) {
                 super.readFromRequest(formContext);
-                if (this.valueState == VALUE_UNPARSED) {
-                    setFieldsValues(enteredValue);
-                }
-            } else {
-                // Check if there are multiple splitted values. Read them and aggregate them.
-                for (Iterator i = fields.iterator(); i.hasNext();) {
-                    Field field = (Field)i.next();
+            }
+            if (this.valueState == VALUE_UNPARSED) {
+                setFieldsValues(enteredValue);
+            }
+        } else {
+            // Check if there are multiple splitted values. Read them and aggregate them.
+            for (Iterator i = fields.iterator(); i.hasNext();) {
+                Field field = (Field)i.next();
+                if(getProcessChildRequests() == true) {
                     field.readFromRequest(formContext);
-                    if (field.valueState == VALUE_UNPARSED) {
-                        this.valueState = VALUE_UNPARSED;
-                    }
                 }
-                if (this.valueState == VALUE_UNPARSED) {
-                    combineFields();
+                if (field.valueState == VALUE_UNPARSED) {
+                    this.valueState = VALUE_UNPARSED;
                 }
+            }
+            if (this.valueState == VALUE_UNPARSED) {
+                combineFields();
             }
         }
     }

@@ -73,29 +73,30 @@ public class Union extends AbstractContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
-            // Ensure the case widget has read its value
-            this.caseWidget.readFromRequest(formContext);
+        // Ensure the case widget has read its value
+        this.caseWidget.readFromRequest(formContext);
 
-            Widget widget;
-            // Read current case from request
-            String newValue = (String)getValue();
-            if (newValue != null && !newValue.equals("")) {
+        Widget widget;
+        // Read current case from request
+        String newValue = (String)getValue();
+        if (newValue != null && !newValue.equals("")) {
 
-                if (getForm().getSubmitWidget() == this.caseWidget && !newValue.equals(this.caseValue)) {
-                    // If submitted by the case widget and its value has changed, read the values
-                    // for the previous case values. This allows to keep any entered values
-                    // despite the case change.
-                    widget = getChild(this.caseValue);
-                } else {
-                    // Get the corresponding widget (will create it if needed)
-                    widget = getChild(newValue);
-                }
-
-                if (widget != null) {
-                    widget.readFromRequest(formContext);
-                }
+            if (getProcessMyRequests() == false
+                || (getForm().getSubmitWidget() == this.caseWidget && !newValue.equals(this.caseValue))) {
+                // If submitted by the case widget and its value has changed, read the values
+                // for the previous case value. This allows to keep any already entered values
+                // despite the case change.
+                widget = getChild(this.caseValue);
+            } else {
+                // Get the corresponding widget (will create it if needed)
+                widget = getChild(newValue);
             }
+
+            if (getProcessChildRequests() == true && widget != null) {
+                widget.readFromRequest(formContext);
+            }
+        }
+        if(getProcessMyRequests() == true) {
             this.caseValue = newValue;
         }
     }

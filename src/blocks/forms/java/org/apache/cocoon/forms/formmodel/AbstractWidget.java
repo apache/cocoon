@@ -47,7 +47,12 @@ public abstract class AbstractWidget implements Widget {
     /**
      * Process request parameters for this widget?
      */
-    private boolean processRequests = true;
+    private boolean processMyRequests = true;
+
+    /**
+     * Process request parameters for children of this widget?
+     */
+    private boolean processChildRequests = true;
 
     /**
      * Lazy loaded reference to the top-level form.
@@ -205,19 +210,44 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
+     * Controls whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for this widget and its children.
+     */
+    public void setProcessRequests(boolean processRequests) {
+      this.processMyRequests = processRequests;
+      this.processChildRequests = processRequests;
+    }
+
+    /**
      * Returns whether {@link #readFromRequest(FormContext formContext)}
      * processes the request parameter(s) for this widget.
      */
-    public boolean getProcessRequests() {
-      return this.processRequests;
+    public boolean getProcessMyRequests() {
+      return this.processMyRequests;
     }
 
     /**
      * Controls whether {@link #readFromRequest(FormContext formContext)}
      * processes the request parameter(s) for this widget.
      */
-    public void setProcessRequests(boolean processRequests) {
-      this.processRequests = processRequests;
+    public void setProcessMyRequests(boolean processMyRequests) {
+      this.processMyRequests = processMyRequests;
+    }
+
+    /**
+     * Returns whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for children of this widget.
+     */
+    public boolean getProcessChildRequests() {
+      return this.processChildRequests;
+    }
+
+    /**
+     * Controls whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for children of this widget.
+     */
+    public void setProcessChildRequests(boolean processChildRequests) {
+      this.processChildRequests = processChildRequests;
     }
 
     public boolean isRequired() {

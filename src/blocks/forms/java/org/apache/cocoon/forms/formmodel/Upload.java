@@ -71,7 +71,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessMyRequests() == true) {
             Object obj = formContext.getRequest().get(getRequestParameterName());
 
             // If the request object is a Part, keep it

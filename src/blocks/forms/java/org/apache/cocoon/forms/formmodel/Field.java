@@ -175,7 +175,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessMyRequests() == true) {
             String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
             // FIXME: Should we consider only non-null values, which allows to
             // split a form across several screens?

@@ -44,7 +44,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     public void readFromRequest(final FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessMyRequests() == true) {
             Form form = getForm();
 
             // Set the submit widget if we can determine it from the request

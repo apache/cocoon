@@ -181,7 +181,7 @@ public class Repeater extends AbstractWidget
     }
     
     public void readFromRequest(FormContext formContext) {
-        if(getProcessRequests() == true) {
+        if(getProcessMyRequests() == true) {
             // read number of rows from request, and make an according number of rows
             String sizeParameter = formContext.getRequest().getParameter(getRequestParameterName() + ".size");
             if (sizeParameter != null) {
@@ -208,7 +208,9 @@ public class Repeater extends AbstractWidget
                     }
                 }
             }
+        }
  
+        if(getProcessChildRequests() == true) {
             // let the rows read their data from the request
             Iterator rowIt = rows.iterator();
             while (rowIt.hasNext()) {
