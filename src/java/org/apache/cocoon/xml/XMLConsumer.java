@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.xml;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ext.LexicalHandler;
-
 /**
  * This interfaces identifies classes that consume XML data, receiving
  * notification of SAX events.
@@ -62,7 +59,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: XMLConsumer.java,v 1.1 2003/03/09 00:09:46 pier Exp $
+ * @version CVS $Id: XMLConsumer.java,v 1.2 2004/01/05 14:22:25 cziegeler Exp $
  */
-public interface XMLConsumer extends ContentHandler, LexicalHandler {
+public interface XMLConsumer extends org.apache.excalibur.xml.sax.XMLConsumer {
 }
