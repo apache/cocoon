@@ -30,6 +30,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
+import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -42,6 +43,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.w3c.dom.TypeInfo;
+import org.w3c.dom.UserDataHandler;
 
 /**
  * DOM Wrapper for Java Beans and JavaScript objects utilizing Apache JXPath's Introspector.
@@ -51,6 +54,9 @@ import org.w3c.dom.Text;
 
 public class DocumentAdapter implements Document {
     
+    protected final static String DOMLEVEL3_ERR_MSG = 
+        "This method was just added for providing future compatibility to JDK 1.5's DOM level 3 Document interface.";
+
     private static final CompiledExpression
         GET_SELF = JXPathContext.compile(".");
     private static final CompiledExpression 
@@ -367,6 +373,110 @@ public class DocumentAdapter implements Document {
             return null;
         }
 
+        /**
+         * @since DOM Level 3
+         */
+        public Object getUserData(String key) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public Object setUserData(String key, Object value, UserDataHandler handler) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public Object getFeature(String feature, String version) { 
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public short compareDocumentPosition(Node other) throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String getBaseURI() {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String getTextContent() throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isDefaultNamespace(String namespaceURI) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isEqualNode(Node arg) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isSameNode(Node other) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String lookupNamespaceURI(String prefix) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String lookupPrefix(String namespaceURI) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public void setTextContent(String textContent) throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String getWholeText() {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isElementContentWhitespace() {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public Text replaceWholeText(String content) throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
     }
 
     public class ElementAdapter extends NodeAdapter implements Element {
@@ -562,8 +672,107 @@ public class DocumentAdapter implements Document {
                 throws DOMException {
                 notSupported();
             }
+
             public Element getOwnerElement() {
                 return ElementAdapter.this;
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public Object getUserData(String key) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public Object setUserData(String key, Object value, UserDataHandler handler) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public Object getFeature(String feature, String version) { 
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public short compareDocumentPosition(Node other) throws DOMException {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public String getBaseURI() {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public String getTextContent() throws DOMException {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public boolean isDefaultNamespace(String namespaceURI) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public boolean isEqualNode(Node arg) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public boolean isSameNode(Node other) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public String lookupNamespaceURI(String prefix) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public String lookupPrefix(String namespaceURI) {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public void setTextContent(String textContent) throws DOMException {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public TypeInfo getSchemaTypeInfo() {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+            }
+
+            /**
+             * @since DOM Level 3
+             */
+            public boolean isId() {
+                throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
             }
         }
 
@@ -717,6 +926,120 @@ public class DocumentAdapter implements Document {
             return getAttributes().getLength() > 0;
         }
         
+        /**
+         * @since DOM Level 3
+         */
+        public Object getUserData(String key) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public Object setUserData(String key, Object value, UserDataHandler handler) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public Object getFeature(String feature, String version) { 
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public short compareDocumentPosition(Node other) throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String getBaseURI() {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String getTextContent() throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isDefaultNamespace(String namespaceURI) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isEqualNode(Node arg) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public boolean isSameNode(Node other) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String lookupNamespaceURI(String prefix) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public String lookupPrefix(String namespaceURI) {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public void setTextContent(String textContent) throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public TypeInfo getSchemaTypeInfo() {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public void setIdAttribute(String name, boolean isId)
+        throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public void setIdAttributeNode(Attr idAttr, boolean isId)
+        throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
+
+        /**
+         * @since DOM Level 3
+         */
+        public void setIdAttributeNS(String namespaceURI, String localName,
+                boolean isId) throws DOMException {
+            throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+        }
     }
 
     public DocumentType getDoctype() {
@@ -921,4 +1244,194 @@ public class DocumentAdapter implements Document {
     public Object unwrap() {
         return root.unwrap();
     }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Node renameNode(Node node, String namespaceURI, String qualifiedName) throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void normalizeDocument() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public DOMConfiguration getDomConfig() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Node adoptNode(Node source) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setDocumentURI(String uri) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getDocumentURI() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setStrictErrorChecking(boolean value) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean getStrictErrorChecking() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setXmlVersion(String version) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getXmlVersion() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setXmlStandalone(boolean value) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean getXmlStandalone() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+    
+    /**
+     * @since DOM Level 3
+     */
+    public void setXmlEncoding(String version) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getXmlEncoding() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getInputEncoding() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Object getUserData(String key) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Object setUserData(String key, Object value, UserDataHandler handler) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+    
+    /**
+     * @since DOM Level 3
+     */
+    public Object getFeature(String feature, String version) { 
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public short compareDocumentPosition(Node other) throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getBaseURI() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getTextContent() throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean isDefaultNamespace(String namespaceURI) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean isEqualNode(Node arg) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean isSameNode(Node other) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String lookupNamespaceURI(String prefix) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String lookupPrefix(String namespaceURI) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setTextContent(String textContent) throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
 }
