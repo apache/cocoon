@@ -26,10 +26,7 @@
           <td>TYPE</td><td>Reader, Sitemap Component</td>
         </tr>
         <tr>
-          <!-- choose Core, the block name, or Scratchpad 
-            depending on where AxisRPCReader sources live
-          -->
-          <td>BLOCK</td><td>Scratchpad</td>
+          <td>BLOCK</td><td>Axis</td>
         </tr>
         <tr>
           <td>CLASS</td><td>org.apache.cocoon.reading.AxisRPCReader</td>
