@@ -53,7 +53,7 @@ public class EclipseClasspathBuilderTask extends Task {
     private static final String LIT_ATTR_KIND_SRC = "src";
     private static final String LIT_ATTR_KIND_CON = "con";
     private static final String LIT_ATTR_KIND_LIB = "lib";
-    private static final String LIT_ATTR_KIND_OUT = "output";        
+    // private static final String LIT_ATTR_KIND_OUT = "output";        
     private static final String CORE_LIB = "core";
     private static final String DEFAULT_ECLIPSE_CONTAINER = "org.eclipse.jdt.launching.JRE_CONTAINER";
     
@@ -100,12 +100,20 @@ public class EclipseClasspathBuilderTask extends Task {
             // append all public block jars
     		Iterator blockIterator = this.blocks.iterator();
             while(blockIterator.hasNext()) {
-            	File[] f = ((Block)blockIterator.next()).getJarFile(this.getProject().getBaseDir());
-                if(f!=null) for(int i = 0; i < f.length; i++) {
+                Block block = (Block)blockIterator.next();
+                if(block.isDynamicEclipseReference()) {
+                	File[] f = block.getJarFile(this.getProject().getBaseDir());
+                    if(f!=null) for(int i = 0; i < f.length; i++) {
+                        Element entry = doc.createElement(EL_CLASSPATHENTRY);
+                        entry.setAttribute(ATTR_KIND, LIT_ATTR_KIND_LIB);
+                        entry.setAttribute(ATTR_PATH, f[i].getCanonicalPath());
+                        root.appendChild(entry);
+                    }
+                } else {
                     Element entry = doc.createElement(EL_CLASSPATHENTRY);
-                    entry.setAttribute(ATTR_KIND, LIT_ATTR_KIND_LIB);
-                    entry.setAttribute(ATTR_PATH, f[i].getCanonicalPath());
-                    root.appendChild(entry);
+                    entry.setAttribute(ATTR_KIND, LIT_ATTR_KIND_SRC);
+                    entry.setAttribute(ATTR_PATH, "/" + block.getEclipseProjectName());
+                    root.appendChild(entry);                    
                 }
             }
             
@@ -127,10 +135,12 @@ public class EclipseClasspathBuilderTask extends Task {
             }
             
             // append default output dir
+            /* RP: is it really necessary?
             Element outputEntry = doc.createElement(EL_CLASSPATHENTRY);
             outputEntry.setAttribute(ATTR_KIND, LIT_ATTR_KIND_OUT);
             outputEntry.setAttribute(ATTR_PATH, "");
             root.appendChild(outputEntry);               
+            */
             
             // append container
             Element containerEntry = doc.createElement(EL_CLASSPATHENTRY);
