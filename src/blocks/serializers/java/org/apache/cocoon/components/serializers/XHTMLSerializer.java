@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XHTMLSerializer.java,v 1.2 2004/04/27 18:35:21 pier Exp $
+ * @version CVS $Id: XHTMLSerializer.java,v 1.3 2004/04/30 22:57:22 joerg Exp $
  */
 public class XHTMLSerializer extends XMLSerializer {
 
@@ -99,7 +99,7 @@ public class XHTMLSerializer extends XMLSerializer {
      * @param qual The fully-qualified name of the root element.
      * @param namespaces An array of <code>String</code> objects containing
      *                   the namespaces to be declared by this element.
-     * @param namespaces An array of <code>String</code> objects containing
+     * @param attributes An array of <code>String</code> objects containing
      *                   all attributes of this element.
      */
     public void startElementImpl(String uri, String local, String qual,
