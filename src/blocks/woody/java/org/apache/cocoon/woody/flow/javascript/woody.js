@@ -229,6 +229,7 @@ Form.prototype.showForm = function(uri, bizdata) {
 Form.prototype._show = function(uri, locale, lastWebCont, timeToLive, bizData) {
     var k = new Continuation();
     var wk = this.woody.makeWebContinuation(k, lastWebCont, timeToLive);
+    if (bizData == undefined) bizData = new Object();
     bizData["woody-form"] = this.form;
     bizData["locale"] = locale;
     //var bizData = { "woody-form": this.form, "locale" : locale };
