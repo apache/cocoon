@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-12 18:54:40 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-12 20:52:05 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -69,7 +69,6 @@ public class OraAddAction extends DatabaseAddAction {
             }
 
             PreparedStatement statement = conn.prepareStatement(query);
-            getLogger().info(query);
 
             Configuration[] keys = conf.getChild("table").getChild("keys").getChildren("key");
             Configuration[] values = conf.getChild("table").getChild("values").getChildren("value");
@@ -86,6 +85,7 @@ public class OraAddAction extends DatabaseAddAction {
                     statement.setInt(currentIndex, value);
 
                     request.setAttribute(keys[i].getAttribute("param"), String.valueOf(value));
+                    getLogger().info(currentIndex + ": " + keys[i].getAttribute("param"));
 
                     set.close();
                     set.getStatement().close();
@@ -94,22 +94,25 @@ public class OraAddAction extends DatabaseAddAction {
             }
 
             for (int i = 0; i < values.length; i++) {
-                if (values[i].getAttribute("type").equals("image")) {
-                    File binaryFile = (File) request.get(values[i].getAttribute("param"));
+                String type = values[i].getAttribute("type");
+                String parameter = values[i].getAttribute("param");
+
+                if (type.equals("image")) {
+                    File binaryFile = (File) request.get(parameter);
                     Parameters iparam = new Parameters();
 
-                    iparam.setParameter("image-size", Long.toString(binaryFile.length()));
+                    iparam.setParameter("image-size", String.valueOf(binaryFile.length()));
 
                     int [] dimensions = ImageDirectoryGenerator.getSize(binaryFile);
-                    iparam.setParameter("image-width", Integer.toString(dimensions[0]));
-                    iparam.setParameter("image-height", Integer.toString(dimensions[1]));
+                    iparam.setParameter("image-width", String.valueOf(dimensions[0]));
+                    iparam.setParameter("image-height", String.valueOf(dimensions[1]));
 
                     synchronized (this.files) {
                         this.files.put(binaryFile, param);
                     }
                 }
 
-                if (this.isLargeObject(values[i].getAttribute("type")) == false) {
+                if (! this.isLargeObject(type)) {
                     this.setColumn(statement, currentIndex, request, values[i]);
                     currentIndex++;
                 }
@@ -194,7 +197,7 @@ public class OraAddAction extends DatabaseAddAction {
                 }
             }
 
-            throw new ProcessingException("Could not add record :position = " + currentIndex, e);
+            throw new ProcessingException("Could not add record :position = " + (currentIndex - 1), e);
         } finally {
             if (conn != null) {
                 try {
@@ -264,8 +267,12 @@ public class OraAddAction extends DatabaseAddAction {
                         queryBuffer.append(", ");
                     }
 
-                    if (this.isLargeObject(values[i].getAttribute("type", ""))) {
-                        queryBuffer.append("empty_lob()");
+                    if (this.isLargeObject(values[i].getAttribute("type"))) {
+                        if (values[i].getAttribute("type").equals("ascii")) {
+                             queryBuffer.append("empty_clob()");
+                        } else {
+                             queryBuffer.append("empty_blob()");
+                        }
                     } else {
                         queryBuffer.append("?");
                     }
@@ -319,15 +326,19 @@ public class OraAddAction extends DatabaseAddAction {
                     return query;
                 }
 
-                queryBuffer.append(" WHERE ");
+                queryBuffer.append(" FROM ").append(table.getAttribute("name"));
 
-                for (int i = 0; i < keys.length; i++) {
-                    if (i > 0) {
-                        queryBuffer.append(" AND ");
+                if (keys.length > 0) {
+                    queryBuffer.append(" WHERE ");
+
+                    for (int i = 0; i < keys.length; i++) {
+                        if (i > 0) {
+                            queryBuffer.append(" AND ");
+                        }
+
+                        queryBuffer.append(keys[i].getAttribute("dbcol"));
+                        queryBuffer.append(" = ?");
                     }
-
-                    queryBuffer.append(keys[i].getAttribute("dbcol"));
-                    queryBuffer.append(" = ?");
                 }
 
                 query = queryBuffer.toString();
