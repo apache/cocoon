@@ -51,13 +51,13 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.SingleThreaded;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.RequestLifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
@@ -77,7 +77,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.11 2003/10/16 14:57:36 bloritsch Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.12 2003/10/22 18:10:48 bloritsch Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Serviceable, Contextualizable, Interpreter,
@@ -198,7 +198,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         FlowHelper.setContextObject(objectModel, biz);
 
         // Attermpt to start processing the wrapper environment
-        Object key = CocoonComponentManager.startProcessing(wrapper);
+        Object key = RequestLifecycleHelper.startProcessing(wrapper);
 
         Processor processor = null;
         boolean result = false;
@@ -207,7 +207,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             processor = (Processor)this.manager.lookup(Processor.ROLE);
 
             // Enter the environment
-            CocoonComponentManager.enterEnvironment(wrapper, this.manager, processor);
+            RequestLifecycleHelper.enterEnvironment(wrapper, this.manager, processor);
 
             // Process the subrequest
             result = processor.process(wrapper);
@@ -223,9 +223,9 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             if ( processor != null ) {
                 // enterEnvironemnt has only been called if the
                 // processor has been looked up
-                CocoonComponentManager.leaveEnvironment();
+                RequestLifecycleHelper.leaveEnvironment();
             }
-            CocoonComponentManager.endProcessing(wrapper, key);
+            RequestLifecycleHelper.endProcessing(wrapper, key);
             this.manager.release(processor);
         }
     }
