@@ -76,6 +76,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -84,11 +85,9 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
@@ -113,7 +112,7 @@ import org.apache.cocoon.util.StringUtils;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.24 2003/12/26 18:38:44 unico Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.25 2003/12/28 20:52:21 unico Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -123,14 +122,25 @@ public class CocoonServlet extends HttpServlet {
     public static final String CONTEXT_SERVLET_CONFIG = "servlet-config";
 
     // Processing time message
-    protected static final String PROCESSED_BY = "Processed by "
+    private static final String PROCESSED_BY = "Processed by "
         + Constants.COMPLETE_NAME + " in ";
 
     // Used by "show-time"
-    static final float SECOND = 1000;
-    static final float MINUTE = 60 * SECOND;
-    static final float HOUR   = 60 * MINUTE;
+    private static final float SECOND = 1000;
+    private static final float MINUTE = 60 * SECOND;
+    private static final float HOUR   = 60 * MINUTE;
 
+    private static final HashMap LOG_LEVELS = new HashMap(6);
+    
+    static {
+        LOG_LEVELS.put("DEBUG",new Integer(ServletLogger.LEVEL_DEBUG));
+        LOG_LEVELS.put("INFO",new Integer(ServletLogger.LEVEL_INFO));
+        LOG_LEVELS.put("WARN",new Integer(ServletLogger.LEVEL_WARN));
+        LOG_LEVELS.put("ERROR",new Integer(ServletLogger.LEVEL_ERROR));
+        LOG_LEVELS.put("FATAL",new Integer(ServletLogger.LEVEL_FATAL));
+        LOG_LEVELS.put("DISABLED",new Integer(ServletLogger.LEVEL_DISABLED));
+    }
+    
     /**
      * The time the cocoon instance was created
      */
@@ -504,10 +514,6 @@ public class CocoonServlet extends HttpServlet {
         }
         cocoonBean.dispose();
 
-        /* *********************************************************
-         * **** WARNING!!!!  Why are WE disabling a parent????? ****
-         * *********************************************************
-         */
         if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
             ((Disposable)this.parentComponentManager).dispose();
         }
@@ -761,7 +767,7 @@ public class CocoonServlet extends HttpServlet {
 
     /**
      * Set up the log level and path.  The default log level is
-     * Priority.ERROR, although it can be overwritten by the parameter
+     * ERROR, although it can be overwritten by the parameter
      * "log-level".  The log system goes to both a file and the Servlet
      * container's log system.  Only messages that are Priority.ERROR
      * and above go to the servlet context.  The log messages can
@@ -769,9 +775,21 @@ public class CocoonServlet extends HttpServlet {
      * (Priority.DEBUG and above) as you want that get routed to the
      * file.
      */
-    protected void initLogger() {
-        cocoonBean.setInitializationLogger(new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG));
-
+    protected void initLogger() throws ServletException {
+        String logLevel = getInitParameter("log-level", "ERROR");
+//        cocoonBean.setInitializationLogger(
+//            new ServletLogger(
+//                getServletConfig(),
+//                getLogLevelForName(logLevel)
+//            )
+//        );
+        cocoonBean.setInitializationLogger(
+            new ConsoleLogger(
+                getLogLevelForName(logLevel)
+            )
+        );
+        cocoonBean.setProperty("servlet-context", servletContext);
+        
         /* I am leaving this all commented out.  Avalon no longer forces you to use
          * LogKit, so you can use Log4J all the way.  In order to make this work the
          * way you want, we may need to create a special implementation of an Avalon
@@ -779,8 +797,6 @@ public class CocoonServlet extends HttpServlet {
          * logging facility or something else.  I just don't want to force Cocoon
          * to use LogKit either if the users don't want to.
          */
-
-        cocoonBean.setProperty("servlet-context", servletContext);
 
 /*        String logLevel = getInitParameter("log-level", "INFO");
 
@@ -1007,7 +1023,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // Get the cocoon engine instance
-        CompilingProcessor cocoon = getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
+        CompilingProcessor processor = getProcessor(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
 
         // We got it... Process the request
         String uri = request.getServletPath();
@@ -1078,7 +1094,8 @@ public class CocoonServlet extends HttpServlet {
                 ctxMap.set("request-id", threadName + System.currentTimeMillis());
                  */
 
-                if (cocoon.process(env)) {
+                if (processor.process(env)) {
+                    env.commitResponse();
                     contentType = env.getContentType();
                 } else {
                     // We reach this when there is nothing in the processing change that matches
@@ -1112,7 +1129,7 @@ public class CocoonServlet extends HttpServlet {
                     getLogger().warn(cre.getMessage());
                 }
 
-            } catch ( SocketException se ) {
+            } catch (SocketException se) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug(se.getMessage(), se);
                 } else if (getLogger().isWarnEnabled()) {
@@ -1332,10 +1349,10 @@ public class CocoonServlet extends HttpServlet {
     }
 
     /**
-     * Gets the current cocoon object.  Reload cocoon if configuration
+     * Gets the processor.  Reload cocoon if configuration
      * changed or we are reloading.
      */
-    private CompilingProcessor getCocoon(final String pathInfo, final String reloadParam)
+    private CompilingProcessor getProcessor(final String pathInfo, final String reloadParam)
     throws ServletException {
 
         CompilingProcessor processor = cocoonBean.getRootProcessor();
@@ -1437,5 +1454,13 @@ public class CocoonServlet extends HttpServlet {
 
     protected Logger getLogger() {
         return cocoonBean.getInitializationLogger();
+    }
+    
+    private static final int getLogLevelForName(String name) throws ServletException {
+        Integer level = (Integer) LOG_LEVELS.get(name);
+        if (level == null) {
+            throw new ServletException("Bad value for log-level parameter: " + name);
+        }
+        return level.intValue();
     }
 }
