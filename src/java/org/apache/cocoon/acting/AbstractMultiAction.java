@@ -61,6 +61,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Enumeration;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -75,7 +76,7 @@ import java.lang.reflect.Method;
  * will call the method "doSave" of the MultiAction
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: AbstractMultiAction.java,v 1.4 2003/05/06 09:47:23 stephan Exp $
+ * @version CVS $Id: AbstractMultiAction.java,v 1.5 2003/07/18 21:07:02 stephan Exp $
  */
 public abstract class AbstractMultiAction extends ConfigurableComposerAction {
 
@@ -136,7 +137,15 @@ public abstract class AbstractMultiAction extends ConfigurableComposerAction {
         if((actionMethod != null) && (actionMethod.length() > 0)) {
             Method method = (Method) methodIndex.get(actionMethod);
             if (method != null) {
-                return ((Map) method.invoke(this, new Object[]{redirector, resolver, objectModel, source, parameters}));
+                try {
+                    return ((Map) method.invoke(this, new Object[]{redirector, resolver, objectModel, source, parameters}));
+                } catch (InvocationTargetException ite) {
+                    if ((ite.getTargetException()!=null) && (ite instanceof Exception)) {
+                        throw (Exception)ite.getTargetException();
+                    } else {
+                        throw ite;
+                    }
+                }
             } else {
                 throw new Exception("action has no method \"" + actionMethod + "\"");
             }
