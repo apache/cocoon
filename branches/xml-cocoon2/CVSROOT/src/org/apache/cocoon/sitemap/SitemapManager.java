@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-21 17:35:31 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-25 20:18:19 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -93,6 +93,6 @@ public class SitemapManager implements Configurable, Composer {
                     return true;
             }
         }
-        return true;
+        return false;
     }
 }
