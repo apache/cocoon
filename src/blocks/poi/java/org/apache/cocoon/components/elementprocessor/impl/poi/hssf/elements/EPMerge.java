@@ -51,86 +51,57 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
-import org.apache.cocoon.components.elementprocessor.types.Attribute;
-import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.poi.hssf.util.RangeAddress;
 import org.apache.poi.hssf.util.Region;
+
 import java.io.IOException;
 
 /**
- * No-op implementation of ElementProcessor to handle the "Merge" tag
+ * No-op implementation of ElementProcessor to handle the "Merge" tag.
+ * This element is a container of other elements and has several attributes.
  *
- * This element is a container of other elements and has several
- * attributes
- *
- *
- * @author Danny Mui (danny@muibros.com) 
+ * @author Danny Mui (danny@muibros.com)
  */
-public class EPMerge extends BaseElementProcessor
-{
-    private boolean _invalid = false;
+public class EPMerge extends BaseElementProcessor {
+
     private String _cellRange;
-    
+
     /**
      * constructor
      */
-    public EPMerge()
-    {
+    public EPMerge() {
         super(null);
         _cellRange = null;
     }
-    
-    
-    /**
-     * Override of Initialize() implementation
-     *
-     * @param attributes the array of Attribute instances; may be
-     *                   empty, will never be null
-     * @param parent the parent ElementProcessor; may be null
-     *
-     * @exception IOException if anything is wrong
-     */
-    public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
-        super.initialize(attributes, parent);
-    
-    }    
-    
-    public String getCellRange(){
+
+    public String getCellRange() {
         if (this._cellRange == null) {
             //pulls in the content
             _cellRange = this.getData();
         }
-        
         return this._cellRange;
     }
-    
-   /**
+
+    /**
      * Setup the merged regions
      *
      * @exception IOException
      */
-    public void endProcessing()
-        throws IOException
-    {
+    public void endProcessing() throws IOException {
         RangeAddress rangeAddress = new RangeAddress(getCellRange());
         Sheet sheet = this.getSheet();
-        
-        //subtracting one since rangeaddress starts at 1,1 where rows/cols start at 0,0        
-        short   fromCol = (short)(rangeAddress.getXPosition(rangeAddress.getFromCell())-1);
-        int     fromRow = (rangeAddress.getYPosition(rangeAddress.getFromCell())-1);
-        short   toCol = (short)(rangeAddress.getXPosition(rangeAddress.getToCell())-1);
-        int     toRow = rangeAddress.getYPosition(rangeAddress.getToCell())-1;
-        
-        getLogger().debug("Merging Range: Row ("+fromRow+") Col ("+fromCol+") to Row("+toRow+") Col("+toCol+")");
-        
+
+        //subtracting one since rangeaddress starts at 1,1 where rows/cols start at 0,0
+        short fromCol = (short)(rangeAddress.getXPosition(rangeAddress.getFromCell()) - 1);
+        int   fromRow = rangeAddress.getYPosition(rangeAddress.getFromCell()) - 1;
+        short toCol   = (short)(rangeAddress.getXPosition(rangeAddress.getToCell()) - 1);
+        int   toRow   = rangeAddress.getYPosition(rangeAddress.getToCell()) - 1;
+
+        getLogger().debug("Merging Range: Row (" + fromRow + ") Col (" + fromCol + ")"
+                                   + " to Row (" + toRow   + ") Col (" + toCol   + ")");
+
         Region region = new Region(fromRow, fromCol, toRow, toCol);
         sheet.addMergedRegion(region);
-
     }
 
-}   // end public class EPMerge
+} // end public class EPMerge
