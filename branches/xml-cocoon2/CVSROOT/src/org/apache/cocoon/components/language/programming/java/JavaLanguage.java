@@ -32,7 +32,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-01-31 15:48:36 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-07 12:15:08 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -161,11 +161,19 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
 
       String systemClasspath = System.getProperty("java.class.path");
       String systemExtDirs = System.getProperty("java.ext.dirs");
+	  String systemExtClasspath = null;
+	  
+	  try {
+		systemExtClasspath = expandDirs(systemExtDirs);
+	  } catch (Exception e) {
+		log.warn("Could not expand Directory:" + systemExtDirs, e);
+	  }
+
       compiler.setClasspath(
         baseDirectory.getCanonicalPath() +
         ((classpath != null) ? File.pathSeparator + classpath : "") +
         ((systemClasspath != null) ? File.pathSeparator + systemClasspath : "") +
-        ((systemExtDirs != null) ? File.pathSeparator + expandDirs(systemExtDirs) : "")
+        ((systemExtClasspath != null) ? File.pathSeparator + systemExtClasspath : "")
       );
 
       if (encoding != null) {
