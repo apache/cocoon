@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.65 2000-05-06 11:11:37 stefano Exp $
+  $Id: changes.xml,v 1.66 2000-05-07 00:44:45 ricardo Exp $
 -->
 
 <changes title="History of Changes">
@@ -21,6 +21,32 @@
   </action>
  </release>
  
+ <release version="1.7.3" date="May 6 2000">
+  <action dev="RR" type="update">
+    Added namespace preservation for XSP pages. To preserve namespaces in an
+    XSP page, add an "xsp:xxx" attribute to the page's root element, where
+    "xxx" is the namespace and the attribute value is the namespace URI
+  </action>
+  <action dev="RR" type="update">
+    Added boolean attribute "create-session" to &lt;xsp:page&gt; in order
+    to allow for the automatic creation of servlet sessions without
+    intervening &lt;xsp:logic&gt;
+  </action>
+  <action dev="RR" type="update">
+    Added "java.net.*" to the list of default XSP page Java imports
+  </action>
+  <action dev="RR" type="update" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+    Added synchronization on code generation, compilation and loading
+  </action>
+  <action dev="RR" type="update" due-to="Pavel Karassev" due-to-email="paul@soft.tlt.ru">
+    Added support for charset encodings in code generation and compilation.
+    Tested only with Russian under Blackdown's JDK1.2
+  </action>
+  <action dev="RR" type="fix">
+    Fixed bug resulting in multiple &lt;xsp:page&gt; top elements
+  </action>
+ </release>
+
  <release version="1.7.3" date="May 5 2000">
   <action dev="DB" type="fix">
    Added code to XSLTProcessor to not import request parameters whose names are not valid XML Qnames and code to XalanTransformer to quote request parameter values to bypass the expression parsing routines.
