@@ -13,8 +13,10 @@
 
       <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.ManualAutoIncrementModule"/>
       <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.IfxSerialAutoIncrementModule"/>
+      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.McKoiSequenceModule"/>
       <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.MysqlAutoIncrementModule"/>
       <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.PgsqlAutoIncrementModule"/>
+      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.SQLServerIdentityAutoIncrementModule"/>
 -->
    </autoincrement-modules>
 </xconf>
