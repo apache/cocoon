@@ -1,4 +1,5 @@
 <?xml version="1.0" ?>
+
 <testcase>
  <annotation>
   Test Cases: FileGenerator
@@ -10,7 +11,7 @@
   </factories>
   <targets>
    <file id="root">
-    <filename>cocoon-filegenerator.log</filename>
+    <filename>cocoon-filegenerator-test.log</filename>
     <format type="extended">
      %7.7{priority} %5.5{time}   [%8.8{category}] (%{context}): %{message}\n%{throwable}
     </format>
@@ -20,6 +21,14 @@
    <category name="test" log-level="DEBUG">
     <log-target id-ref="root"/>
    </category>
+   <!-- Uncomment for ComponentManager and RoleManager debug
+   <category name="cm" log-level="DEBUG">
+    <log-target id-ref="root"/>
+   </category>
+   <category name="rm" log-level="DEBUG">
+    <log-target id-ref="root"/>
+   </category>
+   -->
   </categories>
  </logkit>
 
@@ -54,13 +63,11 @@
 
   <source-factories>
    <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
+   <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
-
-  <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
 
   <generators>
    <component-instance class="org.apache.cocoon.generation.FileGenerator" name="file"/>
   </generators>
  </components>
-
 </testcase>
