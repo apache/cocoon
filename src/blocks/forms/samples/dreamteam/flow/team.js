@@ -102,7 +102,7 @@ function updateNameWidget(event) {
       var form = event.source.form;
       var everyone = form.getAttribute("everyone");
       if (everyone != null) {
-         nameList = everyone.get(value).team;
+         var nameList = everyone.get(value).team;
          memberIdwidget.setSelectionList(nameList, "memberId", "name");
          // Always set the name value to the first in the list.
          // Note that it will also fire an event on the
@@ -144,7 +144,7 @@ function updateRowIDcounter(event) {
   var form = event.source.form;
   var count = new java.lang.Long(form.getAttribute("counter").longValue() + 1);
   form.setAttribute("counter", count);
-  repeater = form.getChild("teammembers");
+  var repeater = form.getChild("teammembers");
   repeater.getRow(repeater.getSize() - 1).getChild("ID").setValue(count);
 }
 
