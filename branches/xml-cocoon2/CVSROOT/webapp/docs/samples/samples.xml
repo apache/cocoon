@@ -98,6 +98,9 @@
    <sample name="Javascript Generator" href="scripts/hello.js">
     An example of the ScriptGenerator producing XML out of a Javascript program.
    </sample>
+   <sample name="JSP Generator" href="jsp/hello">
+    An example of the JSPGenerator producing XML out of using JSP.
+   </sample>
    <sample name="Python Generator" href="scripts/hello.py">
     An example of the ScriptGenerator producing XML out of a Python program.
     You should make sure that you have the Jython interpreter (jython.jar) from

@@ -16,6 +16,7 @@
    <map:generator  name="script"      src="org.apache.cocoon.generation.ScriptGenerator"/>
    <map:generator  name="velocity"    src="org.apache.cocoon.generation.VelocityGenerator"/>
    <map:generator  name="html"        src="org.apache.cocoon.generation.HTMLGenerator" label="content"/>
+   <map:generator  name="jsp"         src="org.apache.cocoon.generation.JspGenerator"/>
   </map:generators>
 
   <map:transformers default="xslt">
@@ -296,6 +297,12 @@
 
    <map:match pattern="scripts/*">
     <map:generate type="script" src="docs/samples/scripts/{1}"/>
+    <map:transform src="stylesheets/page/simple-page2html.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="jsp/*">
+    <map:generate type="jsp" src="/docs/samples/jsp/{1}.jsp"/>
     <map:transform src="stylesheets/page/simple-page2html.xsl"/>
     <map:serialize type="html"/>
    </map:match>
