@@ -11,7 +11,6 @@
     </head>
     <body>
       <table width="90%">
-        <tr><td>JPEG</td><td>PNG</td></tr>
         <tr>
           <td>Available ascii art as <em>TXT</em>
           <ul>
