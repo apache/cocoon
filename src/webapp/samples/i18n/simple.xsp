@@ -7,7 +7,7 @@
     <xsp:logic>
         private static int count = 0;
     </xsp:logic>
-    <root i18n:attr="language" language="language">
+    <document i18n:attr="language" language="language">
         <xsp-request:get-session/>
         <xsp:logic>
             synchronized (this) {
@@ -28,7 +28,7 @@
                 <i18n:text i18n:key="doclink"/>
                 <i18n:param>
                     <link>
-                        <href>http://cocoon.apache.org/userdocs/transformers/i18n-transformer.html</href>
+                        <href>http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html</href>
                         <title>Cocoon 2 Web Site</title>
                     </link>
                 </i18n:param>
@@ -101,5 +101,5 @@
                 <i18n:text>copyright</i18n:text>
             </copyright>
         </bottom>
-    </root>
+    </document>
 </xsp:page>
