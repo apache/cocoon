@@ -244,15 +244,6 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ConfigurationHelper.html">ConfigurationHelper</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
-  <!-- B --><td>core</td>
-  <!-- C --><td>n</td>
-  <!-- D --><td></td>
-  <!-- E --><td></td>
-</tr>
-<tr>
   <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CookieCreatorAction.html">CookieCreatorAction</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
@@ -775,7 +766,7 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/taglib/acting/TagtestAction.html">TagtestAction</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/taglib/test/acting/TagtestAction.html">TagtestAction</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>taglib</td>
@@ -797,24 +788,6 @@
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
-  <!-- C --><td>n</td>
-  <!-- D --><td></td>
-  <!-- E --><td></td>
-</tr>
-<tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ValidatorActionHelper.html">ValidatorActionHelper</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
-  <!-- B --><td>core</td>
-  <!-- C --><td>n</td>
-  <!-- D --><td></td>
-  <!-- E --><td></td>
-</tr>
-<tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ValidatorActionResult.html">ValidatorActionResult</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
-  <!-- B --><td>core</td>
   <!-- C --><td>n</td>
   <!-- D --><td></td>
   <!-- E --><td></td>
@@ -942,8 +915,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 2 --><td></td>
-  <!-- 1 --><td><link href="../userdocs/generators/error-generator.html">error</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/error-generator.html">error</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2974,7 +2947,7 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/TraxTransformer.html">TraxTransformer</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/Transformer.html">TraxTransformer</link></td>
   <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
