@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.180 2003/11/01 20:29:46 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.181 2003/11/05 21:01:06 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" due-to="Andrea Poeschl" due-to-email="poeschel@aidossoftware.com">
+      Fixing precompilation of the XSPs for the CLI.
+   </action>
     <action dev="BRD" type="update">
       Woody: in the form definition, for widgets that have child widgets, those
       child widgets should now be embedded inside a wd:widgets element.
