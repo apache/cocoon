@@ -99,21 +99,27 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
+
 /**
- *  <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>)</p>
- *  <p>Uses the namespace <code>http://cocoon.apache.org/templates/jx/1.0</code></p>
- *  <p>Provides a generic page template with embedded JSTL and XPath expression substitution
- *  to access data sent by Cocoon Flowscripts.</p>
- *  The embedded expression language allows a page author to access an 
- *  object using a simplified syntax such as
+ * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> 
+ * and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>).</p>
+ * <p>Uses the namespace <code>http://cocoon.apache.org/templates/jx/1.0</code></p>
+ * <p>Provides a generic page template with embedded JSTL and XPath 
+ * expression substitution to access data sent by Cocoon Flowscripts.</p>
+ * The embedded expression language allows a page author to access an 
+ * object using a simplified syntax such as
+ *
  *  <p><pre>
  *  &lt;site signOn="${accountForm.signOn}"&gt;
  *  </pre></p>
+ *
  * <p>Embedded JSTL expressions are contained in <code>${}</code>.</p>
  * <p>Embedded XPath expressions are contained in <code>#{}</code>.</p>
- * <p>Note that since this generator uses <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the referenced 
- * objects may be Java Beans, DOM, JDOM, or JavaScript objects from a 
- * Flowscript. In addition the following implicit objects are available as
+ * <p>Note that since this generator uses 
+ * <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a> 
+ * and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the 
+ * referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects from 
+ * a Flowscript. In addition the following implicit objects are available as
  * both XPath and JSTL variables:</p>
  * <p>
  * <dl>
@@ -137,40 +143,63 @@ import org.xml.sax.helpers.LocatorImpl;
  * The current Web Continuation from the Flowscript 
  * is also available as a variable named <code>continuation</code>. You would 
  * typically access its <code>id</code>:
+ *
  * <p><pre>
  *    &lt;form action="${continuation.id}"&gt;
  * </pre></p>
- * <p>You can also reach previous continuations by using the <code>getContinuation()</code> function:</p>
+ *
+ * <p>You can also reach previous continuations by using the 
+ * <code>getContinuation()</code> function:</p>
+ *
  * <p><pre>
  *     &lt;form action="${continuation.getContinuation(1).id}" >
  * </pre></p>
+ *
  * <p>
  * <p>The <code>template</code> tag defines a new template:</p><pre>
  *    &lt;template&gt;
  *        body
  *    &lt;/template&gt;
  * </pre></p>
- * <p>The <code>import</code> tag allows you to include another template within the current template. The content of the imported template is compiled and will be executed in place of the <code>import</code> tag:</p><pre>
+ *
+ * <p>The <code>import</code> tag allows you to include another template 
+ * within the current template. The content of the imported template is 
+ * compiled and will be executed in place of the <code>import</code> tag:</p><pre>
  *    &lt;import uri="URI" [context="Expression"]/&gt;
- * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>. If <code>context</code> is present, then its value is used as the context for evaluating the imported template, otherwise the current context is used.</p>
- * <p>The <code>set</code> tag creates a local alias of an object. The <code>var</code> attribute specifies the name of a variable to assign the object to. The <code>value</code> attribute specifies the object (defaults to <code>body</code> if not present):</p><pre>
+ * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>. 
+ * If <code>context</code> is present, then its value is used as the context 
+ * for evaluating the imported template, otherwise the current context is 
+ * used.</p>
+ * <p>The <code>set</code> tag creates a local alias of an object. The 
+ * <code>var</code> attribute specifies the name of a variable to assign the 
+ * object to. The <code>value</code> attribute specifies the object (defaults 
+ * to <code>body</code> if not present):</p>
+ *
+ * <pre>
  *    &lt;set var="Name" [value="Value"]&gt;
  *        [body]
  *    &lt;/set&gt;
- * </pre></p><p>If used within a <code>macro</code> definition (see below) variables created by <code>set</code> are only visible within the body of the <code>macro</code>.</p>
+ * </pre></p>
+ *
+ * <p>If used within a <code>macro</code> definition (see below) 
+ * variables created by <code>set</code> are only visible within the body of 
+ * the <code>macro</code>.</p>
  * <p>The <code>if</code> tag allows the conditional execution of its body 
  * according to value of a <code>test</code> attribute:</p>
+ *
  * <p><pre>
  *   &lt;if test="Expression"&gt;
  *       body
  *   &lt;/if&gt;
  * </pre></p>
+ *
  * <p>The <code>choose</code> tag performs conditional block execution by the 
  * embedded <code>when</code> sub tags. It renders the body of the first 
  * <code>when</code> tag whose <code>test</code> condition evaluates to true. 
  * If none of the <code>test</code> conditions of nested <code>when</code> tags
  * evaluate to <code>true</code>, then the body of an <code>otherwise</code> 
  * tag is evaluated, if present:</p>
+ *
  * <p><pre>
  *  &lt;choose&gt;
  *    &lt;when test="Expression"&gt;
@@ -181,42 +210,68 @@ import org.xml.sax.helpers.LocatorImpl;
  *    &lt;/otherwise&gt;
  *  &lt;/choose&gt;
  * </pre></p>
+ *
  * <p>The <code>out</code> tag evaluates an expression and outputs 
  * the result of the evaluation:</p>
+ *
  * <p><pre>
  * &lt;out value="Expression"/&gt;
  * </pre></p>
+ *
  * <p>The <code>forEach</code> tag allows you to iterate over a collection 
  * of objects:<p>
+ *
  * <p><pre>
- *   &lt;forEach [var="Name"] [items="Expression"] [begin="Number"] [end="Number"] [step="Number"]&gt;
+ *   &lt;forEach [var="Name"] [items="Expression"] 
+                 [begin="Number"] [end="Number"] [step="Number"]&gt;
  *     body
  *  &lt;/forEach&gt;
  * </pre></p>
- * <p>The <code>items</code> attribute specifies the list of items to iterate over. The <code>var</code> attribute specifies the name of a variable to hold the current item. The <code>begin</code> attribute specifies the element to start with 
- * (<code>0</code> = first item, <code>1</code> = second item, ...). 
+ *
+ * <p>The <code>items</code> attribute specifies the list of items to iterate 
+ * over. The <code>var</code> attribute specifies the name of a variable to 
+ * hold the current item. The <code>begin</code> attribute specifies the 
+ * element to start with (<code>0</code> = first item, 
+ * <code>1</code> = second item, ...). 
  * If unspecified it defaults to <code>0</code>. The <code>end</code> 
  * attribute specifies the item to end with (<code>0</code> = first item, 
- * <code>1</code> = second item, ...). If unspecified it defaults to the last item in the list. Every <code>step</code> items are
- * processed (defaults to <code>1</code> if <code>step</code> is absent). Either <code>items</code> or both <code>begin</code> and <code>end</code> must be present.<p>
+ * <code>1</code> = second item, ...). If unspecified it defaults to the last 
+ * item in the list. Every <code>step</code> items are
+ * processed (defaults to <code>1</code> if <code>step</code> is absent). 
+ * Either <code>items</code> or both <code>begin</code> and <code>end</code> 
+ * must be present.<p>
  *
- * <p>The <code>macro</code> tag allows you define a new custom tag.</p><p><pre>
+ * <p>The <code>macro</code> tag allows you define a new custom tag.</p>
+ *
+ * <p><pre>
  * &lt;macro name="Name" [targetNamespace="Namespace"]&gt;
  *   &lt;parameter name="Name" [optional="Boolean"] [default="Value"]/&gt;*
  *   body
  * &lt/macro&gt;
  * </pre></p>
- *<p> For example:</p><p><pre>
+ *
+ *<p> For example:</p>
+ *
+ *<p><pre>
  * &lt;c:macro name="d"&gt;
  *   &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
  * &lt;/c:macro&gt;
  * </pre></p>
+ *
  * <p>The tag being defined in this example is <code>&lt;d&gt;</code> and it 
- * can be used like any other tag:</p><p><pre>
+ * can be used like any other tag:</p>
+ *
+ * <p><pre>
  *   &lt;d/&gt;
  * </pre></p>
- * <p>However, when this tag is used it will be replaced with a row containing a single empty data cell.</p>
- * <p> When such a tag is used, the attributes and content of the tag become available as variables in the body of the <code>macro</code>'s definition, for example:</p><p><pre>
+ *
+ * <p>However, when this tag is used it will be replaced with a row containing 
+ * a single empty data cell.</p>
+ * <p> When such a tag is used, the attributes and content of the tag become 
+ * available as variables in the body of the <code>macro</code>'s definition, 
+ * for example:</p>
+ *
+ * <p><pre>
  * &lt;c:macro name="tablerows"&gt;
  *   &lt;c:parameter name="list"/&gt;
  *   &lt;c:parameter name="color"/&gt;
@@ -225,14 +280,24 @@ import org.xml.sax.helpers.LocatorImpl;
  *   &lt;/c:forEach&gt;
  * &lt;/c:macro&gt;
  * </pre></p>
- * <p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${content}</code>.</p><p>Assuming you had this code in your flowscript:</p>
- *    <code>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</code></p><p><code> sendPage(uri, {greatlakes: greatlakes});</code>
- * </p><p>and a template like this:</p><p><pre>
+ *
+ * <p>The <code>parameter</code> tags in the macro definition define formal 
+ * parameters, which are replaced with the actual attribute values of the 
+ * tag when it is used. The content of the tag is also available as a special 
+ * variable <code>${content}</code>.</p><p>Assuming you had this code in your 
+ * flowscript:</p>
+ * <code>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</code>
+ * </p><p><code> sendPage(uri, {greatlakes: greatlakes});</code>
+ * </p><p>and a template like this:</p>
+ *
+ * <p><pre>
  * &lt;table&gt;
  *    &lt;tablerows list="${greatlakes}" color="blue"/&gt;
  * &lt;/table&gt;
  * </pre></p>
- * <p>When the <code>tablerows</code> tag is used in this situation the following output would be generated:
+ *
+ * <p>When the <code>tablerows</code> tag is used in this situation the 
+ * following output would be generated:
  * </p>
  *<p><pre>
  * &lt;table&gt;
@@ -244,7 +309,6 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  */
-
 public class JXTemplateGenerator extends AbstractGenerator {
 
     private static final JXPathContextFactory 
