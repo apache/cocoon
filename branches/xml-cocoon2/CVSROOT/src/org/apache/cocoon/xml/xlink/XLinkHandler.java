@@ -8,6 +8,7 @@
 
 package org.apache.cocoon.xml.xlink;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
@@ -15,27 +16,27 @@ import org.xml.sax.SAXException;
  * event driven design patterns that SAX enforces.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-23 22:44:30 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-25 14:48:21 $
  */
 public interface XLinkHandler  {
     
-    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate) throws SAXException;
+    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr) throws SAXException;
     
-    public void startExtendedLink(String role, String title) throws SAXException;
+    public void startExtendedLink(String role, String title, String uri, String name, String raw, Attributes attr) throws SAXException;
     
-    public void endExtendedLink() throws SAXException;
+    public void endExtendedLink(String uri, String name, String raw) throws SAXException;
     
-    public void startLocator(String href, String role, String title, String label) throws SAXException;
+    public void startLocator(String href, String role, String title, String label, String uri, String name, String raw, Attributes attr) throws SAXException;
 
-    public void endLocator() throws SAXException;
+    public void endLocator(String uri, String name, String raw) throws SAXException;
     
-    public void startArc(String arcrole, String title, String show, String actuate, String from, String to) throws SAXException;
+    public void startArc(String arcrole, String title, String show, String actuate, String from, String to, String uri, String name, String raw, Attributes attr) throws SAXException;
     
-    public void endArc() throws SAXException;
+    public void endArc(String uri, String name, String raw) throws SAXException;
 
-    public void linkResource(String role, String title, String label) throws SAXException;
+    public void linkResource(String role, String title, String label, String uri, String name, String raw, Attributes attr) throws SAXException;
     
-    public void linkTitle() throws SAXException;
+    public void linkTitle(String uri, String name, String raw, Attributes attr) throws SAXException;
     
 }
 
