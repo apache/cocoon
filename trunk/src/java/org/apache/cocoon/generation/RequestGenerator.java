@@ -50,7 +50,14 @@
 */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.Map;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -58,13 +65,15 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.ServletGenerator;
+import org.apache.cocoon.transformation.helpers.NOPRecorder;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Map;
 
 /**
  * Generates an XML representation of the incoming request.
@@ -78,18 +87,19 @@ import java.util.Map;
  * <dt> <i>generate-attributes</i> (optional)
  * <dd> If true, also generates request attributes. Default is false.
  * </dl>
- * These configuration options supported in both declaration and use time.
+ * These configuration options supported in both declaration and use time. 
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RequestGenerator.java,v 1.2 2003/05/19 10:40:39 stephan Exp $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Id: RequestGenerator.java,v 1.3 2003/06/16 23:46:10 stefano Exp $
  */
 public class RequestGenerator extends ServletGenerator implements Parameterizable {
 
     /** The URI of the namespace of this generator. */
-    private String URI="http://apache.org/cocoon/request/2.0";
+    private String PREFIX = "h";
+    private String URI = "http://apache.org/cocoon/request/2.0";
     private String global_container_encoding;
     private String global_form_encoding;
     private String container_encoding;
@@ -99,8 +109,6 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
 
     public void parameterize(Parameters parameters)
     throws ParameterException {
-        // super.parameterize(parameters);
-
         global_container_encoding = parameters.getParameter("container-encoding", "ISO-8859-1");
         global_form_encoding = parameters.getParameter("form-encoding", null);
         global_generate_attributes = parameters.getParameterAsBoolean("generate-attributes", false);
@@ -123,119 +131,87 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
     throws SAXException {
         Request request = ObjectModelHelper.getRequest(objectModel);
         this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("",URI);
-        AttributesImpl attr=new AttributesImpl();
+        this.contentHandler.startPrefixMapping(PREFIX,URI);
+        AttributesImpl attr = new AttributesImpl();
 
         this.attribute(attr,"target", request.getRequestURI());
         this.attribute(attr,"source", (this.source != null ? this.source : ""));
         this.start("request", attr);
-        this.data("\n");
-        this.data("\n");
 
-        this.data("  ");
         this.start("requestHeaders", attr);
-        this.data("\n");
-        Enumeration headers=request.getHeaderNames();
+        Enumeration headers = request.getHeaderNames();
         while (headers.hasMoreElements()) {
-            String header=(String)headers.nextElement();
+            String header = (String) headers.nextElement();
             this.attribute(attr,"name",header);
-            this.data("    ");
             this.start("header",attr);
             this.data(request.getHeader(header));
             this.end("header");
-            this.data("\n");
         }
-        this.data("  ");
         this.end("requestHeaders");
-        this.data("\n");
-        this.data("\n");
 
-        this.data("  ");
         this.start("requestParameters",attr);
-        this.data("\n");
         Enumeration parameters=request.getParameterNames();
         while (parameters.hasMoreElements()) {
-            String parameter=(String)parameters.nextElement();
+            String parameter = (String) parameters.nextElement();
             this.attribute(attr,"name",parameter);
-            this.data("    ");
             this.start("parameter",attr);
-            this.data("\n");
-            String values[]=request.getParameterValues(parameter);
-            if (values!=null) for (int x=0; x<values.length; x++) {
-                this.data("      ");
-                this.start("value",attr);
-                if (form_encoding != null) {
-                    try {
-                        this.data(new String(values[x].getBytes(container_encoding),
-                            form_encoding));
-                    } catch(java.io.UnsupportedEncodingException uee) {
-                        throw new CascadingRuntimeException("Unsupported Encoding Exception", uee);
+            String values[] = request.getParameterValues(parameter);
+            if (values != null) {
+                for (int x = 0; x < values.length; x++) {
+                    this.start("value",attr);
+                    if (form_encoding != null) {
+                        try {
+                            this.data(values[x],container_encoding,form_encoding);
+                        } catch (UnsupportedEncodingException uee) {
+                            throw new CascadingRuntimeException("The suggested encoding is not supported.", uee);
+                        }
+                    } else if (parameter.startsWith("xml:")) {
+                        try {
+                            this.parse(values[x]);
+                        } catch (Exception e) {
+                            throw new CascadingRuntimeException("Could not parse the xml parameter", e);
+                        }
+                    } else {
+                        this.data(values[x]);
                     }
-                } else {
-                    this.data(values[x]);
+                    this.end("value");
                 }
-                this.end("value");
-                this.data("\n");
             }
-            this.data("    ");
             this.end("parameter");
-            this.data("\n");
         }
-        this.data("  ");
         this.end("requestParameters");
-        this.data("\n");
-        this.data("\n");
 
-        if(generate_attributes) {
-            this.data("  ");
+        if (generate_attributes) {
             this.start("requestAttributes",attr);
-            this.data("\n");
-            Enumeration attributes=request.getAttributeNames();
+            Enumeration attributes = request.getAttributeNames();
             while (attributes.hasMoreElements()) {
                 String attribute=(String)attributes.nextElement();
                 this.attribute(attr,"name",attribute);
-                this.data("    ");
                 this.start("attribute",attr);
-                this.data("\n");
                 Object value=request.getAttribute(attribute);
                 if (value!=null) {
-                    this.data("      ");
                     this.start("value",attr);
-                    XMLUtils.valueOf(this.contentHandler, value );
+                    XMLUtils.valueOf(this.contentHandler, value);
                     this.end("value");
-                    this.data("\n");
                 }
-                this.data("    ");
                 this.end("attribute");
-                this.data("\n");
             }
-            this.data("  ");
             this.end("requestAttributes");
-            this.data("\n");
-            this.data("\n");
         }
 
-        this.data("  ");
         this.start("configurationParameters",attr);
-        this.data("\n");
         String[] confparams=super.parameters.getNames();
-        for (int i=0; i<confparams.length; i++) {
+        for (int i = 0; i < confparams.length; i++) {
             this.attribute(attr, "name", confparams[i]);
-            this.data("    ");
             this.start("parameter",attr);
             this.data(super.parameters.getParameter(confparams[i], ""));
             this.end("parameter");
-            this.data("\n");
         }
-        this.data("  ");
         this.end("configurationParameters");
-        this.data("\n");
-        this.data("\n");
 
         this.end("request");
 
-        // Finish
-        this.contentHandler.endPrefixMapping("");
+        this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
     }
 
@@ -245,17 +221,72 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
 
     private void start(String name, AttributesImpl attr)
     throws SAXException {
-        super.contentHandler.startElement(URI,name,name,attr);
+        super.contentHandler.startElement(URI,name,PREFIX + ":" + name,attr);
         attr.clear();
     }
 
     private void end(String name)
     throws SAXException {
-        super.contentHandler.endElement(URI,name,name);
+        super.contentHandler.endElement(URI,name,PREFIX + ":" + name);
     }
 
     private void data(String data)
     throws SAXException {
         super.contentHandler.characters(data.toCharArray(),0,data.length());
     }
+    
+    private void data(String data, String container_encoding, String form_encoding) 
+    throws SAXException, UnsupportedEncodingException {
+        this.data(new String(data.getBytes(container_encoding), form_encoding));
+    }
+    
+    private void parse(String data)
+    throws Exception {
+        SAXParser parser = null;
+
+        try {
+            parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+            StringReader inputStream = new StringReader(data);
+            InputSource is = new InputSource(inputStream);
+            parser.parse(is, new FilteringXMLConsumer(super.xmlConsumer));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (parser != null) manager.release((Component) parser);
+        }
+    }
+    
+    private class FilteringXMLConsumer extends NOPRecorder {
+        XMLConsumer c;
+        
+        FilteringXMLConsumer(XMLConsumer c) {
+            this.c = c;
+        }
+        
+        public void startPrefixMapping(String prefix, String uri)
+         throws SAXException {
+             this.c.startPrefixMapping(prefix,uri);
+         }
+        
+         public void endPrefixMapping(String prefix)
+         throws SAXException {
+             this.c.endPrefixMapping(prefix);
+         }
+        
+         public void startElement(String namespace, String name, String raw, Attributes attr)
+         throws SAXException {
+             this.c.startElement(namespace,name,raw,attr);
+         }
+        
+         public void endElement(String namespace, String name, String raw)
+         throws SAXException {
+             this.c.endElement(namespace,name,raw);
+         }
+        
+         public void characters(char ary[], int start, int length)
+         throws SAXException {
+             this.c.characters(ary,start,length);
+         }
+    }
+
 }
