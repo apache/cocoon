@@ -49,7 +49,7 @@ import java.util.Map;
  * <code>portlet:render:</code>, <code>portlet:resource:</code>) are omitted.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletURLModule.java,v 1.2 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletURLModule extends AbstractInputModule implements ThreadSafe {
 
@@ -113,16 +113,16 @@ public class PortletURLModule extends AbstractInputModule implements ThreadSafe 
             if (name.length() > 0) {
                 parameters.put(PortletEnvironment.PARAMETER_PATH_INFO, name);
             }
-            for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-                String param = (String) i.next();
-                Object values = parameters.get(param);
+            for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
+                Map.Entry me = (Map.Entry)i.next();
+                String param = (String)me.getKey();
+                Object values = me.getValue();
                 if (values instanceof String) {
                     url.setParameter(param, (String) values);
                 } else {
                     url.setParameter(param, (String[]) values);
-                }
+                } 
             }
-
             return url.toString();
         } else {
             if (name.startsWith(PREFIX_RENDER)) {

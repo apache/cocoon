@@ -35,7 +35,7 @@ import java.util.Map;
  * the JSR-168 (Portlet) environment.
  *
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
- * @version CVS $Id: ActionResponse.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id$
  */
 public final class ActionResponse extends PortletResponse {
 
@@ -134,9 +134,10 @@ public final class ActionResponse extends PortletResponse {
         if (absLoc.startsWith(servletPath)) {
             String pathInfo = absLoc.substring(servletPath.length());
 
-            for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-                String name = (String) i.next();
-                String value = (String) parameters.get(name);
+            for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
+                Map.Entry me = (Map.Entry)i.next();
+                String name = (String)me.getKey();
+                String value = (String)me.getValue();
                 getActionResponse().setRenderParameter(name, value);
             }
             getActionResponse().setRenderParameter(PortletEnvironment.PARAMETER_PATH_INFO, pathInfo);

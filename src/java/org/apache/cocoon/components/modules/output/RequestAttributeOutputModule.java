@@ -36,7 +36,7 @@ import org.apache.cocoon.environment.Request;
  * copied to the final destination.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestAttributeOutputModule.java,v 1.3 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestAttributeOutputModule extends AbstractOutputModule implements OutputModule {
     
@@ -90,29 +90,30 @@ public class RequestAttributeOutputModule extends AbstractOutputModule implement
      * */
     public void rollback( Configuration modeConf, Map objectModel, Exception e ) {
         if (this.settings.get("isolation-level","0").equals("1")) {
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("rolling back");
+            }
             this.rollback(objectModel, TRANS_PREFIX);
         } else {
-
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("start rolling back");
-            
+            }
             Request request = ObjectModelHelper.getRequest(objectModel);
-            Object tmp = this.prepareCommit(objectModel,ROLLBACK_LIST);
-            if (tmp != null) {
-                Map rollbackList = (Map) tmp;
-                Iterator iter = rollbackList.keySet().iterator();
-                while(iter.hasNext()) {
-                    String key = (String) iter.next();
-                    Object val = rollbackList.get(key);
+            Map rollbackList = this.prepareCommit(objectModel,ROLLBACK_LIST);
+            if (rollbackList != null) {
+                for (Iterator i = rollbackList.entrySet().iterator(); i.hasNext(); ){
+                    Map.Entry me = (Map.Entry)i.next();
+                    String key = (String)me.getKey();
+                    Object val = me.getValue();
                     if (val != null) {
-                        if (getLogger().isDebugEnabled())
-                            getLogger().debug("rolling back ['"+key+"'] to ['"+val+"']");
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("rolling back ['" + key + "'] to ['" + val + "']");
+                        }
                         request.setAttribute(key, val);
                     } else {
-                        if (getLogger().isDebugEnabled())
-                            getLogger().debug("rolling back ['"+key+"']");
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("rolling back ['" + key + "']");
+                        }
                         request.removeAttribute(key);
                     }
                 }
@@ -137,47 +138,44 @@ public class RequestAttributeOutputModule extends AbstractOutputModule implement
      * */
     public void commit( Configuration modeConf, Map objectModel ) {
         if (this.settings.get("isolation-level","0").equals("1")) {
-            
+
             Logger logger = getLogger();
-            if (logger.isDebugEnabled())
+            if (logger.isDebugEnabled()) {
                 logger.debug("prepare commit");
+            }
 
             Map aMap = this.prepareCommit(objectModel, TRANS_PREFIX);
-            if (aMap == null) {
+            if (aMap == null || aMap.isEmpty()) {
                 return;
             }
-        
-            Iterator iter = aMap.keySet().iterator();
-            if (!iter.hasNext()){
-                return;
-            }
-            
-            String prefix = (String) this.settings.get("key-prefix", PREFIX );
-            if (prefix != "") {
-                prefix = prefix+":";
+            String prefix = (String)this.settings.get("key-prefix", PREFIX );
+            if (prefix.length() > 0) {
+                prefix = prefix + ":";
             } else {
                 prefix = null;
             }
             Request request = ObjectModelHelper.getRequest(objectModel);
-            while (iter.hasNext()) {
-                String key = (String) iter.next();
-                Object value = aMap.get(key);
-                if (prefix != null) { key = prefix + key; }
-                if (logger.isDebugEnabled())
-                    logger.debug("committing ['"+key+"'] to ['"+value+"']");
+            for (Iterator i = aMap.entrySet().iterator(); i.hasNext(); ) {
+                Map.Entry me = (Map.Entry)i.next();
+                String key = (String)me.getKey();
+                Object value = me.getValue();
+                if (prefix != null) {
+                    key = prefix + key;
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("committing ['" + key + "'] to ['" + value + "']");
+                }
                 request.setAttribute(key, value);
             }
-
-            if (logger.isDebugEnabled())
+            if (logger.isDebugEnabled()) {
                 logger.debug("done commit");
-
+            }
         } else {
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("commit");
+            }
             this.prepareCommit(objectModel, ROLLBACK_LIST);
         }
-        
-        
     }
 
     protected String getName( String name ) {

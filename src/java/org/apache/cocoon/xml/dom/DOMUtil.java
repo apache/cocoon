@@ -59,7 +59,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.10 2004/03/28 23:57:41 antonio Exp $
+ * @version CVS $Id$
 */
 public final class DOMUtil {
 
@@ -505,22 +505,21 @@ public final class DOMUtil {
      */
     public static void valueOf(Node parent, Map v) throws ProcessingException {
         if (v != null) {
-            Iterator iterator = v.keySet().iterator();
             Node mapNode = parent.getOwnerDocument().createElementNS(null, "java.util.map");
             parent.appendChild(mapNode);
-            while (iterator.hasNext()) {
-                Object key = iterator.next();
-
+            for (Iterator iter = v.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry me = (Map.Entry)iter.next();
+                
                 Node entryNode = mapNode.getOwnerDocument().createElementNS(null, "entry");
                 mapNode.appendChild(entryNode);
 
                 Node keyNode = entryNode.getOwnerDocument().createElementNS(null, "key");
                 entryNode.appendChild(keyNode);
-                valueOf(keyNode, key);
+                valueOf(keyNode, me.getKey());
 
                 Node valueNode = entryNode.getOwnerDocument().createElementNS(null, "value");
                 entryNode.appendChild(valueNode);
-                valueOf(valueNode, v.get(key));
+                valueOf(valueNode, me.getValue());
             }
         }
     }

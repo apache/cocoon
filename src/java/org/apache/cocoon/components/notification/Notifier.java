@@ -88,16 +88,14 @@ public class Notifier {
           .append(StringEscapeUtils.escapeXml(n.getSource())).append("</p>");
 
         Map extras = n.getExtraDescriptions();
-        Iterator i = extras.keySet().iterator();
-        while (i.hasNext()) {
-            final String key = (String) i.next();
-
+        for (Iterator i = extras.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry me = (Map.Entry)i.next();
+            final String key = (String)me.getKey();
             sb.append("<p><span>")
-              .append(key).append("</span><pre>")
-              .append(StringEscapeUtils.escapeXml(String.valueOf(extras.get(key))))
-              .append("</pre></p>");
+            .append(key).append("</span><pre>")
+            .append(StringEscapeUtils.escapeXml(String.valueOf(me.getValue())))
+            .append("</pre></p>");
         }
-
         sb.append("<p class='footer'><a href='http://cocoon.apache.org/'>").append(Constants.COMPLETE_NAME).append("</p>");
         sb.append("</body></html>");
 
@@ -140,12 +138,11 @@ public class Notifier {
         ch.endElement(URI, "description", PREFIX + ":description");
 
         Map extraDescriptions = n.getExtraDescriptions();
-        Iterator keyIter = extraDescriptions.keySet().iterator();
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-            String value = String.valueOf(extraDescriptions.get(key));
+        for (Iterator i = extraDescriptions.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry me = (Map.Entry)i.next();
+            String key = (String)me.getKey();
+            String value = String.valueOf(me.getValue());
             atts = new AttributesImpl();
-
             atts.addAttribute(URI, "description", PREFIX + ":description", "CDATA", key);
             ch.startElement(URI, "extra", PREFIX + ":extra", atts);
             ch.characters(value.toCharArray(), 0, value.length());
