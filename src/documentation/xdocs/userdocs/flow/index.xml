@@ -32,7 +32,7 @@
 
       <p>Moreover, the interactions in some applications are more
       complex than a simple finite state machine. In such cases it's
-      much easier to think and implement the application as a program,
+      much easier to think of and implement the application as a program,
       rather than a FSM.</p>
 
       <p>By using a high level programming concept called

@@ -11,12 +11,12 @@
 <body>
 	<s1 title="JXTemplate Generator">
   <p>
-The JXTemplate Generator is a page template processor that allows you to inject data from Java and JavaScript objects passed by a Cocoon Flowscript into a Cocoon pipeline. It provides a set of tags (similar to the <link href="http://java.sun.com/products/jsp/jstl/">JSTL</link> core tags) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties, as well as embedded expressions to specify conditions and to access the properties of objects. The <em>JX</em>Template Generator gets its name from the embedded expression languages it supports, namely <link href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</link> and <link href="http://jakarta.apache.org/commons/jxpath">Apache <em>J</em>e<em>X</em>l</link>. 
+The JXTemplate Generator is a page template processor that allows you to inject data from Java and JavaScript objects passed by a Cocoon Flowscript into a Cocoon pipeline. It provides a set of tags (similar to the <link href="http://java.sun.com/products/jsp/jstl/">JSTL</link> core tags) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties, as well as embedded expressions to specify conditions and to access the properties of objects. The <em>JX</em>Template Generator gets its name from the embedded expression languages it supports, namely <link href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</link> and <link href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>X</em>l</link>. 
   </p>
          </s1>
          <s1 title="Expression Languages">
   <p>
-The JXTemplateGenerator supports two embedded expression languages: <link href="http://jakarta.apache.org/commons/jxpath">Jexl</link> and <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>. Apache <link href="http://jakarta.apache.org/commons/jxpath">Jexl</link> provides an extended version of the expression language of the <link href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JSTL.html">JSTL</link>. Apache <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link> provides an interpreter of the <link href="http://www.w3.org/TR/xpath">XPath</link> expression language that can apply XPath expressions to graphs of Java objects of all kinds: JavaBeans, Maps, Servlet contexts, DOM etc, including mixtures thereof.
+The JXTemplateGenerator supports two embedded expression languages: <link href="http://jakarta.apache.org/commons/jexl">Jexl</link> and <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>. Apache <link href="http://jakarta.apache.org/commons/jexl">Jexl</link> provides an extended version of the expression language of the <link href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JSTL.html">JSTL</link>. Apache <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link> provides an interpreter of the <link href="http://www.w3.org/TR/xpath">XPath</link> expression language that can apply XPath expressions to graphs of Java objects of all kinds: JavaBeans, Maps, Servlet contexts, DOM etc, including mixtures thereof.
  </p>
   <p>
  Having an embedded expression language allows a page author to access an object using a simple syntax such as
@@ -258,7 +258,7 @@ can be used like any other tag:</p><source>
 &lt;/c:macro&gt;
 </source>
 <p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${content}</code>.</p><p>Assuming you had this code in your flowscript:</p><p>
-   <code>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</code></p><p><code> sendPage(uri, {greatlakes: greatlakes});</code>
+   <source><p>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</p><p>sendPage(uri, {greatlakes: greatlakes});</p></source>
 </p><p>and a template like this:</p><source>
 &lt;table&gt;
    &lt;tablerows list="${greatlakes}" color="blue"/&gt;
