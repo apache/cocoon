@@ -39,14 +39,7 @@ import org.apache.slide.common.NamespaceAccessToken;
 /**
  * A factory for sources from a Jakarta Slide repository.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.14 2004/03/05 13:02:23 bdelacretaz Exp $
- * 
- * @avalon.component
- * @avalon.service type=SourceFactory
- * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=slide
+ * @version CVS $Id: SlideSourceFactory.java,v 1.15 2004/03/27 22:25:10 unico Exp $ 
  */
 public class SlideSourceFactory extends AbstractLogEnabled 
 implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
@@ -71,8 +64,6 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
      * Lookup the SlideRepository.
      * 
      * @param manager ServiceManager.
-     * 
-     * @avalon.dependency type=SlideRepository optional=false
      */
     public void service(ServiceManager manager) throws ServiceException {
         m_repository = (SlideRepository) manager.lookup(SlideRepository.ROLE);
@@ -92,7 +83,7 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
     throws MalformedURLException, IOException, SourceException {
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("resolve uri: " + location);
+            getLogger().debug("Creating source object for " + location);
         }
         
         final String[] parts = SourceUtil.parseUrl(location);
@@ -135,7 +126,6 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
         String version = queryParameters.getParameter("version",null);
         String scope   = queryParameters.getParameter("scope",
             nat.getNamespaceConfig().getFilesPath());
-        boolean eventCaching = queryParameters.getParameterAsBoolean("event-caching",false);
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("scheme: " + scheme);
@@ -144,10 +134,9 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
             getLogger().debug("path: " + path);
             getLogger().debug("version: " + version);
             getLogger().debug("scope: " + scope);
-            getLogger().debug("event-caching: " + eventCaching);
         }
 
-        SlideSource source = new SlideSource(nat,scheme,scope,path,principal,version,eventCaching);
+        SlideSource source = new SlideSource(nat,scheme,scope,path,principal,version);
 
         source.enableLogging(getLogger());
         source.contextualize(m_context);
