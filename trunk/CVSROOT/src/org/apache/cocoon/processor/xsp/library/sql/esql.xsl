@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.13 2000-09-14 20:44:46 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.14 2000-09-15 04:36:11 balld Exp $-->
 <!--
 
  ============================================================================
@@ -55,7 +55,9 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
 	xmlns:esql="http://apache.org/cocoon/SQL/v2"
+	xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
+<xspdoc:title>The ESQL logicsheet</xspdoc:title>
 
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
@@ -138,6 +140,7 @@
  </xsl:copy>
 </xsl:template>
 
+ <xspdoc:desc>indicates that a sql connection is going to be defined and one or more queries may be executed</xspdoc:desc>
 <xsl:template match="esql:execute-query">
  <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_esql_sessions,_esql_session);</xsp:logic>
 </xsl:template>
@@ -286,6 +289,7 @@
 	</xsp:logic>
 </xsl:template>
 
+ <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-columns">
  <xsp:logic>
   for (int _esql_i=1; _esql_i &lt;= _esql_session.resultset_metadata.getColumnCount(); _esql_i++) {
@@ -296,10 +300,12 @@
  </xsp:logic>
 </xsl:template>
 
+ <xspdoc:desc>returns the value of the given column as a string</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-string" name="get-string">
  <xsp:expr><xsl:call-template name="get-resultset"/>.getString(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the value of the given column as a date. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-date">
  <xsl:choose>
   <xsl:when test="@format">
@@ -311,6 +317,7 @@
  </xsl:choose>
 </xsl:template>
 
+ <xspdoc:desc>returns the value of the given column as a time. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-time">
  <xsl:choose>
   <xsl:when test="@format">
@@ -322,6 +329,7 @@
  </xsl:choose>
 </xsl:template>
 
+ <xspdoc:desc>returns the value of the given column as a timestamp. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-timestamp">
  <xsl:choose>
   <xsl:when test="@format">
@@ -333,6 +341,7 @@
  </xsl:choose>
 </xsl:template>
 
+ <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. the fragment is parsed by the default xsp parser and the document element is returned. if a root attribute exists, its value is taken to be the name of an element to wrap around the contents of the fragment before parsing.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-xml">
  <xsl:variable name="content">
   <xsl:choose>
@@ -353,30 +362,37 @@
  <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the position of the current row in the result set</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-row-number">
  <xsp:expr>_esql_session.count</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the name of the given column</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-column-name">
  <xsp:expr>_esql_session.resultset_metadata.getColumnName(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the label of the given column</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-column-label">
  <xsp:expr>_esql_session.resultset_metadata.getColumnLabel(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the name of the type of the given column</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-column-type-name">
  <xsp:expr>_esql_session.resultset_metadata.getColumnTypeName(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the message of the current exception</xspdoc:desc>
 <xsl:template match="esql:error-results//esql:get-message">
  <xsp:expr>_esql_exception.getMessage()</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the current exception as a string</xspdoc:desc>
 <xsl:template match="esql:error-results//esql:to-string">
  <xsp:expr>_esql_exception.toString()</xsp:expr>
 </xsl:template>
 
+ <xspdoc:desc>returns the stacktrace of the current exception</xspdoc:desc>
 <xsl:template match="esql:error-results//esql:get-stacktrace">
  <xsp:expr>_esql_exception_writer.toString()</xsp:expr>
 </xsl:template>
@@ -394,6 +410,7 @@
  </xsl:choose>
 </xsl:template>
 
+ <xspdoc:desc>used internally to determine which column is the given column. if a column attribute exists and its value is a number, it is taken to be the column's position. if the value is not a number, it is taken to be the column's name. if a column attribute does not exist, an esql:column element is assumed to exist and to render as a string (after all of the xsp instructions have been evaluated), which is taken to be the column's name.</xspdoc:desc>
 <xsl:template name="get-column">
  <xsl:choose>
   <xsl:when test="@column">
