@@ -18,7 +18,7 @@
 <separator/>
   <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
 <separator/>
-  <external href="./api/index.html"  label="Javadocs"/>
+  <external label="Javadocs" href="./api/index.html"/>
 <separator/>
   <page id="cocoon2" label="Cocoon 2" source="cocoon2.xml"/>
   <page id="javadoc" label="Javadoc XML" source="javadoc.xml"/>
@@ -26,5 +26,7 @@
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
   <todo id="todo" label="Todo" source="todo.xml"/>
- 
+<separator/>
+  <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
+  <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
 </book>

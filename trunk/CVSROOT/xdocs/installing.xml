@@ -443,6 +443,12 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    <td colspan="2">Jetty Java HTTP Server v2.3.3</td>
    <td>Blackdown jdk-1.2.2-RC4-linux-i386-glibc</td>
   </tr>
+  <tr>
+   <td>SuSE 6.3 Linux</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
   </table>
 
   <note>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<book title="Cocoon documentation" copyright="1999 The Apache Software Foundation">
+<book title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
 
   <external href="../index.html"  label="Back"/>
 <separator/>
@@ -30,5 +30,10 @@
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
   <todo id="todo" label="Todo" source="todo.xml"/>
- 
+<separator/>
+  <external label="Code Repository" href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon"/>
+  <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
+  <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
+  <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
+
 </book>
