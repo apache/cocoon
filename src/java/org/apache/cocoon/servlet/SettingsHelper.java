@@ -20,7 +20,9 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletConfig;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * This helper class initializes the {@link Settings} object from the servlet
@@ -35,34 +37,87 @@ public class SettingsHelper {
     }
     
     public static void fill(Settings s, ServletConfig config) {
-        // logging
-        s.setCocoonLogger(config.getInitParameter("cocoon-logger"));
-        s.setAccessLogger(config.getInitParameter("servlet-logger"));
-        s.setBootstrapLogLevel(config.getInitParameter("log-level"));
-        s.setLoggerClassName(config.getInitParameter("logger-class"));
-        String value = config.getInitParameter("logkit-config");
+        String value;
+
+        s.setInitClassloader(getInitParameterAsBoolean(config, "init-classloader", s.isInitClassloader()));
+
+        handleForceProperty(getInitParameter(config, "force-property"), s);
+
+        value = getInitParameter(config, "configurations");
+        if ( value != null ) {
+            s.setConfiguration(value);
+        } else if ( s.getConfiguration() == null ) {
+            s.setConfiguration("/WEB-INF/cocoon.xconf");
+        }
+
+        value = getInitParameter(config, "logkit-config");
         if ( value != null ) {
             s.setLoggingConfiguration("context:/" + value);
         }
-        value = config.getInitParameter("log4j-config");
+
+        value = getInitParameter(config, "servlet-logger");
+        if ( value != null ) {
+            s.setAccessLogger(value);
+        }
+
+        value = getInitParameter(config, "cocoon-logger");
+        if ( value != null ) {
+            s.setCocoonLogger(value);
+        }
+
+        value = getInitParameter(config, "log-level");
+        if ( value != null ) {
+            s.setBootstrapLogLevel(value);
+        }
+
+        value = getInitParameter(config, "logger-class");
+        if ( value != null ) {
+            s.setLoggerClassName(value);
+        }
+
+        value = getInitParameter(config, "log4j-config");
         if ( value != null ) {
             s.setLog4jConfiguration("context:/" + value);
         }
+
+        s.setAllowReload(getInitParameterAsBoolean(config, "allow-reload", s.isAllowReload()));
+
+        handleLoadClass(getInitParameter(config, "load-class"), s);
+
+        s.setEnableUploads(getInitParameterAsBoolean(config, "enable-uploads", s.isEnableUploads()));
+
+        value = getInitParameter(config, "upload-directory");
+        if ( value != null ) {
+            s.setUploadDirectory(value);
+        }
+
+        s.setAutosaveUploads(getInitParameterAsBoolean(config, "autosave-uploads", s.isAutosaveUploads()));
+
+        value = getInitParameter(config, "overwrite-uploads");
+        if ( value != null ) {
+            s.setOverwriteUploads(config.getInitParameter(value));
+        }
+
+        s.setMaxUploadSize(getInitParameterAsInteger(config, "upload-max-size", s.getMaxUploadSize()));
         
-        s.setInitClassloader(getInitParameterAsBoolean(config, "init-classloader", false));
-        s.setForceProperties(getInitParameterAsArray(config, "force-property"));
-        s.setConfiguration(config.getInitParameter("configurations"));
-        s.setAllowReload(getInitParameterAsBoolean(config, "allow-reload", Settings.ALLOW_RELOAD));
-        s.setLoadClasses(getInitParameterAsArray(config, "load-class"));
-        s.setEnableUploads(getInitParameterAsBoolean(config, "enable-uploads", Settings.ENABLE_UPLOADS));
-        s.setUploadDirectory(config.getInitParameter("upload-directory"));
-        s.setAutosaveUploads(getInitParameterAsBoolean(config, "autosave-uploads", Settings.SAVE_UPLOADS_TO_DISK));
-        s.setOverwriteUploads(config.getInitParameter("overwrite-uploads"));
-        s.setMaxUploadSize(getInitParameterAsInteger(config, "upload-max-size", Settings.MAX_UPLOAD_SIZE));
-        s.setCacheDirectory(config.getInitParameter("cache-directory"));
-        s.setWorkDirectory(config.getInitParameter("work-directory"));
-        s.setParentServiceManagerClassName(config.getInitParameter("parent-service-manager"));
-        value = config.getInitParameter("show-time");
+        value = getInitParameter(config, "cache-directory");
+        if ( value != null ) {
+            s.setCacheDirectory(value);
+        }
+
+        value = getInitParameter(config, "work-directory");
+        if ( value != null ) {
+            s.setWorkDirectory(value);
+        }
+
+        handleExtraClassPath(config.getInitParameter("extra-classpath"), s);
+
+        value = getInitParameter(config, "parent-service-manager");
+        if ( value != null ) {
+            s.setParentServiceManagerClassName(value);
+        }
+
+        value = getInitParameter(config, "show-time");
         if ( value != null && value.equalsIgnoreCase("hide") ) {
             s.setShowTime(true);
             s.setHideShowTime(true);
@@ -70,15 +125,18 @@ public class SettingsHelper {
             s.setShowTime(getInitParameterAsBoolean(config, "show-time", false));
             s.setHideShowTime(false);
         }
-        s.setManageExceptions(getInitParameterAsBoolean(config, "manage-exceptions", true));
-        s.setFormEncoding(config.getInitParameter("form-encoding"));
-        
-        // TODO extra classpath
+
+        s.setManageExceptions(getInitParameterAsBoolean(config, "manage-exceptions", s.isManageExceptions()));
+
+        value = getInitParameter(config, "form-encoding");
+        if ( value != null ) {
+            s.setFormEncoding(value);
+        }
     }
     
     /** Convenience method to access boolean servlet parameters */
     protected static boolean getInitParameterAsBoolean(ServletConfig config, String name, boolean defaultValue) {
-        String value = config.getInitParameter(name);
+        String value = getInitParameter(config, name);
         if (value == null) {
             return defaultValue;
         }
@@ -87,32 +145,85 @@ public class SettingsHelper {
     }
 
     protected static int getInitParameterAsInteger(ServletConfig config, String name, int defaultValue) {
-        String value = config.getInitParameter(name);
+        String value = getInitParameter(config, name);
         if (value == null) {
             return defaultValue;
         }
         return Integer.parseInt(value);
     }
     
-    protected static String[] getInitParameterAsArray(ServletConfig config, String name) {
-        final String param = config.getInitParameter(name);
+    private static void handleLoadClass(String param, Settings s) {
         if ( param == null ) {
-            return null;
+            return;
         }
         StringTokenizer tokenizer = new StringTokenizer(param, " \t\r\n\f;,", false);
         String[] array = null;    
         while (tokenizer.hasMoreTokens()) {
             final String value = tokenizer.nextToken().trim();
-            if ( array == null ) {
-                array = new String[1];
-            } else {
-                String[] ca = new String[array.length+1];
-                System.arraycopy(array, 0, ca, 0, array.length);
-                array = ca;
-            }
-            array[array.length-1] = value;
+            s.addToLoadClasses(value);
         }
-        return array;
+    }
+
+    /**
+     * Handle the "force-property" parameter.
+     *
+     * If you need to force more than one property to load, then
+     * separate each entry with whitespace, a comma, or a semi-colon.
+     * Cocoon will strip any whitespace from the entry.
+     */
+    private static void handleForceProperty(String forceSystemProperty, Settings s) {
+        if (forceSystemProperty != null) {
+            StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
+
+            while (tokenizer.hasMoreTokens()) {
+                final String property = tokenizer.nextToken().trim();
+                if (property.indexOf('=') == -1) {
+                    continue;
+                }
+                try {
+                    String key = property.substring(0, property.indexOf('='));
+                    String value = property.substring(property.indexOf('=') + 1);
+                    if (value.indexOf("${") != -1) {
+                        value = StringUtils.replaceToken(value);
+                    }
+                    s.addToForceProperties(key, value);
+                } catch (Exception e) {
+                    // Do not throw an exception, because it is not a fatal error.
+                }
+            }
+        }
+    }
+
+    /**
+     * Retreives the "extra-classpath" attribute, that needs to be
+     * added to the class path.
+     */
+    private static void handleExtraClassPath(String extraClassPath, Settings settings) {
+        if (extraClassPath != null) {
+            StringBuffer sb = new StringBuffer();
+            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
+            int i = 0;
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken();
+                settings.addToExtraClasspaths(s);
+            }
+        }
+    }
+
+    /**
+     * Get an initialisation parameter. The value is trimmed, and null is returned if the trimmed value
+     * is empty.
+     */
+    private static String getInitParameter(ServletConfig config, String name) {
+        String result = config.getInitParameter(name);
+        if (result != null) {
+            result = result.trim();
+            if (result.length() == 0) {
+                result = null;
+            }
+        }
+
+        return result;
     }
     
 }
