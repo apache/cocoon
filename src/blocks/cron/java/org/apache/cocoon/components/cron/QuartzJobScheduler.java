@@ -48,7 +48,11 @@ import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.impl.DirectSchedulerFactory;
+import org.quartz.impl.jdbcjobstore.JobStoreCMT;
+import org.quartz.impl.jdbcjobstore.JobStoreSupport;
+import org.quartz.impl.jdbcjobstore.JobStoreTX;
 import org.quartz.simpl.RAMJobStore;
+import org.quartz.spi.JobStore;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
@@ -59,7 +63,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.12 2004/03/11 22:05:12 sylvain Exp $
+ * @version CVS $Id$
  *
  * @since 2.1.1
  */
@@ -304,8 +308,8 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 			// we cannot create the same scheduler again
 			final String runID = new Date().toString().replace(' ', '_');
 			final ThreadPool pool = createThreadPool(this.config.getChild("thread-pool"));
-			DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool,
-																 new RAMJobStore());
+            final JobStore store = createJobStore(this.config.getChild("job-store"));
+			DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool, store);
 			// scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
 			scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
 		} catch (final SchedulerException se) {
@@ -686,6 +690,26 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         }
     }
 
+    private JobStore createJobStore(final Configuration configuration)
+    throws ConfigurationException {
+        String type = configuration.getAttribute("type", "ram");
+        if (type.equals("ram")) {
+            return new RAMJobStore();
+        }
+        JobStoreSupport store = null;
+        if (type.equals("tx")) {
+            store = new JobStoreTX();
+        }
+        else if (type.equals("cmt")) {
+            store = new JobStoreCMT();
+        }
+        else {
+            throw new ConfigurationException("Unknown store type: " + type);
+        }
+        store.setDataSource(configuration.getChild("datasource").getValue());
+        return store;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#fireTarget(java.lang.Object)
      */
@@ -717,7 +741,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.12 2004/03/11 22:05:12 sylvain Exp $
+     * @version CVS $Id$
      */
     private static class ThreadPool extends AbstractLogEnabled implements org.quartz.spi.ThreadPool {
         /** Our executor thread pool */
