@@ -3,7 +3,7 @@
 	<description>Coplet instance data mapping file</description>
 
 	<class name="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
-        <field name="persistentAspectDatas" type="org.apache.cocoon.portal.aspect.impl.MapItem" collection="map" handler="org.apache.cocoon.portal.aspect.impl.AspectDataFieldHandler">
+        <field name="persistentAspectDatas" type="org.apache.cocoon.portal.util.MapItem" collection="map" handler="org.apache.cocoon.portal.util.AspectDataFieldHandler">
             <bind-xml name="aspect"/>
         </field>
     </class>
@@ -21,7 +21,7 @@
 	<class name="org.apache.cocoon.portal.profile.impl.CopletInstanceDataManager">
 		<map-to xml="coplets" />
 
-		<field name="copletInstanceData" type="org.apache.cocoon.portal.coplet.CopletInstanceData" collection="vector" handler="org.apache.cocoon.portal.profile.impl.CopletInstanceDataFieldHandler">
+		<field name="copletInstanceData" type="org.apache.cocoon.portal.coplet.CopletInstanceData" collection="vector" handler="org.apache.cocoon.portal.util.CopletInstanceDataFieldHandler">
 			<bind-xml auto-naming="deriveByClass"/>
 		</field>
 	</class>
@@ -34,10 +34,10 @@
 			<bind-xml name="status"/>
 		</field>
 
-		<field name="copletData" type="java.lang.String" handler="org.apache.cocoon.portal.profile.impl.CopletDataReferenceFieldHandler"/>
+		<field name="copletData" type="java.lang.String" handler="org.apache.cocoon.portal.util.CopletDataReferenceFieldHandler"/>
 	</class>
 
-	<class name="org.apache.cocoon.portal.aspect.impl.MapItem">
+	<class name="org.apache.cocoon.portal.util.MapItem">
 		<field name="key" type="java.lang.String">
 			<bind-xml name="name"/>
 		</field>
