@@ -121,7 +121,7 @@ implements Contextualizable {
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
         if ( window == null ) {
             // no portlet window, so use a default behaviour
-            XMLUtils.createElement(contenthandler, "title", copletInstanceData.getCopletData().getTitle());
+            XMLUtils.createElement(contenthandler, "title", copletInstanceData.getTitle());
         } else {
             if ( ((PortletWindowImpl)window).getLayout() == null ) {
                 ((PortletWindowImpl)window).setLayout((CopletLayout)layout);
@@ -133,7 +133,7 @@ implements Contextualizable {
                 try {
                     title = def.getDisplayName(def.getLanguageSet().getDefaultLocale()).getDisplayName();
                 } catch (Exception ignore)  {
-                    title = copletInstanceData.getCopletData().getTitle();
+                    title = copletInstanceData.getTitle();
                 }
             }
             XMLUtils.createElement(contenthandler, "title", title);            
