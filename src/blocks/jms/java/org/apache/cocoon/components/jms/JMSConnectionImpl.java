@@ -68,45 +68,49 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * JMSConnection properties container plus utilities.
  * 
- * <p>Parameters:</p>
+ * <p>Configuration:</p>
+ * <pre>&lt;jndi-info&gt;
+ *      &lt;parameter name="" value=""/&gt;
+ * &lt;jndi-info&gt;</pre>
+ * 
+ * <p>Other parameters:</p>
  * <table>
  *  <tbody>
- *   <tr><td>component      </td><td>(required, null)</td></tr>
- *   <tr><td>scheme         </td><td>(rmi)</td></tr>
- *   <tr><td>host           </td><td>(localhost)</td></tr>
- *   <tr><td>port           </td><td>(for rmi 1099)</td></tr>
- *   <tr><td>jndiname       </td><td>("")</td></tr>
- *   <tr><td>context-factory</td><td>(org.exolab.jms.jndi.InitialContextFactory)</td></tr>
- *   <tr><td>topic-factory  </td><td>(JmsTopicConnectionFactory)</td></tr>
- *   <tr><td>topic          </td><td>(topic1)</td></tr>
- *   <tr><td>ack-mode       </td><td>(dups)</td></tr>
+ *   <tr><td>topic-factory  </td><td><i>(required, no default)</i></td></tr>
+ *   <tr><td>topic          </td><td><i>(required, no default)</i></td></tr>
+ *   <tr><td>ack-mode       </td><td>("dups")</td></tr>
+ *   <tr><td>durable-subscription-id       </td><td><i>(optional)</i></td></tr>
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.1 2003/10/14 16:40:09 haul Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.2 2003/10/19 02:30:17 ghoward Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
-public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSafe, JMSConnection {
+public class JMSConnectionImpl extends AbstractLogEnabled 
+                                implements Configurable, 
+                                            Disposable, 
+                                            ThreadSafe,
+                                            Initializable,  
+                                            JMSConnection {
 
-    // defaults to go with OpenJMS demo on localhost 
-    protected String contextFactoryName = "org.exolab.jms.jndi.InitialContextFactory";
-    protected String scheme = "rmi";
-    protected String host = "localhost";
-    protected String port = "";
-    protected String jndiname = "";
-    protected String topicFactoryName = "JmsTopicConnectionFactory";
-    protected String topicName = "topic1";
+    private boolean available = false;
+    protected String topicFactoryName;
+    protected String topicName;
     protected String ackModeName = "dups";
-    protected String durableSubscriptionID = null;
+    protected String durableSubscriptionID;
 
     protected TopicConnection connection = null;
     protected TopicSession session = null;
@@ -114,10 +118,10 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
     protected Topic topic = null;
     protected int ackMode = Session.DUPS_OK_ACKNOWLEDGE;
     protected Context context = null;
-    protected TopicConnectionFactory topicConnectionFactory = null;
+    protected TopicConnectionFactory topicConnectionFactory;
 
-
-    /**
+    private Parameters jndiParams;
+	/**
      * Register a new TopicListener for this connection.
      * 
      * @param listener
@@ -126,8 +130,13 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
     public synchronized void registerListener(
         MessageListener listener,
         String selector)
-        throws JMSException, NamingException {
+        throws CascadingException, JMSException, NamingException {
 
+        if (!this.available) {
+            // Connection was not successfully initialized.
+            throw new CascadingException("Attempt to register Listener on unavailable JMS Connection");
+        }
+        
         TopicSubscriber subscriber = null;
         if (this.durableSubscriptionID != null) {
             subscriber =
@@ -167,9 +176,6 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
      * @throws JMSException
      */
     public synchronized TopicSession getSession() throws NamingException, JMSException {
-        if (this.session == null) {
-            this.connect();
-        }
         return this.session;
     }
 
@@ -179,20 +185,23 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
       * @return
       * @throws NamingException
       */
-    protected Context getContext() throws NamingException {
+    protected Context setupContext() throws NamingException {
 
-        Hashtable properties = new Hashtable();
-        properties.put(Context.INITIAL_CONTEXT_FACTORY, this.contextFactoryName);
-
-        String name = "";
-        if (scheme.equals("rmi")) {
-            name = this.jndiname;
+        String[] jndiKeys = jndiParams.getNames();
+        InitialContext ctx;
+        if (jndiKeys.length > 0) {
+            // Params specified in cocoon.xconf
+            Hashtable properties = null;
+            properties = new Hashtable();
+            for (int i = 0 ; i < jndiKeys.length ; i++) {
+                properties.put(jndiKeys[i],jndiParams.getParameter(jndiKeys[i],""));
+            }
+            ctx = new InitialContext(properties);
+        } else {
+            // Use jndi.properties from the classpath or container
+            ctx = new InitialContext();
         }
-
-        String url = scheme + "://" + host + ":" + port + "/" + name;
-
-        properties.put(Context.PROVIDER_URL, url);
-        return new InitialContext(properties);
+        return ctx;
     }
 
 
@@ -204,11 +213,13 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
      */
     private void setupConnection() throws NamingException, JMSException {
         // setup JMS connection
-        this.context = this.getContext();
-        this.topicConnectionFactory =
-            (TopicConnectionFactory) this.context.lookup(this.topicFactoryName);
-        this.connection = this.topicConnectionFactory.createTopicConnection();
-        this.connection.start();
+        //this.context = this.getContext();
+        if (this.context != null) {
+            this.topicConnectionFactory =
+                (TopicConnectionFactory) this.context.lookup(this.topicFactoryName);
+            this.connection = this.topicConnectionFactory.createTopicConnection();
+            this.connection.start();
+        }
     }
 
     /**
@@ -217,21 +228,10 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
      * @throws JMSException
      */
     private void setupSession() throws JMSException {
-        this.session = connection.createTopicSession(false, this.ackMode);
-        this.topic = session.createTopic(this.topicName);
-    }
-
-    /**
-     * Setup connection and session for this connection.
-     * 
-     * @throws NamingException
-     * @throws JMSException
-     */
-    private void connect() throws NamingException, JMSException {
-        if (this.connection == null)
-            this.setupConnection();
-        if (this.session == null)
-            this.setupSession();
+        if (this.connection != null) {
+            this.session = connection.createTopicSession(false, this.ackMode);
+            this.topic = session.createTopic(this.topicName);
+        }
     }
 
     /**
@@ -251,49 +251,32 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
         this.connection.close();
     }
 
-    /* 
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters parameters) throws ParameterException {
+    public void configure(Configuration conf) throws ConfigurationException {
+			Parameters parameters = Parameters.fromConfiguration(conf);
+			this.jndiParams = Parameters.fromConfiguration(conf.getChild("jndi-info"));
+            this.topicFactoryName =
+                    parameters.getParameter("topic-factory", null);
+            this.topicName = parameters.getParameter("topic", null);
+            this.durableSubscriptionID =
+                parameters.getParameter(
+                    "durable-subscription-id",null);
 
-        this.scheme = parameters.getParameter("scheme", this.scheme).toLowerCase();
-        if (scheme.equals("tcp") || scheme.equals("tcps")) {
-            port = "3035";
-        } else if (scheme.equals("http")) {
-            port = "8080";
-        } else if (scheme.equals("https")) {
-            port = "8443";
-        } else if (scheme.equals("rmi")) {
-            port = "1099";
-        }
-        this.host = parameters.getParameter("host", this.host);
-        this.port = parameters.getParameter("port", this.port);
-        this.jndiname = parameters.getParameter("jndiname", this.jndiname);
-        this.contextFactoryName =
-            parameters.getParameter("context-factory", this.contextFactoryName);
-        this.topicFactoryName =
-            parameters.getParameter("topic-factory", this.topicFactoryName);
-        this.topicName = parameters.getParameter("topic", this.topicName);
-        this.durableSubscriptionID =
-            parameters.getParameter(
-                "durable-subscription-id",
-                this.durableSubscriptionID);
-
-        this.ackModeName =
-            parameters.getParameter("ack-mode", this.ackModeName).toLowerCase();
-        // see if an ack mode has been specified. If it hasn't
-        // then assume CLIENT_ACKNOWLEDGE mode.
-        this.ackMode = Session.CLIENT_ACKNOWLEDGE;
-        if (this.ackModeName.equals("auto")) {
-            this.ackMode = Session.AUTO_ACKNOWLEDGE;
-        } else if (this.ackModeName.equals("dups")) {
-            this.ackMode = Session.DUPS_OK_ACKNOWLEDGE;
-        } else if (!this.ackModeName.equals("client")) {
-            // ignore all ack modes, to test no acking
-            this.ackMode = -1;
-        }
+            this.ackModeName =
+                parameters.getParameter("ack-mode", this.ackModeName).toLowerCase();
+            // see if an ack mode has been specified. If it hasn't
+            // then assume CLIENT_ACKNOWLEDGE mode.
+            this.ackMode = Session.CLIENT_ACKNOWLEDGE;
+            if (this.ackModeName.equals("auto")) {
+                this.ackMode = Session.AUTO_ACKNOWLEDGE;
+            } else if (this.ackModeName.equals("dups")) {
+                this.ackMode = Session.DUPS_OK_ACKNOWLEDGE;
+            } else if (!this.ackModeName.equals("client")) {
+                // ignore all ack modes, to test no acking
+                this.ackMode = -1;
+            }
     }
 
+    
     /* 
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -304,5 +287,25 @@ public class JMSConnectionImpl implements Parameterizable, Disposable, ThreadSaf
         } catch (NamingException e) {
         }
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Initializable#initialize()
+	 */
+	public void initialize() throws Exception {
+		try {
+			this.context = setupContext();
+			this.setupConnection();
+			this.setupSession();
+            this.available = true;
+		} catch (NamingException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Cannot get Initial Context.  Is the JNDI server reachable?",e);
+            }
+        } catch (JMSException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Failed to initialize JMS.",e);
+            }
+		}
+	}
 
 }

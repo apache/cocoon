@@ -50,10 +50,14 @@
 */
 package org.apache.cocoon.components.jms;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.naming.NamingException;
 
-import org.apache.avalon.framework.activity.Startable;
+import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -74,26 +78,18 @@ import org.apache.cocoon.caching.validity.NamedEvent;
  * <p>Parameters:</p>
  * <table>
  *  <tbody>
- *   <tr><td>connection     </td><td>(required, no default)</td></tr>
- *   <tr><td>component      </td><td>(required, no default)</td></tr>
- *   <tr><td>scheme         </td><td>(rmi)</td></tr>
- *   <tr><td>host           </td><td>(localhost)</td></tr>
- *   <tr><td>port           </td><td>(for rmi 1099)</td></tr>
- *   <tr><td>jndiname       </td><td>("")</td></tr>
- *   <tr><td>context-factory</td><td>(org.exolab.jms.jndi.InitialContextFactory)</td></tr>
- *   <tr><td>topic-factory  </td><td>(JmsTopicConnectionFactory)</td></tr>
- *   <tr><td>topic          </td><td>(topic1)</td></tr>
- *   <tr><td>ack-mode       </td><td>(dups)</td></tr>
- *   <tr><td>selector       </td><td>("")</td></tr>
+ *   <tr><td>connection      </td><td>(required, no default)</td></tr>
+ *   <tr><td>component       </td><td>(required, no default)</td></tr>
+ *   <tr><td>message-selector</td><td>("")</td></tr>
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSEventListener.java,v 1.1 2003/10/14 16:40:09 haul Exp $
+ * @version CVS $Id: JMSEventListener.java,v 1.2 2003/10/19 02:30:17 ghoward Exp $
  * @author <a href="mailto:chaul@informatik.tu-darmstadt.de">chaul</a>
  */
 public class JMSEventListener
     extends AbstractLogEnabled
-    implements Serviceable, Parameterizable, MessageListener, Startable, ThreadSafe {
+    implements Serviceable, Parameterizable, MessageListener, Initializable, Disposable, ThreadSafe {
 
     protected String selector = "";
 
@@ -105,31 +101,31 @@ public class JMSEventListener
     protected JMSConnection connection = null;
 
 
-    /* 
-     * @see org.apache.avalon.framework.activity.Startable#start()
-     */
-    public void start() throws Exception {
+    public void initialize() {
 
-        this.connection = (JMSConnection) this.manager.lookup(JMSConnection.ROLE+"/"+this.connectionName);
-        this.connection.registerListener(this, this.selector);
+        try {
+			this.connection = (JMSConnection) this.manager.lookup(JMSConnection.ROLE+"/"+this.connectionName);
+            this.connection.registerListener(this, this.selector);
+        } catch (ServiceException e) {
+			if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Could not obtain JMSConnection");
+			}
+		} catch (JMSException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Could not obtain JMSConnection");
+            }
+		} catch (NamingException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Could not obtain JMSConnection");
+            }
+		} catch (CascadingException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Could not obtain JMSConnection");
+            }
+		}
     }
 
-    /* 
-     * @see org.apache.avalon.framework.activity.Startable#stop()
-     */
-    public void stop() throws Exception {
-        if (this.manager != null){
-            if (this.connection != null){
-                this.manager.release(connection);
-            }
-            
-            if (this.service != null) {
-                this.manager.release(this.service);
-            }
-        }
-    }
-
-    /* 
+        /* 
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
@@ -189,5 +185,15 @@ public class JMSEventListener
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
+	 */
+	public void dispose() {
+        if (this.manager != null){
+            this.manager.release(connection);
+            this.manager.release(service);
+        }
+	}
 
 }
