@@ -67,8 +67,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * WARNING: THIS CLASS DOES NOT WORK PROPERLY WITH NAMESPACES
  *
+ * @deprecated The only user of this class (I18nTransformer) now uses ParamSaxBuffer
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
- * @version CVS $Id: MirrorRecorder.java,v 1.3 2003/11/24 18:39:48 joerg Exp $
+ * @version CVS $Id: MirrorRecorder.java,v 1.1 2003/12/10 15:42:25 vgritsenko Exp $
  */
 public class MirrorRecorder
     extends NOPRecorder
