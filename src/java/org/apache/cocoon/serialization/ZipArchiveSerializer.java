@@ -100,20 +100,20 @@ import java.util.zip.ZipOutputStream;
  *     &lt;/zip:entry&gt;
  *   &lt;/zip:archive:zip&gt;
  * </pre>
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.2 2003/05/08 05:05:22 vgritsenko Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.3 2003/05/08 20:42:38 vgritsenko Exp $
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
 //            such as comment or default compression method and level
 
-// TODO (2) : handle more attributes on <entry> for properties of ZipEntry 
+// TODO (2) : handle more attributes on <entry> for properties of ZipEntry
 //            (compression method and level, time, comment, etc.)
 
 public class ZipArchiveSerializer extends AbstractSerializer implements Composable {
     /**
-     * The namespace for elements handled by this serializer, 
+     * The namespace for elements handled by this serializer,
      * "http://apache.org/cocoon/zip-archive/1.0".
      */
     public static final String ZIP_NAMESPACE = "http://apache.org/cocoon/zip-archive/1.0";
@@ -163,10 +163,17 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
     }
 
     /**
-     * Always return "application/x-zip" which is the default for Zip archives.
+     * Returns null.
      */
     public String getMimeType() {
-        return "application/x-zip";
+        // FIXME: There are many applications of Zip serializer, and one of them to generate
+        // OpenOffice documents, which have different mime type than "application/x-zip".
+        // Problem is that constant returned here can not be overriden in the sitemap neither
+        // when declaring serializer, nor when using it.
+        // Bug http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277 might be related to this issue.
+        // WAS HERE: Always return "application/x-zip" which is the default for Zip archives
+        // return "application/x-zip";
+        return null;
     }
 
     /**

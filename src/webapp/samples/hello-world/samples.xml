@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.5 2003/05/08 05:05:22 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.6 2003/05/08 20:42:17 vgritsenko Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -60,7 +60,16 @@
 
   <group name="Hello Office!">
    <sample name="OpenOffice Writer" href="hello.sxw">
-    This page shows how a simple XML page can be presented in OpenOffice Writer document format.
+    This document shows how a simple XML page can be presented in OpenOffice Writer file format.
+   </sample>
+   <sample name="OpenOffice Calc" href="hello.sxc">
+    This spreadsheet shows how a simple XML page can be presented in OpenOffice Calc file format.
+   </sample>
+   <sample name="OpenOffice Impress" href="hello.sxi">
+    This presentation shows how a simple XML page can be presented in OpenOffice Impress file format.
+   </sample>
+   <sample name="OpenOffice Draw" href="hello.sxd">
+    This drawing shows how a simple XML page can be presented in OpenOffice Draw file format.
    </sample>
   </group>
   
