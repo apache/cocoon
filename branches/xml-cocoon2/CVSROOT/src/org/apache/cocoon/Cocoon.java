@@ -47,7 +47,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.64 $ $Date: 2001-03-16 21:45:57 $
+ * @version CVS $Revision: 1.4.2.65 $ $Date: 2001-03-16 21:50:21 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -160,7 +160,6 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         }
         getLogger().debug("Setting up components...");
         this.componentManager.configure(conf);
-        this.componentManager.init();
         getLogger().debug("Setting up the sitemap.");
         // Create the sitemap
         Configuration sconf = conf.getChild("sitemap");
