@@ -28,15 +28,9 @@ import org.apache.cocoon.Constants;
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-09 20:51:10 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-09 22:16:54 $
  */
 public class HelloAction extends ComposerAction {
-
-    /**
-     * Get the <code>Configuration</code> object for this <code>Component</code>
-     */
-    public void configure( Configuration configuration) throws ConfigurationException {
-    }
 
     /**
      * A simple Action that logs if the <code>Session</code> object

@@ -9,8 +9,8 @@ package org.apache.cocoon.generation;
 
 import java.util.Map;
 
-import javax.servlet.ServletContext; 
-import javax.servlet.http.HttpServletRequest; 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.Composer;
@@ -25,7 +25,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-29 12:18:03 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-09 22:16:55 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer, Poolable {

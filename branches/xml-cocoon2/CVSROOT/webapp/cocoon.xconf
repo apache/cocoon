@@ -36,6 +36,12 @@
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
         </builtin-logicsheet>
 
+	<builtin-logicsheet>
+	  <parameter name="prefix" value="session"/>
+	  <parameter name="uri" value="http://apache.org/xsp/session"/>
+	  <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
+	</builtin-logicsheet>
+
     <builtin-logicsheet>
       <parameter name="prefix" value="esql"/>
       <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
