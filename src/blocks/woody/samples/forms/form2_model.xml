@@ -12,46 +12,6 @@
     <wd:label>Enter an <b>email</b> address:</wd:label>
   </wd:field>
 
-  <wd:booleanfield id="somebool">
-    <wd:label>Put me <em>on</em> or <em>off</em>.</wd:label>
-  </wd:booleanfield>
-
-  <wd:field id="account">
-    <wd:label>Indicate the size of your bank account (in m<sup>3</sup>):</wd:label>
-    <wd:datatype base="string">
-      <wd:selection-list>
-        <wd:item value="1"/>
-        <wd:item value="2"/>
-        <wd:item value="3">
-          <wd:label>three</wd:label>
-        </wd:item>
-        <wd:item value="4"/>
-        <wd:item value="5"/>
-      </wd:selection-list>
-    </wd:datatype>
-  </wd:field>
-
-  <wd:field id="number1" required="true">
-    <wd:label>Please enter a number:</wd:label>
-    <wd:datatype base="long"/>
-  </wd:field>
-
-  <wd:multivaluefield id="drinks">
-    <wd:label>Indicate which 2 of the following drinks you'd like to receive:</wd:label>
-    <wd:datatype base="string">
-      <wd:selection-list>
-        <wd:item value="Maes"/>
-        <wd:item value="Jupiler"/>
-        <wd:item value="Leffe"/>
-        <wd:item value="Hoegaarden"/>
-        <wd:item value="Coca Cola"/>
-      </wd:selection-list>
-      <wd:validation>
-        <wd:value-count exact="2"/>
-      </wd:validation>
-    </wd:datatype>
-  </wd:multivaluefield>
-
   <wd:aggregatefield id="phone" required="true">
     <wd:label>Enter a phone number in \+([0-9]{1,3})-([0-9]{1,4})-([0-9]{5,7}) format</wd:label>
     <wd:split pattern="\+([0-9]{1,3})-([0-9]{1,4})-([0-9]{5,7})">
