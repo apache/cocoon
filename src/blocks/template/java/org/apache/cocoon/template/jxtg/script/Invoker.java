@@ -15,24 +15,15 @@
  */
 package org.apache.cocoon.template.jxtg.script;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
-import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.environment.LocatorFacade;
-import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.instruction.StartCall;
 import org.apache.cocoon.template.jxtg.instruction.StartDefine;
-import org.apache.cocoon.template.jxtg.instruction.StartParameter;
-import org.apache.cocoon.template.jxtg.script.event.AttributeEvent;
-import org.apache.cocoon.template.jxtg.script.event.CopyAttribute;
 import org.apache.cocoon.template.jxtg.script.event.Event;
 import org.apache.cocoon.template.jxtg.script.event.StartElement;
 import org.apache.cocoon.template.jxtg.script.event.StartInstruction;
-import org.apache.cocoon.template.jxtg.script.event.SubstituteAttribute;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -72,67 +63,10 @@ public class Invoker {
                     continue;
                 }
 
-                // this is a macro call
-                Map attributeMap = new HashMap();
-                Iterator i = startElement.getAttributeEvents().iterator();
-                while (i.hasNext()) {
-                    String attributeName;
-                    Object attributeValue;
-                    AttributeEvent attrEvent = (AttributeEvent) i.next();
-                    attributeName = attrEvent.getLocalName();
-                    if (attrEvent instanceof CopyAttribute) {
-                        CopyAttribute copy = (CopyAttribute) attrEvent;
-                        attributeValue = copy.getValue();
-                    } else if (attrEvent instanceof SubstituteAttribute) {
-                        SubstituteAttribute substEvent = (SubstituteAttribute) attrEvent;
-                        if (substEvent.getSubstitutions().size() == 1
-                                && substEvent.getSubstitutions().get(0) instanceof JXTExpression) {
-                            JXTExpression expr = (JXTExpression) substEvent
-                                    .getSubstitutions().get(0);
-                            Object val;
-                            try {
-                                val = expr.getNode(expressionContext);
-                            } catch (Exception e) {
-                                throw new SAXParseException(e.getMessage(), ev
-                                        .getLocation(), e);
-                            } catch (Error err) {
-                                throw new SAXParseException(err.getMessage(),
-                                        ev.getLocation(), new ErrorHolder(err));
-                            }
-                            attributeValue = val != null ? val : "";
-                        } else {
-                            attributeValue = substEvent.getSubstitutions()
-                                    .toString(ev.getLocation(),
-                                            expressionContext);
-                        }
-                    } else {
-                        throw new Error("this shouldn't have happened");
-                    }
-                    attributeMap.put(attributeName, attributeValue);
-                }
-                ExpressionContext localExpressionContext = new ExpressionContext(
-                        expressionContext);
-                HashMap macro = new HashMap();
-                macro.put("body", startElement);
-                macro.put("arguments", attributeMap);
-                localExpressionContext.put("macro", macro);
-                Iterator iter = def.getParameters().entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry e = (Map.Entry) iter.next();
-                    String key = (String) e.getKey();
-                    StartParameter startParam = (StartParameter) e.getValue();
-                    Object default_ = startParam.getDefaultValue();
-                    Object val = attributeMap.get(key);
-                    if (val == null) {
-                        val = default_;
-                    }
-                    localExpressionContext.put(key, val);
-                }
-                call(ev.getLocation(), startElement, consumer,
-                        localExpressionContext, executionContext,
-                        def.getBody(), def.getEndInstruction());
-                ev = startElement.getEndElement().getNext();
-            } else 
+                StartCall call = new StartCall( def, startElement );
+                ev = call.execute(consumer, expressionContext,
+                        executionContext, macroCall, startEvent, endEvent);
+            } else
                 ev = ev.execute(consumer, expressionContext, executionContext,
                         macroCall, startEvent, endEvent);
         }
@@ -176,7 +110,7 @@ public class Invoker {
         streamer.stream(node);
     }
 
-    private static void call(Locator location, StartElement macroCall,
+    public static void call(Locator location, StartElement macroCall,
             final XMLConsumer consumer, ExpressionContext expressionContext,
             ExecutionContext executionContext, Event startEvent, Event endEvent)
             throws SAXException {
