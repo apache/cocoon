@@ -89,9 +89,9 @@ public abstract class AbstractLayout
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.layout.Layout#copy(java.util.Map)
+     * @see org.apache.cocoon.portal.layout.Layout#copy()
      */
-    public Layout copy(Map copletInstanceDatas) {
+    public Layout copy() {
         try {
             return (Layout)this.clone();
         } catch (CloneNotSupportedException cnse) {

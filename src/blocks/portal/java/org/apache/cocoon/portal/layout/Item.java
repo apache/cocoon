@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.layout;
 
-import java.util.Map;
-
 
 /**
  *
@@ -68,11 +66,11 @@ public class Item extends AbstractParameters {
         return clone;
     }
     
-    public Item copy(CompositeLayout parent, Map copletInstanceDatas) {
+    public Item copy(CompositeLayout parent) {
         try {
             Item clone = (Item)this.clone();
             if ( this.layout != null ) {
-                clone.layout = this.layout.copy(copletInstanceDatas);
+                clone.layout = this.layout.copy();
             }
             clone.parentLayout = parent;
             return clone;

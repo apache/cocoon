@@ -54,15 +54,15 @@ public final class CopletLayout extends AbstractLayout {
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.layout.Layout#copy(java.util.Map)
+     * @see org.apache.cocoon.portal.layout.Layout#copy()
      */
     public Layout copy(Map copletInstanceDatas) {
-        CopletLayout clone = (CopletLayout)super.copy(copletInstanceDatas);
+        CopletLayout clone = (CopletLayout)super.copy();
         if (copletInstanceDatas == null) {
             clone.copletInstanceData = this.copletInstanceData;
         } else {
             if ( this.copletInstanceData != null ) {
-                clone.copletInstanceData = (CopletInstanceData)copletInstanceDatas.get(this.copletInstanceData.getId());
+                clone.copletInstanceData = this.copletInstanceData.copy();
             }
             
         }
