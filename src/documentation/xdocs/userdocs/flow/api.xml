@@ -664,34 +664,34 @@ function processPage() {
     </p>
     <s3 title="error">
     <p>
-        <em>Function</em> <code>error([String] message)</code>
+        <em>Function</em> <code>error([String] message, [java.lang.Throwable] exception)</code>
     </p>
     <p>
-      Log an error message.
+      Log an error message. If <code>exception</code> is provided its stack trace will also be logged.
     </p>
     </s3>
     <s3 title="debug">
     <p>
-        <em>Function</em> <code>debug([String] message)</code>
+        <em>Function</em> <code>debug([String] message, [java.lang.Throwable] exception)</code>
     </p>
     <p>
-      Log a debug message.
+      Log a debug message. If <code>exception</code> is provided its stack trace will also be logged.
     </p>
     </s3>
     <s3 title="warn">
     <p>
-        <em>Function</em> <code>warn([String] message)</code>
+        <em>Function</em> <code>warn([String] message, [java.lang.Throwable] exception)</code>
     </p>
     <p>
-      Log a warning message.
+      Log a warning message. If <code>exception</code> is provided its stack trace will also be logged.
     </p>
     </s3>
     <s3 title="info">
     <p>
-        <em>Function</em> <code>info([String] message)</code>
+        <em>Function</em> <code>info([String] message, [java.lang.Throwable] exception)</code>
     </p>
     <p>
-      Log an information message.
+      Log an information message. If <code>exception</code> is provided its stack trace will also be logged.
     </p>
     </s3>
     <s3 title="isErrorEnabled">
