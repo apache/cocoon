@@ -13,7 +13,8 @@ set XERCES=.\lib\xerces_1_0_3.jar
 set XALAN=.\lib\xalan_1_0_1.jar
 set FOP=.\lib\fop_0_12_1.jar
 set SERVLETS=.\lib\servlet_2_2.jar
-set LOCALCLASSPATH=%ANT%;%JAVAC%;%XERCES%;%XALAN%;%FOP%;%SERVLETS%;%CLASSPATH%
+set TURBINE=.\lib\turbine-2.0.jar
+set LOCALCLASSPATH=%ANT%;%JAVAC%;%XERCES%;%XALAN%;%FOP%;%SERVLETS%;%TURBINE%;%CLASSPATH%
 
 echo.
 echo Building with classpath %LOCALCLASSPATH%
