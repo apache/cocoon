@@ -299,7 +299,7 @@ public class ScriptableWidget extends ScriptableObject {
         delegate.setState(state);
     }
 
-    public Scriptable jsGet_parent() {
+    public Object jsGet_parent() {
         if (delegate != null) {
             return wrap(delegate.getParent());
         }
