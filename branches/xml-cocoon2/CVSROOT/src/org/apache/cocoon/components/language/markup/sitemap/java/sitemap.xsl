@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2000-08-23 22:44:27 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2000-08-25 20:27:10 $
 -->
 
 <xsl:stylesheet 
@@ -511,11 +511,9 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     </xsl:choose>
   </xsl:template> <!-- match="map:redirect-to" -->
  
-<!-- FIXME (SM) what is this for?
-  <xsl:template match="parameter"> 
+  <xsl:template match="map:pipeline//parameter"> 
     param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@value"/>"); 
   </xsl:template> 
- -->
  
   <xsl:template match="map:param"> 
     param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@map:value"/>"); 
