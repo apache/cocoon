@@ -18,39 +18,7 @@
 <html>
   <head>
 
-    <style type="text/css">
-      li {
-        list-style-type: none
-      }
- 
-      /* The actions buttons, placed on the right */
-      .actions {
-        float: right;
-        padding-top: 0.2em;
-      }
- 
-      /* A "section" contains stuff, related actions and substuff */
-      div.section {
-        padding-top: 0.4em;
-        padding-bottom: 0.4em;
-        padding-left: 0.4em;
-        border: 1px dotted black;
-        mmargin-top: 0.4em;
-        margin-bottom: -1px;
-      }
- 
-      /* Indent sub-sections (recursively) */
-      div.section div.section {
-        margin-left: 3em;
-        border-right: none;
-      }
- 
-      /* Change bg color depending on nesting depth */
-      div.section div.section { background-color: #F0F0F0; }
-      div.section div.section div.section { background-color: #E0E0E0; }
-      div.section div.section div.section div.section { background-color: #D0D0D0; }
-      div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="swan/resources/css/swan_sections.css" />
 
     <title>Swan: CForms-based XML Editor Demo</title>
     <h2>Swan: CForms-based XML Editor Demo</h2>
@@ -65,14 +33,14 @@
       <b>Sample xReport</b>
       <div class="section">
         <b>xReport:</b>
-        <a href="xreport.flow?file=report1.xml">report</a><br/>
+        <a href="xreport.flow?file=report1.xml">report</a>
       </div>
     </div>
     <div class="section">
       <b>Sample Sitemap</b>
       <div class="section">
         <b>Sitemap:</b>
-        <a href="sitemap.flow?file=sitemap.xmap">sitemap</a><br/>
+        <a href="sitemap.flow?file=sitemap.xmap">sitemap</a>
       </div>
     </div>
     <div class="section">
@@ -81,22 +49,22 @@
       <b>Simple:</b>
         <a href="binding.flow?file=sample_form_1.xml">binding</a>
         <a href="model.flow?file=sample_form_1.xml">model</a>
-        <a href="template.flow?file=sample_form_1_template.xml">template</a><br/>
+        <a href="template.flow?file=sample_form_1_template.xml">template</a>
       </div>
       <div class="section">
       <b>Medium:</b>
         <a href="binding.flow?file=sample_form_2.xml">binding</a>
         <a href="model.flow?file=sample_form_2.xml">model</a>
-        <a href="template.flow?file=sample_form_2_template.xml">template</a><br/>
+        <a href="template.flow?file=sample_form_2_template.xml">template</a>
       </div>
       <div class="section">
         <b>Complex:</b>
         <a href="binding.flow?file=form_model_gui_binding.xml">binding</a>
         <a href="model.flow?file=form_model_gui_data.xml">model</a>
-        <a href="template.flow?file=form_model_gui_template_data.xml">template</a><br/>
+        <a href="template.flow?file=form_model_gui_template_data.xml">template</a>
       </div>
     </div>
-    <a href="profile.html">Profiling Data</a><br/>
+    <a href="profile.html">Profiling Data</a>
   </body>
 </html>
 

@@ -35,7 +35,7 @@ div.section {
 
 /* Indent sub-sections (recursively) */
 div.section div.section {
-  margin-left: 3em;
+  margin-left: 1em;
   border-right: none;
 }
 
@@ -44,3 +44,6 @@ div.section div.section { background-color: #F0F0F0; }
 div.section div.section div.section { background-color: #E0E0E0; }
 div.section div.section div.section div.section { background-color: #D0D0D0; }
 div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
+div.section div.section div.section div.section div.section div.section { background-color: #D0D0D0; }
+div.section div.section div.section div.section div.section div.section div.section { background-color: #E0E0E0; }
+div.section div.section div.section div.section div.section div.section div.section div.section { background-color: #F0F0F0; }
