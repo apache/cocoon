@@ -22,12 +22,14 @@
   </description>
 
   <!-- Creates the web site  -->
+<!--
   <target name="site" depends="forrest" description="[admin] Builds the site">
     <mkdir dir="${site}"/>
     <copy todir="${site}" filtering="off">
       <fileset dir="${build.site}"/>
     </copy>
   </target>
+-->
 
   <!-- Create the announcements -->
   <target name="announcement" depends="prepare-docs">
