@@ -70,7 +70,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.8 2003/11/07 12:51:38 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.9 2003/11/11 10:31:04 unico Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -92,7 +92,8 @@ public class MountNode extends AbstractProcessingNode implements Composable {
     /** The component manager to be used by the mounted processor */
     private ComponentManager manager;
 
-    public MountNode(VariableResolver prefix, VariableResolver source, String language, TreeProcessor parentProcessor) {        this.prefix = prefix;
+    public MountNode(VariableResolver prefix, VariableResolver source, String language, TreeProcessor parentProcessor) {
+        this.prefix = prefix;
         this.source = source;
         this.language = language;
         this.parentProcessor = parentProcessor;
