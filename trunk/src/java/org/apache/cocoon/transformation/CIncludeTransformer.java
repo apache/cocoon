@@ -76,14 +76,14 @@ import java.util.Map;
  *         <!-- more can follow -->
  *     </cinclude:parameters>
  * </cinclude:includexml>
- *
+ * 
  *
  * This transformer also supports caching of the included content.
  * Therefore it triggers for the element <code>cached-include</code> in the
  * namespace "http://apache.org/cocoon/include/1.0".
  * The <code>src</code> attribute contains the url which points to
  * an xml resource which is include instead of the element.
- * First, it works like the usual include command. But it can be
+ * First, it works like the usual include command. But it can be 
  * configured with various parameters:
  * The most important one is the <code>expires</code> parameter.
  * If (and only if) this is set to a value greater than zero,
@@ -102,23 +102,23 @@ import java.util.Map;
  * in a series.
  * With the optional parameter <code>preemptive</code> set to <code>true</code>
  * a pre-emptive caching is activated. When a resource is requested with
- * pre-emptive caching, this transformer always attempts to get the
+ * pre-emptive caching, this transformer always attempts to get the 
  * content from the cache. If the content is not in the cache, it is
  * of course retrieved from the original source and cached.
  * If the cached resource has expired, it is still provided. The cache
  * is updated by a background task. This task has to be started
  * beforehand.
- *
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.13 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.14 2004/03/17 12:26:59 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Transformer"
  * @x-avalon.lifestyle type="pooled"
  * @x-avalon.info name="cinclude-transformer"
  */
-public class CIncludeTransformer
+public class CIncludeTransformer 
 extends AbstractSAXTransformer
 implements Disposable, CacheableProcessingComponent {
 
@@ -147,13 +147,13 @@ implements Disposable, CacheableProcessingComponent {
 
     /** The configuration of includexml */
     protected Parameters configurationParameters;
-
+    
     /** The parameters for includexml */
     protected SourceParameters resourceParameters;
-
+    
     /** The current state: STATE_ */
     protected int state;
-
+    
     protected IncludeCacheManager cacheManager;
 
     protected IncludeCacheManagerSession cachingSession;
@@ -240,7 +240,7 @@ implements Disposable, CacheableProcessingComponent {
         this.configurationParameters = null;
         this.resourceParameters = null;
         if (this.getLogger().isErrorEnabled()) {
-            this.getLogger().debug("Finishing CIncludeTransformer, time: " + (System.currentTimeMillis() - this.startTime));
+            this.getLogger().debug("Finishing CachingCIncludeTransformer, time: " + (System.currentTimeMillis() - this.startTime));
             this.startTime = 0;
         }
         this.filter = null;
@@ -299,7 +299,7 @@ implements Disposable, CacheableProcessingComponent {
         // parameter value
         } else if (name.equals(CINCLUDE_VALUE_ELEMENT)
                    && this.state == STATE_INCLUDE) {
-            this.startSerializedXMLRecording(XMLUtils.defaultSerializeToXMLFormat(true));
+            this.startSerializedXMLRecording(XMLUtils.createPropertiesForXML(true));
 
        } else if (name.equals(CINCLUDE_CACHED_INCLUDE_ELEMENT)) {
 

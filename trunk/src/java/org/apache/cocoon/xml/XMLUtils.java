@@ -44,7 +44,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.5 2004/03/08 14:04:00 cziegeler Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.6 2004/03/17 12:26:59 cziegeler Exp $
  */
 public class XMLUtils {
 
@@ -122,10 +122,14 @@ public class XMLUtils {
      * @return an <code>XMLConsumer</code> for <code>ch</code> an <code>lh</code>
      */
     public static XMLConsumer getConsumer(ContentHandler ch, LexicalHandler lh) {
-        if (ch instanceof XMLConsumer)
+        if (ch instanceof XMLConsumer) {
             return (XMLConsumer)ch;
-        else
+        } else {
+            if ( lh == null && ch instanceof LexicalHandler ) {
+                lh = (LexicalHandler)ch;
+            }
             return new ContentHandlerWrapper(ch, lh);
+        }
     }
 
     /**
@@ -141,45 +145,20 @@ public class XMLUtils {
     }
 
     /**
-     * Serialize a DOM node to a String.
-     * The defaultSerializeToXMLFormat() is used to format the serialized xml.
-     */
-    public static String serializeNodeToXML(Node node)
-    throws ProcessingException {
-        return serializeNode(node, XMLUtils.defaultSerializeToXMLFormat());
-    }
-
-    /**
-     * This is the default properties set used to serialize xml.
-     * It is used by the serializeNodeToXML() method.
-     * The format is as follows:
-     * Method: xml
-     * Encoding: ISO-8859-1
-     * Omit xml declaration: no
-     * Indent: yes
-     */
-    public static Properties defaultSerializeToXMLFormat() {
-        return defaultSerializeToXMLFormat(false);
-    }
-
-    /**
-     * This is the default properties set used to serialize xml.
-     * It is used by the serializeNodeToXML() method.
+     * Create a new properties set for serializing xml
      * The omit xml declaration property can be controlled by the flag.
      * Method: xml
-     * Encoding: ISO-8859-1
      * Omit xml declaration: according to the flag
      * Indent: yes
      */
-    public static Properties defaultSerializeToXMLFormat(boolean omitXMLDeclaration) {
-        Properties format = new Properties();
+    public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
+        final Properties format = new Properties();
         format.put(OutputKeys.METHOD, "xml");
-        format.put(OutputKeys.ENCODING, "ISO-8859-1");
         format.put(OutputKeys.OMIT_XML_DECLARATION, (omitXMLDeclaration ? "yes" : "no"));
         format.put(OutputKeys.INDENT, "yes");
-        return format;
+        return format;        
     }
-
+    
     /**
      * Serialize a DOM node to a String.
      * The format of the output can be specified with the properties.
@@ -347,7 +326,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElement(ContentHandler contentHandler, String localName) 
     throws SAXException {
@@ -363,7 +342,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElement(ContentHandler contentHandler, String localName, String stringValue)
         throws SAXException {
@@ -381,7 +360,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElement(ContentHandler contentHandler, String localName, Attributes atts) 
@@ -401,7 +380,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElement(ContentHandler contentHandler, String localName, Attributes atts, String stringValue)
@@ -417,7 +396,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElementNS(ContentHandler contentHandler, String namespaceURI, String localName)
         throws SAXException {
@@ -433,7 +412,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElementNS(
         ContentHandler contentHandler,
@@ -455,7 +434,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElementNS(
@@ -479,7 +458,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElementNS(
@@ -530,7 +509,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void startElement(ContentHandler contentHandler, String localName) 
     throws SAXException {
@@ -545,7 +524,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName)
     throws SAXException {
@@ -561,7 +540,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void startElement(ContentHandler contentHandler, String localName, Attributes atts) 
@@ -580,7 +559,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName, Attributes atts)

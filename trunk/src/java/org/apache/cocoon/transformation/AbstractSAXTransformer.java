@@ -85,7 +85,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.10 2004/03/08 14:03:31 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.11 2004/03/17 12:26:59 cziegeler Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -166,20 +166,15 @@ implements Serviceable, Configurable {
     /** The current prefix for our namespace */
     private String ourPrefix;
     
-    /**
-     * Avalon Configurable Interface
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
     }
 
-    /**
-     * Setup the next round.
-     * The instance variables are initialised.
-     * @param resolver The current SourceResolver
-     * @param objectModel The objectModel of the environment.
-     * @param src The value of the src attribute in the sitemap.
-     * @param par The parameters from the sitemap.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public void setup(SourceResolver resolver,
                       Map            objectModel,
@@ -209,7 +204,8 @@ implements Serviceable, Configurable {
         this.isInitialized = false;
 
         // get the current namespace
-        this.namespaceURI = this.parameters.getParameter("namespaceURI", this.defaultNamespaceURI);
+        this.namespaceURI = this.parameters.getParameter("namespaceURI",
+                    this.defaultNamespaceURI);
 
         this.ignoreHooksCount = 0;
         this.ignoreEventsCount = 0;
@@ -221,8 +217,8 @@ implements Serviceable, Configurable {
         }
     }
 
-    /**
-     *  Recycle this component.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
         super.recycle();
@@ -239,9 +235,8 @@ implements Serviceable, Configurable {
         this.ourPrefix = null;
     }
 
-    /**
-     * Avalon Serviceable Interface
-     * @param manager The Avalon Service Manager
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
@@ -250,7 +245,7 @@ implements Serviceable, Configurable {
     /**
      *  Process the SAX event. A new document is processed. The hook (method)
      *  <code>setupTransforming()</code> is invoked.
-     *  @see org.xml.sax.ContentHandler#startDocument
+     *  @see org.xml.sax.ContentHandler#startDocument()
      */
     public void startDocument()
     throws SAXException {
@@ -269,13 +264,12 @@ implements Serviceable, Configurable {
 
     /**
      *  Process the SAX event. The processing of the document is finished.
-     *  @see org.xml.sax.ContentHandler#endDocument
+     *  @see org.xml.sax.ContentHandler#endDocument()
      */
     public void endDocument()
     throws SAXException {
         if (this.ignoreEventsCount == 0) super.endDocument();
     }
-
 
     /**
      * Process the SAX event.
@@ -400,73 +394,25 @@ implements Serviceable, Configurable {
     }
 
     /**
-     * Start DocumentFragment recording.
-     * All invoking events are recorded and not forwarded. The resulting
-     * DocumentFragment can be obtained by the matching endRecording() call.
+     * Start recording of SAX events
+     * All incomming events are recorded and not forwarded. The result
+     * can be obtained by the matching endSAXRecording() call.
+     * @since 2.1.5
      */
-    public void startRecording()
+    public void startSAXRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN startRecording");
-        }
-        DOMBuilder builder = new DOMBuilder();
-        this.addRecorder(builder);
-        builder.startDocument();
-        builder.startElement("", "cocoon", "cocoon", new AttributesImpl());
-
-        this.sendStartPrefixMapping();
-
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END startRecording");
-        }
+        this.addRecorder(new SaxBuffer());
     }
 
     /**
      * Stop DocumentFragment recording.
-     * All invoking events are recorded and not forwarded. This method returns
+     * All incomming events are recorded and not forwarded. This method returns
      * the resulting DocumentFragment.
+     * @since 2.1.5
      */
-    public DocumentFragment endRecording()
+    public XMLizable endSAXRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endRecording");
-        }
-
-        this.sendEndPrefixMapping();
-
-        DOMBuilder builder = (DOMBuilder)this.removeRecorder();
-        builder.endElement("", "cocoon", "cocoon");
-        builder.endDocument();
-
-        // Create Document Fragment
-        final Document doc = builder.getDocument();
-        final DocumentFragment recordedDocFrag = doc.createDocumentFragment();
-        final Node root = doc.getDocumentElement();
-        root.normalize();
-        Node child;
-        boolean appendedNode = false;
-        while (root.hasChildNodes() == true) {
-            child = root.getFirstChild();
-            root.removeChild(child);
-            // Leave out empty text nodes before any other node
-            if (appendedNode == true
-                || child.getNodeType() != Node.TEXT_NODE
-                || child.getNodeValue().trim().length() > 0) {
-                recordedDocFrag.appendChild(child);
-                appendedNode = true;
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled()) {
-            Object serializedXML = null;
-            try {
-                serializedXML = (recordedDocFrag == null ? "null" : XMLUtils.serializeNodeToXML(recordedDocFrag));
-            } catch (ProcessingException ignore) {
-                serializedXML = recordedDocFrag;
-            }
-            this.getLogger().debug("END endRecording fragment=" + serializedXML);
-        }
-        return recordedDocFrag;
+        return (XMLizable)this.removeRecorder();
     }
 
     /**
@@ -522,7 +468,7 @@ implements Serviceable, Configurable {
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startSerializedXMLRecording format="+format);
         }
-        this.stack.push((format == null ? XMLUtils.defaultSerializeToXMLFormat() : format));
+        this.stack.push((format == null ? XMLUtils.createPropertiesForXML(false) : format));
         this.startRecording();
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END startSerializedXMLRecording");
@@ -611,6 +557,76 @@ implements Serviceable, Configurable {
             this.getLogger().debug("END endParametersRecording parameters="+pars);
         }
         return pars;
+    }
+
+    /**
+     * Start DocumentFragment recording.
+     * All incomming events are recorded and not forwarded. The resulting
+     * DocumentFragment can be obtained by the matching endRecording() call.
+     */
+    public void startRecording()
+    throws SAXException {
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("BEGIN startRecording");
+        }
+        DOMBuilder builder = new DOMBuilder();
+        this.addRecorder(builder);
+        builder.startDocument();
+        builder.startElement("", "cocoon", "cocoon", new AttributesImpl());
+
+        this.sendStartPrefixMapping();
+
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("END startRecording");
+        }
+    }
+
+    /**
+     * Stop DocumentFragment recording.
+     * All incomming events are recorded and not forwarded. This method returns
+     * the resulting DocumentFragment.
+     */
+    public DocumentFragment endRecording()
+    throws SAXException {
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("BEGIN endRecording");
+        }
+
+        this.sendEndPrefixMapping();
+
+        DOMBuilder builder = (DOMBuilder)this.removeRecorder();
+        builder.endElement("", "cocoon", "cocoon");
+        builder.endDocument();
+
+        // Create Document Fragment
+        final Document doc = builder.getDocument();
+        final DocumentFragment recordedDocFrag = doc.createDocumentFragment();
+        final Node root = doc.getDocumentElement();
+        root.normalize();
+        Node child;
+        boolean appendedNode = false;
+        while (root.hasChildNodes() == true) {
+            child = root.getFirstChild();
+            root.removeChild(child);
+            // Leave out empty text nodes before any other node
+            if (appendedNode == true
+                || child.getNodeType() != Node.TEXT_NODE
+                || child.getNodeValue().trim().length() > 0) {
+                recordedDocFrag.appendChild(child);
+                appendedNode = true;
+            }
+        }
+
+        if (this.getLogger().isDebugEnabled()) {
+            Object serializedXML = null;
+            try {
+                serializedXML = (recordedDocFrag == null ? "null" : XMLUtils.serializeNode(recordedDocFrag, XMLUtils.createPropertiesForXML(false)));
+            } catch (ProcessingException ignore) {
+                serializedXML = recordedDocFrag;
+            }
+            this.getLogger().debug("END endRecording fragment=" + serializedXML);
+        }
+        return recordedDocFrag;
     }
 
     // ************
@@ -914,54 +930,53 @@ implements Serviceable, Configurable {
         if (this.ignoreEventsCount == 0) super.endPrefixMapping(prefix);
     }
 
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
      */
     public void processingInstruction(String target, String data)
-            throws SAXException {
+    throws SAXException {
         if (this.ignoreEventsCount == 0) super.processingInstruction(target, data);
     }
 
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
      */
     public void skippedEntity(String name)
-            throws SAXException {
+    throws SAXException {
         if (this.ignoreEventsCount == 0) super.skippedEntity(name);
     }
 
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ext.LexicalHandler#startDTD(java.lang.String, java.lang.String, java.lang.String)
      */
     public void startDTD(String name, String public_id, String system_id)
-            throws SAXException {
+    throws SAXException {
         if (this.ignoreEventsCount == 0) super.startDTD(name, public_id, system_id);
     }
 
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ext.LexicalHandler#endDTD()
      */
     public void endDTD() throws SAXException {
         if (this.ignoreEventsCount == 0) super.endDTD();
     }
 
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ext.LexicalHandler#startCDATA()
      */
     public void startCDATA() throws SAXException {
         if (this.ignoreEventsCount == 0) super.startCDATA();
     }
 
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ext.LexicalHandler#endCDATA()
      */
     public void endCDATA() throws SAXException {
         if (this.ignoreEventsCount == 0) super.endCDATA();
     }
 
-
-    /**
-     * SAX Event handling
+    /* (non-Javadoc)
+     * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
      */
     public void comment(char ary[], int start, int length)
     throws SAXException {
