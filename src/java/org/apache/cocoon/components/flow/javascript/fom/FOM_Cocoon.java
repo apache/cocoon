@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P\u00F6tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.38 2004/07/11 13:59:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class FOM_Cocoon extends ScriptableObject {
 
