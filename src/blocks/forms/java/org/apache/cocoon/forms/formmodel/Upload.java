@@ -64,10 +64,11 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void setValue(Object object) {
-        if (!(object instanceof Part)) {
+        if ((object == null) || (object instanceof Part)) {
+            this.part = (Part)object;
+        } else {
             throw new RuntimeException("The value of an upload widget must be of type " + Part.class + ".");
         }
-        this.part = (Part)object;
     }
 
     public void readFromRequest(FormContext formContext) {
