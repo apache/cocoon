@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleHelper.java,v 1.1 2004/04/27 22:25:29 haul Exp $
+ * @version CVS $Id: InputModuleHelper.java,v 1.2 2004/04/30 23:07:55 joerg Exp $
  */
 public class InputModuleHelper {
     
@@ -40,7 +40,6 @@ public class InputModuleHelper {
     private final static int OP_GET = 0;
     private final static int OP_VALUES = 1;
     private final static int OP_NAMES = 2;
-    private final static String[] OPNAME = new String[] {"GET_VALUE", "GET_VALUES", "GET_NAMES"};
 
     
     private Map inputModules;
