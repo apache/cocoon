@@ -461,6 +461,21 @@
    <action dev="AG" type="update">
      Updated Groovy to 1.0-beta5, qdox to 1.4 and util.concurrent to 1.3.4.
    </action>
+   <action dev="DC" type="update" fixes-bug="28809" due-to="Dave Brondsema">
+     Chaperon block: Improvements for Chaperon JSPWiki to xdocs conversion:
+     <ul>
+       <li>Handle nested bullet lists (number lists already supported)</li>
+       <li>If 'name' parameter is specified, use it as title (and add spaces between
+           WikiWords) instead of first section title</li>
+       <li>Handle images with alt text</li>
+       <li>'spaceless-filenames' parameter will squash out spaces in relative
+           links</li>
+       <li>Fix anchors to use 'id' instead of 'name'</li>
+       <li>Emphasize anchors a bit</li>
+       <li>selftest.txt tests for lists and tables</li>
+       <li>More known issues listed in selftest.txt</li>
+     </ul>
+   </action>
    <action dev="VG" type="add">
      Added instrumentation support to ContinuationsManager.
    </action>

@@ -25,9 +25,72 @@
              doctype-system="document-v11.dtd"
              cdata-section-elements="source"/>
 
+ <xsl:param name="name" select="''"/>
+ <xsl:param name="spaceless-filenames" select="''"/>
+
+ <xsl:template name="splitString">
+    <xsl:param name="restOfString"/>
+    
+    <xsl:variable name="uppercase">(ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
+    <xsl:variable name="currentLetter" select="substring($restOfString,1,1)"/>
+    
+    <xsl:choose>
+        <xsl:when test="contains($restOfString, '(') or contains($restOfString,' ')">
+            <xsl:value-of select="$restOfString"/>
+        </xsl:when>
+        <xsl:when test="string-length($restOfString) &gt;= 2">
+        <!-- there's a possibility it needs to be split -->
+        <xsl:choose>
+            <xsl:when test="contains($uppercase,$currentLetter)">
+                <xsl:variable name="followingLetter" select="substring($restOfString,2,1)"/>
+                <xsl:if test="not(contains($uppercase,$followingLetter))">
+                    <xsl:text> </xsl:text>
+                </xsl:if>
+                <xsl:value-of select="$currentLetter"/>
+                
+                <xsl:call-template name="splitString">
+                    <xsl:with-param name="restOfString" select="substring($restOfString,2)"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- current letter is lower-case - just spit it out -->
+                <xsl:value-of select="$currentLetter"/>
+                <xsl:call-template name="splitString">
+                    <xsl:with-param name="restOfString" select="substring($restOfString,2)"/>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+        <!-- end of string - just write the remainder -->
+        <xsl:value-of select="$restOfString"/>
+        </xsl:otherwise>
+    </xsl:choose>
+ </xsl:template>
+
+
+
  <xsl:template match="st:output">
+   <document>  
+    <header>  
+     <title>
+      <xsl:choose>
+       <xsl:when test="$name">
+        <xsl:call-template name="splitString">
+         <xsl:with-param name="restOfString" select="$name"/>
+        </xsl:call-template>
+       </xsl:when>
+       <xsl:otherwise>
+        <xsl:value-of select="st:document/st:section/st:title/st:textsequence"/>
+       </xsl:otherwise>
+      </xsl:choose>
+     </title>  
+     </header>  
+    <body>
   <xsl:apply-templates select="st:document/st:paragraphs/st:paragraph/*" mode="paragraph"/>  
   <xsl:apply-templates select="st:document/st:section"/>
+    </body>  
+   </document>
  </xsl:template>
 
  <xsl:template match="st:section">
@@ -118,13 +181,26 @@
        <xsl:value-of select="$text"/>
       </link>
      </xsl:when>
+     <xsl:when test="contains($href,'.png') or contains($href,'.jpg') or contains($href,'.gif')">
+      <img src="{$href}" alt="{$text}"/>
+     </xsl:when>
      <xsl:when test="contains($href,':') or contains($href,'.')">
       <link href="{$href}">
        <xsl:value-of select="$text"/>
       </link>
      </xsl:when>
      <xsl:otherwise>
-      <link href="view.do?page={$href}">
+      <link>
+       <xsl:attribute name="href">
+      <xsl:choose>
+       <xsl:when test="$spaceless-filenames">
+          <xsl:value-of select="concat(translate($href,' ',''),'.html')"/>
+       </xsl:when>
+       <xsl:otherwise>
+          <xsl:value-of select="concat('view.do?page=',$href)"/>
+       </xsl:otherwise>
+      </xsl:choose>
+       </xsl:attribute>
        <xsl:value-of select="$text"/>
       </link>
      </xsl:otherwise>
@@ -149,7 +225,17 @@
       </link>
      </xsl:when>
      <xsl:otherwise>
-      <link href="view.do?page={$href}">
+      <link>
+       <xsl:attribute name="href">
+      <xsl:choose>
+       <xsl:when test="$spaceless-filenames">
+          <xsl:value-of select="concat(translate($href,' ',''),'.html')"/>
+       </xsl:when>
+       <xsl:otherwise>
+          <xsl:value-of select="concat('view.do?page=',$href)"/>
+       </xsl:otherwise>
+      </xsl:choose>
+       </xsl:attribute>
        <xsl:value-of select="$href"/>
       </link>
      </xsl:otherwise>
@@ -160,16 +246,19 @@
  </xsl:template>
 
  <xsl:template match="st:anchor" >
+  <p>
   <xsl:choose>
    <xsl:when test="contains(.,'|')">
-    <anchor name="{substring-before(substring-after(.,'|#'),']')}">
+    <anchor id="{substring-before(substring-after(.,'|#'),']')}">
      <xsl:value-of select="substring-after(substring-before(.,'|'),'[')"/>
     </anchor>
    </xsl:when>
    <xsl:otherwise>
-    <anchor name="{substring(.,3,string-length(.)-3)}"/>
+    <em><xsl:value-of select="substring(.,3,string-length(.)-3)"/>:</em>
+    <anchor id="{substring(.,3,string-length(.)-3)}"/>
    </xsl:otherwise>
   </xsl:choose>
+  </p>
  </xsl:template>
 
  <xsl:template match="st:emblock">
@@ -180,21 +269,42 @@
   <strong><xsl:value-of select="st:text"/></strong><xsl:text> </xsl:text>
  </xsl:template>
 
- <xsl:template match="st:codeblock">
-  <code><xsl:value-of select="st:text"/></code><xsl:text> </xsl:text>
- </xsl:template>
-
- <xsl:template match="st:bulletedlist" mode="paragraph">
+ <xsl:template match="st:bulletedlist1" mode="paragraph">
   <ul>
-   <xsl:apply-templates select="st:bulletedlistitem"/>
+   <xsl:apply-templates select="st:bulletedlistitem1|st:bulletedlist2"/>
+  </ul>
+ </xsl:template>
+ 
+ <xsl:template match="st:bulletedlistitem1" >
+   <li>
+    <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
+   </li>
+ </xsl:template>
+ 
+ <xsl:template match="st:bulletedlist2" >
+  <ul>
+   <xsl:apply-templates select="st:bulletedlistitem2|st:bulletedlist3"/>
   </ul>
  </xsl:template>
 
- <xsl:template match="st:bulletedlistitem" >
+ <xsl:template match="st:bulletedlistitem2" >
   <li>
    <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
   </li>
  </xsl:template>
+
+ <xsl:template match="st:bulletedlist3" >
+  <ul>
+   <xsl:apply-templates select="st:bulletedlistitem3"/>
+  </ul>
+ </xsl:template>
+    
+ <xsl:template match="st:bulletedlistitem3" >
+  <li>
+   <xsl:apply-templates select="st:textsequence/st:textblock/*"/>
+  </li>
+ </xsl:template>
+
 
  <xsl:template match="st:numberedlist1" mode="paragraph">
   <ol>
