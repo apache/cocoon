@@ -71,7 +71,7 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.5 2003/07/01 23:43:21 joerg Exp $
+ * @version CVS $Id: Sheet.java,v 1.6 2003/07/02 12:49:56 bruno Exp $
  */
 
 // package scope
@@ -281,6 +281,14 @@ class Sheet extends AbstractLogEnabled {
                 && (characters <= ((Short.MAX_VALUE + 0.5) / 256)));
 
     } */
+
+    /**
+     * Flag a certain region of cells to be merged
+     * @param region the region to create as merged
+     */
+    void addMergedRegion(Region region) {
+        this._sheet.addMergedRegion(region);
+    }
 
     /**
      * assigns blank cells to regions where no cell is currently allocated.

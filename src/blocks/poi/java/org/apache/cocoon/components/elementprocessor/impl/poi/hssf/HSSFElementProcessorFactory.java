@@ -61,7 +61,7 @@ import org.apache.cocoon.components.elementprocessor.impl.AbstractElementProcess
  * objects.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: HSSFElementProcessorFactory.java,v 1.2 2003/03/11 19:05:00 vgritsenko Exp $
+ * @version CVS $Id: HSSFElementProcessorFactory.java,v 1.3 2003/07/02 12:49:59 bruno Exp $
  */
 public class HSSFElementProcessorFactory
     extends AbstractElementProcessorFactory
@@ -109,6 +109,8 @@ public class HSSFElementProcessorFactory
         addElementProcessorProgenitor("Margins", EPMargins.class);
         addElementProcessorProgenitor("MaxCol", EPMaxCol.class);
         addElementProcessorProgenitor("MaxRow", EPMaxRow.class);
+        addElementProcessorProgenitor("Merge", EPMerge.class);
+        addElementProcessorProgenitor("MergedRegions", EPMergedRegions.class);
         addElementProcessorProgenitor("monochrome", EP_Monochrome.class);
         addElementProcessorProgenitor("Name", EPName.class);
         addElementProcessorProgenitor("name", EP_Name.class);
