@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+    <content>
+        <p>
+            This example uses a simple two-page form to enter data for a simulated
+            email message.
+        </p>
+        <p>
+            Start the example <a href="../number-guess/startMultiPage">here</a>.
+        </p>
+        <p>
+            Although a two-page form does not make sense for three fields
+            when run from a desktop
+            browser, this demonstrates how the Flow makes it easy to keep track
+            of the user's "position" in the application flow. Just imagine you're
+            working on a tiny mobile device for a minute.
+        </p>
+        <p>
+            We won't use Cocoon Forms here, but simply bind a javascript object
+            to our form manually.
+        </p>
+        <p>
+            Notice how little code is needed to keep state while the user
+            can freely move between the pages without losing data.
+        </p>
+
+        <h2>The sitemap</h2>
+        <p>
+            There's nothing new in the sitemap, our use of
+            variables allows the exact same sitemap to be reused for
+            both our Flow examples.
+        </p>
+        <p>
+            The only specific thing is the importing of the multi-page.js
+            flowscript, but this was already present for the previous
+            example:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/flow"/>
+        </p>
+
+        <h2>Flowscript code</h2>
+        <p>
+            Here's the Flowscript which drives the multi-page form example:
+            <cinclude:include element="flowscript-code" src="cocoon:/text-file/flow/multi-page/multi-page.js"/>
+        </p>
+        <p>
+            It's not more complicated than the previous example, but slightly
+            longer due to the (boring) copying of request parameters into
+            the message object. This boring part is where Cocoon Forms will
+            come into play, by making it easier to <em>bind</em> data to
+            values edited in a form.
+        </p>
+        <p>
+            By copying values into the <em>message</em> object after each
+            submission, we allow the user to freely move between pages
+            without losing data.
+        </p>
+
+        <h2>JXTemplate view</h2>
+        <p>
+            Nothing special in the form view, this is very similar to the
+            previous example.
+        </p>
+        <p>
+            We're only using two submit buttons, one to move between pages
+            and one to actually submit the data and go to the <em>result</em>
+            page.
+        </p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/multi-page/page1.xml/page"/>
+        <p>
+            This is page 1, page 2 is similar but shows the <em>text</em> field instead of
+            the fields present on page 1.
+        </p>
+    </content>
+</page>

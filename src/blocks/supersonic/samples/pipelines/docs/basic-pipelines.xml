@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+
+    <content>
+        <h2>Minimal pipeline</h2>
+        <p>
+            Our first pipeline uses the RequestGenerator to output the request
+            attributes in XML.
+        </p>
+
+        <h3>Sitemap excerpt</h3>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/sitemap.xmap/requestPipeline"/>
+
+        <h3>Typical output</h3>
+        <p>
+            Shown below is the result of a request to <a href="../dump-request?param=xyz">dump-request?param=xyz</a>.
+            The response is XML as specified by the serializer, and describes the request attributes and parameters,
+            converted to XML by the RequestGenerator component.
+        </p>
+
+        <cinclude:include element="xml-code" src="cocoon:/pipelines/dump-request?param=xyz"/>
+
+        <h2>Converting XML to HTML</h2>
+        <p>
+            Adding a transformer with map:transform and changing the serializer
+            to HTML allows us to generate HTML out of the XML of the previous example.
+        </p>
+
+        <p>
+            You can also view the output here: <a href="../request.html">request.html</a>
+        </p>
+
+        <h3>Sitemap excerpt</h3>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/sitemap.xmap/requestToHtml"/>
+
+        <h3>XSL transformation</h3>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/xsl/request-to-html.xsl/main"/>
+
+        <h3>Typical output</h3>
+        <cinclude:include element="xml-code" src="cocoon:/pipelines/request.html"/>
+
+        <h2>Adding a touch of style</h2>
+        <p>
+            You can chain several transformers in a pipeline. In this example we add
+            some style to our HTML by adding an additional XSL transform.
+        </p>
+        <p>
+            View the output in your browser: <a href="../styled/request.html">styled/request.html</a>
+        </p>
+
+        <h3>Sitemap excerpt</h3>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/sitemap.xmap/styledHtml"/>
+
+        <h3>XSL transformation</h3>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/xsl/html-styling.xsl/main"/>
+
+        <h3>Typical output</h3>
+        <cinclude:include element="xml-code" src="cocoon:/pipelines/styled/request.html"/>
+
+    </content>
+</page>

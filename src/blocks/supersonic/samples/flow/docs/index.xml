@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <p>
+            Through the magic of <em>continuations</em>, the Cocoon Flow subsystem
+            makes it easy to track the user's state when interacting with a web-based
+            application.
+        </p>
+        <p>
+            A <em>continuation</em> saves the state of execution of the currently
+            running flowscript, and allows this state to be "resurrected" later on,
+            typically when the user submits an HTML form that was sent with the
+            <em>cocoon.sendPageAndWait</em> instruction.
+        </p>
+        <p>
+            This makes the typical web applications interactions much easier to
+            manage, as the developer can write "linear" code for page flows, instead
+            of having to keep track of the user's state manually. Our examples will
+            show how little code is used to manage typical interactions.
+        </p>
+        <p>
+            Having to use javascript to write the Flow scripts might seem strange
+            at first, but in practice only a few lines of Flow code will be required
+            for a typical application, so this doesn't matter much. The reason is that
+            javascript (through a modified version of the mozilla Rhino interpreter)
+            is currently the only continuations-enabled language that can be
+            distributed with Cocoon.
+        </p>
+
+    </content>
+</page>

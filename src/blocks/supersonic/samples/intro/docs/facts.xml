@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <h2>Architecture</h2>
+        <p>
+            Cocoon is written in java and based on the
+            <a href="http://avalon.apache.org/">Apache Avalon</a> components framework.
+        </p>
+        <p>
+            Modular <em>blocks</em> can be enabled by configuration when installing Cocoon,
+            allowing you to have either a small and focused system, or a "kitchen sink" installation
+            with all possible options.
+        </p>
+        <p>
+            Many of Cocoon's <em>core components</em> and <em>blocks</em> reuse
+            Open-Source libraries, many from other Apache projects and some from outside
+            the Apache Software Foundation.
+        </p>
+        <p>
+            The <em>caching subsystem</em> uses sophisticated yet very customizable caching
+            algorithms to maximize performance. Although some components or blocks might use a
+            lot of resources (for example when generating PDF documents or bitmapped images), the Cocoon
+            core itself is very efficient and can be tuned to maximize performance under high
+            loads.
+        </p>
+
+        <h2>Licensing</h2>
+        <p>
+            Cocoon is distributed under the fairly liberal <em>Apache Software Foundation License</em>,
+            which allows it to be used in most any way provided due credit is given to the Foundation.
+        </p>
+
+        <h2>Community</h2>
+        <p>
+            The Cocoon project lives through its <em>contributors</em> and <em>committers</em>, a
+            community which is recognized for being friendly and efficient. Discussions take
+            place on the <em>mailing lists</em> and IRC channels, and conferences or informal mettings
+            called <em>GetTogethers</em> happen in various places.
+        </p>
+        <p>
+            The current team comprises more than 40 active committers, of which about 20
+            are regularly active and contribute new components, bug fixes, tests and documentation.
+        </p>
+
+    </content>
+</page>

@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.310 2004/05/01 00:49:29 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.311 2004/05/04 17:27:20 bdelacretaz Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BD" type="add">
+     Supersonic block added: the Supersonic Tour of Apache Cocoon.
+     Tutorial/example app focused on the Power Trio: Pipelines, Flow, Forms.
+   </action>
    <action dev="JH" type="update">
      Made JSPGenerator cacheable by simply extending the FileGenerator.
    </action>

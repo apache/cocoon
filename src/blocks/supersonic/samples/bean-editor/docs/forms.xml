@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+    <content>
+        <p>
+            At this point, our application allows us to navigate in
+            our TaskBean objects, and we're ready to start editing them.
+        </p>
+        <p>
+            To take advantage of the Cocoon Forms editing features, we need the
+            following:
+            <ul>
+                <li>
+                    A pipeline to call the Flowscript <em>handleForm()</em> function
+                    (provided by the Cocoon Forms Flowscript library, <em>Form.js</em>)
+                    with the appropriate parameters.
+                </li>
+                <li>
+                    A <em>Form Model</em> file, to define the data model
+                    of our form.
+                </li>
+                <li>
+                    A <em>Form Template</em> file, to define the layout
+                    of our form while letting Cocoon Forms create the appropriate
+                    HTML elements to edit our <em>form widgets</em>.
+                </li>
+                <li>
+                    A <em>Form Binding</em> file, to define a
+                    mapping between the Form data model and our Java beans.
+                </li>
+            </ul>
+            This seems a lot of work when described in this way, but notice
+            once again how modular things are: each "concern" of our bean editor
+            is cleary defined in its own place.
+        </p>
+        <p>
+            Note also that, while our example uses static XML files for these
+            definitions, nothing prevents you from generating them dynamically
+            using pipelines and the <em>cocoon:/</em> protocol. If your application
+            provides a central data dictionary, for example, it would be possible
+            to generate at least simple versions of the required definition files
+            automatically.
+        </p>
+        <h2>Sitemap</h2>
+        <p>
+            Let's look first at the pipeline definition for the
+            <em>edit/singleTask</em> request:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/sitemap.xmap/edit"/>
+        </p>
+        <p>
+            What this does is to call the <em>handleForm()</em> function of the
+            <em>Form.js</em> Flowscript library, telling it which of
+            our own Flowscript function to call to edit the form, and indicating
+            the locations of the <em>Form Model</em> (form-definition) and
+            <em>Form Binding</em> documents.
+        </p>
+        <p>
+            Later, the Flowscript function shown below will call this pipeline:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/sitemap.xmap/showForm"/>
+        </p>
+        <p>
+            Using the FormsTransformer to generate the appropriate HTML
+            elements for our form's <em>widgets</em>.
+        </p>
+
+        <h2>Flowscript</h2>
+        <p>
+            Here's our Flowscript form editing function, called by
+            the <em>handleForm</em> library function to edit our form:
+            <pre class="code">
+0027 // Edit a single TaskBean object using Cocoon Forms
+0028 function singleTaskEditor(form) {
+0029    id = cocoon.request.getParameter("taskId");
+0030    bean = db.getTaskBeanById(id);
+
+0032    form.load(bean);
+0033    form.showForm("internal/show-form/singleTask");
+0034    form.save(bean);
+0035    displayTaskBean(id,bean);
+0036 }
+            </pre>
+        </p>
+        <p>
+            Notice how simple and readable the code is - the magic happens
+            behind the Cocoon Forms scenes, based on the Forms definitions
+            shown below.
+        </p>
+
+        <h2>Form Model</h2>
+        <p>Here's the definition of our Form Model.</p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/cocoon-app/forms/singleTaskFormModel.xml/form"/>
+        <p>
+            As you can see, the Forms subsystem uses <em>widgets</em>
+            with <em>labels</em> and <em>datatypes</em> to define a Model.
+        </p>
+        <p>
+            If you omit the <em>repeater</em> element above, this is a fairly simple
+            data model which represents our form's data. The repeater is used to model
+            the 1-N relationship between our TaskBean and TaskCommentBean objects.
+        </p>
+        <p>
+            Strongly typed fields are an important features of Cocoon Forms,
+            and provide many standard validation features which make our
+            life easier.
+        </p>
+        <p>
+            This model is independent from the way the form
+            is going to look in HTML (or WML, or XUL, or whatever), and
+            also independent of the internal structure of our java beans.
+        </p>
+        <p>
+            Here we use constants for the widget labels (field names),
+            but the i18n transformer could be added to our pipeline to
+            easily generate views and forms in multiple languages.
+        </p>
+
+        <h2>Form Binding</h2>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/cocoon-app/forms/singleTaskFormBinding.xml/form"/>
+        <p>
+            Here's the <em>binding</em> definition, which allows the Forms
+            subsystem to automatically move data from our Form's internal model
+            to our java beans.
+        </p>
+        <p>
+            This looks simple enough: for example, we tell the Forms
+            subsystem that the form's <em>taskId</em> field is mapped
+            in readonly mode to the bean's <em>id</em> field.
+        </p>
+        <p>
+            The data mapping is triggered by the Flowscript <em>form.load</em> and
+            <em>form.save</em> calls shown above.
+        </p>
+        <p>
+            For the <em>taskId</em> form field, the <em>readonly</em> flag
+            makes the binding unidirectional,
+            The value of the form field will not be copied to the bean
+            when <em>form.save</em> is called.
+        </p>
+
+        <h2>Form Template</h2>
+        <p>
+            Here's the template used by the FormsTransformer, which is activated
+            by the above sitemap excerpt.
+        </p>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/cocoon-app/forms/singleTaskFormTemplate.xml/page"/>
+        <p>
+            Based on the Form Model definition, The FormsTransformer replaces
+            the &lt;ft:widget&gt; elements by the appropriate HTML input elements.
+        </p>
+
+        <h2>That's it!</h2>
+        <p>
+            Well, this time it certainly gets more complicated. But stand back and look
+            at the code in the <em>bean-editor/cocoon-app</em> directory
+            of this tour's files.
+        </p>
+        <p>
+            You will hopefully notice that we've written little "code", actually
+            almost only definitions but very little actual code. Yet, the editing application is
+            robust, easy to use, and very adaptable to different presentations or output
+            devices.
+        </p>
+        <p>
+            Another important feature of the Cocoon Forms subsystem is its extensibility:
+            a clean design makes it fairly easy to add custom java classes for custom formatting,
+            validation and bindings.
+        </p>
+    </content>
+</page>

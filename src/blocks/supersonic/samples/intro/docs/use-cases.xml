@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <p>
+            Here's a non exhaustive but typical list of Cocoon use-cases, including
+            some weird ones to show Cocoon's flexiblity...
+            <ul>
+                <li>Convert XML documents to HTML for publishing</li>
+                <li>Generate the presentation and navigation aspects of web sites</li>
+                <li>Generate HTML, PDF, RTF documents and images off-line</li>
+                <li>Acquire XML data over network connections, process and redistribute it</li>
+                <li>Act as a front-end for SOAP or XML-RPC backend components</li>
+                <li>Implement a complex HTML forms-based application which saves data in XML</li>
+                <li>Build a query and navigation front-end for a relational or XML database</li>
+                <li>Generate customized HTML pages depending on the type of client: different browsers, mobile devices, etc.</li>
+                <li>Dynamically generate images out of XML data</li>
+                <li>Generate MIDI music files from SAP data</li>
+                <li>Convert structured text files to XML and HTML</li>
+                <li>Build a secure authentication-based web site</li>
+                <li>Build a multi-language website using XML dictionaries to translate menus and messages</li>
+                <li>Build web portals using the latest JSR-168 standard</li>
+                <li>Write web applications with little code and no state management code using the Flow subsystem</li>
+                <li>Allow java objects to be edited from a WAP device</li>
+            </ul>
+            The combination of components available in Cocoon applies
+            to widely varied types of applications. This explains why more and more companies are making Cocoon
+            a strategic component of their toolset.
+        </p>
+        <p>
+            See also the list
+            of Cocoon features at
+            <a href="http://cocoon.apache.org/2.1/features.html">http://cocoon.apache.org/2.1/features.html</a>.
+        </p>
+    </content>
+</page>

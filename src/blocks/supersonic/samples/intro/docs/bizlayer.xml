@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <p>
+            A question which often comes when starting with Cocoon
+            is <em>how to implement my business layer</em>.
+        </p>
+        <p>
+            The short answer: <em>it's up to you</em> ;-)
+        </p>
+        <p>
+            More precisely, you could say that Cocoon leaves a lot
+            of freedom regarding how to access databases and run
+            business processes or apply business rules.
+        </p>
+        <p>
+            Here's a brief discussion of possible options. Some are real
+            today and some are still - as we like to say here -
+            <em>in the pipeline</em>.
+        </p>
+
+        <h2>Flowscript code</h2>
+        <p>
+            Writing your business layer code inside Flowscript might be tempting
+            after looking at this tour's examples, but <em>please don't</em>!
+        </p>
+        <p>
+            Flowscript is not meant for more than glue between pages and business code,
+            and its design and future evolution will stay targeted to small glue modules.
+        </p>
+
+        <h2>Independent java code</h2>
+        <p>
+            As we'll see in our example, it is very easy to access java
+            objects from Flowscript code.
+            Such objects do not necessarily need to know about Cocoon or
+            Avalon classes, which means that legacy code could be easily integrated,
+            provided their are no class libraries conflicts.
+        </p>
+        <p>
+            Working in this way however, prevents you from using any Avalon features
+            like configuration, logging and monitoring facilities.
+        </p>
+        <p>
+            As such, this is a suboptimal solution, but might be interesting for
+            small applications where you don't want to learn too much about Avalon
+            and Cocoon.
+        </p>
+
+        <h2>Avalon-based java code</h2>
+        <p>
+            The next step would be to write first-class Cocoon components based on
+            the Avalon framework, allowing your components to use all of the Avalon
+            facilities, and if necessary to access Cocoon components directly.
+        </p>
+        <p>
+            In this case, your build system will be integrated with the Cocoon build
+            system, and you will tailor your build to include only the required Cocoon
+            blocks.
+        </p>
+        <p>
+            This is the way to go if you don't mind the tighter coupling between Cocoon, Avalon
+            and your application, and if you are ready to learn these technologies in more detail.
+            The benefits are largely worth it for serious applications.
+        </p>
+        <p>
+            Structuring your code in <em>blocks</em> as is done inside Cocoon will make integration
+            easier and should help future migrations to newer versions of Cocoon.
+        </p>
+
+        <h2>RMI components</h2>
+        <p>
+            If you're worried about coupling, RMI components might be an interesting option: in this
+            case, only a small facade will be integrated in Cocoon, and your application will
+            run in its own process with no risks of class library conflicts.
+        </p>
+        <p>
+            The downside is added complexity and a possible loss of performance, depending on your
+            application patterns.
+        </p>
+
+        <h2>REST or SOAP backends</h2>
+        <p>
+            The next step towards decoupling would be to use REST or SOAP backends to communicate with your
+            business layer, leaving you free to choose the language and framework of your choice to
+            implement the backends. Interoperability with other systems can also be a big advantage
+            in this case.
+        </p>
+        <p>
+            There are some SOAP helper components in Cocoon today, but we don't see a lot of discussions
+            about them on the mailing lists, so we don't know if their use is widespread.
+        </p>
+        <p>
+            A good example of a REST backend is the XReporter database reporting framework
+            (<a href="http://xreporter.cocoondev.org/">http://xreporter.cocoondev.org/</a>).
+        </p>
+        <p>
+            Recent discussions about a possible integration of SOAP with Flowscript
+            are promising. Being able to transparently access SOAP backends directly from Flowscript
+            would make it possible to create forms-based frontends to SOAP services with a minimal
+            amount of code. Stay tuned...
+        </p>
+
+    </content>
+</page>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <p class="note">
+            All documents and files included in this tour are
+            Copyright (C) 1999-2004 by the Apache Software Foundation.
+            <br/>
+            This tour was originally created by Bertrand Delacrétaz
+            and donated to the Cocoon project in May 2004.
+        </p>
+        <p class="note">
+            You can generate a printable single-page version of this tour
+            <a href="../../print/supersonic-tour.html">here</a> (requires
+            an Internet connection for some example pages).
+        </p>
+        <h2>Overview</h2>
+        <p>
+            This <em>supersonic tour of Apache Cocoon</em> will give
+            you a quick overview of what Cocoon is and does.
+        </p>
+        <p>
+            We won't go deep into any part of Cocoon, but will rather
+            get an overall feel of what's in Cocoon.
+        </p>
+        <p>
+            The only parts that we will study in some detail are the
+            following Cocoon components, which are becoming the
+            mainstream way of using Cocoon:
+            <ul>
+                <li>
+                    The <em>pipelines</em>, used to transform
+                    XML data obtained from various sources into
+                    many differents output formats like HTML, PDF,
+                    SVG, XML, bitmapped pictures, etc.
+                </li>
+
+                <li>
+                    The <em>Flow subsystem</em>, a powerful yet simple
+                    to use mechanism to handle the interaction between
+                    multiple web pages and forms in a Web application.
+                </li>
+
+                <li>
+                    The <em>Cocoon Forms</em> subsystem, which uses
+                    simple and modular definitions of Web-based forms
+                    to allow java beans, XML documents or other objects
+                    to be edited via the Web.
+                </li>
+            </ul>
+        </p>
+
+        <h2>Running this application</h2>
+        <p>
+            If you're reading this documentation on paper and would like
+            to study the application directly in Cocoon, you will find it under
+            <em>blocks with samples</em> on the Cocoon samples page.
+
+        </p>
+
+        <h2>Studying this application</h2>
+        <p>
+            The complete source code of this tour is found under
+            <em>src/blocks/supersonic</em> in the Cocoon source code tree.
+            There is one directory with its own sitemap for each part of
+            the tutorial, so that you can easily dig deeper in your areas
+            of interest.
+        </p>
+
+        <h2>Code excerpts</h2>
+        <p>
+            Note that (according to the <em>lazyness is a virtue</em> rule),
+            most of the sitemap, flowscripts, XSLT transforms and
+            other code excerpts are dynamically inserted into this documentation
+            from the corresponding source files. This avoids having to
+            copy and paste code and ensures that the code you see stays up to date.
+        </p>
+
+        <h2>Contents</h2>
+        <insert-toc/>
+    </content>
+</page>

@@ -15,18 +15,13 @@
   limitations under the License.
 -->
 
-<page>
- <title>Login page</title>
- <content>
-   <linkbar/>
-   <para>
-     This page serves as an example of the authentication framework.
-   </para>
-   <para>Please log in using your name (cocoon will work)</para>
-   <form target="do-login" method="post">
-     <input type="text" name="username"/>
-     <input type="submit">Login</input>
-   </form>
- </content>
-</page>
+<xsamples xpath="/samples" unless="group[@name='Supersonic Tour']">
 
+  <group name="Supersonic Tour">
+    <sample name="Supersonic Tour of Cocoon" href="supersonic/">
+      Introduction and quick overview of the Cocoon Power Trio
+        (Pipelines, Flow, Forms)
+    </sample>
+  </group>
+
+</xsamples>

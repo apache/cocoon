@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.147 2004/04/21 22:03:53 joerg Exp $
+    | CVS $Id: gump.xml,v 1.148 2004/05/04 17:25:09 bdelacretaz Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1148,6 +1148,28 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/serializers-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-supersonic" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="supersonic-block">
+      <property name="block-name" value="supersonic"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="supersonic"/>
+    <depend project="cocoon-block-batik"/>
+    <depend project="cocoon-block-fop"/>
+    <depend project="cocoon-block-forms"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/supersonic-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
