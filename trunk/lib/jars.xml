@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.114 2003/10/19 15:58:15 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.115 2003/10/21 08:32:27 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -280,7 +280,7 @@
       performance oriented logging in applications.
     </description>
     <used-by>Cocoon logging</used-by>
-    <lib>core/logkit-1.2.jar</lib>
+    <lib>core/logkit-1.2.2.jar</lib>
     <homepage>http://avalon.apache.org/logkit/</homepage>
   </file>
 
