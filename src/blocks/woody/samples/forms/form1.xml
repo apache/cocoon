@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<wd:form
-  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
-  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+<!--+
+    | CVS $Id: form1.xml,v 1.17 2003/11/19 03:29:12 vgritsenko Exp $
+    +-->
+
+<wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
   
   <wd:widgets>
     <wd:field id="tab-state">
@@ -15,7 +19,20 @@
         </wd:validation>
       </wd:datatype>
       <wd:label>Enter an <b>email</b> address:</wd:label>
-      <wd:help>An email address must be <i>[name]@[domain].[tld]</i></wd:help>
+      <wd:help>
+        An email address must be in <i>[name]@[domain].[tld]</i> format.
+        <br/>
+        And if you do not know what <b>email</b> address is, then well, chances are
+        that you do not have it. However, if you have access to the Internet,
+        you can easily get yourself one!
+        <br/>
+        Choose one of the following options:
+        <ul>
+          <li><a href='http://mail.yahoo.com/'>Yahoo! Mail</a></li>
+          <li><a href='http://www.hotmail.com/'>Hotmail</a></li>
+        </ul>
+        <small>Anyway, the point of all this was to show a popup help with mixed html content.</small>
+      </wd:help>
     </wd:field>
   
     <wd:booleanfield id="somebool">
