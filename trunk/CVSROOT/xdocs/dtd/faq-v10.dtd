@@ -23,8 +23,8 @@ TYPICAL INVOCATION:
 NOTES:  
   FAQs represent a powerful knowledge base and a very good way of solving
   common user problems reducing messages on mail lists and reducing the effort
-  required for software installation and usage. Thid DTD want to be a common
-  format for FAQ interchange to allow FAQ-O-Matic-type workgroup services to 
+  required for software installation and usage. This DTD is intended to be a common
+  format for FAQ interchange to allow FAQ-O-Matic-type workgroup services to
   be published in other formats as well as enhancing data interchange.
   
 AUTHORS:
@@ -34,15 +34,16 @@ FIXME:
 
 CHANGE HISTORY:
   19991129 Initial version. (SM)
-    
+  20000913 Added optional FAQ sections. (RDG)
+
 COPYRIGHT:
   Copyright (c) @year@ The Apache Software Foundation.
-  
-  Permission to copy in any form is granted provided this notice is 
-  included in all copies. Permission to redistribute is granted 
-  provided this file is distributed untouched in all its parts and 
+
+  Permission to copy in any form is granted provided this notice is
+  included in all copies. Permission to redistribute is granted
+  provided this file is distributed untouched in all its parts and
   included files.
-  
+
 ==================================================================== -->
 
 <!-- =============================================================== -->
@@ -59,16 +60,19 @@ COPYRIGHT:
 <!-- Document Type Definition -->
 <!-- =============================================================== -->
 
-<!ELEMENT faqs (authors?, faq)+>
-<!ATTLIST faqs %common.att; 
+<!ELEMENT faqs (authors?, (faqsection | faq)+)>
+<!ATTLIST faqs %common.att;
                %title.att;>
 
+    <!ELEMENT faqsection (faq)+>
+    <!ATTLIST faqsection %common.att; %title.att;>
+
     <!ELEMENT faq (question, answer)>
-    <!ATTLIST faq %common.att;>
-    
+    <!ATTLIST faq %common-idreq.att;>
+
         <!ELEMENT question (%content.mix;)*>
         <!ATTLIST question %common.att;>
-            
+
         <!ELEMENT answer (%blocks;)*>
         <!ATTLIST answer author IDREF #IMPLIED>
 
