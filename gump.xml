@@ -97,6 +97,7 @@
 
     <jar name="cocoon.jar"/>
     <jar name="cocoon-deprecated.jar"/>
+    <jar name="cocoon-testcase.jar"/>
 
     <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
 
