@@ -24,13 +24,13 @@
 	  <p>
 		This document will not explain how to set up database
 		connectivity with Apache Cocoon. For this, see <link
-		  href="../developer/datasources.html">here.</link>
+		  href="../../developing/datasources.html">here.</link>
 	  </p>
 	  <p>
 		Basically, there are three different approaches available:
 		<link href="actions.html">Actions,</link> <link
-		  href="../advanced/xsp/logicsheet-concepts.html">logicsheets,</link>
-		and <link href="../user/sitemap/preface.html">transformers.</link> Each approach has
+		  href="../xsp/logicsheet-concepts.html">logicsheets,</link>
+		and <link href="sitemap.html">transformers.</link> Each approach has
 		its pros and cons. 
 	  </p>
 	</s1>
@@ -66,7 +66,7 @@
 	  </p>
 	  <p>
 		For more detailed information, read:  <link
-		  href="../components/actions/database-actions.html">Database Actions</link>.
+		  href="../actions/database-actions.html">Database Actions</link>.
 	  </p>
 	</s1>
 
@@ -98,7 +98,7 @@
 	  </p>
 	  <p>
 		For more detailed information, read:  <link
-		  href="../advanced/xsp/esql.html">ESQL Taglib</link>.
+		  href="../xsp/esql.html">ESQL Taglib</link>.
 	  </p>
 	</s1>
 
@@ -121,7 +121,7 @@
 	  </p>
 	  <p>
 		For more detailed information, read: <link
-		  href="../components/transformers/sql-transformer.html">SQL Transformer</link>.
+		  href="../transformers/sql-transformer.html">SQL Transformer</link>.
 	  </p>
 	</s1>
 

@@ -22,7 +22,7 @@
     </p>
 
     <note>
-     See the <link href="../preface.html">User documentation</link>
+     See the <link href="../index.html">User documentation</link>
      for details about configuration of each sitemap component.
      See the <link href="sitemap-examples.html">Example sitemap snippets</link>.
      Explore each <code>sitemap.xmap</code> in the distribution, to see
@@ -320,7 +320,7 @@
       An <link href="#interface-action"><code>Action</code></link> is a sitemap component
       that manipulates runtime parameters based on request and application state.
       An Action's result is available in the sitemap as map of name/value pairs.
-      Detailed information on actions may be found in <link href="../advanced/actions.html">the Actions
+      Detailed information on actions may be found in <link href="actions.html">the Actions
       section</link>.
      </p>
      <source>
@@ -344,7 +344,7 @@
      The <code>&lt;map:view&gt;</code> element defines different view
      of the site. Views are defined independent of pipelines and might
      be used with any pipeline defined in the sitemap. For more on views 
-     read <link href="../../concepts/views.html">the Views section</link>.
+     read <link href="views.html">the Views section</link>.
     </p>
    
     <source>
@@ -379,7 +379,7 @@
    <s2 title="The &lt;map:action-sets&gt;">
     <p>
      The <code>&lt;map:action-set&gt;</code> element is used to arrange actions in
-     groups (See <link href="../advanced/actions.html">the Actions section</link> for details).
+     groups (See <link href="actions.html">the Actions section</link> for details).
     </p>
 
     <source>
@@ -455,7 +455,7 @@
      transform and present the requested resource(s) to the client. 
     </p>
     <p>See also 
-      <link href="../advanced/matchers_selectors.html">Implementing Matchers And Selectors</link>
+      <link href="matchers_selectors.html">Implementing Matchers And Selectors</link>
     </p>
    </s2>
    
@@ -475,7 +475,7 @@
      using the XSLT <code><![CDATA[<xsl:test> statement]]></code>.
     </p>
     <p>See also 
-      <link href="../advanced/matchers_selectors.html">Implementing Matchers And Selectors</link>
+      <link href="matchers_selectors.html">Implementing Matchers And Selectors</link>
     </p>
    </s2>
    
@@ -490,7 +490,7 @@
       Without the use of Actions this would make the sitemap almost incomprehensible.
     </p>
     <p>See also 
-      <link href="../advanced/actions.html">Creating And Using Actions</link>
+      <link href="actions.html">Creating And Using Actions</link>
     </p>
    </s2>
    <s2 title="Generating">
@@ -500,7 +500,7 @@
     </p>
     <p>
      See also 
-      <link href="../../components/generators/generators.html">
+      <link href="../generators/generators.html">
         Generators in Cocoon.
       </link>
     </p>
@@ -603,7 +603,7 @@ The name of the parent element which contains the merged XML content from each p
     </p>
     <p>
      See also 
-      <link href="../../components/transformers/transformers.html">
+      <link href="../transformers/transformers.html">
         Transformers in Cocoon.
       </link>
     </p>
@@ -615,7 +615,7 @@ The name of the parent element which contains the merged XML content from each p
     </p>
     <p>
      See also 
-      <link href="../../components/serializers/serializers.html">
+      <link href="../serializers/serializers.html">
         Serializers in Cocoon.
       </link>
     </p>
