@@ -200,8 +200,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         this.envPortletContext = new PortletContext(this.portletContext);
         this.portletContextPath = this.portletContext.getRealPath("/");
 
-        initLogger();
-
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
         final String workDirParam = getInitParameter("work-directory");
@@ -229,6 +227,9 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             this.workDir = new File(workDir, "cocoon-files");
         }
         this.workDir.mkdirs();
+
+        // Init logger
+        initLogger();
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
@@ -866,12 +867,13 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         ContainerUtil.enableLogging(loggerManager, logger);
 
         final DefaultContext subcontext = new DefaultContext();
+        subcontext.put(Constants.CONTEXT_WORK_DIR, workDir);
         subcontext.put("portlet-context", this.portletContext);
         if (this.portletContextPath == null) {
             File logSCDir = new File(this.workDir, "log");
             logSCDir.mkdirs();
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Setting servlet-context for LogKit to " + logSCDir);
+                getLogger().warn("Setting context-root for LogKit to " + logSCDir);
             }
             subcontext.put("context-root", logSCDir.toString());
         } else {
