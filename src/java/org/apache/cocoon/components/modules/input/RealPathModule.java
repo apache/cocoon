@@ -68,7 +68,7 @@ import java.util.Vector;
  * running in a .war file), <code>null</code> will be returned.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: RealPathModule.java,v 1.1 2003/03/27 03:43:01 jefft Exp $
+ * @version CVS $Id: RealPathModule.java,v 1.2 2004/02/07 12:43:24 joerg Exp $
  */
 
 /*
@@ -104,6 +104,10 @@ public class RealPathModule extends AbstractInputModule implements ThreadSafe {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) throws ConfigurationException {
 
         String uri = ObjectModelHelper.getContext(objectModel).getRealPath(name);
+        int lastCharPos = uri.length() - 1;
+        if (uri.charAt(lastCharPos) == '\\') {
+            uri = uri.substring(0, lastCharPos);
+        }
         return uri;
     }
 
