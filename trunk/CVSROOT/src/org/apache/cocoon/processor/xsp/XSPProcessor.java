@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.20 2000-04-28 02:40:26 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.21 2000-05-07 00:43:51 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.20 $ $Date: 2000-04-28 02:40:26 $
+ * @version $Revision: 1.21 $ $Date: 2000-05-07 00:43:51 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -89,6 +89,8 @@ public class XSPProcessor extends AbstractActor
 
   protected Hashtable languages;
   protected File repositoryFile;
+
+  protected String encoding;
 
   protected Store store;
   protected Monitor monitor;
@@ -138,6 +140,9 @@ public class XSPProcessor extends AbstractActor
 
     // create a repository for xsp logicsheets
     Hashtable xspLogicsheets = new Hashtable(10);
+
+    // Set default encoding
+    this.encoding = (String) conf.get("encoding");
 
     // Set properties and actors for each supported language
     Tokenizer t = new Tokenizer((String) conf.get("languages"));
@@ -199,6 +204,7 @@ public class XSPProcessor extends AbstractActor
         (XSPLanguageProcessor) enum.nextElement();
 
       try {
+        languageProcessor.setEncoding(this.encoding);
         languageProcessor.setRepository(this.repositoryFile);
       } catch (Exception e) {
         throw new RuntimeException(
@@ -318,124 +324,133 @@ public class XSPProcessor extends AbstractActor
       this.store.hold(filename, pageEntry);
     }
 
-    // [Re]create page if necessary
-    if (pageEntry.hasChanged()) {
-      // Update logicsheets in page entry
-      pageEntry.setLogicsheets(
-        this.getLogicsheets(document, request)
-      );
+    // Get page from Cocoon cache AGAIN to ensure proper synchronization
+    pageEntry = (PageEntry) this.store.get(filename);
 
-      // Build XSP parameters for logicsheet
-      Hashtable logicsheetParameters = new Hashtable();
-      logicsheetParameters.put("filename", filename);
-      logicsheetParameters.put("language", languageName);
-
-      // Apply each logicsheet in sequence
-      Vector logicsheetList = pageEntry.getLogicsheets();
-      int logicsheetCount = logicsheetList.size();
-      for (int i = 0; i < logicsheetCount; i++) {
-        Object resource = logicsheetList.elementAt(i);
-        XSPLogicsheet logicsheet =
-          (XSPLogicsheet) this.store.get(resource.toString());
-        document = logicsheet.apply(document, logicsheetParameters);
-      }
-
-      // Apply namespace-defined logicsheets
-      NamedNodeMap attributes = root.getAttributes();
-      int attrCount = attributes.getLength();
-      for (int i = 0; i < attrCount; i++) {
-        Attr attr = (Attr) attributes.item(i);
-        String attrName = attr.getName();
-
-        // Is this attribute a namespace definition?
-        if (
-          attrName.length() >= 6 &&
-          attrName.substring(0, 6).equals("xmlns:")
-        ) {
-          String namespace = attrName.substring(6);
-
-          // Not xsp yet, it comes forecefully last
-          if (!namespace.equals("xsp")) {
-            Hashtable byLanguage = (Hashtable) this.byNamespace.get(namespace);
-            if (byLanguage != null) { // Is such a namespace mapped?
-              document =
-                ((XSPLogicsheet) byLanguage.get(languageName)).
-              apply(document, logicsheetParameters);
+    synchronized (pageEntry) {
+      // [Re]create page if necessary
+      if (pageEntry.hasChanged()) {
+        // Update logicsheets in page entry
+        pageEntry.setLogicsheets(
+          this.getLogicsheets(document, request)
+        );
+  
+        // Build XSP parameters for logicsheet
+        Hashtable logicsheetParameters = new Hashtable();
+        logicsheetParameters.put("filename", filename);
+        logicsheetParameters.put("language", languageName);
+  
+        // Apply each logicsheet in sequence
+        Vector logicsheetList = pageEntry.getLogicsheets();
+        int logicsheetCount = logicsheetList.size();
+        for (int i = 0; i < logicsheetCount; i++) {
+          Object resource = logicsheetList.elementAt(i);
+          XSPLogicsheet logicsheet =
+            (XSPLogicsheet) this.store.get(resource.toString());
+          document = logicsheet.apply(document, logicsheetParameters);
+        }
+  
+        // Apply namespace-defined logicsheets
+        NamedNodeMap attributes = root.getAttributes();
+        int attrCount = attributes.getLength();
+        for (int i = 0; i < attrCount; i++) {
+          Attr attr = (Attr) attributes.item(i);
+          String attrName = attr.getName();
+  
+          // Is this attribute a namespace definition?
+          if (
+            attrName.length() >= 6 &&
+            attrName.substring(0, 6).equals("xmlns:")
+          ) {
+            String namespace = attrName.substring(6);
+  
+            // Not xsp yet, it comes forecefully last
+            if (!namespace.equals("xsp")) {
+              Hashtable byLanguage = (Hashtable) this.byNamespace.get(namespace);
+              if (byLanguage != null) { // Is such a namespace mapped?
+                document =
+                  ((XSPLogicsheet) byLanguage.get(languageName)).
+                apply(document, logicsheetParameters);
+              }
             }
           }
         }
-      }
-
-      // Now is the time... apply the implied, built-in logicsheet
-      document =
-        (
-         (XSPLogicsheet)
-         ((Hashtable) this.byNamespace.get("xsp")).get(languageName)
-        ).
-          apply(document, logicsheetParameters);
-
-
-      // Retrieve and format generated source code
-      Element sourceElement = document.getDocumentElement();
-      // sourceElement.normalize();
-      // String sourceCode = sourceElement.getFirstChild().getNodeValue();
-      /*
-        For large XSP pages normalize() can be
-	_really_ slow so we do it ourselves
-      */
-      StringBuffer buffer = new StringBuffer();
-      Node node = sourceElement.getFirstChild();
-      while (node != null) {
-        switch(node.getNodeType()) {
-          case Node.TEXT_NODE:
-          case Node.CDATA_SECTION_NODE:
-            buffer.append(((Text)node).getData());
-            break;
+  
+        // Now is the time... apply the implied, built-in logicsheet
+        document =
+          (
+           (XSPLogicsheet)
+           ((Hashtable) this.byNamespace.get("xsp")).get(languageName)
+          ).
+            apply(document, logicsheetParameters);
+  
+  
+        // Retrieve and format generated source code
+        Element sourceElement = document.getDocumentElement();
+        // sourceElement.normalize();
+        // String sourceCode = sourceElement.getFirstChild().getNodeValue();
+        /*
+          For large XSP pages normalize() can be
+         _really_ slow so we do it ourselves
+        */
+        StringBuffer buffer = new StringBuffer();
+        Node node = sourceElement.getFirstChild();
+        while (node != null) {
+          switch(node.getNodeType()) {
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+              buffer.append(((Text)node).getData());
+              break;
+          }
+          node = node.getNextSibling();
         }
-        node = node.getNextSibling();
-      }
-      String sourceCode = languageProcessor.formatCode(buffer.toString());      
-
-      sourceCode = languageProcessor.formatCode(sourceCode);
-
-      // Store source code in repository
-      String baseName = XSPUtil.normalizedBaseName(filename);
-
-      String sourceExtension = languageProcessor.getSourceExtension();
-      if (sourceExtension != null) {
-        baseName += "." + sourceExtension;
-      }
-
-      String sourceFilename =
-        repositoryFile.getCanonicalPath() +
-        File.separator +
-          baseName;
-
-      // Create repository subdirectories as needed
-      String subdirName = XSPUtil.pathComponent(sourceFilename);
-      File subdirFile = new File(subdirName);
-      if (!subdirFile.exists()) {
-        if (!subdirFile.mkdirs()) {
-          throw new Exception("Can't create subdirectory: " + subdirName);
+        String sourceCode = languageProcessor.formatCode(buffer.toString());      
+  
+        sourceCode = languageProcessor.formatCode(sourceCode);
+  
+        // Store source code in repository
+        String baseName = XSPUtil.normalizedBaseName(filename);
+  
+        String sourceExtension = languageProcessor.getSourceExtension();
+        if (sourceExtension != null) {
+          baseName += "." + sourceExtension;
         }
+  
+        String sourceFilename =
+          repositoryFile.getCanonicalPath() +
+          File.separator +
+            baseName;
+  
+        // Create repository subdirectories as needed
+        String subdirName = XSPUtil.pathComponent(sourceFilename);
+        File subdirFile = new File(subdirName);
+        if (!subdirFile.exists()) {
+          if (!subdirFile.mkdirs()) {
+            throw new Exception("Can't create subdirectory: " + subdirName);
+          }
+        }
+  
+        // Dump to file
+        byte[] bytes = null;
+        if (this.encoding == null) {
+          bytes = sourceCode.getBytes();
+        } else {
+          bytes = sourceCode.getBytes(this.encoding);
+        }
+        FileOutputStream fileWriter = new FileOutputStream(sourceFilename); 
+        fileWriter.write(bytes);
+        fileWriter.flush();
+        fileWriter.close();
+  
+        // Compile generated code
+        XSPPage page = pageEntry.getPage();
+        if (page != null) {
+          languageProcessor.unload(page);
+        }
+  
+        languageProcessor.compile(baseName);
+        this.loadPage(languageProcessor, pageEntry, baseName);
       }
-
-      // Dump to file
-      FileWriter fileWriter = new FileWriter(sourceFilename);
-      fileWriter.write(sourceCode);
-      fileWriter.flush();
-      fileWriter.close();
-
-      // Compile generated code
-      XSPPage page = pageEntry.getPage();
-      if (page != null) {
-        languageProcessor.unload(page);
-      }
-
-System.err.println("Start compilation: " + new Date());
-      languageProcessor.compile(baseName);
-System.err.println("End compilation: " + new Date());
-      this.loadPage(languageProcessor, pageEntry, baseName);
     }
 
     return pageEntry.getPage().getDocument(request, response);
