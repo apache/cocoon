@@ -306,8 +306,10 @@
 
           InputSource is = null;
           try {
-            is = new InputSource (new FileReader (filepath));
-            this.colorize(XSPUtil.getDocument(is,parser), document, this.contentHandler);
+            org.apache.xerces.parsers.DOMParser parser = 
+                        new org.apache.xerces.parsers.DOMParser();
+            parser.parse( filepath ); 
+            this.colorize(parser.getDocument(), document, this.contentHandler);
           } catch (FileNotFoundException fnfe) {
             throw new SAXException (fnfe);
           } catch (IOException ie) {
