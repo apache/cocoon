@@ -4,6 +4,9 @@
 
 <xsl:template match="/">
 
+<html>
+<body style="background-color: #FFFFFF; margin: 0px 0px 0px 0px; font-family: Verdana, Helvetica, sans-serif;	font-size : 100%;">
+
 <table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody> 
 <tr>
 <td colspan="2"> 
@@ -20,8 +23,9 @@
 		</td>
 		</tr>
 		<tr> 
-		<td align="center" height="1%" noWrap="" bgcolor="#294563" width="1%"> 
+		<td align="right" height="1%" noWrap="" bgcolor="#294563" width="1%"> 
 			<img src="space.gif" width="300" height="10"/>
+            <a href="logout">LOGOUT</a>
 		</td>
 		</tr>
 	</tbody>
@@ -50,8 +54,8 @@
 </tbody>
 </table>
 
-
-
+</body>
+</html>
 
 </xsl:template>
 

@@ -92,37 +92,32 @@
     <!-- Test pipeline for layout engine -->
     <map:match pattern="portal">
         <map:act type="auth-protect">
-          <map:parameter name="handler" value="portalhandler"/> 
-          <map:parameter name="application" value="portal"/> 
+            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="application" value="portal"/> 
 
-          <map:generate type="portal" label="content">
-        	<map:parameter name="portal-name" value="portal" />
-          </map:generate>
-
-          <map:transform type="cinclude"/> 
-
-          <map:transform src="{global:skin}styles/header.xsl"/>
-          <map:transform src="{global:skin}styles/portal_layout.xsl"/>
-
+            <map:generate type="portal" label="content">
+        	    <map:parameter name="portal-name" value="portal" />
+            </map:generate>
+            <map:transform src="{global:skin}styles/header.xsl"/>
+            <map:transform type="cinclude"/> 
+            <map:transform type="encodeURL"/>
 <!--
-          <map:transform type="htmlroot" />
--->
-          <map:serialize type="html"/> 
+            <map:transform type="htmlroot" />
+-->          
+            <map:serialize type="html"/> 
         </map:act>
-        <map:redirect-to uri="login"/>
     </map:match>
         
     <!-- authentication stuff -->
 
     <map:match pattern="login">
         <map:act type="auth-loggedIn">
-          <map:parameter name="handler" value="portalhandler"/> 
-          <map:redirect-to uri="portal"/>
+            <map:parameter name="handler" value="portalhandler"/> 
+            <map:redirect-to uri="portal"/>
         </map:act>
         <map:generate src="resources/login.xml"/>
         <map:transform src="{global:skin}styles/login-html.xsl"/>
         <map:transform src="{global:skin}styles/header.xsl"/>
-        <map:transform src="{global:skin}styles/portal_layout.xsl"/>
         <map:transform type="encodeURL"/>
         <map:serialize/>
     </map:match>
@@ -159,10 +154,9 @@
 
     <map:match pattern="logout">
 		<map:act type="auth-protect">
-		  <map:parameter name="handler" value="portalhandler"/> 
-          <map:parameter name="application" value="portal"/> 
+		    <map:parameter name="handler" value="portalhandler"/> 
 
-		  <map:act type="auth-logout"/>
+		    <map:act type="auth-logout"/>
         </map:act>
 <!-- TODO logout??? -->
         <map:redirect-to uri="login"/>
