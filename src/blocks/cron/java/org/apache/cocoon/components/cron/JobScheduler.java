@@ -53,10 +53,10 @@ public interface JobScheduler {
      *
      * @param name the name of the job
      * @param jobrole The Avalon components role name of the job itself
-     * @param cronSpec the time specification using a cron expression
+     * @param schedulingExpression the time specification using a scheduling expression
      * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
      */
-    void addJob(String name, String jobrole, String cronSpec, boolean canRunConcurrently)
+    void addJob(String name, String jobrole, String schedulingExpression, boolean canRunConcurrently)
     throws CascadingException;
 
     /**
@@ -64,12 +64,12 @@ public interface JobScheduler {
      *
      * @param name the name of the job
      * @param jobrole The Avalon components role name of the job itself
-     * @param cronSpec the time specification using a cron expression
+     * @param schedulingExpression the time specification using a scheduling expression
      * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
      * @param params Additional Parameters to setup CronJob
      * @param objects A Map with additional object to setup CronJob
      */
-    void addJob(String name, String jobrole, String cronSpec, boolean canRunConcurrently, Parameters params, Map objects)
+    void addJob(String name, String jobrole, String schedulingExpression, boolean canRunConcurrently, Parameters params, Map objects)
     throws CascadingException;
 
     /**
@@ -78,10 +78,10 @@ public interface JobScheduler {
      * @param name the name of the job
      * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
      *        specific class (i.e. org.quartz.Job)
-     * @param cronSpec the time specification using a cron expression
+     * @param schedulingExpression the time specification using a scheduling expression
      * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
      */
-    void addJob(String name, Object job, String cronSpec, boolean canRunConcurrently)
+    void addJob(String name, Object job, String schedulingExpression, boolean canRunConcurrently)
     throws CascadingException;
 
     /**
@@ -90,12 +90,12 @@ public interface JobScheduler {
      * @param name the name of the job
      * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
      *        specific class (i.e. org.quartz.Job)
-     * @param cronSpec the time specification using a cron expression
+     * @param schedulingExpression the time specification using a scheduling expression
      * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
      * @param params Additional Parameters to setup CronJob
      * @param objects A Map with additional object to setup CronJob
      */
-    void addJob(String name, Object job, String cronSpec, boolean canRunConcurrently, Parameters params, Map objects)
+    void addJob(String name, Object job, String schedulingExpression, boolean canRunConcurrently, Parameters params, Map objects)
     throws CascadingException;
 
     /**
