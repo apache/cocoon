@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,59 +16,56 @@
 package org.apache.cocoon.portal.coplets.basket;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplets.basket.BasketManager.ActionInfo;
+import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * This transformer supports the basket feature. It can generate links to
- * add content and to upload files into the basket.
- *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * This transformer supports the basket and briefcase feature. It can generate links to
+ * add content into a content store.
  *
  * @version CVS $Id$
  */
 public class BasketTransformer
-extends AbstractSAXTransformer {
-
-    /** The namespace URI to listen for. */
-    public static final String NAMESPACE_URI = "http://apache.org/cocoon/portal/basket/1.0";
+    extends AbstractBasketTransformer {
 
     /** Element to add a link */
     protected static final String ADD_ITEM_ELEMENT = "add-item";
 
-    /** Element to upload an item */
-    protected static final String UPLOAD_ITEM_ELEMENT = "upload-item";
+    /** Element to show all actions */
+    protected static final String SHOW_ACTIONS_ELEMENT = "show-actions";
 
-    /** Element for the upload form */
-    protected static final String UPLOAD_FORM_ELEMENT = "upload-form";
+    /** The default store: briefcase or basket */
+    protected String defaultStoreName = "basket";
 
-    /** Upload element list */
-    protected List uploadElements = new ArrayList();
+    /** The default link element name */
+    protected String defaultLinkElement = "a";
 
-    /**
-     * Constructor
-     */
-    public BasketTransformer() {
-        this.defaultNamespaceURI = NAMESPACE_URI;
-    }
+    /** The default namespace for the link element */
+    protected String defaultLinkElementNS = "";
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void recycle() {
-        super.recycle();
-        this.uploadElements.clear();
+    public void configure(Configuration configuration)
+    throws ConfigurationException {
+        super.configure(configuration);
+        this.defaultStoreName = configuration.getChild("default-store").getValue(this.defaultStoreName);
+        this.defaultLinkElement = configuration.getChild("default-link-element").getValue(this.defaultLinkElement);
+        this.defaultLinkElementNS = configuration.getChild("default-link-element-ns").getValue(this.defaultLinkElementNS);
     }
 
     /* (non-Javadoc)
@@ -77,12 +74,11 @@ extends AbstractSAXTransformer {
     public void endTransformingElement(String uri, String name, String raw)
     throws ProcessingException, IOException, SAXException {
         if ( ADD_ITEM_ELEMENT.equals(name) ) {
-            this.endElement("", "a", "a");
-        } else if ( UPLOAD_ITEM_ELEMENT.equals(name) ) {
-            this.endElement("", "input", "input");
-        } else if ( UPLOAD_FORM_ELEMENT.equals(name) ) {
-            this.endElement("", "form", "form");
-            this.uploadElements = new ArrayList();
+            final String linkElementName = this.parameters.getParameter("link-element", this.defaultLinkElement);
+            final String linkElementNS = this.parameters.getParameter("link-element-ns", this.defaultLinkElementNS);
+            XMLUtils.endElement(this.contentHandler, linkElementNS, linkElementName);
+        } else if ( SHOW_ACTIONS_ELEMENT.equals(name) ) {
+            // nothing to do here
         }
     }
 
@@ -93,63 +89,83 @@ extends AbstractSAXTransformer {
                                          String raw, Attributes attr)
     throws ProcessingException, IOException, SAXException {
         if ( ADD_ITEM_ELEMENT.equals(name) ) {
-            String value = attr.getValue("content");
+            PortalService service = null;
+            try {
+                service = (PortalService)this.manager.lookup(PortalService.ROLE);
+
+                // do we want to add content or a link?
             boolean addContent = false;
+                final String value = attr.getValue("content");
             if ( value != null ) {
                 addContent = new Boolean(value).booleanValue();
             }
-            String href = attr.getValue("href");
-            PortalService service = null;
-            try {
-                service = (PortalService)this.manager.lookup(PortalService.ROLE);
-                ContentItem ci = new ContentItem(href, addContent);
-                Event e = new AddItemEvent(ci);
-                AttributesImpl ai = new AttributesImpl();
-                ai.addCDATAAttribute("href", service.getComponentManager().getLinkService().getLinkURI(e));
-                this.startElement("", "a", "a", ai);
-            } catch (ServiceException se) {
-                throw new SAXException("Unable to lookup portal service.", se);
-            } finally {
-                this.manager.release(service);
+                
+                // do we want to add a url or a coplet?
+                final ContentItem ci;
+                final String href = attr.getValue("href");            
+                if ( href != null ) {
+                    ci = new ContentItem(href, addContent);
+                } else {
+                    final String copletId = attr.getValue("coplet");
+                    final CopletInstanceData cid = service.getComponentManager().getProfileManager().getCopletInstanceData(copletId);                    
+                    ci = new ContentItem(cid, addContent);
             }
 
-        } else if ( UPLOAD_ITEM_ELEMENT.equals(name) ) {
-            this.uploadElements.add(attr.getValue("name"));
-            this.startElement("", "input", "input", attr);
-
-        } else if ( UPLOAD_FORM_ELEMENT.equals(name) ) {
-            AttributesImpl ai = new AttributesImpl(attr);
-            PortalService service = null;
-            String parameters;
-            try {
-                service = (PortalService)this.manager.lookup(PortalService.ROLE);
-                Event e = new UploadItemEvent(this.uploadElements);
-                parameters = service.getComponentManager().getLinkService().getLinkURI(e);
-                int pos = parameters.indexOf('?');
-                ai.addCDATAAttribute("action", parameters.substring(0, pos));
-                parameters = parameters.substring(pos+1);
-            } catch (ServiceException se) {
-                throw new SAXException("Unable to lookup portal service.", se);
-            } finally {
-                this.manager.release(service);
-            }
-            this.startElement("", "form", "form", ai);
-            if ( parameters != null && parameters.length() > 0 ) {
-                // create hidden input fields
-                RequestParameters pars = new RequestParameters(parameters);
-                Enumeration enumeration = pars.getParameterNames();
-                while ( enumeration.hasMoreElements() ) {
-                    String pName = (String)enumeration.nextElement();
-                    String pValue = pars.getParameter(pName);
-                    AttributesImpl hiddenAttrs = new AttributesImpl();
-                    hiddenAttrs.addCDATAAttribute("type", "hidden");
-                    hiddenAttrs.addCDATAAttribute("name", pName);
-                    hiddenAttrs.addCDATAAttribute("value", pValue);
-                    this.startElement("", "input", "input", hiddenAttrs);
-                    this.endElement("", "input", "input");
+                // do we want to add the content to the basket or to the briefcase
+                final ContentStore store;
+                final String storeName = (attr.getValue("store") == null ? this.defaultStoreName : attr.getValue("store"));
+                if ("basket".equalsIgnoreCase(storeName) )     {
+                    store = this.basketManager.getBasket();
+                } else {
+                    store = this.basketManager.getBriefcase();
                 }
-            }
 
+                final Event e = new AddItemEvent(store, ci);
+                final AttributesImpl ai = new AttributesImpl();
+                String newLink = service.getComponentManager().getLinkService().getLinkURI(e);
+                // check for bockmark
+                final String bookmark = attr.getValue("bookmark");
+                if ( bookmark != null && bookmark.length() > 0) {
+                    int pos = newLink.indexOf('?') + 1;
+                    final char separator;
+                    if ( bookmark.indexOf('?') == -1 ) {
+                        separator = '?';
+                    } else {
+                        separator = '&';
+                    }
+                    newLink = bookmark + separator + newLink.substring(pos);
+                }
+                ai.addCDATAAttribute("href", newLink);
+                
+                final String linkElementName = this.parameters.getParameter("link-element", this.defaultLinkElement);
+                final String linkElementNS = this.parameters.getParameter("link-element-ns", this.defaultLinkElementNS);
+                XMLUtils.startElement(this.contentHandler, linkElementNS, linkElementName, ai);
+            } catch (ServiceException se) {
+                throw new SAXException("Unable to lookup portal service.", se);
+            } finally {
+                this.manager.release(service);
+            }
+        } else if ( SHOW_ACTIONS_ELEMENT.equals(name) ) {
+            // basket or briefcase
+            final List actions;
+            final String storeName = (attr.getValue("store") == null ? this.defaultStoreName : attr.getValue("store"));
+            if ("basket".equalsIgnoreCase(storeName) )     {
+                actions = this.basketManager.getBasketActions();
+            } else {
+                actions = this.basketManager.getBriefcaseActions();
+                }
+            final String checkedAction = attr.getValue("checked");
+            final Iterator i = actions.iterator();
+            AttributesImpl a = new AttributesImpl();
+            while ( i.hasNext() ) {
+                final BasketManager.ActionInfo current = (ActionInfo) i.next();
+                a.addCDATAAttribute("name", current.name);
+                if ( current.name.equals(checkedAction) ) {
+                    a.addCDATAAttribute("checked", "true");
+            }
+                XMLUtils.createElement(this.xmlConsumer, "action", a);
+                a.clear();
+            }
         }
     }
 

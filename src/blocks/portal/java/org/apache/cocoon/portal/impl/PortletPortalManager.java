@@ -68,7 +68,7 @@ public class PortletPortalManager
 	extends PortalManagerImpl
 	implements Initializable, Contextualizable, Disposable, Subscriber {
 
-    public static ThreadLocal copletInstanceData = new InheritableThreadLocal();
+    public static final ThreadLocal copletInstanceData = new InheritableThreadLocal();
     
     /** The servlet configuration for pluto */
     protected ServletConfig servletConfig;

@@ -89,12 +89,9 @@ public class PageLabelLinkService extends DefaultLinkService {
                         buffer.append('?');
                     }
                     String encodedKey;
-                    try
-                    {
+                    try {
                         encodedKey = SourceUtil.encode(key.toString(), "utf-8");
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         encodedKey = SourceUtil.encode(key.toString());
                     }
                     buffer.append(requestParameterName).append('=').append(encodedKey);
@@ -233,13 +230,10 @@ public class PageLabelLinkService extends DefaultLinkService {
             uri.append('?');
         }
         String encodedLabel;
-        try
-        {
-            encodedLabel = SourceUtil.encode(label.toString(), "utf-8");
-        }
-        catch (Exception e)
-        {
-            encodedLabel = SourceUtil.encode(label.toString());
+        try {
+            encodedLabel = SourceUtil.encode(label, "utf-8");
+        } catch (Exception e) {
+            encodedLabel = SourceUtil.encode(label);
         }
         uri.append(parmName).append('=').append(encodedLabel);
         return uri.toString();

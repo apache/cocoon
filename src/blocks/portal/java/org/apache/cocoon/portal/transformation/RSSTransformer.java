@@ -133,7 +133,7 @@ implements CacheableProcessingComponent {
         }
     }
 
-   class HTMLFilter extends IncludeXMLConsumer {
+   static class HTMLFilter extends IncludeXMLConsumer {
        
        int bodyCount = 0;
        

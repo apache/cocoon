@@ -15,7 +15,11 @@
   limitations under the License.
 -->
 <p xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
-This is a sample for the basket portlet.<br/>
-<basket:add-item href="context://samples/blocks/portal/coplets/basket/sample.xml" content="true">Add the content</basket:add-item>&#160;
-<basket:add-item href="context://samples/blocks/portal/coplets/basket/sample.xml">Add the link</basket:add-item>
+This number (<value/>) is stored in an attribute.<br/>
+<buttons/>
+<basket:add-item coplet="basket-sample-2" content="true">Add the content</basket:add-item>&#160;
+<basket:add-item coplet="basket-sample-2">Add the link</basket:add-item>
+<jx:if test="#{isBasketFull}" xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+<br/><b>You have reached the allowed quota for your basket.</b>
+</jx:if>
 </p>

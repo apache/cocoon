@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,15 @@
  */
 package org.apache.cocoon.portal.coplets.basket;
 
-
 /**
- * This event is used to add an item to the basket
+ * This is a per user basket that is persistent between sessions
+ * Make a subclass to add your specific functionality
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: AddItemEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id: Basket.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public class AddItemEvent extends BasketEvent {
+public class Briefcase extends ContentStore {
     
-    /** The item to add */
-    protected Object item;
-    
-    /**
-     * Constructor
-     * @param item The item that will be added to the basket
-     */
-    public AddItemEvent(Object item) {
-        this.item = item;
-    }
-    
-    /**
-     * The item
-     */
-    public Object getItem() {
-        return this.item;
+    public Briefcase(String id) {
+        super(id);
     }
 }

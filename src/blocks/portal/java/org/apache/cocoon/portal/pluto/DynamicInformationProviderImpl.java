@@ -125,10 +125,9 @@ implements DynamicInformationProvider {
         return "text/html";
     }
 
-    static protected HashSet responseMimeTypes;
+    static protected final HashSet responseMimeTypes = new HashSet();
     
     static {
-        responseMimeTypes = new HashSet();
         responseMimeTypes.add("text/html");        
     }
     

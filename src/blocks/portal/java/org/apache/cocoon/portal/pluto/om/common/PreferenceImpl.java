@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.pluto.om.common.Preference;
 import org.apache.pluto.om.common.PreferenceCtrl;
 import org.apache.pluto.util.StringUtils;
@@ -114,7 +115,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
     }
 
     public void setReadOnly(String readOnly) {
-        this.readOnly = new Boolean(readOnly);
+        this.readOnly = BooleanUtils.toBooleanObject(readOnly);
     }
 
     // additional methods.
@@ -122,10 +123,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
     // internal methods only used by castor
 
     public String getReadOnly() {
-        if (readOnly == null) {
-            return Boolean.FALSE.toString();
-        }
-        return readOnly.toString();
+        return BooleanUtils.toStringTrueFalse(BooleanUtils.toBoolean(readOnly));
     }
 
     public Collection getCastorValues() {

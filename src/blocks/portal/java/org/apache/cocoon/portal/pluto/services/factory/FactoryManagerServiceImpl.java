@@ -132,15 +132,15 @@ implements FactoryManagerService, Initializable, Contextualizable, Serviceable, 
 
         factories.put(ControllerFactory.class.getName(), ControllerFactoryImpl.class.getName());
     
-        for (Iterator iter = factories.keySet().iterator(); iter.hasNext (); ) {
-            String factoryInterfaceName = (String) iter.next ();
-
+        for (Iterator iter = factories.entrySet().iterator(); iter.hasNext (); ) {
+            Map.Entry me = (Map.Entry)iter.next();
+            String factoryInterfaceName = (String)me.getKey();
             // try to get hold of the factory
             Class factoryInterface;
 
             factoryInterface = Class.forName (factoryInterfaceName);
 
-            String factoryImplName = (String)factories.get(factoryInterfaceName);
+            String factoryImplName = (String)me.getValue();
             Class factoryImpl = Class.forName (factoryImplName);
             Factory factory = (Factory) factoryImpl.newInstance ();
 
@@ -157,7 +157,6 @@ implements FactoryManagerService, Initializable, Contextualizable, Serviceable, 
             factoryList.add (0, factory);
 
         }
-
     }
 
     /* (non-Javadoc)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,42 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplets.basket;
+package org.apache.cocoon.portal.coplets.basket.events;
 
+import org.apache.cocoon.portal.coplets.basket.Briefcase;
 
 /**
- * Clean all baskets or one single basket
+ * Clean all briefcases or a single one
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id$
+ * @version CVS $Id: CleanBasketEvent.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public class CleanBasketEvent extends BasketEvent {
-    
-    /** The basket id that will be cleaned */
-    protected String basketId;
+public class CleanBriefcaseEvent extends ContentStoreEvent {
     
     /**
      * Constructor
      * If this constructor is used all baskets will be cleaned
      */
-    public CleanBasketEvent() {
-        // nothing to do 
+    public CleanBriefcaseEvent() {
+        // nothing to do here
     }
     
     /**
      * Constructor
-     * One basket will be cleaned
-     * @param basketId The id of the basket
+     * One briefcase will be cleaned
+     * @param briefcaseId The briefcase
      */
-    public CleanBasketEvent(String basketId) {
-        this.basketId = basketId;
+    public CleanBriefcaseEvent(Briefcase briefcase) {
+        super(briefcase);
     }
     
-    /**
-     * Return the basket id or null for all baskets
-     */
-    public String getBasketId() {
-        return this.basketId;
-    }
 }

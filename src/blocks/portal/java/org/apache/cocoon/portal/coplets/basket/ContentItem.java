@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  * This is an item that contains a link or a content.
  * The item can either reference a coplet or an URL.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: ContentItem.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ContentItem extends AbstractItem implements Serializable {
     
@@ -137,5 +135,9 @@ public class ContentItem extends AbstractItem implements Serializable {
             }
         }
         return false;
+    }
+    
+    public void setTitle(String title) {
+        this.stringRep = title;
     }
 }

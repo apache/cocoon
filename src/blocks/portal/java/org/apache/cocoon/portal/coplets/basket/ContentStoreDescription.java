@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
  */
 package org.apache.cocoon.portal.coplets.basket;
 
-import org.apache.cocoon.portal.event.Event;
-
 /**
- * This is the base class for all basket events
+ * This class describes a {@link ContentStore}.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id$
+ * @version CVS $Id: Basket.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public abstract class BasketEvent implements Event {
-    
-    // just a marker interface
+public class ContentStoreDescription {
+
+    /** The id */
+    public String id;
+    /** The size of the basket */
+    public int    size;
+
 }
