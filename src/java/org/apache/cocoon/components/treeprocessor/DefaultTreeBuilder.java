@@ -52,7 +52,7 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.14 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.15 2004/07/17 10:51:15 joerg Exp $
  */
 public class DefaultTreeBuilder
         extends AbstractLogEnabled
@@ -89,7 +89,7 @@ public class DefaultTreeBuilder
     protected ServiceManager parentProcessorManager;
 
     /**
-     * Component manager created by {@link #createComponentManager(Configuration)}.
+     * Component manager created by {@link #createServiceManager(Configuration)}.
      */
     protected ServiceManager processorManager;
 
@@ -473,7 +473,6 @@ public class DefaultTreeBuilder
             );
         }            
 
-        boolean selectable = selector.isSelectable(type);
         this.processorManager.release(selector);
 
         if (!selector.isSelectable(type)) {

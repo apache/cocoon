@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.26 2004/07/15 12:49:49 sylvain Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.27 2004/07/17 10:51:14 joerg Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -650,7 +650,7 @@ public abstract class AbstractProcessingPipeline
         for (int i = 0; i < size; i++) {
             final ServiceSelector selector =
                 (ServiceSelector)this.transformerSelectors.get(i);
-            selector.release( (Component)this.transformers.get(i) );
+            selector.release(this.transformers.get(i));
             this.newManager.release( selector );
         }
         this.transformerSelectors.clear();

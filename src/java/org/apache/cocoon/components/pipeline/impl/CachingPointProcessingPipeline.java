@@ -41,7 +41,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.8 2004/07/17 10:51:15 joerg Exp $
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -402,7 +402,7 @@ public class CachingPointProcessingPipeline
 
         Iterator itt = this.xmlSerializerArray.iterator();
         while (itt.hasNext()) {
-            this.manager.release((XMLSerializer) itt.next());
+            this.manager.release(itt.next());
         }
         this.isCachePoint.clear();
         this.xmlSerializerArray.clear();

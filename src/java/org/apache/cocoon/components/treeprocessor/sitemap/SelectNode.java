@@ -17,7 +17,6 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -31,7 +30,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNode.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id: SelectNode.java,v 1.7 2004/07/17 10:51:15 joerg Exp $
  */
 public class SelectNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode {
@@ -44,8 +43,6 @@ public class SelectNode extends SimpleSelectorProcessingNode
     private VariableResolver[] whenTests;
 
     private ProcessingNode[] otherwhiseNodes;
-
-    private ComponentManager manager;
 
     public SelectNode(String name) throws PatternException {
         super(Selector.ROLE + "Selector", name);

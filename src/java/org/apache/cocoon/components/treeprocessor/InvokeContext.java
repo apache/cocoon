@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -47,7 +46,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.11 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.12 2004/07/17 10:51:15 joerg Exp $
  */
 
 public class InvokeContext 
@@ -315,7 +314,7 @@ implements Serviceable, Disposable {
         // Release pipelines, if any
         if (this.internalPipelineDescription == null && this.pipelinesManager != null) {
             if ( this.pipelineSelector != null) {
-                this.pipelineSelector.release( (Component)this.processingPipeline);
+                this.pipelineSelector.release(this.processingPipeline);
                 this.processingPipeline = null;
                 this.pipelinesManager.release( this.pipelineSelector );
                 this.pipelineSelector = null;
