@@ -58,7 +58,7 @@
     <delete file="${dist.target}/${dist.name}.tar"/>
   </target>
   
-  <target name="distclean" depends="clean" description="Cleans everything and brings back to original 'CVS checkout' state">
+  <target name="clean-dist" depends="clean" description="Cleans everything and brings back to original 'CVS checkout' state">
     <delete dir="${build.root}"/>
     <delete dir="${tools.tasks.dest}"/>
     <delete dir="${tools.loader.dest}"/>
