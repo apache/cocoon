@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.util.datasource.DataSourceComponent;
+import org.apache.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.Parameters;
@@ -43,7 +43,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:11 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-17 16:46:04 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
