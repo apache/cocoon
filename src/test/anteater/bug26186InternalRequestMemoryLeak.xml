@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Cocoon Stress Test" default="main">
+<project name="Cocoon Stress Test" default="conditional">
   <taskdef resource="META-INF/Anteater.tasks"/>
   <typedef resource="META-INF/Anteater.types"/>
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
-  <property name="url" value="http://localhost:8888/samples/xsp/java/resolver"/>
+  <property name="url" value="${cocoon}/samples/xsp/java/resolver"/>
 
-  <target name="main">
+  <target name="conditional" depends="main,disabled"/>
+  <target name="disabled" unless="anteater.test.bug26186InternalRequestMemoryLeak.enabled">
+    <echo>bug26186InternalRequestMemoryLeak disabled by configuration</echo>
+  </target>
+  <target name="main" if="anteater.test.bug26186InternalRequestMemoryLeak.enabled">
+    <echo>base=${anteater.target.base.path}</echo>
+    <echo>disabled? ${anteater.test.bug26186InternalRequestMemoryLeak.disabled}</echo>
     <foreach list="0,1,2,3,4,5" target="multiplier1" param="m1"/>
   </target>
   <target name="multiplier1">
