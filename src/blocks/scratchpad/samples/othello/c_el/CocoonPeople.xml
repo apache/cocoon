@@ -7,7 +7,9 @@
 		</osm:pageTitle>
 	</head>
 	<body contentID="content">
-		<p class="title">Apache Cocoon</p>
+		<!-- The following are intentionally Greek characters -->
+		<p class="title">Οι άνθρωποι του Apache Cocoon
+</p>
 		<p id="" class="" width="" height="">The Apache Cocoon Project Management Committee oversees the entire project, and consists of all willing committers on Cocoon and its subprojects. Its main concerns are community health, fostering the Apache Cocoon brand, and making sure all legal requirements are met when people contribute.</p>
 		<p id="" class="" width="" height="">The current Cocoon PMC members are:</p>
 		<osm:list>
