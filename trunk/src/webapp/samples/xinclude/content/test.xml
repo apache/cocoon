@@ -32,11 +32,9 @@
 
     <hr/>
     <para><b><![CDATA[
-    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)
-      xpointer(/page/content/xi:include[1])"/>
+    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
         ]]></b></para>
-    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)
-      xpointer(/page/content/xi:include[1])"/>
+    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
 
     <hr/>
     <para><b>This sample demonstrates the recursive inclusion: here file4.xml
@@ -49,7 +47,7 @@
         one after the other. If one doesn't return a result, it is skipped and
         the next one is evaluated, until one is found that returns a
         result.</b></para>
-    <para><b><![CDATA[<xi:include href="test2.xml#xpointer(/x) xpointer(/y) xpointer(/z) xpointer(/page/content/para[2])"/>]]></b></para>
-    <xi:include href="test2.xml#xpointer(/x) xpointer(/y) xpointer(/z) xpointer(/page/content/para[2])"/>
+    <para><b><![CDATA[<xi:include href="test2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>]]></b></para>
+    <xi:include href="test2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>
   </content>
 </page>
