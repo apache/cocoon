@@ -5,6 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.sitemap;
 
 import java.io.FileNotFoundException;
@@ -31,7 +32,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:12:11 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-17 17:07:36 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -60,12 +61,12 @@ public class SitemapManager implements Configurable, Composer {
     throws Exception {
         SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get (source);
         if (sitemapHandler != null) {
-            sitemapHandler.throwError();
+            sitemapHandler.throwEventualException();
             if (sitemapHandler.available()) {
                 if (check_reload 
                  && sitemapHandler.hasChanged()
                  && !sitemapHandler.isRegenerating()) {
-                    sitemapHandler.regenerateAsynchroniously(environment);
+                    sitemapHandler.regenerateAsynchronously(environment);
                 }
                 environment.changeContext (uri_prefix, source);
                 return sitemapHandler.process (environment);

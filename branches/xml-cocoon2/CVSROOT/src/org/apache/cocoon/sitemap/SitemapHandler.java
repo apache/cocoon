@@ -5,6 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.sitemap;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.environment.Environment;
@@ -28,9 +30,10 @@ import org.apache.avalon.ComponentManager;
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-04 21:12:11 $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-17 17:07:36 $
  */
-public class SitemapHandler implements Runnable, Configurable, Composer {
+public class SitemapHandler implements Runnable, Configurable, Composer, Processor {
 
     /** the configuration */
     private Configuration conf = null;
@@ -64,42 +67,42 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         this.conf = conf;
     }
 
-    protected SitemapHandler (String source, boolean check_reload) throws FileNotFoundException {
+    protected SitemapHandler (String source, boolean check_reload) 
+    throws FileNotFoundException {
         this.check_reload = check_reload;
         String s = null;
-        if (source.charAt(source.length()-1) == File.separatorChar) {
-            s = source+"sitemap.xmap";
+        if (source.charAt(source.length() - 1) == File.separatorChar) {
+            s = source + "sitemap.xmap";
             this.sourceFile = new File (s);
         } else {
             sourceFile = new File (source);
             if (!sourceFile.isFile()) {
-                s = source+File.separatorChar+"sitemap.xmap";
+                s = source + File.separatorChar + "sitemap.xmap";
                 sourceFile = new File (s);
             }
             if (!sourceFile.canRead()) {
-                throw new FileNotFoundException ("file "+s+" not found or cannot be opened for reading");
+                throw new FileNotFoundException ("file " + s + " not found or cannot be opened for reading");
             }
         }
     }
 
-    protected void throwError () 
+    protected void throwEventualException () 
     throws ProcessingException, SAXException, IOException, InterruptedException {
-        Exception e = exception;
-        exception = null;
-        if (e instanceof ProcessingException) {
+        if (exception == null) return; // No exception was caught
+        
+        if (exception instanceof ProcessingException) {
             throw (ProcessingException) exception;
-        } else if (e instanceof SAXException) {
+        } else if (exception instanceof SAXException) {
             throw (SAXException) exception;
-        } else if (e instanceof IOException) {
+        } else if (exception instanceof IOException) {
             throw (IOException) exception;
-        } else if (e instanceof InterruptedException) {
+        } else if (exception instanceof InterruptedException) {
             throw (InterruptedException) exception;
-        } else if (e != null) {
-            throw new ProcessingException ("Unknown Exception raised: "
-                                         + exception.toString());
+        } else {
+            throw new ProcessingException ("Unknown Exception raised: " + exception.toString());
         }
     }
-
+ 
     protected boolean available () {
         return (sitemap != null);
     }
@@ -118,7 +121,8 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         return isRegenerationRunning; 
     }
 
-    protected synchronized void regenerateAsynchroniously (Environment environment) {
+    protected synchronized void regenerateAsynchronously (Environment environment)
+    throws ProcessingException, SAXException, IOException, InterruptedException { 
         if (!this.isRegenerationRunning) {
             isRegenerationRunning = true;
             regeneration = new Thread (this);
@@ -129,25 +133,23 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
 
     protected synchronized void regenerate (Environment environment) 
     throws ProcessingException, SAXException, IOException, InterruptedException { 
-        if (!this.isRegenerationRunning) {
-            isRegenerationRunning = true;
-            regeneration = new Thread (this);
-            this.environment = environment;
-            regeneration.start();
-        }
+        regenerateAsynchronously(environment);
         regeneration.join();
-        throwError();
+        throwEventualException();
     }
 
     public boolean process (Environment environment) 
     throws Exception {
-        this.throwError();
+        throwEventualException();
         return sitemap.process (environment);
+    }
+
+    public void setBasePath (String basePath) {
+        this.basePath = basePath;
     }
 
     /** Generate the Sitemap class */
     public void run() {
-
         Sitemap smap = null;
         InputSource inputSource = new InputSource (sourceFile.getPath());
         String systemId = inputSource.getSystemId();
@@ -157,28 +159,18 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
 
-        ProgramGenerator programGenerator = null;
-
-        programGenerator = (ProgramGenerator) this.manager.getComponent("program-generator");
-
         try {
-            smap = (Sitemap) programGenerator.load(file, markupLanguage, 
-                                 programmingLanguage, environment);
+            ProgramGenerator programGenerator = (ProgramGenerator) this.manager.getComponent("program-generator");
+            smap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage, environment);
             if (smap instanceof Composer) smap.setComponentManager(this.manager);
             if (smap instanceof Configurable) smap.setConfiguration(this.conf);
             this.sitemap = smap;
         } catch (Exception e) {
-            synchronized (this.exception) {
-                this.exception = e;
-            }
+            this.exception = e;
         } finally {
-            regeneration = null;
-            environment = null;
-            isRegenerationRunning = false;
+            this.regeneration = null;
+            this.environment = null;
+            this.isRegenerationRunning = false;
         }
-    }
-
-    public void setBasePath (String basePath) {
-        this.basePath = basePath;
     }
 } 
