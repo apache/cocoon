@@ -46,6 +46,7 @@
         <xsp:include>org.apache.cocoon.components.flow.FlowHelper</xsp:include>
         <xsp:include>org.apache.commons.jxpath.JXPathContext</xsp:include>
         <xsp:include>org.apache.commons.jxpath.CompiledExpression</xsp:include>
+        <xsp:include>org.apache.commons.jxpath.Pointer</xsp:include>
       </xsp:structure>
 
       <xsp:logic>
@@ -164,22 +165,25 @@
       <xsl:when test="@select">
         <xsp:logic>
           {
-            Iterator iter_<xsl:value-of select="generate-id(.)"/>
-              = <xsl:call-template name="get-var-name">
-                  <xsl:with-param name="expr" select="@select"/>
-                </xsl:call-template>
-                .iterate(jxpathContext);
             JXPathContext <xsl:value-of select="$old-context"/> = jxpathContext;
-            while (iter_<xsl:value-of select="generate-id(.)"/>.hasNext()) {
-              Object current_<xsl:value-of select="generate-id(.)"/> = iter_<xsl:value-of select="generate-id(.)"/>.next();
-              jxpathContext = JXPathContext.newContext(current_<xsl:value-of select="generate-id(.)"/>);
+            try {
+              Iterator iter_<xsl:value-of select="generate-id(.)"/>
+                = <xsl:call-template name="get-var-name">
+                    <xsl:with-param name="expr" select="@select"/>
+                  </xsl:call-template>
+                  .iteratePointers(jxpathContext);
+              while (iter_<xsl:value-of select="generate-id(.)"/>.hasNext()) {
+                jxpathContext = <xsl:value-of select="$old-context"/>
+                  .getRelativeContext((Pointer)iter_<xsl:value-of select="generate-id(.)"/>.next());
         </xsp:logic>
 
         <xsl:apply-templates/>
 
         <xsp:logic>
+              }
+            } finally {
+              jxpathContext = <xsl:value-of select="$old-context"/>;
             }
-            jxpathContext = <xsl:value-of select="$old-context"/>;
           }
         </xsp:logic>
       </xsl:when>
@@ -223,6 +227,29 @@
     </xsp:expr>
   </xsl:template>
 
+  <xsl:template match="jpath:set-lenient">
+    <xsl:choose>
+      <xsl:when test="*">
+        <xsp:logic>
+          {
+            boolean __jxpathLenient = jxpathContext.isLenient();
+            try {
+              jxpathContext.setLenient(<xsl:value-of select="@lenient"/>);
+        </xsp:logic>
+        <xsl:apply-templates/>
+        <xsp:logic>
+            } finally {
+              jxpathContext.setLenient(__jxpathLenient);
+            }
+          }
+        </xsp:logic>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsp:logic>jxpathContext.setLenient(<xsl:value-of select="@lenient"/>);</xsp:logic>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="@*|*|text()|processing-instruction()">
     <!-- Catch all template. Just pass along unmodified everything we
          don't handle. -->
@@ -230,6 +257,5 @@
       <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
     </xsl:copy>
   </xsl:template>
-
 
 </xsl:stylesheet>
