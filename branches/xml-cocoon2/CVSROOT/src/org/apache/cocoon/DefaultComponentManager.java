@@ -40,7 +40,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-12 13:30:42 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-14 04:53:25 $
  */
 public class DefaultComponentManager implements ComponentManager, Configurable, Loggable {
 
@@ -182,6 +182,7 @@ public class DefaultComponentManager implements ComponentManager, Configurable, 
 
     public void configure(Configuration conf) throws ConfigurationException {
         // Set components
+
         Iterator e = conf.getChildren("component");
         while (e.hasNext()) {
             Configuration co = (Configuration) e.next();
@@ -189,11 +190,11 @@ public class DefaultComponentManager implements ComponentManager, Configurable, 
             String role = co.getAttribute("role", "");
             String className = co.getAttribute("class", "");
 
-            if (! type.equals("")) {
+            if (! "".equals(type)) {
                 role = RoleUtils.lookup(type);
             }
 
-            if (className.equals("")) {
+            if ("".equals(className)) {
                 className = RoleUtils.defaultClass(role);
             }
 
@@ -333,6 +334,7 @@ public class DefaultComponentManager implements ComponentManager, Configurable, 
     protected void addComponent(String role, Class component, Configuration config)
     throws ConfigurationException,
            ComponentManagerException {
+
         this.components.put(role,component);
         if ( config != null ) {
             this.configurations.put(role, config);
