@@ -34,9 +34,7 @@ public class SettingsHelper {
         //  no instantiation
     }
     
-    public static Settings getSettings(ServletConfig config) {
-        final Settings s = new Settings();
-        
+    public static void fill(Settings s, ServletConfig config) {
         // logging
         s.setCocoonLogger(config.getInitParameter("cocoon-logger"));
         s.setAccessLogger(config.getInitParameter("servlet-logger"));
@@ -76,8 +74,6 @@ public class SettingsHelper {
         s.setFormEncoding(config.getInitParameter("form-encoding"));
         
         // TODO extra classpath
-        
-        return s;
     }
     
     /** Convenience method to access boolean servlet parameters */
