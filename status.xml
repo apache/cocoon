@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.305 2004/04/22 12:15:48 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.306 2004/04/22 14:45:56 mpo Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="MPO" type="update">
+     [cforms] change to generated instance xml &lt;fi:form&gt;.  
+     Nested widgets are now grouped in &lt;fi:widgets&gt; and no longer in &lt;fi:children&gt;.
+     This aligns with other container-widgets.
+   </action>
    <action dev="VG" type="update">
      LinkRewriter: Added support for rewriting URLs which are embedded into
      the attribute values (example: style attribute with background image URL).
