@@ -78,7 +78,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.7 2003/08/06 15:54:13 bruno Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.8 2003/09/02 16:29:09 coliver Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
@@ -191,7 +191,8 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         EnvironmentWrapper wrapper = new EnvironmentWrapper(env, uri, "", getLogger());
         wrapper.setURI("", uri);
         wrapper.setOutputStream(out);
-        wrapper.setAttribute("bean-dict", biz);
+        Map objectModel = env.getObjectModel();
+        FlowHelper.setContextObject(objectModel, biz);
 
         // Attermpt to start processing the wrapper environment
         Object key = CocoonComponentManager.startProcessing(wrapper);
