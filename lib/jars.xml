@@ -549,14 +549,6 @@
   </file>
 
   <file>
-    <title>JISP</title>
-    <description>Java Indexed Serialization Package</description>
-    <used-by>JISP file storage</used-by>
-    <lib>core/jisp-2.5.1.jar</lib>
-    <homepage>http://www.coyotegulch.com/jisp/</homepage>
-  </file>
-
-  <file>
     <title>JCS</title>
     <description>Java Caching System</description>
     <used-by>JCS Store</used-by>
