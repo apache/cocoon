@@ -780,10 +780,11 @@ ApplicationServer start $appserv/
    <p>This has been tested on RedHat, Debian and Windows 2000 with JWS 2.0.</p>
 
    <ol>
-    <li>Copy all the required jars
+    <li>Start IAS with the command line options 
+     <code>-cploc:front -classpath $CLASSPATH</code>, substituting a classpath
+     with all the required Cocoon jars 
      (see <jump anchor="jars">top of page</jump>)
-     to the IAS <code>[path_to_ias]/ias/lib</code> directory.</li>
-    <li>Start IAS.</li>
+     where you see $CLASSPATH.</li>
     <li>Open the web server administration interface (not the IAS console) at
      http://your_host:9090 and login as admin.</li>
     <li>Select "HTTP Web Engine", the first on the services list.</li>
