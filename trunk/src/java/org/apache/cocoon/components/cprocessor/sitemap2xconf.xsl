@@ -12,13 +12,35 @@
     </sitemap>
   </xsl:template>
   
-  <xsl:template match="map:components/*/*">
-    <component-node id="{@name}-{local-name()}-node" logger="sitemap.processor">
+  <xsl:template match="map:components">
+    <meta>
+      <xsl:for-each select="*">
+        <default type="{local-name()}" hint="{@default}"/>
+      </xsl:for-each>
+    </meta>
+    <xsl:apply-templates select="*/*" />
+  </xsl:template>
+  
+  
+  <xsl:template match="map:generator|map:transformer|map:serializer|map:reader">
+    <xsl:element name="{local-name()}-node">
+      <xsl:attribute name="id">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
+      <xsl:attribute name="logger">
+        <xsl:text>sitemap.processor</xsl:text>
+      </xsl:attribute>
       <xsl:apply-templates select="@label|@mime-type" mode="copy" />
-      <component id-ref="{@name}-{local-name()}" />
-    </component-node>
-    <component id="{@name}-{local-name()}" class="{@src}">
-      <xsl:apply-templates select="@logger|@pool-min|@pool-max|@pool-grow|child::node()" mode="copy"/>
+      <component hint="{@name}" />
+    </xsl:element>
+    <component id="{@name}" class="{@src}">
+      <xsl:apply-templates select="@*|child::node()" mode="copy"/>
+    </component>
+  </xsl:template>
+  
+  <xsl:template match="map:matcher|map:selector|map:action|map:pipe">
+    <component id="{@name}" class="{@src}">
+      <xsl:apply-templates select="@*|child::node()" mode="copy"/>
     </component>
   </xsl:template>
   
@@ -163,22 +185,6 @@
     </xsl:variable>
     <match-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:choose>
-        <xsl:when test="@type">
-          <xsl:attribute name="type">
-            <xsl:value-of select="@type"/>
-            <xsl:text>-matcher</xsl:text>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="/map:sitemap/map:components/map:matchers/@default">
-            <xsl:attribute name="type">
-              <xsl:value-of select="/map:sitemap/map:components/map:matchers/@default"/>
-              <xsl:text>-matcher</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
       <xsl:for-each select="map:match|map:select|map:act|map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
         <xsl:element name="{local-name()}">
           <xsl:attribute name="id-ref">
@@ -202,22 +208,6 @@
     </xsl:variable>
     <select-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:choose>
-        <xsl:when test="@type">
-          <xsl:attribute name="type">
-            <xsl:value-of select="@type"/>
-            <xsl:text>-selector</xsl:text>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="/map:sitemap/map:components/map:selectors/@default">
-            <xsl:attribute name="type">
-              <xsl:value-of select="/map:sitemap/map:components/map:selectors/@default"/>
-              <xsl:text>-selector</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
       <xsl:apply-templates select="map:parameter" mode="copy" />
       <xsl:apply-templates select="map:when|map:otherwise" mode="config">
         <xsl:with-param name="parent-id">
@@ -268,22 +258,6 @@
     </xsl:variable>
     <act-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:choose>
-        <xsl:when test="@type">
-          <xsl:attribute name="type">
-            <xsl:value-of select="@type"/>
-            <xsl:text>-action</xsl:text>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="/map:sitemap/map:components/map:actions/@default">
-            <xsl:attribute name="type">
-              <xsl:value-of select="/map:sitemap/map:components/map:actions/@default" />
-              <xsl:text>-action</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
       <xsl:for-each select="map:match|map:select|map:act|map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
         <xsl:element name="{local-name()}">
           <xsl:attribute name="id-ref">
@@ -306,24 +280,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <generate-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:choose>
-        <xsl:when test="not(@type)">
-          <xsl:if test="/map:sitemap/map:components/map:generators/@default">
-            <xsl:attribute name="type">
-              <xsl:value-of select="/map:sitemap/map:components/map:generators/@default" />
-              <xsl:text>-generator-node</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="type">
-            <xsl:value-of select="@type" />
-            <xsl:text>-generator-node</xsl:text>
-          </xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="map:parameter" mode="copy" />
+      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
     </generate-node>
   </xsl:template>
   
@@ -333,24 +290,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <transform-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:choose>
-        <xsl:when test="not(@type)">
-          <xsl:if test="/map:sitemap/map:components/map:transformers/@default">
-            <xsl:attribute name="type">
-              <xsl:value-of select="/map:sitemap/map:components/map:transformers/@default" />
-              <xsl:text>-transformer-node</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="type">
-            <xsl:value-of select="@type" />
-            <xsl:text>-transformer-node</xsl:text>
-          </xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="map:parameter" mode="copy" />
+      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
     </transform-node>
   </xsl:template>
   
@@ -360,24 +300,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <serialize-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="map:parameter" mode="copy" />
-      <xsl:choose>
-        <xsl:when test="not(@type)">
-          <xsl:if test="/map:sitemap/map:components/map:serializers/@default">
-            <xsl:attribute name="type">
-              <xsl:value-of select="/map:sitemap/map:components/map:serializers/@default" />
-              <xsl:text>-serializer-node</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="type">
-            <xsl:value-of select="@type" />
-            <xsl:text>-serializer-node</xsl:text>
-          </xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="map:parameter" mode="copy" />
+      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
     </serialize-node>
   </xsl:template>
   

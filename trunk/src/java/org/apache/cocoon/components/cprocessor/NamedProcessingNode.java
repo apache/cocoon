@@ -51,14 +51,15 @@
 package org.apache.cocoon.components.cprocessor;
 
 /**
- * A <code>ProcessingNode</code> that has a name. This is primarily used by
- * <code>CategoryNode</code> to access its children.
+ * A <code>ProcessingNode</code> that has a name.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NamedProcessingNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: NamedProcessingNode.java,v 1.2 2004/01/28 17:25:31 unico Exp $
  */
-
 public interface NamedProcessingNode extends ProcessingNode {
-
+    
+    /**
+     * Return this node's name.
+     */
     String getName();
 }

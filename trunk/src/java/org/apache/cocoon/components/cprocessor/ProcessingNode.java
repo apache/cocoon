@@ -58,14 +58,14 @@ import org.apache.cocoon.environment.Environment;
  * executed for the particular request.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.3 2004/01/27 13:27:47 unico Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.4 2004/01/28 17:25:31 unico Exp $
  */
 public interface ProcessingNode {
 
     public static final String ROLE = ProcessingNode.class.getName();
 
     /**
-     * Process this node with the suppled environment information.  Will recursively
+     * Process this node with the supplied environment information. Will recursively
      * process child nodes.
      *
      * @param env     The Environment object used to process a request.
@@ -73,7 +73,7 @@ public interface ProcessingNode {
      * @return <code>true</code> if a redirect has been issued.
      * @throws Exception if the processing was not successful.
      */
-    boolean invoke( Environment env, InvokeContext context ) throws Exception;
+    boolean invoke(Environment env, InvokeContext context) throws Exception;
 
     /**
      * Get the location of this node.

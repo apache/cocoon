@@ -48,38 +48,69 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor;
+package org.apache.cocoon.components.cprocessor.sitemap;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.environment.Environment;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.components.cprocessor.ComponentNode;
+import org.apache.cocoon.util.StringUtils;
 
 /**
- * A generic container node that just invokes its children.
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.3 2004/01/28 17:25:31 unico Exp $
- * 
- * @avalon.component
- * @avalon.service type=ProcessingNode
- * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=container-node
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
-public class ContainerNode extends SimpleParentProcessingNode {
-
-    public ContainerNode() {
+public abstract class AbstractComponentNode implements ComponentNode, Serviceable, Configurable {
+    
+    private ServiceManager m_manager;
+    
+    private Collection m_labels;
+    private String m_componentHint;
+    private String m_mimeType;
+    
+    public AbstractComponentNode() {
+    }
+    
+    public void service(ServiceManager manager) throws ServiceException {
+        m_manager = manager;
     }
     
     public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        if (!hasChildren()) {
-            String msg = "There must be at least one child at " + getLocation();
-            throw new ConfigurationException(msg);
+        m_componentHint = config.getChild("component").getAttribute("hint");
+        Collection labels = splitLabels(config.getAttribute("label",null));
+        m_labels = Collections.unmodifiableCollection(labels);
+        m_mimeType = config.getAttribute("mime-type",null);
+    }
+    
+    public Collection getLabels() {
+        return m_labels;
+    }
+    
+    public String getComponentHint() {
+        return m_componentHint;
+    }
+    
+    public String getMimeType() {
+        return m_mimeType;
+    }
+    
+    /**
+     * Split a list of space/comma separated labels into a Collection
+     *
+     * @return the collection of labels (may be empty, never null)
+     */
+    private static final Collection splitLabels(String labels) {
+        if (labels == null) {
+            return Collections.EMPTY_SET;
+        } else {
+            return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
         }
     }
     
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        return invokeNodes(getChildNodes(), env, context);
-    }
-
 }

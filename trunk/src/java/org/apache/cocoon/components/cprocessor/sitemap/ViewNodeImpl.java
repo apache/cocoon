@@ -48,38 +48,51 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor;
+package org.apache.cocoon.components.cprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.components.cprocessor.NamedContainerNode;
+import org.apache.cocoon.components.cprocessor.ViewNode;
 
 /**
- * A generic container node that just invokes its children.
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.3 2004/01/28 17:25:31 unico Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @avalon.component
- * @avalon.service type=ProcessingNode
+ * @avalon.service type=ViewNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=container-node
+ * @x-avalon.info name=view-node
  */
-public class ContainerNode extends SimpleParentProcessingNode {
-
-    public ContainerNode() {
+public class ViewNodeImpl extends NamedContainerNode implements ViewNode {
+    
+    private static final String FROM_LABEL_ATTR = "from-label";
+    private static final String FROM_POSITION_ATTR = "from-position";
+    
+    private String m_label;
+    
+    public ViewNodeImpl() {
     }
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        if (!hasChildren()) {
-            String msg = "There must be at least one child at " + getLocation();
-            throw new ConfigurationException(msg);
+        // Get the label or position (pseudo-label) of this view.
+        m_label = config.getAttribute(FROM_LABEL_ATTR, null);
+        
+        if (m_label == null) {
+            String position = config.getAttribute(FROM_POSITION_ATTR);
+            if ("first".equals(position)) {
+                m_label = FIRST_POS_LABEL;
+            } else if ("last".equals(position)) {
+                m_label = LAST_POS_LABEL;
+            } else {
+                String msg = "Bad value for 'from-position' at " + getLocation();
+                throw new ConfigurationException(msg);
+            }
         }
     }
     
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        return invokeNodes(getChildNodes(), env, context);
+    public String getLabel() {
+        return m_label;
     }
-
+    
 }

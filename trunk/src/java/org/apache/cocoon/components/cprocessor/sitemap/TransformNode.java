@@ -67,14 +67,14 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: TransformNode.java,v 1.2 2003/12/28 22:11:19 unico Exp $
+ * @version CVS $Id: TransformNode.java,v 1.3 2004/01/28 17:25:30 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=transform-node
  */
-public class TransformNode extends PipelineEventComponentProcessingNode {
+public class TransformNode extends ViewablePipelineComponentNode {
 
     private VariableResolver m_src;
     private String m_transformerRole;
@@ -96,7 +96,7 @@ public class TransformNode extends PipelineEventComponentProcessingNode {
     public void initialize() throws Exception {
         super.initialize();
         m_transformerRole = Transformer.ROLE;
-        String hint = getComponentId();
+        String hint = m_component.getComponentHint();
         if (hint != null) {
             m_transformerRole += "/" + hint;
         }
@@ -135,6 +135,10 @@ public class TransformNode extends PipelineEventComponentProcessingNode {
 
         // Return false to contine sitemap invocation
         return false;
+    }
+    
+    protected String getComponentNodeRole() {
+        return TransformerNode.ROLE;
     }
     
     /**

@@ -55,6 +55,7 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.cprocessor.*;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
@@ -67,14 +68,14 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: GenerateNode.java,v 1.4 2004/01/27 10:33:05 unico Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.5 2004/01/28 17:25:30 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=generate-node
  */
-public class GenerateNode extends PipelineEventComponentProcessingNode 
+public class GenerateNode extends ViewablePipelineComponentNode 
 implements ProcessingNode {
 
     private VariableResolver m_src;
@@ -98,7 +99,7 @@ implements ProcessingNode {
     public void initialize() throws Exception {
         super.initialize();
         m_generatorRole = Generator.ROLE;
-        String hint = getComponentId();
+        String hint = m_component.getComponentHint();
         if (hint != null) {
             m_generatorRole += "/" + hint;
         }
@@ -137,6 +138,10 @@ implements ProcessingNode {
 
         // Return false to continue sitemap invocation
         return false;
+    }
+    
+    protected String getComponentNodeRole() {
+        return GeneratorNode.ROLE;
     }
     
     /**

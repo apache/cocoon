@@ -60,6 +60,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.components.cprocessor.*;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
@@ -89,7 +90,7 @@ import org.apache.cocoon.util.StringUtils;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.3 2004/01/28 17:25:30 unico Exp $
  */
 public class AggregateNode extends AbstractProcessingNode {
 
@@ -266,7 +267,7 @@ public class AggregateNode extends AbstractProcessingNode {
         if (view == null) {
             try {
                 view = (ViewNode) super.m_manager.lookup(
-                    ProcessingNode.ROLE + "/v-" + name);
+                    ViewNode.ROLE + "/v-" + name);
             }
             catch (ServiceException e) {
                 // TODO: record no such view

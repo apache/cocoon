@@ -70,14 +70,14 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SerializeNode.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.4 2004/01/28 17:25:30 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=serialize-node
  */
-public class SerializeNode extends PipelineEventComponentProcessingNode {
+public class SerializeNode extends ViewablePipelineComponentNode {
 
     private VariableResolver m_mimeType;
     private int m_statusCode;
@@ -101,7 +101,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
     public void initialize() throws Exception {
         super.initialize();
         m_serializerRole = Serializer.ROLE;
-        String hint = getComponentId();
+        String hint = m_component.getComponentHint();
         if (hint != null) {
             m_serializerRole += "/" + hint;
         }
@@ -168,6 +168,10 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
             // Return true : pipeline is finished.
             return true;
         }
+    }
+
+    protected String getComponentNodeRole() {
+        return SerializerNode.ROLE;
     }
 
     /**

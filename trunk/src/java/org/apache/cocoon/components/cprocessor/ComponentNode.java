@@ -50,36 +50,31 @@
 */
 package org.apache.cocoon.components.cprocessor;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.environment.Environment;
+import java.util.Collection;
 
 /**
- * A generic container node that just invokes its children.
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.3 2004/01/28 17:25:31 unico Exp $
- * 
- * @avalon.component
- * @avalon.service type=ProcessingNode
- * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=container-node
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
-public class ContainerNode extends SimpleParentProcessingNode {
+public interface ComponentNode {
 
-    public ContainerNode() {
-    }
-    
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        if (!hasChildren()) {
-            String msg = "There must be at least one child at " + getLocation();
-            throw new ConfigurationException(msg);
-        }
-    }
-    
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        return invokeNodes(getChildNodes(), env, context);
-    }
+    public static final String ROLE = ComponentNode.class.getName();
 
+    /**
+     * Return the labels associated with this sitemap 
+     * component declaration statement. Only relevant if
+     * this represents a generator, transformer or serializer.
+     */
+    public Collection getLabels();
+    
+    /**
+     * Return the hint of the sitemap component this node represents.
+     */
+    public String getComponentHint();
+    
+    /**
+     * Return the mime-type attribute of this sitemap
+     * component declaration statement. Only relevant if
+     * this represents a reader or serializer.
+     */
+    public String getMimeType();
 }

@@ -54,7 +54,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
@@ -68,14 +67,14 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ReadNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: ReadNode.java,v 1.3 2004/01/28 17:25:30 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=read-node
  */
-public class ReadNode extends AbstractProcessingNode implements ProcessingNode {
+public class ReadNode extends AbstractPipelineComponentNode implements ProcessingNode {
 
     private String m_type;
     private VariableResolver m_src;
@@ -113,15 +112,11 @@ public class ReadNode extends AbstractProcessingNode implements ProcessingNode {
         ProcessingPipeline pipeline = context.getProcessingPipeline();
 
         String mimeType = m_mimeType.resolve(context, objectModel);
-        /* TODO: 
-         * either
-         * 
-           if (mimeType == null) {
-               mimeType = m_readerComponentNode.getMimeType();
-           }
-         * 
-         * or do this during sitemap2xconf transformation
-         */
+
+        if (mimeType == null) {
+            mimeType = m_component.getMimeType();
+        }
+        
         pipeline.setReader(
             m_readerLookupKey,
             m_src.resolve(context, objectModel),
@@ -137,11 +132,14 @@ public class ReadNode extends AbstractProcessingNode implements ProcessingNode {
         if (!context.isBuildingPipelineOnly()) {
             // Process pipeline
             return pipeline.process(env);
-
         } else {
             // Return true : pipeline is finished.
             return true;
         }
+    }
+    
+    protected String getComponentNodeRole() {
+        return ReaderNode.ROLE;
     }
     
     /**

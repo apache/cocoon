@@ -50,61 +50,19 @@
 */
 package org.apache.cocoon.components.cprocessor.sitemap;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.cprocessor.NamedContainerNode;
-import org.apache.cocoon.components.cprocessor.ProcessingNode;
-
 /**
- * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $ID$
  * 
  * @avalon.component
- * @avalon.service type=ProcessingNode
+ * @avalon.service type=SerializerNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=view-node
+ * @x-avalon.info name=serializer-node
  */
-public class ViewNode extends NamedContainerNode implements ProcessingNode {
+public class SerializerNode extends AbstractComponentNode {
     
-    /**
-     * Pseudo-label for views <code>from-position="first"</code> (i.e. generator).
-     */
-    public static final String FIRST_POS_LABEL = "!first!";
-
-    /**
-     * Pseudo-label for views <code>from-position="last"</code> (i.e. serializer).
-     */
-    public static final String LAST_POS_LABEL = "!last!";
+    public static final String ROLE = SerializerNode.class.getName();
     
-    private static final String FROM_LABEL_ATTR = "from-label";
-    private static final String FROM_POSITION_ATTR = "from-position";
-    
-    private String m_label;
-    
-    public ViewNode() {
-    }
-    
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        // Get the label or position (pseudo-label) of this view.
-        m_label = config.getAttribute(FROM_LABEL_ATTR, null);
-        
-        if (m_label == null) {
-            String position = config.getAttribute(FROM_POSITION_ATTR);
-            if ("first".equals(position)) {
-                m_label = FIRST_POS_LABEL;
-            } else if ("last".equals(position)) {
-                m_label = LAST_POS_LABEL;
-            } else {
-                String msg = "Bad value for 'from-position' at " + getLocation();
-                throw new ConfigurationException(msg);
-            }
-        }
-    }
-    
-    public String getLabel() {
-        return m_label;
+    public SerializerNode() {
     }
     
 }

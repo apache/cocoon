@@ -48,38 +48,21 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor;
-
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.environment.Environment;
+package org.apache.cocoon.components.cprocessor.sitemap;
 
 /**
- * A generic container node that just invokes its children.
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.3 2004/01/28 17:25:31 unico Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @avalon.component
- * @avalon.service type=ProcessingNode
+ * @avalon.service type=TransformerNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=container-node
+ * @x-avalon.info name=transformer-node
  */
-public class ContainerNode extends SimpleParentProcessingNode {
-
-    public ContainerNode() {
+public class TransformerNode extends AbstractComponentNode {
+    
+    public static final String ROLE = TransformerNode.class.getName();
+    
+    public TransformerNode() {
     }
     
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        if (!hasChildren()) {
-            String msg = "There must be at least one child at " + getLocation();
-            throw new ConfigurationException(msg);
-        }
-    }
-    
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        return invokeNodes(getChildNodes(), env, context);
-    }
-
 }

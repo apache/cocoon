@@ -50,36 +50,27 @@
 */
 package org.apache.cocoon.components.cprocessor;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.environment.Environment;
-
 /**
- * A generic container node that just invokes its children.
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.3 2004/01/28 17:25:31 unico Exp $
  * 
- * @avalon.component
- * @avalon.service type=ProcessingNode
- * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=container-node
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
-public class ContainerNode extends SimpleParentProcessingNode {
-
-    public ContainerNode() {
-    }
+public interface ViewNode extends NamedProcessingNode {
     
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        if (!hasChildren()) {
-            String msg = "There must be at least one child at " + getLocation();
-            throw new ConfigurationException(msg);
-        }
-    }
+    public static final String ROLE = ViewNode.class.getName();
     
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        return invokeNodes(getChildNodes(), env, context);
-    }
+    /**
+     * Pseudo-label for views <code>from-position="first"</code> (i.e. generator).
+     */
+    public static final String FIRST_POS_LABEL = "!first!";
 
+    /**
+     * Pseudo-label for views <code>from-position="last"</code> (i.e. serializer).
+     */
+    public static final String LAST_POS_LABEL = "!last!";
+
+    /**
+     * Return this view's label.
+     */
+    public String getLabel();
+    
 }

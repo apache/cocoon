@@ -56,54 +56,52 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
-import org.apache.cocoon.components.cprocessor.ProcessingNode;
+import org.apache.cocoon.components.cprocessor.ViewNode;
 import org.apache.cocoon.util.StringUtils;
 
 /**
- *
- * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.4 2004/01/28 00:29:42 crossley Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
-public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode
-implements Initializable {
+public abstract class ViewablePipelineComponentNode extends AbstractPipelineComponentNode {
 
-    private String m_type;
     private Map m_views = new HashMap();
     protected Collection m_labels;
-    protected ComponentNode m_component;
-    // TODO: implement pipeline hints
-    protected Map m_pipelineHints;
-    
-    public PipelineEventComponentProcessingNode() {
+        
+    public ViewablePipelineComponentNode() {
     }
-    
+
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        m_type = config.getAttribute("type",null);
         m_labels = splitLabels(config.getAttribute("label",null));
     }
     
     public void initialize() throws Exception {
-        String key = ComponentNode.ROLE;
-        if (m_type != null) {
-            key += "/" + m_type;
-        }
-        // TODO: meaningful error message
-        m_component = (ComponentNode) super.m_manager.lookup(key);
+        super.initialize();
         // add the labels defined at the component node
         m_labels.addAll(m_component.getLabels());
     }
     
+    /**
+     * Split a list of space/comma separated labels into a Collection
+     *
+     * @return the collection of labels (may be empty, nut never null)
+     */
+    private static final Collection splitLabels(String labels) {
+        if (labels == null) {
+            return new HashSet(0);
+        } else {
+            return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
+        }
+    }
+
     protected final ViewNode getViewNode(String name) {
         ViewNode view = (ViewNode) m_views.get(name);
         if (view == null) {
             try {
-                view = (ViewNode) super.m_manager.lookup(ProcessingNode.ROLE + "/v-" + name);
+                view = (ViewNode) super.m_manager.lookup(ViewNode.ROLE + "/v-" + name);
                 if (m_labels.contains(view.getLabel())) {
                     m_views.put(name,view);
                 }
@@ -122,22 +120,5 @@ implements Initializable {
             }
         }
         return view;
-    }
-    
-    protected final String getComponentId() {
-        return m_component.getIdRef();
-    }
-    
-    /**
-     * Split a list of space/comma separated labels into a Collection
-     *
-     * @return the collection of labels (may be empty, nut never null)
-     */
-    private static final Collection splitLabels(String labels) {
-        if (labels == null) {
-            return new HashSet(0);
-        } else {
-            return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
-        }
     }
 }
