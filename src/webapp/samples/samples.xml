@@ -84,8 +84,9 @@
     Samples showing possible ways how to use Cocoon sources in sitemap.
     (These samples are served by sub-sitemap)
    </sample>
-   <sample name="Miscellaneous" href="misc/">
-    Other samples: Catalog entity resolver, ...
+   <sample name="Catalog entity resolver" href="catalog/">
+    Resolve network resources (e.g. DTDs, symbols, character entity sets,
+    images) to local copies.
    </sample>
   </group>
   
