@@ -107,7 +107,7 @@ public class FOM_Cocoon extends ScriptableObject {
 
     private void forwardTo(String uri, Object bizData,
                            Continuation continuation) 
-	throws Exception {
+        throws Exception {
         WebContinuation wk = null;
         if (continuation != null) {
             ContinuationsManager contMgr = (ContinuationsManager)
@@ -125,7 +125,7 @@ public class FOM_Cocoon extends ScriptableObject {
     public void jsFunction_sendPage(String uri, 
                                     Object obj, 
                                     Object continuation) 
-	throws Exception {
+        throws Exception {
         forwardTo(uri, obj, (Continuation)unwrap(continuation)); 
     }
                                     
@@ -134,12 +134,12 @@ public class FOM_Cocoon extends ScriptableObject {
                                              Object map,
                                              Object outputStream) 
         throws Exception {
-	if (!(unwrap(outputStream) instanceof OutputStream)) {
-	    throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
-	}
+        if (!(unwrap(outputStream) instanceof OutputStream)) {
+            throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
+        }
         interpreter.process(uri, map, 
-			    (OutputStream)unwrap(outputStream), 
-			    environment);
+                            (OutputStream)unwrap(outputStream), 
+                            environment);
     }
 
     public void jsFunction_redirectTo(String uri) throws Exception {
@@ -166,8 +166,8 @@ public class FOM_Cocoon extends ScriptableObject {
         Request request;
 
         public FOM_Request() {
-	    // prototype ctor
-	}
+            // prototype ctor
+        }
 
         public FOM_Request(Object request) {
             this.request = (Request)unwrap(request);
@@ -186,7 +186,7 @@ public class FOM_Cocoon extends ScriptableObject {
         }
 
         public void jsFunction_removeAttribute(String name) {
-	    request.removeAttribute(name);
+            request.removeAttribute(name);
         }
 
         public void jsFunction_setAttribute(String name,
@@ -211,7 +211,7 @@ public class FOM_Cocoon extends ScriptableObject {
         }
 
         public void jsFunction_setCharacterEncoding(String value) 
-	    throws Exception {
+            throws Exception {
             request.setCharacterEncoding(value);
         }
 
@@ -246,245 +246,245 @@ public class FOM_Cocoon extends ScriptableObject {
 
     public static class FOM_Cookie extends ScriptableObject {
 
-	Cookie cookie;
+        Cookie cookie;
 
-	public FOM_Cookie() {
-	    // prototype ctor
-	}
+        public FOM_Cookie() {
+            // prototype ctor
+        }
 
-	public FOM_Cookie(Object cookie) {
-	    this.cookie = (Cookie)unwrap(cookie);
-	}
+        public FOM_Cookie(Object cookie) {
+            this.cookie = (Cookie)unwrap(cookie);
+        }
 
         public String getClassName() {
             return "FOM_Cookie";
         }
 
-	public String jsGet_name() {
-	    return cookie.getName();
-	}
+        public String jsGet_name() {
+            return cookie.getName();
+        }
 
-	public int jsGet_version() {
-	    return cookie.getVersion();
-	}
+        public int jsGet_version() {
+            return cookie.getVersion();
+        }
 
-	public void jsSet_version(int value) {
-	    cookie.setVersion(value);
-	}
+        public void jsSet_version(int value) {
+            cookie.setVersion(value);
+        }
 
-	public String jsGet_value() {
-	    return cookie.getValue();
-	}
+        public String jsGet_value() {
+            return cookie.getValue();
+        }
 
-	public void jsSet_value(String value) {
-	    cookie.setValue(value);
-	}
+        public void jsSet_value(String value) {
+            cookie.setValue(value);
+        }
 
-	public void jsSet_comment(String purpose) {
-	    cookie.setComment(purpose);
-	}
+        public void jsSet_comment(String purpose) {
+            cookie.setComment(purpose);
+        }
 
-	public String jsGet_comment() {
-	    return cookie.getComment();
-	}
+        public String jsGet_comment() {
+            return cookie.getComment();
+        }
 
-	public void jsSet_domain(String pattern) {
-	    cookie.setDomain(pattern);
-	}
+        public void jsSet_domain(String pattern) {
+            cookie.setDomain(pattern);
+        }
 
-	public String jsGet_domain() {
-	    return cookie.getDomain();
-	}
+        public String jsGet_domain() {
+            return cookie.getDomain();
+        }
 
-	public void jsSet_maxAge(int value) {
-	    cookie.setMaxAge(value);
-	}
+        public void jsSet_maxAge(int value) {
+            cookie.setMaxAge(value);
+        }
 
-	public int jsGet_maxAge() {
-	    return cookie.getMaxAge();
-	}
+        public int jsGet_maxAge() {
+            return cookie.getMaxAge();
+        }
 
-	public void jsSet_path(String value) {
-	    cookie.setPath(value);
-	}
+        public void jsSet_path(String value) {
+            cookie.setPath(value);
+        }
 
-	public String jsGet_path() {
-	    return cookie.getPath();
-	}
+        public String jsGet_path() {
+            return cookie.getPath();
+        }
 
-	public void jsSet_secure(boolean value) {
-	    cookie.setSecure(value);
-	}
+        public void jsSet_secure(boolean value) {
+            cookie.setSecure(value);
+        }
 
-	public boolean jsGet_secure() {
-	    return cookie.getSecure();
-	}
+        public boolean jsGet_secure() {
+            return cookie.getSecure();
+        }
     }
 
     public static class FOM_Response extends ScriptableObject {
 
         Response response;
 
-	public FOM_Response() {
-	    // prototype ctor
-	}
+        public FOM_Response() {
+            // prototype ctor
+        }
 
-	public FOM_Response(Object response) {
-	    this.response = (Response)unwrap(response);
-	}
+        public FOM_Response(Object response) {
+            this.response = (Response)unwrap(response);
+        }
 
         public String getClassName() {
             return "FOM_Response";
         }
 
-	public Object jsFunction_createCookie(String name, String value) {
-	    FOM_Cookie result = 
-		new FOM_Cookie(response.createCookie(name, value));
-	    result.setParentScope(getParentScope());
-	    result.setPrototype(getClassPrototype(this, "FOM_Cookie"));
-	    return result;
-	}
+        public Object jsFunction_createCookie(String name, String value) {
+            FOM_Cookie result = 
+                new FOM_Cookie(response.createCookie(name, value));
+            result.setParentScope(getParentScope());
+            result.setPrototype(getClassPrototype(this, "FOM_Cookie"));
+            return result;
+        }
 
-	public void jsFunction_addCookie(Object cookie) 
-	    throws JavaScriptException {
-	    if (!(cookie instanceof FOM_Cookie)) {
-		throw new JavaScriptException("expected a Cookie instead of "+cookie);
-	    }
-	    FOM_Cookie fom_cookie = (FOM_Cookie)cookie;
-	    response.addCookie(fom_cookie.cookie);
-	}
+        public void jsFunction_addCookie(Object cookie) 
+            throws JavaScriptException {
+            if (!(cookie instanceof FOM_Cookie)) {
+                throw new JavaScriptException("expected a Cookie instead of "+cookie);
+            }
+            FOM_Cookie fom_cookie = (FOM_Cookie)cookie;
+            response.addCookie(fom_cookie.cookie);
+        }
 
-	public boolean jsFunction_containsHeader(String name) {
-	    return response.containsHeader(name);
-	}
+        public boolean jsFunction_containsHeader(String name) {
+            return response.containsHeader(name);
+        }
 
-	public void jsFunction_setHeader(String name, String value) {
-	    response.setHeader(name, value);
-	}
+        public void jsFunction_setHeader(String name, String value) {
+            response.setHeader(name, value);
+        }
 
-	public void jsFunction_addHeader(String name, String value) {
-	    response.addHeader(name, value);
-	}
+        public void jsFunction_addHeader(String name, String value) {
+            response.addHeader(name, value);
+        }
     }
 
     public static class FOM_Session extends ScriptableObject {
 
         Session session;
 
-	public FOM_Session() {
-	    // prototype ctor
-	}
+        public FOM_Session() {
+            // prototype ctor
+        }
 
-	public FOM_Session(Object session) {
-	    this.session = (Session)unwrap(session);
-	}
+        public FOM_Session(Object session) {
+            this.session = (Session)unwrap(session);
+        }
 
         public String getClassName() {
             return "FOM_Session";
         }
 
-	public Object get(String name, Scriptable start) {
-	    Object result = super.get(name, start);
-	    if (result == NOT_FOUND && session != null) {
-		result = session.getAttribute(name);
-		if (result == null) {
-		    result = NOT_FOUND;
-		}
-	    }
-	    return result;
-	}
+        public Object get(String name, Scriptable start) {
+            Object result = super.get(name, start);
+            if (result == NOT_FOUND && session != null) {
+                result = session.getAttribute(name);
+                if (result == null) {
+                    result = NOT_FOUND;
+                }
+            }
+            return result;
+        }
 
-	public Object jsFunction_getAttribute(String name) {
-	    return session.getAttribute(name);
-	}
-	
-	public void jsFunction_setAttribute(String name, Object value) {
-	    session.setAttribute(name, value);
-	}
+        public Object jsFunction_getAttribute(String name) {
+            return session.getAttribute(name);
+        }
+        
+        public void jsFunction_setAttribute(String name, Object value) {
+            session.setAttribute(name, value);
+        }
 
-	public void jsFunction_removeAttribute(String name) {
-	    session.removeAttribute(name);
-	}
+        public void jsFunction_removeAttribute(String name) {
+            session.removeAttribute(name);
+        }
 
-	public Object jsFunction_getAttributeNames() {
-	    return session.getAttributeNames();
-	}
+        public Object jsFunction_getAttributeNames() {
+            return session.getAttributeNames();
+        }
 
-	public void jsFunction_invalidate() {
-	    session.invalidate();
-	}
+        public void jsFunction_invalidate() {
+            session.invalidate();
+        }
 
-	public boolean jsFunction_isNew() {
-	    return session.isNew();
-	}
+        public boolean jsFunction_isNew() {
+            return session.isNew();
+        }
 
-	public String jsFunction_getId() {
-	    return session.getId();
-	}
+        public String jsFunction_getId() {
+            return session.getId();
+        }
 
-	public long jsFunction_getCreationTime() {
-	    return session.getCreationTime();
-	}
+        public long jsFunction_getCreationTime() {
+            return session.getCreationTime();
+        }
 
-	public long jsFunction_getLastAccessedTime() {
-	    return session.getLastAccessedTime();
-	}
+        public long jsFunction_getLastAccessedTime() {
+            return session.getLastAccessedTime();
+        }
 
-	public void jsFunction_setMaxInactiveInterval(int interval) {
-	    session.setMaxInactiveInterval(interval);
-	}
+        public void jsFunction_setMaxInactiveInterval(int interval) {
+            session.setMaxInactiveInterval(interval);
+        }
 
-	public int jsFunction_getMaxInactiveInterval() {
-	    return session.getMaxInactiveInterval();
-	}
+        public int jsFunction_getMaxInactiveInterval() {
+            return session.getMaxInactiveInterval();
+        }
     }
 
     public static class FOM_Context extends ScriptableObject {
 
         org.apache.cocoon.environment.Context context;
 
-	public FOM_Context() {
-	    // prototype ctor
-	}
+        public FOM_Context() {
+            // prototype ctor
+        }
 
-	public FOM_Context(Object context) {
-	    this.context = (org.apache.cocoon.environment.Context)unwrap(context);
-	}
+        public FOM_Context(Object context) {
+            this.context = (org.apache.cocoon.environment.Context)unwrap(context);
+        }
 
         public String getClassName() {
             return "FOM_Context";
         }
 
-	public Object jsFunction_getAttribute(String name) {
-	    return context.getAttribute(name);
-	}
+        public Object jsFunction_getAttribute(String name) {
+            return context.getAttribute(name);
+        }
 
-	public void jsFunction_setAttribute(String name, Object value) {
-	    context.setAttribute(name, unwrap(value));
-	}
+        public void jsFunction_setAttribute(String name, Object value) {
+            context.setAttribute(name, unwrap(value));
+        }
 
-	public void jsFunction_removeAttribute(String name) {
-	    context.removeAttribute(name);
-	}
+        public void jsFunction_removeAttribute(String name) {
+            context.removeAttribute(name);
+        }
 
-	public Object jsFunction_getAttributeNames() {
-	    return context.getAttributeNames();
-	}
+        public Object jsFunction_getAttributeNames() {
+            return context.getAttributeNames();
+        }
 
-	public Object jsFunction_getInitParameter(String name) {
-	    return context.getInitParameter(name);
-	}
+        public Object jsFunction_getInitParameter(String name) {
+            return context.getInitParameter(name);
+        }
 
-	public Object get(String name, Scriptable start) {
-	    Object value = super.get(name, start);
-	    if (value == NOT_FOUND && context != null) {
-		value = context.getAttribute(name);
-		if (value == null) {
-		    value = NOT_FOUND;
-		}
-	    }
-	    return value;
-	}
+        public Object get(String name, Scriptable start) {
+            Object value = super.get(name, start);
+            if (value == NOT_FOUND && context != null) {
+                value = context.getAttribute(name);
+                if (value == null) {
+                    value = NOT_FOUND;
+                }
+            }
+            return value;
+        }
     }
 
     public static class FOM_Log extends ScriptableObject {
@@ -518,21 +518,21 @@ public class FOM_Cocoon extends ScriptableObject {
             logger.error(message);
         }
 
-	public boolean jsFunction_isDebugEnabled() {
-	    return logger.isDebugEnabled();
-	}
+        public boolean jsFunction_isDebugEnabled() {
+            return logger.isDebugEnabled();
+        }
 
-	public boolean jsFunction_isInfoEnabled() {
-	    return logger.isInfoEnabled();
-	}
+        public boolean jsFunction_isInfoEnabled() {
+            return logger.isInfoEnabled();
+        }
 
-	public boolean jsFunction_isWarnEnabled() {
-	    return logger.isWarnEnabled();
-	}
+        public boolean jsFunction_isWarnEnabled() {
+            return logger.isWarnEnabled();
+        }
 
-	public boolean jsFunction_isErrorEnabled() {
-	    return logger.isErrorEnabled();
-	}
+        public boolean jsFunction_isErrorEnabled() {
+            return logger.isErrorEnabled();
+        }
     }
 
     public FOM_Request jsGet_request() {
@@ -571,8 +571,8 @@ public class FOM_Cocoon extends ScriptableObject {
 
     public FOM_Log jsGet_log() {
         if (log != null) {
-	    return log;
-	}
+            return log;
+        }
         log = new FOM_Log();
         log.setParentScope(getParentScope());
         log.setPrototype(getClassPrototype(this, "FOM_Log"));
@@ -613,9 +613,9 @@ public class FOM_Cocoon extends ScriptableObject {
         if (obj instanceof Wrapper) {
             obj = ((Wrapper)obj).unwrap();
         } else if (obj == Undefined.instance) {
-	    obj = null;
-	}
-	return obj;
+            obj = null;
+        }
+        return obj;
     }
 
 }
