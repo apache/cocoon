@@ -47,6 +47,10 @@
           <td/>
           <td valign="top"><wt:widget id="choose"/> <wt:widget-label id="choose"/></td>
         </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="sex"/></td>
+          <td valign="top"><wt:widget id="sex"/></td>
+        </tr>
       </table>
 
       <wt:widget-label id="contacts"/><br/>
