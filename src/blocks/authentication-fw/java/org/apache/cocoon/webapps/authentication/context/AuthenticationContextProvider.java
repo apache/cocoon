@@ -68,7 +68,7 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.4 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.5 2003/05/23 12:35:32 cziegeler Exp $
 */
 public final class AuthenticationContextProvider
 extends AbstractLogEnabled
@@ -101,7 +101,6 @@ implements SessionContextProvider, ThreadSafe, Component, Composable {
                 UserHandler handler = state.getHandler();
                 if ( handler != null ) {
                     context = handler.getContext();
-                    context.state.set( state );
                 }
             }
         }

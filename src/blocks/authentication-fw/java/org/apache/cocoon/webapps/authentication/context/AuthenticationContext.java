@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.7 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.8 2003/05/23 12:35:32 cziegeler Exp $
 */
 public final class AuthenticationContext
 implements SessionContext {
@@ -92,7 +92,8 @@ implements SessionContext {
     private String          handlerName;
     private boolean        initialized;
     
-    ThreadLocal     state = new InheritableThreadLocal();
+    // FIXME
+    public static ThreadLocal     state = new InheritableThreadLocal();
     
     public AuthenticationContext(UserHandler handler) {
         this.name = AuthenticationConstants.SESSION_CONTEXT_NAME;
