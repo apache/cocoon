@@ -15,53 +15,15 @@
  */
 package org.apache.cocoon.components.flow.java;
 
-import java.util.ArrayList;
-import java.util.Vector;
+import java.util.*;
 
-import org.apache.bcel.Constants;
-import org.apache.bcel.Repository;
-import org.apache.bcel.classfile.ConstantCP;
-import org.apache.bcel.classfile.ConstantNameAndType;
-import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.ConstantUtf8;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ACONST_NULL;
-import org.apache.bcel.generic.BasicType;
-import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.GOTO;
-import org.apache.bcel.generic.IFEQ;
-import org.apache.bcel.generic.IFNONNULL;
-import org.apache.bcel.generic.IFNULL;
-import org.apache.bcel.generic.INVOKESTATIC;
-import org.apache.bcel.generic.InstructionConstants;
-import org.apache.bcel.generic.InstructionFactory;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.InstructionTargeter;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.ObjectType;
-import org.apache.bcel.generic.PUSH;
-import org.apache.bcel.generic.RET;
-import org.apache.bcel.generic.ReferenceType;
-import org.apache.bcel.generic.ReturnaddressType;
-import org.apache.bcel.generic.SWAP;
-import org.apache.bcel.generic.TABLESWITCH;
-import org.apache.bcel.generic.TargetLostException;
-import org.apache.bcel.generic.Type;
+import org.apache.bcel.*;
+import org.apache.bcel.classfile.*;
+import org.apache.bcel.generic.*;
 import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.bcel.verifier.exc.AssertionViolatedException;
-import org.apache.bcel.verifier.structurals.ControlFlowGraph;
-import org.apache.bcel.verifier.structurals.ExceptionHandler;
-import org.apache.bcel.verifier.structurals.ExecutionVisitor;
-import org.apache.bcel.verifier.structurals.Frame;
-import org.apache.bcel.verifier.structurals.InstConstraintVisitor;
-import org.apache.bcel.verifier.structurals.InstructionContext;
-import org.apache.bcel.verifier.structurals.LocalVariables;
-import org.apache.bcel.verifier.structurals.OperandStack;
-import org.apache.bcel.verifier.structurals.UninitializedObjectType;
+import org.apache.cocoon.components.flow.java.analyser.*;
+import org.apache.regexp.RE;
 
 /**
  * The classloader breakes the methods of the classes into pieces and
@@ -72,7 +34,7 @@ import org.apache.bcel.verifier.structurals.UninitializedObjectType;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.6 2004/04/06 07:40:48 antonio Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.7 2004/06/03 12:43:27 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -94,10 +56,51 @@ public class ContinuationClassLoader extends ClassLoader {
     private static final String CAPURING_METHOD = "isCapturing";
 
     private static boolean currentMethodStatic;
+    
+    private List includes = new ArrayList();
 
     public ContinuationClassLoader(ClassLoader parent) {
         super(parent);
         Repository.setRepository(new ClassLoaderRepository(parent));
+    }
+    
+    public void addIncludeClass(String pattern) {
+        
+        StringBuffer buffer = new StringBuffer();
+
+        buffer.append("^");
+        for (int i = 0; i<pattern.length(); i++) {
+            if (pattern.charAt(i)=='*') {
+                if ((i+1<pattern.length()) && (pattern.charAt(i+1)=='*')) {
+                    buffer.append("[^\\.]*(\\.[^\\.]*)+");
+                    i++;
+                } else
+                    buffer.append("[^\\.]*");
+            } else {
+                if ("[]|.+?-()^${}".indexOf(pattern.charAt(i))>=0)
+                    buffer.append("\\");
+                buffer.append(pattern.charAt(i));
+            }
+        }
+        buffer.append("$");
+
+        String regex = buffer.toString();
+        
+        RE matcher = new RE(regex);
+        includes.add(matcher);
+    }
+    
+    private boolean isContinuable(Class c) {
+        if (Continuable.class.isAssignableFrom(c))
+            return true;
+        
+        String classname = c.getName();
+        for(Iterator i=includes.iterator(); i.hasNext();) {
+            if (((RE)i.next()).match(classname))
+                return true;
+        }
+        
+        return false;
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
@@ -106,7 +109,7 @@ public class ContinuationClassLoader extends ClassLoader {
         Class c = super.loadClass(name, resolve);
 
         // transform class if class is continuable and not continuation capable
-        if ((Continuable.class.isAssignableFrom(c)) && 
+        if (isContinuable(c) && 
             (!ContinuationCapable.class.isAssignableFrom(c)) && 
             (!c.isInterface())) {
             JavaClass clazz = Repository.lookupClass(c);
@@ -127,9 +130,6 @@ public class ContinuationClassLoader extends ClassLoader {
         // make all methods of java class continuable
         ClassGen clazz = new ClassGen(javaclazz);
         ConstantPoolGen cp = clazz.getConstantPool();
-        // obsolete, but neccesary to execute the InvokeContext
-        InstConstraintVisitor icv = new InstConstraintVisitor();
-        icv.setConstantPoolGen(cp);
         // vistor to build the frame information
         ExecutionVisitor ev = new ExecutionVisitor();
         ev.setConstantPoolGen(cp);
@@ -143,7 +143,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 // analyse the code of the method to create the frame
                 // information about every instruction
                 ControlFlowGraph cfg = new ControlFlowGraph(method);
-                analyse(clazz, method, cfg, icv, ev);
+                analyse(clazz, method, cfg, ev);
                 // add intercepting code 
                 rewrite(method, cfg);
                 // make last optional check for consistency
@@ -165,8 +165,7 @@ public class ContinuationClassLoader extends ClassLoader {
         }
     }
 
-    private void analyse(ClassGen clazz, MethodGen method, ControlFlowGraph cfg,
-                         InstConstraintVisitor icv, ExecutionVisitor ev) {
+    private void analyse(ClassGen clazz, MethodGen method, ControlFlowGraph cfg, ExecutionVisitor ev) {
         // build the initial frame situation for this method.
         Frame vanillaFrame = new Frame(method.getMaxLocals(), method.getMaxStack());
         if (!method.isStatic()) {
@@ -194,14 +193,13 @@ public class ContinuationClassLoader extends ClassLoader {
                 vanillaFrame.getLocals().set(twoslotoffset + j + (method.isStatic() ? 0 : 1), Type.UNKNOWN);
             }
         }
-        icv.setMethodGen(method);
 
         Vector ics = new Vector(); // Type: InstructionContext
         Vector ecs = new Vector(); // Type: ArrayList (of InstructionContext)
 
         InstructionContext start = cfg.contextOf(method.getInstructionList().getStart());
 
-        start.execute(vanillaFrame, new ArrayList(), icv, ev);
+        start.execute(vanillaFrame, new ArrayList(), ev);
         // new ArrayList() <=>  no Instruction was executed before
         //                  => Top-Level routine (no jsr call before)
         ics.add(start);
@@ -222,7 +220,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 ReturnaddressType t = (ReturnaddressType)u.getOutFrame(oldchain).getLocals().get(ret.getIndex());
                 InstructionContext theSuccessor = cfg.contextOf(t.getTarget());
 
-                if (theSuccessor.execute(u.getOutFrame(oldchain), newchain, icv, ev)) {
+                if (theSuccessor.execute(u.getOutFrame(oldchain), newchain, ev)) {
                     ics.add(theSuccessor);
                     ecs.add(newchain.clone());
                 }
@@ -231,7 +229,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 InstructionContext[] succs = u.getSuccessors();
                 for (int s = 0; s < succs.length; s++) {
                     InstructionContext v = succs[s];
-                    if (v.execute(u.getOutFrame(oldchain), newchain, icv, ev)) {
+                    if (v.execute(u.getOutFrame(oldchain), newchain, ev)) {
                         ics.add(v);
                         ecs.add(newchain.clone());
                     }
@@ -254,7 +252,7 @@ public class ContinuationClassLoader extends ClassLoader {
                         : exc_hds[s].getExceptionType()));
                 Frame newFrame = new Frame(newLocals, newStack);
 
-                if (v.execute(newFrame, new ArrayList(), icv, ev)) {
+                if (v.execute(newFrame, new ArrayList(), ev)) {
                     ics.add(v);
                     ecs.add(new ArrayList());
                 }
