@@ -66,6 +66,12 @@
     <condition property="unless.exclude.scratchpad">
       <istrue value="${exclude.scratchpad}"/>
     </condition>
+    <condition property="unless.exclude.scratchpad.samples">
+      <or>
+        <istrue value="${unless.exclude.webapp.samples}"/>
+        <istrue value="${unless.exclude.scratchpad}"/>
+      </or>
+    </condition>
     <condition property="unless.exclude.deprecated">
       <istrue value="${exclude.deprecated}"/>
     </condition>
@@ -75,7 +81,6 @@
     <condition property="unless.exclude.idldocs">
       <istrue value="${exclude.idldocs}"/>
     </condition>
-    
     <condition property="exclude.validate.jars">
       <isfalse value="${validate.jars}"/>
     </condition>
