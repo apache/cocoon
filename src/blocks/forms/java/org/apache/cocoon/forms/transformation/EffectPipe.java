@@ -35,7 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the XMLPipe to match the structure of the data being transformed.
  *
  * @author Timothy Larson
- * @version $Id: EffectPipe.java,v 1.2 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: EffectPipe.java,v 1.3 2004/04/08 09:38:55 mpo Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
@@ -60,23 +60,27 @@ public class EffectPipe extends AbstractXMLPipe {
     protected static final int EVENT_COMMENT                =18;
 
     protected class Element {
-        public String prefix;
-        public String uri;
-        public String loc;
-        public String raw;
+        public final String prefix;
+        public final String uri;
+        public final String loc;
+        public final String raw;
         public Attributes attrs;
         public boolean mine;
 
         public Element() {
-            prefix = null; uri = null; loc = null; raw = null; attrs = XMLUtils.EMPTY_ATTRIBUTES; mine = true;
+            this(null, null, null, null, null);
         }
 
         public Element(String prefix, String uri) {
-            this.prefix = prefix;
-            this.uri = uri;
+            this(prefix, uri, null, null, null);
         }
 
         public Element(String uri, String loc, String raw, Attributes attrs) {
+            this(null, uri, loc, raw, attrs);
+        }
+        
+        public Element(String prefix, String uri, String loc, String raw, Attributes attrs) { 
+            this.prefix=prefix;
             this.uri = uri;
             this.loc = loc;
             this.raw = raw;
