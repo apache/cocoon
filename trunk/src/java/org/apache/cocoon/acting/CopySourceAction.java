@@ -48,67 +48,80 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.servlet.multipart;
+package org.apache.cocoon.acting;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+
 /**
- * This class represents a file part parsed from a http post stream.
+ * The CopySourceAction copies the content of it's "src" attribute to its "dest" parameter.
+ * The destination must of course resolve to a <code>WriteableSource</code>
+ * <p>
+ * Example :
+ * <pre>
+ *   &lt;map:act type="copy-source" src="cocoon://pipeline.xml"&gt;
+ *     &lt;map:parameter name="dest" value="context://WEB-INF/data/file.xml"/&gt;
+ *     .../...
+ *   &lt;/map:act&gt;
+ *</pre>
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartInMemory.java,v 1.4 2003/11/13 15:02:07 sylvain Exp $
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: CopySourceAction.java,v 1.1 2003/11/13 15:02:07 sylvain Exp $
  */
-public class PartInMemory extends Part {
+public class CopySourceAction extends ServiceableAction implements ThreadSafe
+{
+    
+    private SourceResolver resolver;
 
-    private InputStream in;
-
-    private int size;
-
-    /**
-     * Constructor PartInMemory
-     *
-     * @param headers
-     * @param in
-     * @param size
-     */
-    protected PartInMemory(Map headers, InputStream in, int size) {
-        super(headers);
-        this.in = in;
-        this.size = size;
-    }
-
-    /**
-     * Returns the filename
-     */
-    public String getFileName() {
-        return (String) headers.get("filename");
-    }
-
-    /**
-     * Returns the filesize in bytes
-     */
-    public int getSize() {
-        return this.size;
-    }
-
-    /**
-     * Returns a (ByteArray)InputStream containing the file data
-     *
-     * @throws Exception
-     */
-    public InputStream getInputStream() throws Exception {
-        if (this.in != null) {
-            return this.in;
-        } else {
-            throw new IllegalStateException("This part has already been disposed.");
-        }
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
     }
     
-    /**
-     * Clean the byte array content buffer holding part data
-     */
-    public void dispose() {
-        this.in = null;
+    public Map act(Redirector redirector, org.apache.cocoon.environment.SourceResolver oldResolver, Map objectModel, String source, Parameters par)
+        throws Exception {
+        
+        // Get source and destination Sources
+        Source src = resolver.resolveURI(source);
+        Source dest = resolver.resolveURI(par.getParameter("dest"));
+        
+        // Check that dest is writeable
+        if (! (dest instanceof ModifiableSource)) {
+            throw new IllegalArgumentException("Non-writeable URI : " + dest.getURI());
+        }
+        
+        ModifiableSource wdest = (ModifiableSource)dest;
+        
+        // Get streams
+        InputStream is = src.getInputStream();
+        OutputStream os = wdest.getOutputStream();
+        
+        // And transfer all content.
+        try {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = is.read(buffer, 0, buffer.length)) > 0) {
+                os.write(buffer, 0, len);
+            }
+            os.close();
+        } catch(Exception e) {
+            if (wdest.canCancel(os)) {
+                wdest.cancel(os);
+            }
+        } finally {
+            is.close();
+        }
+        // Success !
+        return EMPTY_MAP;
     }
 }
