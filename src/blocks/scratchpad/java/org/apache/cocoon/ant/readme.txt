@@ -106,8 +106,8 @@
 
  Processing Cocoon Modes
  -----------------------
- followLinks - boolean value, iff following links should be processed, by default true
- precompileOnly - boolean value, iff xsp precompile should be performed, by default false,
+ followLinks - boolean value, if following links should be processed, by default true
+ precompileOnly - boolean value, if xsp precompile should be performed, by default false,
  not evaluted - yet
 
  Processing Cocoon Link Generation
