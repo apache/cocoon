@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.336 2004/05/24 11:31:28 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.337 2004/05/24 11:58:07 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -211,6 +211,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Remove deprecated (2.0.x) caching system; only 2.1.x is supported.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated sitemap related components and classes.
+   </action>
    <action dev="CZ" type="update">
      Remove deprecated Store implementations. Excalibur Store/JCS are used instead.
    </action>

@@ -19,8 +19,6 @@ import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.environment.Request;
@@ -39,11 +37,11 @@ import java.io.Serializable;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: AbstractServerPage.java,v 1.1 2004/03/10 15:20:51 unico Exp $
+ * @version CVS $Id: AbstractServerPage.java,v 1.2 2004/05/24 11:58:06 cziegeler Exp $
  */
 public abstract class AbstractServerPage
   extends ServletGenerator 
-  implements CompiledComponent, CacheableProcessingComponent, Cacheable, Recomposable {
+  implements CompiledComponent, CacheableProcessingComponent, Recomposable {
     /**
      * Code generators should produce a constructor
      * block that initializes the generator's
@@ -184,48 +182,4 @@ public abstract class AbstractServerPage
         this.lexicalHandler.comment(data.toCharArray(), 0, data.length());
     }
 
-    /**
-     * Generates the unique key.
-     * This key must be unique inside the space of this component.
-     * Users may override this method to take
-     * advantage of SAX event cacheing
-     *
-     * @return A long representing the cache key (defaults to not cachable)
-     */
-    public long generateKey() {
-        return 0;
-    }
-
-    /**
-     * Generate the validity object.
-     *
-     * @return The generated validity object, <code>NOPCacheValidity</code>
-     *         is the default if hasContentChange() gives false otherwise
-     *         <code>null</code> will be returned.
-     */
-    public CacheValidity generateValidity() {
-        if (hasContentChanged(request))
-            return null;
-        else
-            return NOPCacheValidity.CACHE_VALIDITY;
-    }
-
-}
-
-/** 
- * This is here to avaid references to the deprecated package.
- * It is required to support the deprecated caching algorithm
- */
-final class NOPCacheValidity
-implements CacheValidity {
-
-    public static final CacheValidity CACHE_VALIDITY = new NOPCacheValidity();
-
-    public boolean isValid(CacheValidity validity) {
-        return validity instanceof NOPCacheValidity;
-    }
-
-    public String toString() {
-        return "NOP Validity";
-    }
 }

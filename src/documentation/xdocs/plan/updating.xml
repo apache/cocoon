@@ -158,8 +158,9 @@
         <li><em>org.apache.cocoon.components.xslt.XSLTProcessorImpl</em> - Excalibur XMLUtils</li>
       </ul>
     </s2>
-    <s2 title="Sitemap Components (TBD)">
+    <s2 title="Sitemap Components">
       <ul>
+        <li><em>org.apache.cocoon.components.treeprocessor.MapStackResolver</em> - org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory</li>
         <li><em>org.apache.cocoon.matching.RegexpTargetHostMatcher</em> - org.apache.cocoon.matching.RegexpHostMatcher</li>
         <li><em>org.apache.cocoon.matching.RequestParamMatcher</em> - org.apache.cocoon.matching.RequestParameterMatcher</li>
         <li><em>org.apache.cocoon.matching.WildcardParameterValueMatcher</em> - org.apache.cocoon.matching.WildcardRequestParameterMatcher</li>
@@ -167,6 +168,7 @@
         <li><em>org.apache.cocoon.selection.RequestSelector</em> - org.apache.cocoon.selection.RequestParameterSelector</li>
         <li><em>org.apache.cocoon.selection.SessionStateSelector</em> - org.apache.cocoon.selection.SessionAttributeSelector</li>
         <li><em>org.apache.cocoon.transformation.CachingCIncludeTransformer</em> - org.apache.cocoon.transformation.CIncludeTransformer</li>
+        <li><em>org.apache.cocoon.transformation.helpers.MirrorRecorder</em> - Different alternatives, e.g. ParamSaxBuffer</li>
       </ul>
     </s2>
   </s1>
@@ -179,13 +181,13 @@
      <ul>
      <li><em>Cacheable</em> : Use the <em>CacheableProcessingComponent</em> interface that is very similar.</li>
      <li><em>CacheValidity</em> : Is replaced by <em>SourceValidity</em>.</li>
-     <li><em>AggregatedCacheValidity</em></li>
-     <li><em>CompositeCacheValidity</em></li> 
-     <li><em>DeltaTimeCacheValidity</em></li>
-     <li><em>IncludeCacheValidity</em></li>
-     <li><em>NOPCacheValidity</em></li>
-     <li><em>ParametersCacheValidity</em></li>
-     <li><em>TimeStampCacheValidity</em></li>
+     <li><em>AggregatedCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>CompositeCacheValidity</em> - Excalibur SourceResolver</li> 
+     <li><em>DeltaTimeCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>IncludeCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>NOPCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>ParametersCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>TimeStampCacheValidity</em> - Excalibur SourceResolver</li>
      <li><em>CacheValidityToSourceValidity</em></li>
      <li><em>SourceCacheValidity</em></li>
      <li><em>CachedEventObject</em> : Is replaced by <em>CachedResponse</em>.</li>
