@@ -129,6 +129,12 @@
 
  <map:pipelines>
   <map:pipeline>
+   <map:match pattern="sub**">
+    <map:mount uri-prefix="sub" src="sub/" check-reload="yes"/>
+   </map:match>
+  </map:pipeline>
+
+  <map:pipeline>
 
    <map:match pattern="">
     <map:redirect-to uri="welcome"/>
@@ -152,7 +158,7 @@
     <map:transform src="stylesheets/simple-samples2html.xsl"/>
     <map:serialize/>
    </map:match>
-   
+
    <map:match pattern="welcome-svg">
    	<map:generate src="docs/samples/samples.xml"/>
 	<map:transform src="stylesheets/svg-samples2html.xsl"/>
@@ -160,7 +166,7 @@
 	<map:transform src="stylesheets/fragment-extractor.xsl"/>
 	<map:serialize/>
    </map:match>
-   
+
    <map:match pattern="welcome-svg-images/*.png">
    	<map:generate type="extractor" src="{1}"/>
 	<map:serialize type="svg2png"/>

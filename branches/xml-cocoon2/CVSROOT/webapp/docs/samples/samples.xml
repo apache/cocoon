@@ -60,6 +60,9 @@
 	to automatically extract the images and feed them through
 	a separate pipeline.
    </sample>
+   <sample name="sub sitemap" href="sub/welcome">
+    Example of a page served by a sub sitemap.
+   </sample>
   </group>
 
   <group name="Dynamic Content">
