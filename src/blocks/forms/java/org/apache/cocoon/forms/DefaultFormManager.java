@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,22 +40,22 @@ import org.xml.sax.InputSource;
 
 /**
  * Component implementing the {@link FormManager} role.
- * 
- * @version $Id: DefaultFormManager.java,v 1.4 2004/03/18 13:56:09 bruno Exp $
+ *
+ * @version $Id$
  */
-public class DefaultFormManager 
-  extends AbstractLogEnabled 
+public class DefaultFormManager
+  extends AbstractLogEnabled
   implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
-      
+
     protected static final String PREFIX = "CocoonForm:";
     protected ServiceManager manager;
     protected Configuration configuration;
     protected SimpleServiceSelector widgetDefinitionBuilderSelector;
     protected CacheManager cacheManager;
 
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.manager = serviceManager;
-        this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.cacheManager = (CacheManager)manager.lookup(CacheManager.ROLE);
     }
 
     /**
@@ -138,8 +138,12 @@ public class DefaultFormManager
      * Disposable
      */
     public void dispose() {
-        widgetDefinitionBuilderSelector.dispose();
-        this.manager = null;
+        if (this.widgetDefinitionBuilderSelector != null) {
+            this.widgetDefinitionBuilderSelector.dispose();
+            this.widgetDefinitionBuilderSelector = null;
+        }
+        this.manager.release(this.cacheManager);
         this.cacheManager = null;
+        this.manager = null;
     }
 }

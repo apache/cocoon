@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,8 +31,8 @@ import org.outerj.expression.TokenMgrError;
 
 /**
  * Abstract base class for ValidationRuleBuilder implementations.
- * 
- * @version $Id: AbstractValidationRuleBuilder.java,v 1.7 2004/03/09 13:53:47 reinhard Exp $
+ *
+ * @version $Id$
  */
 public abstract class AbstractValidationRuleBuilder implements ValidationRuleBuilder, Serviceable, Disposable {
     protected ExpressionManager expressionManager;
@@ -40,7 +40,7 @@ public abstract class AbstractValidationRuleBuilder implements ValidationRuleBui
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
-        expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
+        this.expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
     }
 
     /**
@@ -69,6 +69,8 @@ public abstract class AbstractValidationRuleBuilder implements ValidationRuleBui
     }
 
     public void dispose() {
-        serviceManager.release(expressionManager);
+        this.serviceManager.release(this.expressionManager);
+        this.expressionManager = null;
+        this.serviceManager = null;
     }
 }
