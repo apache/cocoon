@@ -20,9 +20,8 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Loggable;
-
-import org.apache.log.Logger;
 
 //import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.Constants;
@@ -30,14 +29,9 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.1 2001-02-12 13:33:16 giacomo Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.2 2001-02-12 13:50:23 bloritsch Exp $
  */
-public class URLFactoryImpl implements URLFactory, Component, Loggable, Configurable, Contextualizable {
-
-    /**
-     * The logger
-     */
-    protected Logger log;
+public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 
     /**
      * The context
@@ -69,7 +63,7 @@ public class URLFactoryImpl implements URLFactory, Component, Loggable, Configur
         try {
             return new URL(location);
         } catch (MalformedURLException mue) {
-            log.debug("Making URL a File relative to context root", mue);
+            getLogger().debug("Making URL a File relative to context root", mue);
 
             String root = (String)context.get(Constants.CONTEXT_ROOT_PATH);
             if (root != null) {
@@ -92,21 +86,13 @@ public class URLFactoryImpl implements URLFactory, Component, Loggable, Configur
             this.context = context;
         }
     }
-    /**
-     * Get the logger
-     */
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
 
     /**
      * Configure the URLFactories
      */
     public void configure(final Configuration conf) throws ConfigurationException {
         try {
-            log.debug("Getting the URLFactories");
+            getLogger().debug("Getting the URLFactories");
             factories = new HashMap();
             Iterator iter = conf.getChildren("protocol");
             Configuration config = null;
@@ -115,10 +101,10 @@ public class URLFactoryImpl implements URLFactory, Component, Loggable, Configur
             while (iter.hasNext()) {
                 config = (Configuration)iter.next();
                 protocol = config.getAttribute("name");
-                log.debug("\tfor protocol: " + protocol + " " + config.getAttribute("class"));
+                getLogger().debug("\tfor protocol: " + protocol + " " + config.getAttribute("class"));
                 urlFactory = (URLFactory) ClassUtils.newInstance(config.getAttribute("class"));
                 if (urlFactory instanceof Loggable) {
-                    ((Loggable) urlFactory).setLogger (this.log);
+                    ((Loggable) urlFactory).setLogger(getLogger());
                 }
                 if (urlFactory instanceof Contextualizable) {
                     ((Contextualizable) urlFactory).contextualize (this.context);
@@ -126,7 +112,7 @@ public class URLFactoryImpl implements URLFactory, Component, Loggable, Configur
                 factories.put(protocol, urlFactory);
             }
         } catch (Exception e) {
-            log.error("Could not get URLFactories", e);
+            getLogger().error("Could not get URLFactories", e);
             throw new ConfigurationException("Could not get parameters because: " +
                                            e.getMessage());
         }

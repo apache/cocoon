@@ -12,22 +12,15 @@ import java.net.MalformedURLException;
 
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Loggable;
-
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: ResourceURLFactory.java,v 1.1.2.1 2001-02-12 13:33:15 giacomo Exp $
+ * @version $Id: ResourceURLFactory.java,v 1.1.2.2 2001-02-12 13:50:23 bloritsch Exp $
  */
-public class ResourceURLFactory implements URLFactory, Loggable, Contextualizable {
-
-    /**
-     * The logger
-     */
-    protected Logger log;
+public class ResourceURLFactory extends AbstractLoggable implements URLFactory, Contextualizable {
 
     /**
      * The context
@@ -48,7 +41,7 @@ public class ResourceURLFactory implements URLFactory, Loggable, Contextualizabl
         if (u != null)
             return u;
         else {
-            log.error(location + " could not be found. (possible classloader problem)");
+            getLogger().error(location + " could not be found. (possible classloader problem)");
             throw new RuntimeException(location + " could not be found. (possible classloader problem)");
         }
     }
@@ -63,14 +56,6 @@ public class ResourceURLFactory implements URLFactory, Loggable, Contextualizabl
     public void contextualize(Context context) {
         if (this.context == null) {
             this.context = context;
-        }
-    }
-    /**
-     * Get the logger
-     */
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
         }
     }
 }
