@@ -98,7 +98,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.33 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class CocoonServlet extends HttpServlet {
 
