@@ -256,8 +256,8 @@ AddHandler cocoon xml</source>
       Next, if using Apache with Tomcat (which is recommended on a production server, since Tomcat standalone
       is not yet as efficient or robust - Apache is far more mature!)
       we need to tell Apache to forward the same partial pathnames to Tomcat. This is done
-      by editing the tomcat <code>.conf</code> file (it's called <code>tomcat-apache.conf</code> if you're using Tomcat 3.1 and
-      Apache 1.3.12) in your Apache setup. Add the following lines:
+      by editing the tomcat <code>.conf</code> file (it's called <code>tomcat-apache.conf</code> if you're 
+      using Tomcat 3.1 and Apache 1.3.12) in your Apache setup. Add the following lines:
      </p>
 
  <source><![CDATA[
@@ -266,6 +266,8 @@ AddHandler cocoon xml</source>
      Options Indexes FollowSymLinks
  </Directory>
  ApJServMount /cocoon /cocoon
+ AddType text/xml .xml
+ AddHandler jserv-servlet .xml
  <Location /cocoon/WEB-INF/ >
      AllowOverride None
      deny from all
@@ -273,7 +275,7 @@ AddHandler cocoon xml</source>
  ]]></source>
 
       <p>
-      This tells Apache to direct requests that come in under that partial path "/cocoon" to
+      This tells Apache to direct .xml requests that come in under that partial path "/cocoon" to
       the directory under Tomcat (<code>$TOMCAT_HOME/webapps/cocoon</code>).
       </p>
 
@@ -303,7 +305,8 @@ AddHandler cocoon xml</source>
  ]]></source>
  
      <p>
-      Next you need to edit the <code>$TOMCAT_HOME/webapps/WEB-INF/web.xml</code> file to point to the
+      Next you need to edit the <code>$TOMCAT_HOME/webapps/cocoon/WEB-INF/web.xml</code>
+      file to point to the
       Cocoon properties file in the same directory. Do this by changing the text
       <code>conf/cocoon.properties</code> to <code>WEB-INF/cocoon-properties</code>. Note that this path is a relative
       path must be so. Don't try to use an absolute path here. It won't work. Also note that
@@ -328,14 +331,16 @@ AddHandler cocoon xml</source>
  
    <note>
     Make sure that <code>xerces.jar</code> is located <strong>before</strong> 
-    <code>xml.jar</code> otherwise XSP won't work. To do this, rename 
-    <code>xml.jar</code> as <code>zxml.jar</code> to be placed later in
-    alphabetical order.
+    <code>xml.jar</code> in the CLASSPATH, otherwise XSP won't work. Tomcat
+    constructs its own CLASSPATH automatically and then adds the environment 
+    CLASSPATH, so manually setting the CLASSPATH before running Tomcat won't work.
+    Instead, a hack which some people have found to work is renaming
+    <code>xml.jar</code> as <code>zxml.jar</code>.
    </note>
 
    <note>
     If you have any problems, please look at the 
-    <connect href="faqs.xml">FAQ</connect> before submitting a bug
+    <connect href="faq.xml">FAQ</connect> before submitting a bug
     report or a request for help on the mailing lists. Thank you.
    </note>
   </s2>
@@ -984,6 +989,12 @@ ApplicationServer start $appserv/
    <td>Apache 1.3.9</td>
    <td>Apache JServ 1.1b3</td>
    <td>Sun JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>Solaris 2.6 SPARC</td>
+   <td>Apache 1.3.14</td>
+   <td>JServ 1.1.2</td>
+   <td>Sun JDK 1.3</td>
   </tr>
   <tr>
    <td>Solaris 7</td>
