@@ -7,9 +7,6 @@ import java.util.Locale;
  */
 public class PlainBooleanConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
-        if (value == null || value.length() == 0) {
-            return "";
-        }
         return Boolean.valueOf(value);
     }
 

@@ -65,8 +65,10 @@ import java.util.Locale;
  * which can be expensive if it needs to be done repeatedly.
  */
 public interface Convertor {
+    
     /**
-     * Returns null if conversion failes.
+     * Converts string representation into the object of convertor's type.
+     * Returns null if conversion fails.
      *
      * @param formatCache can be null if not needed
      */

@@ -75,7 +75,7 @@ import java.util.Locale;
  * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.2 2003/11/13 13:19:09 bruno Exp $
+ * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.3 2003/12/10 17:53:26 vgritsenko Exp $
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
     
@@ -125,9 +125,18 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
                 }
                 Element element = (Element)node;
                 String stringValue = element.getAttribute("value");
-                Object value = convertor.convertFromString(stringValue, Locale.US, formatCache);
-                if (value == null)
-                    throw new Exception("Could not convert the value \"" + stringValue + "\" to the type " + datatype.getDescriptiveName() + ", defined at " + DomHelper.getLocation(element));
+                Object value;
+                if ("".equals(stringValue)) {
+                    // Empty value translates into the null object
+                    value = null;
+                } else {
+                    value = convertor.convertFromString(stringValue, Locale.US, formatCache);
+                    if (value == null) {
+                        throw new Exception("Could not convert the value \"" + stringValue +
+                                            "\" to the type " + datatype.getDescriptiveName() +
+                                            ", defined at " + DomHelper.getLocation(element));
+                    }
+                }
 
                 XMLizable label = null;
                 Element labelEl = DomHelper.getChildElement(element, Constants.WD_NS, "label");
