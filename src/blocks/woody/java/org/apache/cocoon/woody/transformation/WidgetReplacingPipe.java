@@ -108,6 +108,9 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
     protected WoodyTemplateTransformer pipeContext;
+    
+    /** Have we encountered a <wi:style> element in a widget ? */
+    protected boolean gotStylingElement = false;
 
     public void init(Widget contextWidget, WoodyTemplateTransformer pipeContext) {
         this.contextWidget = contextWidget;
@@ -124,6 +127,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             checkContextWidgetAvailable(qName);
             inWidgetElement = true;
             widgetElementNesting = elementNestingCounter;
+            gotStylingElement = false;
             xmlCompiler.recycle();
 
             // retrieve widget here, but its XML will only be streamed in the endElement call
@@ -132,6 +136,10 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             if (repeaterWidget && !(widget instanceof Repeater))
                 throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
         } else if (inWidgetElement) {
+            if (elementNestingCounter == widgetElementNesting + 1 &&
+                Constants.WI_NS.equals(namespaceURI) && STYLING_EL.equals(localName)) {
+                gotStylingElement = true;
+            }
             xmlCompiler.startElement(namespaceURI, localName, qName, attributes);
         } else if (namespaceURI.equals(Constants.WT_NS)) {
             if (localName.equals("widget-label")) {
@@ -487,9 +495,15 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             if (elementNesting == 0 && saxFragment != null) {
                 interpreter.setContentHandler(contentHandler);
                 interpreter.setLexicalHandler(lexicalHandler);
-                contentHandler.startElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
-                interpreter.deserialize(saxFragment);
-                contentHandler.endElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL);
+                if (gotStylingElement) {
+                    // Just deserialize
+                    interpreter.deserialize(saxFragment);
+                } else {
+                    // Insert an enclosing <wi:styling>
+                    contentHandler.startElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
+                    interpreter.deserialize(saxFragment);
+                    contentHandler.endElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL);
+                } 
             }
             super.endElement(uri, loc, raw);
         }
