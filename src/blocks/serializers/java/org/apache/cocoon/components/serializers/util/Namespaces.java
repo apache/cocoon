@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  * stack for XML namespaces declarations.
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: Namespaces.java,v 1.1 2004/04/21 09:33:27 pier Exp $
+ * @version CVS $Id: Namespaces.java,v 1.2 2004/06/02 07:42:27 tcurdt Exp $
  */
 public class Namespaces {
     /** The array of all URIs in this stack. */
@@ -83,14 +83,15 @@ public class Namespaces {
      */
     public synchronized void pop(String prefix)
     throws SAXException {
-        for (int x = this.position(prefix, pre); x < (--this.depth); x++) {
+        for (int x = this.position(prefix, pre); x < this.depth; x++) {
             int k = (x + 1);
             this.pre[x] = this.pre[k];
             this.uri[x] = this.uri[k];
         }
-        this.pre[this.depth] = null;
-        this.uri[this.depth] = null;
+        //this.pre[this.depth] = null;
+        //this.uri[this.depth] = null;
         this.last--;
+        this.depth--;
     }
 
     /**
@@ -180,4 +181,5 @@ public class Namespaces {
         }
         throw new SAXException("Unable to map \"" + check + "\"");
     }
+
 }

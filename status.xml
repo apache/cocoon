@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.344 2004/06/01 17:16:28 tcurdt Exp $:-->
+<!-- CVS $Id: status.xml,v 1.345 2004/06/02 07:42:27 tcurdt Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="TC" type="fix">
+     Fixed the namespace handling.
+   </action>
    <action dev="TC" type="add">
      Added support for indentation to the new XML Serializer.
    </action>
