@@ -98,11 +98,5 @@
     Look here ... samples for more and more blocks are in this section.
    </sample>
   </group>
-  
-  <group name="Scratchpad samples">
-    <sample name="Try Scratchpad" href="scratchpad">
-    Here is a peek of what the next release of Cocoon will bring.
-    To test these samples, you must have built Cocoon with "build (sh|bat) installscratchpadwar".
-   </sample>
-  </group>
+ 
 </samples>
