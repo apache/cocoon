@@ -59,15 +59,14 @@ import org.apache.cocoon.environment.Environment;
  * executed for the particular request.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.2 2003/10/24 20:37:56 bloritsch Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.3 2003/11/16 14:27:40 unico Exp $
  */
+public interface ProcessingNode {
 
-public interface ProcessingNode
-        extends ThreadSafe
-{
+    public static final String ROLE = ProcessingNode.class.getName();
 
     /** The key used for the <code>SourceResolver</code> in the object model. */
-    String OBJECT_SOURCE_RESOLVER = "source-resolver";
+    static final String OBJECT_SOURCE_RESOLVER = "source-resolver";
 
     /**
      * Process this node with the suppled environment information.  Will recursively
@@ -81,9 +80,9 @@ public interface ProcessingNode
     boolean invoke( Environment env, InvokeContext context ) throws Exception;
 
     /**
-     * Get the location of this node.  ?? Is this the XML locator text ??
+     * Get the location of this node.
      *
-     * @return
+     * @return  xml locator text.
      */
     String getLocation();
 }
