@@ -88,7 +88,7 @@ public class XModuleSource
      */
     public XModuleSource( Map objectModel, String uri,
                           ServiceManager manager, Logger logger )
-        throws MalformedURLException, SourceException {
+        throws MalformedURLException {
 
         this.objectModel = objectModel;
         this.manager = manager;
