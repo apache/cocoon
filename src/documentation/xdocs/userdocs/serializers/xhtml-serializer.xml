@@ -78,8 +78,8 @@
       <p>
         As XHTML serializer uses the XML serializer internally, you might 
         want to read the complete list of valid XML configuration parameters.
-        It is available at <link href="xml-serializer.html">XML serializer</link>
-        user docuementation.
+        It is available at <link href="xml-serializer.html">XML Serializer</link>
+        user documentation.
       </p>
     </s2>
   </s1>
