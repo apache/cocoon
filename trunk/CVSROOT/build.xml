@@ -243,7 +243,7 @@ a Java 1.2 compatible JVM is required for this target.
   <target name="prepare-saxon" depends="init" if="saxon.present">
     <copy todir="${build.src}" filtering="on">
       <fileset dir="${src.dir}">
-        <include name="**/Saxon*"/>
+        <include name="**/SAXON*"/>
       </fileset>
     </copy>
   </target>
