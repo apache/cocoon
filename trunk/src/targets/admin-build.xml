@@ -25,15 +25,15 @@
 <!-- === Gump Targets ====================================================== -->
 
   <!-- compiles and packages the core classes and the deprecated classes -->
-  <target name="gump-core" depends="package-core, package-deprecated, javadocs"/>
+  <target name="gump-core" depends="package-core, package-deprecated, javadocs, junit-tests"/>
 
   <!-- compiles and packages the scratchpad classes -->
   <target name="gump-scratchpad" depends="package-scratchpad"/>
   
   <!-- compiles and packages a single block identified by ${block-name} -->
-  <target name="gump-block" depends="compile-core, compile-deprecated, prepare-blocks">
+  <target name="gump-block" depends="compile-core, compile-deprecated, prepare-blocks, junit-tests">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="cocoon-block-${block-name}-compile"/>
+         target="cocoon-block-${block-name}-tests"/>
   </target>
