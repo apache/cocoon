@@ -173,7 +173,7 @@ public class SimpleJdbcSourceDescriptor
     public void initialize() throws Exception {
         ComponentSelector datasources = (ComponentSelector) m_manager.lookup(
             DataSourceComponent.ROLE + "Selector");
-        m_datasource = (DataSourceComponent) datasources.select("cocoondb");
+        m_datasource = (DataSourceComponent) datasources.select(m_datasourceName);
     }
     
     public void dispose() {
