@@ -36,6 +36,20 @@
       </fileset>
     </copy>
 
+    <!-- compile core classes 
+    <echo message="Compiling Cocoon Core"/>
+    <javac srcdir="${src.core}"
+           destdir="${build.dest}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           source="${source.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+    -->
+
     <!-- compile mock classes -->
     <mkdir dir="${build.mocks}"/>
     <javac srcdir="${mocks}"
@@ -59,7 +73,11 @@
            source="${source.vm}"
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
-           classpathref="classpath"/>
+           classpathref="classpath">
+     <src path="${src.core}"/>
+     <src path="${java}"/>
+    </javac>       
+
   </target>
 
   <!-- compiles deprecated code -->
