@@ -385,32 +385,10 @@
     pool-grow="4" pool-max="32" pool-min="2"
   />
   
-<!-- TODO: entries below are still 2.1 configuration -->
-
 <!-- ========================= Sitemap Flowscript ========================== -->
 
   <!--+
-      |  The <flow-interpreters> element is used to describe the flowscript
-      |  engines usedd by the current instance.
-      |
-      |  The attributes recognized by the <flow-interpreters> element are:
-      |
-      |    default (string value):
-      |
-      |       the default interpreted language assumed for <map:script>
-      |       elements which do not specify a "language" attribute. If not
-      |       present, the first language that's described within the
-      |       <flow-interpreters> element is assumed to be the default
-      |       language.
-      |
-      |  Within <flow-interpreters> only <component-instance> elements are
-      |  recognized. The attributes recognized by this element are "name"
-      |  and "class". "name" specifies the name of a scripting language,
-      |  and "class" defines the Java class that implements it. See
-      |  org.apache.cocoon.components.flow.Interpreter for the Cocoon
-      |  interface with an scripting language interpreter.
-      |
-      |  A <component-instance> element contains as subelements the
+      |  A javascript interpreter declaration element contains as subelements the
       |  following elements:
       |
       |    reload-scripts (boolean value, default false):
@@ -434,23 +412,12 @@
       |       whether support for the JavaScript debugger should be enabled
       |       in the control flow.
       +-->
-  <flow-interpreters default="javascript" logger="flow">
-    <!-- FOM (Flow Object Model) -->
-    <component-instance name="javascript" class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter">
-      <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
-      <reload-scripts>true</reload-scripts>
-      <check-time>4000</check-time>
-      <!--  <debugger>enabled</debugger> -->  <!-- JavaScript Debugger support -->
-    </component-instance>
-    <!-- (Deprecated) Original
-    <component-instance name="JavaScript" class="org.apache.cocoon.components.flow.javascript.JavaScriptInterpreter">
-      <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/system.js</load-on-startup>
-      <reload-scripts>true</reload-scripts>
-      <check-time>4000</check-time>
-      <debugger>enabled</debugger>
-    </component-instance>
-    -->
-  </flow-interpreters>
+  <fom-javascript-interpreter id="javascript" logger="flow">
+    <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
+    <reload-scripts>true</reload-scripts>
+    <check-time>4000</check-time>
+    <!--  <debugger>enabled</debugger> -->  <!-- JavaScript Debugger support -->
+  </fom-javascript-interpreter>
 
   <!--+
       | Configuration for the continuations manager.
@@ -463,12 +430,14 @@
       | expiring continuations. Currently only the "periodic" type is
       | supported.
       +-->
-  <continuations-manager logger="flow" time-to-live="3600000">
+  <continuations-manager id="default" logger="flow" time-to-live="3600000">
     <expirations-check type="periodic">
       <offset>180000</offset>
       <period>180000</period>
     </expirations-check>
   </continuations-manager>
+  
+<!-- TODO: entries below are still 2.1 configuration -->
 
 <!-- =================== Sitemap Input/Output Modules ====================== -->
 
