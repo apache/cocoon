@@ -200,7 +200,13 @@
       </target>
 
       <target name="{$block-name}-build" if="{$block-name}.has.build">
-         <ant inheritAll="true" inheritRefs="false" target="main" antfile="{string('${blocks}')}/{$block-name}/build.xml"/>
+         <ant inheritAll="true"
+              inheritRefs="false"
+              target="main"
+              antfile="{string('${blocks}')}/{$block-name}/build.xml"
+              >
+              <property name="block.dir" value="{string('${blocks}')}/{$block-name}"/>
+         </ant>
       </target>
 
       <target name="{$block-name}-mocks" if="{$block-name}.has.mocks">
