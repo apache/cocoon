@@ -19,10 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.avalon.framework.context.Context;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
@@ -35,14 +34,16 @@ import org.mozilla.javascript.Script;
  * Listeners built by {@link org.apache.cocoon.forms.event.impl.JavaScriptWidgetListenerBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListener.java,v 1.3 2004/04/25 12:12:09 sylvain Exp $
+ * @version CVS $Id: JavaScriptWidgetListener.java,v 1.4 2004/04/27 12:02:13 bruno Exp $
  */
 public abstract class JavaScriptWidgetListener {
     
     private Script script;
-    
-    public JavaScriptWidgetListener(Script script) {
+    private Context context;
+
+    public JavaScriptWidgetListener(Script script, Context context) {
         this.script = script;
+        this.context = context;
     }
     
     /**
@@ -54,10 +55,8 @@ public abstract class JavaScriptWidgetListener {
             HashMap values = new HashMap(2);
             values.put("event", event);
             
-            // FIXME: remove this ugly hack and get the request from the Avalon context once
-            // listener builder are real components
-            Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-            
+            Map objectModel = ContextHelper.getObjectModel(context);
+
             // Add the biz data that was passed to showForm()
             Object viewData = FlowHelper.getContextObject(objectModel);
             if (viewData != null) {
@@ -76,8 +75,8 @@ public abstract class JavaScriptWidgetListener {
     
     public static class JSActionListener extends JavaScriptWidgetListener implements ActionListener {
 
-        public JSActionListener(Script script) {
-            super(script);
+        public JSActionListener(Script script, Context context) {
+            super(script, context);
         }
 
         public void actionPerformed(ActionEvent event) {
@@ -87,8 +86,8 @@ public abstract class JavaScriptWidgetListener {
     
     public static class JSValueChangedListener extends JavaScriptWidgetListener implements ValueChangedListener {
 
-        public JSValueChangedListener(Script script) {
-            super(script);
+        public JSValueChangedListener(Script script, Context context) {
+            super(script, context);
         }
 
         public void valueChanged(ValueChangedEvent event) {

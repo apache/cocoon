@@ -19,6 +19,7 @@ import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.w3c.dom.Element;
 
 /**
@@ -30,11 +31,9 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaClassWidgetListenerBuilder.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version CVS $Id: JavaClassWidgetListenerBuilder.java,v 1.2 2004/04/27 12:02:13 bruno Exp $
  */
-public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder {
-
-    public static final JavaClassWidgetListenerBuilder INSTANCE = new JavaClassWidgetListenerBuilder();
+public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe {
 
     public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
 
