@@ -54,7 +54,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.21 2004/04/26 21:28:39 ugo Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.22 2004/05/24 11:04:55 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -560,16 +560,27 @@ public abstract class AbstractProcessingPipeline
     protected void setupReader(Environment environment)
     throws ProcessingException {
         try {
-            String mimeType;
             this.reader.setup(environment,environment.getObjectModel(),readerSource,readerParam);
-            mimeType = this.reader.getMimeType();
-            if ( mimeType != null ) {
-                environment.setContentType(mimeType);
-            } else if ( readerMimeType != null ) {
+            // Set the mime-type
+            // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
+            // MIME type declared on the reader instance
+            // MIME type declared for the reader component
+            // Ask the Reader for a MIME type:
+            //     A *.doc reader could peek into the file
+            //     and return either text/plain or application/vnd.msword or
+            //     the reader can use MIME type declared in WEB-INF/web.xml or 
+            //     by the server.
+            if ( this.readerMimeType != null ) {
                 environment.setContentType(this.readerMimeType);
+            } else if ( this.sitemapReaderMimeType != null ) {
+                environment.setContentType(this.sitemapReaderMimeType);                
             } else {
-                environment.setContentType(this.sitemapReaderMimeType);
+                final String mimeType = this.reader.getMimeType();
+                if ( mimeType != null ) {
+                    environment.setContentType(mimeType);                    
+                }
             }
+
         } catch (SAXException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
         } catch (IOException e){

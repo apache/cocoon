@@ -50,11 +50,11 @@
   </s1>
   <s1 title="Updating Your Application">
     <p>Currently, updating your application from an older version to the latest
-     version of Cocoon has do be done manually (but we are working on a better
+     version of Cocoon has to be done manually (but we are working on a better
      solution!).</p>
     <p>We suggest you, that you start from a clean Cocoon installation and 
     incorporate your changes into the cocoon.xconf, the sitemap etc. This
-    is in most cases much easier that starting with your old application
+    is in most cases much easier than starting with your old application
     and adapting it for Cocoon 2.2.x.</p>
   </s1>
   <s1 title="Sitemap Changes">
