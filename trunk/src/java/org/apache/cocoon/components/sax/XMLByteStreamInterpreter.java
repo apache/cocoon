@@ -50,19 +50,19 @@
 */
 package org.apache.cocoon.components.sax;
 
+import java.util.ArrayList;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.util.ArrayList;
 
 /**
  * This a simple xml compiler which takes a byte array as input.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.1 2003/03/09 00:09:11 pier Exp $
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.2 2003/05/26 09:52:58 cziegeler Exp $
  */
 
 public final class XMLByteStreamInterpreter
