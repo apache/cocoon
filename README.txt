@@ -37,7 +37,7 @@
 
    o  A Java 1.3 or later compatible virtual machine for your operating system.
 
-   o  A Servlet API 2.2 compatible Servlet Engine or J2EE Application Server. 
+   o  A Servlet API 2.3 compatible Servlet Engine or J2EE Application Server. 
       [not required for command line operation]
 
 

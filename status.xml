@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.377 2004/06/29 12:14:06 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.378 2004/07/02 09:10:15 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Update to servlet specification 2.3.
+   </action>
    <action dev="AG" type="update">
      Updated commons-collections to 3.1
    </action>

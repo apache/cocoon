@@ -47,7 +47,7 @@
       </p>
 
       <p><strong>Servlet Engine</strong>
-       A Servlet 2.2 compliant servlet engine must be present in order to support
+       A Servlet 2.3 compliant servlet engine must be present in order to support
        servlet operation and dynamic request handling. Note that this requirement
        is optional for command line operation.  Note also that Cocoon now ships 
        with a stripped down version of Jetty suitable for immediately testing 
