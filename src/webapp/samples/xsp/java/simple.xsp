@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: simple.xsp,v 1.1 2003/09/07 06:09:10 vgritsenko Exp $ -->
+<!-- CVS $Id: simple.xsp,v 1.2 2004/02/07 15:02:11 ghoward Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
           xmlns:xsp-request="http://apache.org/xsp/request/2.0"
           xmlns:log="http://apache.org/xsp/log/2.0"
-          xmlns:capture="http://apache.org/cocoon/capture/1.0">
+          xmlns:capture="http://apache.org/cocoon/capture/1.0"
+          xmlns:input="http://apache.org/cocoon/xsp/input/1.0">
 
   <page>
   <log:logger name="xsp-sample" filename="xsp-sample.log"/>
@@ -80,6 +81,13 @@
      Header "user-agent" as String:
      <xsp-request:get-header name="user-agent"/>
    </para>
+   
+   <para>
+   	 Access to input modules configured in cocoon.xconf: 
+   	 <input:get-attribute module="cocoon-properties" name="fullname"/>
+   	 <input:get-attribute module="cocoon-properties" name="version"/>
+   </para>
+   	 
 
    <xsp-request:get-header-names/>
 
