@@ -14,13 +14,26 @@ import org.apache.cocoon.framework.Configurable;
 import org.apache.cocoon.framework.Modificable;
 
 /**
+ * The <code>Filter</code> interface is an abstraction for those compoments
+ * whose task is to filter and modify SAX events into the Cocoon pipeline.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 01:18:30 $
+ * @since Cocoon 2.0
  */
 public interface Filter extends Component, Configurable, Modificable {
+    /**
+     * Get the <code>XMLConsumer</code> object that will listen to SAX events,
+     * modify them, and then forward them to the specified 
+     * <code>XMLConsumer</code>.
+     *
+     * @param job The current <code>Job</code>.
+     * @param src The sitemap-translate source URI.
+     * @param cons The <code>XMLConsumer</code> listening to the modified
+     *             SAX events.
+     */
     public XMLConsumer getXMLConsumer(Job job, String src, XMLConsumer cons);
 }
