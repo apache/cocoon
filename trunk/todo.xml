@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.2 2003/03/17 00:47:42 vgritsenko Exp $
+  CVS $Id: todo.xml,v 1.3 2003/03/20 06:08:33 crossley Exp $
 -->
 
 <todo title="Things To Do">
@@ -39,6 +39,11 @@
    <link href="plan/todo-doc.html">Documentation To Do List</link>
   </action> 
 
+  <action context="code" assigned-to="open">
+   Attend to the general issues in the
+   <link href="plan/release.html">release plan</link>
+  </action>
+
  <action context="code" assigned-to="open">
    For 2.1: use (only) released versions of excalibur (xml, source, store etc).
    This requires a release of those components in excalibur.
@@ -70,7 +75,38 @@
    DOUBLE CHECK THAT REDIRECTS ARE FORBIDDEN.
    http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=102633389301850&amp;w=2
   </action>  
-    
+
+  <action context="code" assigned-to="open">
+   Finish the design and contracts of flow. Add more tests and samples and
+   documentation.
+  </action>
+
+  <action context="code" assigned-to="open">
+   Finish the document
+   <link href="installing/updating.html">Updating Cocoon</link>
+   which describes the major changes since 2.0.2
+  </action>
+
+  <action context="code" assigned-to="open">
+   Finish the
+   <link href="plan/samples.html">refactoring of samples</link>
+  </action>
+
+  <action context="code" assigned-to="open">
+   Move complete Source implementation to Excalibur.
+  </action>
+
+  <action context="code" assigned-to="open">
+   Documentation to be published by Forrest.
+   See the
+   <link href="http://wiki.cocoondev.org/Wiki.jsp?page=ForrestProposal">proposal</link>
+   under development.
+  </action>
+
+  <action context="code" assigned-to="open">
+   Finish moving the scratchpad stuff in main trunk.
+  </action>
+
  </actions>
 
  <actions priority="medium">
