@@ -51,6 +51,8 @@
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.Constants;
 import org.outerj.expression.ExpressionContext;
 
 /**
@@ -77,7 +79,7 @@ public class Mod10ValidationRule extends AbstractValidationRule {
             }
         }
         if(!((sum % 10) == 0))
-            return hasFailMessage() ? getFailMessage() : new ValidationError("validation.mod10");
+            return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.mod10", Constants.I18N_CATALOGUE));
         else
             return null;
     }

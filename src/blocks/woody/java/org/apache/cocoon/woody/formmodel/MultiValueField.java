@@ -55,6 +55,7 @@ import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.util.I18nMessage;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -125,7 +126,7 @@ public class MultiValueField extends AbstractWidget {
         if (values != null)
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else
-            validationError = new ValidationError("multivaluefield.conversionfailed");
+            validationError = new ValidationError(new I18nMessage("multivaluefield.conversionfailed", Constants.I18N_CATALOGUE));
 
         return validationError == null;
     }

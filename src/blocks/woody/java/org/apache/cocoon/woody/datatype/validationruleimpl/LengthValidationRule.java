@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
+import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.Constants;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
 
@@ -96,7 +98,7 @@ public class LengthValidationRule extends AbstractValidationRule {
                 return null;
             int length = ((BigDecimal)result).intValue();
             if (string.length() != length)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.string.exact-length", new String[] {String.valueOf(length)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.exact-length", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
             return null;
         } else if (minExpr != null && maxExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, "min", "length");
@@ -114,7 +116,7 @@ public class LengthValidationRule extends AbstractValidationRule {
             int maxLength = ((BigDecimal)result).intValue();
 
             if (string.length() < minLength || string.length() > maxLength)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.string.range-length", new String[] {String.valueOf(minLength), String.valueOf(maxLength)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.range-length", new String[] {String.valueOf(minLength), String.valueOf(maxLength)}, Constants.I18N_CATALOGUE));
             return null;
         } else if (minExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, "min", "length");
@@ -124,7 +126,7 @@ public class LengthValidationRule extends AbstractValidationRule {
                 return null;
             int length = ((BigDecimal)result).intValue();
             if (string.length() < length)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.string.min-length", new String[] {String.valueOf(length)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.min-length", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
             return null;
         } else if (maxExpr != null) {
             Object result = evaluateNumeric(maxExpr, expressionContext, "max", "length");
@@ -134,7 +136,7 @@ public class LengthValidationRule extends AbstractValidationRule {
                 return null;
             int length = ((BigDecimal)result).intValue();
             if (string.length() > length)
-                return hasFailMessage() ? getFailMessage() : new ValidationError("validation.string.max-length", new String[] {String.valueOf(length)});
+                return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.max-length", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
             return null;
         }
         return null;

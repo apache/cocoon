@@ -52,6 +52,7 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.util.I18nMessage;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.datatype.Datatype;
@@ -75,7 +76,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.16 2003/11/06 21:33:28 vgritsenko Exp $
+ * @version CVS $Id: Field.java,v 1.17 2003/11/13 13:18:35 bruno Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -122,11 +123,12 @@ public class Field extends AbstractWidget {
 
                 if (this.value == null) {
                     // Conversion failed
-                    this.validationError = new ValidationError(
+                    this.validationError = new ValidationError(new I18nMessage(
                         "datatype.conversion-failed",
                         new String[] {"datatype." + definition.getDatatype().getDescriptiveName()},
-                        new boolean[] { true }
-                    );
+                        new boolean[] { true },
+                        Constants.I18N_CATALOGUE
+                    ));
 
                     // No need for further validation (and need to keep the above error)
                     this.needsValidate = false;
@@ -154,7 +156,7 @@ public class Field extends AbstractWidget {
                 if (this.value == null) {
                     // No value : is it required ?
                     if (this.definition.isRequired()) {
-                        this.validationError = new ValidationError("general.field-required");
+                        this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
                     }
 
                 } else {
@@ -344,7 +346,7 @@ public class Field extends AbstractWidget {
      * <p>Access to the values of the above mentioned properties is done
      * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
      * @param model The collection used as a model for the selection list. 
-     * @param keyPath An XPath expression referring to the attribute used
+     * @param valuePath An XPath expression referring to the attribute used
      * to populate the values of the list's items. 
      * @param labelPath An XPath expression referring to the attribute used
      * to populate the labels of the list's items.
