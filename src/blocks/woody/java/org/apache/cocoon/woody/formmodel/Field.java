@@ -76,7 +76,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.20 2003/12/29 06:14:49 tim Exp $
+ * @version CVS $Id: Field.java,v 1.21 2003/12/31 11:41:41 antonio Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -115,34 +115,27 @@ public class Field extends AbstractWidget {
     public Object getValue() {
         // Parse the value
         if (this.needsParse) {
-
             // Clear value, it will be recomputed
             this.value = null;
-            if (this.enteredValue == null) {
-                this.value = null;
-                this.needsParse = false;
-                this.needsValidate = true;
-
-            } else {
+            if (this.enteredValue != null) {
                 // Parse the value
-                this.value = definition.getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
-
-                if (this.value == null) {
-                    // Conversion failed
+                this.value = getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
+                if (this.value != null) {       // Conversion successfull
+                    this.needsParse = false;
+                    this.needsValidate = true;
+                } else {        // Conversion failed
                     this.validationError = new ValidationError(new I18nMessage(
                         "datatype.conversion-failed",
-                        new String[] {"datatype." + definition.getDatatype().getDescriptiveName()},
+                        new String[] {"datatype." + getDatatype().getDescriptiveName()},
                         new boolean[] { true },
                         Constants.I18N_CATALOGUE
                     ));
-
                     // No need for further validation (and need to keep the above error)
                     this.needsValidate = false;
-                } else {
-                    // Conversion successfull
-                    this.needsParse = false;
-                    this.needsValidate = true;
                 }
+            } else {
+                this.needsParse = false;
+                this.needsValidate = true;                
             }
         }
 
@@ -158,53 +151,42 @@ public class Field extends AbstractWidget {
             try {
                 // Clear error, it will be recomputed
                 this.validationError = null;
-
-                if (this.value == null) {
-                    // No value : is it required ?
+                if (this.value != null) {
+                    this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
+                } else {        // No value : is it required ?
                     if (this.definition.isRequired()) {
                         this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
                     }
-
-                } else {
-                    this.validationError = definition.getDatatype().validate(value, new ExpressionContextImpl(this));
                 }
-
                 this.needsValidate = false;
             } finally {
                 isValidating = false;
             }
         }
-
         return this.validationError == null ? this.value : null;
     }
 
     public void setValue(Object newValue) {
-        if (newValue != null && !definition.getDatatype().getTypeClass().isAssignableFrom(newValue.getClass())) {
+        if (newValue != null && !getDatatype().getTypeClass().isAssignableFrom(newValue.getClass())) {
             throw new RuntimeException("Incorrect value type for \"" + getFullyQualifiedId() +
-                                       "\" (expected " + definition.getDatatype().getTypeClass() +
-                                       ", got " + newValue.getClass() + ".");
+                           "\" (expected " + getDatatype().getTypeClass() +
+                           ", got " + newValue.getClass() + ".");
         }
-
         Object oldValue = this.value;
-
         boolean changed = ! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue);
-
         // Do something only if value is different or null
         // (null allows to reset validation error)
         if (changed || newValue == null) {
             this.value = newValue;
-
             this.needsParse = false;
             this.validationError = null;
             // Force validation, even if set by the application
             this.needsValidate = true;
-
-            if (newValue == null) {
-                this.enteredValue = null;
+            if (newValue != null) {
+                this.enteredValue = getDatatype().convertToString(newValue, getForm().getLocale());
             } else {
-                this.enteredValue = definition.getDatatype().convertToString(newValue, getForm().getLocale());
+                this.enteredValue = null;
             }
-
             if (changed) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
@@ -216,17 +198,14 @@ public class Field extends AbstractWidget {
 
     public void readFromRequest(FormContext formContext) {
         String newEnteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
-        
         // whitespace & empty field handling
         if (newEnteredValue != null) {
             // TODO make whitespace behaviour configurable !!
             newEnteredValue = newEnteredValue.trim();
-
             if (newEnteredValue.length() == 0) {
                 newEnteredValue = null;
             }
         }
-        
         // TODO: This cause validation to occur too early.
         getValue();
         this.oldValue = value;
@@ -236,12 +215,10 @@ public class Field extends AbstractWidget {
             // TODO: Hmmm...
             //getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
             getForm().addWidgetEvent(new DeferredValueChangedEvent(this, getValue()));
-
             enteredValue = newEnteredValue;
             validationError = null;
             value = null;
             needsParse = true;
-
         }
         
         // Always revalidate, as validation may depend on the value of other fields
@@ -289,31 +266,28 @@ public class Field extends AbstractWidget {
         if (enteredValue != null || value != null) {
             contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
             String stringValue;
-            if (value != null)
-                stringValue = definition.getDatatype().convertToString(value, locale);
-            else
+            if (value != null) {
+                stringValue = getDatatype().convertToString(value, locale);
+            } else {
                 stringValue = enteredValue;
+            }
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
         }
-
         // validation message element: only present if the value is not valid
         if (validationError != null) {
             contentHandler.startElement(Constants.WI_NS, VALIDATION_MSG_EL, Constants.WI_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.WI_NS, VALIDATION_MSG_EL, Constants.WI_PREFIX_COLON + VALIDATION_MSG_EL);
         }
-
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
-
         // the selection list, if any
         if (selectionList != null) {
             selectionList.generateSaxFragment(contentHandler, locale);
         } else if (definition.getSelectionList() != null) {
             definition.getSelectionList().generateSaxFragment(contentHandler, locale);
         }
-
         contentHandler.endElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL);
     }
 
@@ -328,8 +302,7 @@ public class Field extends AbstractWidget {
     public void setSelectionList(SelectionList selectionList) {
         if (selectionList != null &&
             selectionList.getDatatype() != null &&
-            selectionList.getDatatype() != definition.getDatatype()) {
-
+            selectionList.getDatatype() != getDatatype()) {
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         }
         this.selectionList = selectionList;

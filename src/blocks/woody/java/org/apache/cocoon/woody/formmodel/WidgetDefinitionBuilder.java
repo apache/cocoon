@@ -60,6 +60,8 @@ import org.w3c.dom.Element;
  *
  * <p>Implementations may implement Avalon's Composable interface to gain access
  * to other components.
+ * 
+ * @version CVS $Id: WidgetDefinitionBuilder.java,v 1.2 2003/12/31 11:41:41 antonio Exp $
  */
 public interface WidgetDefinitionBuilder {
 

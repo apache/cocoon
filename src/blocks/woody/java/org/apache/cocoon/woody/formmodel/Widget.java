@@ -88,6 +88,8 @@ import java.util.Locale;
  * WidgetDefinition holds the data that is static accross all widgets. This
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
+ * 
+ * @version CVS $Id: Widget.java,v 1.7 2003/12/31 11:41:41 antonio Exp $
  */
 public interface Widget {
 
