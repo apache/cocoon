@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.2 2003/03/09 00:20:09 pier Exp $
+  $Id: changes.xml,v 1.3 2003/03/13 01:33:31 vgritsenko Exp $
 -->
 
 <changes title="History of Changes">
@@ -41,6 +41,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="VG" type="update">
+    FOP serializer's &lt;user-config&gt; relative path now resolves relative
+    to sitemap's directory. All Cocoon URIs are supported too.
+  </action>
   <action dev="PF" type="fix"> 
     The CVS repository for Cocoon 2.1 is now called "cocoon-2.1" (no branches, just HEAD).
   </action>
@@ -832,7 +836,7 @@
    To switch back to FilesystemStore, remove jisp.jar and rebuild Cocoon
    (or simply edit cocoon.xconf)
   </action>
-<action dev="CZ" type="add" due-to="Ilya A. Kriveshko" due-to-email="ilya@kaon.com">
+  <action dev="CZ" type="add" due-to="Ilya A. Kriveshko" due-to-email="ilya@kaon.com">
    RequestGenerator does optionally output request parameters.
   </action>
   <action dev="BH" type="add">
