@@ -201,7 +201,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.3 2003/08/11 07:46:20 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.4 2003/08/11 20:41:26 joerg Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -436,8 +436,6 @@ public class SendMailTransformer extends AbstractSAXTransformer
     private void appendToAddress(String s, String delim) {
         StringTokenizer t = null;
         t = new StringTokenizer(s.trim(), delim);
-
-        int i = 0;
 
         while (t.hasMoreElements()) {
             this.toAddresses.add(t.nextToken());
