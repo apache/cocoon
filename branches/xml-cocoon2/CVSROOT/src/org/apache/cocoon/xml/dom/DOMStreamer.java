@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-03 15:38:23 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-23 17:59:41 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 
@@ -191,7 +191,8 @@ public class DOMStreamer extends AbstractXMLProducer {
                 if (raw.length()>5) prefix=raw.substring(6);
                 nslist.addElement(prefix);
                 super.contentHandler.startPrefixMapping(prefix,val);
-            } else atts.addAttribute(uri,loc,raw,"CDATA",val);
+            } 
+            atts.addAttribute(uri,loc,raw,"CDATA",val);
         }
         // Get and normalize values for the Element
         String uri=n.getNamespaceURI(); uri=(uri==null)?"":uri;

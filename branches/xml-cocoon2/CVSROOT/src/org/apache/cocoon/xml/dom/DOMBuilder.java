@@ -40,7 +40,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:56 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-23 17:59:39 $
  */
 public class DOMBuilder implements XMLConsumer, Loggable {
     protected Logger log;
@@ -269,7 +269,7 @@ public class DOMBuilder implements XMLConsumer, Loggable {
             String aloc=a.getLocalName(x);
             String araw=a.getQName(x);
             String aval=a.getValue(x);
-            if (araw.startsWith("xmlns:")==false) {
+            if (araw.startsWith("xmlns:")==false && araw.equals("xmlns")==false) {
                 NamespacesTable.Name k=this.namespaces.resolve(auri,araw,null,aloc);
                 // Set the attribute into the element
                 auri=k.getPrefix().length()==0 ? null : k.getUri();
