@@ -24,7 +24,6 @@
     <menu-item label="How-Tos" href="howto/index.html"/>
     <menu-item label="Performance" href="performancetips.html"/>
     <menu-item label="Snippets" href="snippet/index.html"/>
-    <menu-item label="ToC" href="doclist.html"/>
   </menu>
 
   <menu label="Status">

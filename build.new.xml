@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!-- ===========================================================================
+
+                       * =========================== *
+                       |  Apache Cocoon Build System |
+                       * =========================== *
+
+       CVS $Id: build.new.xml,v 1.1 2003/03/21 13:56:06 stephan Exp $:
+
+============================================================================ -->
+
+<!-- ==================  Krysalis Centipede targets ===================  --> 
+<!ENTITY init-targets     SYSTEM "./src/targets/init-build.xml"> 
+<!ENTITY compile-targets  SYSTEM "./src/targets/compile-build.xml"> 
+<!ENTITY validate-targets SYSTEM "./src/targets/validate-build.xml"> 
+<!ENTITY samples-targets  SYSTEM "./src/targets/samples-build.xml"> 
+<!ENTITY webapp-targets   SYSTEM "./src/targets/webapp-build.xml"> 
+<!ENTITY ide-targets      SYSTEM "./src/targets/ide-build.xml"> 
+<!ENTITY test-targets     SYSTEM "./src/targets/test-build.xml"> 
+<!ENTITY docs-targets     SYSTEM "./src/targets/docs-build.xml"> 
+<!-- =================================================================== -->
+
+<!-- ======================  Forrest targets =========================== -->
+<!ENTITY forrest-targets  SYSTEM "./src/targets/forrest-build.xml">
+<!-- =================================================================== -->
+
+]>
+
+<project default="webapp" basedir="." name="Apache Cocoon">
+
+  <!-- ======================  Cocoon targets ============================ -->
+
+  <!-- =================================================================== -->
+  <!-- Initialization targets  -->  &init-targets;
+       <!--<import file="src/targets/init-build.xml"/>-->
+  <!-- =================================================================== -->
+  <!-- Compile targets         -->  &compile-targets;
+       <!--<import file="src/targets/compile-build.xml"/>-->
+  <!-- =================================================================== -->  
+  <!-- Validation targets      -->  &validate-targets;
+       <!--<import file="src/targets/validate-build.xml"/>-->
+  <!-- =================================================================== -->
+  <!-- Samples targets         -->  &samples-targets;
+       <!--<import file="src/targets/samples-build.xml"/>-->
+  <!-- =================================================================== -->
+  <!-- Web application targets -->  &webapp-targets;
+       <!--<import file="src/targets/webapp-build.xml"/>-->
+  <!-- =================================================================== -->
+  <!-- IDE targets             -->  &ide-targets;
+       <!--<import file="src/targets/ide-build.xml"/>-->
+  <!-- =================================================================== -->
+  <!-- Testcases targets       -->  &test-targets;
+       <!--<import file="src/targets/test-build.xml"/>-->
+  <!-- =================================================================== -->
+  <!-- Documentation targets   -->  &docs-targets;
+       <!--<import file="src/targets/docs-build.xml"/>-->
+  <!-- =================================================================== -->
+
+
+
+  <!-- ======================  Forrest targets =========================== -->
+
+  <!-- =================================================================== -->
+  <!-- Forrest targets         -->  &forrest-targets;
+       <!--<import file="src/targets/forrest-build.xml"/>-->
+  <!-- =================================================================== -->
+
+</project>
