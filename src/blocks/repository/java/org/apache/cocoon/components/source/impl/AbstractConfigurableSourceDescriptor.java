@@ -92,5 +92,5 @@ extends AbstractConfigurableSourceInspector implements SourceDescriptor {
     
     protected abstract void doSetSourceProperty(Source source, SourceProperty property) 
         throws SourceException;
-
+    
 }

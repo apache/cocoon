@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.94 2003/10/22 21:11:19 gcasper Exp $
+    | CVS $Id: gump.xml,v 1.95 2003/10/28 15:01:00 unico Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1075,6 +1075,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-databases" />
+    <depend project="cocoon-block-eventcache" />
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>

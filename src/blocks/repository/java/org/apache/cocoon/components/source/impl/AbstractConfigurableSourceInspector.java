@@ -130,4 +130,7 @@ public abstract class AbstractConfigurableSourceInspector extends AbstractLogEna
     protected abstract SourceProperty doGetSourceProperty(Source source, String ns, String name)
         throws SourceException;
     
+    protected final Set getPropertyTypes() {
+        return m_properties;
+    }
 }
