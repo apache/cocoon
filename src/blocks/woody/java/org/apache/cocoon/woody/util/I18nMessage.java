@@ -64,6 +64,8 @@ import org.xml.sax.SAXException;
  *
  * <p>This generates an autonomous SAX-blurb, i.e. all necessary namespace
  * declarations will be made, and no start/endDocument events will be generated.
+ * 
+ * @version CVS $Id: I18nMessage.java,v 1.3 2003/12/31 10:27:18 antonio Exp $
  */
 public class I18nMessage implements XMLizable {
     private String key;

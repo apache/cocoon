@@ -50,22 +50,27 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.FormContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.datatype.ValidationRule;
 import org.apache.cocoon.woody.formmodel.AggregateFieldDefinition.SplitMapping;
+import org.apache.cocoon.woody.util.I18nMessage;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.excalibur.xml.sax.XMLizable;
+import org.outerj.expression.ExpressionException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.outerj.expression.ExpressionException;
-
-import java.util.*;
 
 /**
  * An aggregatedfield allows to edit the content of multiple fields through 1 textbox.
@@ -83,6 +88,8 @@ import java.util.*;
  * using an expression.
  *
  * <p>Currently the child widgets should always be field widgets whose datatype is string.
+ * 
+ * @version CVS $Id: AggregateField.java,v 1.13 2003/12/31 10:27:18 antonio Exp $
  *
  */
 public class AggregateField extends AbstractWidget {
@@ -114,7 +121,6 @@ public class AggregateField extends AbstractWidget {
         if (newEnteredValue != null) {
             // TODO make whitespace behaviour configurable !!
             newEnteredValue.trim();
-
             if (newEnteredValue.length() == 0) {
                 newEnteredValue = null;
             }
@@ -190,17 +196,19 @@ public class AggregateField extends AbstractWidget {
         // valid unless proven otherwise
         validationError = null;
 
-        if (enteredValue == null && isRequired()) {
-            validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
-            return false;
-        } else if (enteredValue == null)
+        if (enteredValue == null) {
+            if (isRequired()) {
+                validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
+                return false;
+            }
             return true;
-        else if (!fieldsHaveValues()) {
+        } else if (!fieldsHaveValues()) {
             XMLizable splitFailMessage = definition.getSplitFailMessage();
-            if (splitFailMessage != null)
+            if (splitFailMessage != null) {
                 validationError = new ValidationError(splitFailMessage);
-            else
+            } else {
                 validationError = new ValidationError(new I18nMessage("aggregatedfield.split-failed", new String[] { definition.getSplitRegexp()}, Constants.I18N_CATALOGUE));
+            }
             return false;
         } else {
             // validate my child fields
@@ -244,8 +252,7 @@ public class AggregateField extends AbstractWidget {
         String value = (String)getValue();
         if (value != null) {
             contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
-            String stringValue; stringValue = value;
-            contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
+            contentHandler.characters(value.toCharArray(), 0, value.length());
             contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
         }
 
@@ -258,7 +265,6 @@ public class AggregateField extends AbstractWidget {
 
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
-
         contentHandler.endElement(Constants.WI_NS, AGGREGATEFIELD_EL, Constants.WI_PREFIX_COLON + AGGREGATEFIELD_EL);
     }
 

@@ -82,6 +82,8 @@ import org.xml.sax.SAXNotSupportedException;
  *
  * <p>This class depends specifically on the Xerces DOM implementation to be able to provide
  * information about the location of elements in their source XML file. See the {@link #getLocation} method.
+ * 
+ * @version CVS $Id: DomHelper.java,v 1.11 2003/12/31 10:27:18 antonio Exp $
  */
 public class DomHelper {
 
