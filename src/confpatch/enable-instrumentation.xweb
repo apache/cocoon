@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <xweb xpath="/web-app/servlet/init-param[param-name='enable-instrumentation']/param-value"
-	if-prop="config.enable-instrumentation"
-	remove="/web-app/servlet/init-param[param-name='enable-instrumentation']/param-value/text()"
+      if-prop="config.enable-instrumentation"
+      remove="/web-app/servlet/init-param[param-name='enable-instrumentation']/param-value/text()"
+      unless="self::node()[. = 'true']"
 >true</xweb>
