@@ -69,7 +69,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.6 2003/10/27 07:57:26 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.7 2003/10/29 14:39:08 vgritsenko Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -134,186 +134,185 @@ public class MutableEnvironmentFacade implements Environment {
     }
     //----------------------------------
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getURI()
-	 */
-	public String getURI() {
-		return env.getURI();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getURI()
+     */
+    public String getURI() {
+        return env.getURI();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getURIPrefix()
-	 */
-	public String getURIPrefix() {
-		return env.getURIPrefix();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getURIPrefix()
+     */
+    public String getURIPrefix() {
+        return env.getURIPrefix();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getRootContext()
-	 */
-	public String getRootContext() {
-		return env.getRootContext();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getRootContext()
+     */
+    public String getRootContext() {
+        return env.getRootContext();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getContext()
-	 */
-	public String getContext() {
-		return env.getContext();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getContext()
+     */
+    public String getContext() {
+        return env.getContext();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getView()
-	 */
-	public String getView() {
-		return env.getView();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getView()
+     */
+    public String getView() {
+        return env.getView();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getAction()
-	 */
-	public String getAction() {
-		return env.getAction();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAction()
+     */
+    public String getAction() {
+        return env.getAction();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#setContext(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	public void setContext(String prefix, String uri, String context) {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setContext(java.lang.String, java.lang.String, java.lang.String)
+     */
+    public void setContext(String prefix, String uri, String context) {
         env.setContext(prefix, uri, context);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#changeContext(java.lang.String, java.lang.String)
-	 */
-	public void changeContext(String uriprefix, String context) throws Exception {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#changeContext(java.lang.String, java.lang.String)
+     */
+    public void changeContext(String uriprefix, String context) throws Exception {
         env.changeContext(uriprefix, context);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#redirect(boolean, java.lang.String)
-	 */
-	public void redirect(boolean sessionmode, String url) throws IOException {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#redirect(boolean, java.lang.String)
+     */
+    public void redirect(boolean sessionmode, String url) throws IOException {
         env.redirect(sessionmode, url);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#setContentType(java.lang.String)
-	 */
-	public void setContentType(String mimeType) {
-		env.setContentType(mimeType);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setContentType(java.lang.String)
+     */
+    public void setContentType(String mimeType) {
+        env.setContentType(mimeType);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getContentType()
-	 */
-	public String getContentType() {
-		return env.getContentType();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getContentType()
+     */
+    public String getContentType() {
+        return env.getContentType();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#setContentLength(int)
-	 */
-	public void setContentLength(int length) {
-		env.setContentLength(length);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setContentLength(int)
+     */
+    public void setContentLength(int length) {
+        env.setContentLength(length);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#setStatus(int)
-	 */
-	public void setStatus(int statusCode) {
-		env.setStatus(statusCode);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setStatus(int)
+     */
+    public void setStatus(int statusCode) {
+        env.setStatus(statusCode);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getOutputStream(int)
-	 */
-	public OutputStream getOutputStream(int bufferSize) throws IOException {
-		return env.getOutputStream(bufferSize);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getOutputStream(int)
+     */
+    public OutputStream getOutputStream(int bufferSize) throws IOException {
+        return env.getOutputStream(bufferSize);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getObjectModel()
-	 */
-	public Map getObjectModel() {
-		return env.getObjectModel();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getObjectModel()
+     */
+    public Map getObjectModel() {
+        return env.getObjectModel();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#isResponseModified(long)
-	 */
-	public boolean isResponseModified(long lastModified) {
-		return env.isResponseModified(lastModified);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isResponseModified(long)
+     */
+    public boolean isResponseModified(long lastModified) {
+        return env.isResponseModified(lastModified);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#setResponseIsNotModified()
-	 */
-	public void setResponseIsNotModified() {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setResponseIsNotModified()
+     */
+    public void setResponseIsNotModified() {
         env.setResponseIsNotModified();
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#setAttribute(java.lang.String, java.lang.Object)
-	 */
-	public void setAttribute(String name, Object value) {
-		env.setAttribute(name, value);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        env.setAttribute(name, value);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getAttribute(java.lang.String)
-	 */
-	public Object getAttribute(String name) {
-		return env.getAttribute(name);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return env.getAttribute(name);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#removeAttribute(java.lang.String)
-	 */
-	public void removeAttribute(String name) {
-		env.removeAttribute(name);
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#removeAttribute(java.lang.String)
+     */
+    public void removeAttribute(String name) {
+        env.removeAttribute(name);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getAttributeNames()
-	 */
-	public Enumeration getAttributeNames() {
-		return env.getAttributeNames();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAttributeNames()
+     */
+    public Enumeration getAttributeNames() {
+        return env.getAttributeNames();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#tryResetResponse()
-	 */
-	public boolean tryResetResponse() throws IOException {
-		return env.tryResetResponse();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#tryResetResponse()
+     */
+    public boolean tryResetResponse() throws IOException {
+        return env.tryResetResponse();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#commitResponse()
-	 */
-	public void commitResponse() throws IOException {
-		env.commitResponse();
-	}
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#commitResponse()
+     */
+    public void commitResponse() throws IOException {
+        env.commitResponse();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#startingProcessing()
-	 */
-	public void startingProcessing() {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#startingProcessing()
+     */
+    public void startingProcessing() {
         env.startingProcessing();
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#finishingProcessing()
-	 */
-	public void finishingProcessing() {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#finishingProcessing()
+     */
+    public void finishingProcessing() {
         env.finishingProcessing();
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#isExternal()
-	 */
-	public boolean isExternal() {
-		return env.isExternal();
-	}
-
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isExternal()
+     */
+    public boolean isExternal() {
+        return env.isExternal();
+    }
 }
