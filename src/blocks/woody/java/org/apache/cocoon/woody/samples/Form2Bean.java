@@ -52,6 +52,7 @@ package org.apache.cocoon.woody.samples;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Sample bean used in the form2 binding demo.
@@ -64,6 +65,8 @@ public class Form2Bean {
     private String phoneNumber;
 
     private String ipAddress;
+    private Date birthday;
+    private int aNumber;
 
     private Collection contacts = new ArrayList();
 
@@ -108,6 +111,22 @@ public class Form2Bean {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public int getaNumber() {
+        return aNumber;
+    }
+
+    public void setaNumber(int aNumber) {
+        this.aNumber = aNumber;
     }
 
     public Collection getContacts() {
