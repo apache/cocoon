@@ -19,7 +19,7 @@ XERCES=./lib/xerces_1_0_3.jar
 XALAN=./lib/xalan_1_0_1.jar
 FOP=./lib/fop_0_12_1.jar
 SERVLETS=./lib/servlet_2_2.jar
-TURBINE=./lib/turbine-2.0.jar
+TURBINE=./lib/turbine-pool.jar
 LOCALCLASSPATH=$ANT:$JAVAC:$XERCES:$XALAN:$FOP:$SERVLETS:$TURBINE:$CLASSPATH
 
 echo
