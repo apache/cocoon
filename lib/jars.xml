@@ -353,7 +353,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/groovy-1.0-beta-9.jar</lib>
+    <lib>optional/groovy-1.0-beta-10.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
@@ -965,11 +965,11 @@
   <file>
     <title>Antlr - ANother Tool for Language Recognition</title>
     <description>
-      language tool that provides a framework for constructing recognizers, compilers, and
+      Language tool that provides a framework for constructing recognizers, compilers, and
       translators from grammatical descriptions containing Java, C#, or C++ actions
     </description>
     <used-by>OJB</used-by>
-    <lib>optional/antlr-2.7.4.jar</lib>
+    <lib>optional/antlr-2.7.5.jar</lib>
     <homepage>http://www.antlr.org/</homepage>
   </file>
 
