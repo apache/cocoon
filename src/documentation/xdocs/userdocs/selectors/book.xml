@@ -18,14 +18,15 @@
   </menu>
   <menu label="Core">
     <menu-item label="Host Selector" href="host-selector.html"/>
-    <menu-item label="Request Parameter Selector" href="requestparameter-selector.html"/>
+    <menu-item label="Parameter Selector" href="parameter-selector.html"/>
     <menu-item label="Request Attribute Selector" href="requestattribute-selector.html"/>
-    <menu-item label="Parameter" href="parameter-selector.html"/>
+    <menu-item label="Request Parameter Selector" href="requestparameter-selector.html"/>
   </menu>
   <menu label="Optional">
   </menu>
-
-
+  <menu label="Scratchpad">
+    <menu-item label="Date Selector" href="date-selector.xml"/>
+  </menu>
 </book>
 
 
