@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.2 2004/04/15 08:40:17 bdelacretaz Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.3 2004/04/15 15:36:15 bdelacretaz Exp $ -->
 
 <samples name="BSF Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -24,8 +24,11 @@
   </group>
 
   <group name="Hello World!">
-    <sample name="Groovy" href="generator/hello.gy">
-        Simple Groovy generator sample
+    <sample name="Groovy generator" href="generator/hello.gy">
+        Simple Groovy generator
+    </sample>
+    <sample name="GroovyMarkup generator" href="generator/helloGroovyMarkup.gy">
+        GroovyMarkup syntax example
     </sample>
   </group>
 </samples>

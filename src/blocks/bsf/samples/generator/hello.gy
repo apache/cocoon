@@ -14,8 +14,6 @@
 * limitations under the License.
 */
 
-import groovy.xml.MarkupBuilder
-
 // Step 1 -- Retrieve helper "beans" from the BSF framework
 source = bsf.lookupBean("source")
 output = bsf.lookupBean("output")
@@ -25,8 +23,8 @@ logger = bsf.lookupBean("logger")
 
 logger.debug("START " + source)
 
-//xml = new MarkupBuilder()
 // Use output send the result back to Cocoon
+// (see helloGroovyMarkup for much better syntax)
 output.append("<page>")
 output.append("<title>")
 output.append("Hello Groovy Baby!")
@@ -37,18 +35,3 @@ output.append("This is my first Cocoon page in Groovy!")
 output.append("</para>")
 output.append("</content>")
 output.append("</page>")
-
-
-/* The following code is prettier, but currently does not work :-(
-will be fixed the the next release of groovy */
-/*
-xml.page() {
-    title("Hello2")
-    content() {
-        para("This is my first Cocoon page in Groovy!")
-    }
-}
-logger.debug("END " + source)
-
-output.append xml
-*/

@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='BSF']">
   <group name="BSF">
     <sample name="BSF Block" href="bsf/">
-      Examples using script generator and script action.
+      Examples using scriptable generators and actions.
     </sample>
   </group>
 </xsamples>
