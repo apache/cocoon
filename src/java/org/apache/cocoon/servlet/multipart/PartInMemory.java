@@ -1,4 +1,4 @@
-32/*
+/*
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartInMemory.java,v 1.2 2003/08/18 21:55:40 ghoward Exp $
+ * @version CVS $Id: PartInMemory.java,v 1.3 2003/08/19 06:01:26 sylvain Exp $
  */
 public class PartInMemory extends Part {
 
