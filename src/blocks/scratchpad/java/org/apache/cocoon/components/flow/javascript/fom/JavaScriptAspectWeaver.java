@@ -101,7 +101,7 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.2 2003/09/08 22:56:34 reinhard Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.3 2003/09/08 23:06:08 reinhard Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -722,7 +722,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         }
         
         /**
-         * TODO current
          * Check a token if it is function call that leads to a stop of
          * execution (continuation is created)
          */
@@ -764,8 +763,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         
         
         /**
-         * to make intercepting easier "function start" and "function end" events
-         * are added
+         * to make intercepting easier events are added (start function, 
+         * stop function, stop execution, continue execution)
          */
         private void addInterceptionEvents() {
             List functionPositions = this.getFunctionPositions();
