@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.137 2004/03/29 17:47:20 stephan Exp $
+    | CVS $Id: gump.xml,v 1.138 2004/03/29 18:50:26 unico Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -923,9 +923,9 @@
       <property name="block-name" value="eventcache"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
-
+    
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-xsp" type="xsp"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
     
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/test"/>
@@ -1061,9 +1061,10 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    
     <depend project="cocoon-block-databases" />
     <depend project="cocoon-block-eventcache" />
-
+    
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
