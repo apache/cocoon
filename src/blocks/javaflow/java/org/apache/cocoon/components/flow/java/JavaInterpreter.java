@@ -144,14 +144,15 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setRedirector(redirector);
         Parameters parameters = new Parameters();
         for(Iterator i=params.iterator(); i.hasNext();) {
-        	Argument argument = (Argument)i.next();
-        	parameters.setParameter(argument.name, argument.value);
+            Argument argument = (Argument)i.next();
+            parameters.setParameter(argument.name, argument.value);
         }
         context.setParameters(parameters);
 
         Continuation continuation = new Continuation(context);
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(
+                continuation, null, timeToLive, getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
@@ -195,7 +196,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         if (!initialized)
             initialize();
 
-        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id);
+        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
 
         if (parentwk == null) {
             /*
@@ -216,8 +217,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setRedirector(redirector);
         Parameters parameters = new Parameters();
         for(Iterator i=params.iterator(); i.hasNext();) {
-        	Argument argument = (Argument)i.next();
-        	parameters.setParameter(argument.name, argument.value);
+            Argument argument = (Argument)i.next();
+            parameters.setParameter(argument.name, argument.value);
         }
         context.setParameters(parameters);
 
@@ -230,8 +231,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         Continuable flow = (Continuable) context.getObject();
         Method method = context.getMethod();
 
-        WebContinuation wk =
-                continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(
+                continuation, parentwk, timeToLive, getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();

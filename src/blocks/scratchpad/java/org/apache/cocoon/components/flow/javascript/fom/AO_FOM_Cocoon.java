@@ -124,6 +124,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
                 contMgr.createWebContinuation(continuation,
                                               lastContinuation,
                                               0,
+                                              interpreter.getInterpreterID(),
                                               null);
         }
         
@@ -248,7 +249,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         public FOM_Request(Object request) {
             this.request = (Request)unwrap(request);
         }
-		
+        
         public String getClassName() {
             return "FOM_Request";
         }
@@ -675,7 +676,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         
         /* TODO: Vote on the inclusion of this method
         public String jsFunction_getRealPath(String path) {
-        	return context.getRealPath(path);
+            return context.getRealPath(path);
         }
         */
     }
@@ -926,6 +927,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
+                                           interpreter.getInterpreterID(),
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
         result.setParentScope(getParentScope());

@@ -93,7 +93,12 @@ public interface Interpreter {
 
     public static final String ROLE = Interpreter.class.getName();
 
-    /**
+	/**
+	 * @return the unique ID for this interpreter.
+	 */
+	String getInterpreterID();
+	
+	/**
      * Set the unique ID for this interpreter.
      */
     void setInterpreterID(String interpreterID);

@@ -103,7 +103,7 @@ public abstract class AbstractInterpreter
      *
      * @return a unique ID for this interpreter
      */
-    protected String getInterpreterID() {
+    public String getInterpreterID() {
         return this.instanceID;
     }
 

@@ -652,7 +652,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                                    Redirector redirector)
         throws Exception
     {
-        WebContinuation wk = continuationsMgr.lookupWebContinuation(id);
+        WebContinuation wk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
 
         if (wk == null) {
 

@@ -1237,7 +1237,7 @@ public class FOM_Cocoon extends ScriptableObject {
 
         /* TODO: Vote on the inclusion of this method
         public String jsFunction_getRealPath(String path) {
-        	return context.getRealPath(path);
+            return context.getRealPath(path);
         }
         */
 
@@ -1470,6 +1470,14 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     /**
+     * Required by FOM_WebContinuation. This way we do not make whole Interpreter public
+     * @return interpreter Id associated with this FOM.
+     */
+    public String getInterpreterId() {
+        return getInterpreter().getInterpreterID();
+    }
+    
+    /**
      * Call the Cocoon Sitemap to process a page
      * @param uri Uri to match
      * @param bean Input to page
@@ -1572,6 +1580,7 @@ public class FOM_Cocoon extends ScriptableObject {
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
+                                           getInterpreter().getInterpreterID(),
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
         result.setParentScope(getParentScope());
