@@ -85,7 +85,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.1 2003/07/08 05:48:52 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.2 2003/07/09 07:27:25 giacomo Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -285,6 +285,11 @@ public class FOM_Cocoon extends ScriptableObject {
         public Object jsFunction_getAttribute(String name) {
             return request.getAttribute(name);
         }
+
+        public String jsFunction_getRemoteUser() {
+            return request.getRemoteUser();
+        }
+
 
         public void jsFunction_removeAttribute(String name) {
             request.removeAttribute(name);
