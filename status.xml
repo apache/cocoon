@@ -203,6 +203,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="27260">
+     Make implementation of Cocoon protocol compliant with the Source interface.
+   </action>
    <action dev="AG" type="update">
      Update ant to 1.6.2, commons-jxpath to 1.2, commons-beanutils to 1.7,
      POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1, nekohtml to 0.9.3,
