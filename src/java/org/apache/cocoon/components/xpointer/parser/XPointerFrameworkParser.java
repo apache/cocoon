@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -506,10 +506,10 @@ public class XPointerFrameworkParser
                 jj_expentry[i] = jj_lasttokens[i];
             }
             boolean exists = false;
-            for (java.util.Enumeration enum = jj_expentries.elements();
-                enum.hasMoreElements();
+            for (java.util.Enumeration enumeration = jj_expentries.elements();
+                enumeration.hasMoreElements();
                 ) {
-                int[] oldentry = (int[]) (enum.nextElement());
+                int[] oldentry = (int[]) (enumeration.nextElement());
                 if (oldentry.length == jj_expentry.length) {
                     exists = true;
                     for (int i = 0; i < jj_expentry.length; i++) {

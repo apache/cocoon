@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,15 @@ import java.util.Iterator;
 /**
  * Wraps an Enumeration and provides Iterator interface.
  *
- * @version CVS $Id: IteratorHelper.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 class IteratorHelper implements Iterator {
-    Enumeration enum = null;
-    public IteratorHelper( Enumeration e ) { this.enum = e; }
-    public boolean hasNext() { return this.enum.hasMoreElements(); }
-    public Object next() { return this.enum.nextElement(); }
+
+    protected Enumeration enumeration;
+
+    public IteratorHelper( Enumeration e ) { this.enumeration = e; }
+    public boolean hasNext() { return this.enumeration.hasMoreElements(); }
+    public Object next() { return this.enumeration.nextElement(); }
     /** ignored */
     public void remove() {}
 }
