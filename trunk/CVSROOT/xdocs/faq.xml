@@ -566,7 +566,7 @@
     package installed in your classpath (named <code>jndi.jar</code>). In fact,
     you will need all of the following jars on your CLASSPATH, all of which can
     be obtained from <link href="http://java.sun.com/products">java.sun.com</link>
-    (thanks to James Vanetten for this list):</p>
+    (thanks to Daniel K. Schneider for this list):</p>
 
    <ul>
     <li><code>jndi.jar</code></li>
@@ -758,7 +758,7 @@
 
        <page>
         <xsp:pi target="xml-stylesheet">
-          <xsp:expr>href="<request:get-parameter name="stylesheet">"</xsp:expr>
+          <xsp:expr>href="<request:get-parameter name="stylesheet">" type="text/xsl"</xsp:expr>
         </xsp:pi> 
        </page>
      </xsp:page>
