@@ -68,6 +68,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -510,8 +511,8 @@ public class CocoonPortlet extends GenericPortlet {
             if (this.servletPath.startsWith("/")) {
                 this.servletPath = this.servletPath.substring(1);
             }
-            if (this.servletPath.length() > 0 && this.servletPath.charAt(0) != '/') {
-                this.servletPath += '/';
+            if (this.servletPath.endsWith("/")) {
+                this.servletPath = servletPath.substring(0, servletPath.length() - 1);
             }
         }
 
@@ -1098,24 +1099,12 @@ public class CocoonPortlet extends GenericPortlet {
         // We got it... Process the request
         String servletPath = this.servletPath;
         if (servletPath == null) {
-            servletPath = "portlets/" + getPortletConfig().getPortletName() + '/';
+            servletPath = "portlets/" + getPortletConfig().getPortletName();
         }
+        String pathInfo = getPathInfo(request);
 
         String uri = servletPath;
-        String pathInfo = request.getParameter(PortletEnvironment.PARAMETER_PATH_INFO);
-        if (storeSessionPath) {
-            final PortletSession session = request.getPortletSession(true);
-            if (pathInfo == null) {
-                pathInfo = (String)session.getAttribute(PortletEnvironment.PARAMETER_PATH_INFO);
-            } else {
-                session.setAttribute(PortletEnvironment.PARAMETER_PATH_INFO, pathInfo);
-            }
-        }
-
         if (pathInfo != null) {
-            if (pathInfo.length() > 0 && pathInfo.charAt(0) == '/') {
-                pathInfo = pathInfo.substring(1);
-            }
             uri += pathInfo;
         }
 
@@ -1123,7 +1112,7 @@ public class CocoonPortlet extends GenericPortlet {
 
         Environment env;
         try {
-            env = getEnvironment(servletPath, uri, request, res);
+            env = getEnvironment(servletPath, pathInfo, uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon portlet", e);
@@ -1261,24 +1250,12 @@ public class CocoonPortlet extends GenericPortlet {
         // We got it... Process the request
         String servletPath = this.servletPath;
         if (servletPath == null) {
-            servletPath = "portlets/" + getPortletConfig().getPortletName() + '/';
+            servletPath = "portlets/" + getPortletConfig().getPortletName();
         }
+        String pathInfo = getPathInfo(request);
 
         String uri = servletPath;
-        String pathInfo = request.getParameter(PortletEnvironment.PARAMETER_PATH_INFO);
-        if (storeSessionPath) {
-            final PortletSession session = request.getPortletSession(true);
-            if (pathInfo == null) {
-                pathInfo = (String)session.getAttribute(PortletEnvironment.PARAMETER_PATH_INFO);
-            } else {
-                session.setAttribute(PortletEnvironment.PARAMETER_PATH_INFO, pathInfo);
-            }
-        }
-
         if (pathInfo != null) {
-            if (pathInfo.length() > 0 && pathInfo.charAt(0) == '/') {
-                pathInfo = pathInfo.substring(1);
-            }
             uri += pathInfo;
         }
 
@@ -1287,7 +1264,7 @@ public class CocoonPortlet extends GenericPortlet {
 
         Environment env;
         try {
-            env = getEnvironment(servletPath, uri, request, res);
+            env = getEnvironment(servletPath, pathInfo, uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon portlet", e);
@@ -1418,6 +1395,30 @@ public class CocoonPortlet extends GenericPortlet {
         }
     }
 
+    private String getPathInfo(PortletRequest request) {
+        PortletSession session = null;
+
+        String pathInfo = request.getParameter(PortletEnvironment.PARAMETER_PATH_INFO);
+        if (storeSessionPath) {
+            session = request.getPortletSession(true);
+            if (pathInfo == null) {
+                pathInfo = (String)session.getAttribute(PortletEnvironment.PARAMETER_PATH_INFO);
+            }
+        }
+
+        // Make sure it starts with or equals to '/'
+        if (pathInfo == null) {
+            pathInfo = "/";
+        } else if (!pathInfo.startsWith("/")) {
+            pathInfo = '/' + pathInfo;
+        }
+
+        if (storeSessionPath) {
+            session.setAttribute(PortletEnvironment.PARAMETER_PATH_INFO, pathInfo);
+        }
+        return pathInfo;
+    }
+
     protected void manageException(ActionRequest req, ActionResponse res, Environment env,
                                    String uri, String title, String message, String description,
                                    Exception e)
@@ -1473,6 +1474,7 @@ public class CocoonPortlet extends GenericPortlet {
      * Create the environment for the request
      */
     protected Environment getEnvironment(String servletPath,
+                                         String pathInfo,
                                          String uri,
                                          ActionRequest req,
                                          ActionResponse res)
@@ -1484,6 +1486,7 @@ public class CocoonPortlet extends GenericPortlet {
             formEncoding = this.defaultFormEncoding;
         }
         env = new PortletEnvironment(servletPath,
+                                     pathInfo,
                                      uri,
                                      this.portletContextURL,
                                      req,
@@ -1501,6 +1504,7 @@ public class CocoonPortlet extends GenericPortlet {
      * Create the environment for the request
      */
     protected Environment getEnvironment(String servletPath,
+                                         String pathInfo,
                                          String uri,
                                          RenderRequest req,
                                          RenderResponse res)
@@ -1512,6 +1516,7 @@ public class CocoonPortlet extends GenericPortlet {
             formEncoding = this.defaultFormEncoding;
         }
         env = new PortletEnvironment(servletPath,
+                                     pathInfo,
                                      uri,
                                      this.portletContextURL,
                                      req,
