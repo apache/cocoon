@@ -334,5 +334,13 @@ public class MockRequest implements Request {
     public void setHeader( String key, String value ) {
         this.headers.put(key, value );
     }
+    
+    public void setMethod( String method ) {
+        this.method = method;
+    }
+    
+    public void clearSession() {
+        this.session = null;
+    }
 
 }
