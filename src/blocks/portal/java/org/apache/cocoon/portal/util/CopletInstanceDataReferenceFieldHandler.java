@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataReferenceFieldHandler.java,v 1.4 2004/01/08 13:33:52 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataReferenceFieldHandler.java,v 1.5 2004/01/08 13:57:59 cziegeler Exp $
  */
 public class CopletInstanceDataReferenceFieldHandler
 extends ReferenceFieldHandler {
@@ -83,7 +83,7 @@ extends ReferenceFieldHandler {
 	public void setValue(Object object, Object value) {
 		CopletInstanceData copletInstanceData = (CopletInstanceData)getObjectMap().get(value);
 		if (copletInstanceData == null) {
-			throw new IllegalArgumentException(
+			throw new ProfileException(
                     "Referenced Coplet Instance Data "+value+" does not exist.");
         }
 		((CopletLayout)object).setCopletInstanceData(copletInstanceData);
