@@ -68,6 +68,7 @@
               var type = widget.lookupWidget("../type-selector");
               var stuff = union.lookupWidget(union.getValue() + "/stuff");
               if("edit".equals(widget.getValue())) {
+                union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
                 if(stuff != null) {
                   stuff.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
                 }
