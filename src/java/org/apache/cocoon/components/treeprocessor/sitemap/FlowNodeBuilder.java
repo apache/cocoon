@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,22 +25,20 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNodeBuilder.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class FlowNodeBuilder
-  extends AbstractParentProcessingNodeBuilder
-{
-  public ProcessingNode buildNode(Configuration config)
-    throws Exception
-  {
-    String language = config.getAttribute("language", "JavaScript");
-    FlowNode node = new FlowNode(language);
+public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
-    this.treeBuilder.registerNode("flow", node);
-    this.treeBuilder.setupNode(node, config);
+    public ProcessingNode buildNode(Configuration config)
+    throws Exception {
+        String language = config.getAttribute("language", "JavaScript");
+        FlowNode node = new FlowNode(language);
 
-    this.buildChildNodesList(config);
+        this.treeBuilder.registerNode("flow", node);
+        this.treeBuilder.setupNode(node, config);
 
-    return node;
-  }
+        buildChildNodesList(config);
+
+        return node;
+    }
 }

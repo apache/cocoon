@@ -55,12 +55,10 @@ import org.apache.excalibur.source.SourceUtil;
  * @since March 15, 2002
  * @version CVS $Id$
  */
-public abstract class AbstractInterpreter extends AbstractLogEnabled
-  implements Component, Serviceable, Contextualizable, Interpreter,
-             SingleThreaded, Configurable, Disposable
-{
-    // The instance counters, used to produce unique IDs
-    private static int instanceCounter = 0;
+public abstract class AbstractInterpreter
+        extends AbstractLogEnabled
+        implements Component, Serviceable, Contextualizable, Interpreter,
+                   SingleThreaded, Configurable, Disposable {
 
     // The instance ID of this interpreter, used to identify user scopes
     private String instanceID;
@@ -87,12 +85,16 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      * through the "check-time" XML attribute in <code>flow.xmap</code>.
      */
     protected long checkTime;
-    
+
     public AbstractInterpreter() {
-        synchronized(AbstractInterpreter.class) {
-            instanceCounter++;
-            this.instanceID = String.valueOf(instanceCounter);
-        }
+    }
+
+    /**
+     * Set the unique ID for this interpreter, which can be used to distinguish user value scopes
+     * attached to the session.
+     */
+    public void setInterpreterID(String interpreterID) {
+        this.instanceID = interpreterID;
     }
 
     /**

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,15 +28,13 @@ import org.apache.cocoon.sitemap.SitemapParameters;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.8 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
-
-
 public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
-  implements ProcessingNodeBuilder {
+                                                    implements ProcessingNodeBuilder {
 
     protected TreeBuilder treeBuilder;
-    
+
     protected ServiceManager manager;
 
     /* (non-Javadoc)
@@ -96,8 +94,7 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
      * one given by the builder.
      */
     protected void checkNamespace(Configuration config) throws ConfigurationException {
-        if (!this.treeBuilder.getNamespace().equals(config.getNamespace()))
-        {
+        if (!this.treeBuilder.getNamespace().equals(config.getNamespace())) {
             String msg = "Invalid namespace '" + config.getNamespace() + "' at " + config.getLocation();
             throw new ConfigurationException(msg);
         }
