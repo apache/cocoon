@@ -20,10 +20,10 @@
 			<td width="5" Valign="bottom" bgcolor="#294563">
 				<table summary="spacer" style="height: 1.8em" border="0" cellpadding="0" cellspacing="0">
 					<tr>
-						<td height="99%"><img height="5" src="space.gif" width="5"/></td>
+						<td height="99%"><img height="5" src="images/space.gif" width="5"/></td>
 					</tr>
 					<tr>
-						<td height="10" bgcolor="#4C6C8F"><img height="10" src="space.gif" width="5"/></td>
+						<td height="10" bgcolor="#4C6C8F"><img height="10" src="images/space.gif" width="5"/></td>
 					</tr>
 				</table>
 			</td>
@@ -32,7 +32,7 @@
 				<table summary="selected tab" style="height: 1.8em" border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td valign="top" width="5" bgcolor="#FFFFFF">
-							<img height="5" width="5" alt="" src="tabSel-left.gif"/>
+							<img height="5" width="5" alt="" src="images/tabSel-left.gif"/>
 						</td>
 						<td valign="middle" bgcolor="#FFFFFF">
 							<font color="#ffffff" size="2" face="Arial, Helvetica, Sans-serif"><b>
@@ -40,7 +40,7 @@
 							</font>
 						</td>
 						<td valign="top" width="5" bgcolor="#FFFFFF">
-							<img height="5" width="5" alt="" src="tabSel-right.gif"/>
+							<img height="5" width="5" alt="" src="images/tabSel-right.gif"/>
 						</td>
 					</tr>
 					<tr>
@@ -57,10 +57,10 @@
 			<td width="5" Valign="bottom" bgcolor="#294563">
 				<table summary="non selected tab" style="height: 1.8em" border="0" cellpadding="0" cellspacing="0">
 					<tr>
-						<td height="99%"><img height="5" src="space.gif" width="5"/></td>
+						<td height="99%"><img height="5" src="images/space.gif" width="5"/></td>
 					</tr>
 					<tr>
-						<td height="10" bgcolor="#4C6C8F"><img height="10" src="space.gif" width="5"/></td>
+						<td height="10" bgcolor="#4C6C8F"><img height="10" src="images/space.gif" width="5"/></td>
 					</tr>
 				</table>
 			</td>
@@ -69,7 +69,7 @@
 				<table summary="non selected tab" style="height: 1.8em" border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td valign="top" width="5" bgcolor="#B2C4E0">
-							<img height="5" width="5" alt="" src="tab-left.gif"/>
+							<img height="5" width="5" alt="" src="images/tab-left.gif"/>
 						</td>
 						<td valign="middle" bgcolor="#B2C4E0" >
 							<div class="tab">
@@ -79,7 +79,7 @@
 							</div>
 						</td>
 						<td valign="top" width="5" bgcolor="#B2C4E0">
-							<img height="5" width="5" alt="" src="tab-right.gif"/>
+							<img height="5" width="5" alt="" src="images/tab-right.gif"/>
 						</td>
 					</tr>
 					<tr>
@@ -96,12 +96,12 @@
 		<table style="height: 2.0em" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tr>
 				<td height="99%" bgcolor="#294563" width="99%" align="right" valign="center">
-					<img height="10" src="space.gif" width="1"/>
+					<img height="10" src="images/space.gif" width="1"/>
 				</td>
 			</tr>
 			<tr>
 				<td height="1" bgcolor="#4C6C8F" width="99%">
-					<img height="10" src="space.gif" width="1"/>
+					<img height="10" src="images/space.gif" width="1"/>
 				</td>
 			</tr>
 		</table>

@@ -5,7 +5,7 @@
 <xsl:template match="/">
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="page.css"/>
+		<link type="text/css" rel="stylesheet" href="css/page.css"/>
 	</head>
 	<body>
 	<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody> 
@@ -16,22 +16,22 @@
 		<tbody> 
 			<tr> 
 				<td colspan="2" noWrap="" height="1%" bgcolor="#294563">
-					<img height="5" src="space.gif" width="100%"/>
+					<img height="5" src="images/space.gif" width="100%"/>
 				</td>
 			</tr>
 			<tr> 
 				<td colspan="2" bgcolor="#294563" height="98%" align="center" valign="middle" width="100%">
-					<img src="portal-logo.gif" width="250" height="90" />
+					<img src="images/portal-logo.gif" width="250" height="90" />
 				</td>
 			</tr>
 			<tr valign="bottom"> 
 				<td height="99%" bgcolor="#294563" width="99%" align="right">
-					<a href="logout"><img src="logout-door.gif" width="18" height="22" border="0"/></a>
-					<img height="5" src="space.gif" width="5"/>
+					<a href="logout"><img src="images/logout-door.gif" width="18" height="22" border="0"/></a>
+					<img height="5" src="images/space.gif" width="5"/>
 				</td>
 				<td height="99%" bgcolor="#294563" width="1%" align="right">
 					<a href="logout" style="color:#CFDCED;font-size:75%;">Logout</a>&#160;
-					<img height="5" src="space.gif" width="5"/>
+					<img height="5" src="images/space.gif" width="5"/>
 				</td>
 			</tr>
 		</tbody>
@@ -53,12 +53,12 @@
 			<tbody> 
 			<tr> 
 			<td colspan="2" noWrap="" height="10" bgcolor="#CFDCED">
-				<img height="1" src="space.gif" width="1"/>
+				<img height="1" src="images/space.gif" width="1"/>
 			</td>
 			</tr>
 			<tr> 
 			<td colspan="2" noWrap="" height="30" bgcolor="#294563">
-				<img height="1" src="space.gif" width="1"/>
+				<img height="1" src="images/space.gif" width="1"/>
 			</td>
 			</tr>
 			</tbody>

@@ -15,6 +15,11 @@
   <map:serializers default="html"/>
   <map:matchers default="wildcard"/>
   <map:selectors default="browser"/>
+  <map:actions>  
+    <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
+        <parameter name="src" value="resources/bookmarks.xml"/>
+    </map:action>
+  </map:actions>
  </map:components>
  
 <!-- =========================== Views =================================== -->
@@ -67,6 +72,40 @@
 
   </map:component-configurations>
   
+  <!-- The internal pipelines for loading and saving -->
+  <map:pipeline internal-only="true">
+    <map:match pattern="sunrise-authuser">
+      <map:generate src="resources/sunrise-user.xml"/>
+      <map:transform src="styles/authenticate.xsl">
+        <map:parameter name="use-request-parameters" value="true"/>
+      </map:transform>
+      <map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="load-global-profile">
+    	<map:generate src="profiles/{request-param:profile}/{request-param:portal}.xml"/>
+    	<map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="load-role-profile">
+    	<map:generate src="profiles/{request-param:profile}/{request-param:portal}-role-{request-param:role}.xml"/>
+    	<map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="load-user-profile">
+    	<map:generate src="profiles/{request-param:profile}/{request-param:portal}-user-{request-param:user}.xml"/>
+    	<map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="save-user-profile">
+    	<map:generate src="resources/save-user-profile.xml"/>
+        <map:transform type="session"/>
+        <map:transform type="write-source"/>
+    	<map:serialize type="xml"/>
+    </map:match>
+  </map:pipeline>
+
+  <!-- Now the accessible pipelines -->
   <map:pipeline>
 
     <!-- images -->
@@ -109,6 +148,20 @@
         </map:act>
     </map:match>
         
+    <!-- Test pipeline for bookmark -->
+    <map:match pattern="bookmark">
+        <map:act type="auth-protect">
+            <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="application" value="portal"/> 
+
+            <map:act type="portal-bookmark">
+        	    <map:parameter name="portal-name" value="portal" />
+        	    
+        	    <map:redirect-to uri="portal?{uri}"/>
+            </map:act>
+        </map:act>
+    </map:match>
+
     <map:match pattern="portalxml">
         <map:act type="auth-protect">
             <map:parameter name="handler" value="portalhandler"/> 
@@ -152,7 +205,9 @@
           <map:parameter name="handler" value="portalhandler"/>
           <map:parameter name="parameter_name" value="{request-param:name}"/>
           <map:parameter name="parameter_password" value="{request-param:password}"/>
-          <map:redirect-to uri="portal"/>
+
+          <map:redirect-to uri="{request-param:resource}"/>
+
         </map:act>
         <map:generate src="resources/login-error.xml"/>
         <map:transform src="{global:skin}styles/portal-page.xsl"/>
@@ -177,7 +232,11 @@
 		<map:act type="auth-protect">
 		    <map:parameter name="handler" value="portalhandler"/> 
             <map:parameter name="application" value="portal"/> 
-
+<!--
+            <map:act type="portal-save-profile">
+        	    <map:parameter name="portal-name" value="portal"/>
+            </map:act>
+-->
             <map:act type="portal-logout">
         	    <map:parameter name="portal-name" value="portal"/>
             </map:act>
@@ -187,37 +246,9 @@
         <map:redirect-to uri="login"/>
     </map:match>
 
-  </map:pipeline>
-
-  <map:pipeline internal-only="true">
-    <map:match pattern="sunrise-authuser">
-      <map:generate src="resources/sunrise-user.xml"/>
-      <map:transform src="styles/authenticate.xsl">
-        <map:parameter name="use-request-parameters" value="true"/>
-      </map:transform>
-      <map:serialize type="xml"/>
-    </map:match>
-
-    <map:match pattern="load-global-profile">
-    	<map:generate src="profiles/{request-param:profile}/{request-param:portal}.xml"/>
-    	<map:serialize type="xml"/>
-    </map:match>
-
-    <map:match pattern="load-role-profile">
-    	<map:generate src="profiles/{request-param:profile}/{request-param:portal}-role-{request-param:role}.xml"/>
-    	<map:serialize type="xml"/>
-    </map:match>
-
-    <map:match pattern="load-user-profile">
-    	<map:generate src="profiles/{request-param:profile}/{request-param:portal}-user-{request-param:user}.xml"/>
-    	<map:serialize type="xml"/>
-    </map:match>
-
-    <map:match pattern="save-user-profile">
-    	<map:generate src="resources/save-user-profile.xml"/>
-        <map:transform type="session"/>
-        <map:transform type="write-source"/>
-    	<map:serialize type="xml"/>
+    <!-- Everything else redirect to the portal -->
+    <map:match pattern="**">
+        <map:redirect-to uri="portal"/>
     </map:match>
   </map:pipeline>
 

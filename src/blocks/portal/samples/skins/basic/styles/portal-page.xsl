@@ -5,7 +5,7 @@
 <xsl:template match="/">
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="page.css"/>
+		<link type="text/css" rel="stylesheet" href="css/page.css"/>
 	</head>
 	<body>
 	<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%">
@@ -51,12 +51,12 @@
 		<tbody> 
 		<tr> 
 			<td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD">
-				<img height="1" src="sunspotdemoimg-space.gif" width="1"/>
+				<img height="1" src="images/space.gif" width="1"/>
 			</td>
 		</tr>
 		<tr> 
 			<td colspan="2" noWrap="" height="30" bgcolor="#CCCCCC">
-				<img height="1" src="sunspotdemoimg-space.gif" width="1"/>
+				<img height="1" src="images/space.gif" width="1"/>
 			</td>
 		</tr>
 		</tbody>
