@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.52 2000-04-08 10:17:07 stefano Exp $
+  $Id: changes.xml,v 1.53 2000-04-08 23:10:00 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -25,7 +25,10 @@
   <action dev="SM" type="fix" due-to="Ovidiu Predescu" due-to-email="ovidiu@cup.hp.com">
    Fixed a number of NPE when using Cocoon from the command line.
   </action>
-  <action dev="RR" type="fix" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+  <action dev="SM" type="fix" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+   Fixed xsp:pi that now can work with included xsp:expr for dynamically generated PIs in XSP.
+  </action>
+  <action dev="RR" type="fix">
    Fixed xsp:expr [XSPPage.xspExpr()] to ensure that node values are created by the same document instance.
   </action>
   <action dev="SM" type="fix" due-to="Andrew Sheehan" due-to-email="AJSheehan@doe.mass.edu">
