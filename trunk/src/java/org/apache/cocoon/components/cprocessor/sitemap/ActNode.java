@@ -77,7 +77,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActNode.java,v 1.2 2004/01/27 13:27:43 unico Exp $
+ * @version CVS $Id: ActNode.java,v 1.3 2004/01/27 13:41:42 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -175,7 +175,7 @@ implements ProcessingNode, Initializable, Disposable {
 
             Map result = m_actionSetNode.call(env, context, resolvedParams);
 
-            if (EnvironmentHelper.getRedirector().hasRedirected()) {
+            if (EnvironmentHelper.getRedirector(env).hasRedirected()) {
                 return true;
 
             } else if (result == null) {
@@ -194,8 +194,8 @@ implements ProcessingNode, Initializable, Disposable {
 
         // Prepare data needed by the action
         Map            objectModel    = env.getObjectModel();
-        Redirector     redirector     = EnvironmentHelper.getRedirector();
-        SourceResolver resolver       = EnvironmentHelper.getSourceResolver();
+        Redirector     redirector     = EnvironmentHelper.getRedirector(env);
+        SourceResolver resolver       = EnvironmentHelper.getSourceResolver(env);
         String         resolvedSource = m_source.resolve(context, objectModel);
         Parameters     resolvedParams = VariableResolver.buildParameters(super.m_parameters, context, objectModel);
 

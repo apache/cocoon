@@ -83,7 +83,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.17 2004/01/27 13:27:49 unico Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.18 2004/01/27 13:41:51 cziegeler Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -263,7 +263,7 @@ public class JSCocoon extends ScriptableObject
         try {
             // Cannot use environment directly as TreeProcessor uses own version of redirector
             // environment.redirect(false, uri);
-            EnvironmentHelper.getRedirector().redirect(false, uri);
+            EnvironmentHelper.getRedirector(this.environment).redirect(false, uri);
         } catch (Exception e) {
             throw new JavaScriptException(e);
         }

@@ -75,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.4 2004/01/27 13:27:40 unico Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.5 2004/01/27 13:41:40 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -152,7 +152,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
     }
 
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        Redirector redirector = EnvironmentHelper.getRedirector();
+        Redirector redirector = EnvironmentHelper.getRedirector(env);
         
         List params = null;
 

@@ -76,7 +76,7 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.17 2004/01/27 13:28:01 unico Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.18 2004/01/27 13:41:57 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Serviceable, Contextualizable, Interpreter,
@@ -242,6 +242,6 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         Map objectModel = environment.getObjectModel();
         FlowHelper.setContextObject(objectModel, bizData);
         FlowHelper.setWebContinuation(objectModel, continuation);
-        EnvironmentHelper.getRedirector().redirect(false, uri);
+        EnvironmentHelper.getRedirector(environment).redirect(false, uri);
     }
 }

@@ -81,7 +81,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.3 2004/01/27 13:27:54 unico Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.4 2004/01/27 13:41:51 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -482,8 +482,8 @@ implements SourceResolver, Serviceable, Disposable {
     /**
      * Return the SourceResolver
      */
-    public static SourceResolver getSourceResolver() {
-        final EnvironmentContext ctx = getCurrentEnvironmentContext();
+    public static SourceResolver getSourceResolver(Environment env) {
+        final EnvironmentContext ctx = getEnvironmentContext(env);
         if (ctx != null) {
             return (SourceResolver) ctx.getAttribute(SOURCE_RESOLVER_KEY);
         }
@@ -493,8 +493,8 @@ implements SourceResolver, Serviceable, Disposable {
     /**
      * Return the Redirector
      */
-    public static Redirector getRedirector() {
-        final EnvironmentContext ctx = getCurrentEnvironmentContext();
+    public static Redirector getRedirector(Environment env) {
+        final EnvironmentContext ctx = getEnvironmentContext(env);
         if (ctx != null) {
             return (Redirector) ctx.getAttribute(REDIRECTOR_KEY);
         }

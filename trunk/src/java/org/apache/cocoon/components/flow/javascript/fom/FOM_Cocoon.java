@@ -87,7 +87,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.19 2004/01/27 13:28:06 unico Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.20 2004/01/27 13:42:06 cziegeler Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -206,11 +206,11 @@ public class FOM_Cocoon extends ScriptableObject {
     public void jsFunction_redirectTo(String uri) throws Exception {
         // Cannot use environment directly as TreeProcessor uses own version of redirector
         // environment.redirect(false, uri);
-        EnvironmentHelper.getRedirector().redirect(false, uri);
+        EnvironmentHelper.getRedirector(this.environment).redirect(false, uri);
     }
     
     public void jsFunction_sendStatus(int sc) {
-        EnvironmentHelper.getRedirector().sendStatus(sc);
+        EnvironmentHelper.getRedirector(this.environment).sendStatus(sc);
     }
 
 /*
