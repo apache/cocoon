@@ -62,7 +62,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: PortalApplicationConfig.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: PortalApplicationConfig.java,v 1.2 2003/09/18 14:38:46 vgritsenko Exp $
  */
 public class PortalApplicationConfig {
     /**
@@ -82,7 +82,7 @@ public class PortalApplicationConfig {
 
     /**
      * Creates the PortalApplicationConfig object.
-     * @param	doc a JDOM document that holds all portal application configurations
+     * @param	doc a DOM document that holds all portal application configurations
      * @param	copletId the id of the coplet for which the portal application configuration should
      * 			be created
      */
@@ -109,7 +109,7 @@ public class PortalApplicationConfig {
 
     /**
      * Sets the configuration parameters in the PortalApplicationConfig object.
-     * @param	application a JDOM element, that holds the configuration of one portal application
+     * @param	application a DOM element, that holds the configuration of one portal application
      * @param	cfg the PortalApplicationConfiguration object, which gets populated with the parameters
      */
     private static void setConfiguration(
@@ -134,7 +134,7 @@ public class PortalApplicationConfig {
     // value equals the given name
     /**
      * Returns true, if configuration element is the expected one.
-     * @param 	elem a JDOM element, that holds the configuration of one portal application
+     * @param 	elem a DOM element, that holds the configuration of one portal application
      * @param	name the id of the coplet
      */
     private static boolean isCoplet(Element elem, String id) {
@@ -153,8 +153,8 @@ public class PortalApplicationConfig {
     private PortalApplicationConfig() {}
 
     /**
-     * Constructor, which builds a PortalApplicationConfig from a given JDOM element.
-     * @param	app the JDOM element, that holds the configuration of one portal application
+     * Constructor, which builds a PortalApplicationConfig from a given DOM element.
+     * @param	app the DOM element, that holds the configuration of one portal application
      */
     protected PortalApplicationConfig(Element app) {
         name = app.getAttribute("name");
