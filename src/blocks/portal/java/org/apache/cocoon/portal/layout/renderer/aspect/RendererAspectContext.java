@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect;
 
+import java.util.Map;
+
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.xml.sax.ContentHandler;
@@ -63,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectContext.java,v 1.3 2003/06/15 16:56:09 cziegeler Exp $
+ * @version CVS $Id: RendererAspectContext.java,v 1.4 2003/12/12 10:13:34 cziegeler Exp $
  */
 public interface RendererAspectContext {
     
@@ -92,4 +94,9 @@ public interface RendererAspectContext {
      * Remove an attribute
      */
     void removeAttribute(String key);
+    
+    /**
+     * Get the object model
+     */
+    Map getObjectModel();
 }

@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -48,69 +48,17 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.renderer.aspect.impl;
+package org.apache.cocoon.portal.acting.helpers;
 
-import java.util.Iterator;
-
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import org.apache.cocoon.portal.event.Event;
 
 /**
+ * Helper class for an event
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
- * @version CVS $Id: AbstractAspect.java,v 1.6 2003/12/12 10:13:34 cziegeler Exp $
- */
-public abstract class AbstractAspect
-    extends AbstractLogEnabled
-    implements Serviceable, ThreadSafe, RendererAspect {
-
-    protected ServiceManager manager;
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
-     */
-    public void toSAX(
-        RendererAspectContext context,
-        Layout layout,
-        PortalService service,
-        ContentHandler handler)
-        throws SAXException {
-    }
-
-    /**
-     * Return the aspects required for this renderer
-     * @return An iterator for the aspect descriptions or null.
-     */
-    public Iterator getAspectDescriptions(Object preparedConf) {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
-        return configuration;
-    }
-
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: Mapping.java,v 1.1 2003/12/12 10:13:34 cziegeler Exp $
+*/
+public abstract class Mapping {
+    public abstract Event getEvent(PortalService service, Object data);
 }

@@ -2,6 +2,12 @@
 
 <samplesxconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.profile.ProfileManager/Auth']">
 
+ <!-- THIS IS A SAMPLE PORTAL
+      It demonstrates several features of the portal engine,
+      so it's not optimized for production. Make sure that
+      if you use the portal for your own projects that you
+      remove all unused stuff from the configuration! 
+ -->
  <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Auth">
  </component>
 
@@ -41,6 +47,7 @@
              <aspect type="parameter">
                  <parameter name="tag-name" value="tab-layout"/>
              </aspect>
+             <aspect type="history"/>
              <aspect type="tab-content">
                  <parameter name="root-tag" value="false"/>
                  <parameter name="store"    value="session"/>
@@ -55,6 +62,7 @@
              <aspect type="parameter">
                  <parameter name="tag-name" value="linktab-layout"/>
              </aspect>
+             <aspect type="history"/>
              <aspect type="tab-content">
                  <parameter name="root-tag" value="false"/>
                  <parameter name="store" value="session"/>
@@ -75,6 +83,7 @@
              <aspect type="coplet-removing"/>
              <aspect type="coplet-full-screen"/>
              <aspect type="coplet-sizing"/>
+             <aspect type="history"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
      </renderer>
@@ -87,6 +96,7 @@
      </renderer>
      <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
+             <aspect type="history"/>
              <aspect type="coplet"/>
          </aspects>
      </renderer>

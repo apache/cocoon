@@ -17,6 +17,12 @@
           <li>The TabDemo2 shows the same content as TabDemo2 but with just a different stylesheet for the tab.</li>
           <li>The Coplets tab show some more coplets. You need to also have the petstore example installed!</li>
         </ul>
+        <note>THIS IS A SAMPLE PORTAL. It demonstrates several features of 
+          the portal engine, so it's not optimized for production. Make sure 
+          that if you use the portal for your own projects that you
+          remove all unused stuff from the configuration! Every configured
+          feature might have an impact on the performance.
+        </note>
         <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
      </s1> 
 
