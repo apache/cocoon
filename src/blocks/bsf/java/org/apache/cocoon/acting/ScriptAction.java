@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.acting;
 
-import com.ibm.bsf.BSFManager;
-import com.ibm.bsf.util.IOUtils;
+import org.apache.bsf.BSFManager;
+import org.apache.bsf.util.IOUtils;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -36,7 +36,7 @@ import java.util.Map;
  * A simple action that executes any script that can be run by the BSF
  *
  * @author <a href="mailto:jafoster@uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptAction.java,v 1.3 2004/03/05 13:01:47 bdelacretaz Exp $
+ * @version CVS $Id: ScriptAction.java,v 1.4 2004/04/03 01:32:29 antonio Exp $
  */
 
 public class ScriptAction
@@ -103,13 +103,10 @@ implements ThreadSafe {
             // Figure out what to return
             // TODO: decide on a more robust communication method
 
-            if ( actionMap.containsKey( "scriptaction-continue" ) )
-            {
+            if ( actionMap.containsKey( "scriptaction-continue" )) {
                 return ( Collections.unmodifiableMap(actionMap) );
-            }
-            else
-            {
-                return ( null );
+            } else {
+                return (null);
             }
         } catch (Exception e) {
             throw new ProcessingException(
