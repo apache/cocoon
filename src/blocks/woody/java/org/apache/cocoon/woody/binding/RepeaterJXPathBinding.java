@@ -120,9 +120,13 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.rowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings);
         this.rowBinding.setParent(this);
         this.insertRowBinding = insertBinding;
-        this.insertRowBinding.setParent(this);
+        if (this.insertRowBinding != null) {
+            this.insertRowBinding.setParent(this);
+        }
         this.deleteRowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, deleteBindings);
-        this.deleteRowBinding.setParent(this);
+        if (this.deleteRowBinding != null) {
+            this.deleteRowBinding.setParent(this);            
+        }
     }
 
 
