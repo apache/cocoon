@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.11 2000-09-05 03:07:48 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.12 2000-09-06 19:35:43 balld Exp $-->
 <!--
 
  ============================================================================
@@ -104,8 +104,8 @@
 		<xsp:logic>
 		 static DBBroker _esql_pool = DBBroker.getInstance();
                  class EsqlSession {
-                  DBConnection db_connection;
-                  Connection connection;
+                  DBConnection db_connection=null;
+                  Connection connection=null;
                   boolean close_connection = true;
 		  String query;
                   Statement statement;
@@ -269,9 +269,9 @@
 		</exception>
 	       } finally {
 	       if (_esql_session.close_connection) {
-	        _esql_session.connection.close();
+	        if (_esql_session.connection != null) _esql_session.connection.close();
 	        <xsl:if test="esql:use-connection">
-	         _esql_session.pool.releaseConnection(_esql_db_connection);
+	         _esql_pool.releaseConnection(_esql_session.db_connection);
 	        </xsl:if>
 	       }
 	       if (_esql_sessions.empty()) {
