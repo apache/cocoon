@@ -169,10 +169,10 @@
   </p>
   <p>
    For direct participation, we suggest you to subscribe to the
-   <link href="http://xml.apache.org/mail.html">Cocoon mailing lists</link>
+   <connect href="mail-lists.xml">Cocoon mailing lists</connect>
    (follow the link for information on how to subscribe and to access the mail
-   list archives), to checkout the <link href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon/">
-   latest and greatest code</link> (which you found in the xml-cocoon module in
+   list archives), to checkout the <link href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/">
+   latest and greatest code</link> (which you find in the xml-cocoon module in
    the xml.apache.org CVS code repository, or from the
    <link href="http://xml.apache.org/from-cvs/xml-cocoon/">CVS snapshots</link>),
    control the <connect href="../todo.xml">todo</connect>

@@ -1,9 +1,18 @@
 
-                        C   O   C   O   O   N 
-                        
+                        C   O   C   O   O   N
+
                                @version@
-                                
-                      
+
+
+Contents
+
+* What is it?
+* Where is it?
+* Requirements
+* Release Notes for Cocoon 1.8
+* Licensing and Legal Issues
+
+
   What is it?
   -----------
 
@@ -44,10 +53,45 @@
   -------------------------------------------
 
   The documentation available as of the date of this release is
-  included in the "docs/" directory.
-  
+  included in the "docs/" directory (unless you got this from CVS,
+  in which case you need to run build docs, which generates documentation
+  in the build/docs directory).
+
   Look for the most updated documentation on the Cocoon web site under
   the Apache XML Project (http://xml.apache.org/cocoon/).
+
+
+  Release Notes for Cocoon 1.8
+  ----------------------------
+
+  There are no reported major issues with this release.
+
+  As usual, if upgrading from an earlier release, you need to replace your
+  cocoon.properties file with the one supplied in
+  src/org/apache/cocoon/cocoon.properties,
+  (then make any site-specific adjustments if you have any),
+  or Cocoon will very likely not work at all.
+
+  *** IMPORTANT ***
+  If you get an error message about ProducerFromRequest, this means
+  that you forgot to do the above. See the FAQ for more details.
+
+  Note also that you need an additional library, new to 1.8,
+  turbine-pool.jar, which is in the /lib directory, to be visible
+  to the servlet engine. See the installation instructions.
+
+  As usual, changes since previous releases are documented in docs/changes.html
+  Highlights include:
+
+  * Database connection pooling
+  * Numerous bugfixes, including better Servlet 2.0 compatibility
+  * Increased performance for heavy load conditions
+  * Also increased speed for some XSP pages which include complex Nodes
+  * New ESQL logicsheet allowing easy post-processing of resultsets in XSP
+  * Improved documentation, with new expanded FAQ
+  * More installation instructions for more different servlet engines
+  * Experimental FP taglib for form-handling and other tasks
+  * Jikes support for faster XSP page compilation
 
 
   Licensing and legal issues

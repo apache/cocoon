@@ -459,17 +459,27 @@
    <a href="{@href}"><xsl:apply-templates/></a>
  </xsl:template>
 
+ <!-- hacky hacky! :-) -->
  <xsl:template match="connect">
+
+  <xsl:variable name="cref"><xsl:value-of select="@href"/></xsl:variable>
+
+  <!-- look up the soft link in the index to try and convert it to a hard link -->
+  <xsl:variable name="converted"><xsl:value-of select="document('sbk:/sources/book.xml')//*[@source=$cref]/@id"/></xsl:variable>
+
   <xsl:variable name="htmlref"><xsl:choose>
-    <xsl:when test="substring(@href,string-length(@href)-4)='.xml'">
+    <xsl:when test="$converted"><xsl:value-of select="$converted"/>.html</xsl:when>
+    <xsl:when test="substring(@href,string-length(@href)-3)='.xml'">
+     <!-- if not in the index, guess -->
      <xsl:value-of select="substring(@href,1,string-length(@href)-4)"/>.html
     </xsl:when>
     <xsl:otherwise>
+     <!-- give up -->
      <xsl:value-of select="@href"/>
     </xsl:otherwise>
    </xsl:choose></xsl:variable>
 
-  <a href="{$htmlref}#{@anchor}"><xsl:apply-templates/></a>
+  <a href="{$htmlref}"><xsl:apply-templates/></a>
  </xsl:template>
 
  <xsl:template match="jump">

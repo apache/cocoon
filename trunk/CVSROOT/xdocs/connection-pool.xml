@@ -4,7 +4,7 @@
 
 <document>
  <header>
-  <title>Installing Cocoon Pool</title>
+  <title>Using DB Connection Pooling</title>
   <authors>
    <person name="Brian Millett" email="bpm@ec-group.com"/>
   </authors>
@@ -16,21 +16,21 @@
 
   <p>
    In the <code>/lib</code> directory you'll find the <code>turbine-pool.jar</code>
-   jar package that contains the Turbine Connection Pool binary files.
+   jar package that contains the Turbine Connection Pool binary files
+   (a new addition to Cocoon in version 1.8).
    While this package may not be the most up-to-date version, it is
    guaranteed and tested to work properly with Cocoon so, we suggest that you
-   use it. Note, however, that it was redistributed untouched from
-   its original distribution.
+   use it.
   </p>
  </s1>
 
  <s1 title="Installing Turbine Connection Pool">
 
-  <s2 title="Installing Cocoon on Apache JServ">
+  <s2 title="Installing on Apache JServ">
    <p>
-    First thing to do is to make sure that Cocoon and all the needed components
-    (as explained in the previous section) are visible. This implies adding
-    this to the servlet engine classpath by adding a line
+    On JServ, it is necessary to make sure that the new turbine-pool.jar is visible to Java.
+    This implies adding
+    the following to the servlet engine classpath by adding a line
     to your <code>jserv.properties</code> file for the connection pool jar package.
    </p>
 
@@ -44,6 +44,10 @@
 wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
 </source>
 
+   <p>Please also read the next section.</p>
+  </s2>
+
+  <s2 title="Generic Installation for All Servlet Engines">
      <p>To use the pool, you need to have the appropriate properties defined
         in your <em>cocoon.properties</em> file. The important ones are listed below.
         This is an example of creating a default pool for use with Oracle. Currently
@@ -79,8 +83,8 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
 
      <p> The <strong>default</strong> is by convention the default connection used
          by the Turbine Connection Pool.  To define a Named connection, add new entries
-         with the word "default" replaced with the name you want.  Here is an example 
-         for defining a connection to a MySQL database called "helpdesk":</p>
+         with the word "default" replaced with the name you want.  Here is an example
+         for defining a connection to an Oracle database called "helpdesk":</p>
      <source>
         processor.xsp.pool.database.helpdesk.driver=oracle.jdbc.driver.OracleDriver
         processor.xsp.pool.database.helpdesk.url=jdbc:oracle:thin:@localhost:1521:ORCL
@@ -99,26 +103,26 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
         the various connection interfaces javadoc and drivers to find out the appropriate
         strings to use.</p>
 
-   <p>
-   </p>
-
    </s2>
+
  </s1>
- <s1 title="Using Turbine Connection Pool in your code">
+ <s1 title="Using Turbine Connection Pool">
     <p>This section is to describe how you can use the Turbine connection pool
-    in your own code. To demonstrate this, I'll show an example how I modified
-    Ricardo Rocha's excellent example XSQL. this is some of the code that he
+    in your own code. (At the time of writing, in Cocoon only the SQL taglibs
+    use connection pooling - another good reason to use the SQL taglibs!)
+    To demonstrate this, I'll show an example of how I modified
+    Ricardo Rocha's excellent example XSQL. This is some of the code that he
     had before:</p>
-    
+
   <source><![CDATA[
     import java.sql.*;
     import java.util.*;
     import org.w3c.dom.*;
     import DBConnectionManager;
-    
+
     public class XSQL {
       static DBConnectionManager manager = DBConnectionManager.getInstance();
-    
+
       public static Element executeQuery(
         String connectionName,
         String statementId,
@@ -128,17 +132,17 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
         throws SQLException
       {
         Connection connection = null;
-        
+
         try {
           connection = manager.getConnection(connectionName);
           Statement statement = connection.createStatement();
           ResultSet resultSet = statement.executeQuery(statementText);
           ResultSetMetaData metaData = resultSet.getMetaData();
           int columnCount = metaData.getColumnCount();
-          
+
           Element rowSet = factory.createElement("xsql:rowset");
           rowSet.setAttribute("id", statementId);
-    
+
           for (int i = 0; resultSet.next(); i++) {
             Element row = factory.createElement("xsql:row");
             row.setAttribute("sequence", String.valueOf(i + 1));
@@ -146,12 +150,12 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
     
             for (int j = 0; j &lt; columnCount; j++) {
               String value = resultSet.getString(j + 1);
-    
+
               Element element = factory.createElement(
                metaData.getColumnLabel(j + 1).toLowerCase()
               );
               row.appendChild(element);
-    
+
               if (value != null) {
                 element.appendChild(
                   factory.createTextNode(value)
@@ -159,10 +163,10 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
               }
             }
           }
-    
+
           resultSet.close();
           statement.close();
-    
+
           return rowSet;
         } catch (SQLException e) {
           throw(new SQLException(statementText));
@@ -172,20 +176,20 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
           }
         }
       }
-    
+
     }
     ]]></source>
-    <p>Now this is the code modified to use the Turbine conncection pool:</p>
-    
+    <p>Now this is the code modified to use the Turbine connection pool:</p>
+
   <source><![CDATA[
     import java.sql.*;
     import java.util.*;
     import org.w3c.dom.*;
     import DBConnectionManager;
-    
+
     public class XSQL {
         static DBBroker pool = DBBroker.getInstance();       // <---- Pool code!
-        
+
         public static Element executeQuery(
         String connectionName,
         String statementId,
@@ -203,23 +207,23 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
           ResultSet resultSet = statement.executeQuery(statementText);
           ResultSetMetaData metaData = resultSet.getMetaData();
           int columnCount = metaData.getColumnCount();
-          
+
           Element rowSet = factory.createElement("xsql:rowset");
           rowSet.setAttribute("id", statementId);
-    
+
           for (int i = 0; resultSet.next(); i++) {
             Element row = factory.createElement("xsql:row");
             row.setAttribute("sequence", String.valueOf(i + 1));
             rowSet.appendChild(row);
-    
+
             for (int j = 0; j &lt; columnCount; j++) {
               String value = resultSet.getString(j + 1);
-    
+
               Element element = factory.createElement(
                 metaData.getColumnLabel(j + 1).toLowerCase()
               );
               row.appendChild(element);
-    
+
               if (value != null) {
                 element.appendChild(
                   factory.createTextNode(value)
@@ -227,10 +231,10 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
               }
             }
           }
-    
+
           resultSet.close();
           statement.close();
-    
+
           return rowSet;
         } catch (SQLException e) {
           throw(new SQLException(statementText));
@@ -240,12 +244,14 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
           }
         }
       }
-    
+
     }
     ]]></source>
+
     <p>Please see the <link href="http://java.apache.org/turbine/getting_started.html">getting
-    started</link> documentation at the <link href="http://java.apache.org/turbine/">Turbine</link>
-    homepage for more information about Turbine.
+     started</link> documentation at the <link href="http://java.apache.org/turbine/">Turbine</link>
+     homepage for more information about Turbine (a server-side framework which is
+     the home of the connection pool code).
     </p>
   </s1>
 </body>

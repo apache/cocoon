@@ -180,8 +180,7 @@ AddHandler cocoon xml</source>
 
    <p>
     If you haven't already got the Actions module compiled in to Apache
-    (<strong>note - this is compiled in by default in standard installs
-    </strong>),
+    (<strong>note - this is compiled in by default in standard installs</strong>),
     you will need to have the following line uncommented in your
     <code>httpd.conf</code> or Apache will not be able to start:
    </p>
@@ -451,9 +450,12 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
   have to be willing to live without hot redeployment).</p>
 
   <p>To disable the WebLogic class loader, put your application classes,
-  the Cocoon jars and _all_ of the WebLogic Server stuff into the Java
-  CLASSPATH add -Dweblogic.system.disableWeblogicClassPath=true to the
-  Java command at the end of you WebLogic start script.</p>
+  the Cocoon jars and <em>all</em> of the WebLogic Server stuff into the Java
+  CLASSPATH, and add</p>
+
+  <source>-Dweblogic.system.disableWeblogicClassPath=true</source>
+
+  <p>to the Java command at the end of you WebLogic start script.</p>
  </s3>
 
  <p>The above will also work for installing Cocoon in the BEA WebLogic
@@ -613,6 +615,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <th>JVM</th>
   </tr>
   <tr>
+   <td>Debian Potato or Woody</td>
+   <td>Apache 1.3.12</td>
+   <td>JServ 1.1.2</td>
+   <td>IBM JDK 1.1.8 or 1.3</td>
+  </tr>
+  <tr>
    <td>RedHat Linux 6.0</td>
    <td>Apache 1.3.9</td>
    <td>Apache JServ 1.0</td>
@@ -649,9 +657,27 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>IBM JDK 1.1.8</td>
   </tr>
   <tr>
+   <td>RedHat Linux 6.1</td>
+   <td>Apache 1.3.12-2</td>
+   <td>Jserv 1.1.2-2</td>
+   <td>JDK 1.2.2_006</td>
+  </tr>
+  <tr>
    <td>RedHat Linux 6.2 (i686)</td>
    <td>Apache 1.3.12 + mod_ssl 2.6.5</td>
    <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2</td>
+   <td>Apache 1.3.12-2</td>
+   <td>Tomcat 3.1</td>
+   <td>JDK 1.2.2_006</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2 (i686)</td>
+   <td>Apache 1.3.12</td>
+   <td>Resin 1.2.b1</td>
    <td>Sun JDK 1.2.2</td>
   </tr>
   <tr>
@@ -725,6 +751,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>Sun JDK 1.2.2</td>
   </tr>
   <tr>
+   <td>Windows NT 4.0 SP5</td>
+   <td>IIS 4.0</td>
+   <td>Websphere 3.5 Enterprise</td>
+   <td>IBM JDK 1.2.2</td>
+  </tr>
+  <tr>
    <td>Windows NT 4.0 SP6a</td>
    <td>Apache 1.3.11</td>
    <td>Apache JServ 1.1</td>
@@ -743,9 +775,19 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>Sun JDK 1.3</td>
   </tr>
   <tr>
+   <td>Windows 2000 Advanced Server</td>
+   <td colspan="2">Tomcat 3.1</td>
+   <td>JDK 1.3</td>
+  </tr>
+  <tr>
    <td>MacOS 8.5+</td>
    <td colspan="2">Resin 1.1b</td>
    <td>MRJ 2.2</td>
+  </tr>
+  <tr>
+   <td>MacOS 8.6</td>
+   <td colspan="2">Tomcat 3.1</td>
+   <td>MRJ 2.2.2</td>
   </tr>
   <tr>
    <td>MacOS 8.6</td>
@@ -784,6 +826,11 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>Sun JDK 1.3 Beta Refresh</td>
   </tr>
   <tr>
+   <td>Solaris 8 (x86)</td>
+   <td colspan="2">Resin 1.2.b1</td>
+   <td>JDK 1.3 beta</td>
+  </tr>
+  <tr>
    <td>FreeBSD 3.4</td>
    <td>Apache 1.3.9</td>
    <td>Apache JServ 1.0</td>
@@ -793,6 +840,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>FreeBSD 3.4-STABLE with linux_base-6.1 for linux-emulation</td>
    <td colspan="2">Jetty Java HTTP Server v2.3.3</td>
    <td>Blackdown jdk-1.2.2-RC4-linux-i386-glibc</td>
+  </tr>
+  <tr>
+   <td>FreeBSD 4.1 (RELEASE)</td>
+   <td>Apache 1.3.12</td>
+   <td>Jserv 1.1.2</td>
+   <td>Linux JDK 1.2.2</td>
   </tr>
   <tr>
    <td>SCO OpenServer 5</td>

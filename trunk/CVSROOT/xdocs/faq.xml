@@ -10,12 +10,13 @@
   <question>I tried to access Cocoon.xml but it doesn't seem to exist.
    Where is it?</question>
   <answer>
-   <p>Firstly, Cocoon.xml is not an actual file on the disk - it is a special
-    "virtual" test page. Note that it is case-sensitive, so
-    cocoon.xml won't work.</p>
+   <p>Firstly, <code>Cocoon.xml</code> is not an actual file on the disk - 
+    it is a special "virtual" test page. Note that it is case-sensitive, so
+    <code>cocoon.xml</code> won't work.</p>
 
-   <p>If the webserver returns "file not found" for Cocoon.xml, this indicates that
-    you haven't installed Cocoon correctly. See the next question.</p>
+   <p>If the webserver returns "file not found" for <code>Cocoon.xml</code>,
+    this indicates that you haven't installed Cocoon correctly. 
+    See the next question.</p>
   </answer>
  </faq>
 
@@ -93,6 +94,14 @@
      (e.g. Tomcat 3.1).</li>
    </ul>
 
+  </answer>
+ </faq>
+
+ <faq id="mac">
+  <question>Why doesn't Cocoon work on my Mac?</question>
+  <answer>
+   <p>There is a long filename bug in some MRJs. Cocoon should work fine
+   on Mac OS 9 or above with MRJ 2.2 or above.</p>
   </answer>
  </faq>
 
@@ -236,7 +245,7 @@
 
  <faq id="noclasspath">
   <question>I used xsp:include to import my classes, but it comes up
-   with <em>Package "mypackage" not found in import</em> Why?</question>
+   with <em>'Package "mypackage" not found in import'</em> Why?</question>
   <answer>
 
    <p>
@@ -364,8 +373,8 @@
 
    <source><![CDATA[<?cocoon-format type="text/html/loose"?>]]></source>
 
-   <p>in the source document (but make sure your stylesheet copies the PIs -
-    see the question below),
+   <p>in the source document (but make sure your stylesheet 
+    <connect href="#lostpis">copies the PIs</connect> or this will disappear!),
     you indicate the page containing this processing instruction should be
     encoded and sent using the formatting properties contained in
     your <code>cocoon.properties</code>
@@ -453,8 +462,15 @@
    ignore this, but IE won't, and will react to the MIME type and 
    trigger the correct plugin/application for that content.</p>
 
-   <p>In the last resort, renaming all your xml files to end in .pdf should always
-    work. Note that this is <em>not</em> a bug in Cocoon and is completely outside
+   <p>Russ Whyte has also developed a 
+    <link href="http://archive.covalent.net/xml/cocoon-users/2000/09/0618.xml">
+    simple servlet workaround</link> which should work for any browser;
+    however this is slightly less efficient because it requires a "servlet chain".</p>
+
+   <p>In the last resort, renaming all your xml files to end in .pdf and 
+    directing .pdf requests to Cocoon should always
+    work (Cocoon doesn't care what filename it's given).
+    Note that this is <em>not</em> a bug in Cocoon and is completely outside
     our control.</p>
 
    <note>There is a bug in MS Internet Explorer 5 which even ignores the 
@@ -468,7 +484,7 @@
   <question>Is there a way to fake the requesting
    UserAgent from my browser? That would make testing easier.</question>
   <answer>
-   <p>Yes - just append <code>?user-agent="xxx"</code> to your requested URI and
+   <p>Yes - just append <code>?user-agent=xxx</code> to your requested URI and
     Cocoon will ignore the userAgent description that your browser is sending and
     use the one you specified instead.</p>
   </answer>
@@ -487,11 +503,11 @@
     (thanks to James Vanetten for this list):</p>
 
    <ul>
-    <li>jndi.jar</li>
-    <li>ldap1_2_2/lib/ldap.jar</li>
-    <li>ldap1_2_2/lib/providerutil.jar</li>
-    <li>ldap1_2_2/lib/jaas.jar</li>
-    <li>ldap1_2_2/lib/ldapbp.jar</li>
+    <li><code>jndi.jar</code></li>
+    <li><code>ldap1_2_2/lib/ldap.jar</code></li>
+    <li><code>ldap1_2_2/lib/providerutil.jar</code></li>
+    <li><code>ldap1_2_2/lib/jaas.jar</code></li>
+    <li><code>ldap1_2_2/lib/ldapbp.jar</code></li>
    </ul>
 
    <note>If you built cocoon yourself, without the JNDI JAR on the classpath, you will
@@ -735,6 +751,19 @@
 </faqsection>
 
 <faqsection title="General">
+
+ <faq id="ejbs">
+  <question>How can EJBs be used with Cocoon</question>
+  <answer>
+   <p><em>(Thanks for Sebastien Sahuc for this answer.)</em> 
+    Using EJB in Cocoon is just a matter of setting the servlet environment 
+    to acts a a client EJB. So on one side you'll get your EJB server running 
+    and listening for upcoming request, and on the other side you start your 
+    Servlet Container with the right EJB client libraries so that whatever 
+    servlet (or Cocoon code through XSP page for instance) you write can 
+    contain EJB invocations.</p>
+  </answer>
+ </faq>
 
  <faq id="cocoon2">
   <question>When can we expect to see the first proper release of Cocoon 2?</question>
