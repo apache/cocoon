@@ -54,8 +54,8 @@ import org.apache.excalibur.source.SourceParameters;
 import org.apache.xpath.XPathAPI;
 import org.apache.excalibur.xml.xpath.NodeListImpl;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.apache.excalibur.xml.xpath.XPathUtil;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.xpath.XPathUtil;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -78,7 +78,7 @@ import javax.xml.transform.TransformerException;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.1 2003/03/09 00:09:48 pier Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.2 2003/03/12 15:05:17 bloritsch Exp $
 */
 public final class DOMUtil {
 

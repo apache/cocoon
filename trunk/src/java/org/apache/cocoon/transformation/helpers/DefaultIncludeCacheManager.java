@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.3 2003/03/12 15:05:17 bloritsch Exp $
  *  @since   2.1
  */
 public final class DefaultIncludeCacheManager
@@ -377,7 +377,7 @@ public final class DefaultIncludeCacheManager
                 serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
                 XMLTeePipe tee = new XMLTeePipe(handler, serializer);
                 
-                SourceUtil.toSAX(source, tee);
+                SourceUtil.toSAX(source, tee, manager);
                 
                 SourceValidity[] validities = new SourceValidity[1];
                 validities[0] = session.getExpiresValidity();
@@ -385,7 +385,7 @@ public final class DefaultIncludeCacheManager
                                                              (byte[])serializer.getSAXFragment());
                 session.getCacheStorageProxy().put(uri, response);
             } else {
-                SourceUtil.toSAX(source, handler);
+                SourceUtil.toSAX(source, handler, manager);
             }
             
         } catch (ProcessingException pe) {
@@ -464,7 +464,7 @@ final class LoaderThread implements Runnable {
     
     public void run() {
         try {
-            SourceUtil.toSAX(this.source, this.serializer);
+            SourceUtil.toSAX(this.source, this.serializer, this.manager);
             this.content = (byte[])this.serializer.getSAXFragment();
         } catch (Exception local) {
             this.exception = local;

@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.transformation.helpers;
+package org.apache.cocoon.generation;
 
 import java.io.IOException;
 
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * This is very usefull for caching tests.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PauseGenerator.java,v 1.1 2003/03/09 00:10:40 pier Exp $
+ *  @version CVS $Id: PauseGenerator.java,v 1.2 2003/03/12 15:02:17 bloritsch Exp $
  *  @since   2.1
  */
 public class PauseGenerator 

@@ -69,7 +69,7 @@ import org.apache.excalibur.source.SourceValidity;
  * and loads content into the cache.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoader.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: PreemptiveLoader.java,v 1.2 2003/03/12 15:05:17 bloritsch Exp $
  *  @since   2.1
  */
 public final class PreemptiveLoader {
@@ -155,7 +155,7 @@ public final class PreemptiveLoader {
                     source = resolver.resolveURI(uri);
                     serializer = (XMLSerializer)manager.lookup(XMLSerializer.ROLE);
                 
-                    SourceUtil.toSAX(source, serializer);
+                    SourceUtil.toSAX(source, serializer, manager);
                 
                     SourceValidity[] validities = new SourceValidity[1];
                     validities[0] = new ExpiresValidity(((Long)object[2]).longValue() * 1000); // milliseconds!
