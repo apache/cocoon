@@ -1013,7 +1013,7 @@
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/pluto-1.0.1-rc1.jar</lib>
+    <lib>portal/lib/pluto-1.0.1-rc2.jar</lib>
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
   
