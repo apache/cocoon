@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" 
- xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
- xmlns:n="http://www.betaversion.org/linotype/news/1.0"
- xmlns:h="http://www.w3.org/1999/xhtml"
- xmlns:dc="http://purl.org/dc/elements/1.1/"
->
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+                              xmlns:n="http://www.betaversion.org/linotype/news/1.0"
+                              xmlns:h="http://www.w3.org/1999/xhtml"
+                              xmlns:dc="http://purl.org/dc/elements/1.1/">
   
   <xsl:param name="home"/>
   <xsl:param name="count"/>
