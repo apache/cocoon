@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: SVGBuilder.java,v 1.1 2003/03/09 00:02:40 pier Exp $
+ * @version CVS $Id: SVGBuilder.java,v 1.2 2003/04/27 14:48:32 cziegeler Exp $
  */
 public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled {
     protected Logger log;
@@ -115,9 +115,11 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
             // this is a fix only ties svg to svg namespace uri
             // it is not as general as tieing any prefix to svg namespace uri
             namespaces.put("svg", SVGDOMImplementation.SVG_NAMESPACE_URI);
+        } catch (SAXException se) {
+            log.error("SVGBuilder: startDocument", se);
+            throw se;
         } catch (Exception ex){
             log.error("SVGBuilder: startDocument", ex);
-            ex.printStackTrace();
             throw new SAXException("SVGBuilder: startDocument", ex);
         }
     }
@@ -136,9 +138,11 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
             ((org.apache.batik.dom.svg.SVGOMDocument)this.document).setURLObject(new java.net.URL("http://xml.apache.org"));
 
             this.notify(this.document);
+        } catch (SAXException se) {
+            log.error("SVGBuilder: endDocument", se);
+            throw se;
         } catch (Exception ex){
             log.error("SVGBuilder: endDocument", ex);
-            ex.printStackTrace();
             throw new SAXException("SVGBuilder: endDocument", ex);
         }
     }
