@@ -102,7 +102,7 @@ import java.util.zip.ZipOutputStream;
  * </pre>
  * 
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.1 2003/03/09 00:09:37 pier Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.2 2003/05/08 05:05:22 vgritsenko Exp $
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -148,6 +148,12 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
 
     /** Used to collect namespaces */
     private NamespaceSupport nsSupport = new NamespaceSupport();
+
+    /**
+     * Store exception
+     */
+    private SAXException exception = null;
+
 
     /**
      * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
@@ -199,30 +205,37 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
      */
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
         throws SAXException {
+
+        // Damage control. Sometimes one exception is just not enough...
+        if (this.exception != null) {
+            throw this.exception;
+        }
+
         switch (state) {
-            case START_STATE :
+            case START_STATE:
                 // expecting "zip" as the first element
                 if (namespaceURI.equals(ZIP_NAMESPACE) && localName.equals("archive")) {
                     this.nsSupport.pushContext();
                     this.state = IN_ZIP_STATE;
                 } else {
-                    throw new SAXException(
-                        "Expecting 'archive' root element (got '" + localName + "')");
+                    throw this.exception =
+                        new SAXException("Expecting 'archive' root element (got '" + localName + "')");
                 }
                 break;
 
-            case IN_ZIP_STATE :
+            case IN_ZIP_STATE:
                 // expecting "entry" element
                 if (namespaceURI.equals(ZIP_NAMESPACE) && localName.equals("entry")) {
                     this.nsSupport.pushContext();
                     // Get the source
                     addEntry(atts);
                 } else {
-                    throw new SAXException("Expecting 'entry' element (got '" + localName + "')");
+                    throw this.exception =
+                        new SAXException("Expecting 'entry' element (got '" + localName + "')");
                 }
                 break;
 
-            case IN_CONTENT_STATE :
+            case IN_CONTENT_STATE:
                 this.contentDepth++;
                 super.startElement(namespaceURI, localName, qName, atts);
                 break;
@@ -248,20 +261,21 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
     protected void addEntry(Attributes atts) throws SAXException {
         String name = atts.getValue("name");
         if (name == null) {
-            throw new SAXException("No name given to the Zip entry");
+            throw this.exception =
+                new SAXException("No name given to the Zip entry");
         }
 
         String src = atts.getValue("src");
         String serializerType = atts.getValue("serializer");
 
         if (src == null && serializerType == null) {
-            throw new SAXException(
-                "No source nor serializer given for the Zip entry '" + name + "'");
+            throw this.exception =
+                new SAXException("No source nor serializer given for the Zip entry '" + name + "'");
         }
 
         if (src != null && serializerType != null) {
-            throw new SAXException(
-                "Cannot specify both 'src' and 'serializer' on a Zip entry '" + name + "'");
+            throw this.exception =
+                new SAXException("Cannot specify both 'src' and 'serializer' on a Zip entry '" + name + "'");
         }
 
         Source source = null;
@@ -302,7 +316,7 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
                 });
 
                 // Set it as the current XMLConsumer
-                this.setConsumer(serializer);
+                setConsumer(serializer);
 
                 // start its document
                 this.serializer.startDocument();
@@ -310,7 +324,6 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
                 // and give it any namespaces already declared
                 Enumeration prefixes = this.nsSupport.getPrefixes();
                 while (prefixes.hasMoreElements()) {
-
                     String prefix = (String) prefixes.nextElement();
                     super.startPrefixMapping(prefix, this.nsSupport.getURI(prefix));
                 }
@@ -322,9 +335,9 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
         } catch (RuntimeException re) {
             throw re;
         } catch (SAXException se) {
-            throw se;
+            throw this.exception = se;
         } catch (Exception e) {
-            throw new SAXException(e);
+            throw this.exception = new SAXException(e);
         } finally {
             this.resolver.release( source );
         }
@@ -335,6 +348,12 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
      */
     public void endElement(String namespaceURI, String localName, String qName)
         throws SAXException {
+
+        // Damage control. Sometimes one exception is just not enough...
+        if (this.exception != null) {
+            throw this.exception;
+        }
+
         if (state == IN_CONTENT_STATE) {
             super.endElement(namespaceURI, localName, qName);
             this.contentDepth--;
@@ -354,7 +373,7 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
                 try {
                     this.zipOutput.closeEntry();
                 } catch (IOException ioe) {
-                    throw new SAXException(ioe);
+                    throw this.exception = new SAXException(ioe);
                 }
 
                 super.setConsumer(null);
@@ -381,10 +400,12 @@ public class ZipArchiveSerializer extends AbstractSerializer implements Composab
             throw new SAXException(ioe);
         }
     }
+
     /**
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
+        this.exception = null;
         if (this.serializer != null) {
             this.selector.release(this.serializer);
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.4 2003/05/07 14:22:47 cziegeler Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.5 2003/05/08 05:05:22 vgritsenko Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -55,6 +55,12 @@
     Or sometimes you don't even have a display in front of you, so you want to
     hear your content, so here is a VoiceML representation of your content (you 
     need a VoiceML-capable agent to hear this).
+   </sample>
+  </group>
+
+  <group name="Hello Office!">
+   <sample name="OpenOffice Writer" href="hello.sxw">
+    This page shows how a simple XML page can be presented in OpenOffice Writer document format.
    </sample>
   </group>
   
