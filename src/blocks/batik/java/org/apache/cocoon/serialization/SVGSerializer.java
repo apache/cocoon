@@ -86,7 +86,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.8 2003/08/13 08:42:58 bruno Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.9 2003/10/09 15:26:54 sylvain Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -194,7 +194,7 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
                     value = new Color(Integer.parseInt(stringValue, 16));
                 } else {
                     // Assume String, and get the value. Allow an empty string.
-                    value = parameters[i].getValue("");
+                    value = parameters[i].getAttribute("value", "");
                 }
                 if(getLogger().isDebugEnabled()) {
                     getLogger().debug("Adding hint \"" + name + "\" with value \"" + value.toString() + "\"");
