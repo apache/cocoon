@@ -167,7 +167,7 @@
         <em>Property</em> <code>[String] id</code>
     </p>
     <p>
-       Returns this unique string identifier of this continuation
+       Returns the unique string identifier of this continuation
     </p>
     </s4>
     </s2>
