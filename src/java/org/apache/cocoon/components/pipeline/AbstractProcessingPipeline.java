@@ -475,10 +475,9 @@ public abstract class AbstractProcessingPipeline
             }
 
             return this.processReader(environment);
-        } else {
-            this.connectPipeline(environment);
-            return this.processXMLPipeline(environment);
         }
+        this.connectPipeline(environment);
+        return this.processXMLPipeline(environment);
     }
 
     /**
@@ -553,22 +552,7 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         try {
             this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
-            // Set the mime-type
-            // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
-            // MIME type declared in the sitemap (instance or declaration, in this order)
-            // Ask the Reader for a MIME type:
-            //     A *.doc reader could peek into the file
-            //     and return either text/plain or application/vnd.msword or
-            //     the reader can use MIME type declared in WEB-INF/web.xml or
-            //     by the server.
-            if ( this.readerMimeType != null ) {
-                environment.setContentType(this.readerMimeType);
-            } else {
-                final String mimeType = this.reader.getMimeType();
-                if (mimeType != null) {
-                    environment.setContentType(mimeType);
-                }
-            }
+
             // set the expires parameter on the pipeline if the reader is configured with one
             if (readerParam.isParameter("expires")) {
 	            // should this checking be done somewhere else??
@@ -583,6 +567,25 @@ public abstract class AbstractProcessingPipeline
         }
     }
 
+    protected void setMimeTypeForReader(Environment environment) {
+        // Set the mime-type
+        // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
+        // MIME type declared in the sitemap (instance or declaration, in this order)
+        // Ask the Reader for a MIME type:
+        //     A *.doc reader could peek into the file
+        //     and return either text/plain or application/vnd.msword or
+        //     the reader can use MIME type declared in WEB-INF/web.xml or
+        //     by the server.
+        if ( this.readerMimeType != null ) {
+            environment.setContentType(this.readerMimeType);
+        } else {
+            final String mimeType = this.reader.getMimeType();
+            if (mimeType != null) {
+                environment.setContentType(mimeType);
+            }
+        }        
+    }
+    
     protected boolean checkIfModified(Environment environment,
                                         long lastModified)
     throws ProcessingException {
@@ -602,6 +605,7 @@ public abstract class AbstractProcessingPipeline
     protected boolean processReader(Environment environment)
     throws ProcessingException {
         try {
+            this.setMimeTypeForReader(environment);
             if (this.reader.shouldSetContentLength()) {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 this.reader.setOutputStream(os);
@@ -673,10 +677,9 @@ public abstract class AbstractProcessingPipeline
         this.lastConsumer = consumer;
         if ( this.reader != null ) {
             throw new ProcessingException("Streaming of an internal pipeline is not possible with a reader.");
-        } else {
-            this.connectPipeline(environment);
-            return this.processXMLPipeline(environment);
         }
+        this.connectPipeline(environment);
+        return this.processXMLPipeline(environment);
     }
 
     /**

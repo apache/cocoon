@@ -699,6 +699,8 @@ public abstract class AbstractCachingProcessingPipeline
                                 usedCache = true;
                                 if ( cachedObject.getContentType() != null ) {
                                     environment.setContentType(cachedObject.getContentType());
+                                } else {
+                                    this.setMimeTypeForReader(environment);
                                 }
                                 outputStream = environment.getOutputStream(0);
                                 environment.setContentLength(response.length);
@@ -732,6 +734,7 @@ public abstract class AbstractCachingProcessingPipeline
                     }
                 }
 
+                this.setMimeTypeForReader(environment);
                 if (this.reader.shouldSetContentLength()) {
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     this.reader.setOutputStream(os);
