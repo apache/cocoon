@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:11:45 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-21 17:37:52 $
  */
 public class PhpGenerator extends ServletGenerator {
 
@@ -76,7 +76,7 @@ public class PhpGenerator extends ServletGenerator {
             try {
                 output.write(data.getBytes());
             } catch (IOException e) {
-                e.printStackTrace(System.err);
+                throw new RuntimeException(e.getMessage());
             }
         }
 

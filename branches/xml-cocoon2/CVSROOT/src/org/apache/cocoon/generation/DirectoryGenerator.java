@@ -5,6 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.generation;
 
 import java.io.File;
@@ -13,10 +14,12 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Dictionary;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
 import org.apache.avalon.utils.Parameters;
 
 /**
@@ -52,20 +55,24 @@ import org.apache.avalon.utils.Parameters;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:42 $ */
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-21 17:37:47 $ */
+ 
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI =
-	"http://apache.org/cocoon/2.0/DirectoryGenerator";
+    "http://apache.org/cocoon/2.0/directory";
+
+    /** The namespace prefix for this namespace. */
+    protected static final String PREFIX = "dir";
 
     /* Node and attribute names */
-    protected static final String DIR_NODE_NAME		= "directory";
-    protected static final String FILE_NODE_NAME		= "file";
+    protected static final String DIR_NODE_NAME         = "directory";
+    protected static final String FILE_NODE_NAME        = "file";
 
-    protected static final String FILENAME_ATTR_NAME	= "name";
-    protected static final String LASTMOD_ATTR_NAME	= "lastModified";
-    protected static final String DATE_ATTR_NAME		= "date";
+    protected static final String FILENAME_ATTR_NAME    = "name";
+    protected static final String LASTMOD_ATTR_NAME     = "lastModified";
+    protected static final String DATE_ATTR_NAME        = "date";
 
     /*
      * Variables set per-request
@@ -81,63 +88,61 @@ public class DirectoryGenerator extends ComposerGenerator {
      * Set the request parameters. Must be called before the generate
      * method.
      *
-     * @param	resolver
-     * 		the EntityResolver object
-     * @param	objectModel
-     * 		a <code>Dictionary</code> containing model object
-     * @param	src
-     * 		the URI for this request (?)
-     * @param	par
-     * 		configuration parameters
+     * @param   resolver
+     *      the EntityResolver object
+     * @param   objectModel
+     *      a <code>Dictionary</code> containing model object
+     * @param   src
+     *      the URI for this request (?)
+     * @param   par
+     *      configuration parameters
      */
     public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par) {
-	super.setup(resolver, objectModel, src, par);
-
-	String dateFormatString = par.getParameter("dateFormat", null);
-
-	if (dateFormatString != null) {
-	    this.dateFormatter = new SimpleDateFormat(dateFormatString);
-	} else {
-	    this.dateFormatter = new SimpleDateFormat();
-	}
-
-	this.depth = par.getParameterAsInteger("depth", 1);
-
-	/* Create a reusable attributes for creating nodes */
-	AttributesImpl attributes = new AttributesImpl();
+        super.setup(resolver, objectModel, src, par);
+    
+        String dateFormatString = par.getParameter("dateFormat", null);
+    
+        if (dateFormatString != null) {
+            this.dateFormatter = new SimpleDateFormat(dateFormatString);
+        } else {
+            this.dateFormatter = new SimpleDateFormat();
+        }
+    
+        this.depth = par.getParameterAsInteger("depth", 1);
+    
+        /* Create a reusable attributes for creating nodes */
+        AttributesImpl attributes = new AttributesImpl();
     }
-
 
     /**
      * Generate XML data.
      * 
-     * @throws	SAXException
-     * 		if an error occurs while outputting the document
-     * @throws	IOException
-     * 		if the requsted URI isn't a directory on the local
-     * 		filesystem
+     * @throws  SAXException
+     *      if an error occurs while outputting the document
+     * @throws  IOException
+     *      if the requsted URI isn't a directory on the local
+     *      filesystem
      */
     public void generate()
     throws SAXException, IOException {
 
         InputSource input;
-
-	URL url;
-	File path;
-
-	input = resolver.resolveEntity(null,super.source);
-        url = new URL(input.getSystemId());
-        path = new File(url.getFile());
-
-        if (!path.isDirectory()) {
-            throw new IOException("Cannot read directory from "
-				  + url.toString() + "\"");
-	}
+        URL url;
+        File path;
+    
+        input = resolver.resolveEntity(null,super.source);
+            url = new URL(input.getSystemId());
+            path = new File(url.getFile());
+    
+            if (!path.isDirectory()) {
+                throw new IOException("Cannot read directory from "
+                      + url.toString() + "\"");
+        }
 
         this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("",URI);
-	addPath(path, depth);
-        this.contentHandler.endPrefixMapping("");
+        this.contentHandler.startPrefixMapping(PREFIX,URI);
+        addPath(path, depth);
+        this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
 
     }
@@ -147,104 +152,90 @@ public class DirectoryGenerator extends ComposerGenerator {
      * directory, and depth is greater than zero, then recursive calls
      * are made to add nodes for the directory's children.
      *
-     * @param	path
-     * 		the file/directory to process
-     * @param	depth
-     * 		how deep to scan the directory
+     * @param   path
+     *      the file/directory to process
+     * @param   depth
+     *      how deep to scan the directory
      *
-     * @throws	SAXException
-     * 		if an error occurs while constructing nodes
+     * @throws  SAXException
+     *      if an error occurs while constructing nodes
      */
     protected void addPath(File path, int depth)
     throws SAXException {
-
-	if (path.isDirectory()) {
-
-	    startNode(DIR_NODE_NAME, path);
-
-	    if (depth>0) {
-		File contents[] = path.listFiles();
-
-		for (int i=0; i<contents.length; i++) {
-		    addPath(contents[i], depth-1);
-		}
-	    }
-
-	    endNode(DIR_NODE_NAME);
-
-	} else {
-
-	    startNode(FILE_NODE_NAME, path);
-	    endNode(FILE_NODE_NAME);
-
-	}
-
+        if (path.isDirectory()) {
+            startNode(DIR_NODE_NAME, path);
+            if (depth>0) {
+                File contents[] = path.listFiles();
+                for (int i=0; i<contents.length; i++) {
+                    addPath(contents[i], depth-1);
+                }
+            }
+            endNode(DIR_NODE_NAME);
+        } else {
+            startNode(FILE_NODE_NAME, path);
+            endNode(FILE_NODE_NAME);
+        }
     }
 
     /**
      * Begins a named node, and calls setNodeAttributes to set its
-	 * attributes.
+     * attributes.
      *
-     * @param	nodeName
-     * 		the name of the new node
-     * @param	path
-     * 		the file/directory to use when setting attributes
+     * @param   nodeName
+     *      the name of the new node
+     * @param   path
+     *      the file/directory to use when setting attributes
      * 
-     * @throws	SAXException
-     * 		if an error occurs while creating the node
+     * @throws  SAXException
+     *      if an error occurs while creating the node
      */
     protected void startNode(String nodeName, File path)
     throws SAXException {
-
-	setNodeAttributes(path);
-	super.contentHandler.startElement(URI, nodeName, nodeName, attributes);
+        setNodeAttributes(path);
+        super.contentHandler.startElement(URI, nodeName, nodeName, attributes);
     }
 
-	/**
-	 * Sets the attributes for a given path. The default method sets attributes 
-	 * for the name of thefile/directory and for the last modification time 
-	 * of the path.
-	 *
-	 * @param path
-	 *        the file/directory to use when setting attributes
-	 *
-	 * @throws SAXException
-	 *         if an error occurs while setting the attributes
-	 */
-	protected void setNodeAttributes(File path) throws SAXException {
-	
-	long lastModified = path.lastModified();
-	attributes.clear();
-	attributes.addAttribute("", FILENAME_ATTR_NAME,
-				FILENAME_ATTR_NAME, "CDATA",
-				path.getName());
-	attributes.addAttribute("", LASTMOD_ATTR_NAME,
-				LASTMOD_ATTR_NAME, "CDATA",
-				Long.toString(path.lastModified()));
-	attributes.addAttribute("", LASTMOD_ATTR_NAME,
-				LASTMOD_ATTR_NAME, "CDATA",
-				Long.toString(lastModified));
-	attributes.addAttribute("", DATE_ATTR_NAME,
-				DATE_ATTR_NAME, "CDATA",
-				dateFormatter.format(new Date(lastModified)));
-	
-	}
-
+    /**
+     * Sets the attributes for a given path. The default method sets attributes 
+     * for the name of thefile/directory and for the last modification time 
+     * of the path.
+     *
+     * @param path
+     *        the file/directory to use when setting attributes
+     *
+     * @throws SAXException
+     *         if an error occurs while setting the attributes
+     */
+    protected void setNodeAttributes(File path) throws SAXException {
+        long lastModified = path.lastModified();
+        attributes.clear();
+        attributes.addAttribute("", FILENAME_ATTR_NAME,
+                    FILENAME_ATTR_NAME, "CDATA",
+                    path.getName());
+        attributes.addAttribute("", LASTMOD_ATTR_NAME,
+                    LASTMOD_ATTR_NAME, "CDATA",
+                    Long.toString(path.lastModified()));
+        attributes.addAttribute("", LASTMOD_ATTR_NAME,
+                    LASTMOD_ATTR_NAME, "CDATA",
+                    Long.toString(lastModified));
+        attributes.addAttribute("", DATE_ATTR_NAME,
+                    DATE_ATTR_NAME, "CDATA",
+                    dateFormatter.format(new Date(lastModified)));
+    }
 
     /**
      * Ends the named node.
      *
-     * @param	nodeName
-     * 		the name of the new node
-     * @param	path
-     * 		the file/directory to use when setting attributes
+     * @param   nodeName
+     *      the name of the new node
+     * @param   path
+     *      the file/directory to use when setting attributes
      * 
-     * @throws	SAXException
-     * 		if an error occurs while closing the node
+     * @throws  SAXException
+     *      if an error occurs while closing the node
      */
     protected void endNode(String nodeName)
     throws SAXException {
-	super.contentHandler.endElement(URI, nodeName, nodeName);
+        super.contentHandler.endElement(URI, nodeName, nodeName);
     }
-
 }

@@ -33,7 +33,7 @@ import org.apache.cocoon.ProcessingException;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:46 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:37:52 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -120,7 +120,6 @@ public class ServerPagesGenerator
       generator = (Generator)
         programGenerator.load(file, markupLanguage, programmingLanguage, resolver);
     } catch (Exception e) {
-e.printStackTrace();
       throw new ProcessingException(e.getMessage());
     }
 

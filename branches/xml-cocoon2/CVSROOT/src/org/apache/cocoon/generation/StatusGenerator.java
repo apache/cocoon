@@ -8,8 +8,12 @@
 
 package org.apache.cocoon.generation;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.text.DateFormat;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -36,21 +40,24 @@ import org.xml.sax.ContentHandler;
  *     name CDATA #IMPLIED
  * &gt;
  *
- * &lt;!ELEMENT value (#PCDATA)&gt;
+ * &lt;!ELEMENT value (line)+&gt;
  * &lt;!ATTLIST value
  *     name CDATA #REQUIRED
+ *
+ * &lt;!ELEMENT line (#PCDATA)+&gt;
  * &gt;
  * </code>
  * 
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:34 $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-21 17:37:53 $
  */
 public class StatusGenerator extends ComposerGenerator {
 
 	/** The XML namespace for the output document.
 	 */
 	protected static final String namespace =
-		"http://apache.org/cocoon/status";
+		"http://apache.org/cocoon/2.0/status";
 
 	/** The XML namespace for xlink
 	 */
@@ -137,7 +144,13 @@ public class StatusGenerator extends ComposerGenerator {
 		endGroup(ch);
 		// END operating system
 		
-		addValue(ch, "classpath", System.getProperty("java.class.path"));
+		String classpath = System.getProperty("java.class.path");
+		List paths = new ArrayList();
+		StringTokenizer tokenizer = new StringTokenizer(classpath, System.getProperty("path.separator"));
+		while (tokenizer.hasMoreTokens()) {
+		    paths.add(tokenizer.nextToken());
+		}
+		addMultilineValue(ch, "classpath", paths);
 
 		// BEGIN OS info
 		endGroup(ch);
@@ -180,10 +193,43 @@ public class StatusGenerator extends ComposerGenerator {
 		}
 		ai.addAttribute(namespace, "name", "name", "CDATA", name);
 		ch.startElement(namespace, "value", "value", ai);
-		if ( value != null ) {
+		ch.startElement(namespace, "line", "line", new AttributesImpl());
+
+    	if ( value != null ) {
 			ch.characters(value.toCharArray(), 0, value.length());
 		}
+
+		ch.endElement(namespace, "line", "line");
 		ch.endElement(namespace, "value", "value");
+	}
+
+	/** Utility function to begin and end a <code>value</code> tag pair. */
+	private void addMultilineValue(ContentHandler ch, String name, List values) throws SAXException {
+		addMultilineValue(ch, name, values, null);
+	}
+	
+	/** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
+	private void addMultilineValue(ContentHandler ch, String name, List values, Attributes atts) throws SAXException {
+		AttributesImpl ai;
+		if ( atts == null ) {
+			ai = new AttributesImpl();
+		} else {
+			ai = new AttributesImpl(atts);
+		}
+		ai.addAttribute(namespace, "name", "name", "CDATA", name);
+		ch.startElement(namespace, "value", "value", ai);
+
+        for (int i = 0; i < values.size(); i++) {
+            String value = (String) values.get(i);
+    	    if ( value != null ) {
+        		ch.startElement(namespace, "line", "line", new AttributesImpl());
+			    ch.characters(value.toCharArray(), 0, value.length());
+        		ch.endElement(namespace, "line", "line");
+		    }
+		}
+
+		ch.endElement(namespace, "value", "value");
+	    
 	}
 }
  
