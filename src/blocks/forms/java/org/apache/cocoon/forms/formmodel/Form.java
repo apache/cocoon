@@ -33,7 +33,7 @@ import org.apache.commons.collections.list.CursorableLinkedList;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.16 2004/07/11 17:18:26 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class Form extends AbstractContainerWidget {
 
@@ -82,10 +82,10 @@ public class Form extends AbstractContainerWidget {
     }
 
     /**
-     * Fire the widget events that have been queued. Note that event handling can fire new
-     * events.
+     * Fire the events that have been queued.
+     * Note that event handling can fire new events.
      */
-    private void fireWidgetEvents() {
+    public void fireEvents() {
         if (this.events != null) {
             CursorableLinkedList.Cursor cursor = this.events.cursor();
             while(cursor.hasNext()) {
@@ -186,7 +186,7 @@ public class Form extends AbstractContainerWidget {
     public boolean process(FormContext formContext) {
 
         // Fire the binding phase events
-        fireWidgetEvents();
+        fireEvents();
 
         // setup processing
         this.submitWidget = null;
@@ -224,7 +224,7 @@ public class Form extends AbstractContainerWidget {
 
             // Fire events, still buffering them: this ensures they will be handled in the same
             // order as they were added.
-            fireWidgetEvents();
+            fireEvents();
         } finally {
             // No need for buffering in the following phases
             this.bufferEvents = false;

@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.18 2004/06/15 07:33:44 sylvain Exp $
+ * @version CVS $Id$
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -114,6 +114,9 @@ Form.prototype.showForm = function(uri, bizData) {
     if (this.validator != undefined) {
         throw "Forms do not support custom javascript validators anymore. Declare your validators in the form model file.";
     }
+
+    // Fire any events pending from binding, etc.
+    this.form.fireEvents();
 
     do {
         var k = cocoon.sendPageAndWait(uri, bizData);

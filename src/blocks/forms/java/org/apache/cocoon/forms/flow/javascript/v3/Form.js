@@ -83,6 +83,9 @@ Form.prototype.showForm = function(uri, viewData, fun, ttl) {
         viewData = new Object();
     viewData["CocoonFormsInstance"] = this.form;
 
+    // Fire any events pending from binding, etc.
+    this.form.fireEvents();
+
     var webCont;
     var finished = false;
     while (!finished) {

@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.event.*;
 
 /**
  * A discriminated union that references a discriminant value in another
@@ -59,6 +60,13 @@ public class Union extends AbstractContainerWidget {
             throw new RuntimeException("Could not find case widget \""
                 + caseWidgetId + "\" for union \"" + getId() + "\" at " + getLocation());
         }
+        ((ValueChangedListenerEnabled)caseWidget).addValueChangedListener(
+            new ValueChangedListener() {
+                public void valueChanged(ValueChangedEvent event) {
+                    Union.this.caseValue = (String)event.getNewValue();
+                }
+            }
+        );
     }
 
     /**

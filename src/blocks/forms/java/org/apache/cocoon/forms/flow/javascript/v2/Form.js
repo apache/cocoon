@@ -113,6 +113,10 @@ Form.prototype.showForm = function(uri, fun, ttl) {
     var FormContext = Packages.org.apache.cocoon.forms.FormContext;
     // this is needed by the FormTemplateTransformer:
     var javaWidget = this.formWidget_.unwrap();
+
+    // Fire any events pending from binding, etc.
+    javaWidget.fireEvents();
+
     this.formWidget_["CocoonFormsInstance"] = javaWidget;
     cocoon.request.setAttribute(Packages.org.apache.cocoon.forms.transformation.CFORMSKEY, javaWidget);
     var wk = cocoon.sendPageAndWait(uri, this.formWidget_, fun, ttl); 
