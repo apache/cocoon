@@ -60,6 +60,9 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
     
+    /** Optional application container */
+    private ComponentLocator applicationContainer;
+
     /**
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
@@ -120,7 +123,8 @@ public class SitemapLanguage extends DefaultTreeBuilder {
                 ContainerUtil.service(cl, newManager);
                 ContainerUtil.configure(cl, appContainer);
                 ContainerUtil.initialize(cl);
-                
+                this.applicationContainer = cl;
+
                 newManager = new ComponentManager(newManager, cl);
             }
         } finally {
@@ -176,6 +180,15 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         this.viewsNode = null;
         this.isBuildingView = false;
         this.isBuildingErrorHandler = false;
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        ContainerUtil.dispose(this.applicationContainer);
+        this.applicationContainer = null;
+        super.dispose();
     }
 
     /**
