@@ -8,14 +8,12 @@
 package org.apache.cocoon.parsers;
 
 import java.io.IOException;
-import org.apache.cocoon.XMLProducer;
-import org.apache.cocoon.XMLConsumer;
+import org.apache.cocoon.sax.XMLProducer;
+import org.apache.cocoon.sax.XMLConsumer;
 import org.apache.cocoon.dom.DocumentFactory;
-import org.apache.cocoon.framework.Configurable;
 import org.apache.cocoon.framework.Configurations;
 import org.apache.cocoon.framework.ConfigurationException;
 import org.apache.xerces.dom.DocumentImpl;
-import org.apache.xerces.dom.DocumentTypeImpl;
 import org.apache.xerces.parsers.SAXParser;
 import org.apache.xerces.utils.StringPool;
 import org.xml.sax.ErrorHandler;
@@ -23,6 +21,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 
 /**
  * The Apache Xerces parser and document factory.
@@ -31,7 +30,7 @@ import org.w3c.dom.Document;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:40 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-10 13:13:51 $
  */
 public class XercesFactory
 implements ParserFactory, DocumentFactory, ErrorHandler {
@@ -65,20 +64,29 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
         return(p);
     }
 
-    /**
-     * Return a new Document instance.
+    /** 
+     * Create a new Document object.
      */
     public Document newDocument() {
-        return(new DocumentImpl());
+        return(this.newDocument(null));
     }
 
-    /**
-     * Return a new Document instance.
+    /** 
+     * Create a new Document object with a specified DOCTYPE.
      */
     public Document newDocument(String name) {
-        if (name==null) return(this.newDocument());
+        return(this.newDocument(null,null,null));
+    }
+
+    /** 
+     * Create a new Document object with a specified DOCTYPE, public ID and 
+     * system ID.
+     */
+    public Document newDocument(String name, String publicId, String systemId) {
+        if (name==null) return(new DocumentImpl());
         DocumentImpl doc=new DocumentImpl();
-        DocumentTypeImpl doctype=new DocumentTypeImpl(doc,name);
+        DocumentType typ=doc.createDocumentType(name,publicId,systemId,"");
+        doc.appendChild(typ);
         return(doc);
     }
 
@@ -181,12 +189,19 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
         public void produce(XMLConsumer consumer)
         throws IOException, SAXException {
             this.parser.setFeature(
-                "http://xml.org/sax/features/validation",this.validationFlag);
+                "http://xml.org/sax/features/validation",
+                this.validationFlag);
             this.parser.setFeature(
                 "http://apache.org/xml/features/validation/dynamic",
                 this.dynamicValidationFlag);
+            this.parser.setProperty(
+                "http://xml.org/sax/properties/lexical-handler",
+                consumer);
+            this.parser.setFeature(
+                "http://xml.org/sax/features/namespaces",
+                true);
             this.parser.setErrorHandler(this.errorHandler);
-            this.parser.setDocumentHandler(consumer);
+            this.parser.setContentHandler(consumer);
             this.parser.parse(this.inputSource);
         }
     }
