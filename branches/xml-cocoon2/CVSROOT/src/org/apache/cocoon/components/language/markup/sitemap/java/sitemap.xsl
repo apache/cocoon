@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.81 2001-02-21 13:59:46 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.82 2001-02-26 16:36:16 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -889,7 +889,7 @@
 
   <!-- FIXME:(GP) is this still valid? -->
   <xsl:template match="map:param">
-    param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@map:value"/>");
+    param.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfMaps, "<xsl:value-of select="@map:value"/>"));
   </xsl:template>
 
   <!-- Sitemap Utility templates -->
