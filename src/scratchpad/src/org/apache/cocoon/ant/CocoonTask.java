@@ -75,7 +75,7 @@ import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.commandline.CommandlineContext;
+import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
 
 import org.apache.tools.ant.AntClassLoader;
@@ -90,7 +90,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.3 2003/05/12 13:26:17 stephan Exp $
  */
 public class CocoonTask extends Task {
 
@@ -606,7 +606,7 @@ public class CocoonTask extends Task {
             File contextDir = (File) this.ctx.get("context-root");
             File workDir = (File) this.ctx.get(Constants.CONTEXT_WORK_DIR);
 
-            CommandlineContext clContext = new CommandlineContext(contextDir.toString());
+            CommandLineContext clContext = new CommandLineContext(contextDir.toString());
             clContext.enableLogging(getLogger());
             this.ctx.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, clContext);
             this.ctx.put(Constants.CONTEXT_CLASSPATH, getClassPath(contextDir));

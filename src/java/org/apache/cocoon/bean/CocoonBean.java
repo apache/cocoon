@@ -64,7 +64,7 @@ import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.commandline.CommandlineContext;
+import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
 import org.apache.cocoon.bean.destination.Destination;
@@ -103,7 +103,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: CocoonBean.java,v 1.3 2003/03/28 12:55:42 nicolaken Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.4 2003/05/12 13:26:17 stephan Exp $
  */
 public class CocoonBean {
 
@@ -132,7 +132,7 @@ public class CocoonBean {
     private PrintWriter brokenLinkWriter;
 
     // Internal Objects
-    private CommandlineContext cliContext;
+    private CommandLineContext cliContext;
     private Cocoon cocoon;
     private Destination dest;
     private static Logger log;
@@ -174,7 +174,7 @@ public class CocoonBean {
         try {
             DefaultContext appContext = new DefaultContext();
             appContext.put(Constants.CONTEXT_CLASS_LOADER, Main.class.getClassLoader());
-            cliContext = new CommandlineContext(contextDir);
+            cliContext = new CommandLineContext(contextDir);
             cliContext.enableLogging(new LogKitLogger(log));
             appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
             DefaultLogKitManager logKitManager = null;

@@ -56,14 +56,14 @@ import junit.framework.TestCase;
 import junit.swingui.TestRunner;
 
 import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.cocoon.environment.commandline.CommandlineContext;
+import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.log.Priority;
 
 /**
  * A simple test case for CommandLineContext.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CommandLineContextTestCase.java,v 1.3 2003/03/16 18:03:56 vgritsenko Exp $
+ * @version CVS $Id: CommandLineContextTestCase.java,v 1.4 2003/05/12 13:26:18 stephan Exp $
  */
 public final class CommandLineContextTestCase
          extends TestCase
@@ -83,8 +83,8 @@ public final class CommandLineContextTestCase
      */
     protected Priority m_logPriority = Priority.INFO;
 
-    private String commandlineContextDir;
-    private CommandlineContext commandlineContext;
+    private String commandLineContextDir;
+    private CommandLineContext commandLineContext;
 
 
     /**
@@ -129,9 +129,9 @@ public final class CommandLineContextTestCase
      * @since
      */
     public void setUp() throws Exception {
-        commandlineContextDir = System.getProperty("java.io.tmpdir", "/tmp");
-        commandlineContext = new CommandlineContext(commandlineContextDir);
-        commandlineContext.enableLogging( new ConsoleLogger() );
+        commandLineContextDir = System.getProperty("java.io.tmpdir", "/tmp");
+        commandLineContext = new CommandLineContext(commandLineContextDir);
+        commandLineContext.enableLogging( new ConsoleLogger() );
     }
 
 
@@ -153,10 +153,10 @@ public final class CommandLineContextTestCase
     public void testGetResource() throws Exception {
 
         Object[] test_values = {
-                new String[]{"", commandlineContextDir},
-                new String[]{"/", commandlineContextDir},
-                new String[]{"foo", commandlineContextDir + File.separator + "foo"},
-                new String[]{"foo/bar", commandlineContextDir + File.separator + "foo/bar"}
+                new String[]{"", commandLineContextDir},
+                new String[]{"/", commandLineContextDir},
+                new String[]{"foo", commandLineContextDir + File.separator + "foo"},
+                new String[]{"foo/bar", commandLineContextDir + File.separator + "foo/bar"}
                 };
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
@@ -164,7 +164,7 @@ public final class CommandLineContextTestCase
             File expected_file = new File(tests[1]);
             URL expected = expected_file.toURL();
 
-            URL result = commandlineContext.getResource(test);
+            URL result = commandLineContext.getResource(test);
             String message = "Test " +
                     "'" + test + "'";
             assertEquals(message, expected, result);
@@ -189,10 +189,10 @@ public final class CommandLineContextTestCase
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
             String test = tests[0];
-            File expected_file = new File(commandlineContextDir, tests[1]);
+            File expected_file = new File(commandLineContextDir, tests[1]);
             String expected = expected_file.getAbsolutePath();
 
-            String result = commandlineContext.getRealPath(test);
+            String result = commandLineContext.getRealPath(test);
             String message = "Test " +
                     "'" + test + "'";
             assertEquals(message, expected, result);
@@ -223,13 +223,13 @@ public final class CommandLineContextTestCase
                     "'" + name + "'" + ", " + "'" + expected + "'";
             */
 
-            commandlineContext.setAttribute(name, expected);
+            commandLineContext.setAttribute(name, expected);
 
-            String result = (String) commandlineContext.getAttribute(name);
+            String result = (String) commandLineContext.getAttribute(name);
             assertEquals("Test " + "'" + "n" + "'", expected, result);
 
-            commandlineContext.removeAttribute(name);
-            result = (String) commandlineContext.getAttribute(name);
+            commandLineContext.removeAttribute(name);
+            result = (String) commandLineContext.getAttribute(name);
             assertEquals("Test " + "'" + "<null>" + "'", null, result);
         }
     }
