@@ -16,6 +16,15 @@
 -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:matchers default="wildcard">
+      <map:matcher logger="sitemap.matcher.header" name="filename" src="org.apache.cocoon.matching.modular.CachingRegexpMatcher">
+        <input-module name="request-param">
+           <parameter>filename</parameter>
+        </input-module>
+      </map:matcher>
+    </map:matchers>
+  </map:components>
 
 <!-- =========================== Views =================================== -->
 
@@ -96,7 +105,7 @@
 	<map:pipeline internal-only="true">
       <map:match pattern="view-source">
         <!-- colourize files that are known to be XML -->
-        <map:match type="regexp" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
+        <map:match type="filename" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
           <map:generate src="util/view-source.xsp" type="serverpages"/>
           <map:serialize/>
         </map:match>
