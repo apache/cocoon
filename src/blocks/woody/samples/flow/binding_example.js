@@ -58,7 +58,7 @@ cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody.js");
 // the form2 function is not directly called by the sitemap but by
 // a generic "woody" function that instantiates the form based on
 // parameters passed from the sitemap (see woody.js file)
-function form2(form, documentURI, bindingURI) {
+function form2xml(form, documentURI, bindingURI) {
     // document contains the document to be edited as a DOM tree
     // (loadDocument is an utility function that looks up the
     //  Avalon DOMParser component to parse the file)
@@ -88,6 +88,35 @@ function form2(form, documentURI, bindingURI) {
     saveDocument(document, makeTargetURI(documentURI));
 
     cocoon.sendPage("form2-success-pipeline");
+    form.finish();
+}
+
+// bean variant of the binding sample
+function form2bean(form, documentURI, bindingURI) {
+    var bean = new Packages.org.apache.cocoon.woody.samples.Form2Bean();
+
+    // fill bean with some data to avoid users having to type to much
+    bean.setEmail("yourname@yourdomain.com");
+    bean.setIpAddress("10.0.0.1");
+    bean.setPhoneCountry("32");
+    bean.setPhoneZone("2");
+    bean.setPhoneNumber("123456");
+    var contact = new Packages.org.apache.cocoon.woody.samples.Contact();
+    contact.setId("1");
+    contact.setFirstName("Herman");
+    bean.addContact(contact);
+
+    var binding = loadBinding(bindingURI);
+
+    binding.loadFormFromModel(form.form, bean);
+
+    form.show("form2-display-pipeline", formHandler);
+
+    binding.saveFormToModel(form.form, bean);
+
+    print(bean.toString());
+
+    cocoon.sendPage("form2bean-success-pipeline", { "form2bean": bean });
     form.finish();
 }
 
