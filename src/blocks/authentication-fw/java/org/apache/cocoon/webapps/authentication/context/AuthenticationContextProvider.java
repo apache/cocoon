@@ -48,58 +48,53 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.components;
+package org.apache.cocoon.webapps.authentication.context;
 
 import java.util.Map;
 
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.cocoon.webapps.session.context.SessionContext;
+import org.apache.cocoon.webapps.session.context.SessionContextProvider;
+import org.apache.excalibur.source.SourceResolver;
 
 
 /**
- * The authentication Handler.
+ *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Status.java,v 1.2 2003/04/27 09:42:42 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
 */
-public final class Status
-implements java.io.Serializable {
+public final class AuthenticationContextProvider
+implements SessionContextProvider {
 
-    private static final String KEY = Status.class.getName();
-    
-    /** The handlers */
-    private UserHandler handler;
-        
-    /** The application */
-    private String application;
-    
-    public static Status getCurrentStatus() {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        return (Status)objectModel.get(KEY);
-    }
-    
-    public static void setStatus(Status status) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        if ( status != null ) {
-            objectModel.put( KEY, status);
-        } else {
-            objectModel.remove( KEY );
-        }
-    }
-    
     /**
-     * Create a new handler object.
+     * Get the context
+     * @param name The name of the context
+     * @param objectModel The objectModel of the current request.
+     * @param resolver    The source resolver
+     * @param componentManager manager
+     * @return The context
+     * @throws ProcessingException If the context is not available.
      */
-    public Status(UserHandler handler, String app) {
-        this.handler = handler;
-        this.application = app;
+    public SessionContext getSessionContext(String           name,
+                                            Map              objectModel,
+                                            SourceResolver   resolver,
+                                            ComponentManager manager)
+    throws ProcessingException {
+        SessionContext context = null;
+        if (name.equals(org.apache.cocoon.webapps.authentication.AuthenticationConstants.SESSION_CONTEXT_NAME) ) {
+            RequestState state = RequestState.getState();
+            if ( null != state ) {
+                UserHandler handler = state.getHandler();
+                if ( handler != null ) {
+                    context = handler.getContext();
+                }
+            }
+        }
+        return context;
     }
 
-    public String getApplicationName() {
-        return this.application;
-    }
-    
-    public UserHandler getHandler() {
-        return this.handler;
-    }
-    
 }

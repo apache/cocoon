@@ -48,18 +48,20 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.components;
+package org.apache.cocoon.webapps.authentication.user;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The authentication Handler.
+ * The state of the user.
+ * This object holds all authentication handlers ({@link UserHandler}
+ * the user is currently logged-in to.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserStatus.java,v 1.1 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: UserState.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
 */
-public final class UserStatus
+public final class UserState
 implements java.io.Serializable {
 
     /** The handlers */
@@ -68,7 +70,7 @@ implements java.io.Serializable {
    /**
      * Create a new handler object.
      */
-    public UserStatus() {
+    public UserState() {
     }
 
     public void addHandler(UserHandler value) {
@@ -79,7 +81,11 @@ implements java.io.Serializable {
         this.handlers.remove( name );
     }
     
-    public UserHandler getUserHandler(String name) {
+    public UserHandler getHandler(String name) {
         return (UserHandler) this.handlers.get( name );
+    }
+    
+    public boolean hasHandler() {
+        return (this.handlers.size() > 0);
     }
 }

@@ -53,6 +53,8 @@ package org.apache.cocoon.webapps.authentication.components;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
@@ -68,19 +70,25 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
+import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
+import org.apache.cocoon.webapps.authentication.context.AuthenticationContextProvider;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.cocoon.webapps.authentication.user.UserState;
+import org.apache.cocoon.webapps.session.components.SessionManager;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceUtil;
-import org.w3c.dom.DocumentFragment;
 
 /**
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.4 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.5 2003/04/27 12:52:53 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractLogEnabled
-implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
+implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Component {
 
     /** The name of the session attribute storing the user status */
     public final static String SESSION_ATTRIBUTE_USER_STATUS = DefaultAuthenticationManager.class.getName() + "/UserStatus";
@@ -91,6 +99,24 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
     /** The Service Manager */
     private ServiceManager manager;
     
+    /** The authenticator used to authenticate a user */
+    private Authenticator authenticator;
+    
+    /** Init the class,
+     *  add the provider for the authentication context
+     */
+    static {
+        // add the provider for the authentication context
+        AuthenticationContextProvider contextProvider = new AuthenticationContextProvider();
+        // TODO
+/*        try {
+            // FIXME - this is static!!!
+            SessionManager.addSessionContextProvider(contextProvider, AuthenticationConstants.SESSION_CONTEXT_NAME);
+        } catch (ProcessingException local) {
+            throw new CascadingRuntimeException("Unable to register provider for authentication context.", local);
+        }*/
+    }
+
     /**
      * Set the sitemap configuration containing the handlers
      */
@@ -126,8 +152,8 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
 
     /**
      * Get the handler configuration
-     * @param name
-     * @return
+     * @param name The handler name
+     * @return The configuration or null.
      */
     private HandlerConfiguration getHandlerConfiguration(String name) 
     throws ProcessingException {   
@@ -148,34 +174,34 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
         return this.getRequest().getSession(create);
     }
     
-    private UserStatus getUserStatus() {
+    private UserState getUserState() {
         final Session session = this.getSession( false );
-        UserStatus status = null;
+        UserState status = null;
         if ( session != null) {
-            status = (UserStatus) session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
+            status = (UserState) session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
         }
         return status;
     }
 
-    private UserStatus createUserStatus() {
-        UserStatus status = this.getUserStatus();
+    private UserState createUserState() {
+        UserState status = this.getUserState();
         if ( status == null ) {
             final Session session = this.getSession(true);
-            status = new UserStatus();
+            status = new UserState();
             session.setAttribute(SESSION_ATTRIBUTE_USER_STATUS, status);
         }
         return status;
     }
     
     private UserHandler getUserHandler(String name) {
-        final UserStatus status = this.getUserStatus();
+        final UserState status = this.getUserState();
         if ( status != null ) {
-            return status.getUserHandler( name );
+            return status.getHandler( name );
         }
         return null;
     }
     
-    private void updateUserStatus() {
+    private void updateUserState() {
         final Session session = this.getSession(true);
         Object status = session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
         session.setAttribute(SESSION_ATTRIBUTE_USER_STATUS, status);
@@ -184,9 +210,9 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.webapps.authentication.components.Manager#authenticate(java.lang.String, java.lang.String, org.apache.excalibur.source.SourceParameters)
 	 */
-	public DocumentFragment authenticate(String handlerName,
-                                          String applicationName,
-                                          SourceParameters parameters)
+	public boolean login(String handlerName,
+                           String applicationName,
+                           SourceParameters parameters)
     throws ProcessingException {
         HandlerConfiguration config = this.getHandlerConfiguration( handlerName );
         if ( config == null ) {
@@ -198,16 +224,22 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
             throw new ProcessingException("User is already authenticated using handler: " + handlerName);
         }
         
-        // TODO Authentication
+        // This could be made pluggable, if required
+        handler = this.authenticator.authenticate( config, parameters );
         
-        // create UserStatus
-        final UserStatus status = this.createUserStatus();
-        handler = new UserHandler( config );
+        if ( handler != null ) {
+            // create UserStatus
+            final UserState status = this.createUserState();
         
-        status.addHandler( handler );        
-        this.updateUserStatus();
+            status.addHandler( handler );        
+            this.updateUserState();
         
- 		return null;
+            // update RequestState
+            RequestState state = new RequestState( handler, applicationName );
+            RequestState.setState( state );
+        }
+        
+ 		return (handler != null);
 	}
 
 	/* (non-Javadoc)
@@ -237,6 +269,10 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
             parameters.setSingleParameterValue("resource", resource);
             final String redirectURI = config.getRedirectURI();
             redirector.globalRedirect(false, SourceUtil.appendParameters(redirectURI, parameters));
+        } else {
+            // update state
+            RequestState state = new RequestState( handler, applicationName );
+            RequestState.setState( state );
         }
         
 		return authenticated;
@@ -263,22 +299,37 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
         UserHandler handler = this.getUserHandler( handlerName );
         // we don't throw an exception if we are already logged out!
         if ( handler != null ) {
-            UserStatus status = this.getUserStatus();
+            UserState status = this.getUserState();
             status.removeHandler( handlerName );
-            this.updateUserStatus();
-        }
-        
-        /*
-        if ( mode == AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY ) {
-            this.getSessionManager().terminateSession(true);
-        } else if (!this.handlerManager.hasUserHandler( this.request )) {
-            if (mode == AuthenticationConstants.LOGOUT_MODE_IF_UNUSED) {
-                this.getSessionManager().terminateSession(false);
-            } else {
-                this.getSessionManager().terminateSession(true);
+            this.updateUserState();
+
+            // handling of session termination
+            SessionManager sessionManager = null;
+            try {
+                sessionManager = (SessionManager)this.manager.lookup( SessionManager.ROLE );
+            
+                if ( mode == AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY ) {
+                    sessionManager.terminateSession(true);
+                } else if ( mode == AuthenticationConstants.LOGOUT_MODE_IF_UNUSED ) {
+                    if ( !status.hasHandler()) {
+                        sessionManager.terminateSession( false ); 
+                    }
+                 
+                } else if ( mode == AuthenticationConstants.LOGOUT_MODE_IF_NOT_AUTHENTICATED) {
+                    if ( !status.hasHandler()) {
+                        sessionManager.terminateSession( true ); 
+                    }
+                } else {
+                    throw new ProcessingException("Unknown logout mode: " + mode);
+                }
+            
+            } catch (ServiceException se) {
+                throw new ProcessingException("Unable to lookup session manager.", se);
+            } finally {
+                this.manager.release( sessionManager );
             }
         }
-        */
+        
 	}
 
 	/**
@@ -287,6 +338,20 @@ implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
 	public void service(ServiceManager manager) 
     throws ServiceException {
         this.manager = manager;
+        this.authenticator = new Authenticator();
+        this.authenticator.enableLogging( this.getLogger() );
+        this.authenticator.service( this.manager );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
+	 */
+	public void dispose() {
+		if ( this.authenticator != null ) {
+            this.authenticator.dispose();
+            this.authenticator = null;
+		}
+        this.manager = null;
 	}
 
 }

@@ -60,6 +60,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.webapps.authentication.configuration.*;
 import org.apache.excalibur.source.SourceResolver;
 
 
@@ -67,7 +68,7 @@ import org.apache.excalibur.source.SourceResolver;
  *  This is a utility class managing the authentication handlers
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultHandlerManager.java,v 1.2 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: DefaultHandlerManager.java,v 1.3 2003/04/27 12:52:53 cziegeler Exp $
 */
 public final class DefaultHandlerManager {
 

@@ -55,15 +55,17 @@ import java.io.IOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.SourceParameters;
-import org.w3c.dom.DocumentFragment;
 
 
 
 /**
- * This is the basis authentication component.
+ * This is the authentication manager.
+ * It is used to authenticate (login, logout) a user. Usually, this
+ * component should not be used from custom code. The provided
+ * actions perform all required tasks.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Manager.java,v 1.3 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: Manager.java,v 1.4 2003/04/27 12:52:53 cziegeler Exp $
 */
 public interface Manager {
 
@@ -72,12 +74,15 @@ public interface Manager {
 
     /**
      * Is the current user authenticated for the given handler?
+     * @return Returns true of the user is authenticated.
      */
     boolean isAuthenticated(String handlerName)
     throws ProcessingException;
 
     /**
      * Is the current user authenticated for the given handler?
+     * If the user is already authenticated, the {@link RequestState}
+     * is updated to the provided information (handler and application).
      */
     boolean checkAuthentication(Redirector redirector,
                                  String     handlerName,
@@ -85,16 +90,18 @@ public interface Manager {
     throws ProcessingException, IOException;
 
     /**
-     * Authenticate
-     * If the authentication is successful, <code>null</code> is returned.
-     * If not an element "failed" is return. If handler specific error
-     * information is available this is also returned.
+     * Try to login the user.
+     * If the authentication is successful, <code>true</code> is returned.
+     * If not, <code>false</code> is returned.
      */
-    DocumentFragment authenticate(String              handlerName,
-                                  String              applicationName,
-                                  SourceParameters    parameters)
+    boolean login(String              handlerName,
+                   String              applicationName,
+                   SourceParameters    parameters)
     throws ProcessingException;
 
+    /**
+     * Perform a logout of the user.
+     */
     void logout(String handlerName,
                  int mode)
     throws ProcessingException;

@@ -48,19 +48,17 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.components;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.apache.cocoon.webapps.authentication.user;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 
 /**
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.1 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -70,9 +68,6 @@ implements java.io.Serializable {
     
     /** Are all apps loaded? */
     private boolean appsLoaded = false;
-
-    /** The handler contexts */
-    private List handlerContexts = new ArrayList(2);
 
    /**
      * Create a new handler object.
@@ -98,28 +93,22 @@ implements java.io.Serializable {
     /**
      * Add a handler context
      */
-    public void addHandlerContext(SessionContext context) {
-        this.handlerContexts.add( context );
+    public SessionContext getContext() {
+        // TODO
+        return null;
     }
 
-    /**
-     * Get handler contexts
-     */
-    public List getHandlerContexts() {
-        return this.handlerContexts;
-    }
-
-    /**
-     * Clear handler contexts
-     */
-    public void clearHandlerContexts() {
-        this.handlerContexts.clear();
-    }
-    
     /**
      * Get the handler name
      */
     public String getHandlerName() {
         return this.handler.getName();
+    }
+    
+    /**
+     * Get the handler configuration
+     */
+    public HandlerConfiguration getHandlerConfiguration() {
+        return this.handler;
     }
 }

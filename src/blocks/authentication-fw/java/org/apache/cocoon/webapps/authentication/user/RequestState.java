@@ -48,33 +48,71 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication;
+package org.apache.cocoon.webapps.authentication.user;
+
+import java.util.Map;
+
+import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
+
 
 /**
- * The <code>Constants</code> used throughout the core of the authentication
- * framework.
+ * The state of the user for the current request.
+ * This object holds the information which handler and application
+ * is currently used for this request.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationConstants.java,v 1.2 2003/04/27 12:52:53 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: RequestState.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
 */
-public interface AuthenticationConstants {
+public final class RequestState
+implements java.io.Serializable {
 
-    /** The name of the session attribute storing the context */
-    String SESSION_ATTRIBUTE_CONTEXT_NAME = "org.apache.cocoon.webapps.authentication.SessionContext";
-
-    /** The name of the authentication context. */
-    String SESSION_CONTEXT_NAME = "authentication";
-
-    /** Logout mode: session is terminated immediately */
-    int LOGOUT_MODE_IMMEDIATELY = 0;
+    private static final String KEY = RequestState.class.getName();
     
-    /** Logout mode: session is terminated if not used anymore (by the 
-     * session or the authentication framework */
-    int LOGOUT_MODE_IF_UNUSED = 1;
+    /** The handlers */
+    private UserHandler handler;
+        
+    /** The application */
+    private String application;
+    
+    public static RequestState getState() {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        return (RequestState)objectModel.get(KEY);
+    }
+    
+    public static void setState(RequestState status) {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        if ( status != null ) {
+            objectModel.put( KEY, status);
+        } else {
+            objectModel.remove( KEY );
+        }
+    }
+    
+    /**
+     * Create a new handler object.
+     */
+    public RequestState(UserHandler handler, String app) {
+        this.handler = handler;
+        this.application = app;
+    }
 
-    /** Logout mode: session is terminated if the user is not authenticated
-     * to any handler anymore. */
-    int LOGOUT_MODE_IF_NOT_AUTHENTICATED = 2;
+    public String getApplicationName() {
+        return this.application;
+    }
+    
+    public UserHandler getHandler() {
+        return this.handler;
+    }
+    
+    public String getHandlerName() {
+        return this.handler.getHandlerName();
+    }
+    
+    public ApplicationConfiguration getApplicationConfiguration() {
+        if ( this.application != null ) {
+            return (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get(this.application);
+        }
+        return null;
+    }
 }
-
-
