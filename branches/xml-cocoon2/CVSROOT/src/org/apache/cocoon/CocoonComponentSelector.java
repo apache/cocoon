@@ -43,7 +43,7 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-02-28 17:40:24 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-01 15:45:26 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;
@@ -225,6 +225,7 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
 
         if ( pool == null ) {
             try {
+                log.debug("Creating new pool for:" + componentClass);
                 ComponentFactory cf = new ComponentFactory(componentClass, (Configuration)configurations.get(hint), this.manager, this.context);
                 cf.setLogger(this.log);
 
@@ -263,6 +264,8 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
 
             if (pool != null) {
                 pool.put((Poolable) component);
+            } else {
+                log.debug("Could not find pool for:" + component.getClass());
             }
         } else if (component instanceof Recyclable) {
             ((Recyclable) component).recycle();

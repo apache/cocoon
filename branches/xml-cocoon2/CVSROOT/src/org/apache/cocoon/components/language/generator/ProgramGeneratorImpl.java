@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-02-22 19:07:41 $
+ * @version CVS $Revision: 1.1.2.38 $ $Date: 2001-03-01 15:45:33 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -152,7 +152,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
 
         // Attempt to load program object from cache
         try {
-            programInstance = (CompiledComponent) this.cache.select(normalizedName);
+            programInstance = (CompiledComponent) select(normalizedName);
         } catch (Exception e) {
             getLogger().debug("The instance was not accessible, creating it now.");
         }
@@ -165,7 +165,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             }
 
             try {
-                programInstance = (CompiledComponent) this.cache.select(normalizedName);
+                programInstance = (CompiledComponent) select(normalizedName);
             } catch (Exception cme) {
                 getLogger().debug("Can't load ServerPage", cme);
             }
@@ -183,22 +183,29 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
          */
 
         if (programInstance != null && programInstance.modifiedSince(file.lastModified())) {
+            // Release the component.            
+            release(programInstance);
+
             // Unload program
             programmingLanguage.unload(program, normalizedName, this.workDir);
+            
             // Invalidate previous program/instance pair
             program = null;
             programInstance = null;
         }
 
         if (programInstance == null) {
-            program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
+            if (program == null) {
+                program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
+            }
+            // Instantiate
+            programInstance = (CompiledComponent) select(normalizedName);
         }
 
         this.markupSelector.release((Component) markupLanguage);
         this.languageSelector.release((Component) programmingLanguage);
 
-        // Instantiate
-        return (CompiledComponent) this.cache.select(normalizedName);
+        return programInstance;
     }
 
     private Class generateResource(File file,
@@ -227,7 +234,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
 
         if (markupLanguage.getClass().getName().equals(SitemapMarkupLanguage.class.getName())) {
             try {
-                this.cache.select("sitemap");
+                select("sitemap");
             } catch (Exception e) {
                 // If the root sitemap has not been compiled, add an alias here.
                 this.cache.addGenerator("sitemap", program);
@@ -235,6 +242,12 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         }
 
         return program;
+    }
+
+    public CompiledComponent select(String componentName) 
+        throws Exception {
+        CompiledComponent component = (CompiledComponent)this.cache.select(componentName);
+        return component;
     }
 
     public void release(CompiledComponent component) {
