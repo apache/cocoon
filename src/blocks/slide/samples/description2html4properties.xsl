@@ -150,12 +150,11 @@
                <td align="right">
                 <xsl:if test="namespace-uri()!='DAV:' and ../@type='live'">
                  <form action="" method="post">
-                  <input type="hidden" name="method" value="doDeleteProperty"/>
                   <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
                   <input type="hidden" name="cocoon-source-property-namespace" value="{namespace-uri()}"/>
                   <input type="hidden" name="cocoon-source-property-name" value="{local-name()}"/>
   
-                  <input type="submit" name="cocoon-action-deleteproperty" value="Delete"/>
+                  <input type="submit" name="doDeleteProperty" value="Delete"/>
                  </form>
                 </xsl:if>
                </td>
@@ -164,7 +163,6 @@
 
              <tr>
               <form action="" method="post">
-               <input type="hidden" name="method" value="doAddProperty"/>
                <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
                 <td align="left">
                  <input name="cocoon-source-property-namespace" type="text" size="15" maxlength="40"/>
@@ -176,7 +174,7 @@
                  <input name="cocoon-source-property-value" type="text" size="15" maxlength="40"/>
                 </td>
                 <td align="right">
-                 <input type="submit" name="cocoon-action-addproperty" value="Add/Modify"/>
+                 <input type="submit" name="doAddProperty" value="Add/Modify"/>
                 </td>
                </form>
               </tr>

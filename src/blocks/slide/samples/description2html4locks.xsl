@@ -149,11 +149,10 @@
                 <td align="left"><xsl:value-of select="@exclusive"/></td>
                 <td align="right">
                  <form action="" method="post">
-                  <input type="hidden" name="method" value="doDeleteLock"/>
                   <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
                   <input type="hidden" name="cocoon-lock-subject" value="{@subject}"/>
 
-                  <input type="submit" name="cocoon-action-deletelock" value="Delete"/>
+                  <input type="submit" name="doDeleteLock" value="Delete"/>
                  </form>
                 </td>
                </tr>
@@ -161,7 +160,6 @@
 
               <tr>
                <form action="" method="post">
-                <input type="hidden" name="method" value="doAddLock"/>
                 <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
                 <td align="left">
                  <input name="cocoon-lock-subject" type="text" size="20" maxlength="40"/>
@@ -185,7 +183,7 @@
                  </select>
                 </td>
                 <td align="right">
-                 <input type="submit" name="cocoon-action-addlock" value="Add/Modify"/>
+                 <input type="submit" name="doAddLock" value="Add/Modify"/>
                 </td>
                </form>
               </tr>

@@ -93,15 +93,14 @@
                <tr>
   
                 <form action="" method="post">
-                <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
-                <input type="hidden" name="method" value="doRemovePrincipal"/>
+                 <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
  
                  <td align="left">
                   <xsl:value-of select="@name"/>
                  </td>
  
                  <td align="left">
-                  <input type="submit" name="cocoon-action-deleteprincipal" value="Delete user"/>
+                  <input type="submit" name="doRemovePrincipal" value="Delete user"/>
                  </td>
  
                 </form>
@@ -109,8 +108,7 @@
                 <td align="left"><xsl:value-of select="@role"/></td>
  
                 <form action="" method="post">
-                <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
-                <input type="hidden" name="method" value="doRemovePrincipalGroupMember"/>
+                 <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
  
                  <td align="left">
                   <xsl:variable name="name" select="@name"/>
@@ -123,7 +121,7 @@
                  </td>
  
                  <td align="left">
-                  <input type="submit" name="cocoon-action-removemember" value="Remove group"/>
+                  <input type="submit" name="doRemovePrincipalGroupMember" value="Remove group"/>
                  </td>
                 </form>
  
@@ -136,7 +134,6 @@
  
                 <form action="" method="post">
                 <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
-                <input type="hidden" name="method" value="doAddPrincipalGroupMember"/>
  
                  <td align="left">
                   <xsl:variable name="name" select="@name"/>
@@ -148,7 +145,7 @@
                  </td>
  
                  <td align="left">
-                  <input type="submit" name="cocoon-action-addmember" value="Add group"/>
+                  <input type="submit" name="doAddPrincipalGroupMember" value="Add group"/>
                  </td>
                 </form>
  
@@ -157,7 +154,6 @@
  
               <tr>
                <form action="" method="post">
-                <input type="hidden" name="method" value="doAddPrincipal"/>
                 <td align="left">
                  <input name="cocoon-principal-name" type="text" size="10" maxlength="40"/>
                 </td>
@@ -170,7 +166,7 @@
                  <input name="cocoon-principal-password" type="text" size="10" maxlength="40"/>
                 </td>
                 <td align="right">
-                 <input type="submit" name="cocoon-action-addprincipal" value="Add user"/>
+                 <input type="submit" name="doAddPrincipal" value="Add user"/>
                 </td>
                </form>
               </tr>
@@ -217,14 +213,13 @@
 
                 <form action="" method="post">
                  <input type="hidden" name="cocoon-principal-group-name" value="{@name}"/>
-                 <input type="hidden" name="method" value="doRemovePrincipalGroup"/>
  
                  <td align="left">
                   <xsl:value-of select="@name"/>
                  </td>
 
                  <td align="right">
-                  <input type="submit" name="cocoon-action-deletegroup" value="Delete group"/>
+                  <input type="submit" name="doRemovePrincipalGroup" value="Delete group"/>
                  </td>
 
                 </form>
@@ -233,12 +228,11 @@
 
               <tr>
                <form action="" method="post">
-                <input type="hidden" name="method" value="doAddPrincipalGroup"/>
                 <td align="left">
                  <input name="cocoon-principal-group-name" type="text" size="15" maxlength="40"/>
                 </td>
                 <td align="right">
-                 <input type="submit" name="cocoon-action-addgroup" value="Add group"/>
+                 <input type="submit" name="doAddPrincipalGroup" value="Add group"/>
                 </td>
                </form>
               </tr>

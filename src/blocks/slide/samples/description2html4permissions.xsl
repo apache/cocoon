@@ -148,7 +148,6 @@
                 <td align="left"><xsl:value-of select="@negative"/></td>
                 <td align="right">
                  <form action="" method="post">
-                  <input type="hidden" name="method" value="doRemovePrincipalPermission"/>
                   <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
                   <input type="hidden" name="cocoon-source-permission-principal" value="{@principal}"/>
                   <input type="hidden" name="cocoon-source-permission-privilege" value="{@privilege}"/>
@@ -163,7 +162,6 @@
 
               <tr>
                <form action="" method="post">
-                <input type="hidden" name="method" value="doAddPrincipalPermission"/>
                 <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
                 <td align="left">
                  <select name="cocoon-source-permission-principal">
@@ -258,7 +256,6 @@
                <td align="left"><xsl:value-of select="@negative"/></td>
                <td align="right">
                 <form action="" method="post">
-                 <input type="hidden" name="method" value="doRemovePrincipalGroupPermission"/>
                  <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
                  <input type="hidden" name="cocoon-source-permission-principal-group" value="{@group}"/>
                  <input type="hidden" name="cocoon-source-permission-privilege" value="{@privilege}"/>
@@ -273,7 +270,6 @@
 
              <tr>
               <form action="" method="post">
-               <input type="hidden" name="method" value="doAddPrincipalGroupPermission"/>
                <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
                <td align="left">
                 <select name="cocoon-source-permission-principal-group">
