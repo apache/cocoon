@@ -79,7 +79,7 @@ import org.apache.avalon.excalibur.logger.LogKitManageable;
  * To be moved to Avalon ?
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LifecycleHelper.java,v 1.4 2003/07/28 18:26:01 cziegeler Exp $
+ * @version CVS $Id: LifecycleHelper.java,v 1.5 2003/09/04 15:24:01 mpo Exp $
  */
 
 // FIXME : need to handle also LogEnabled.
@@ -115,7 +115,9 @@ public class LifecycleHelper {
 
     /**
      * Construct a new <code>LifecycleHelper</code> that can be used repeatedly to
-     * setup several components. <b>Note</b> : if a parameter is <code>null</code>,
+     * setup several components. 
+     * <p>
+     * <b>Note</b> : if a parameter is <code>null</code>,
      * the corresponding method isn't called (e.g. if <code>configuration</code> is
      * <code>null</code>, <code>configure()</code> isn't called).
      *
@@ -132,18 +134,14 @@ public class LifecycleHelper {
                             final RoleManager roles,
                             final LogKitManager logkit,
                             final Configuration configuration) {
-        m_logger = logger;
-        m_context = context;
-        m_componentManager = componentManager;
-        m_roles = roles;
-        m_logkit = logkit;
-        m_configuration = configuration;
-        m_serviceManager = null;
+        this(logger, context, null, componentManager, roles, logkit, configuration);
     }
 
     /**
      * Construct a new <code>LifecycleHelper</code> that can be used repeatedly to
-     * setup several components. <b>Note</b> : if a parameter is <code>null</code>,
+     * setup several components. 
+     * <p>
+     * <b>Note</b> : if a parameter is <code>null</code>,
      * the corresponding method isn't called (e.g. if <code>configuration</code> is
      * <code>null</code>, <code>configure()</code> isn't called).
      *
@@ -160,14 +158,41 @@ public class LifecycleHelper {
                             final RoleManager roles,
                             final LogKitManager logkit,
                             final Configuration configuration) {
+        this(logger, context, serviceManager, null, roles, logkit, configuration);
+    }
+
+    /**
+     * Construct a new <code>LifecycleHelper</code> that can be used repeatedly to
+     * setup several components. 
+     * <p>
+     * <b>Note</b> : if a parameter is <code>null</code>,
+     * the corresponding method isn't called (e.g. if <code>configuration</code> is
+     * <code>null</code>, <code>configure()</code> isn't called).
+     *
+     * @param logger the <code>Logger</code> to pass to <code>LogEnabled</code>s, unless there is
+     *        a <code>LogKitManager</code> and the configuration specifies a logger name.
+     * @param context the <code>Context</code> to pass to <code>Contexutalizable</code>s.
+     * @param serviceManager the service manager to pass to <code>Serviceable</code>s.
+     * @param componentManager the component manager to pass to <code>Composable</code>s.
+     * @param roles the <code>RoleManager</code> to pass to <code>DefaultComponentSelector</code>s.
+     * @param configuration the <code>Configuration</code> object to pass to new instances.
+     */
+    public LifecycleHelper(final Logger logger,
+                            final Context context,
+                            final ServiceManager serviceManager,
+                            final ComponentManager componentManager,
+                            final RoleManager roles,
+                            final LogKitManager logkit,
+                            final Configuration configuration) {
         m_logger = logger;
         m_context = context;
         m_serviceManager = serviceManager;
+        m_componentManager = componentManager;
         m_roles = roles;
         m_logkit = logkit;
         m_configuration = configuration;
-        m_componentManager = null;
     }
+
 
     /**
      * Setup a component, including initialization and start.
@@ -243,7 +268,6 @@ public class LifecycleHelper {
             logger,
             context,
             serviceManager,
-            null,
             roles,
             logkit,
             configuration,
@@ -275,7 +299,35 @@ public class LifecycleHelper {
             initializeAndStart);
     }
 
-    static Object setupComponent(final Object component,
+    /**
+     * Alternative setupComponent method that takes a ServiceManager instead of a ComponentManger.
+     */
+    public static Object setupComponent(final Object component,
+                                         final Logger logger,
+                                         final Context context,
+                                         final ServiceManager serviceManager,
+                                         final RoleManager roles,
+                                         final LogKitManager logkit,
+                                         final Configuration configuration,
+                                         final boolean initializeAndStart)
+    throws Exception {
+        return setupComponent(
+            component,
+            logger,
+            context,
+            serviceManager,
+            null,
+            roles,
+            logkit,
+            configuration,
+            initializeAndStart);
+    }
+
+    /**
+     * Static equivalent to {@link #setupComponent(Object, boolean)}, to be used when there's only one
+     * component to setup.
+     */
+    public static Object setupComponent(final Object component,
                                  final Logger logger,
                                  final Context context,
                                  final ServiceManager serviceManager,
@@ -309,13 +361,14 @@ public class LifecycleHelper {
             ((Contextualizable) component).contextualize(context);
         }
 
-        if (null != serviceManager && component instanceof Serviceable) {
-            ((Serviceable) component).service(serviceManager);
-        } else if (
-            null != componentManager && component instanceof Composable) {
+        if (null != componentManager && component instanceof Composable) {
             ((Composable) component).compose(componentManager);
         }
 
+        if (null != serviceManager && component instanceof Serviceable) {
+            ((Serviceable) component).service(serviceManager);
+        } 
+        
         if (null != roles && component instanceof RoleManageable) {
             ((RoleManageable) component).setRoleManager(roles);
         }
