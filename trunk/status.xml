@@ -191,6 +191,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="fix" fixes-bug="17612">
+   Delaying getting of the output stream from the http response until it is really needed.
+  </action>
+  <action dev="CZ" type="add">
+    Adding new portal framework.
+  </action>
   <action dev="BRD" type="update">
     Updated Xalan to a CVS snapshot (2003-05-06), fixes bug with incorrect
     namespaces in endElement SAX events.
