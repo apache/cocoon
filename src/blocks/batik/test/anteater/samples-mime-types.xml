@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Tests the basic functionality of the Batik samples by checking
+    their content-type: if a sample gives an error instead of
+    generating an image, its content-type will be text/html.
+
+    @author bdelacretaz@apache.org
+
+    $Id: samples-mime-types.xml,v 1.1 2004/02/07 11:14:42 bdelacretaz Exp $
+ -->
+
+<project name="batik-samples-mime-types" default="batik-samples-mime-types">
+
+    <group id="default">
+        <property name="usetidy" value="false"/>
+    </group>
+
+    <target name="batik-samples-mime-types">
+        <property name="baseUrl" value="${cocoon}/samples/batik"/>
+
+        <httpRequest href="${baseUrl}/batikLogo.svg">
+            <match>
+                <header name="Content-type" value="image/svg+xml"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/batikLogo.jpg">
+            <match>
+                <header name="Content-type" value="image/jpg"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/batikLogo.png">
+            <match>
+                <header name="Content-type" value="image/png"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/henryV.svg">
+            <match>
+                <header name="Content-type" value="image/svg+xml"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/henryV.jpg">
+            <match>
+                <header name="Content-type" value="image/jpg"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/henryV.png">
+            <match>
+                <header name="Content-type" value="image/png"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/anne.svg">
+            <match>
+                <header name="Content-type" value="image/svg+xml"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/anne.jpg">
+            <match>
+                <header name="Content-type" value="image/jpg"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/anne.png">
+            <match>
+                <header name="Content-type" value="image/png"/>
+            </match>
+        </httpRequest>
+
+    </target>
+
+</project>
