@@ -1,7 +1,7 @@
 /*
- * $Header: /home/cvs/cocoon-2.1/legal/Attic/commons-digester-1.3.jar.license.txt,v 1.1 2004/03/04 08:08:51 cziegeler Exp $
+ * $Header: /home/cvs/cocoon-2.1/legal/commons-digester-1.5.jar.license.txt,v 1.1 2004/07/04 07:10:06 antonio Exp $
  * $Revision: 1.1 $
- * $Date: 2004/03/04 08:08:51 $
+ * $Date: 2004/07/04 07:10:06 $
  *
  * ====================================================================
  *
