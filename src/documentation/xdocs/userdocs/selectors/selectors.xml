@@ -42,7 +42,7 @@
       statements. By extension, consider selectors to have all
       the power of an &quot;if-else if-else&quot; or &quot;switch-case&quot; constructs.
       The selector syntax should be familiar to anyone who
-      uses XSLT's <code>&lt;xsl:test&gt;</code> statement.
+      uses XSLT's <code>&lt;xsl:choose&gt;</code> statement.
       </p>
       <p>
       As an example, consider the typical scenario in which a page should
