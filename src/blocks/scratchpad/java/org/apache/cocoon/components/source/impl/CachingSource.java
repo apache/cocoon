@@ -209,14 +209,7 @@ implements Source, Serviceable, Initializable, XMLizable {
         boolean storeResponse = false;
         CachedSourceResponse response = this.response;
         if (response == null) {
-            SourceValidity[] validities;
-            if (this.cache instanceof EventAware) {
-                validities = new SourceValidity[] { new EventValidity(new NamedEvent(this.source.getURI())) };
-            }
-            else {
-                validities = new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() };
-            }
-            response = new CachedSourceResponse(validities);
+            response = new CachedSourceResponse(getCacheValidities());
             storeResponse = true;
         }
         if (response.getExtra() == null) {
@@ -244,7 +237,7 @@ implements Source, Serviceable, Initializable, XMLizable {
         /* delay caching the response until we have a valid new one */
         CachedSourceResponse response = this.response;
         if (response == null) {
-            response = new CachedSourceResponse(new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity()});
+            response = new CachedSourceResponse(getCacheValidities());
             storeResponse = true;
         }
         if (response.getBinaryResponse() == null) {
@@ -279,7 +272,7 @@ implements Source, Serviceable, Initializable, XMLizable {
         /* delay caching the response until we have a valid new one */
         CachedSourceResponse response = this.response;
         if (response == null) {
-            response = new CachedSourceResponse(new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() });
+            response = new CachedSourceResponse(getCacheValidities());
             storeResponse = true;
         }
         if (response.getXMLResponse() == null || refresh) {
@@ -621,7 +614,19 @@ implements Source, Serviceable, Initializable, XMLizable {
         }
         return valid;
     }
-    
+
+    private SourceValidity[] getCacheValidities() {
+        if (this.cache instanceof EventAware) {
+            // use event caching strategy, the associated event is the source uri
+            return new SourceValidity[] { new EventValidity(new NamedEvent(this.source.getURI())) };
+        }
+        else {
+            // we need to store both the cache expiration and the original source validity
+            // the former is to determine whether to recheck the latter (see checkValidity)
+            return new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() };
+        }
+    }
+
     private static boolean isValid(SourceValidity oldValidity, SourceValidity newValidity) {
         return (oldValidity.isValid() == SourceValidity.VALID ||
                 (oldValidity.isValid() == SourceValidity.UNKNOWN &&
