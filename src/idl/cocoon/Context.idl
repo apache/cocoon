@@ -57,34 +57,9 @@
 
 /**
  * <p>
- *   The <code>Script</code> object represents the instance of the script
- *   currently executed by the <b>Cocoon Flow Layer</b>.
- * </p>
- * <p>
- *   When a Cocoon sitemap contains an entry like <code>&lt;map:call
- *  function="myFunction"/&gt;</code>, the flow engine will invoke the
- *  <code>myFunction</code> function in a user-defined subclass of this
- *  interface.
- * </p>
- * <p>
- *   For example, using the JavaScript flow, attributes and operations of
- *   this instance can be retrieved, set or called prefixing them with the
- *   keyword <code>this.</code>, or without any prefix, as in JavaScript
- *   the current script defines also <b>Global</b> attributes and operations.
+ *   <b>(TODO)</b> The <code>Context</code> object.
  * </p>
  */
-interface Script {
-
-    /**
-     * The current <b>Cocoon</b> instance associated with this script.
-     * <i>(suggested by Stefano Mazzocchi)</i>
-     */
-    readonly attribute cocoon::Cocoon cocoon;
-
-    /**
-     * The current <b>Log</b> instance used for logging from this script.
-     * <i>(suggested by Sylvain Wallez)</i>.
-     */
-    readonly attribute cocoon::Log log;
+interface Context {
 
 };

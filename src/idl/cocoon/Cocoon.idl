@@ -54,37 +54,65 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
-
 /**
  * <p>
- *   The <code>Script</code> object represents the instance of the script
- *   currently executed by the <b>Cocoon Flow Layer</b>.
- * </p>
- * <p>
- *   When a Cocoon sitemap contains an entry like <code>&lt;map:call
- *  function="myFunction"/&gt;</code>, the flow engine will invoke the
- *  <code>myFunction</code> function in a user-defined subclass of this
- *  interface.
- * </p>
- * <p>
- *   For example, using the JavaScript flow, attributes and operations of
- *   this instance can be retrieved, set or called prefixing them with the
- *   keyword <code>this.</code>, or without any prefix, as in JavaScript
- *   the current script defines also <b>Global</b> attributes and operations.
+ *   The <code>Cocoon</code> interface defines the main Cocoon liaison
+ *   available to flow scripts.
  * </p>
  */
-interface Script {
+interface Cocoon {
 
     /**
-     * The current <b>Cocoon</b> instance associated with this script.
-     * <i>(suggested by Stefano Mazzocchi)</i>
-     */
-    readonly attribute cocoon::Cocoon cocoon;
-
-    /**
-     * The current <b>Log</b> instance used for logging from this script.
-     * <i>(suggested by Sylvain Wallez)</i>.
+     * The current <b>Log</b> instance used for logging.
+     * <i>(suggested by Jeremy Quinn)</i>.
      */
     readonly attribute cocoon::Log log;
 
+    /**
+     * The current <b>Request</b> instance associated with this script.
+     * <i>(suggested by Stefano Mazzocchi)</i>
+     */
+    readonly attribute cocoon::Request request;
+
+    /**
+     * The current <b>Context</b> instance.
+     * <i>(suggested by Stefano Mazzocchi)</i>
+     * <p><b>NOTE: &quot;<code>context</code>&quot; is a reserved word in
+     * IDL (at least it seems so). This name has been mangled accordingly
+     * to allow IDLDoc to produce the documentation.</b></p>
+     */
+    readonly attribute cocoon::Context contxt;
+
+    /**
+     * <p>
+     *   Passes control to the Cocoon sitemap to generate the output page.
+     * </p>
+     * <p>
+     *   TODO: What happens when the control returns to a script which (for
+     *   example) calls again <code>sendPage(AndWait)</code>???
+     * </p>
+     *
+     * @param uri the relative URL of the page to be sent back to the client.
+     * @param bean a context object which can be accessed inside this page to
+     *             extract various values and place them in the generated page.
+     */
+    void sendPage(in string url, in Object bean)
+    raises (java::Exception);
+
+    /**
+     * <p>
+     *   Passes control to the Cocoon sitemap to generate the output page,
+     *   interrupting the execution until another request comes in.
+     * </p>
+     * <p>
+     *   The flow script is suspended after the page is generated and the
+     *   whole execution stack saved in a continuation.
+     * </p>
+     *
+     * @param uri the relative URL of the page to be sent back to the client.
+     * @param bean a context object which can be accessed inside this page to
+     *             extract various values and place them in the generated page.
+     */
+    void sendPageAndWait(in string url, in Object bean)
+    raises (java::Exception);
 };

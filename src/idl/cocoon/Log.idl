@@ -57,34 +57,31 @@
 
 /**
  * <p>
- *   The <code>Script</code> object represents the instance of the script
- *   currently executed by the <b>Cocoon Flow Layer</b>.
- * </p>
- * <p>
- *   When a Cocoon sitemap contains an entry like <code>&lt;map:call
- *  function="myFunction"/&gt;</code>, the flow engine will invoke the
- *  <code>myFunction</code> function in a user-defined subclass of this
- *  interface.
- * </p>
- * <p>
- *   For example, using the JavaScript flow, attributes and operations of
- *   this instance can be retrieved, set or called prefixing them with the
- *   keyword <code>this.</code>, or without any prefix, as in JavaScript
- *   the current script defines also <b>Global</b> attributes and operations.
+ *   The <code>Log</code> interface defines a way for flow scripts to report
+ *   messages and errors to the Cocoon logging facility.
  * </p>
  */
-interface Script {
+interface Log {
 
     /**
-     * The current <b>Cocoon</b> instance associated with this script.
-     * <i>(suggested by Stefano Mazzocchi)</i>
+     * Log an informative message.
+     *
+     * @param message The message to log.
      */
-    readonly attribute cocoon::Cocoon cocoon;
+    void info (in string message);
 
     /**
-     * The current <b>Log</b> instance used for logging from this script.
-     * <i>(suggested by Sylvain Wallez)</i>.
+     * Log an error message.
+     *
+     * @param message The message to log.
      */
-    readonly attribute cocoon::Log log;
+    void error (in string message);
+
+    /**
+     * Log a debug message.
+     *
+     * @param message The message to log.
+     */
+    void debug (in string message);
 
 };

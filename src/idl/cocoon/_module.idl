@@ -55,18 +55,26 @@
  * ------------------------------------------------------------------------- */
 
 /**
- * The <b>flow</b> module defines the object model used by the <b>Flow</b>
+ * The <b>cocoon</b> module defines the object model used by the <b>Flow</b>
  * system available on <b>Apache Cocoon 2.1</b>.
  */
-module flow {
+module cocoon {
 
     // Interfaces definitions.
+    interface Cocoon;
+    interface Context;
+    interface Log;
+    interface Request;
     interface Script;
 
     // Interfaces inclusions.
-    #include "cocoon/flow/Script.idl"
+    #include "cocoon/Cocoon.idl"
+    #include "cocoon/Context.idl"
+    #include "cocoon/Log.idl"
+    #include "cocoon/Request.idl"
+    #include "cocoon/Script.idl"
 
     // Sub-modules inclusions.
-    #include "cocoon/flow/javascript/_module.idl"
+    //#include "cocoon/javascript/_module.idl"
 
 };
