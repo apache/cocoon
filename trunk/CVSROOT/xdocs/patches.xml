@@ -76,13 +76,6 @@
     <td>1.7.1-dev</td>
    </tr>
    <tr>
-    <td>Unknown, 2000</td>
-    <td>session.xsl</td>
-    <td>JSDK2.0/2.1 HttpSession objects removeValue() method doesn't have a tag. +more...</td>
-    <td>Corey O'Donovan</td>
-    <td>1.?</td>
-   </tr>
-   <tr>
     <td>28 Oct 2000</td>
     <td><link href="http://mailman.real-time.com/pipermail/cocoon-devel/2000-October/003029.html">
      resource URL: handling</link></td>

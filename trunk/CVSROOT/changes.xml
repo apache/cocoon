@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.159 2000-12-01 23:36:43 greenrd Exp $ 
+  $Id: changes.xml,v 1.160 2000-12-08 12:48:28 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Corey O'Donovan" 
+   due-to-email="od@feersumendjinns.com">
+   Added removeValue template and remove duplicate putValue template from session taglib,
+   which should now be complete.
+  </action>
   <action dev="RDG" type="add" due-to="Donald Ball" due-to-email="balld@webslingerZ.com">
    Passed extra parameters to style- and logic- sheets - XSP-ENVIRONMENT
    ("Cocoon @version@") and XSP-VERSION (1.0)

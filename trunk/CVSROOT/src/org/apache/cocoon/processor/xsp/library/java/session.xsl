@@ -130,6 +130,18 @@
       );
     </xsp:logic>
   </xsl:template>
+ 
+  <xsl:template match="session:remove-value">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsp:logic>
+      session.removeValue(
+        String.valueOf(<xsl:copy-of select="$name"/>)
+      );
+    </xsp:logic>
+  </xsl:template>
   <!-- End deprecated methods -->
 
   <xsl:template match="session:get-attribute">
@@ -333,25 +345,6 @@
 
     <xsp:logic>
       session.setAttribute(
-        String.valueOf(<xsl:copy-of select="$name"/>),
-        <xsl:copy-of select="$content"/>
-      );
-    </xsp:logic>
-  </xsl:template>
-
-  <xsl:template match="session:put-value">
-    <xsl:variable name="name">
-      <xsl:call-template name="value-for-name"/>
-    </xsl:variable>
-
-    <xsl:variable name="content">
-      <xsl:call-template name="get-nested-content">
-        <xsl:with-param name="content" select="."/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsp:logic>
-      session.putValue(
         String.valueOf(<xsl:copy-of select="$name"/>),
         <xsl:copy-of select="$content"/>
       );
