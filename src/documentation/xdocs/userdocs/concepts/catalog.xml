@@ -112,16 +112,16 @@
   <p>
    The following article eloquently describes the need for all parsers and
    XML frameworks to be capable of utilising entity resolvers.
-   "<link href="http://www.arbortext.com/Think_Tank/XML_Resources/Issue_Three/issue_three.html">If You Can Name It, You Can Claim It!</link>"
-   by Norman Walsh. Please read that document, then return here to apply
-   entity catalogs to Cocoon.
+   "<link href="http://xml.apache.org/commons/components/resolver/">XML Entity
+   and URI Resolvers</link>" by Norman Walsh. Please read that document,
+   then return here to apply entity catalogs to Cocoon.
   </p>
 
   <p>
-   (Note: That article (and Java classes) evolved to become the
-   <code>resolver.zip</code> Java package that has been added to Cocoon
-   - a more recent version of the article is available at the XML Commons site
-   (see below). The API javadocs for <code>resolver</code> have further information.
+   (Note: The <link href="http://xml.apache.org/commons/">Apache XML
+   Commons</link> project provides the Java package that has been added to
+   Cocoon as the <code>lib/core/resolver.jar</code> package. There are also
+   API javadocs for <code>resolver</code> that have further information.
    However, you do not need to know the gory details to understand catalogs
    and configure them.)
   </p>
@@ -642,8 +642,10 @@ PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN"
    <li>
     The Apache project
     <link href="http://xml.apache.org/commons/">XML Commons</link> provides the
-    &quot;XML Entity and URI Resolvers Java classes&quot; and evolution
-    of the Arbortext article.
+    entity resolver Java classes (which are used in Cocoon) and evolution of
+    the Arbortext article into
+    <link href="http://xml.apache.org/commons/components/resolver/">XML
+    Entity and URI Resolvers</link>.
    </li>
    <li>XML-Deviant article 2000-11-29
     <link href="http://www.xml.com/pub/a/2000/11/29/deviant.html">What's in
