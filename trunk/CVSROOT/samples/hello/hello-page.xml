@@ -7,6 +7,6 @@
 <page>
  <title>Hello</title>
  <content>
-  <paragraph>This is my first Cocoon file!</paragraph>
+  <paragraph>This is my first Cocoon page!</paragraph>
  </content>
 </page>

@@ -6,6 +6,12 @@
 
   <xsl:import href="../hello/hello-page-html.xsl"/>
   
+  <xsl:template match="page">
+   <html>
+    <xsl:apply-templates/>
+   </html>
+  </xsl:template>
+  
   <xsl:template match="paragraph">
    <p align="left">
     <b>
