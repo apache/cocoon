@@ -13,7 +13,7 @@
    <content>
 
    <esql:connection>
-     <esql:use-connection>personnel</esql:use-connection/>
+     <esql:pool>personnel</esql:pool>
      <esql:execute-query>
        <esql:query>select * from department_table</esql:query>
        <esql:results>
