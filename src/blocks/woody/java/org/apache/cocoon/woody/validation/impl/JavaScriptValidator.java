@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.util.JavaScriptHelper;
@@ -36,7 +35,7 @@ import org.mozilla.javascript.Function;
  * flowscript, can use the flow's global values and fonctions and the <code>cocoon</code> object.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptValidator.java,v 1.5 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: JavaScriptValidator.java,v 1.6 2004/04/30 22:52:43 joerg Exp $
  */
 public class JavaScriptValidator implements WidgetValidator {
     

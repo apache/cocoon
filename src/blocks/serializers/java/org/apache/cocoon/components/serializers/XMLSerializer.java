@@ -17,7 +17,6 @@ package org.apache.cocoon.components.serializers;
 
 import java.io.CharArrayWriter;
 
-import org.apache.cocoon.components.serializers.encoding.Encoder;
 import org.apache.cocoon.components.serializers.encoding.XMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.apache.cocoon.components.serializers.util.Namespaces;
@@ -27,7 +26,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.3 2004/04/30 19:34:46 pier Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.4 2004/04/30 22:52:43 joerg Exp $
  */
 public class XMLSerializer extends EncodingSerializer {
 

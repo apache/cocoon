@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.util.JavaScriptHelper;
 import org.apache.commons.jxpath.JXPathContext;
@@ -31,7 +29,7 @@ import org.mozilla.javascript.Script;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.12 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.13 2004/04/30 22:52:43 joerg Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
