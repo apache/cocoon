@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.69 2003/07/12 19:34:19 coliver Exp $
+  CVS $Id: gump.xml,v 1.70 2003/07/14 02:52:25 ghoward Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -918,6 +918,26 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/webdav-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-eventcache" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="eventcache"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/eventcache/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/eventcache-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
