@@ -352,7 +352,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      session.setInactiveInterval(
+      session.setMaxInactiveInterval(
         Integer.parseInt(
           String.valueOf(
             <xsl:copy-of select="$interval"/>
