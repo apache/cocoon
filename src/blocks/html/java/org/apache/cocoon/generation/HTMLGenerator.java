@@ -73,6 +73,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.PostInputStream;
@@ -92,7 +94,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.6 2003/08/09 18:21:49 cziegeler Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.7 2003/09/03 12:54:54 cziegeler Exp $
  */
 public class HTMLGenerator extends ComposerGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -172,8 +174,8 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
-
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        
         if (src == null) {
             // Handle this request as the StreamGenerator does (from the POST
             // request or from a request parameter), but try to make sure
@@ -201,9 +203,13 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 contentType.startsWith("text/xml") ||
                 contentType.startsWith("application/xml")) {
 
+                HttpServletRequest httpRequest = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+                if ( httpRequest == null ) {
+                    throw new ProcessingException("This functionality only works in an http environment.");
+                }
                 int len = request.getContentLength();
                 if (len > 0) {
-                    requestStream = new PostInputStream(request.getInputStream(), len);
+                    requestStream = new PostInputStream(httpRequest.getInputStream(), len);
                 } else {
                     throw new IOException("getContentLen() == 0");
                 }
