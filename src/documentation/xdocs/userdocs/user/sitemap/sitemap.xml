@@ -22,7 +22,7 @@
     </p>
 
     <note>
-     See the <link href="../index.html">User documentation</link>
+     See the <link href="../preface.html">User documentation</link>
      for details about configuration of each sitemap component.
      See the <link href="sitemap-examples.html">Example sitemap snippets</link>.
      Explore each <code>sitemap.xmap</code> in the distribution, to see
