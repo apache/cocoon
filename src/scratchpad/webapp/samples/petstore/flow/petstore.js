@@ -48,6 +48,10 @@
 
 var MAX_RESULTS = 5;
 
+var VIEW = "Velocity";
+var EXT = ".vm";
+
+
 function Yoshi() {
 }
 
@@ -88,13 +92,26 @@ function getPetStore() {
     return petStore;
 }
 
+function setView() {
+    VIEW = cocoon.request.get("view");
+    print("setView: VIEW="+VIEW);
+    if (VIEW == "Velocity") {
+	EXT = ".vm";
+    } else if (VIEW == "Xsp") {
+	EXT = ".xsp";
+    }
+    print("EXT="+EXT);
+}
+
 // Index page
 
 function index() {
+    setView();
     getPetStore();
-    sendPage("/view/index.html", {
+    sendPage("/view/index" + EXT, {
+             view: VIEW,
              accountForm: accountForm,
-             categoryList: categoryList
+             categoryList: categoryList,
     });
 }
 
@@ -106,7 +123,8 @@ function viewCart() {
         var cartItem = cartForm.cart.cartItems[i];
         cartItems.push(cartItem);
     }
-    sendPage("/view/Cart.html", {
+    sendPage("/view/Cart" + EXT, {
+             view: VIEW,
              accountForm: accountForm, 
              cartForm: cartForm, 
              yoshi: yoshi,
@@ -124,7 +142,8 @@ function removeItemFromCart() {
         var cartItem = cartForm.cart.cartItems[i];
         cartItems.push(cartItem);
     }
-    sendPage("/view/Cart.html", {
+    sendPage("/view/Cart" + EXT, {
+             view: VIEW,
              yoshi: yoshi, 
              accountForm: accountForm, 
                         cartForm: cartForm, cartItems: cartItems
@@ -140,7 +159,8 @@ function updateCartQuantities() {
         cartItem.updateQuantity(quantity);
         cartItems.push(cartItem);
     }
-    sendPage("/view/Cart.html", {
+    sendPage("/view/Cart" + EXT, {
+             view: VIEW,
              yoshi: yoshi, 
              accountForm: accountForm, 
              cartForm:cartForm,
@@ -157,7 +177,8 @@ function addItemToCart() {
         var cartItem = cartForm.cart.cartItems[i];
         cartItems.push(cartItem);
     }
-    sendPage("/view/Cart.html", {
+    sendPage("/view/Cart" + EXT, {
+             view: VIEW,
              yoshi: yoshi, 
              accountForm: accountForm, 
              cartForm:cartForm, 
@@ -180,7 +201,7 @@ function viewCategory() {
                                                    maxResults);
         var lastPage = !productList.isLimitedByMaxRows;
         var rowCount = productList.rowCount;
-        sendPageAndWait("/view/Category.html", {
+        sendPageAndWait("/view/Category" + EXT, {
                         accountForm: accountForm, 
                         productList: productList.rows, 
                         category: category, 
@@ -224,7 +245,8 @@ function viewProduct() {
             getPetStore().getItemListByProduct(productId,
                                                skipResults, 
                                                maxResults);
-        sendPageAndWait("/view/Product.html", {
+        sendPageAndWait("/view/Product" + EXT, {
+                        view: VIEW,
                         accountForm: accountForm, 
                         yoshi: yoshi,
                         product: product,
@@ -250,7 +272,8 @@ function viewProduct() {
 function viewItem() {
     var itemId = cocoon.request.getParameter("itemId");
     var item = getPetStore().getItem(itemId);
-    sendPage("/view/Item.html", {
+    sendPage("/view/Item" + EXT, {
+             view: VIEW,
              accountForm: accountForm, 
              cartForm: cartForm, 
              item: item, 
@@ -275,7 +298,8 @@ function signOn() {
     } else {
         var message = "";
         while (true) {
-            sendPageAndWait("/view/SignonForm.html", {
+            sendPageAndWait("/view/SignonForm" + EXT, {
+                            view: VIEW,
                             accountForm: accountForm, 
                             message: message
             });
@@ -301,7 +325,8 @@ function newAccountForm() {
     print("new account");
     var accountForm = new AccountForm();
     var account = new Account();
-    sendPageAndWait("/view/NewAccountForm.html", {
+    sendPageAndWait("/view/NewAccountForm" + EXT, {
+                     view: VIEW,
                      accountForm: accountForm,
                      account: account,
                      categoryList: categoryList
@@ -312,7 +337,7 @@ function editAccountForm() {
     if (accountForm.signOn) {
         newAccountForm();
     } else {
-        sendPageAndWait("/view/EditAccountForm.html", {
+        sendPageAndWait("/view/EditAccountForm" + EXT, {
                         accountForm: accountForm,
                         account: accountForm.account,
                         categoryList: categoryList
@@ -325,7 +350,8 @@ function editAccountForm() {
 function searchProducts() {
     var keyword = cocoon.request.get("keyword");
     if (keyword == null || keyword == "") {
-        sendPage("/view/Error.html", {
+        sendPage("/view/Error" + EXT, {
+           view: VIEW,
            message: "Please enter a keyword to search for, then press the search button"
         });
         return;
@@ -336,7 +362,8 @@ function searchProducts() {
         var result = 
             getPetStore().searchProductList(keyword, skipResults,
                                             maxResults);
-        sendPageAndWait("/view/SearchProducts.html", {
+        sendPageAndWait("/view/SearchProducts" + EXT, {
+                        view: VIEW,
                         searchResultsProductList: result.rows,
                         firstPage: skipResults == 0,
                         lastPage: !result.isLimitedByMaxRows
@@ -362,7 +389,8 @@ function checkout() {
         var cartItem = cartForm.cart.cartItems[i];
         cartItems.push(cartItem);
     }
-    sendPageAndWait("/view/Checkout.html", {
+    sendPageAndWait("/view/Checkout" + EXT, {
+                    view: VIEW,
                     accountForm: accountForm,
                     cartForm: cartForm, 
 		    yoshi: yoshi,
@@ -376,25 +404,26 @@ function checkout() {
     var order = orderForm.order;
     var valid = false;
     while (!valid) {
-        sendPageAndWait("/view/NewOrderForm.html", { 
+        sendPageAndWait("/view/NewOrderForm" + EXT, { 
+                        view: VIEW,
                         yoshi: yoshi,
                         creditCardTypes: ["Visa", "MasterCard", "American Express"],
                         order: order});
         var shippingAddressRequired = cocoon.request.get("shippingAddressRequired");
         if (shippingAddressRequired) {
-            sendPageAndWait("/view/ShippingForm.html",
+            sendPageAndWait("/view/ShippingForm" + EXT,
                             {order: order, yoshi: yoshi});
         }
         // fix me !! do real validation
         valid = true;
     }
-    sendPageAndWait("/view/ConfirmOrder.html",
-                    {order: order, yoshi: yoshi});
+    sendPageAndWait("/view/ConfirmOrder" + EXT,
+                    {view: VIEW, order: order, yoshi: yoshi});
     
     var oldCartForm = cartForm;
     cartForm = new CartForm();
-    sendPage("/view/ViewOrder.html",
-             {order: order, itemList: order.lineItems, yoshi: yoshi});
+    sendPage("/view/ViewOrder" + EXT,
+             {view: VIEW, order: order, itemList: order.lineItems, yoshi: yoshi});
 }
 
 function listOrders() {

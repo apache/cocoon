@@ -18,7 +18,13 @@
                     <tbody>
                         <tr>
                             <td>
-                                <a href="index.do"><img border="0" src="images/logo-topbar.gif" /></a>
+                               <form method="post" action="index.do">
+                                 <input type="image" border="0" src="images/logo-topbar.gif" />
+                                   <select name="view" width="14" align="left" value="Xsp">
+                                      <option value="Xsp">Xsp</option>
+                                      <option value="Velocity">Velocity</option>
+                                   </select>
+                               </form>
                             </td>
                             <td align="right">
                                 <a href="viewCart.do"><img border="0" name="img_cart" src="images/cart.gif" /></a><img border="0" src="images/separator.gif" hspace="4" />
