@@ -104,9 +104,10 @@ public interface ThreadPool
     int getPriority(  );
 
     /**
-     * Current size of the queue
+     * Current size of the queue.
      *
-     * @return current size of queue
+     * @return current size of queue. If the size of the queue is not
+     *         maintained by an implementation -1 should be returned.
      */
     int getQueueSize(  );
 
