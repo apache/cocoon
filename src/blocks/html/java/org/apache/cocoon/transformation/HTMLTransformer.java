@@ -240,7 +240,7 @@ public class HTMLTransformer
         this.tags = new HashMap();
         StringTokenizer tokenizer = new StringTokenizer(tagsParam, ",");
         while (tokenizer.hasMoreElements()) {
-            String tok = tokenizer.nextToken();
+            String tok = tokenizer.nextToken().trim();
             this.tags.put(tok, tok);
         }
     }
