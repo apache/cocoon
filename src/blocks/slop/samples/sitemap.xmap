@@ -35,6 +35,11 @@
             <map:read mime-type="text/plain" src="{1}.txt"/>
         </map:match>
 
+        <!-- more samples -->
+        <map:match pattern="*/**">
+           <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+         </map:match>
+
     </map:pipeline>
 
   </map:pipelines>
