@@ -60,9 +60,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
@@ -74,7 +74,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.17 2003/10/15 18:03:52 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.18 2003/10/19 14:02:47 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -107,8 +107,8 @@ public abstract class AbstractEnvironment
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver sourceResolver;
 
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The service manager */
+    protected ServiceManager manager;
 
     /** The attributes */
     private Map attributes = new HashMap();
@@ -458,7 +458,7 @@ public abstract class AbstractEnvironment
                 }
                 this.tempInitContext = null;
             }
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             // this should never happen!
             throw new CascadingRuntimeException("Unable to lookup component.", ce);
         } catch (IOException ie) {
