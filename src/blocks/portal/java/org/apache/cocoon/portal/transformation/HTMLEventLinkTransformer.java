@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Current we only support POSTing of forms.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.7 2004/04/01 09:36:56 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.8 2004/04/01 10:25:42 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -66,14 +66,14 @@ extends AbstractCopletTransformer {
     throws SAXException {
         boolean processed = false;
         if ("a".equals(name) ) {
-            final boolean isRemoteAnchor = this.isRemoteAnchor(name, attr);
+            final boolean isRemoteAnchor = this.isRemoteAnchor(attr);
             this.stack.push(isRemoteAnchor? Boolean.TRUE: Boolean.FALSE);
             if ( isRemoteAnchor ) {
-                this.createAnchorEvent(uri, name, raw, attr);
+                this.createAnchorEvent(attr);
                 processed = true;
             }
         } else if ("form".equals(name) ) {
-            this.createFormEvent(uri, name, raw, attr);
+            this.createFormEvent(attr);
             processed = true;
         }
         if ( !processed ) {
@@ -108,7 +108,7 @@ extends AbstractCopletTransformer {
         }
     }
 
-    protected void createAnchorEvent(String uri, String name, String raw, Attributes attributes)
+    protected void createAnchorEvent(Attributes attributes)
     throws SAXException {
         AttributesImpl newAttributes = new AttributesImpl();
         String link = attributes.getValue("href");
@@ -127,7 +127,7 @@ extends AbstractCopletTransformer {
                                       newAttributes);
     }
 
-    protected void createFormEvent(String uri, String name, String raw, Attributes attributes)
+    protected void createFormEvent(Attributes attributes)
     throws SAXException {
         AttributesImpl newAttributes = new AttributesImpl();
         String link = attributes.getValue("action");
@@ -166,7 +166,7 @@ extends AbstractCopletTransformer {
      * @param attributes the attributes of the element
      * @return true if the href url is an anchor pointing to a remote source
      */
-    protected boolean isRemoteAnchor(String name, Attributes attributes) {
+    protected boolean isRemoteAnchor(Attributes attributes) {
         String link = attributes.getValue("href");
 
         // no empty link to current document

@@ -28,7 +28,6 @@ import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.Attributes;
@@ -54,7 +53,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.18 2004/04/01 09:36:55 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.19 2004/04/01 10:25:41 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
