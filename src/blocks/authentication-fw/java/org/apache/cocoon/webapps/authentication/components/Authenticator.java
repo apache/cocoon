@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
  * An authenticator must be implemented in a thread safe manner!
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.11 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public interface Authenticator {
 
@@ -67,7 +67,7 @@ public interface Authenticator {
 
     /**
      * Try to authenticate the user.
-     * @return A AuthenticationResult that is either valid (authentication
+     * @return An AuthenticationResult that is either valid (authentication
      *         successful) or invalid (authentication failed.
      * @throws ProcessingException Only if an error occurs
      */

@@ -187,7 +187,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.12 2004/04/03 03:01:35 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -206,7 +206,7 @@ public abstract class AbstractValidatorAction
 
     /**
      * Are parameters encoded as strings?
-     * @return
+     * @return boolean
      */
     abstract boolean isStringEncoded();
 
