@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated jdt-core to 3.0.1
+   </action>
    <action dev="VG" type="add">
      Faces block: Added JSF CarStore demo.
    </action>
