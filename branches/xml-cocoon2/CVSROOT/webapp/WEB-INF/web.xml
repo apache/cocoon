@@ -25,7 +25,7 @@
    <param-value>org.apache.tomcat.jsp_classpath</param-value>
 
    <!-- Alternatively you can choose one of these:
-        Catalina: org.apache.tomcat.jsp_classpath
+        Catalina: org.apache.catalina.jsp_classpath
         Resin:    caucho.class.path
         IBM:      com.ibm.websphere.servlet.application.classpath
    -->
