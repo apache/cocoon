@@ -57,7 +57,7 @@ import org.w3c.dom.DocumentFragment;
  * Form manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FormManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: FormManager.java,v 1.2 2003/05/06 17:08:26 cziegeler Exp $
 */
 public interface FormManager {
 
@@ -66,7 +66,6 @@ public interface FormManager {
 
     /**
      * Register input field and return the current value of the field.
-     * This is a private method and should not be invoked directly.
      */
     DocumentFragment registerInputField(String contextName,
                                         String path,
@@ -74,4 +73,10 @@ public interface FormManager {
                                         String formName)
     throws ProcessingException;
 
+    /**
+     * Process the request.
+     * The incoming parameters are evaluated, if they contain information
+     * for a previously registered input field.
+     */
+    void processInputFields();
 }
