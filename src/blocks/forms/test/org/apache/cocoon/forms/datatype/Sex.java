@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.woody.datatype;
+package org.apache.cocoon.forms.datatype;
 
 
 /**
  * Description of Sex.
- * @version CVS $Id: Sex.java,v 1.1 2004/03/09 10:33:58 reinhard Exp $
+ * @version CVS $Id: Sex.java,v 1.1 2004/03/09 13:03:10 cziegeler Exp $
  */
 public class Sex {
 
