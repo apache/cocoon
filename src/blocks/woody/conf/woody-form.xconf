@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 
 <xconf xpath="/cocoon" unless="woody-formmanager" logger="woody">
-  <!--
-     | Woody's FormManager component
-     |-->
+
+  <!--+
+      | Woody's FormManager component
+      +-->
   <woody-formmanager>
     <widgets>
       <widget name="form" src="org.apache.cocoon.woody.formmodel.FormDefinitionBuilder"/>

@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 
 <xconf xpath="/cocoon" unless="woody-datatype">
-  <!--
-     | Woody's datatypes and validation rules.
-     |-->
+
+  <!--+
+      | Woody's datatypes and validation rules.
+      +-->
   <woody-datatype logger="woody">
     <datatypes>
       <datatype name="string" src="org.apache.cocoon.woody.datatype.typeimpl.StringTypeBuilder">
