@@ -77,7 +77,7 @@ import EDU.oswego.cs.dl.util.concurrent.Mutex;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.4 2003/07/10 22:14:32 reinhard Exp $
+ * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.5 2003/08/04 03:19:22 joerg Exp $
  */
 public class Web3DataSourceSelectorImpl
     extends AbstractLogEnabled
@@ -118,13 +118,10 @@ public class Web3DataSourceSelectorImpl
             Web3DataSourceSelectorImpl.lock.acquire();
             if (null != obj) {
                 if (Web3DataSourceSelectorImpl.pools.containsKey(obj)) {
-                    pool =
-                        (Web3DataSource) Web3DataSourceSelectorImpl.pools.get(
-                            obj);
+                    pool = (Web3DataSource)Web3DataSourceSelectorImpl.pools.get(obj);
                 } else {
-                    Configuration a[] =
-                        this.configuration.getChildren("backend"),
-                        c = null;
+                    Configuration a[] = this.configuration.getChildren("backend");
+                    Configuration c = null;
 
                     if (null != a)
                         for (int i = 0; i < a.length; i++) {
@@ -162,7 +159,7 @@ public class Web3DataSourceSelectorImpl
             }
         } catch (Exception ex) {
             getLogger().error(ex.getMessage(), ex);
-            throw new ComponentException(ex.getMessage());
+            throw new ComponentException(null, ex.getMessage());
         } finally {
             Web3DataSourceSelectorImpl.lock.release();
         }
