@@ -8,7 +8,7 @@ function form1(form) {
     model.cowheight = 4;
     model.number1 = 1;
     model.number2 = 3;
-    model.birthdate = new Date();
+    model.birthdate = new java.util.Date();
     
     model.contacts[0].firstname = "Jules";
     model.contacts[1].firstname =  "Lucien";
