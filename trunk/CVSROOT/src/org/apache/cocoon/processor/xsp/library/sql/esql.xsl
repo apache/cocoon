@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.83 2001-06-19 20:27:14 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.84 2001-07-05 04:34:51 balld Exp $-->
 <!--
 
  ============================================================================
@@ -201,7 +201,7 @@
           <xsl:when test="$environment = 'cocoon2'">
             private static ComponentSelector _esql_selector = null;
 
-            public void compose(ComponentManager manager) org.apache.avalon.framework.component.ComponentException {
+            public void compose(ComponentManager manager) throws org.apache.avalon.framework.component.ComponentException {
               super.compose(manager);
               if (_esql_selector == null) {
                 try {
@@ -502,20 +502,28 @@
         </xsl:otherwise>
       </xsl:choose>
       if (_esql_query.results) {
-        _esql_query.resultset = _esql_query.statement.getResultSet();
-        _esql_query.resultset_metadata = _esql_query.resultset.getMetaData();
-        _esql_query.position = 0;
-        if (_esql_connection.use_limit_clause == 0 &amp;&amp; _esql_query.skip_rows &gt; 0) {
-          while (_esql_query.resultset.next()) {
-            _esql_query.position++;
-            if (_esql_query.position == _esql_query.skip_rows) {
-              break;
+        do {
+          _esql_query.resultset = _esql_query.statement.getResultSet();
+          _esql_query.resultset_metadata = _esql_query.resultset.getMetaData();
+          _esql_query.position = 0;
+          if (_esql_connection.use_limit_clause == 0 &amp;&amp; _esql_query.skip_rows &gt; 0) {
+            while (_esql_query.resultset.next()) {
+              _esql_query.position++;
+              if (_esql_query.position == _esql_query.skip_rows) {
+                break;
+              }
             }
           }
-        }
-        <xsl:apply-templates select="esql:results"/>
-        <xsl:apply-templates select="esql:no-results"/>
-        _esql_query.resultset.close();
+
+          if (_esql_query.resultset.next()) { /* desire */
+            <xsl:apply-templates select="esql:results"/>
+          }
+          else {
+            <xsl:apply-templates select="esql:no-results"/>
+          }
+
+          _esql_query.resultset.close();
+        } while(_esql_query.statement.getMoreResults());
       } else {
         _esql_query.position = _esql_query.statement.getUpdateCount();
         if (_esql_query.position &gt;= 0) {
@@ -562,11 +570,7 @@
 </xsl:template>
 
 <xsl:template match="esql:execute-query//esql:no-results">
-  <xsp:logic>
-    if (_esql_query.position == _esql_query.skip_rows) {
-      <xsl:apply-templates/>
-    }
-  </xsp:logic>
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="esql:update-results//esql:get-update-count">
@@ -575,14 +579,15 @@
 
 <xsl:template match="esql:results//esql:row-results">
   <xsp:logic>
-    while (_esql_query.resultset.next()) {
+    do {
       <xsl:apply-templates/>
       if (_esql_connection.use_limit_clause == 0 &amp;&amp; _esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
         _esql_query.position++;
         break;
       }
       _esql_query.position++;
-    }
+    } while (_esql_query.resultset.next());
+
     if (_esql_query.resultset.next()) {
       <xsl:apply-templates select="following-sibling::esql:more-results" mode="more"/>
       _esql_query.position++;
@@ -851,7 +856,7 @@
   <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnTypeName(<xsl:value-of select="@column"/>)</xsp:expr>
 </xsl:template>
 
-<xspdoc:desc>allows null-column testing. Evaluates to a Java expression, which is true when the referred column contains a null-value for the current resultset row</xspdoc:desc> 
+<xspdoc:desc>allows null-column testing. Evaluates to a Java expression, which is true when the referred column contains a null-value for the current resultset row</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:is-null">
   <xsp:expr>((<xsl:call-template name="get-resultset"/>.getObject("<xsl:value-of select="@column"/>") == null) || <xsl:call-template name="get-resultset"/>.wasNull())</xsp:expr>
 </xsl:template>
