@@ -16,7 +16,6 @@
 
 package org.apache.cocoon.transformation.pagination;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,7 +44,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.4 2004/05/17 09:32:04 unico Exp $
+ * @version CVS $Id: Pagesheet.java,v 1.5 2004/05/17 13:44:47 unico Exp $
  */
 
 /*
@@ -99,7 +98,7 @@ which indicates that:
 
 */
 public class Pagesheet extends DefaultHandler
-  implements Cloneable, Modifiable, Serializable {
+  implements Cloneable, Modifiable {
 
     // Used only during parsing of pagesheet document
     private int level = 0;
