@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,18 +31,18 @@ import org.apache.cocoon.components.sax.XMLSerializer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.2 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version $Id$
  */
-public abstract class BaseCachingProcessingPipeline
-    extends AbstractProcessingPipeline
-    implements Disposable {
+public abstract class BaseCachingProcessingPipeline extends AbstractProcessingPipeline
+                                                    implements Disposable {
 
     /** This is the Cache holding cached responses */
-    protected Cache  cache;
+    protected Cache cache;
 
-    /** The deserializer */
+    /** The XML Deserializer */
     protected XMLDeserializer xmlDeserializer;
-    /** The serializer */
+
+    /** The XML Serializer */
     protected XMLSerializer xmlSerializer;
 
     /**
@@ -51,27 +51,27 @@ public abstract class BaseCachingProcessingPipeline
     public void parameterize(Parameters params)
     throws ParameterException {
         super.parameterize(params);
-        
+
         String cacheRole = params.getParameter("cache-role", Cache.ROLE);
-        if ( this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Using cache " + cacheRole);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Using cache " + cacheRole);
         }
-        
+
         try {
-            this.cache = (Cache)this.manager.lookup(cacheRole);
+            this.cache = (Cache) this.manager.lookup(cacheRole);
         } catch (ComponentException ce) {
             throw new ParameterException("Unable to lookup cache: " + cacheRole, ce);
         }
     }
-    
+
     /**
      * Recyclable Interface
      */
     public void recycle() {
-        this.manager.release( this.xmlDeserializer );
+        this.manager.release(this.xmlDeserializer);
         this.xmlDeserializer = null;
 
-        this.manager.release( this.xmlSerializer );
+        this.manager.release(this.xmlSerializer);
         this.xmlSerializer = null;
 
         super.recycle();
@@ -81,7 +81,7 @@ public abstract class BaseCachingProcessingPipeline
      * Disposable Interface
      */
     public void dispose() {
-        if ( null != this.manager ) {
+        if (null != this.manager) {
             this.manager.release(this.cache);
         }
         this.cache = null;
