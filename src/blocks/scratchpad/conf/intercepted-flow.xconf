@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon/flow-interpreters" unless="scratchpad">
+
+    <!-- Intercepted, FOM-aware JavaScript Interpreter -->
+    <component-instance class="org.apache.cocoon.components.flow.javascript.fom.AO_FOM_JavaScriptInterpreter" name="intercepted-javascript">
+      <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/ao_fom_system.js</load-on-startup>
+      <reload-scripts>true</reload-scripts>
+      <enable-interception>true</enable-interception>
+      <check-time>40</check-time>
+      <!--  <debugger>enabled</debugger> -->  <!-- JavaScript Debugger support -->
+    </component-instance>    
+
+</xconf>
