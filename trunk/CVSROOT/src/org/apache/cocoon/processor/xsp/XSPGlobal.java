@@ -1,4 +1,4 @@
-/*-- $Id: XSPGlobal.java,v 1.3 2000-01-03 01:42:50 stefano Exp $ -- 
+/*-- $Id: XSPGlobal.java,v 1.4 2000-01-05 08:48:44 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -52,10 +52,11 @@
 package org.apache.cocoon.processor.xsp;
 
 import java.util.Hashtable;
+import java.util.Enumeration;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:42:50 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-05 08:48:44 $
  */
 public class XSPGlobal {
   protected Hashtable attributes;
@@ -70,5 +71,13 @@ public class XSPGlobal {
 
   public Object getAttribute(String name) {
     return this.attributes.get(name);
+  }
+
+  public void removeAttribute(String name) {
+    this.attributes.remove(name);
+  }
+
+  public Enumeration getAttributeNames() {
+    return this.attributes.keys();
   }
 }
