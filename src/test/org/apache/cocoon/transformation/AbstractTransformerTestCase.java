@@ -87,7 +87,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.4 2003/04/16 13:47:59 stephan Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.5 2003/04/19 16:10:32 stephan Exp $
  */
 public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 {
@@ -139,11 +139,11 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
             transformer = (Transformer) selector.select(type);
             assertNotNull("Test lookup of transformer", transformer);
 
-            DOMBuilder builder = new DOMBuilder();
-            transformer.setConsumer(new WhitespaceFilter(builder));
-
             transformer.setup(new SourceResolverAdapter(resolver, this.manager),
                                   objectmodel, source, parameters);
+
+            DOMBuilder builder = new DOMBuilder();
+            transformer.setConsumer(new WhitespaceFilter(builder));
 
             assertNotNull("Test if input document is not null", input);
             DOMStreamer streamer = new DOMStreamer(transformer);
