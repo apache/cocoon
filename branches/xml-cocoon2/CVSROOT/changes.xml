@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.12 2000-09-05 22:09:39 giacomo Exp $
+  $Id: changes.xml,v 1.9.2.13 2000-10-24 04:23:52 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -14,13 +14,18 @@
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
   <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
-  <person name="Berin Loritsch" email="bloritsch@infoplanning.com" id="BL"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="update">
+    Updated Cocoon to be Avalon 3.0a4 compliant.  Introduced ComponentManager and
+    ComponentSelector patterns correctly in code.  Updated sitemap to create
+    Configuration trees directly.
+  </action>
   <action dev="RB" type="add"> 
    Added a more complete SVG serializer.
   </action>

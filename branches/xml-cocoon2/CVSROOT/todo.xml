@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.12 2000-09-27 14:29:18 stefano Exp $
+  $Id: todo.xml,v 1.6.2.13 2000-10-24 04:23:53 bloritsch Exp $
 -->
 
 
@@ -15,7 +15,7 @@
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
   <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
-  <person name="Berin Loritsch" email="bloritsch@infoplanning.com" id="BL"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
