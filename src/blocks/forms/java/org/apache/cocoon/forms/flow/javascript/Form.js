@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.4 2004/03/18 21:04:40 joerg Exp $
+ * @version CVS $Id: Form.js,v 1.5 2004/03/31 21:06:59 vgritsenko Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -118,8 +118,8 @@ Form.prototype.showForm = function(uri, bizData) {
                 this.isValid = this.form.isValid();
             } else {
                 this.isValid = this.form.isValid() & this.validator(this.form, bizData);
+                finished = this.isValid;
             }
-            finished = this.isValid;
         }
         
         // FIXME: Theoretically, we should clone the form widget (this.form) to ensure it keeps its
