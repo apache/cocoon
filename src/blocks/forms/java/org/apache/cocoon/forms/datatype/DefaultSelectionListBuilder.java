@@ -137,10 +137,10 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
 
             return selectionListElement;
         } finally {
-            if (source != null) {
-                resolver.release(source);
-            }
             if (resolver != null) {
+                if (source != null) {
+                    resolver.release(source);
+                }
                 serviceManager.release(resolver);
             }
         }
