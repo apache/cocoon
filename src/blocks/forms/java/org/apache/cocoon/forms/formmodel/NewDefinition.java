@@ -25,7 +25,7 @@ import java.util.ListIterator;
  * {@link ClassDefinition}. The resolve step replaces this definition with
  * the definitions contained in the referenced {@link ClassDefinition}.
  *
- * @version $Id: NewDefinition.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class NewDefinition extends AbstractWidgetDefinition {
     private boolean resolving;
@@ -72,7 +72,9 @@ public class NewDefinition extends AbstractWidgetDefinition {
             if (definition instanceof ContainerDefinition) {
                 ((ContainerDefinition)definition).resolve(parents, parent);
             }
-            if (!(definition instanceof NewDefinition)) {
+            if (definition instanceof NewDefinition) {
+                ((NewDefinition)definition).resolve(parents, parent);
+            } else {
                 ((ContainerDefinition)parent).addWidgetDefinition(definition);
             }
         }
