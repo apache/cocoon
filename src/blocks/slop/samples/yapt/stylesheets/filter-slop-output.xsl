@@ -2,7 +2,7 @@
 
 <!--
     Convert the slop parser output to a collection of slides
-    $Id: filter-slop-output.xsl,v 1.2 2003/09/27 18:45:04 bdelacretaz Exp $
+    $Id: filter-slop-output.xsl,v 1.3 2003/10/11 22:37:11 stevenn Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -104,13 +104,22 @@
     <!-- ignore multiple empty lines -->
     <xsl:template mode="paragraph" match="slop:empty-line[following-sibling::*[1][self::slop:empty-line]]"/>
 
-    <!-- empty line separates paragraphs -->
+    <!-- extract paragraph and code blocks -->
     <xsl:template mode="paragraph" match="slop:empty-line">
-        <p>
-            <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
-                <xsl:call-template name="para-grouper"/>
-            </xsl:for-each>
-        </p>
+        <xsl:choose>
+          <xsl:when test="following-sibling::*[1][not(self::slop:code)]">
+		        <p>
+		            <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
+		                <xsl:call-template name="para-grouper"/>
+		            </xsl:for-each>
+		        </p>
+          </xsl:when>
+          <xsl:otherwise>
+		        <pre><xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
+		                <xsl:call-template name="code-grouper"/>
+		        </xsl:for-each></pre>
+          </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- recursively collect elements until an empty line or the next slide is found -->
@@ -122,12 +131,26 @@
         </xsl:for-each>
     </xsl:template>
 
+    <!-- ditto for code lines -->
+    <xsl:template name="code-grouper">
+        <xsl:apply-templates mode="code" select="."/>
+        
+        <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
+            <xsl:call-template name="code-grouper"/>
+        </xsl:for-each>
+    </xsl:template>
+
     <!-- paragraph grouping mode, by default copy everything, removing slop namespace -->
     <xsl:template match="slop:*" mode="paragraph">
         <xsl:element name="{name()}">
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates/>
         </xsl:element>
+    </xsl:template>
+
+    <!-- output code slop:lines as-is, with added carriage return -->
+    <xsl:template match="slop:line" mode="code">
+        <xsl:copy-of select="text()"/><xsl:text>&#13;</xsl:text>
     </xsl:template>
 
     <!-- extract the text of lines -->

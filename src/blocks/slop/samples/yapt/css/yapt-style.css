@@ -30,6 +30,14 @@ h3 {
     font-style: italic;
 }
 
+pre {
+    border: 1px dotted #000;
+    padding: 10px;
+    margin: 20px;
+    font-size: 120%;
+    background: silver;
+}
+
 a {
 	text-decoration: none;
 	color: #000;

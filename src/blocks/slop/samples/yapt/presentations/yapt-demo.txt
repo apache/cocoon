@@ -2,7 +2,7 @@ presentation: YAPT demo
 image-directory: yapt-demo-images
 author: Bertrand Delacrétaz
 date: September 2003
-cvs: $Id: yapt-demo.txt,v 1.3 2003/09/27 19:12:05 bdelacretaz Exp $
+cvs: $Id: yapt-demo.txt,v 1.4 2003/10/11 22:37:11 stevenn Exp $
 A (short) journey through the (few) YAPT features.
 
 slide: What is YAPT?
@@ -39,6 +39,16 @@ Use the grey links at the bottom of the page to go to the previous slide, or to 
 
 note: This page uses a hint-style line to indicate that it contains little text and can use a larger font
 
+slide: Testing source code
+hint-style: LittleText
+
+You can embed source code examples using the code: demarcation.
+
+code:
+<?xml version="1.0"?>
+  <foo/>
+
+You'll find out that indenting is dropped, which is bad.
 
 slide: Test results
 
