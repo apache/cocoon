@@ -8,7 +8,7 @@
      <title><xsl:value-of select="title"/></title>
      <link rel="stylesheet" type="text/css" href="style" title="Style"/>
     </head>
-    <body>
+    <body bgcolor="white">
      <table width="100%">
       <tr>
        <td>
