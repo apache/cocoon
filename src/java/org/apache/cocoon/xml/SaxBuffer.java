@@ -77,7 +77,7 @@ import java.util.List;
  * that the setDocumentLocator event is not recorded.
  * 
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: SaxBuffer.java,v 1.6 2003/12/09 21:03:17 vgritsenko Exp $
+ * @version CVS $Id: SaxBuffer.java,v 1.7 2003/12/26 14:42:04 cziegeler Exp $
  */
 public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Recyclable {
 
@@ -117,7 +117,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     public void startDocument() throws SAXException {
-        saxbits.add(new StartDocument());
+        saxbits.add(StartDocument.SINGLETON);
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
@@ -137,7 +137,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     public void endDocument() throws SAXException {
-        saxbits.add(new EndDocument());
+        saxbits.add(EndDocument.SINGLETON);
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
@@ -145,7 +145,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     public void endCDATA() throws SAXException {
-        saxbits.add(new EndCDATA());
+        saxbits.add(EndCDATA.SINGLETON);
     }
 
     public void comment(char ch[], int start, int length) throws SAXException {
@@ -157,7 +157,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     public void endDTD() throws SAXException {
-        saxbits.add(new EndDTD());
+        saxbits.add(EndDTD.SINGLETON);
     }
 
     public void startDTD(String name, String publicId, String systemId) throws SAXException {
@@ -165,7 +165,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     public void startCDATA() throws SAXException {
-        saxbits.add(new StartCDATA());
+        saxbits.add(StartCDATA.SINGLETON);
     }
 
     public void endEntity(String name) throws SAXException {
@@ -225,12 +225,14 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     final static class StartDocument implements SaxBit {
+        static public final StartDocument SINGLETON = new StartDocument();
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.startDocument();
         }
     }
 
     final static class EndDocument implements SaxBit {
+        static public final EndDocument SINGLETON = new EndDocument();
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.endDocument();
         }
@@ -268,6 +270,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     final static class EndDTD implements SaxBit {
+        static public final EndDTD SINGLETON = new EndDTD();
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endDTD();
@@ -406,6 +409,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     final static class StartCDATA implements SaxBit {
+        static public final StartCDATA SINGLETON = new StartCDATA();
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).startCDATA();
@@ -413,6 +417,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
     }
 
     final static class EndCDATA implements SaxBit {
+        static public final EndCDATA SINGLETON = new EndCDATA();
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endCDATA();
