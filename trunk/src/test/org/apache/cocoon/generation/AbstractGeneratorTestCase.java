@@ -51,9 +51,8 @@
 
 package org.apache.cocoon.generation;
 
-import java.util.Enumeration;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.component.Component;
@@ -75,7 +74,7 @@ import org.xml.sax.InputSource;
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.5 2003/04/19 16:37:58 stephan Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.6 2003/07/10 00:25:25 ghoward Exp $
  */
 public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 {

@@ -53,9 +53,6 @@ package org.apache.cocoon.util.test;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.StringReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 
 import org.apache.cocoon.util.MIMEUtils;
@@ -66,7 +63,7 @@ import org.apache.cocoon.util.MIMEUtils;
  * Specifically, code for testing the parsing of mime.types files.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: MIMEUtilsTestCase.java,v 1.1 2003/06/01 09:17:01 jefft Exp $
+ * @version CVS $Id: MIMEUtilsTestCase.java,v 1.2 2003/07/10 00:25:25 ghoward Exp $
  */
 public class MIMEUtilsTestCase extends TestCase
 {

@@ -61,16 +61,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Testcase for DOMStreamer and DOMBuilder.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.4 2003/04/29 10:45:03 stephan Exp $
+ * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.5 2003/07/10 00:25:26 ghoward Exp $
  */
 public class DOMBuilderStreamerTestCase extends XMLTestCase {
 

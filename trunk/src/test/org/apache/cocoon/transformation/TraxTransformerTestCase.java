@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.transformation;
 
-import java.util.HashMap;
-
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.w3c.dom.Document;
@@ -61,7 +59,7 @@ import org.w3c.dom.Document;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TraxTransformerTestCase.java,v 1.2 2003/04/23 06:42:26 stephan Exp $
+ * @version CVS $Id: TraxTransformerTestCase.java,v 1.3 2003/07/10 00:25:25 ghoward Exp $
  */
 public class TraxTransformerTestCase extends AbstractTransformerTestCase {
 

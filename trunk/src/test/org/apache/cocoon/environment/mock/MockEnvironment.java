@@ -54,7 +54,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -66,7 +65,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Source;
 import org.apache.excalibur.source.SourceResolver;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 

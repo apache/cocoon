@@ -51,7 +51,6 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -74,20 +73,16 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Testcase for transformer components. It uses multiple input documents
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.6 2003/04/23 06:20:20 stephan Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.7 2003/07/10 00:25:25 ghoward Exp $
  */
 public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 {
