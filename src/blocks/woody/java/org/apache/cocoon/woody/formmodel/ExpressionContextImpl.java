@@ -116,6 +116,8 @@ public class ExpressionContextImpl implements ExpressionContext {
             //   * ...
             if (value instanceof Long)
                 return new BigDecimal(((Long)value).longValue());
+            else if (value instanceof Integer)
+                return new BigDecimal(((Integer)value).intValue());
             else
                 return value;
         }
