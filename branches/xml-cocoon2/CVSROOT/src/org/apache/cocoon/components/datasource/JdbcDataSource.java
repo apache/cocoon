@@ -9,46 +9,66 @@ package org.apache.cocoon.components.datasource;
 
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.cocoon.util.ClassUtils;
+import org.apache.avalon.ThreadSafe;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
- * The Default implementation for DataSources in Cocoon.
+ * The Default implementation for DataSources in Cocoon.  This uses the
+ * normal <code>java.sql.Connection</code> object and
+ * <code>java.sql.DriverManager</code>.
+ *
+ * TODO: Implement a configurable closed end Pool, where the Connection
+ * acts like JDBC PooledConnections work.  That means we can limit the
+ * total number of Connection objects that are created.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-08 15:29:32 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-08 20:20:47 $
  */
-public class JdbcDataSource implements DataSourceComponent {
-    String dburl;
-    String user;
-    String passwd;
+public class JdbcDataSource implements DataSourceComponent, ThreadSafe {
     Logger log = LogKit.getLoggerFor("cocoon");
-    Connection dbConnection = null;
+    JdbcConnectionPool pool = null;
 
-    /** Configure and set up DB connection */
+    /**
+     *  Configure and set up DB connection.  Here we set the connection
+     *  information needed to create the Connection objects.  It must
+     *  be called only once.
+     *
+     * @param conf The Configuration object needed to describe the
+     *             connection.
+     *
+     * @throws ConfigurationException
+     */
     public void configure(Configuration conf)
     throws ConfigurationException {
-        this.dburl = conf.getChild("dburl").getValue();
-        this.user = conf.getChild("user").getValue();
-        this.passwd = conf.getChild("password").getValue();
+        if (this.pool == null) {
+            String dburl = conf.getChild("dburl").getValue();
+            String user = conf.getChild("user").getValue();
+            String passwd = conf.getChild("password").getValue();
 
-        try {
-            if (user.equals("")) {
-                this.dbConnection = DriverManager.getConnection(dburl);
-            } else {
-                this.dbConnection = DriverManager.getConnection(dburl, user, passwd);
-            }
-        } catch (Exception e) {
-            log.error("Could not connect to Database", e);
-            throw new ConfigurationException("Could not connect to Database", e);
+            Configuration controler = conf.getChild("pool-controller");
+            int min = controler.getAttributeAsInt("min", 0);
+            int max = controler.getAttributeAsInt("max", 1);
+
+            this.pool = new JdbcConnectionPool(dburl, user, passwd, min, max);
         }
     }
 
     /** Get the database connection */
-    public Connection getConnection() {
-        return this.dbConnection;
+    public Connection getConnection()
+    throws SQLException {
+        Connection conn = null;
+
+        try {
+            conn = (Connection) this.pool.get();
+        } catch (Exception e) {
+            log.error("Could not return Connection", e);
+            throw new SQLException(e.getMessage());
+        }
+
+        return conn;
     }
 }

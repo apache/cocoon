@@ -9,18 +9,19 @@ package org.apache.cocoon.components.datasource;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.Configurable;
-import org.apache.avalon.Poolable;
+
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * The standard interface for DataSources in Cocoon.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-05 23:08:34 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-08 20:20:46 $
  */
-public interface DataSourceComponent extends Component, Configurable, Poolable {
+public interface DataSourceComponent extends Component, Configurable {
     /**
      * Gets the Connection to the database
      */
-    Connection getConnection();
+    Connection getConnection() throws SQLException;
 }

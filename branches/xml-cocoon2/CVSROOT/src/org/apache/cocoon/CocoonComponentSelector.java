@@ -26,6 +26,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
 
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.ComponentPool;
 import org.apache.cocoon.util.ComponentPoolController;
 
@@ -35,7 +36,7 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-05 16:20:58 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-08 20:20:44 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer, ThreadSafe {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -117,7 +118,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
         }
 
         // Work out what class of component we're dealing with.
-        if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
+        if ( ThreadSafe.class.isAssignableFrom(componentClass)) {
             component = getThreadsafeComponent(componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
             component = getPooledComponent(componentClass);
