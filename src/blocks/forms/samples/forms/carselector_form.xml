@@ -28,7 +28,7 @@
         <javascript>
           java.lang.System.err.println("maker changed from " + event.oldValue + " to " + event.newValue);
           var value = event.source.value;
-          var typewidget = event.source.parent.getWidget("type");
+          var typewidget = event.source.lookupWidget("../type");
           if (value != null) {
             // Get the corresponding type list
             typewidget.setSelectionList("cocoon:/cars/" + value);
@@ -43,7 +43,7 @@
           typewidget.setValue(null);
           
           // Fun with messages...
-          var msg = event.source.parent.getWidget("message");
+          var msg = event.source.lookupWidget("../message");
           if (value == null) {
             msg.value = "Yep. Choosing a maker is not that easy...";
           } else {
@@ -69,8 +69,8 @@
         <javascript>
           java.lang.System.err.println("type changed to " + event.source.value);
           var value = event.source.value;
-          var modelwidget = event.source.parent.getWidget("model");
-          var makewidget = event.source.parent.getWidget("make");
+          var modelwidget = event.source.lookupWidget("../model");
+          var makewidget = event.source.lookupWidget("../make");
           if (value != null) {
             modelwidget.setSelectionList("cocoon:/cars/" + makewidget.value + "/" + value);
           } else {
@@ -86,7 +86,7 @@
           
           // Fun with messages...
           if (value != null) {
-            var msg = event.source.parent.getWidget("message");
+            var msg = event.source.lookupWidget("../message");
             if (event.oldValue == null) {
               msg.value = "A " + makewidget.value + " " + value + " is a very good choice.";
             } else {
@@ -109,7 +109,7 @@
         <javascript>
           var value = event.source.value;
           if (value != null) {
-            event.source.parent.getWidget("message").setValue("Model " + value + " is a great car!");
+            event.source.lookupWidget("../message").setValue("Model " + value + " is a great car!");
           } else {
             // Reset value
             event.source.value = null;

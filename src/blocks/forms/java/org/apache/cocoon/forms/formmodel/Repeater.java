@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.13 2004/05/07 16:43:42 mpo Exp $
+ * @version $Id: Repeater.java,v 1.14 2004/05/07 20:54:21 mpo Exp $
  */
 public class Repeater extends AbstractWidget 
 //implements ContainerWidget 
@@ -177,31 +177,7 @@ public class Repeater extends AbstractWidget
         RepeaterRow row = (RepeaterRow)rows.get(rowIndex);
         return row.getChild(id);
     }
-//
-//    public boolean hasWidget(String id) {
-//        int row; 
-//        try { 
-//            row = Integer.parseInt(id);
-//        } catch (NumberFormatException e) {
-//            // TODO: Use i18n.
-//            throw new RuntimeException("Repeater: Row id is not a valid integer: " + id);
-//        }
-//        return row >= 0 && row < rows.size();
-//    }
-
-    //TODO: consider removing when this method is removed 
-    // from the Widget interface.
-    public Widget getWidget(String id) {
-        int row; 
-        try { 
-            row = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            // TODO: Use i18n.
-            throw new RuntimeException("Repeater: Row id is not a valid integer: " + id);
-        }
-        return (RepeaterRow)rows.get(row);
-    }
-
+    
     public void readFromRequest(FormContext formContext) {
         // read number of rows from request, and make an according number of rows
         String sizeParameter = formContext.getRequest().getParameter(getRequestParameterName() + ".size");

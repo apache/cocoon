@@ -27,9 +27,9 @@
       <xsp:logic>
         // get reference to form and some of the widgets on it
         Form form = (Form)request.getAttribute("form1");
-        Field field = (Field)form.getWidget("email");
-        BooleanField booleanField = (BooleanField)form.getWidget("somebool");
-        Field field2 = (Field)((Repeater)form.getWidget("contacts")).getWidget(1, "firstname");
+        Field field = (Field)form.lookupWidget("email");
+        BooleanField booleanField = (BooleanField)form.lookupWidget("somebool");
+        Field field2 = (Field)((Repeater)form.lookupWidget("contacts")).getWidget(1, "firstname");
       </xsp:logic>
 
       email has the following value:

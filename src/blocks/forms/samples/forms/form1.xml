@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.6 2004/05/07 10:55:08 vgritsenko Exp $
+    | CVS $Id: form1.xml,v 1.7 2004/05/07 20:54:21 mpo Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
@@ -26,7 +26,7 @@
     <!-- This demonstrates form level validation -->
     <fd:javascript>
       var success = true;
-      var price = widget.getWidget("dieselprice");
+      var price = widget.lookupWidget("dieselprice");
       if (price.value &lt; 1) {
           price.setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("It can not be that low!", false));
           success = false;
@@ -115,7 +115,7 @@
           java.lang.System.err.println("Was here!");
           var newValue = event.source.value;
           if (newValue != null) {
-            var number2 = event.source.parent.getWidget("number2");
+            var number2 = event.source.parent.lookupWidget("number2");
             if (number2.value == null) {
               number2.setValue(new java.lang.Long(newValue.intValue() + 1));
             }
@@ -261,10 +261,10 @@
             // Get the row
             var row = widget.getRow(i);
             // Compute a key combining the first and last name
-            var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
+            var key = row.lookupWidget("firstname").value + "/" + row.lookupWidget("lastname").value;
             if (list.contains(key)) {
               // already in the list
-              row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
+              row.lookupWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
               success = false;
               break; // no need to continue
             }

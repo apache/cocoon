@@ -39,7 +39,7 @@
 	      <javascript>
 	        java.lang.System.err.println("Residence changed from " + event.oldValue + " to " + event.newValue);
 	        var value = event.source.value;
-	        var typewidget = event.source.parent.getWidget("country");
+	        var typewidget = event.source.lookupWidget("../country");
 	        if (value == "us") {
 	          typewidget.setSelectionList(states, "key", "value");
 	        }
@@ -71,7 +71,7 @@
 	      <javascript>
 	        var value = event.source.value;
 	        if (value != null) {
-	          event.source.parent.getWidget("message").setValue("So you live in  " + value + " ?");
+	          event.source.lookupWidget("../message").setValue("So you live in  " + value + " ?");
 	        } else {
 	          // Reset value
 	          event.source.value = null;
