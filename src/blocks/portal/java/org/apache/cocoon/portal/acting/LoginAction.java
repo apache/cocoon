@@ -31,12 +31,15 @@ import org.apache.cocoon.portal.PortalService;
  * This action logs the user into the portal
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LoginAction.java,v 1.4 2004/03/05 13:02:09 bdelacretaz Exp $
+ * @version CVS $Id: LoginAction.java,v 1.5 2004/03/15 18:18:19 cziegeler Exp $
 */
 public final class LoginAction
 extends ServiceableAction
 implements ThreadSafe {
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public Map act(Redirector redirector,
                    SourceResolver resolver,
                    Map objectModel,
