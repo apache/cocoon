@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.48 2001-01-17 02:33:42 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.49 2001-01-17 17:07:37 greenrd Exp $-->
 <!--
 
  ============================================================================
@@ -202,6 +202,7 @@
           }
         </xsl:when>
       </xsl:choose>
+      static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
       class EsqlConnection {
         <xsl:choose>
           <xsl:when test="$environment = 'cocoon1'">
