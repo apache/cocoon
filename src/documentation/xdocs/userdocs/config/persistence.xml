@@ -31,8 +31,7 @@
   </s1>
   <s1 title="Configuration:">
   <source><![CDATA[
- <cache-persistent class="org.apache.cocoon.components.store.FilesystemStore"
-                    logger="core.store.persistent">
+ <cache-persistent logger="core.store.persistent">
     <!-- Configuratin goes here -->
  </cache-persistent>]]>
   </source> 
