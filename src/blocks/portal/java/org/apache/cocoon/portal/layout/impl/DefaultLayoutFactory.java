@@ -54,6 +54,7 @@ import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -121,7 +122,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.16 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.17 2004/04/28 11:53:09 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -416,7 +417,11 @@ public class DefaultLayoutFactory
                     CopletFactory factory = service.getComponentManager().getCopletFactory();
                     factory.remove( ((CopletLayout)layout).getCopletInstanceData());
                 }
-                service.getComponentManager().getProfileManager().unregister(layout);
+                ProfileManager profileManager = service.getComponentManager().getProfileManager();
+                if ( layout.equals(profileManager.getEntryLayout()) ) {
+                    profileManager.setEntryLayout(null);
+                }
+                profileManager.unregister(layout);
             } catch (ServiceException ce) {
                 throw new ProcessingException("Unable to lookup portal service.", ce);
             } finally {
