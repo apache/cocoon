@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,10 +26,10 @@ import org.xml.sax.SAXException;
  * events.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: EmbeddedXMLPipe.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class EmbeddedXMLPipe extends AbstractXMLPipe
-{
+public class EmbeddedXMLPipe extends AbstractXMLPipe {
+
     /**
      * Creates an EmbeddedXMLPipe that writes into the given ContentHandler.
      */
@@ -42,9 +42,7 @@ public class EmbeddedXMLPipe extends AbstractXMLPipe
      *
      * @exception SAXException if an error occurs
      */
-    public void startDocument()
-    throws SAXException
-    {
+    public void startDocument() throws SAXException {
     }
 
     /**
@@ -52,8 +50,6 @@ public class EmbeddedXMLPipe extends AbstractXMLPipe
      *
      * @exception SAXException if an error occurs
      */
-    public void endDocument()
-    throws SAXException
-    {
+    public void endDocument() throws SAXException {
     }
 }
