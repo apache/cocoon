@@ -76,8 +76,10 @@ import org.apache.log4j.Category;
 /**
  * Implementation of a workflow instance.
  *
+ * FIXME - Remove dependency to log4j
+ * 
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: WorkflowInstanceImpl.java,v 1.2 2004/03/01 20:11:17 joerg Exp $
+ * @version $Id: WorkflowInstanceImpl.java,v 1.3 2004/03/01 21:00:27 cziegeler Exp $
  */
 public abstract class WorkflowInstanceImpl implements WorkflowInstance {
     
