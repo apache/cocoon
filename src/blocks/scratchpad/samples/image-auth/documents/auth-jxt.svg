@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<svg width="200" height="75">
+    <defs>
+        <filter id="blur2">
+            <feGaussianBlur stdDeviation="2"/>
+        </filter>
+    </defs>
+     <g id="imagegroup">
+        <text style="fill:#0086B3;font-size:42;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="0" y="48">${text}</text>
+     </g>
+</svg>
