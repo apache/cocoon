@@ -67,7 +67,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.4 2003/08/12 15:48:02 sylvain Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.5 2003/10/28 19:53:57 cziegeler Exp $
  */
 
 public class ExtendedComponentSelector 
@@ -371,6 +371,7 @@ public class ExtendedComponentSelector
             this.parentLocator.release( this.parentSelector );
             this.parentLocator = null;
             this.parentSelector = null;
+            this.parentComponents = null;
         }
     }
 

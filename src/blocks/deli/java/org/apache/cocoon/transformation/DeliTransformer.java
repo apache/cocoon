@@ -71,12 +71,12 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: DeliTransformer.java,v 1.1 2003/03/09 00:03:45 pier Exp $
+ * @version CVS $Id: DeliTransformer.java,v 1.2 2003/10/28 19:53:57 cziegeler Exp $
  */
 public class DeliTransformer extends TraxTransformer {
 
     /** The DELI service instance */
-    private Deli deli = null;
+    private Deli deli;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -88,6 +88,9 @@ public class DeliTransformer extends TraxTransformer {
         this.deli = (Deli) this.manager.lookup(Deli.ROLE);
     }
 
+    /**
+     * Get the parameters for the logicsheet
+     */
     protected Map getLogicSheetParameters() {
         Map map = super.getLogicSheetParameters();
         
@@ -102,10 +105,11 @@ public class DeliTransformer extends TraxTransformer {
                 map.put("deli-capabilities", deliCapabilities);
 
                 String accept = request.getParameter("accept");
-                if (accept == null)
+                if (accept == null) {
                    accept = request.getHeader("accept");
-
-                /* add the accept param */
+                }
+                
+                // add the accept param 
                 map.put("accept", accept);
             } catch (Exception e) {
                 getLogger().error("Error setting DELI info", e);
@@ -113,15 +117,17 @@ public class DeliTransformer extends TraxTransformer {
         }
         
         this.logicSheetParameters = map;
-        return map;
+        return this.logicSheetParameters;
     }
     
     /**
      * Disposable
      */
     public void dispose() {
-        this.manager.release(this.deli);
-        this.deli = null;
+        if ( this.manager != null ) {
+            this.manager.release(this.deli);
+            this.deli = null;
+        }
         super.dispose();
     }    
 }
