@@ -62,6 +62,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
+import org.apache.cocoon.util.ClassUtils;
 
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -73,6 +74,8 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -84,7 +87,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.2 2003/03/12 07:38:42 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -127,6 +130,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     /** The real output stream */
     protected OutputStream outputStream;
 
+    /** The AvalonToCocoonSourceWrapper (this is for the deprecated support) */
+    static protected Constructor avalonToCocoonSourceWrapper;
+    
     /**
      * Constructs the abstract environment
      */
@@ -348,11 +354,30 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
         if (systemId == null) throw new SAXException("Invalid System ID");
 
+        // get the wrapper class - we don't want to import the wrapper directly
+        // to avoid a direct dependency from the core to the deprecation package
+        if ( null == avalonToCocoonSourceWrapper ) {
+            synchronized (avalonToCocoonSourceWrapper) {
+                try {
+                    Class clazz = ClassUtils.loadClass("org.apache.cocoon.components.source.impl.AvalonToCocoonSource");
+                    avalonToCocoonSourceWrapper = clazz.getConstructor(new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
+                                                                                    ClassUtils.loadClass("org.apache.excalibur.source.SourceResolver"),
+                                                                                    ClassUtils.loadClass("org.apache.cocoon.environment.Environment")});
+                } catch (Exception e) {
+                    throw new ProcessingException("The deprecated resolve() method of the environment was called." 
+                                                  +"Please either update your code to use the new resolveURI() method or"                                                   +" install the deprecation support.", e);
+                }
+            }
+        }
         try {
             org.apache.excalibur.source.Source source = this.resolveURI( systemId );
-            return new org.apache.cocoon.components.source.impl.AvalonToCocoonSource(source, this.sourceResolver, this);
+            Source wrappedSource;
+            wrappedSource = (Source)avalonToCocoonSourceWrapper.newInstance(new Object[] {source, this.sourceResolver, this});
+            return wrappedSource;
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
+        } catch (Exception e) {
+            throw new ProcessingException("Unable to create source wrapper.", e);
         }
     }
 
