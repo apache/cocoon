@@ -428,6 +428,14 @@
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
  </release>
+ <release version="2.1.8" date="TBD">
+   <action dev="CZ" type="fix" fixes-bug="33963" due-to="John Yonosh" due-to-email="jyonosh@fcg.com">
+     Fix NPE in DOMStreamer.stream().
+   </action>
+   <action dev="CZ" type="fix">
+     Portal block: Make portal manager available through portal component manager.
+   </action>
+ </release>
  <release version="2.1.7" date="March 23 2005">
    <action dev="AG" type="update">
      Updated hsqldb to 1.7.3.3.
