@@ -21,9 +21,11 @@
 defineClass("org.apache.cocoon.forms.flow.javascript.v2.ScriptableWidget");
 
 /**
- * Create a form, given the URI of its definition file
+ * Create a form, giving either:
+ *   - the URI of its definition file
+ *   - an fd:form element in the form of a org.w3c.dom.Element
  */
-function Form(uri) {
+function Form(formDefinition) {
     var formMgr = null;
     var resolver = null;
     var src = null;
@@ -33,9 +35,14 @@ function Form(uri) {
         var SourceResolver = 
             Packages.org.apache.cocoon.environment.SourceResolver;
         formMgr = cocoon.getComponent(FormManager.ROLE);
-        resolver = cocoon.getComponent(SourceResolver.ROLE);
-        src = resolver.resolveURI(uri);
-        var form = formMgr.createForm(src);
+        var form;
+        if ((typeof formDefinition) == "string" || formDefinition instanceof String) {
+            resolver = cocoon.getComponent(SourceResolver.ROLE);
+            src = resolver.resolveURI(formDefinition);
+            form = formMgr.createForm(src);
+        } else {
+            form = formMgr.createForm(formDefinition)
+        }
         this.binding_ = null;
         this.formWidget_ = new Widget(form);
         this.local_ = cocoon.createPageLocal();
