@@ -75,7 +75,7 @@ import org.xmldb.api.DatabaseManager;
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.5 2003/12/05 20:05:37 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.6 2004/01/29 03:18:43 vgritsenko Exp $
  */
 public final class XMLDBSourceFactory extends AbstractLogEnabled
                                       implements SourceFactory, Configurable, Serviceable, ThreadSafe {
@@ -94,14 +94,14 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
 
         credentialMap = new HashMap();
 
-        Configuration[] xmldbConfigs = conf.getChildren("driver");
-        for (int i = 0; i < xmldbConfigs.length; i++) {
-            String type = xmldbConfigs[i].getAttribute("type");
-            String driver = xmldbConfigs[i].getAttribute("class");
+        Configuration[] drivers = conf.getChildren("driver");
+        for (int i = 0; i < drivers.length; i++) {
+            String type = drivers[i].getAttribute("type");
+            String driver = drivers[i].getAttribute("class");
 
             SourceCredential credential = new SourceCredential(null, null);
-            credential.setPrincipal(xmldbConfigs[i].getAttribute("user", null));
-            credential.setPassword(xmldbConfigs[i].getAttribute("password", null));
+            credential.setPrincipal(drivers[i].getAttribute("user", null));
+            credential.setPassword(drivers[i].getAttribute("password", null));
             credentialMap.put(type, credential);
 
             if (getLogger().isDebugEnabled()) {
@@ -109,8 +109,14 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
             }
 
             try {
-                Class c = Class.forName(driver);
-                DatabaseManager.registerDatabase((Database)c.newInstance());
+                Database db = (Database)Class.forName(driver).newInstance();
+
+                Configuration[] params = drivers[i].getChildren();
+                for (int j = 0; j < params.length; j++) {
+                    db.setProperty(params[j].getName(), params[j].getValue());
+                }
+
+                DatabaseManager.registerDatabase(db);
 
             } catch (XMLDBException xde) {
                 String error = "Unable to connect to the XMLDB database. Error "
