@@ -16,8 +16,8 @@
 package org.apache.cocoon.kernel;
 
 import org.apache.cocoon.kernel.composition.Composer;
-import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.composition.WiringException;
+import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
 import org.apache.cocoon.kernel.configuration.Parameters;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
@@ -28,7 +28,7 @@ import org.apache.cocoon.kernel.deployment.DeploymentException;
  * requested.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class SimpleComposer implements Composer {
 

@@ -15,23 +15,21 @@
  */
 package org.apache.cocoon.kernel;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import org.apache.cocoon.kernel.identification.Descriptor;
-import org.apache.cocoon.kernel.identification.Identifier;
 import org.apache.cocoon.kernel.archival.HashLibrary;
 import org.apache.cocoon.kernel.archival.Library;
-
 import org.apache.cocoon.kernel.deployment.Block;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
 import org.apache.cocoon.kernel.deployment.Loader;
+import org.apache.cocoon.kernel.identification.Descriptor;
+import org.apache.cocoon.kernel.identification.Identifier;
 
 /**
  * <p>A {@link BlockLoader} provides a default implementation of the
@@ -41,7 +39,7 @@ import org.apache.cocoon.kernel.deployment.Loader;
  * in every method returning a {@link Block}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class BlockLoader extends HashLibrary implements Loader {
 
@@ -190,7 +188,7 @@ public class BlockLoader extends HashLibrary implements Loader {
      * {@link #addURL(URL)} method.</p>
      *
      * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
-     * @version 1.0 (CVS $Revision: 1.3 $)
+     * @version 1.0 (CVS $Revision: 1.4 $)
      */
     private static final class RootClassLoader extends URLClassLoader {
 

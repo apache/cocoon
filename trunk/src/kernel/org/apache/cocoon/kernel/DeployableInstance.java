@@ -18,6 +18,7 @@ package org.apache.cocoon.kernel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.apache.cocoon.kernel.configuration.Parameters;
 import org.apache.cocoon.kernel.deployment.Block;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
@@ -28,7 +29,7 @@ import org.apache.cocoon.kernel.deployment.Instance;
  * the {@link Instance} interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class DeployableInstance implements Instance {
 

@@ -20,23 +20,24 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.apache.cocoon.kernel.identification.Descriptor;
-import org.apache.cocoon.kernel.identification.IdentificationException;
-import org.apache.cocoon.kernel.identification.Identifier;
-import org.apache.cocoon.kernel.identification.ParsedIdentifier;
+
 import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
 import org.apache.cocoon.kernel.configuration.Parameters;
 import org.apache.cocoon.kernel.deployment.Deployer;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
 import org.apache.cocoon.kernel.deployment.Instance;
+import org.apache.cocoon.kernel.identification.Descriptor;
+import org.apache.cocoon.kernel.identification.IdentificationException;
+import org.apache.cocoon.kernel.identification.Identifier;
+import org.apache.cocoon.kernel.identification.ParsedIdentifier;
 
 /**
  * <p>An {@link Installer} processes a given configuration, installing and
  * deploying each block in the correct order.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class Installer {
 

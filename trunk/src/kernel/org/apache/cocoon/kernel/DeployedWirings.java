@@ -20,16 +20,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.apache.cocoon.kernel.composition.Composer;
 import org.apache.cocoon.kernel.composition.Lifecycle;
 import org.apache.cocoon.kernel.composition.LifecycleException;
 import org.apache.cocoon.kernel.composition.Wire;
-import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.composition.WiringException;
+import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
 import org.apache.cocoon.kernel.deployment.Instance;
-import org.apache.cocoon.kernel.identification.Descriptor;
 import org.apache.cocoon.kernel.identification.BlockDescriptor;
+import org.apache.cocoon.kernel.identification.Descriptor;
 import org.apache.cocoon.kernel.resolution.CompoundResolver;
 import org.apache.cocoon.kernel.resolution.Resolver;
 import org.apache.cocoon.kernel.resolution.Resource;
@@ -37,7 +38,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -237,7 +238,7 @@ public class DeployedWirings implements Wirings, Lifecycle {
             ((Lifecycle)this.composer).init();
         }
     }
-    
+
     /**
      * <p>Notify this {@link DeployedWirings} of its destruction.</p>
      *

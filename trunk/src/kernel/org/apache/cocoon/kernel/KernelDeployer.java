@@ -15,30 +15,26 @@
  */
 package org.apache.cocoon.kernel;
 
-import java.net.URL;
 import java.net.MalformedURLException;
-
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.kernel.identification.BlockDescriptor;
-import org.apache.cocoon.kernel.identification.Descriptor;
-import org.apache.cocoon.kernel.identification.DescriptorBuilder;
-import org.apache.cocoon.kernel.identification.Identifier;
-import org.apache.cocoon.kernel.identification.IdentificationException;
-
 import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
 import org.apache.cocoon.kernel.configuration.Parameters;
-
 import org.apache.cocoon.kernel.deployment.Block;
 import org.apache.cocoon.kernel.deployment.Deployer;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
 import org.apache.cocoon.kernel.deployment.Instance;
 import org.apache.cocoon.kernel.deployment.Loader;
-
+import org.apache.cocoon.kernel.identification.BlockDescriptor;
+import org.apache.cocoon.kernel.identification.Descriptor;
+import org.apache.cocoon.kernel.identification.DescriptorBuilder;
+import org.apache.cocoon.kernel.identification.IdentificationException;
+import org.apache.cocoon.kernel.identification.Identifier;
 import org.apache.cocoon.kernel.startup.Logger;
 
 /**
@@ -46,7 +42,7 @@ import org.apache.cocoon.kernel.startup.Logger;
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.6 $)
+ * @version 1.0 (CVS $Revision: 1.7 $)
  */
 public class KernelDeployer implements Deployer {
 
@@ -60,10 +56,13 @@ public class KernelDeployer implements Deployer {
     private Logger log = new Logger();
 
     /** <p>A map of {@link DeployedWirings}s by {@link Instance}.</p> */
-    private Map instances = new HashMap();
+    private Map wiringsByInstance = new HashMap();
+    
+    /** <p>A map of {@link DeployedWirings}s by name.</p> */
+    private Map wiringsByName = new HashMap();
     
     /** <p>A simple block loader instance.</p> */
-    private Loader loader = new BlockLoader();
+    private Loader loader = new BlockLoader(this.getClass().getClassLoader());
     
     /* ====================================================================== */
     
@@ -165,7 +164,8 @@ public class KernelDeployer implements Deployer {
         try {
             LoadedBlock block = (LoadedBlock) this.loader.load(identifier);
             Instance instance = new DeployableInstance(block, name);
-            this.instances.put(instance, null);
+            this.wiringsByInstance.put(instance, null);
+            this.wiringsByName.put(instance.name(), null);
             this.log.info("Block instance \"" + instance + "\" created");
             return(instance);
         } catch (Exception e) {
@@ -187,11 +187,11 @@ public class KernelDeployer implements Deployer {
     public void deploy(Instance instance)
     throws DeploymentException {
         /* Check that we created this instance and that it is deployable */
-        if (!this.instances.containsKey(instance)) {
+        if (!this.wiringsByInstance.containsKey(instance)) {
             throw new DeploymentException("Attempting to deploy unknown "
                                           + "instance \"" + instance + "\"");
         }
-        if (this.instances.get(instance) != null) {
+        if (this.wiringsByInstance.get(instance) != null) {
             throw new DeploymentException("Cannot deploy already deployed "
                                           + "instance \"" + instance + "\"");
         }
@@ -221,7 +221,7 @@ public class KernelDeployer implements Deployer {
                                               + "\" for \"" + required
                                               + "\" not provided for \""
                                               + deployable + "\"");
-            } else if (!this.instances.containsKey(wired)) {
+            } else if (!this.wiringsByInstance.containsKey(wired)) {
                 throw new DeploymentException("Required wiring \"" + name
                                               + "\" for \"" + required
                                               + "\" has invalid target");
@@ -256,7 +256,8 @@ public class KernelDeployer implements Deployer {
         } catch (Throwable t) {
             throw new DeploymentException("Error initializing wirings", t);
         }
-        this.instances.put(deployable, deployed);
+        this.wiringsByInstance.put(deployable, deployed);
+        this.wiringsByName.put(instance.name(), deployed);
         deployable.deployed(true);
     }
 
@@ -285,7 +286,7 @@ public class KernelDeployer implements Deployer {
     /* ====================================================================== */
 
     /**
-        * <p>Destroy the specified deployed block {@link Instance}.</p>
+     * <p>Destroy the specified deployed block {@link Instance}.</p>
      *
      * <p>If the specified {@link Instance} is deployed <b>and</b> is required
      * by any other block (there is an active wiring), this method will throw
@@ -316,12 +317,32 @@ public class KernelDeployer implements Deployer {
      * the {@link Instance#deployed()} method can be called.</p>
      */
     public Iterator instances() {
-        return(new HashSet(this.instances.keySet()).iterator());
+        return(new HashSet(this.wiringsByInstance.keySet()).iterator());
     }
 
     /* ====================================================================== */
 
+    /**
+     * <p>Return a {@link DeployedWirings} instance associated with the
+     * specified block {@link Instance}, if any.</p>
+     * 
+     * @param instance a deployed block {@link Instance} to look up.
+     * @return a {@link DeployedWirings} instance or <b>null</b> if the
+     *         specified {@link Instance} was not deployed.
+     */
     protected DeployedWirings lookup(Instance instance) {
-        return((DeployedWirings)this.instances.get(instance));
+        return((DeployedWirings)this.wiringsByInstance.get(instance));
+    }
+
+    /**
+     * <p>Return a {@link DeployedWirings} instance associated with the
+     * specified block name, if any.</p>
+     * 
+     * @param name a deployed block name (from configurations) to look up.
+     * @return a {@link DeployedWirings} instance or <b>null</b> if the
+     *         specified {@link Instance} was not deployed.
+     */
+    protected DeployedWirings lookup(String name) {
+        return((DeployedWirings)this.wiringsByName.get(name));
     }
 }

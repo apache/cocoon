@@ -22,11 +22,12 @@ import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import org.apache.cocoon.kernel.identification.Descriptor;
-import org.apache.cocoon.kernel.identification.Identifier;
+
 import org.apache.cocoon.kernel.deployment.Block;
 import org.apache.cocoon.kernel.deployment.DeploymentException;
 import org.apache.cocoon.kernel.deployment.Loader;
+import org.apache.cocoon.kernel.identification.Descriptor;
+import org.apache.cocoon.kernel.identification.Identifier;
 import org.apache.cocoon.kernel.resolution.LocalResolver;
 
 /**
@@ -34,7 +35,7 @@ import org.apache.cocoon.kernel.resolution.LocalResolver;
  * the default implementation returned by a {@link BlockLoader}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class LoadedBlock implements Block {
     
