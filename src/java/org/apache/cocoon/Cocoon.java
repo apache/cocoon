@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -71,7 +71,6 @@ import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
-import org.apache.excalibur.xml.impl.XercesParser;
 import org.apache.excalibur.xml.sax.SAXParser;
 
 import org.xml.sax.InputSource;
@@ -82,7 +81,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.26 2004/05/27 13:14:36 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.27 2004/06/11 21:37:04 vgritsenko Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -99,7 +98,7 @@ public class Cocoon
     private ThreadManager threads;
 
     private CommandManager commands;
-    
+
     /** The application context */
     private Context context;
 
@@ -138,16 +137,16 @@ public class Cocoon
 
     /** The source resolver */
     protected SourceResolver sourceResolver;
-    
+
     /** The environment helper */
     protected EnvironmentHelper environmentHelper;
 
     /** A service manager (wrapper) */
     protected ServiceManager serviceManager;
-    
+
     /** An optional Avalon Component that is called before and after processing all requests. */
-    protected RequestListener requestListener; 
-    
+    protected RequestListener requestListener;
+
     /**
      * Creates a new <code>Cocoon</code> instance.
      *
@@ -178,33 +177,33 @@ public class Cocoon
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
             this.context = new ComponentContext(context);
-            
+
             try {
                 DefaultContext setup = (DefaultContext)this.context;
                 this.threads = new TPCThreadManager();
-                
+
                 Parameters params = new Parameters();
                 params.setParameter("threads-per-processor", "1");
                 params.setParameter("sleep-time", "100");
                 params.setParameter("block-timeout", "1000");
                 params.setParameter("force-shutdown", "true");
                 params.makeReadOnly();
-                
+
                 ContainerUtil.enableLogging(this.threads, getLogger().getChildLogger("thread.manager"));
                 ContainerUtil.parameterize(this.threads, params);
                 ContainerUtil.initialize(this.threads);
-                
+
                 this.commands = new CommandManager();
                 ContainerUtil.enableLogging(this.commands, getLogger().getChildLogger("thread.manager"));
                 this.threads.register(this.commands);
-                
+
                 setup.put(Queue.ROLE, this.commands.getCommandSink());
-                
+
                 setup.makeReadOnly();
             } catch (Exception e) {
                 getLogger().error("Could not set up the Command Manager", e);
             }
-            
+
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
             this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
             try {
@@ -284,11 +283,11 @@ public class Cocoon
         } catch (Exception e) {
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
-        
+
         ContainerUtil.initialize(startupManager);
-        
+
         this.configure(startupManager);
-        
+
         ContainerUtil.dispose(startupManager);
         startupManager = null;
 
@@ -315,14 +314,14 @@ public class Cocoon
         }
 
         this.serviceManager = new ComponentManagerWrapper(this.componentManager);
-        
+
         this.environmentHelper = new EnvironmentHelper(
                 (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, this.serviceManager);
 
         this.sourceResolver = (SourceResolver)this.componentManager.lookup(SourceResolver.ROLE);
-        
+
         if (this.componentManager.hasComponent(RequestListener.ROLE)){
             this.requestListener = (RequestListener) this.componentManager.lookup(RequestListener.ROLE);
         }
@@ -486,21 +485,21 @@ public class Cocoon
         this.commands = null;
         ContainerUtil.dispose(this.threads);
         this.threads = null;
-        
+
         if ( this.componentManager != null ) {
             if ( this.requestListener!=null ){
                 this.componentManager.release(this.requestListener);
             }
             this.componentManager.release(this.threadSafeProcessor);
             this.threadSafeProcessor = null;
-            
+
             this.componentManager.release(this.sourceResolver);
             this.sourceResolver = null;
 
             ContainerUtil.dispose(this.componentManager);
-            this.componentManager = null;            
+            this.componentManager = null;
         }
-        
+
         this.context = null;
         this.disposed = true;
     }
@@ -624,7 +623,7 @@ public class Cocoon
                 this.debug(environment, false);
             }
 
-            
+
             if (this.requestListener != null) {
                 try {
                     requestListener.onRequestStart(environment);
@@ -633,7 +632,7 @@ public class Cocoon
                     getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                 }
             }
-            
+
             if (this.threadSafeProcessor != null) {
                 result = this.threadSafeProcessor.process(environment);
                 if (this.requestListener != null) {
@@ -683,7 +682,7 @@ public class Cocoon
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
-            
+
             // TODO (CZ): This is only for testing - remove it later on
             EnvironmentHelper.checkEnvironment(getLogger());
         }
@@ -730,7 +729,7 @@ public class Cocoon
     public Map getComponentConfigurations() {
         return Collections.EMPTY_MAP;
     }
-    
+
     /**
      * Return this (Cocoon is always at the root of the processing chain).
      * @since 2.1.1
@@ -745,7 +744,7 @@ public class Cocoon
     public int getActiveRequestCount() {
         return activeRequestCount;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
