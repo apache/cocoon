@@ -92,12 +92,14 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.1 2003/06/27 20:10:43 stefano Exp $
+ * @version CVS $Id: ImageReader.java,v 1.2 2003/07/03 09:43:25 upayavira Exp $
  */
 final public class ImageReader extends ResourceReader {
 
     private int width;
     private int height;
+    private boolean enlarge;
+    private final static String ENLARGE_DEFAULT = "true";
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
@@ -106,6 +108,13 @@ final public class ImageReader extends ResourceReader {
 
         width = par.getParameterAsInteger("width", 0);
         height = par.getParameterAsInteger("height", 0);
+
+        String enlargePar = par.getParameter("allow-enlarging", ENLARGE_DEFAULT);
+        if ("true".equalsIgnoreCase(enlargePar) || "yes".equalsIgnoreCase(enlargePar)){
+            enlarge = true;
+        } else {
+            enlarge = false;
+        }
     }
 
     /** 
@@ -137,9 +146,19 @@ final public class ImageReader extends ResourceReader {
             }
         }
 
+        if (!enlarge) {
+            if ((nw > ow && nh <= 0) || (oh > nh && nw <=0)) {
+                wm = 1.0d;
+                hm = 1.0d;
+            } else if (nw > ow) {
+                wm = 1.0d;
+            } else if (nh > oh) {
+                hm = 1.0d;
+            }
+        }
         return new AffineTransform(wm, 0.0d, 0.0d, hm, 0.0d, 0.0d);
     }
-    
+
     protected void processStream() throws IOException, ProcessingException {
         if (width > 0 || height > 0) {
             if (getLogger().isDebugEnabled()) {

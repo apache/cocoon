@@ -12,6 +12,7 @@
     <menu-item label="Resource Reader" href="resource-reader.html"/>
   </menu>
   <menu label="Core">
+    <menu-item label="Image Reader" href="image-reader.html"/>
   </menu>
   <menu label="Optional">
     <menu-item label="Database Reader" href="database-reader.html"/>
@@ -21,7 +22,6 @@
     <menu-item label="AxisRPC Reader" href="axisrpc-reader.html"/>
     <menu-item label="Byte Range Resource Reader" href="byterangeresource-reader.html"/>
     <menu-item label="Directory ZIP Archiver" href="directoryziparchiver-reader.html"/>
-    <menu-item label="Image Reader" href="image-reader.html"/>
   </menu>
 </book>
 
