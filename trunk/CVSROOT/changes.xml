@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.84 2000-06-13 22:28:34 stefano Exp $
+  $Id: changes.xml,v 1.85 2000-06-22 22:35:11 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -33,7 +33,7 @@
   </action>
   <action dev="DB" type="fix" due-to="Daniel Schneider" due-to-email="Daniel.Schneider@tecfa.unige.ch">
    XIncludeProcessor now strips document type nodes from included documents
-  </action
+  </action>
   <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
    Added new installation case that should provide insights for newbies.
   </action>
@@ -41,8 +41,9 @@
    fixed null pointer exception in XIncludeProcessor.
   </action>
   <action dev="SM" type="add">
-   Added printer friendly skin so tha documentation can now be generated to
-   be printer friendly when needed.
+   Added printer friendly skin so the documentation can now be generated to
+   be printer friendly when needed. (stylesheets are pretty crappy right now, but hopefully
+   some nice guy will improve them)
   </action>
  </release>
  
