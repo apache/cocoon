@@ -1,6 +1,18 @@
-/* ========================================================================== *
- * Copyright (C) 1996-2004 VNU Business Publications LTD. All rights reserved *
- * ========================================================================== */
+/*
+ * Copyright 1999-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.cocoon.kernel;
 
 import org.apache.cocoon.kernel.composition.Wire;
@@ -12,10 +24,9 @@ import org.apache.cocoon.kernel.resolution.Resource;
  * <p>The {@link CoreWirings} provides an implementation of the {@link Wirings}
  * interface wrapping all blocks installed in a {@link KernelDeployer}.</p> 
  *
- * @version CVS $Revision: 1.2 $
- * @author <a href="mailto:pier_fumagalli@vnu.co.uk">Pier Fumagalli</a>
- * @author Copyright &copy; 1996-2004 <a href="http://www.vnunet.com/">VNU
- *         Business Publications LTD.</a> All rights reserved
+ *
+ * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class CoreWirings implements Wirings {
     
