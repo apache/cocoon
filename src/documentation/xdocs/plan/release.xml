@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
 
 <!--
-  $Id: release.xml,v 1.8 2003/11/14 09:42:23 cziegeler Exp $
+  $Id: release.xml,v 1.9 2004/02/02 08:34:59 cziegeler Exp $
 -->
 
 <document>
@@ -19,9 +19,9 @@
  <s1 title="Timeframe">
   <p>This is the current time frame for the next releases:</p>
   <ul>
-   <li>December 03/January 04 : 2.1.4 (maintainance release)</li>
-   <li>Not schedulded yet     : 2.2 Milestone 1</li>
-   <li>On request             : 2.0.5 (maintainance release)</li>
+   <li>2004/02/12         : 2.1.4 (maintainance release)</li>
+   <li>Not schedulded yet : 2.2 Milestone 1</li>
+   <li>On request         : 2.0.5 (maintainance release)</li>
   </ul>
  </s1>
 
