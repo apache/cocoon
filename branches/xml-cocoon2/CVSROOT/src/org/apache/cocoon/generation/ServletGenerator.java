@@ -10,15 +10,14 @@ package org.apache.cocoon.generation;
 import java.util.Map;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Composer;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.http.HttpRequest;
-import org.apache.cocoon.environment.http.HttpResponse;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.http.HttpContext;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -26,21 +25,21 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-23 13:48:53 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:33 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer {
 
-    protected HttpRequest request=null;
-    protected HttpResponse response=null;
-    protected ServletContext context=null;
+    protected Request request=null;
+    protected Response response=null;
+    protected HttpContext context=null;
 
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
 
       super.setup(resolver, objectModel, src, par);
-      this.request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
-      this.response = (HttpResponse) objectModel.get(Constants.RESPONSE_OBJECT);
-      this.context = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
+      this.request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
+      this.response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
+      this.context = (HttpContext) objectModel.get(Constants.CONTEXT_OBJECT);
     }
 }

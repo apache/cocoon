@@ -9,7 +9,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.util.Enumeration;
 
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Vector;
@@ -24,7 +24,7 @@ import org.apache.cocoon.Constants;
  * The <code>HttpServletRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-26 19:40:44 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:18 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -48,7 +48,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     elementData(contentHandler, "uri", request.getRequestURI());
   }
 
@@ -61,7 +61,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getRequestURI();
   }
 
@@ -78,7 +78,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     String name,
     String defaultValue
   ) {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     String value = request.getParameter(name);
 
     if (value == null) {
@@ -106,7 +106,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     AttributesImpl attr = new AttributesImpl();
     addAttribute(attr, "name", name);
 
@@ -132,7 +132,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     AttributesImpl attr = new AttributesImpl();
     addAttribute(attr, "name", name);
 
@@ -162,7 +162,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     start(contentHandler, "parameter-names");
 
     Enumeration e = request.getParameterNames();
@@ -184,7 +184,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel,
     String name
   ) {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getHeader(name);
   }
 
@@ -203,7 +203,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     AttributesImpl attr = new AttributesImpl();
     addAttribute(attr, "name", name);
 
@@ -233,7 +233,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     start(contentHandler, "header-names");
 
     Enumeration e = request.getHeaderNames();
@@ -257,7 +257,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel,
     String name) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     HttpSession session = request.getSession(false);
     return session.getAttribute(name);
   }
@@ -275,7 +275,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     String name,
     String defaultValue) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     HttpSession session = request.getSession(false);
     Object value = null;
 
@@ -300,7 +300,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel,
     String name) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     request.removeAttribute(name);
   }
 
@@ -314,7 +314,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel,
     String name) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getAttribute(name);
   }
 
@@ -329,7 +329,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     String name,
     Object value) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     request.setAttribute(name, value);
   }
 
@@ -351,7 +351,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     AttributesImpl attr = new AttributesImpl();
     addAttribute(attr, "name", name);
 
@@ -374,9 +374,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      return request.getRemoteUser();
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getRemoteUser();
+  }
 
     /**
      * Output the login of the user making the request
@@ -392,9 +392,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      elementData(contentHandler, "remote-user", request.getRemoteUser());
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    elementData(contentHandler, "remote-user", request.getRemoteUser());
+  }
 
 
     /**
@@ -406,9 +406,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      return request.getMethod();
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getMethod();
+  }
 
     /**
      * Output the name of the HTTP method with which the request was made,
@@ -423,9 +423,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      elementData(contentHandler, "method", request.getMethod());
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    elementData(contentHandler, "method", request.getMethod());
+  }
 
     /**
      * Output the query string that is contained in the request URL after the path,
@@ -437,9 +437,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      return request.getQueryString();
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getQueryString();
+  }
 
     /**
      * Output the query string that is contained in the request URL after the path,
@@ -455,9 +455,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      elementData(contentHandler, "query-string", request.getQueryString());
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    elementData(contentHandler, "query-string", request.getQueryString());
+  }
 
     /**
      * Output the name and version of the protocol the request uses in the form of
@@ -469,9 +469,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      return request.getProtocol();
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getProtocol();
+  }
 
     /**
      * Output the name and version of the protocol the request uses in the form of
@@ -487,7 +487,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     )
       throws SAXException
     {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       elementData(contentHandler, "protocol", request.getProtocol());
     }
 
@@ -502,9 +502,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      return request.getRemoteHost();
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getRemoteHost();
+  }
 
     /**
      * Output the fully qualified name of the client that sent the request, or
@@ -521,7 +521,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     elementData(contentHandler, "remote-user", request.getRemoteHost());
   }
 
@@ -534,9 +534,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel
   )
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
-      return request.getRemoteAddr();
-    }
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getRemoteAddr();
+  }
 
     /**
      * Output the IP address of the client that sent the request
@@ -551,9 +551,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
   )
     throws SAXException
   {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     elementData(contentHandler, "remote-address", request.getRemoteAddr());
-    }
+  }
 
 
   /**
@@ -563,7 +563,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static boolean isSecure(
     Map objectModel) {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.isSecure();
   }
 
@@ -576,7 +576,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   public static String getServerName(
     Map objectModel) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getServerName();
   }
 
@@ -588,7 +588,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   public static int getServerPort(
     Map objectModel) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getServerPort();
   }
 
@@ -600,7 +600,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static Vector getSessionAttributeNames (
     Map objectModel) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       Vector v = new Vector();
       Enumeration e = request.getSession().getAttributeNames();
 
@@ -621,7 +621,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static long getSessionCreationTime (
     Map objectModel) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       return request.getSession().getCreationTime();
   }
 
@@ -632,7 +632,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static String getSessionId (
     Map objectModel) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       return request.getSession().getId();
   }
 
@@ -643,7 +643,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static long getSessionLastAccessedTime (
     Map objectModel) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       return request.getSession().getLastAccessedTime();
   }
 
@@ -654,7 +654,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static long getSessionMaxInactiveInterval (
     Map objectModel) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       return request.getSession().getMaxInactiveInterval();
   }
 
@@ -667,7 +667,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   public static void setSessionMaxInactiveInterval (
     Map objectModel,
     int interval) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       request.getSession().setMaxInactiveInterval(interval);
   }
 
@@ -678,7 +678,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static void invalidateSession (
     Map objectModel) {
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       request.getSession().invalidate();
   }
 
@@ -690,7 +690,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    */
   public static boolean isSessionNew(
     Map objectModel) {
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getSession().isNew();
   }
 
@@ -704,7 +704,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     Map objectModel,
     String name) {
 
-    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     request.getSession().removeAttribute(name);
   }
 }

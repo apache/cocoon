@@ -16,14 +16,14 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-23 19:38:15 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-30 17:14:33 $
  */
 public class RequestGenerator extends ServletGenerator implements Poolable {
 
@@ -36,7 +36,7 @@ public class RequestGenerator extends ServletGenerator implements Poolable {
     public void generate()
     throws SAXException {
         
-        HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
+        Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping("",URI);
         AttributesImpl attr=new AttributesImpl();

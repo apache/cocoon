@@ -28,16 +28,14 @@ import org.xml.sax.SAXException;
 
 public class HttpEnvironment extends AbstractEnvironment {
 
-    /** The HttpServletRequest */
+    /** The HttpRequest */
     private HttpRequest request = null;
-    private HttpServletRequest servletRequest = null;
 
-    /** The HttpServletResponse */
+    /** The HttpResponse */
     private HttpResponse response = null;
-    private HttpServletResponse servletResponse = null;
 
-    /** The ServletContext */
-    private ServletContext servletContext = null;
+    /** The HttpContext */
+    private HttpContext context = null;
 
     /** The OutputStream */
     private OutputStream outputStream = null;
@@ -46,20 +44,19 @@ public class HttpEnvironment extends AbstractEnvironment {
      * Constructs a HttpEnvironment object from a HttpServletRequest
      * and HttpServletResponse objects
      */
-    public HttpEnvironment (String uri, HttpServletRequest request,
-                            HttpServletResponse response,
+    public HttpEnvironment (String uri, HttpServletRequest req,
+                            HttpServletResponse res,
                             ServletContext servletContext)
     throws MalformedURLException, IOException {
-        super(uri, request.getParameter(Constants.VIEW_PARAM), servletContext.getRealPath("/"), request.getParameter(Constants.ACTION_PARAM));
-        this.request = new HttpRequest (request, this);
-        this.servletRequest = request;
-        this.response = new HttpResponse (response);
-        this.servletResponse = response;
-        this.servletContext = servletContext;
+        super(uri, req.getParameter(Constants.VIEW_PARAM), servletContext.getRealPath("/"), req.getParameter(Constants.ACTION_PARAM));
+
+		this.request = new HttpRequest (req, this);
+		this.response = new HttpResponse (res);
+		this.context = new HttpContext (servletContext);
         this.outputStream = response.getOutputStream();
         this.objectModel.put(Constants.REQUEST_OBJECT, this.request);
         this.objectModel.put(Constants.RESPONSE_OBJECT, this.response);
-        this.objectModel.put(Constants.CONTEXT_OBJECT, this.servletContext);
+        this.objectModel.put(Constants.CONTEXT_OBJECT, this.context);
     }
 
    /**

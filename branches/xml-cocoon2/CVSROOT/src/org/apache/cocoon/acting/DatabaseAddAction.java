@@ -31,7 +31,7 @@ import org.apache.avalon.configuration.Parameters;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
 import org.apache.avalon.util.datasource.DataSourceComponent;
 
@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-03-19 21:20:12 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-30 17:14:09 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();
@@ -62,7 +62,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
-            HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
+            Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
             if (conn.getAutoCommit() == true) {
                 conn.setAutoCommit(false);

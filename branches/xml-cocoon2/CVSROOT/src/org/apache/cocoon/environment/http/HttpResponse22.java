@@ -17,6 +17,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
+import org.apache.cocoon.environment.Response;
+
 /**
  *
  * Implements the {@link HttpServletResponse} interface to provide HTTP-specific
@@ -24,7 +26,7 @@ import javax.servlet.ServletOutputStream;
  * to access HTTP headers and cookies.
  */
 
-public class HttpResponse implements HttpServletResponse {
+public class HttpResponse implements HttpServletResponse, Response {
 
     /** The real HttpServletResponse object */
     private HttpServletResponse res = null;
@@ -127,11 +129,13 @@ public class HttpResponse implements HttpServletResponse {
     }
 
     public ServletOutputStream getOutputStream() throws IOException {
-        throw new IllegalStateException ("you are not a serializer or reader");
+        //throw new IllegalStateException ("you are not a serializer or reader");
+        return this.res.getOutputStream();
     }
 
     public PrintWriter getWriter() throws IOException {
-        throw new IllegalStateException ("you are not a serializer or reader");
+        //throw new IllegalStateException ("you are not a serializer or reader");
+        return this.res.getWriter();
     }
 
     public void setContentLength(int len) {

@@ -13,24 +13,24 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import javax.servlet.ServletContext;
+import org.apache.cocoon.environment.Context;
 
 /**
  *  This class implements the handler for the context: URL
  *
  * @author: <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author: <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 05:55:25 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-30 17:14:43 $
  */
 public class Handler extends URLStreamHandler {
 
-    /** The ServletContext */
-    private static ServletContext context;
+    /** The Context */
+    private static Context context;
 
     /**
      * Sets the ServletContext to pull files from
      */
-    public static void setContext(ServletContext context) {
+    public static void setContext(Context context) {
         if (Handler.context == null) {
             Handler.context = context;
         }

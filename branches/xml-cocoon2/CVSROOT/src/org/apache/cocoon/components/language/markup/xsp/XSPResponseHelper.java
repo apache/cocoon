@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.cocoon.environment.http.HttpResponse;
+import org.apache.cocoon.environment.Response;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
@@ -22,10 +22,10 @@ import org.apache.cocoon.Constants;
 import org.apache.log.LogKit;
 
 /**
- * The XSP <code>HttpResponse</code> object helper
+ * The XSP <code>Response</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-23 19:38:07 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-30 17:14:19 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -44,7 +44,7 @@ public class XSPResponseHelper extends XSPObjectHelper {
    * @param value The header value
    */
   public static void setHeader(Map objectModel, String name, String value) {
-    HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+    Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
     response.setHeader(name, value);
   }
 
@@ -60,7 +60,7 @@ public class XSPResponseHelper extends XSPObjectHelper {
     String name,
     String value
   ) {
-    HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+    Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
     response.addHeader(name, value);
   }
 
@@ -71,7 +71,7 @@ public class XSPResponseHelper extends XSPObjectHelper {
    * @param type The content type
    */
   public static void setContentType(Map objectModel, String type) {
-    HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+    Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
     response.setContentType(type);
   }
 
@@ -83,7 +83,7 @@ public class XSPResponseHelper extends XSPObjectHelper {
    */
   public static void sendRedirect(Map objectModel, String location) {
     try {
-      HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+      Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
       response.sendRedirect(response.encodeRedirectURL(location));
     }
     catch (IOException e) {LogKit.getLoggerFor("cocoon").warn("XSPResponseHelper.sendRedirect", e);}
@@ -99,7 +99,7 @@ public class XSPResponseHelper extends XSPObjectHelper {
     Map objectModel,
     String input
   ) {
-      HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+      Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
       return response.encodeURL(input);
   }
 

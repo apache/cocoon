@@ -17,11 +17,12 @@ import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
+
+import org.apache.cocoon.environment.Request;
 
 /**
  *
@@ -29,7 +30,7 @@ import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
  * to provide request information for HTTP servlets.
  */
 
-public class RequestWrapper extends MaybeUploadRequestWrapper implements HttpServletRequest {
+public class RequestWrapper extends MaybeUploadRequestWrapper implements HttpServletRequest, Request {
 
     public RequestWrapper(HttpServletRequest httpservletrequest, File file, boolean flag, boolean flag1)
         throws Exception {

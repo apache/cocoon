@@ -50,7 +50,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
@@ -174,7 +174,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-26 19:40:41 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-30 17:14:08 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -237,7 +237,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
     /**
      * Get the Statement column so that the results are mapped correctly.
      */
-    protected Object getColumn(ResultSet set, HttpRequest request, Configuration entry)
+    protected Object getColumn(ResultSet set, Request request, Configuration entry)
     throws Exception {
         Integer type = (Integer) AbstractDatabaseAction.typeConstants.get(entry.getAttribute("type"));
         String attribute = entry.getAttribute("param", "");
@@ -311,7 +311,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
     /**
      * Set the Statement column so that the results are mapped correctly.
      */
-    protected void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry)
+    protected void setColumn(PreparedStatement statement, int position, Request request, Configuration entry)
     throws Exception {
         Integer typeObject = (Integer) AbstractDatabaseAction.typeConstants.get(entry.getAttribute("type"));
 

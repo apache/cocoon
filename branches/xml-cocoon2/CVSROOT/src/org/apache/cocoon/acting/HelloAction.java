@@ -21,14 +21,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 
 /**
  * A simple Action that tracks if a <code>Session</code> object
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-23 13:48:52 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:10 $
  */
 public class HelloAction extends ComposerAction {
 
@@ -37,9 +37,9 @@ public class HelloAction extends ComposerAction {
      * has been created
      */
     public Map act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
-        HttpRequest req = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
-        if (req != null) {
-            HttpSession session = req.getSession (false);
+        Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
+        if (request != null) {
+            HttpSession session = request.getSession (false);
 
             if (session != null) {
                 if (session.isNew()) {

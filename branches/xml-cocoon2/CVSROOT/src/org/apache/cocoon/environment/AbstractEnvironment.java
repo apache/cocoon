@@ -15,10 +15,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.cocoon.environment.Environment;
 
 import org.apache.avalon.AbstractLoggable;

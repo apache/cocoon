@@ -14,14 +14,12 @@ import java.net.MalformedURLException;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-
 /**
  * A collection of class management utility methods.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-14 11:39:56 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-30 17:14:41 $
  */
 public class ClassUtils {
 

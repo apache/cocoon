@@ -9,14 +9,12 @@ package org.apache.cocoon.environment.http;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-//import java.io.UnsupportedEncodingException;
-//import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.http.Cookie;
-//import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+
+import org.apache.cocoon.environment.Response;
 
 /**
  *
@@ -25,7 +23,7 @@ import javax.servlet.ServletOutputStream;
  * to access HTTP headers and cookies.
  */
 
-public class HttpResponse extends HttpServletResponseWrapper {
+public class HttpResponse extends HttpServletResponseWrapper implements Response {
 
     /**
      * Creates a HttpServletResponse based on a real HttpServletResponse object
@@ -37,11 +35,13 @@ public class HttpResponse extends HttpServletResponseWrapper {
     /* The ServletResponse interface methods */
 
     public ServletOutputStream getOutputStream() throws IOException {
-        throw new IllegalStateException ("you are not a serializer or reader");
+        //throw new IllegalStateException ("you are not a serializer or reader");
+        return super.getOutputStream();
     }
 
     public PrintWriter getWriter() throws IOException {
-        throw new IllegalStateException ("you are not a serializer or reader");
+        //throw new IllegalStateException ("you are not a serializer or reader");
+        return super.getWriter();
     }
 }
 

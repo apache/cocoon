@@ -21,13 +21,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.cocoon.environment.Request;
+
 /**
  *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
  * to provide request information for HTTP servlets.
  */
 
-public class HttpRequest implements HttpServletRequest {
+public class HttpRequest implements HttpServletRequest, Request {
 
     /** The real HttpServletRequest object */
     private HttpServletRequest req = null;

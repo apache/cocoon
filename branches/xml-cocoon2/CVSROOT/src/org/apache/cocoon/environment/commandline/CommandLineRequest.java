@@ -18,25 +18,23 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Iterator;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.RequestDispatcher;
-
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.apache.cocoon.environment.Request;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-25 00:30:12 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-30 17:14:26 $
  */
 
 /*
  * NOTE: method with a non-compliant implementation are marked with FIXME
  * and should be fixed in the future if required
  */
-public class CommandLineRequest implements HttpServletRequest {
+public class CommandLineRequest implements Request {
 
     private class IteratorWrapper implements Enumeration {
         private Iterator iterator;
@@ -79,6 +77,8 @@ public class CommandLineRequest implements HttpServletRequest {
         this.parameters = parameters;
         this.headers = headers;
     }
+
+    public Object get(String name) { return getAttribute(name); }
 
     public String getContextPath() { return contextPath; }
     public String getServletPath() { return servletPath; }
@@ -136,7 +136,6 @@ public class CommandLineRequest implements HttpServletRequest {
     }
 
     public BufferedReader getReader() throws IOException { return null; }
-    public ServletInputStream getInputStream() throws IOException { return null; }
     public String getCharacterEncoding() { return characterEncoding; }
     public int getContentLength() { return -1; }
 
@@ -165,7 +164,6 @@ public class CommandLineRequest implements HttpServletRequest {
 
     public String getAuthType() { return null; }
     public boolean isSecure() { return false; }
-    public RequestDispatcher getRequestDispatcher(String path) { return null; }
     public boolean isUserInRole(String role) { return false; }
     public java.security.Principal getUserPrincipal() { return null; }
 

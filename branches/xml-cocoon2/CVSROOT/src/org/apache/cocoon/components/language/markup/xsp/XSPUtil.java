@@ -9,8 +9,6 @@
 
 package org.apache.cocoon.components.language.markup.xsp;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.io.File;
@@ -36,6 +34,7 @@ import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.Tokenizer;
@@ -44,13 +43,11 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
-import javax.servlet.ServletContext;
-
 /**
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.9 $ $Date: 2001-03-23 19:38:08 $
+ * @version $Revision: 1.1.2.10 $ $Date: 2001-03-30 17:14:21 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {
@@ -103,11 +100,11 @@ public class XSPUtil {
 
     public static String relativeFilename(String filename, Map objectModel) 
         throws IOException {
-            ServletContext context = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
             File file = new File(filename);
             if (file.isAbsolute()) {
                 return filename;
             }
+            Context context = (Context) objectModel.get(Constants.CONTEXT_OBJECT);
             return NetUtils.getPath(context.getResource(filename).toExternalForm());
     }
 
@@ -281,7 +278,7 @@ public class XSPUtil {
 
     public static Object getContextAttribute(Map objectModel, String name)
     {
-        ServletContext context = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
+        Context context = (Context) objectModel.get(Constants.CONTEXT_OBJECT);
         return context.getAttribute(name);
     }
 }

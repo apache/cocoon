@@ -12,13 +12,15 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.cocoon.environment.Request;
+
 /**
  *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
  * to provide request information for HTTP servlets.
  */
 
-public class HttpRequest extends HttpServletRequestWrapper {
+public class HttpRequest extends HttpServletRequestWrapper implements Request {
 
     /** The HttpEnvironment object */
     private HttpEnvironment env = null;

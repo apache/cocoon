@@ -13,8 +13,6 @@ import java.io.IOException;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -29,7 +27,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-19 21:20:39 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-30 17:14:38 $
  */
 
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {

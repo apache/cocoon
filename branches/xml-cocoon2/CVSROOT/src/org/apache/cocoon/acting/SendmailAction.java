@@ -25,7 +25,7 @@ import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
 
@@ -74,7 +74,7 @@ public class SendmailAction extends AbstractAction {
     HashMap results = new HashMap();
     try {
       getLogger().debug("SendmailAction: act start");
-      HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+      Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
       Properties properties = new Properties(default_properties);
       if (parameters.isParameter("smtphost")) {
         properties.put("mail.smtp.host",parameters.getParameter("smtphost",null));

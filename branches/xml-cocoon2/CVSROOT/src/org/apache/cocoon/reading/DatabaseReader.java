@@ -35,8 +35,8 @@ import java.util.Date;
 
 import org.xml.sax.SAXException;
 
-import org.apache.cocoon.environment.http.HttpRequest;
-import org.apache.cocoon.environment.http.HttpResponse;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 
 /**
  * This Reader pulls a resource from a database.  It is configured with
@@ -108,18 +108,18 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
             ResultSet set = statement.executeQuery();
             if (set.next() == false) throw new ResourceNotFoundException("There is no image with that key");
 
-            HttpResponse res = (HttpResponse) objectModel.get(Constants.RESPONSE_OBJECT);
-            HttpRequest req = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
+            Response response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
+            Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
-            if (this.modifiedSince(set, req, res)) {
+            if (this.modifiedSince(set, request, response)) {
                 Blob object = set.getBlob(1);
 
                 if (object == null) {
                     throw new ResourceNotFoundException("There is no image with that key");
                 }
 
-                res.setContentType(this.parameters.getParameter("content-type", ""));
-                this.serialize(object, res);
+                response.setContentType(this.parameters.getParameter("content-type", ""));
+                this.serialize(object, response);
             }
 
             con.commit();
@@ -187,7 +187,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
      * more prone to change than filesystems, and don't have intrinsic
      * timestamps on column updates.
      */
-    public boolean modifiedSince(ResultSet set, HttpRequest request, HttpResponse response)
+    public boolean modifiedSince(ResultSet set, Request request, Response response)
     throws SQLException {
         String lastModified = this.parameters.getParameter("last-modified", null);
 
@@ -207,7 +207,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
     /**
      * This method actually performs the serialization.
      */
-    public void serialize(Blob object, HttpResponse response)
+    public void serialize(Blob object, Response response)
     throws IOException, SQLException {
         if (object == null) {
             throw new SQLException("The Blob is empty!");

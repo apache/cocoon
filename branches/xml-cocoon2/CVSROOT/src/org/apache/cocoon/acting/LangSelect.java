@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.environment.http.HttpRequest;
+import org.apache.cocoon.environment.Request;
 
 import org.apache.avalon.configuration.Parameters;
 
@@ -76,10 +76,10 @@ public class LangSelect extends java.lang.Object implements Action {
             objectModel.put("lang", lang);
         }
 
-        HttpRequest req =
-                (HttpRequest)(objectModel.get(Constants.REQUEST_OBJECT));
+        Request request =
+                (Request)(objectModel.get(Constants.REQUEST_OBJECT));
 
-        HttpSession session = req.getSession();
+        HttpSession session = request.getSession();
         if (session != null) {
             if (session.getAttribute("lang") == null) {
                 session.setAttribute("lang", lang);
@@ -120,15 +120,15 @@ public class LangSelect extends java.lang.Object implements Action {
         }
         String def_lang = par.getParameter("default_lang", LangSelect.DEFAULT_LANG);
 
-        HttpRequest req =
-                (HttpRequest)(objectModel.get(Constants.REQUEST_OBJECT));
+        Request request =
+                (Request)(objectModel.get(Constants.REQUEST_OBJECT));
 
         String lang = null;
 
-        lang = req.getParameter("lang");
+        lang = request.getParameter("lang");
 
         if (lang == null) {
-            HttpSession session = req.getSession(false);
+            HttpSession session = request.getSession(false);
             if (session != null) {
                 Object session_lang = session.getAttribute("lang");
                 if (session_lang != null) {
@@ -139,7 +139,7 @@ public class LangSelect extends java.lang.Object implements Action {
         }
 
         if (lang == null) {
-            Cookie[] cookies = req.getCookies();
+            Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for ( int i = 0; i < cookies.length; i++) {
                     Cookie cookie = cookies[i];
@@ -152,7 +152,7 @@ public class LangSelect extends java.lang.Object implements Action {
 
         if (lang == null) {
 
-            Enumeration locales = req.getLocales();
+            Enumeration locales = request.getLocales();
             while (locales.hasMoreElements()) {
                 Locale locale = (Locale)(locales.nextElement());
                 langs_user.add(locale.getLanguage());

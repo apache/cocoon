@@ -13,24 +13,20 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
+
+import org.apache.cocoon.environment.Response;
 
 /**
  * Creates a specific servlet response simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-05 22:02:03 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-30 17:14:27 $
  */
 
-public class CommandLineResponse implements HttpServletResponse {
+public class CommandLineResponse implements Response {
     
     public PrintWriter getWriter() throws IOException {
-        throw new IllegalStateException ("you are not a serializer or reader");
-    }
-    public ServletOutputStream getOutputStream() throws IOException { 
         throw new IllegalStateException ("you are not a serializer or reader");
     }
 
