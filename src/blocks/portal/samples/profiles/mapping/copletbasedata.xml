@@ -5,7 +5,7 @@
 	<class name="org.apache.cocoon.portal.profile.impl.CopletBaseDataManager">
 		<map-to xml="coplets" />
 
-		<field name="copletBaseData" type="org.apache.cocoon.portal.coplet.CopletBaseData" collection="vector" handler="org.apache.cocoon.portal.profile.impl.CopletBaseDataFieldHandler">
+		<field name="copletBaseData" type="org.apache.cocoon.portal.coplet.CopletBaseData" collection="vector" handler="org.apache.cocoon.portal.util.CopletBaseDataFieldHandler">
 			<bind-xml auto-naming="deriveByClass" />
 		</field>
 	</class>
@@ -21,7 +21,7 @@
 			<bind-xml name="coplet-adapter" />
 		</field>
 
-		<field name="copletConfig" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.profile.impl.ConfigurationFieldHandler">
+		<field name="copletConfig" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.util.ConfigurationFieldHandler">
 			<bind-xml name="configuration"/>
 		</field>
 	</class>
