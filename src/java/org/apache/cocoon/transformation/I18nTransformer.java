@@ -76,8 +76,8 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
@@ -87,10 +87,12 @@ import org.apache.cocoon.i18n.BundleFactory;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.transformation.helpers.MirrorRecorder;
-import org.apache.excalibur.source.Source;
+
 import org.apache.excalibur.source.SourceValidity;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -251,7 +253,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.16 2003/11/27 03:40:41 vgritsenko Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.17 2003/11/27 18:40:03 joerg Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
