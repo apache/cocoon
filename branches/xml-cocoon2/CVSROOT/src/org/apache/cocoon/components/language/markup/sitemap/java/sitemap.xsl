@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.84 2001-02-27 13:47:13 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.85 2001-02-27 15:43:39 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -629,7 +629,9 @@
     </xsl:variable>
 
     <!-- collect the parameters -->
-    <xsl:apply-templates select="parameter"/>
+    <xsl:apply-templates select="parameter">
+      <xsl:with-param name="param">param</xsl:with-param>
+    </xsl:apply-templates>
 
     <!-- generate the invocation of the act method of the action component -->
     <xsl:choose>
@@ -672,24 +674,17 @@
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->
-    <xsl:if test="count(parameter)>0">
-      nparam = new Parameters ();
-    </xsl:if>
+    nparam = new Parameters ();
 
     <!-- generate the value used for the parameter argument in the invocation of the act method of this action -->
-    <xsl:variable name="component-param">
-      <xsl:choose>
-        <xsl:when test="count(parameter)>0">
-          param
-        </xsl:when>
-        <xsl:otherwise>
-          nparam
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="component-param">nparam</xsl:variable>
 
     <!-- collect the parameters -->
-    <xsl:apply-templates select="parameter"/>
+    <xsl:apply-templates select="parameter">
+      <xsl:with-param name="param" select="$component-param"/>
+    </xsl:apply-templates>
+
+    nparam.merge(param);
 
     <!-- generate the invocation of the act method of the action component -->
     <xsl:choose>
@@ -749,7 +744,9 @@
     </xsl:variable>
 
     <!-- collect the parameters -->
-    <xsl:apply-templates select="parameter"/>
+    <xsl:apply-templates select="parameter">
+        <xsl:with-param name="param">param</xsl:with-param>
+    </xsl:apply-templates>
 
     <!-- generate the invocation of the act method of the action component -->
     <xsl:choose>
@@ -884,7 +881,8 @@
 
   <!-- collect parameter definitions -->
   <xsl:template match="map:pipeline//parameter | map:action-set//parameter">
-    param.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfMaps, "<xsl:value-of select="@value"/>"));
+    <xsl:param name="param"/>
+    <xsl:value-of select="$param"/>.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfMaps, "<xsl:value-of select="@value"/>"));
   </xsl:template>
 
   <!-- FIXME:(GP) is this still valid? -->
@@ -1047,7 +1045,9 @@
     </xsl:variable>
 
     <!-- collect the parameters -->
-    <xsl:apply-templates select="parameter"/>
+    <xsl:apply-templates select="parameter">
+        <xsl:with-param name="param">param</xsl:with-param>
+    </xsl:apply-templates>
 
     getLogger().debug("Component <xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>(<xsl:value-of select="$component-param"/>)");
     <!-- determine the right invokation according to "has a src attribute" and "has a mime-type attribute" -->
