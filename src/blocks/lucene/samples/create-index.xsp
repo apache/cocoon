@@ -79,6 +79,11 @@
     <content>
       <h1>Create a Lucene search index</h1>
       <para>
+        <font size="-1">
+          <a href="welcome">Welcome</a>
+        </font>
+      </para>
+      <para>
         This process might take some time (follow the tail of your logfiles
         to see the indexer in progress).
         <ul>
