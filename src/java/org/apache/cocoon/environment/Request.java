@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.3 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: Request.java,v 1.4 2003/07/18 20:53:50 stephan Exp $
  *
  */
 
@@ -112,6 +112,46 @@ public interface Request {
      */
 
     Enumeration getAttributeNames();
+
+    /**
+     *
+     * Stores an attribute in this request.
+     * Attributes are reset between requests.
+     *
+     * <p>Attribute names should follow the same conventions as
+     * package names. Names beginning with <code>java.*</code>,
+     * <code>javax.*</code>, and <code>com.sun.*</code>, are
+     * reserved for use by Sun Microsystems.
+     *
+     *
+     * @param name                        a <code>String</code> specifying
+     *                                        the name of the attribute
+     *
+     * @param o                                the <code>Object</code> to be stored
+     *
+     */
+
+    void setAttribute(String name, Object o);
+
+    /**
+     *
+     * Removes an attribute from this request.  This method is not
+     * generally needed as attributes only persist as long as the request
+     * is being handled.
+     *
+     * <p>Attribute names should follow the same conventions as
+     * package names. Names beginning with <code>java.*</code>,
+     * <code>javax.*</code>, and <code>com.sun.*</code>, are
+     * reserved for use by Sun Microsystems.
+     *
+     *
+     * @param name                        a <code>String</code> specifying
+     *                                        the name of the attribute to remove
+     *
+     */
+
+    void removeAttribute(String name);
+
 
     /**
      *
@@ -296,45 +336,6 @@ public interface Request {
      */
 
     String getRemoteHost();
-
-    /**
-     *
-     * Stores an attribute in this request.
-     * Attributes are reset between requests.
-     *
-     * <p>Attribute names should follow the same conventions as
-     * package names. Names beginning with <code>java.*</code>,
-     * <code>javax.*</code>, and <code>com.sun.*</code>, are
-     * reserved for use by Sun Microsystems.
-     *
-     *
-     * @param name                        a <code>String</code> specifying
-     *                                        the name of the attribute
-     *
-     * @param o                                the <code>Object</code> to be stored
-     *
-     */
-
-    void setAttribute(String name, Object o);
-
-    /**
-     *
-     * Removes an attribute from this request.  This method is not
-     * generally needed as attributes only persist as long as the request
-     * is being handled.
-     *
-     * <p>Attribute names should follow the same conventions as
-     * package names. Names beginning with <code>java.*</code>,
-     * <code>javax.*</code>, and <code>com.sun.*</code>, are
-     * reserved for use by Sun Microsystems.
-     *
-     *
-     * @param name                        a <code>String</code> specifying
-     *                                        the name of the attribute to remove
-     *
-     */
-
-    void removeAttribute(String name);
 
     /**
      *
