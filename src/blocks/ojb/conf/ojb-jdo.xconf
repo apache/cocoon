@@ -15,7 +15,9 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="ojb-jdo">
-  <!-- Persistent Manager Factory for JDO -->
-  <!-- <ojb-jdo logger="core.ojb.jdo"/> -->
+<xconf xpath="/cocoon" unless="comment()[contains(.,'ojb-jdo')]">
+  <!-- Persistent Manager Factory for JDO.
+       Requires javax.jdo package.
+  <ojb-jdo logger="core.ojb.jdo"/>
+  -->
 </xconf>

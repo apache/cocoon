@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[class='org.apache.cocoon.ojb.components.LoggerImpl']">
+<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.ojb.components.LoggerImpl']">
   <!-- OJB Logger -->
   <component role="org.apache.cocoon.ojb.components.Logger"
              class="org.apache.cocoon.ojb.components.LoggerImpl"

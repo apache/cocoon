@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[class='org.apache.cocoon.ojb.components.ConnectionFactoryImpl']">
+<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.ojb.components.ConnectionFactoryImpl']">
   <!-- OJB Connection Factory -->
   <component role="org.apache.cocoon.ojb.components.ConnectionFactory"
              class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"
