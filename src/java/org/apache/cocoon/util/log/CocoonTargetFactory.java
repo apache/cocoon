@@ -89,7 +89,7 @@ import org.apache.log.format.Formatter;
  * </dl>
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: CocoonTargetFactory.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: CocoonTargetFactory.java,v 1.3 2004/03/28 10:27:20 antonio Exp $
  */
 public class CocoonTargetFactory
     extends FileTargetFactory
@@ -102,26 +102,21 @@ public class CocoonTargetFactory
     private static final String XFORMAT =
         "priority time category uri thread class message throwable";
 
-    protected Formatter getFormatter(final Configuration conf)
-    {
+    protected Formatter getFormatter(final Configuration conf) {
         final String type = conf.getAttribute("type", "unknown");
 
-        if ("cocoon".equals(type))
-        {
+        if ("cocoon".equals(type)) {
             int depth = conf.getAttributeAsInteger( "depth", 0 );
             final CocoonLogFormatter formatter = new CocoonLogFormatter( depth );
             final String format = conf.getValue(CFORMAT);
             formatter.setFormat(format);
             return formatter;
-        }
-        else if ("xml".equals(type))
-        {
+        } else if ("xml".equals(type)) {
             final XMLCocoonLogFormatter formatter = new XMLCocoonLogFormatter();
             final String format = conf.getValue(XFORMAT);
             formatter.setTypes(format);
             return formatter;
         }
-
         // default formatter
         return super.getFormatter(conf);
     }
