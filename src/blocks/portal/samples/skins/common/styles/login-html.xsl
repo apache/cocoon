@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!--+ $Id: login-html.xsl,v 1.5 2004/03/06 02:25:56 antonio Exp $ 
+<!--+ $Id$ 
     |
     | Description: Login page to HTML
     |
@@ -77,10 +77,10 @@
 
 <xsl:template match="field">
 	<tr>
-		<td>
+		<td align="left">
 			<xsl:value-of select="@description"/>:
 		</td>
-		<td>
+		<td align="left">
 			<input>
 				<xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
 				<xsl:attribute name="type"><xsl:value-of select="@type"/></xsl:attribute>
