@@ -63,6 +63,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.excalibur.source.Source;
@@ -129,11 +131,11 @@ import java.util.Map;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * <dt>&lt;export-object key="objectMapKey" name="velocityContextName"/&gt; (optional; 0..n)</dt>
- * <dd>Export the object specified by <em>key</em> from the Cocoon
- * object map to the Velocity context of the template.  The object can
- * be accessed from the template as <em>name</em>. Be careful to use a
- * valid VTL variable name.</dd>
+ * <dt>&lt;export-object key="objectMapKey" name="velocityContextName" [scope=request/session/sitemap]/&gt; (optional; 0..n)</dt>
+ * <dd>Export the object specified by <em>key</em> from the <em>request, session, sitemap</em> to
+ * the Velocity context of the template.  The object can be accessed
+ * from the template as <em>name</em>.
+ * Be careful to use a valid VTL variable name.</dd>
  * </dl>
  * </p>
  *
@@ -161,14 +163,17 @@ import java.util.Map;
  * <p> Additional Java objects can be exported from the Cocoon object
  * map to the Velocity context by adding one or more &lt;export-object
  * key="objectMapKey" name="velocityContextName"/&gt; child elements
- * to the generator configuration in the sitemap.</p>
+ * to the generator configuration in the sitemap.
+ * Additionally a scope=[request, session, sitemap] can be set in which
+ * lookup of the object to export is performed.</p>
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:mike@hihat.net">Michael McKibben</a>
- * @version CVS $Id: VelocityGenerator.java,v 1.3 2003/03/18 21:22:09 vgritsenko Exp $
+ * @author <a href=mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
+ * @version CVS $Id: VelocityGenerator.java,v 1.4 2003/05/16 13:35:56 stephan Exp $
  */
 public class VelocityGenerator extends ComposerGenerator
-        implements Initializable, Configurable, LogSystem {
+  implements Initializable, Configurable, LogSystem {
 
     /**
      * Velocity {@link org.apache.velocity.runtime.resource.loader.ResourceLoader}
@@ -179,7 +184,7 @@ public class VelocityGenerator extends ComposerGenerator
      * @see org.apache.velocity.runtime.resource.loader.ResourceLoader
      */
     public static class TemplateLoader
-            extends org.apache.velocity.runtime.resource.loader.ResourceLoader {
+      extends org.apache.velocity.runtime.resource.loader.ResourceLoader {
 
         private Context resolverContext;
 
@@ -190,15 +195,12 @@ public class VelocityGenerator extends ComposerGenerator
          * pipeline.
          *
          * @param config the properties to configure this resource.
-         * @throws IllegalArgumentException thrown if the required
-         *         'context' property is not set.
-         * @throws ClassCastException if the 'context' property is not
          *         of type {@link Context}.
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#init
          */
         public void init(ExtendedProperties config) {
             this.resolverContext = (Context) config.get("context");
-            if (this.resolverContext == null) {
+            if (this.resolverContext==null) {
                 throw new IllegalArgumentException("Runtime Cocoon resolver context not specified in resource loader configuration.");
             }
         }
@@ -206,43 +208,57 @@ public class VelocityGenerator extends ComposerGenerator
         /**
          * @param systemId the path to the resource
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getResourceStream
+         *
+         * @return
          */
         public InputStream getResourceStream(String systemId)
-                throws org.apache.velocity.exception.ResourceNotFoundException {
+          throws org.apache.velocity.exception.ResourceNotFoundException {
             try {
                 return resolveSource(systemId).getInputStream();
             } catch (org.apache.velocity.exception.ResourceNotFoundException ex) {
                 throw ex;
             } catch (Exception ex) {
-                throw new org.apache.velocity.exception.ResourceNotFoundException("Unable to resolve source: " + ex);
+                throw new org.apache.velocity.exception.ResourceNotFoundException("Unable to resolve source: "+
+                    ex);
             }
         }
 
         /**
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified
+         *
+         * @param resource   
+         *
+         * @return
          */
         public boolean isSourceModified(org.apache.velocity.runtime.resource.Resource resource) {
             long lastModified = 0;
+
             try {
                 lastModified = resolveSource(resource.getName()).getLastModified();
             } catch (Exception ex) {
-                super.rsvc.warn("Unable to determine last modified for resource: "
-                                + resource.getName() + ": " + ex);
+                super.rsvc.warn("Unable to determine last modified for resource: "+
+                                resource.getName()+": "+ex);
             }
 
-            return lastModified > 0 ? lastModified != resource.getLastModified() : true;
+            return (lastModified>0)
+                   ? lastModified!=resource.getLastModified() : true;
         }
 
         /**
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified
+         *
+         * @param resource   
+         *
+         * @return
          */
         public long getLastModified(org.apache.velocity.runtime.resource.Resource resource) {
             long lastModified = 0;
+
             try {
                 lastModified = resolveSource(resource.getName()).getLastModified();
             } catch (Exception ex) {
-                super.rsvc.warn("Unable to determine last modified for resource: "
-                                + resource.getName() + ": " + ex);
+                super.rsvc.warn("Unable to determine last modified for resource: "+
+                                resource.getName()+": "+ex);
             }
 
             return lastModified;
@@ -253,9 +269,13 @@ public class VelocityGenerator extends ComposerGenerator
          * recycled later.
          *
          * @param systemId the path to the resource
+         *
+         * @return
          */
-        private Source resolveSource(String systemId) throws org.apache.velocity.exception.ResourceNotFoundException {
+        private Source resolveSource(String systemId)
+          throws org.apache.velocity.exception.ResourceNotFoundException {
             Map sourceCache;
+
             try {
                 sourceCache = (Map) this.resolverContext.get(CONTEXT_SOURCE_CACHE_KEY);
             } catch (ContextException ignore) {
@@ -263,14 +283,17 @@ public class VelocityGenerator extends ComposerGenerator
             }
 
             Source source = (Source) sourceCache.get(systemId);
-            if (source == null) {
+
+            if (source==null) {
                 try {
                     SourceResolver resolver = (SourceResolver) this.resolverContext.get(CONTEXT_RESOLVER_KEY);
+
                     source = resolver.resolveURI(systemId);
                 } catch (ContextException ex) {
                     throw new org.apache.velocity.exception.ResourceNotFoundException("No Cocoon source resolver associated with current request.");
                 } catch (Exception ex) {
-                    throw new org.apache.velocity.exception.ResourceNotFoundException("Unable to resolve source: " + ex);
+                    throw new org.apache.velocity.exception.ResourceNotFoundException("Unable to resolve source: "+
+                        ex);
                 }
             }
 
@@ -281,24 +304,29 @@ public class VelocityGenerator extends ComposerGenerator
 
     /**
      * Holder object for controlling Cocoon objects exported to the
-     * Velocity Context
+     * Velocity Context.
      */
     private static class ObjectExport {
-        public String key;
-        public String name;
+        private String key;
+        private String sourcemap;
+        private String name;
     }
 
     /**
      * Key to lookup the {@link SourceResolver} from the context of
-     * the resource loader
+     * the resource loader.
      */
     final private static String CONTEXT_RESOLVER_KEY = "resolver";
 
     /**
      * Key to lookup the source cache {@link Map} from the context of
-     * the resource loader
+     * the resource loader.
      */
     final private static String CONTEXT_SOURCE_CACHE_KEY = "source-cache";
+
+    private static final String VALUE_SITEMAP = "sitemap";
+    private static final String VALUE_SESSION = "session";
+    private static final String VALUE_REQUEST = "request";
 
     private List objectExports;
     private VelocityEngine tmplEngine;
@@ -313,7 +341,8 @@ public class VelocityGenerator extends ComposerGenerator
      * @param configuration the class configurations.
      * @see org.apache.avalon.framework.configuration.Configurable#configure
      */
-    public void configure(Configuration configuration) throws ConfigurationException {
+    public void configure(Configuration configuration)
+      throws ConfigurationException {
         this.resolverContext = new DefaultContext();
         this.objectExports = new ArrayList();
         this.tmplEngine = new VelocityEngine();
@@ -323,23 +352,27 @@ public class VelocityGenerator extends ComposerGenerator
         this.tmplEngine.setProperty("cocoon.resource.loader.class",
                                     TemplateLoader.class.getName());
         this.tmplEngine.setProperty("cocoon.resource.loader.cache",
-                                    configuration.getAttribute("usecache", "false"));
+                                    configuration.getAttribute("usecache",
+                                        "false"));
         this.tmplEngine.setProperty("cocoon.resource.loader.modificationCheckInterval",
-                                    configuration.getAttribute("checkInterval", "0"));
+                                    configuration.getAttribute("checkInterval",
+                                        "0"));
         this.tmplEngine.setProperty("cocoon.resource.loader.context",
                                     this.resolverContext);
 
         // Read in any additional properties to pass to the VelocityEngine during initialization
         Configuration[] properties = configuration.getChildren("property");
-        for (int i = 0; i < properties.length; ++i) {
+
+        for (int i = 0; i<properties.length; ++i) {
             Configuration c = properties[i];
             String name = c.getAttribute("name");
 
             // Disallow setting of certain properties
-            if (name.startsWith("runtime.log")
-                    || name.indexOf(".resource.loader.") != -1) {
+            if (name.startsWith("runtime.log") ||
+                (name.indexOf(".resource.loader.")!=-1)) {
                 if (getLogger().isInfoEnabled()) {
-                    getLogger().info("ignoring disallowed property '" + name + "'.");
+                    getLogger().info("ignoring disallowed property '"+name+
+                                     "'.");
                 }
                 continue;
             }
@@ -349,9 +382,11 @@ public class VelocityGenerator extends ComposerGenerator
         // Now read in any additional Velocity resource loaders
         List resourceLoaders = new ArrayList();
         Configuration[] loaders = configuration.getChildren("resource-loader");
-        for (int i = 0; i < loaders.length; ++i) {
+
+        for (int i = 0; i<loaders.length; ++i) {
             Configuration loader = loaders[i];
             String name = loader.getAttribute("name");
+
             if (name.equals("cocoon")) {
                 if (getLogger().isInfoEnabled()) {
                     getLogger().info("'cocoon' resource loader already defined.");
@@ -359,20 +394,25 @@ public class VelocityGenerator extends ComposerGenerator
                 continue;
             }
             resourceLoaders.add(name);
-            String prefix = name + ".resource.loader.";
+            String prefix = name+".resource.loader.";
             String type = loader.getAttribute("class");
-            this.tmplEngine.setProperty(prefix + "class", type);
+
+            this.tmplEngine.setProperty(prefix+"class", type);
             Configuration[] loaderProperties = loader.getChildren("property");
-            for (int j = 0; j < loaderProperties.length; j++) {
+
+            for (int j = 0; j<loaderProperties.length; j++) {
                 Configuration c = loaderProperties[j];
                 String propName = c.getAttribute("name");
-                this.tmplEngine.setProperty(prefix + propName, c.getAttribute("value"));
+
+                this.tmplEngine.setProperty(prefix+propName,
+                                            c.getAttribute("value"));
             }
         }
 
         // Velocity expects resource loaders as CSV list
         StringBuffer buffer = new StringBuffer("cocoon");
-        for (Iterator it = resourceLoaders.iterator(); it.hasNext();) {
+
+        for (Iterator it = resourceLoaders.iterator(); it.hasNext(); ) {
             buffer.append(',');
             buffer.append((String) it.next());
         }
@@ -380,11 +420,14 @@ public class VelocityGenerator extends ComposerGenerator
 
         // Read in additional objects to export from the object map
         Configuration[] exports = configuration.getChildren("export-object");
-        for (int i = 0; i < exports.length; ++i) {
+
+        for (int i = 0; i<exports.length; ++i) {
             Configuration c = exports[i];
             ObjectExport export = new ObjectExport();
+
             export.key = c.getAttribute("key");
             export.name = c.getAttribute("name");
+            export.sourcemap = c.getAttribute("scope");
             this.objectExports.add(export);
         }
     }
@@ -399,8 +442,10 @@ public class VelocityGenerator extends ComposerGenerator
     /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters params)
-            throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src,
+                      Parameters params)
+                        throws ProcessingException, SAXException,
+                               IOException {
         if (activeFlag) {
             throw new IllegalStateException("setup called on recyclable sitemap component before properly recycling previous state");
         }
@@ -414,24 +459,32 @@ public class VelocityGenerator extends ComposerGenerator
         // Initialize the Velocity context
         this.velocityContext = new VelocityContext();
         this.velocityContext.put("template", src);
-        this.velocityContext.put("request", ObjectModelHelper.getRequest(objectModel));
-        this.velocityContext.put("response", ObjectModelHelper.getResponse(objectModel));
-        this.velocityContext.put("context", ObjectModelHelper.getContext(objectModel));
+        this.velocityContext.put("request",
+                                 ObjectModelHelper.getRequest(objectModel));
+        this.velocityContext.put("response",
+                                 ObjectModelHelper.getResponse(objectModel));
+        this.velocityContext.put("context",
+                                 ObjectModelHelper.getContext(objectModel));
         this.velocityContext.put("parameters", params);
 
         // Export any additional objects to the Velocity context
-        for (Iterator it = this.objectExports.iterator(); it.hasNext();) {
+        for (Iterator it = this.objectExports.iterator(); it.hasNext(); ) {
             ObjectExport export = (ObjectExport) it.next();
-            Object object = objectModel.get(export.key);
-            if (object != null) {
+            // Object object = objectModel.get(export.key);
+            Object object = this.searchBean(objectModel, export.key,
+                                            export.sourcemap);
+
+            if (object!=null) {
                 this.velocityContext.put(export.name, object);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("exporting object under key '" + export.key
-                                      + "' to velocity context with name '" + export.name + "'.");
+                    getLogger().debug("exporting object under key '"+
+                                      export.key+
+                                      "' to velocity context with name '"+
+                                      export.name+"'.");
                 }
             } else if (getLogger().isInfoEnabled()) {
-                getLogger().info("unable to export object under key '" + export.key
-                                 + "' to velocity context.");
+                getLogger().info("unable to export object under key '"+
+                                 export.key+"' to velocity context.");
             }
         }
 
@@ -450,11 +503,11 @@ public class VelocityGenerator extends ComposerGenerator
         // Recycle all the Source objects resolved/used by our resource loader
         try {
             Map sourceCache = (Map) this.resolverContext.get(CONTEXT_SOURCE_CACHE_KEY);
-            for (Iterator it = sourceCache.values().iterator(); it.hasNext();) {
+
+            for (Iterator it = sourceCache.values().iterator(); it.hasNext(); ) {
                 this.resolver.release((Source) it.next());
             }
-        } catch (ContextException ignore) {
-        }
+        } catch (ContextException ignore) {}
 
         this.velocityContext = null;
         super.recycle();
@@ -466,40 +519,46 @@ public class VelocityGenerator extends ComposerGenerator
      * @see org.apache.cocoon.generation.Generator#generate
      */
     public void generate()
-            throws IOException, SAXException, ProcessingException {
+      throws IOException, SAXException, ProcessingException {
         // Guard against calling generate before setup.
-        if (!activeFlag) {
+        if ( !activeFlag) {
             throw new IllegalStateException("generate called on sitemap component before setup.");
         }
 
         SAXParser parser = null;
+
         try {
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processing File: " + super.source);
+                getLogger().debug("Processing File: "+super.source);
             }
 
             /* lets render a template */
+
             StringWriter w = new StringWriter();
+
             this.tmplEngine.mergeTemplate(super.source, velocityContext, w);
 
-            InputSource xmlInput =
-                    new InputSource(new StringReader(w.toString()));
+            InputSource xmlInput = new InputSource(new StringReader(w.toString()));
+
             parser.parse(xmlInput, this.xmlConsumer);
         } catch (IOException e) {
             getLogger().warn("VelocityGenerator.generate()", e);
-            throw new ResourceNotFoundException("Could not get Resource for VelocityGenerator", e);
+            throw new ResourceNotFoundException("Could not get Resource for VelocityGenerator",
+                                                e);
         } catch (SAXException e) {
             getLogger().error("VelocityGenerator.generate()", e);
             throw e;
         } catch (ComponentException e) {
             getLogger().error("Could not get parser", e);
-            throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
+            throw new ProcessingException("Exception in VelocityGenerator.generate()",
+                                          e);
         } catch (ProcessingException e) {
             throw e;
         } catch (Exception e) {
             getLogger().error("Could not get parser", e);
-            throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
+            throw new ProcessingException("Exception in VelocityGenerator.generate()",
+                                          e);
         } finally {
             this.manager.release((Component) parser);
         }
@@ -509,29 +568,78 @@ public class VelocityGenerator extends ComposerGenerator
      * This implementation does nothing.
      *
      * @see org.apache.velocity.runtime.log.LogSystem#init
+     *
+     * @param rs         
      */
     public void init(RuntimeServices rs) throws Exception {
+    }
+
+    private Object searchBean(Map objectModel, String name,
+                              String sourcemap) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        Object bean;
+
+        // search all maps for the given bean
+        if ((sourcemap==null) || VALUE_SITEMAP.equals(sourcemap)) {
+            // System.out.println("Searching bean " + name+ " in "+VALUE_SITEMAP);
+            bean = objectModel.get(name);
+
+            if (bean!=null) {
+                return bean;
+            }
+        }
+
+        if ((sourcemap==null) || VALUE_REQUEST.equals(sourcemap)) {
+            // System.out.println("Searching bean " + name+ " in "+ VALUE_REQUEST);
+            bean = request.getAttribute(name);
+
+            if (bean!=null) {
+                return bean;
+            }
+        }
+
+        if ((sourcemap==null) || VALUE_SESSION.equals(sourcemap)) {
+            // System.out.println("Searching bean " + name+ " in "+VALUE_SESSION);
+            Session session = request.getSession(false);
+
+            if (session!=null) {
+                bean = session.getAttribute(name);
+
+                if (bean!=null) {
+                    return bean;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
      * Pass along Velocity log messages to our configured logger.
      *
      * @see org.apache.velocity.runtime.log.LogSystem#logVelocityMessage
+     *
+     * @param level      
+     * @param message    
      */
     public void logVelocityMessage(int level, String message) {
         switch (level) {
-            case LogSystem.WARN_ID:
+            case LogSystem.WARN_ID :
                 getLogger().warn(message);
                 break;
-            case LogSystem.INFO_ID:
+
+            case LogSystem.INFO_ID :
                 getLogger().info(message);
                 break;
-            case LogSystem.DEBUG_ID:
+
+            case LogSystem.DEBUG_ID :
                 getLogger().debug(message);
                 break;
-            case LogSystem.ERROR_ID:
+
+            case LogSystem.ERROR_ID :
                 getLogger().error(message);
                 break;
+
             default :
                 getLogger().info(message);
                 break;
