@@ -58,14 +58,14 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class enabling logging and supporting the intrepretation of
  * common configuration settings on all specific implementations of
- * {@see org.apache.cocoon.woody.binding.JXPathBindingBase}.
+ * {@link org.apache.cocoon.woody.binding.JXPathBindingBase}.
  *
  * Common supported configurations:
  * <ul>
- * <li>Attribute direction="load|save|both": {@see #getDirectionAttributes(Element)}</li>
+ * <li>Attribute direction="load|save|both": {@link #getDirectionAttributes(Element)}</li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.1 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.2 2004/02/06 16:06:32 tim Exp $
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
@@ -154,7 +154,13 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
       * actions of a given binding.
       */
      static class CommonAttributes{
+        /**
+         * Flag which controls whether a binding is active during loading.
+         */
         final boolean loadEnabled;
+        /**
+         * Flag which controls whether a binding is active during saving.
+         */
         final boolean saveEnabled;
         final Boolean leniency;
 
