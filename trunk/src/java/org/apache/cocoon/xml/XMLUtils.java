@@ -68,6 +68,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -78,9 +79,11 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.2 2003/03/12 15:11:15 cziegeler Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.3 2003/05/06 12:09:20 cziegeler Exp $
  */
 public class XMLUtils{
+
+    public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
 
     //using parent because some dom implementations like jtidy are bugged,
     //cannot get parent or delete child
@@ -370,5 +373,253 @@ public class XMLUtils{
          // Give up: hope it's a string or has a meaningful string representation
          data(contentHandler, String.valueOf(v));
     }
+
+    /**
+     * Create a start and endElement with a empty Namespace and without Attributes
+     *
+     * @param localName The local name (without prefix)
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     */
+    public static void createElement(ContentHandler contentHandler, String localName) 
+    throws SAXException {
+        startElement(contentHandler, localName);
+        endElement(contentHandler, localName);
+    }
+
+    /**
+     * Create a start and endElement with a empty Namespace and without Attributes
+     * The content of the Element is set to the stringValue parameter
+     *
+     * @param localName The local name (without prefix)
+     * @param stringValue The content of the Element
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     */
+    public static void createElement(ContentHandler contentHandler, String localName, String stringValue)
+        throws SAXException {
+        startElement(contentHandler, localName);
+        data(contentHandler, stringValue);
+        endElement(contentHandler, localName);
+    }
+
+    /**
+     * Create a start and endElement with a empty Namespace
+     *
+     * @param localName The local name (without prefix)
+     * @param atts The attributes attached to the element.  If
+     *        there are no attributes, it shall be an empty
+     *        Attributes object.
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     * @see org.xml.sax.Attributes
+     */
+    public static void createElement(ContentHandler contentHandler, String localName, Attributes atts) 
+    throws SAXException {
+        startElement(contentHandler, localName, atts);
+        endElement(contentHandler, localName);
+    }
+
+    /**
+     * Create a start and endElement with a empty Namespace
+     * The content of the Element is set to the stringValue parameter
+     *
+     * @param localName The local name (without prefix)
+     * @param atts The attributes attached to the element.  If
+     *        there are no attributes, it shall be an empty
+     *        Attributes object.
+     * @param stringValue The content of the Element
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     * @see org.xml.sax.Attributes
+     */
+    public static void createElement(ContentHandler contentHandler, String localName, Attributes atts, String stringValue)
+        throws SAXException {
+        startElement(contentHandler, localName, atts);
+        data(contentHandler, stringValue);
+        endElement(contentHandler, localName);
+    }
+
+    /**
+     * Create a start and endElement without Attributes
+     *
+     * @param localName The local name (without prefix)
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     */
+    public static void createElementNS(ContentHandler contentHandler, String namespaceURI, String localName)
+        throws SAXException {
+        startElement(contentHandler, namespaceURI, localName);
+        endElement(contentHandler, namespaceURI, localName);
+    }
+
+    /**
+     * Create a start and endElement without Attributes
+     * The content of the Element is set to the stringValue parameter
+     *
+     * @param localName The local name (without prefix)
+     * @param stringValue The content of the Element
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     */
+    public static void createElementNS(
+        ContentHandler contentHandler,
+        String namespaceURI,
+        String localName,
+        String stringValue)
+    throws SAXException {
+        startElement(contentHandler, namespaceURI, localName);
+        data(contentHandler, stringValue);
+        endElement(contentHandler, namespaceURI, localName);
+    }
+    
+    /**
+     * Create a start and endElement
+     *
+     * @param localName The local name (without prefix)
+     * @param atts The attributes attached to the element.  If
+     *        there are no attributes, it shall be an empty
+     *        Attributes object.
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     * @see org.xml.sax.Attributes
+     */
+    public static void createElementNS(
+        ContentHandler contentHandler,
+        String namespaceURI,
+        String localName,
+        Attributes atts)
+    throws SAXException {
+        startElement(contentHandler, namespaceURI, localName, atts);
+        endElement(contentHandler, namespaceURI, localName);
+    }
+    
+    /**
+     * Create a start and endElement with a empty Namespace
+     * The content of the Element is set to the stringValue parameter
+     *
+     * @param localName The local name (without prefix)
+     * @param atts The attributes attached to the element.  If
+     *        there are no attributes, it shall be an empty
+     *        Attributes object.
+     * @param stringValue The content of the Element
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     * @see org.xml.sax.Attributes
+     */
+    public static void createElementNS(
+        ContentHandler contentHandler,
+        String namespaceURI,
+        String localName,
+        Attributes atts,
+        String stringValue)
+    throws SAXException {
+        startElement(contentHandler, namespaceURI, localName, atts);
+        data(contentHandler, stringValue);
+        endElement(contentHandler, namespaceURI, localName);
+    }
+    
+   
+    /**
+     * Create endElement with empty Namespace
+     *
+     * <p>For information on the names, see startElement.</p>
+     *
+     * @param localName The local name (without prefix)
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     */
+    public static void endElement(ContentHandler contentHandler, String localName) 
+    throws SAXException {
+        contentHandler.endElement("", localName, localName);
+    }
+    
+    /**
+     * Create endElement
+     * Prefix must be mapped to empty String
+     *
+     * <p>For information on the names, see startElement.</p>
+     *
+     * @param localName The local name (without prefix)
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     */
+    public static void endElement(ContentHandler contentHandler, String namespaceURI, String localName) 
+    throws SAXException {
+        contentHandler.endElement(namespaceURI, localName, localName);
+    }
+    
+    /**
+     * Create a startElement with a empty Namespace and without Attributes
+     *
+     * @param localName The local name (without prefix)
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     */
+    public static void startElement(ContentHandler contentHandler, String localName) 
+    throws SAXException {
+        contentHandler.startElement("", localName, localName, EMPTY_ATTRIBUTES);
+    }
+
+    /**
+     * Create a startElement without Attributes
+     * Prefix must be mapped to empty String
+     *
+     * @param namespaceURI The Namespace URI
+     * @param localName The local name (without prefix)
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     */
+    public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName)
+    throws SAXException {
+        contentHandler.startElement(namespaceURI, localName, localName, EMPTY_ATTRIBUTES);
+    }
+
+    /**
+     * Create a startElement with a empty Namespace
+     *
+     * @param localName The local name (without prefix)
+     * @param atts The attributes attached to the element.  If
+     *        there are no attributes, it shall be an empty
+     *        Attributes object.
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     * @see org.xml.sax.Attributes
+     */
+    public static void startElement(ContentHandler contentHandler, String localName, Attributes atts) 
+    throws SAXException {
+        contentHandler.startElement("", localName, localName, atts);
+    }
+
+    /**
+     * Create a startElement with a empty Namespace
+     * Prefix must be mapped to empty String
+     *
+     * @param namespaceURI The Namespace URI
+     * @param localName The local name (without prefix)
+     * @param atts The attributes attached to the element.  If
+     *        there are no attributes, it shall be an empty
+     *        Attributes object.
+     * @exception org.xml.sax.SAXException Any SAX exception, possibly
+     *            wrapping another exception.
+     * @see #endElement
+     * @see org.xml.sax.Attributes
+     */
+    public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName, Attributes atts)
+    throws SAXException {
+        contentHandler.startElement(namespaceURI, localName, localName, atts);
+    }
+     
 
 }
