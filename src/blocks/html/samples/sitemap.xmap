@@ -2,7 +2,7 @@
 
 <!--+
     | HTML block samples sitemap
-    | CVS $Id: sitemap.xmap,v 1.3 2003/07/29 03:15:46 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.4 2003/08/16 15:17:10 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -44,12 +44,12 @@
 
       <!-- ================  TIDY  =========================== -->
 
-      <map:match pattern="yahoo">
-        <map:generate type="html" src="http://www.yahoo.com">
-          <map:parameter name="xpath" value="/html/body/center/table[4]/tr[1]/td[1]"/>
+      <map:match pattern="googlenews">
+        <map:generate type="html" src="http://news.google.com/news/en/us/technology.html">
+          <map:parameter name="xpath" value="/html"/>
         </map:generate>
-        <!-- map:transform src="stylesheets/news.xsl"/ -->
-        <map:serialize type="html"/>
+        <map:transform src="stylesheets/googlenews.xsl"/>
+        <map:serialize type="xhtml"/>
       </map:match>
 
     </map:pipeline>
