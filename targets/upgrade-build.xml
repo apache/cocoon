@@ -15,153 +15,227 @@
   limitations under the License.
 -->
 <project name="upgrade">
-  <tstamp/>
   <description>
     Upgrade targets that help to convert between different Cocoon versions
   </description>
 
-  <!-- Namespace-upgrade from Woody to CocoonForms -->
-  <!--  - namespace change
-           * from xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
-             to   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
-           * from xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
-             to   xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
-           * from xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
-             to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
-           * from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
-             to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template">               
-             
-       TODO (RP): If somebody knows how to make a timestamp including the seconds
-                  we could drop the check for an existing backup  
-  -->
-  <target 
-    name="woody2CocoonForms-renaming" 
-    description="Updates all namespaces from Woody to CocoonForms">
-    
-    <input message="Please enter the basedir which should be updated:" addproperty="target.dir"/>
+  <tstamp>
+    <format property="timestamp" pattern="yyyyMMdd_hhmmss"/>
+  </tstamp>
 
-    <!-- check if the backup directory doesn't exist already?-->
-    <available file="${target.dir}" type="dir" property="target.exists"/>  
-    <fail unless="target.exists" message="The entered directory doesn't exist!"/>      
-    
-    <property name="timestamp" value="${DSTAMP}${TSTAMP}"/>
-    <property name="backup.dir" value="./build/temp/backup_${DSTAMP}${TSTAMP}"/>
-    <property name="temp_output" value="./build/temp/output_${timestamp}"/>    
+  <target
+    name="woody2CocoonForms-renaming"
+    description="Updates from Woody to CocoonForms">
 
-    <echo message=" "/>
-    <echo message="---------------------------------------------------------"/>    
-    <echo message="The directory has been backed up at ${backup.dir}"/>
-    <echo message=" "/>
-    <echo message="All .xml, .xsl, .xmap and .js/.flow files in the directory ${target.dir} (or any subdirectory) will be updated to the new namespace declarations."/>
-    <echo message="---------------------------------------------------------"/>    
-    <echo message=" "/>
-        
-    <!-- check if the backup directory doesn't exist already?-->
-    <available file="${backup.dir}" type="dir" property="backup.exists"/>    
-    
-    <fail if="backup.exists" message="Backup already exists! Attention: If you start this process more than once in a minute the backup directy may already exist! In order to avoid damaging an existing backup the transformation process is stopped. Please start it again some seconds later"/>
-    
-    <!-- create a backup -->
-    <copy todir="${backup.dir}">
-      <fileset dir="${target.dir}">
+<echo>
+-----------------------------------------------------------------------------
+Woody 2 Cocoon Forms update
+-----------------------------------------------------------------------------
+This target is now going to update your Woody files to Cocoon Forms files.
+Therefore you have to specify a source and a target dir.
+
+All .xml, .xsl, .xslt, .xmap and .js/.flow files found in the source directory
+(and any subdirectory) will be copied to the target dir and updated there. The
+source directory itself remains untouched.
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Please enter the source dir with the files that should be updated:"
+           addproperty="src.dir"
+           defaultvalue="./src/blocks/woody/samples"/>
+    <available file="${src.dir}" type="dir" property="src.dir.exists"/>
+    <fail unless="src.dir.exists" message="The entered directory doesn't exist!"/>
+
+<echo>
+-----------------------------------------------------------------------------
+For the target directory a default directory name is given, you can specify
+another one of course if you want.
+The default directory name for the target directory is:
+./build/woody2cforms_${timestamp}
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Please enter the target directory in which the output should be stored:"
+           addproperty="target.dir"
+           defaultvalue="./build/woody2cforms_${timestamp}"/>
+
+<echo>
+-----------------------------------------------------------------------------
+The update process is now going to start.
+-----------------------------------------------------------------------------
+</echo>
+
+    <property name="temp.dir" value="${target.dir}_temp"/>
+
+    <copy todir="${target.dir}">
+      <fileset dir="${src.dir}">
         <include name="**/*.xml"/>
-        <include name="**/*.xsl"/>  
-        <include name="**/*.xmap"/>               
-        <include name="**/*.js"/>   
-        <include name="**/*.flow"/>                             
+        <include name="**/*.xsl"/>
+        <include name="**/*.xslt"/>
+        <include name="**/*.xmap"/>
+        <include name="**/*.js"/>
+        <include name="**/*.flow"/>
       </fileset>
     </copy>
-     
+
+    <!-- namespace changes from Woody to CocoonForms
+         * from xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+           to   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         * from xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
+           to   xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+         * from xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+           to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+         * from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+           to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+    -->
     <replace dir="${target.dir}">
-      <include name="**/*.xml"/>  
-      <include name="**/*.xsl"/>              
-      <exclude name="${backup.dir}"/>             
-      <replacefilter 
-        token="http://apache.org/cocoon/woody/instance/1.0" 
+      <include name="**/*.xml"/>
+      <include name="**/*.xsl"/>
+      <include name="**/*.xslt"/>
+      <exclude name="${backup.dir}"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/instance/1.0"
         value="http://apache.org/cocoon/forms/1.0#instance"/>
-      <replacefilter 
-        token="http://apache.org/cocoon/woody/binding/1.0" 
+      <replacefilter
+        token="http://apache.org/cocoon/woody/binding/1.0"
         value="http://apache.org/cocoon/forms/1.0#binding"/>
-      <replacefilter 
-        token="http://apache.org/cocoon/woody/template/1.0" 
-        value="http://apache.org/cocoon/forms/1.0#template"/>      
-      <replacefilter 
-        token="http://apache.org/cocoon/woody/definition/1.0" 
-        value="http://apache.org/cocoon/forms/1.0#definition"/>                       
-      <replacefilter 
-        token="wi:" 
-        value="fi:"/>
-      <replacefilter 
-        token="wb:" 
-        value="fb:"/>
-      <replacefilter 
-        token="wt:" 
-        value="ft:"/>
-      <replacefilter 
-        token="wd:" 
-        value="fd:"/>
-      <replacefilter 
-        token="xmlns:wi" 
-        value="xmlns:fi"/>
-      <replacefilter 
-        token="xmlns:wb" 
-        value="xmlns:fb"/>
-      <replacefilter 
-        token="xmlns:wt" 
-        value="xmlns:ft"/>
-      <replacefilter 
-        token="xmlns:wd" 
-        value="xmlns:fd"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/template/1.0"
+        value="http://apache.org/cocoon/forms/1.0#template"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/definition/1.0"
+        value="http://apache.org/cocoon/forms/1.0#definition"/>
+      <replacefilter token="wi:" value="fi:"/>
+      <replacefilter token="wb:" value="fb:"/>
+      <replacefilter token="wt:" value="ft:"/>
+      <replacefilter token="wd:" value="fd:"/>
+      <replacefilter token="xmlns:wi" value="xmlns:fi"/>
+      <replacefilter token="xmlns:wb" value="xmlns:fb"/>
+      <replacefilter token="xmlns:wt" value="xmlns:ft"/>
+      <replacefilter token="xmlns:wd" value="xmlns:fd"/>
     </replace>
 
-    <replace dir="${target.dir}"> 
-      <include name="**/*.xsl"/>              
-      <exclude name="${backup.dir}"/>             
+    <replace dir="${target.dir}">
+      <include name="**/*.xsl"/>
+      <include name="**/*.xslt"/>
       <replacetoken><![CDATA[exclude-result-prefixes="wi"]]></replacetoken>
-      <replacevalue><![CDATA[exclude-result-prefixes="fi"]]></replacevalue>      
-    </replace>    
-    
+      <replacevalue><![CDATA[exclude-result-prefixes="fi"]]></replacevalue>
+    </replace>
+
+    <xslt basedir="${target.dir}" destdir="${temp.dir}"
+          includes="**/*.xml" extension=".xml"
+          style="tools/src/cforms-repeater-syntax.xsl"/>
+    <move todir="${target.dir}">
+      <fileset dir="${temp.dir}"/>
+    </move>
+
     <!-- updating sitemaps -->
     <replace dir="${target.dir}">
-      <include name="**/*.xmap"/> 
-      <replacefilter 
-        token="org.apache.cocoon.woody.generation.WoodyGenerator" 
-        value="org.apache.cocoon.forms.generation.FormGenerator"/>      
-      <replacefilter 
-        token="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer" 
-        value="org.apache.cocoon.forms.transformation.FormTemplateTransformer"/>     
+      <include name="**/*.xmap"/>
+      <!--+
+          | - flow function
+          +-->
+      <replacetoken><![CDATA[function="woody"]]></replacetoken>
+      <replacevalue><![CDATA[function="handleForm"]]></replacevalue>
+    </replace>
+    <replace dir="${target.dir}">
+      <include name="**/*.xmap"/>
+      <!--+
+          | - Woody(Generator|TemplateTransformer|Messages)
+          | -> Form(Generator|TemplateTransformer|Messages)
+          +-->
+      <replacefilter token="Woody" value="Form"/>
+      <!--+
+          | - stylesheet names
+          +-->
+      <replacefilter
+        token="woody-samples-styling.xsl"
+        value="forms-samples-styling.xsl"/>
+      <!--+
+          | - hints for actions (removing woody "prefix")
+          +-->
+      <replacefilter token="woody-" value=""/>
+      <!--+
+          | - package name: o.a.c.woody.* -> o.a.c.forms.*
+          +-->
+      <replacefilter token=".woody." value=".forms."/>
       <!--+
           | - hints for FormTemplateTransformer and FormGenerator
           | - logger
-          | - forms() function
+          | - i18n catalogue
           +-->
-      <replacefilter 
-        token="woody" 
-        value="form"/>   
-      <replacefilter 
-        token="woody-samples-styling.xsl" 
-        value="forms-samples-styling.xsl"/>                               
+      <replacefilter token="woody" value="form"/>
     </replace>
 
     <!-- updating flowscripts -->
     <replace dir="${target.dir}">
-      <include name="**/*.js"/> 
-      <include name="**/*.flow"/>       
-      <!-- Java packages -->    
+      <include name="**/*.js"/>
+      <include name="**/*.flow"/>
+      <include name="**/*.xml"/>
+      <!-- Java packages -->
       <replacefilter
         token="resource://org/apache/cocoon/woody/flow/javascript/woody2.js"
-        value="resource://org/apache/cocoon/forms/flow/javascript/Form.js"/>   
-      <replacefilter 
-        token="org.apache.cocoon.woody.datatype.ValidationError" 
-        value="org.apache.cocoon.forms.validation.ValidationError"/>                                   
-      <replacefilter 
-        token="org/apache/cocoon/woody" 
-        value="org/apache/cocoon/forms"/>  
-      <replacefilter 
-        token="org.apache.cocoon.woody" 
-        value="org.apache.cocoon.forms"/>         
-    </replace>    
-    
+        value="resource://org/apache/cocoon/forms/flow/javascript/Form.js"/>
+      <replacefilter
+        token="org.apache.cocoon.woody.datatype.ValidationError"
+        value="org.apache.cocoon.forms.validation.ValidationError"/>
+      <replacefilter
+        token="org/apache/cocoon/woody"
+        value="org/apache/cocoon/forms"/>
+      <replacefilter
+        token="org.apache.cocoon.woody"
+        value="org.apache.cocoon.forms"/>
+    </replace>
+
+<echo>
+-----------------------------------------------------------------------------
+The update was successful so far. You can now choose whether you want to copy
+the updated files from the target directory back to the source directory.
+
+Before copying you can have a look into the files in the target directory. You
+are also asked for a backup directory if you choose to copy.
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Do you want to copy the files from the target dir back to the src dir? (yes|no)"
+           addproperty="copyFilesInput"
+           defaultvalue="no"/>
+
+    <condition property="copyFiles">
+      <or>
+        <equals arg1="yes" arg2="${copyFilesInput}" casesensitive="false" trim="true"/>
+        <equals arg1="y" arg2="${copyFilesInput}" casesensitive="false" trim="true"/>
+      </or>
+    </condition>
+
+<fail unless="copyFiles">
+The update was not completed as you chose not to copy the updated files.
+Either do this by hand or restart this update process.
+The updated files can be found at:
+${target.dir}
+</fail>
+
+    <input
+           message="Please enter the backup dir (default is ${target.dir}_orig):"
+           addproperty="backup.dir"
+           defaultvalue="${target.dir}_orig"/>
+
+    <copy todir="${backup.dir}">
+      <fileset dir="${src.dir}"/>
+    </copy>
+
+    <copy todir="${src.dir}">
+      <fileset dir="${target.dir}"/>
+    </copy>
+
+<echo>
+-----------------------------------------------------------------------------
+The update is now complete. Have much fun with the new Cocoon Forms.
+
+                                                  The Apache Cocoon Team
+-----------------------------------------------------------------------------
+</echo>
+
   </target>
 
 </project>
