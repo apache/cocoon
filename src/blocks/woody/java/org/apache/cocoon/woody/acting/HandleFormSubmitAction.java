@@ -52,7 +52,6 @@ package org.apache.cocoon.woody.acting;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -79,7 +78,7 @@ import java.util.Locale;
  *  <li><strong>attribute-name</strong>: name of the request attribute in which the form instance should be stored
  * </ul>
  */
-public class HandleFormSubmitAction extends AbstractWoodyAction implements Action, ThreadSafe, Composable {
+public class HandleFormSubmitAction extends AbstractWoodyAction implements Action, ThreadSafe {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws Exception {

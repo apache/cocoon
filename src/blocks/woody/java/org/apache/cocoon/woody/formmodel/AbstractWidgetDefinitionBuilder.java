@@ -53,26 +53,30 @@ package org.apache.cocoon.woody.formmodel;
 import org.w3c.dom.Element;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.FormManager;
 import org.apache.cocoon.woody.expression.ExpressionManager;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.activity.Disposable;
 
 /**
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
  * common to many implementations.
  */
-public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Composable {
-    protected FormManager formManager;
+public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
+    protected ServiceSelector widgetDefinitionBuilderSelector;
     protected DatatypeManager datatypeManager;
     protected ExpressionManager expressionManager;
+    protected ServiceManager serviceManager;
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
-        datatypeManager = (DatatypeManager)componentManager.lookup(DatatypeManager.ROLE);
-        expressionManager = (ExpressionManager)componentManager.lookup(ExpressionManager.ROLE);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
+        widgetDefinitionBuilderSelector = (ServiceSelector)serviceManager.lookup( WidgetDefinitionBuilder.class.getName() + "Selector");
+        datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
+        expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
     }
 
     protected void setId(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
@@ -88,5 +92,22 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
             Object label = DomHelper.compileElementContent(labelElement);
             widgetDefinition.setLabel(label);
         }
+    }
+
+    protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition) throws Exception {
+        String widgetName = widgetDefinition.getLocalName();
+        WidgetDefinitionBuilder builder = null;
+        try {
+            builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
+        } catch (ServiceException e) {
+            throw new CascadingException("Unkown kind of widget \"" + widgetName + "\" specified at " + DomHelper.getLocation(widgetDefinition), e);
+        }
+        return builder.buildWidgetDefinition(widgetDefinition);
+    }
+
+    public void dispose() {
+        serviceManager.release(widgetDefinitionBuilderSelector);
+        serviceManager.release(datatypeManager);
+        serviceManager.release(expressionManager);
     }
 }

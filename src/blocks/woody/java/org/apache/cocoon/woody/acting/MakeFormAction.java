@@ -60,9 +60,9 @@ import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.excalibur.source.Source;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 
 import java.util.Map;
 
@@ -75,12 +75,12 @@ import java.util.Map;
  *  <li><strong>attribute-name</strong>: name of the request attribute in which to store the form instance
  * </ul>
  */
-public class MakeFormAction implements Action, ThreadSafe, Composable {
+public class MakeFormAction implements Action, ThreadSafe, Serviceable {
 
     FormManager formManager;
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        formManager = (FormManager)serviceManager.lookup(FormManager.ROLE);
     }
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters)

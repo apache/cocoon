@@ -70,7 +70,7 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         Element[] widgetElements = DomHelper.getChildElements(formElement, Constants.WD_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             Element widgetElement = widgetElements[i];
-            WidgetDefinition widgetDefinition = formManager.buildWidgetDefinition(widgetElement);
+            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);
             formDefinition.addWidgetDefinition(widgetDefinition);
         }
 

@@ -67,7 +67,7 @@ public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         // the children of the repeater element are widget configuration elements
         Element[] widgetElements = DomHelper.getChildElements(widgetElement, Constants.WD_NS);
         for (int i = 0; i < widgetElements.length; i++) {
-            WidgetDefinition widgetDefinition = formManager.buildWidgetDefinition(widgetElements[i]);
+            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
             repeaterDefinition.addWidget(widgetDefinition);
         }
 

@@ -55,9 +55,10 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.expression.ExpressionManager;
 import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.w3c.dom.Element;
 import org.outerj.expression.Expression;
 import org.outerj.expression.TokenMgrError;
@@ -65,11 +66,13 @@ import org.outerj.expression.TokenMgrError;
 /**
  * Abstract base class for ValidationRuleBuilder implementations.
  */
-public abstract class AbstractValidationRuleBuilder implements ValidationRuleBuilder, Composable {
+public abstract class AbstractValidationRuleBuilder implements ValidationRuleBuilder, Serviceable, Disposable {
     protected ExpressionManager expressionManager;
+    protected ServiceManager serviceManager;
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        expressionManager = (ExpressionManager)componentManager.lookup(ExpressionManager.ROLE);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
+        expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
     }
 
     /**
@@ -95,5 +98,9 @@ public abstract class AbstractValidationRuleBuilder implements ValidationRuleBui
         } catch (Exception e) {
             throw new CascadingException("Error in expression \"" + exprString + "\" in attribute \"" + attrName + "\" at " + DomHelper.getLocation(element), e);
         }
+    }
+
+    public void dispose() {
+        serviceManager.release(expressionManager);
     }
 }

@@ -51,23 +51,19 @@
 package org.apache.cocoon.woody.datatype;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
-import org.apache.cocoon.components.LifecycleHelper;
 import org.w3c.dom.Element;
-
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Implementation of the {@link DatatypeManager} component.
@@ -78,27 +74,28 @@ import java.util.HashMap;
  * become externally configurable in the future.
  *
  */
-public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Composable, Configurable, Initializable {
+public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Serviceable,
+        Configurable, Initializable, Disposable {
     private SimpleServiceSelector typeBuilderSelector;
     private SimpleServiceSelector validationRuleBuilderSelector;
-    private ComponentManager componentManager;
+    private ServiceManager serviceManager;
     private Configuration configuration;
 
     public void configure(Configuration configuration) throws ConfigurationException {
         this.configuration = configuration;
     }
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.componentManager = componentManager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
     }
 
     public void initialize() throws Exception {
         typeBuilderSelector = new SimpleServiceSelector("datatype", DatatypeBuilder.class);
-        typeBuilderSelector.compose(componentManager);
+        typeBuilderSelector.service(serviceManager);
         typeBuilderSelector.configure(configuration.getChild("datatypes"));
 
         validationRuleBuilderSelector = new SimpleServiceSelector("validation-rule", ValidationRuleBuilder.class);
-        validationRuleBuilderSelector.compose(componentManager);
+        validationRuleBuilderSelector.service(serviceManager);
         validationRuleBuilderSelector.configure(configuration.getChild("validation-rules"));
 
         configuration = null;
@@ -124,5 +121,10 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
             throw new CascadingException("Unknown validation rule \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement), e);
         }
         return builder.build(validationRuleElement);
+    }
+
+    public void dispose() {
+        typeBuilderSelector.dispose();
+        validationRuleBuilderSelector.dispose();
     }
 }
