@@ -46,6 +46,7 @@ function Form(formDefinition) {
         this.binding_ = null;
         this.formWidget_ = new Widget(form);
         this.local_ = cocoon.createPageLocal();
+        this.locale = java.util.Locale.getDefault();
     } finally {
         cocoon.releaseComponent(formMgr);
         if (src != null) resolver.release(src);
@@ -107,7 +108,7 @@ Form.prototype.showForm = function(uri, fun, ttl) {
     cocoon.request.setAttribute(Packages.org.apache.cocoon.forms.transformation.CFORMSKEY, javaWidget);
     var wk = cocoon.sendPageAndWait(uri, this.formWidget_, fun, ttl); 
     var formContext = 
-        new FormContext(cocoon.request, javaWidget.getLocale());
+        new FormContext(cocoon.request, this.locale);
     var userErrors = 0;
     this.formWidget_.validationErrorListener = function(widget, error) {
         if (error != null) {
