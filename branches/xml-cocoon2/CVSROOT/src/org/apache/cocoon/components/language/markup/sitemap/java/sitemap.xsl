@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.34 $ $Date: 2000-09-10 10:09:15 $
+ * @version CVS $Revision: 1.1.2.35 $ $Date: 2000-09-10 11:00:44 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -722,20 +722,22 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       </xsl:otherwise>
     </xsl:choose>
     <!-- view/label check -->
-    <xsl:variable name="component-label">
-      <xsl:if test="$prefix='generator'">
-        <xsl:value-of select="/map:sitemap/map:components/map:generators/map:generator[@name=$component-type]/@label"/>
+    <xsl:if test="not(ancestor::map:views)">
+      <xsl:variable name="component-label">
+        <xsl:if test="$prefix='generator'">
+          <xsl:value-of select="/map:sitemap/map:components/map:generators/map:generator[@name=$component-type]/@label"/>
+        </xsl:if>
+        <xsl:if test="$prefix='transformer'">
+          <xsl:value-of select="/map:sitemap/map:components/map:transformers/map:transformer[@name=$component-type]/@label"/>
+        </xsl:if>
+      </xsl:variable>
+      <xsl:if test="$component-label">
+        <xsl:for-each select="/map:sitemap/map:views/map:view[@generate-from=$component-label]">
+          if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+          }
+        </xsl:for-each>
       </xsl:if>
-      <xsl:if test="$prefix='transformer'">
-        <xsl:value-of select="/map:sitemap/map:components/map:transformers/map:transformer[@name=$component-type]/@label"/>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:if test="$component-label">
-      <xsl:for-each select="/map:sitemap/map:views/map:view[@generate-from=$component-label]">
-        if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-          return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
-        }
-      </xsl:for-each>
     </xsl:if>
   </xsl:template>
 
