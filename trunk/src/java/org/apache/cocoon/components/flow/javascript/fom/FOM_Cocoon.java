@@ -51,14 +51,13 @@
 package org.apache.cocoon.components.flow.javascript.fom;
 
 import java.io.OutputStream;
-import java.util.Map;
-import java.util.List;
-import java.util.LinkedList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.flow.ContinuationsManager;
@@ -69,15 +68,8 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.Wrapper;
-import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.*;
 import org.mozilla.javascript.continuations.Continuation;
-import org.apache.avalon.framework.logger.Logger;
 
 /**
  * Implementation of FOM (Flow Object Model).
@@ -85,7 +77,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.2 2003/07/09 07:27:25 giacomo Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.3 2003/07/10 11:40:57 cziegeler Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
