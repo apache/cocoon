@@ -62,7 +62,7 @@ import junit.textui.TestRunner;
  *
  * @author huber.at.apache.org
  * @since 18. Dezember 2002
- * @version CVS $Id: AsciiArtPadTestCase.java,v 1.3 2003/03/23 11:37:02 stefano Exp $
+ * @version CVS $Id: AsciiArtPadTestCase.java,v 1.1 2003/04/09 13:46:03 stephan Exp $
  */
 public class AsciiArtPadTestCase extends TestCase {
 
