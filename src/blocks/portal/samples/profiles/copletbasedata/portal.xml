@@ -3,5 +3,8 @@
    <coplet-base-data id="URICoplet">
       <coplet-adapter>uri</coplet-adapter>
    </coplet-base-data>
+   <coplet-base-data id="Portlet">
+      <coplet-adapter>portlet</coplet-adapter>
+   </coplet-base-data>
 </coplets>
 

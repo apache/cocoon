@@ -16,6 +16,7 @@
           <li>The TabDemo1 shows a tab inside a tab, which is useful for structuring content.</li>
           <li>The TabDemo2 shows the same content as TabDemo2 but with just a different stylesheet for the tab.</li>
           <li>The Gallery tab shows some more coplets.</li>
+          <li>The JSR-168 tab demonstrates the integration of Portlets (read more below).</li>
         </ul>
         <p><strong>THIS IS A SAMPLE PORTAL!</strong></p>
         <p>It demonstrates several features of 
@@ -26,6 +27,15 @@
         </p>
         <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
      </s1> 
-
+     <s1 title="The JSR-168">
+        <p>The Cocoon portal supports portlets conforming to the JSR-168. The JSR-168 contains 
+           a sample that uses the testsuite from the <fork href="http://jakarta.apache.org/pluto">Jakarta-Pluto project</fork>.</p>
+        <p>These samples only work if you follow these installation instructions:</p>
+        <ul>
+         <li>Get the jakarta pluto project and install it into Tomcat (Test Pluto now).</li>
+         <li>Install Cocoon as a web application in Tomcat and remove the Pluto webapp.</li>
+         <li>Start Tomcat and run the Cocoon portal demo. You should now see two portlets.</li>
+        </ul>
+     </s1>
   </body>
 </document>
