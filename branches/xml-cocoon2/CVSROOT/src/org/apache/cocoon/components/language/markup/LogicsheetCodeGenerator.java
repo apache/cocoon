@@ -17,10 +17,11 @@ import org.xml.sax.ContentHandler;
 
 import java.io.IOException;
 
-import org.apache.xalan.serialize.SerializerFactory;
-import org.apache.xalan.serialize.Method;
-import org.apache.xalan.serialize.Serializer;
-import org.apache.xalan.serialize.OutputFormat;
+import org.apache.xml.serialize.SerializerFactory;
+import org.apache.xml.serialize.Method;
+import org.apache.xml.serialize.Serializer;
+import org.apache.xml.serialize.OutputFormat;
+
 
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXResult;
@@ -31,7 +32,7 @@ import javax.xml.transform.TransformerException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-14 21:52:05 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-15 17:17:39 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 
@@ -45,6 +46,8 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 
     private TransformerHandler currentParent;
 
+    private StringWriter writer;
+
     /**
     * The default constructor
     */
@@ -52,16 +55,16 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
         // set the serializer which would act as ContentHandler for the last transformer
         // FIXME (SSA) change a home made content handler, that extract the PCDATA
         // from the last remaining element
-        this.serializer = SerializerFactory.getSerializer(Method.Text);
+        SerializerFactory factory = SerializerFactory.getSerializerFactory(Method.TEXT);
         OutputFormat outformat = new OutputFormat();
         // FIXME (SSA) set the right encoding set
         //outformat.setEncoding("");
         // FIXME (SSA) remove the nice identing. For debug purpose only.
-        outformat.setIndent(true);
+        outformat.setIndent(4);
         outformat.setPreserveSpace(true);
-        this.serializer.setOutputFormat(outformat);
-
-        this.serializer.setWriter(new StringWriter());
+        this.serializer = factory.makeSerializer(outformat);
+        this.writer = new StringWriter();
+        this.serializer.setOutputCharStream(writer);
         try {
             this.serializerContentHandler = this.serializer.asContentHandler();
         } catch (IOException ioe) {
@@ -115,7 +118,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
         this.rootReader = reader;
         // start the parsing
         this.rootReader.parse(input);
-        return this.serializer.getWriter().toString();
+        return this.writer.toString();
     }
 
 }
