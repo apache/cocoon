@@ -17,7 +17,7 @@ CP=$CLASSPATH
 export CP
 unset CLASSPATH
 
-$PWD/tools/bin/ant -logger org.apache.tools.ant.NoBannerLogger $@ 
+$PWD/tools/bin/ant -logger org.apache.tools.ant.NoBannerLogger -emacs $@ 
 
 CLASSPATH=$CP
 export CLASSPATH
