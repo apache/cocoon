@@ -16,12 +16,15 @@
 This How-To shows you how to publish XML documents in HTML and PDF using Cocoon. It requires no 
 prior knowledge of Cocoon, XSLT or XSL-FO.
 </p>
+<p>
+It has been updated for Cocoon 2.1, which does not require the use of the <em>mount</em> directory anymore.
+</p>
 </s1>
 
 <s1 title="Purpose">
 <p>
 You will learn how to build a simple pipeline that converts XML documents on-the-fly to HTML or PDF using simple 
-XSLT transforms. This is similar to the <code>hello.html</code> and <code>hello.pdf</code> samples of the standard Cocoon installation. However, this How-To teaches you how to build these mechanisms yourself. Thus, you will get a better feel of how Cocoon publishing really works. 
+XSLT transforms. This is similar to the <code>hello.html</code> and <code>hello.pdf</code> samples of the standard Cocoon installation. However, this How-To teaches you how to build these mechanisms yourself. Thus, you will get a better feel of how Cocoon publishing really works.
 </p>
 </s1>
 
@@ -35,21 +38,23 @@ Beginning Cocoon users who want to learn how to publish HTML and/or PDF document
 <p>Here's what you need:</p>  
 
 <ul>
-<li>Cocoon must be running on your system. The steps below have been tested with Cocoon 2.0.2-dev, but they should work with any 2.x version.</li>
-<li>This document assumes a standard installation where
-<code>http://localhost:8080/cocoon/mount/</code> points to 
-the <code>mount</code> subdirectory of the Cocoon installation. Calling this URL should display a page
-titled "Directory Listing of mount".
-<br /> 
+<li>Cocoon must be running on your system. The steps below have been tested with Cocoon 2.1m3-dev, but they should work with any 2.1 version.</li>
+<li>This document assumes a standard installation where Cocoon is started by the <em>cocoon.sh</em> (or cocoon.bat) script and where
+<code>http://localhost:8888/</code> points to the <em>Welcome to Apache Cocoon</em> page.
+<br />
 If your installation runs on a different URL, you will have to adjust
 the URLs provided throughout this How-To as necessary. 
 </li>
-<li>You must be able to create and edit XML files in the <code>mount</code> subdirectory of the Cocoon installation.
-In a standard installation, this is <code>webapps/cocoon/mount</code> under the directory of the Tomcat installation. 
+<li>You must be able to create and edit XML files in the main directory of the Cocoon installation.
+When started from cocoon.sh, this directory is <code>build/webapp</code> under the directory that contains cocoon.sh.
 </li>
 </ul>
 <note>You will not need a fancy XML editor for this How-To. Copying and pasting the sample code snippets into any text editor
 will do.</note>
+<note>
+Running "build clean" deletes everything under build/webapp, make sure to save your example files if you
+need to do a clean build.
+ </note>
 
 </s1>
 
@@ -58,13 +63,15 @@ will do.</note>
 Here's how to proceed.
 </p>
 
-<s2 title="1. Create the work directory under mount" >
+<s2 title="1. Create the work directory" >
 <p>
-Under <code>webapps/cocoon/mount</code>, create a new directory and name it <code>html-pdf</code>. 
+Under <code>build/webapp</code>, create a new directory and name it <code>html-pdf</code>.
 All files used by this How-To will reside in this directory.
 </p>
 <p>
-After a browser refresh, <code>http://localhost:8080/cocoon/mount/</code> should display the name of this new directory, among others. 
+At this point, <code>http://localhost:8888/html-pdf/</code> should display an error page saying <em>Resource not found</em>,
+indicating that the file <em>build/webapp/html-pdf/sitemap.xmap</em> was not found. This is normal, as the newly
+created directory does not yet contain the required sitemap file.
 </p>
 </s2>
 
@@ -179,27 +186,18 @@ copy the following snippet to a file named <strong>sitemap.xmap</strong> in the
 <?xml version="1.0" encoding="iso-8859-1"?>
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- use the standard components -->
-    <map:components>
-        <map:generators default="file"/>
-        <map:transformers default="xslt"/>
-        <map:readers default="resource"/>
-        <map:serializers default="html"/>
-        <map:selectors default="browser"/>
-        <map:matchers default="wildcard"/>
-    </map:components>
-      
+    <!-- define the Cocoon processing pipelines -->
     <map:pipelines>
         <map:pipeline>
-            <!-- respond to *.html requests with 
+            <!-- respond to *.html requests with
                  our docs processed by doc2html.xsl -->
             <map:match pattern="*.html">
                 <map:generate src="{1}.xml"/>
                 <map:transform src="doc2html.xsl"/>
                 <map:serialize type="html"/>
             </map:match>
-            
-            <!-- later, respond to *.pdf requests with 
+
+            <!-- later, respond to *.pdf requests with
                  our docs processed by doc2pdf.xsl -->
             <map:match pattern="*.pdf">
                 <map:generate src="{1}.xml"/>
@@ -224,17 +222,21 @@ At this point you should be able to display the results in HTML:
 </p>
 <ul>
 <li>
-<code>http://localhost:8080/cocoon/mount/html-pdf/pageOne.html</code>
+<code>http://localhost:8888/html-pdf/pageOne.html</code>
 should display the first page with "Section one" in big letters.
 </li>
 <li>
-<code>http://localhost:8080/cocoon/mount/html-pdf/pageTwo.html</code>
+<code>http://localhost:8888/html-pdf/pageTwo.html</code>
 should display the second page with "Yes it works" in big letters.
 </li>
 </ul>
 <note>If this doesn't work, you might want to double check the above steps first, and then look at the Cocoon
-logs in the webapps/cocoon/WEB-INF/logs directory. You will find lots of information there. Look for clues 
-in files that change in size when the error happens.
+logs (see the Cocoon wiki for information about the logs).
+</note>
+<note>
+To convince yourself that the HTML data is generated dynamically, you can try to edit the pageXXX.xml source documents
+(keeping them well-formed),
+and refresh the browser to see the effect of your changes.
 </note>
 </s2>
 
@@ -316,11 +318,11 @@ At this point you should be able to display the results in PDF in addition to th
 </p>
 <ul>
 <li>
-<code>http://localhost:8080/cocoon/mount/html-pdf/pageOne.pdf</code>
+<code>http://localhost:8888/html-pdf/pageOne.pdf</code>
 should display the first page with "Section one" in big red letters.
 </li>
 <li>
-<code>http://localhost:8080/cocoon/mount/html-pdf/pageTwo.pdf</code>
+<code>http://localhost:8888/html-pdf/pageTwo.pdf</code>
 should display the second page with "Yes it works" in big red letters.
 </li>
 </ul>
@@ -334,7 +336,7 @@ I hope you're beginning to see that publishing PDF and HTML documents in Cocoon 
 </p>
 <p>
 The nice thing is that all of our huge corpus
-of XML documents (actually, only two documents right now, but that's a start... ) is processed by just two XSLT files, one
+of XML documents (actually, only two documents right now, but that's a start... ) is processed by just two XSLT transforms, one
 for each target format.
 </p>
 <p>
@@ -349,7 +351,7 @@ Using dynamic XML as the data source is very easy because the Cocoon FileGenerat
 </p>
 <p>
 If you add the map:match element shown in bold below <strong>before</strong> the existing map:match elements in your sitemap.xmap file, requesting
-<code>http://localhost:8080/cocoon/mount/html-pdf/meerkat.html</code>
+<code>http://localhost:8888/html-pdf/meerkat.html</code>
 should display real-time news from Meerkat (assuming an Internet connection to Meerkat is available).
 </p>
 <p>
@@ -386,7 +388,7 @@ an intermediate <strong>logical document</strong> that describes the output in a
 <p>
 This is obviously not needed in our simple example. If you're aiming for more complicated 
 publishing tasks, then you might want to read about this "publishing pattern" in Martin Fowler's 
-<link href="http://www.martinfowler.com/isa/htmlRenderer.html">Two Step View</link>
+<link href="http://martinfowler.com/eaaCatalog/twoStepView.html">Two Step View</link>
 article.
 </p>
 </s2>
@@ -401,7 +403,7 @@ To go further, you will need to learn about the following technologies and tools
 <ul>
 <li>
 Learning  
-<link href="http://www.google.com/search?as_sitesearch=xml.apache.org&amp;as_q=cocoon+concepts+sitemap">
+<link href="http://cocoon.apache.org/2.1/userdocs/concepts/index.html">
 Cocoon concepts</link> will help you understand how the sitemap, generators, transformers, and serializers work.
 </li> 
 <li>
@@ -416,7 +418,7 @@ Information about XSL-FO is available at the same address.
 <p>
 Care to comment on this How-To? Got another tip? 
 Help keep this How-To relevant by passing along any useful feedback to the author,
-<link href="mailto:bdelacretaz@codeconsult.ch">Bertrand Delacr&#233;taz</link>.
+<link href="mailto:bdelacretaz@apache.org">Bertrand Delacr&#233;taz</link>.
 </p>
 </s1>
 
