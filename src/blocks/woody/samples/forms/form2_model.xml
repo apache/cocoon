@@ -65,7 +65,7 @@
   
     <wd:field id="number" required="true">
       <wd:label>Select a number:</wd:label>
-      <wd:datatype base="long"/>
+      <wd:datatype base="integer"/>
       <wd:selection-list>
         <wd:item value="1"/>
         <wd:item value="2"/>
