@@ -89,7 +89,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.3 2003/05/16 07:04:56 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.4 2003/05/20 00:50:06 vgritsenko Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -168,7 +168,7 @@ implements Source, XMLizable {
                 rawMode = true;
             }
         } else {
-            throw new MalformedURLException("Now protocol found for sitemap source in " + uri);
+            throw new MalformedURLException("No protocol found for sitemap source in " + uri);
         }
 
         // does the uri point to this sitemap or to the root sitemap?
