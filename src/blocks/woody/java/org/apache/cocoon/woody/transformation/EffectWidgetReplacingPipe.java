@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.5 2004/01/23 13:56:13 vgritsenko Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.6 2004/01/23 18:42:52 tim Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -468,7 +468,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 out.bufferFini();
                 return this;
             default:
-                out.copy();
+                out.buffer();
                 return this;
             }
         }
