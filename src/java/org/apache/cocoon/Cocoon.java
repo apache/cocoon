@@ -195,12 +195,7 @@ public class Cocoon
      * @exception Exception if an error occurs
      */
     public void initialize() throws Exception {
-        if (parentServiceManager != null) {
-            // TODO: wrap parent component manager
-            this.serviceManager = new CocoonServiceManager(null);
-        } else {
-            this.serviceManager = new CocoonServiceManager(null);
-        }
+        this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
         ContainerUtil.enableLogging(this.serviceManager, getLogger().getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
 
