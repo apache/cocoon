@@ -59,7 +59,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformerTestCase.java,v 1.2 2003/04/16 13:47:57 stephan Exp $
+ * @version CVS $Id: LexicalTransformerTestCase.java,v 1.3 2003/04/17 07:36:25 stephan Exp $
  */
 public class LexicalTransformerTestCase extends AbstractTransformerTestCase {
 
@@ -72,9 +72,6 @@ public class LexicalTransformerTestCase extends AbstractTransformerTestCase {
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/lexertest-input1.xml";
         String result = "resource://org/apache/cocoon/transformation/lexertest-result1.xml";
-
-        print(load(input));
-        print(load(src));
 
         assertEqual(load(result), transform("lexer", src, parameters, load(input)));
     }
