@@ -175,7 +175,7 @@ public class DefaultLinkService
             Iterator eventIterator = events.iterator();
             boolean found = false;
             while (!found && eventIterator.hasNext()) {
-                Event inEvent = (Event)eventIterator.next();
+                final Object inEvent = eventIterator.next();
                 if ( inEvent instanceof ComparableEvent
                      && current.equalsEvent((ComparableEvent)inEvent)) {
                      found = true;
@@ -195,8 +195,18 @@ public class DefaultLinkService
         // now add events
         iter = events.iterator();
         while ( iter.hasNext()) {
-            final Event current = (Event)iter.next();
-            hasParams = this.addEvent(buffer, current, hasParams);
+            final Object current = iter.next();
+            if ( current instanceof Event ) {
+                hasParams = this.addEvent(buffer, (Event)current, hasParams);
+            } else if ( current instanceof ParameterDescription ) {
+                if ( hasParams ) {
+                    buffer.append('&');
+                } else {
+                    buffer.append('?');
+                    hasParams = true;
+                }
+                buffer.append(((ParameterDescription)current).parameters);
+            }
         }
         return buffer.toString();
     }

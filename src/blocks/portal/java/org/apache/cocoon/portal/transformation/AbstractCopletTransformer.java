@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.9 2004/03/16 09:16:59 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -122,11 +122,14 @@ extends AbstractSAXTransformer {
             if (context != null) {
                 copletId = (String)context.get(Constants.COPLET_ID_KEY);
             } else {
-                try {
-                    copletId = this.parameters.getParameter(COPLET_ID_PARAM);
+                copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
+                if ( copletId == null ) {
+                    try {
+                        copletId = this.parameters.getParameter(COPLET_ID_PARAM);
                         
-                } catch (ParameterException e) {
-                    throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
+                    } catch (ParameterException e) {
+                        throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
+                    }
                 }
             }
         }
