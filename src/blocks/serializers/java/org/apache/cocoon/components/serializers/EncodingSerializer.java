@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -37,10 +38,9 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: EncodingSerializer.java,v 1.2 2004/04/30 22:52:43 joerg Exp $
+ * @version CVS $Id: EncodingSerializer.java,v 1.3 2004/06/01 17:16:28 tcurdt Exp $
  */
-public abstract class EncodingSerializer
-implements Serializer, Locator, Recyclable, Configurable  {
+public abstract class EncodingSerializer implements Serializer, Locator, Recyclable, Configurable  {
 
     /** The line separator string */
     private static final char S_EOL[] =
@@ -80,6 +80,12 @@ implements Serializer, Locator, Recyclable, Configurable  {
     /** Flag indicating if the document is being processed. */
     private boolean processing = false;
 
+    /** Current nesting level */
+    private int level = 0;
+
+    /** Whitespace buffer for indentation */
+    private char[] indentBuffer = null;
+
     /* ====================================================================== */
 
     /** The <code>Charset</code> associated with the character encoding. */
@@ -88,6 +94,8 @@ implements Serializer, Locator, Recyclable, Configurable  {
     /** The <code>Namespace</code> associated with this instance. */
     protected Namespaces namespaces = new Namespaces();
 
+    /** Per level indent spaces */
+    protected int indentPerLevel = 0;
     /* ====================================================================== */
 
     /**
@@ -144,10 +152,23 @@ implements Serializer, Locator, Recyclable, Configurable  {
             throw new ConfigurationException("Encoding not supported: "
                                              + encoding, exception);
         }
+
+        indentPerLevel = conf.getChild("indent").getValueAsInteger(0);
+        if (indentPerLevel > 0) {
+            assureIndentBuffer(indentPerLevel * 6);
+        }
     }
 
     /* ====================================================================== */
-    
+
+    private char[] assureIndentBuffer( int size ) {
+        if (indentBuffer == null || indentBuffer.length < size) {
+            indentBuffer = new char[size];
+            Arrays.fill(indentBuffer,' ');
+        }
+        return indentBuffer;
+    }
+
     /**
      * Encode and write a <code>String</code>
      */
@@ -355,6 +376,19 @@ implements Serializer, Locator, Recyclable, Configurable  {
         }
     }
 
+    /**
+     * Write out character to indent the output according
+     * to the level of nesting
+     * @param indent
+     * @throws SAXException
+     */
+    protected void writeIndent(int indent) throws SAXException {
+        this.charactersImpl("\n".toCharArray(),0,1);
+        if (indent > 0) {
+            this.charactersImpl(assureIndentBuffer(indent),0,indent);
+        }
+    }
+
     /* ====================================================================== */
 
     /**
@@ -363,6 +397,7 @@ implements Serializer, Locator, Recyclable, Configurable  {
     public void startDocument()
     throws SAXException {
         this.processing = true;
+        this.level = 0;
     }
 
     /**
@@ -396,6 +431,11 @@ implements Serializer, Locator, Recyclable, Configurable  {
     public void startElement(String nsuri, String local, String qual,
                                    Attributes attributes)
     throws SAXException {
+        if (indentPerLevel > 0) {
+            this.writeIndent(indentPerLevel*level);
+            level++;
+        }
+
         String name = this.namespaces.qualify(nsuri, local, qual);
 
         if (this.prolog) {
@@ -419,11 +459,24 @@ implements Serializer, Locator, Recyclable, Configurable  {
         this.startElementImpl(nsuri, local, name, ns, at);
     }
 
+    public void characters (char ch[], int start, int length)
+    throws SAXException {
+        if (indentPerLevel > 0) {
+            this.writeIndent(indentPerLevel*level + 1);
+        }
+        this.charactersImpl(ch, start, length);
+    }
+
     /**
      * Receive notification of the end of an element.
      */
     public void endElement(String nsuri, String local, String qual)
     throws SAXException {
+        if (indentPerLevel > 0) {
+            level--;
+            this.writeIndent(indentPerLevel*level);
+        }
+
         String name = this.namespaces.qualify(nsuri, local, qual);
         this.endElementImpl(nsuri, local, name);
     }
@@ -451,6 +504,16 @@ implements Serializer, Locator, Recyclable, Configurable  {
      */
     public abstract void startElementImpl(String uri, String local, String qual,
                                   String namespaces[][], String attributes[][])
+    throws SAXException;
+
+    /**
+     * Receive character notifications
+     * @param ch
+     * @param start
+     * @param length
+     * @throws SAXException
+     */
+    public abstract void charactersImpl (char ch[], int start, int length)
     throws SAXException;
 
     /**
