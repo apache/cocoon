@@ -89,7 +89,7 @@
   </target>
 
   <!-- Validation of xdocs  -->
-  <target name="validate-xdocs" depends="prepare-docs" unless="internal.exclude.validate.xdocs">
+  <target name="cocoon-validate-xdocs" depends="prepare-docs" unless="internal.exclude.validate.xdocs">
 <!--
     <echo message="Conducting validation of core XML documentation."/>
 -->

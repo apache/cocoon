@@ -97,7 +97,7 @@ Not rebuilding docs, as they are up-to-date:
 
   <!-- Create docs -->
   <target name="docs"
-      depends="validate-jars, prepare-docs, validate-xdocs, docs_done, javadocs, do-forrest"
+      depends="validate-jars, prepare-docs, cocoon-validate-xdocs, docs_done, javadocs, do-forrest"
       unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
@@ -147,7 +147,7 @@ Not rebuilding docs, as they are up-to-date:
 -->
   <!-- Create printer friendly docs -->
 <!--
-  <target name="printer-docs" depends="prepare-printer-docs, validate-xdocs, printer-docs_done" description="Builds printer-friendly documentation">
+  <target name="printer-docs" depends="prepare-printer-docs, cocoon-validate-xdocs, printer-docs_done" description="Builds printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
 
     <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context.printer}" failonerror="true" maxmemory="128m">

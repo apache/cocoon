@@ -137,7 +137,7 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="prepare-webapp-docs" depends="validate-xdocs,validate-jars" unless="internal.exclude.webapp.documentation">
+  <target name="prepare-webapp-docs" depends="cocoon-validate-xdocs,validate-jars" unless="internal.exclude.webapp.documentation">
     <mkdir dir="${build.webapp.docs}"/>
 
     <copy todir="${build.webapp.docs}" filtering="on">
