@@ -63,4 +63,5 @@ public class NOPVariableResolver
     public String resolve() throws PatternException {
         return this.expression;
     }
+
 }

@@ -54,12 +54,10 @@ public class RequestParameterEventAspect
             }
         } else {
             List list = (List) request.getAttribute("org.apache.cocoon.portal." + parameterName);
-            if (list != null)
-            {
+            if (list != null) {
                 Event[] events = (Event[]) list.toArray(new Event[0]);
                 final Publisher publisher = context.getEventPublisher();
-                for (int i = 0; i < events.length; i++)
-                {
+                for (int i = 0; i < events.length; i++) {
                     publisher.publish(events[i]);
                 }
             }

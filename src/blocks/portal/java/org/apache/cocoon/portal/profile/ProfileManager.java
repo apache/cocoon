@@ -116,14 +116,6 @@ public interface ProfileManager {
     Collection getCopletDatas();
     
     /**
-     * Copy the current (default) layout and store it under
-     * the provided key.
-     * The copy includes copying of layout objects (with attached
-     * items) and coplet instance datas.
-     */
-    Layout copyProfile(String layoutKey);
-    
-    /**
      * Store the provided profile under the layoutKey.
      * This method can be used to overwrite a profile with another
      * one.

@@ -25,10 +25,11 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.SkinDescription;
 
 /**
- * FIXME We can use the module chaining!
+ * This input module provides information about the current selected skin
  * 
  * @version CVS $Id: SkinModule.java,v 1.4 2005/01/07 10:21:46 cziegeler Exp $
  */
@@ -77,11 +78,21 @@ implements Disposable {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
+            String skinName = null;
             // get the current skin
-            // TODO
-            String skinName = (String)this.globalModule.getAttribute("skin", modeConf, objectModel);
+            // the skin is stored as a parameter on the root layout
+            // if not, the global module is used
+            // fallback is: common
+            final Layout rootLayout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
+            if ( rootLayout != null ) {
+                skinName = (String)rootLayout.getParameters().get("skin");
+            }
+            // use the global module
             if ( skinName == null ) {
-                skinName = "basic";
+                skinName = (String)this.globalModule.getAttribute("skin", modeConf, objectModel);
+            if ( skinName == null ) {
+                skinName = "common";
+            }
             }
             
             // find the correct skin
@@ -100,6 +111,14 @@ implements Disposable {
                     return desc.getBasePath();
                 } else if ( "skin.thumbnailpath".equals(name) ) {
                     return desc.getThumbnailPath();
+                } else if ( name.startsWith("skin.thumbnailuri.") ) {
+                    String selectedSkinName = name.substring(name.lastIndexOf(".")+ 1, name.length());
+                    for(Iterator it = portalService.getSkinDescriptions().iterator(); it.hasNext();) {
+                        SkinDescription selected = (SkinDescription) it.next();
+                        if(selected.getName().equals(selectedSkinName)) {
+                            return selected.getBasePath() + "/"  + selected.getThumbnailPath(); 
+                }
+            }
                 }
             }
             return null;
