@@ -218,7 +218,8 @@ the result of the evaluation:</p>
 <p>The <code>forEach</code> tag allows you to iterate over a collection 
 of objects:</p>
 <source>
-&lt;jx:forEach [var="Name"] [items="Expression"] [begin="NumExpr"] [end="NumExpr"] [step="NumExpr"]&gt;
+&lt;jx:forEach [var="Name"] [varStatus="Name"] [items="Expression"] 
+               [begin="NumExpr"] [end="NumExpr"] [step="NumExpr"]&gt;
   body
 &lt;/jx:forEach&gt;
 </source>
@@ -228,6 +229,83 @@ If unspecified it defaults to <code>0</code>. The <code>end</code>
 attribute specifies the item to end with (<code>0</code> = first item, 
 <code>1</code> = second item, ...). If unspecified it defaults to the last item in the list. Every <code>step</code> items are
 processed (defaults to <code>1</code> if <code>step</code> is absent). Either <code>items</code> or both <code>begin</code> and <code>end</code> must be present.</p>
+<p>
+If the <code>varStatus</code> attribute is present a variable will be created to hold information about the current loop status. The variable named by the <code>varStatus</code> attribute will hold a reference to an object with the following properties:
+    <table>
+     <tr>
+       <td>
+       Property:
+       </td>
+       <td>
+       Description:
+       </td>
+     </tr>
+     <tr>
+       <td>
+       current
+       </td>
+       <td>
+       The item from the collection for the current round of iteration
+       </td>
+     </tr>
+     <tr>
+       <td>
+       index
+       </td>
+       <td>
+       The zero-based index for the current round of iteration
+       </td>
+     </tr>
+     <tr>
+       <td>
+       count
+       </td>
+       <td>
+       The one-based count for the current round of iteration
+       </td>
+     </tr>
+     <tr>
+       <td>
+       first
+       </td>
+       <td>
+       True if this is the first round of iteration
+       </td>
+     </tr>
+     <tr>
+       <td>
+       last
+       </td>
+       <td>
+       True if this is the last round of iteration
+       </td>
+     </tr>
+     <tr>
+       <td>
+       begin
+       </td>
+       <td>
+       The value of the <code>begin</code> attribute
+       </td>
+     </tr>
+     <tr>
+       <td>
+       end
+       </td>
+       <td>
+       The value of the <code>end</code> attribute
+       </td>
+     </tr>
+     <tr>
+       <td>
+       step
+       </td>
+       <td>
+       The value of the <code>step</code> attribute
+       </td>
+     </tr>
+    </table>
+</p>
 <p>An alternate form of <code>forEach</code> is supported for convenience when using XPath (since you can specify the selection criteria for the collection using XPath itself):</p>
 <source>
 &lt;jx:forEach select="XPathExpression"&gt;
