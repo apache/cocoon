@@ -16,12 +16,8 @@
  */
 package org.apache.cocoon.core.container;
 
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
