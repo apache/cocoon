@@ -20,8 +20,56 @@
   <description>
     Documentation Targets
   </description>
+  
+  <target name="docs" depends="prepare-docs" unless="exclude.documentation" 
+  	description="Test documentation target">
+  	
+  	<!-- check whether Forrest bin directory ist set -->
+    <condition property="cond.forrest.bin.exists">
+      <available file="${forrest.bin}/forrest.bat" property="blaaaa"/>
+    </condition>  	
+  	<fail unless="cond.forrest.bin.exists" 
+      message="Set the variable 'forrest.bin' to the directory that contains the Forrest start scripts!"/>
+    
+    <!-- run Forrest using exec task - depending on the operating system either choose 
+         forrest.sh or forrest.bat -->
+  	<dirname file="${forrest.bin}/blaaaa" property="forrest.bin.absolute"/>
+  	<if>
+  	  <contains string="${os.name}" substring="win" casesensitive="false"/>
+  	  <then>
+  	    <exec dir="./src/documentation" executable="${forrest.bin.absolute}/forrest.bat"/>
+      </then>
+      <else>
+  	    <exec dir="./src/documentation" executable="${forrest.bin.absolute}/forrest.sh"/>  		
+      </else>
+  	</if>
+  	
+  	<!-- create Javadocs -->
+      <!-- tbd -->
+  	
+  </target>
 
-  <target name="prepare-docs" unless="exclude.documentation" depends="blocks">
+  <target name="prepare-docs" unless="exclude.documentation" depends="init-tasks" description="Test documentation target">
+  	<!-- create sitemap components: Task has to be rewritten -->
+      <!--sitemap-components docDir="build/xdocs/userdocs" source="./src/java"/-->
+  	<!-- create jar information -->
+  	  <!-- TBD -->
+  	<!-- create Block status information -->
+  	  <!-- create block structure -->
+  	
+  </target>
+	
+  <target name="javadocs" depends="prepare-blocks"
+          description="Builds the API documentation (javadocs)"
+          unless="internal.exclude.javadocs">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="javadocs"/>
+  </target>
+
+
+  <target name="OLD_prepare-docs" unless="exclude.documentation" depends="blocks">
 
     <!-- Set classpath for documentation -->
     <path id="documentation.classpath">
@@ -81,7 +129,7 @@
   </target>
 
   <!-- Set a variable if the generated docs are already up-to-date. -->
-  <target name="docs_check" depends="prepare-docs">
+  <target name="OLD_docs_check" depends="OLD_prepare-docs">
     <uptodate property="docs.notrequired" targetfile="${build.docs}/index.html" >
       <srcfiles dir="." includes="status.xml"/>
       <srcfiles dir="${build}" includes="jars.xml"/>
@@ -90,7 +138,7 @@
   </target>
 
   <!-- If generated docs are already up-to-date, print a message saying so. -->
-  <target name="docs_done" depends="docs_check" if="docs.notrequired">
+  <target name="OLD_docs_done" depends="OLD_docs_check" if="docs.notrequired">
     <echo>-------------------------------------------------------------
 Not rebuilding docs, as they are up-to-date:
   ${build.docs}/index.html is more recent than
@@ -103,8 +151,8 @@ Not rebuilding docs, as they are up-to-date:
 <!-- FIXME: Temporarily disable forrest until we fix the 0.6 vs 0.5 and cocoon version number conflict 
       depends="validate-jars, prepare-docs, cocoon-validate-xdocs, docs_done, javadocs, do-forrest"
 -->
-  <target name="docs"
-      depends="validate-jars, prepare-docs, cocoon-validate-xdocs, docs_done, javadocs"
+  <target name="OLD_docs"
+      depends="validate-jars, prepare-docs, cocoon-validate-xdocs, OLD_docs_done, javadocs"
       unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
@@ -248,15 +296,5 @@ It will generate docs into ${build.site}"/>
   </target>
   -->
 
-  <!-- Creates Javadocs -->
-  <target name="javadocs"
-          depends="prepare-blocks"
-          description="Builds the API documentation (javadocs)"
-          unless="internal.exclude.javadocs">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="javadocs"/>
-  </target>
 
 </project>
