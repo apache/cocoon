@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.39 2003/05/06 09:09:26 bruno Exp $
+    | CVS $Id: jars.xml,v 1.40 2003/05/09 12:31:21 tcurdt Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -765,6 +765,14 @@
 	<used-by>Woody block</used-by>
   <lib>woody/lib/xreporter-expression-20030428.jar</lib>
   <homepage>http://xreporter.cocoondev.org</homepage>
+ </file>
+
+ <file>
+   <title>Joost</title>
+   <description>Streaming Transformation for XML (STX) library</description>
+   <used-by>STX block</used-by>
+   <lib>stx/lib/joost-20030502.jar</lib>
+   <homepage>http://joost.sourceforge.net/</homepage>
  </file>
 
   <file>

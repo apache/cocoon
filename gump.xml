@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.59 2003/05/07 11:31:58 stephan Exp $
+  CVS $Id: gump.xml,v 1.60 2003/05/09 12:31:21 tcurdt Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -818,6 +818,26 @@
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
 
+  <project name="cocoon-block-stx" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="stx"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="commons-logging"/>
+    <depend project="joost"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/stx-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -935,6 +955,15 @@
     </description>
     <home nested="src/blocks/qdox/lib"/>
     <jar name="qdox-1.1.jar"/>
+  </project>
+
+  <project name="joost">
+    <url href="http://joost.sourceforge.net"/>
+    <description>
+      Streaming Transformation for XML (STX) library
+    </description>
+    <home nested="src/blocks/stx/lib"/>
+    <jar name="joost-20030502.jar"/>
   </project>
   
 </module>

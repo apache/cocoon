@@ -186,6 +186,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="TC" type="add" fixes-bug="19772" due-to="Daniel Fagerstrom" due-to-email="danielf@nada.kth.se">
+   Added STX block. (alternative to XSLT)
+  </action>
   <action dev="VG" type="fix" fixes-bug="19526" due-to="Tony Collen" due-to-email="tc@hist.umn.edu">
    Throw InvalidContinuationException when flow continuation is not found or not valid,
    instead of forwarding to hard-coded 'invalidContinuation' page.
