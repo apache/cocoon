@@ -87,7 +87,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.8 2003/12/29 14:19:27 unico Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.9 2003/12/29 14:21:33 unico Exp $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
         implements Configurable, CacheableProcessingComponent {
@@ -224,7 +224,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             format.put(OutputKeys.DOCTYPE_SYSTEM, dtSystem);
         }
         if (encoding != null) {
-            format.put(OutputKeys.ENCODING, null);
+            format.put(OutputKeys.ENCODING, encoding);
         }
         if (indent != null) {
             format.put(OutputKeys.INDENT, indent);
