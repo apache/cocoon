@@ -64,8 +64,8 @@ import org.xml.sax.SAXException;
  *
  * <p>This generates an autonomous SAX-blurb, i.e. all necessary namespace
  * declarations will be made, and no start/endDocument events will be generated.
- * 
- * @version CVS $Id: I18nMessage.java,v 1.3 2003/12/31 10:27:18 antonio Exp $
+ *
+ * @version CVS $Id: I18nMessage.java,v 1.4 2004/01/29 03:18:05 vgritsenko Exp $
  */
 public class I18nMessage implements XMLizable {
     private String key;
@@ -138,15 +138,19 @@ public class I18nMessage implements XMLizable {
 
     public void toSAX(ContentHandler contentHandler) throws SAXException {
         contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
-        AttributesImpl i18nAttrs = new AttributesImpl();
         if (parameters != null) {
             contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT, Constants.EMPTY_ATTRS);
         }
-        if (catalogue != null)
+
+        AttributesImpl i18nAttrs = new AttributesImpl();
+        if (catalogue != null) {
             i18nAttrs.addCDATAAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, catalogue);
+        }
+
         contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
         contentHandler.characters(key.toCharArray(), 0, key.length());
         contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
+
         // the parameters
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {

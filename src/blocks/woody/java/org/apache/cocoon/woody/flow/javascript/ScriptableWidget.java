@@ -100,7 +100,7 @@ public class ScriptableWidget extends ScriptableObject {
             if (id.equals("length")) {
                 return true;
             }
-	} else if (delegate instanceof MultiValueField) {
+        } else if (delegate instanceof MultiValueField) {
             if (id.equals("length")) {
                 return true;
             }
@@ -109,7 +109,7 @@ public class ScriptableWidget extends ScriptableObject {
             if (sub != null) {
                 return true;
             }
-        } 
+        }
         return super.has(id, start);
     }
 
@@ -226,7 +226,7 @@ public class ScriptableWidget extends ScriptableObject {
                 value = unwrap(value);
                 if (value instanceof Double) {
                     // make woody accept a JS Number
-                    Class typeClass = 
+                    Class typeClass =
                         field.getFieldDefinition().getDatatype().getTypeClass();
                     if (typeClass == long.class || typeClass == Long.class) {
                         value = new Long(((Number)value).longValue());
@@ -236,8 +236,8 @@ public class ScriptableWidget extends ScriptableObject {
                         value = new Float(((Number)value).floatValue());
                     } else if (typeClass == short.class || typeClass == Short.class) {
                         value = new Short(((Number)value).shortValue());
-                    } 
-                } 
+                    }
+                }
                 field.setValue(value);
                 return;
             } else if (sub instanceof BooleanField) {
@@ -313,7 +313,7 @@ public class ScriptableWidget extends ScriptableObject {
         }
         return Undefined.instance;
     }
-    
+
     public boolean jsFunction_equals(Object other) {
         if (other instanceof ScriptableWidget) {
             ScriptableWidget otherWidget = (ScriptableWidget)other;
