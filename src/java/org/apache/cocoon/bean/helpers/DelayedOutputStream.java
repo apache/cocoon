@@ -50,12 +50,8 @@
 */
 package org.apache.cocoon.bean.helpers;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -64,7 +60,7 @@ import java.io.OutputStream;
  *
  * @author    huber@apache.org
  * @author    uv@upaya.co.uk
- * @version CVS $Id: DelayedOutputStream.java,v 1.2 2003/06/06 12:21:10 vgritsenko Exp $
+ * @version CVS $Id: DelayedOutputStream.java,v 1.3 2003/06/10 11:17:25 cziegeler Exp $
  */
 public class DelayedOutputStream extends OutputStream {
     /**
