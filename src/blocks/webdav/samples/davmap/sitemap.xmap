@@ -31,7 +31,7 @@
     </map:transformers>
     
     <!-- If event caching is enabled you'll need to uncomment this in order
-         for PROPPATCH to work properly
+         for PROPPATCH to work properly 
     <map:pipes default="caching">
       <map:pipe name="event-caching" 
         src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
@@ -70,7 +70,7 @@
     
     <map:component-configurations>
       <global-variables>
-        <staging>repository:./repo/</staging>
+        <staging>repository:./repo</staging>
       </global-variables>
     </map:component-configurations>
     
@@ -96,7 +96,9 @@
           | generate the input for the PUT method.
           + -->
       <map:match pattern="request/PUT">
-        <map:generate type="stream" />
+        <map:generate type="stream">
+          <map:parameter name="defaultContentType" value="text/xml" />
+        </map:generate>
         <map:serialize type="xml" />
       </map:match>
       
@@ -128,6 +130,10 @@
           <map:parameter name="depth" value="1"/>
           <map:parameter name="dateFormat" value="EEE, d MMM yyyy HH:mm:ss z" />
           <map:parameter name="timeZone" value="GMT" />
+          <map:parameter name="properties" value="false" />
+          <map:parameter name="locks" value="false" />
+          <map:parameter name="permissions" value="false" />
+          <map:parameter name="version" value="false" />
         </map:generate>
         <map:transform src="styles/collection2html.xsl">
           <map:parameter name="requestURI" value="{request:requestURI}" />
@@ -142,6 +148,10 @@
           <map:parameter name="depth" value="{request-header:Depth}" />
           <map:parameter name="dateFormat" value="EEE, d MMM yyyy HH:mm:ss z" />
           <map:parameter name="timeZone" value="GMT" />
+          <map:parameter name="properties" value="false" />
+          <map:parameter name="locks" value="false" />
+          <map:parameter name="permissions" value="false" />
+          <map:parameter name="version" value="false" />
         </map:generate>
         <map:transform src="styles/collection2propfind.xsl">
           <map:parameter name="requestURI" value="{request:requestURI}" />
@@ -192,7 +202,7 @@
       
       <map:match pattern="DELETE/**">
         <map:call function="remove">
-          <map:parameter name="location" value="{global:staging}{1}.{2}" />
+          <map:parameter name="location" value="{global:staging}{1}" />
         </map:call>
       </map:match>
       
