@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.120 2003/08/13 20:03:13 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.121 2003/08/14 13:20:35 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -95,7 +95,7 @@
     </action>   
  
     <action context="docs" assigned-to="open">
-      For 2.1: Attend to any high+ issues in the
+      Attend to any high+ issues in the
       <link href="plan/todo-doc.html">Documentation To Do List</link>
     </action>
 
@@ -105,7 +105,7 @@
     </action>
 
     <action context="code" assigned-to="open">
-      For 2.1: use (only) released versions of excalibur 
+      Use (only) released versions of excalibur 
       (source, store, xmlutil). This requires a release of those
       components in excalibur.
     </action>
@@ -121,7 +121,7 @@
     </action>
 
     <action context="code" assigned-to="NKB">
-      For 2.1: Make comprehensive samples with the handle-errors sitemap and real world
+      Make comprehensive samples with the handle-errors sitemap and real world
       use cases. Add also specific Selector and a FaqBuilder to be used by the
       NotifyingBuilder.
     </action>
@@ -129,12 +129,6 @@
     <action context="code" assigned-to="open">
       Finish the design and contracts of flow. Add more tests and samples and
       documentation.
-    </action>
-
-    <action context="code" assigned-to="open">
-      Finish the document
-      <link href="installing/updating.html">Updating Cocoon</link>
-      which describes the major changes since 2.0.2
     </action>
 
     <action context="code" assigned-to="open">
@@ -147,19 +141,12 @@
     </action>
 
     <action context="code" assigned-to="open">
-      There are some deprecated classes being used in 'build test'. (Note: The testcase for
-      the resolver should be moved to the Excalibur XMLUtil, since there is the
-      default resolver).
-    </action>
-
-    <action context="code" assigned-to="open">
-      Test that the new Catalog Entity Resolver works on all platforms, following
-      its move from Cocoon to Excalibur. See
-      <link href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=104814093018956">email discussion</link>.
+      The testcase for the entity resolver should be moved to the Excalibur XMLUtil, 
+      since there is the default resolver.
     </action>
 
     <action context="code" assigned-to="SMS">
-      For 2.1: Enable the 'use-store' parameter of the XSLT processor component. Test for occuring
+      Enable the 'use-store' parameter of the XSLT processor component. Test for occuring
       memory leaks. Seems only occuring if the xalan transformer is used. There also seems to be
       a problem during the serialization of the transient store, if the servlet container were
       stopped.
@@ -185,7 +172,7 @@
     </action>
 
     <action context="code">
-      For 2.1: Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
+      Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
       server: store fragments in the session rather than in a local store. <br/>
       This couldn't work, because if you working with caching pipelines, you cannot be sure
       that the entries are in the session(Stephan).
@@ -202,6 +189,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix">
+     The jars in /lib/local are used during compilation again.
+   </action>
    <action dev="SW" type="fix" fixes-bug="20445">
      Update the I18nTransformer so that it also accepts the 2.0 namespace. This ensures backwards compatibility
      for 2.0 applications. Additionally, attributes on "i18n:" elements can now be in the default namespace (meaning
