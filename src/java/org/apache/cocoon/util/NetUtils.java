@@ -148,7 +148,7 @@ public class NetUtils {
     }
 
     /**
-     * Encode a path as required by the URL specificatin (<a href="http://www.ietf.org/rfc/rfc1738.txt">
+     * Encode a path as required by the URL specification (<a href="http://www.ietf.org/rfc/rfc1738.txt">
      * RFC 1738</a>). This differs from <code>java.net.URLEncoder.encode()</code> which encodes according
      * to the <code>x-www-form-urlencoded</code> MIME format.
      *
@@ -225,7 +225,7 @@ public class NetUtils {
      * extension  component
      *
      * @param uri The filename
-     * @return The filename extension (with starting dot!)
+     * @return The filename extension (with starting dot!) or null if filename extension is not found
      */
     public static String getExtension(String uri) {
         int dot = uri.lastIndexOf('.');
