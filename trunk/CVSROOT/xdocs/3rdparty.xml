@@ -77,7 +77,22 @@
     <td>Performs LDAP queries and serializes their results as XML. Alternative to Cocoon's LDAP Processor.</td>
     <td>?</td>
     <td>Freeware</td>
-    <td><link href="jeff@socialchange.net.au">Jeff Turner</link></td>
+    <td><link href="mailto:jeff@socialchange.net.au">Jeff Turner</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://ulim.cocoonhost.com/">Auth Taglib</link></td>
+    <td>Logicsheet</td>
+    <td>Performs authentication. More than one "auth set" can be logged in to simultaneously.</td>
+    <td>?</td>
+    <td>Freeware</td>
+    <td><link href="mailto:ulim@denic.de">Ulrich Mayring</link></td>
+   </tr>
+   <tr>
+    <td><link href="http://ulim.cocoonhost.com/">SOAP Taglib</link></td>
+    <td>Logicsheet</td>
+    <td>Implements the SOAP protocol for network transmission of XML.</td>
+    <td>Freeware</td>
+    <td><link href="mailto:ulim@denic.de">Ulrich Mayring</link></td>
    </tr>
 
    <tr>
