@@ -45,7 +45,7 @@ import org.apache.log.Priority;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.13 $ $Date: 2000-11-10 22:38:52 $
+ * @version CVS $Revision: 1.1.4.14 $ $Date: 2000-11-14 15:08:26 $
  */
 
 public class Main {
@@ -99,11 +99,8 @@ public class Main {
         String workDir = Cocoon.DEFAULT_WORK_DIR;
         List targets = new ArrayList();
         CLArgsParser parser = new CLArgsParser(args, options);
-        String logUrl = "";
-        String unprocessed[];
+        String logUrl = "file://./logs/cocoon.log";
         String logLevel = "DEBUG";
-
-        LogKit.setGlobalPriority(Priority.DEBUG);
 
         List clOptions = parser.getArguements();
         int size = clOptions.size();
@@ -113,7 +110,7 @@ public class Main {
 
             switch (option.getId()) {
                 case 0:
-                    LogKit.log("Sorry, cannot recognize the argument: \'" + option.getId() + "\'\n");
+                    targets.add(option.getArguement());
                     break;
 
                 case Main.HELP_OPT:
@@ -146,40 +143,43 @@ public class Main {
             }
         }
 
-        unprocessed = parser.getUnparsedArgs();
-        for (int i = 0; i < unprocessed.length; i++) {
-            targets.add(unprocessed[i]);
-        }
-
         try {
+            LogKit.setGlobalPriority(LogKit.getPriorityForName(logLevel));
+
             log = LogKit.createLogger("cocoon", logUrl, logLevel);
         } catch (MalformedURLException mue) {
-            LogKit.log("Cannot write on the specified log file. " +
-                        "Please, make sure the path exists and you have write permissions.",
-                        mue);
+            String error = "Cannot write on the specified log file.  Please, make sure the path exists and you have write permissions.";
+            LogKit.log(error, mue);
+            System.out.println(error);
+            mue.printStackTrace(System.err);
             System.exit(1);
         }
 
         if (destDir.equals("")) {
-            log.fatalError("Careful, you must specify a destination dir when " +
-                        "using the -d/--destDir argument");
+            String error = "Careful, you must specify a destination dir when using the -d/--destDir argument";
+            log.fatalError(error);
+            System.out.println(error);
             System.exit(1);
         }
 
         if (contextDir.equals("")) {
-            log.error("Careful, you must specify a configuration file when " +
-                        "using the -c/--contextDir argument");
+            String error = "Careful, you must specify a configuration file when using the -c/--contextDir argument";
+            log.error(error);
+            System.out.println(error);
             System.exit(1);
         }
 
         if (workDir.equals("")) {
-            log.error("Careful, you must specify a destination dir when " +
-                        "using the -w/--workDir argument");
+            String error = "Careful, you must specify a destination dir when using the -w/--workDir argument";
+            log.error(error);
+            System.out.println(error);
             System.exit(1);
         }
 
         if (targets.size() == 0) {
-            log.error("Please, specify at least one starting URI.");
+            String error = "Please, specify at least one starting URI.";
+            log.error(error);
+            System.out.println(error);
             System.exit(1);
         }
 
@@ -189,10 +189,7 @@ public class Main {
             File context = getDir(contextDir, "context");
             File conf = getConfigurationFile(context);
             Main main = new Main(new Cocoon(conf, null, work.toString()), context, dest);
-            log.info("Warming up...");
-            log.info(" [Cocoon might need to compile the sitemaps, this might take a while]");
             main.warmup();
-            log.info("...ready, let's go:");
             main.process(targets);
             log.info("Done");
         } catch (Exception e) {
@@ -223,33 +220,41 @@ public class Main {
 
     private static File getConfigurationFile(File dir) throws Exception {
 
+        log.debug("Trying configuration file at: " + Cocoon.DEFAULT_CONF_FILE);
         File f = new File(dir, Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
+        log.debug("Trying configuration file at: " + System.getProperty("user.dir") + File.separator + Cocoon.DEFAULT_CONF_FILE);
         f = new File(System.getProperty("user.dir") + File.separator + Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
+        log.debug("Trying configuration file at: /usr/local/etc/" + Cocoon.DEFAULT_CONF_FILE);
         f = new File("/usr/local/etc/" + Cocoon.DEFAULT_CONF_FILE);
         if (f.canRead()) return f;
 
+        log.error("Could not find the configuration file.");
         throw new FileNotFoundException("The configuration file could not be found.");
     }
 
     private static File getDir(String dir, String type) throws Exception {
 
+        log.debug("Getting handle to " + type + " directory '" + dir + "'");
         File d = new File(dir);
 
         if (!d.exists()) {
             if (!d.mkdirs()) {
+                log.error("Error creating " + type + " directory '" + d + "'");
                 throw new IOException("Error creating " + type + " directory '" + d + "'");
             }
         }
 
         if (!d.isDirectory()) {
+            log.error("'" + d + "' is not a directory.");
             throw new IOException("'" + d + "' is not a directory.");
         }
 
         if (!(d.canRead() && d.canWrite())) {
+            log.error("Directory '" + d + "' is not readable/writable");
             throw new IOException("Directory '" + d + "' is not readable/writable");
         }
 
@@ -277,6 +282,8 @@ public class Main {
      * Warms up the engine by accessing the root.
      */
     public void warmup() throws Exception {
+        log.info("Warming up...");
+        log.info(" [Cocoon might need to compile the sitemaps, this might take a while]");
         cocoon.process(new LinkSamplingEnvironment("/", context, attributes, null));
     }
 
@@ -284,6 +291,7 @@ public class Main {
      * Process the URI list and process them all independently.
      */
     public void process(Collection uris) throws Exception {
+        log.info("...ready, let's go:");
         Iterator i = uris.iterator();
         while (i.hasNext()) {
             this.processURI(NetUtils.normalize((String) i.next()), 0);

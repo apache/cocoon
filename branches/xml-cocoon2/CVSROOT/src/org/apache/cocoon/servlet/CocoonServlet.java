@@ -47,7 +47,7 @@ import org.apache.log.Priority;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.26 $ $Date: 2000-11-13 21:17:31 $
+ * @version CVS $Revision: 1.1.4.27 $ $Date: 2000-11-14 15:08:28 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -72,12 +72,12 @@ public class CocoonServlet extends HttpServlet {
     public void init(ServletConfig conf) throws ServletException {
 
         try {
-            log = LogKit.createLogger("cocoon", new URL("file:logs/cocoon.log"), Priority.INFO);
+            log = LogKit.createLogger("cocoon", new URL("file://./logs/cocoon.log"), Priority.DEBUG);
         } catch (MalformedURLException mue) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", mue);
         }
 
-        LogKit.setGlobalPriority(Priority.INFO);
+        LogKit.setGlobalPriority(Priority.DEBUG);
 
         super.init(conf);
 
@@ -112,12 +112,14 @@ public class CocoonServlet extends HttpServlet {
         if (configFileName == null) {
             throw new ServletException("Servlet initialization argument 'configurations' not specified");
         } else {
+            log.info("Using configuration file: " + configFileName);
             this.context.log("Using configuration file: " + configFileName);
         }
 
         try {
             this.configFile = new File(this.context.getResource(configFileName).getFile());
         } catch (java.net.MalformedURLException mue) {
+            log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
             throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
         }
 
@@ -139,15 +141,18 @@ public class CocoonServlet extends HttpServlet {
         synchronized (this) {
             if (this.cocoon != null) {
                 if (this.cocoon.modifiedSince(this.creationTime)) {
+                    log.info("Configuration changed reload attempt");
                     this.context.log("Configuration changed reload attempt");
                     this.cocoon = this.create();
                     reloaded    = true;
                 } else if ((req.getPathInfo() == null) && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
+                    log.info("Forced reload attempt");
                     this.context.log("Forced reload attempt");
                     this.cocoon = this.create();
                     reloaded    = true;
                 }
             } else if ((req.getPathInfo() == null) && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
+                log.info("Invalid configurations reload");
                 this.context.log("Invalid configurations reload");
                 this.cocoon = this.create();
                 reloaded    = true;
@@ -237,11 +242,13 @@ public class CocoonServlet extends HttpServlet {
 
     private Cocoon create() {
         try {
+            log.info("Reloading from: " + this.configFile);
             this.context.log("Reloading from: " + this.configFile);
             Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
             this.creationTime = System.currentTimeMillis();
             return c;
         } catch (Exception e) {
+            log.error("Exception reloading", e);
             this.context.log("Exception reloading: " + e.getMessage());
             this.exception = e;
             return null;

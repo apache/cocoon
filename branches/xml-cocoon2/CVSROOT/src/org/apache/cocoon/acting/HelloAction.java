@@ -26,7 +26,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-10 22:38:52 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-14 15:08:27 $
  */
 public class HelloAction implements Action {
 
@@ -44,11 +44,14 @@ public class HelloAction implements Action {
             if (context != null) {
                 if (session != null) {
                     if (session.isNew()) {
+                        log.debug("Session is new");
                         context.log("Session is new");
                     } else {
+                        log.debug("Session is new");
                         context.log("Session is old");
                     }
                 } else {
+                    log.debug("A session object was not created");
                     context.log("A session object was not created");
                 }
             } else {
