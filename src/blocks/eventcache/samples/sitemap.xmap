@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-  CVS $Id: sitemap.xmap,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+  CVS $Id: sitemap.xmap,v 1.2 2003/08/11 09:50:40 cziegeler Exp $
   
   Event Cache Sample
 -->
@@ -17,6 +17,11 @@
     <map:actions>
     	<map:action name="cacheevent" src="org.apache.cocoon.acting.CacheEventAction"/>
     </map:actions>
+    <map:pipes default="caching">
+      <map:pipe name="event-aware" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+        <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
+      </map:pipe>
+    </map:pipes>
   </map:components> 
   
   <map:flow language="javascript">
@@ -30,7 +35,8 @@
   </map:views>
 
   <map:pipelines>
-    <map:pipeline>
+    <map:pipeline type="event-aware">
+      
       <map:match pattern="flow">
       	<map:call function="cacheEvent"/>
       </map:match>
