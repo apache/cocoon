@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
 
 <!-- 
-  CVS $Id: status2html.xslt,v 1.3 2003/03/26 21:21:30 stefano Exp $
+  CVS $Id: status2html.xslt,v 1.4 2003/03/30 12:48:32 ghoward Exp $
 -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:status="http://apache.org/cocoon/status/2.0">
+ 
+  <xsl:param name="contextPath" select="string('/cocoon')"/>
 
   <xsl:template match="status:statusinfo">
     <html>
       <head>
         <title>Cocoon Status [<xsl:value-of select="@status:host"/>]</title>
-        <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
-        <script src="/scripts/main.js" type="text/javascript"/>
+        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
+        <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
       </head>
 
       <body>
