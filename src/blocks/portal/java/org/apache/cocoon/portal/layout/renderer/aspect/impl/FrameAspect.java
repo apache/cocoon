@@ -50,7 +50,13 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
+import java.util.Collections;
+import java.util.Iterator;
+
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.FrameLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -62,22 +68,60 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameAspect.java,v 1.5 2003/05/23 14:20:09 cziegeler Exp $
+ * @version CVS $Id: FrameAspect.java,v 1.6 2003/06/15 19:44:58 cziegeler Exp $
  */
 public class FrameAspect extends AbstractCIncludeAspect {
 
     public void toSAX(RendererAspectContext context, Layout layout, PortalService service, ContentHandler handler)
-        throws SAXException {
+    throws SAXException {
+        PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
 
         if (!(layout instanceof FrameLayout)) {
             throw new SAXException("Wrong layout type, FrameLayout expected: " + layout.getClass().getName());
         }
 
-        String source = (String)layout.getAspectData("frame");
+        String source = (String)layout.getAspectData(config.aspectName);
         if (source == null) {
             source = ((FrameLayout) layout).getSource();
         }
         
         this.createCInclude(source, handler);
+    }
+
+    protected class PreparedConfiguration {
+        public String aspectName;
+        public String store;
+        
+        public void takeValues(PreparedConfiguration from) {
+            this.aspectName = from.aspectName;
+            this.store = from.store;
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Object prepareConfiguration(Parameters configuration) 
+    throws ParameterException {
+        PreparedConfiguration pc = new PreparedConfiguration();
+        pc.aspectName = configuration.getParameter("aspect-name", "frame");
+        pc.store = configuration.getParameter("store");
+        return pc;
+    }
+
+    /**
+     * Return the aspects required for this renderer
+     * @return An iterator for the aspect descriptions or null.
+     */
+    public Iterator getAspectDescriptions(Object configuration) {
+        PreparedConfiguration pc = (PreparedConfiguration)configuration;
+        
+        DefaultAspectDescription desc = new DefaultAspectDescription();
+        desc.setName(pc.aspectName);
+        desc.setClassName("java.lang.String");
+        desc.setPersistence(pc.store);
+        desc.setAutoCreate(false);
+        
+        return Collections.singletonList(desc).iterator();
     }
 }

@@ -110,11 +110,11 @@
      </renderer>
      <renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
-             <aspect type="frame"/>
+             <aspect type="frame">
+                 <parameter name="store" value="request"/>
+             </aspect>
          </aspects>
      </renderer>
-     <!--renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.FrameRenderer" logger="portal"/-->
-     <!--renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.NoWindowRenderer" logger="portal"/-->
      <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="coplet"/>
@@ -160,9 +160,6 @@
             <renderers default="frame">
                 <renderer name="frame"/>
             </renderers>
-            <aspects>
-                <aspect name="frame" class="java.lang.String" store="request" auto-create="false"/>
-            </aspects>
         </layout>
         <layout name="coplet" 
                 class="org.apache.cocoon.portal.layout.impl.CopletLayout">
