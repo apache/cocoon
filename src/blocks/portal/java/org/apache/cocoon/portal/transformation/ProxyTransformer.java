@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.11 2004/07/12 13:36:43 cziegeler Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.12 2004/07/13 14:30:11 cziegeler Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -263,9 +263,9 @@ public class ProxyTransformer
                             query.append('&');
                         }
 
-                        query.append(NetUtils.encode(paramName, null));
+                        query.append(NetUtils.encode(paramName, "utf-8"));
                         query.append('=');
-                        query.append(NetUtils.encode(paramValues[i], null));
+                        query.append(NetUtils.encode(paramValues[i], "utf-8"));
                     }
                 }
             }
