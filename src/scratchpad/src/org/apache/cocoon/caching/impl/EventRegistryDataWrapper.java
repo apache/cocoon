@@ -42,45 +42,43 @@
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
+
 */
-package org.apache.cocoon.caching.validity;
+package org.apache.cocoon.caching.impl;
 
 import java.io.Serializable;
 
+import org.apache.commons.collections.MultiHashMap;
+
 /**
- * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  In fact, if this 
- * becomes useful, it would probably move to Excalibur SourceResolve.
+ * A light object for persisting the state of an EventRegistry implementation 
+ * based on two MultiHashMaps.
  * 
- * Base class encapsulating the information about an external 
- * uncache event.
- * 
- * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: Event.java,v 1.4 2003/07/13 04:40:51 ghoward Exp $
+ * @author ghoward@apache.org
+ * @version CVS $Id: EventRegistryDataWrapper.java,v 1.1 2003/07/13 04:40:51 ghoward Exp $
  */
-public abstract class Event implements Serializable {
+public class EventRegistryDataWrapper implements Serializable {
+    private MultiHashMap m_keyMMap;
+    private MultiHashMap m_eventMMap;
     
-    /**
-     * Used by EventValidity for equals(Object o) which 
-     * is important for determining whether a received event 
-     * should uncache a held Pipeline key.
-     * 
-     * @param event Another Event to compare.
-     * @return true if
-     */
-    public abstract boolean equals(Event e);
-    
-    /**
-     * This hash code is the only way the system can locate 
-     * matching Events when a new event notification is received.
-     */
-    public abstract int hashCode();
-    
-    public boolean equals(Object o) {
-        if (o instanceof Event) {
-            return equals((Event)o);   
-        }
-        return false;
+    public EventRegistryDataWrapper() {
+        this.m_keyMMap = null;
+        this.m_eventMMap = null;
     }
-    
+    public void setupMaps(MultiHashMap keyMap, MultiHashMap eventMap) {
+        this.m_keyMMap = keyMap;
+        this.m_eventMMap = eventMap;
+    }
+
+    public MultiHashMap get_eventMap() {
+        return m_eventMMap;
+    }
+
+    public MultiHashMap get_keyMap() {
+        return m_keyMMap;
+    }
 }

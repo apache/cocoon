@@ -45,70 +45,59 @@
 */
 package org.apache.cocoon.caching.impl;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
+import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.EventValidity;
-import org.apache.commons.collections.MultiHashMap;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 
 /**
  * Very experimental start at external cache invalidation.
  * Warning - API very unstable.  Do not use!  
+ * (But it's getting closer!)
  * 
  * This implementation holds all mappings between Events and PipelineCacheKeys 
  * in two MultiHashMap to facilitate efficient lookup by either as Key.
  * 
- * TODO: Implement Persistence.
  * TODO: Test performance.
+ * TODO: Handle MultiThreading
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.1 2003/07/01 04:38:48 ghoward Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.2 2003/07/13 04:40:51 ghoward Exp $
  */
-public class EventAwareCacheImpl extends CacheImpl {
+public class EventAwareCacheImpl 
+        extends CacheImpl 
+        implements Initializable {
     
+    private ComponentManager m_manager;
+
+	private EventRegistry m_eventRegistry;
 
 	/** 
-     * Clears the entire Cache, including all held event-pipeline key 
+     * Clears the entire Cache, including all registered event-pipeline key 
      * mappings..
-     * 
-	 * @see org.apache.cocoon.caching.Cache#clear()
 	 */
 	public void clear() {
 		super.clear();
-        m_keyMMap.clear();
-        m_eventMMap.clear();
+        m_eventRegistry.clear();
 	}
     
-    /**
-	 * Compose
-     * 
-     * TODO: the Maps should not be initialized here (and should not be hardcoded size)
-     * TODO: Attempt to recover/deserialize persisted event listing. (but not here)
-     * 
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-	 */
-	public void compose(ComponentManager manager) throws ComponentException {
-		super.compose(manager);
-        this.m_eventMMap = new MultiHashMap(100); // TODO: don't hardcode initial size
-        this.m_keyMMap = new MultiHashMap(100); // TODO: don't hardcode initial size
-	}
-    
-    
-
 	/** 
-     * When a new Pipeline key is stored, it needs to be registered in 
-     * the local Event-PipelineKey mapping.
+     * When a new Pipeline key is stored, it needs to be have its 
+     * <code>SourceValidity</code> objects examined.  For every 
+     * <code>EventValidity</code> found, its <code>Event</code> will be 
+     * registered with this key in the <code>EventRegistry</code>.
      * 
-	 * @see org.apache.cocoon.caching.Cache#store(java.util.Map, org.apache.cocoon.caching.PipelineCacheKey, org.apache.cocoon.caching.CachedResponse)
+     * <code>AggregatedValidity</code> is handled recursively.
 	 */
 	public void store(Map objectModel,
                 		PipelineCacheKey key,
@@ -116,125 +105,124 @@ public class EventAwareCacheImpl extends CacheImpl {
                 		throws ProcessingException {
         SourceValidity[] validities = response.getValidityObjects();
         for (int i=0; i< validities.length;i++) {
-            if (validities[i] instanceof AggregatedValidity) {
-                 // AggregatedValidity must be investigated further.
-                 Iterator it = ((AggregatedValidity)validities[i]).getValidities().iterator();
-                 SourceValidity sv = null;
-                 while (it.hasNext()) {
-                     sv = (SourceValidity)it.next();
-                     if (sv instanceof EventValidity) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Found EventValidity in AggregatedValidity: " + sv.toString());
-                        }
-                        registerEvent( ((EventValidity)sv).getEvent(),key);                       
-                      }   
-                 }
-            } else if (validities[i] instanceof EventValidity) {
-                // Found a plain EventValidity.
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Found EventValidity: " + validities[i].toString());
-                }
-                registerEvent( ((EventValidity)validities[i]).getEvent(),key); 
-            }
-        
+            SourceValidity val = validities[i];
+			examineValidity(val, key);
         }
 		super.store(objectModel, key, response);
 	}
 
+    /**
+     * Look up the EventRegistry 
+     */
+	public void compose(ComponentManager manager) throws ComponentException {
+		this.m_manager = manager;
+        super.compose(manager);
+        this.m_eventRegistry = (EventRegistry)manager.lookup(EventRegistry.ROLE);
+	}
+
 	/**
-     * When a CachedResponse is removed from the Cache, any entries in the event mapping 
-     * must be cleaned up.
-     * 
-	 * @see org.apache.cocoon.caching.Cache#remove(org.apache.cocoon.caching.PipelineCacheKey)
+     * Un-register this key in the EventRegistry in addition to 
+     * removing it from the Store
 	 */
 	public void remove(PipelineCacheKey key) {
 		super.remove(key);
-        Collection coll = (Collection)m_keyMMap.get(key);
-        if (coll==null || coll.isEmpty()) {
-            return;
-        } else {
-            // get the iterator over all matching PCK keyed 
-            // entries in the key-indexed MMap.
-            Iterator it = coll.iterator();
-
-            while (it.hasNext()) {
-                // remove all entries in the event-indexed map where this PCK key 
-                // is the value.
-                Object o = it.next();
-                if (o != null) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Removing from event mapping: " + o.toString());
-                    }
-                    m_eventMMap.remove((Event)o,key);            
-                }
-            }
-        }
-        // remove all entries in the key-indexed map where this PCK key 
-        // is the key -- confused yet?
-        m_keyMMap.remove(key);
+        m_eventRegistry.removeKey(key);
 	}
     
+    /**
+     * Receive notification about the occurrence of an Event.
+     * If this event has registered pipeline keys, remove them 
+     * from the Store and unregister them
+     * @param e The Event to be processed.
+     */
     public void processEvent(Event e) {
-        Collection coll = (Collection)m_eventMMap.get(e);
-        if (coll==null || coll.isEmpty()) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("The event map returned empty");
+        PipelineCacheKey[] pcks = m_eventRegistry.keysForEvent(e);
+        for (int i=0;i<pcks.length; i++) {
+            if (pcks[i] != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Processing cache event, found Pipeline key: " + pcks[i].toString());
+                }
+                /* every pck associated with this event needs to be
+                 * removed -- regardless of event mapping. and every 
+                 * event mapped to those keys needs to be removed 
+                 * recursively.
+                 */ 
+                remove(pcks[i]);
             }
-            // return silently with no action
-            return;
+        }
+    }
+    
+    /**
+     * Get the EventRegistry ready, and make sure it does not contain 
+     * orphaned Event/PipelineKey mappings.
+     */
+	public void initialize() throws Exception {
+		if (!m_eventRegistry.init()) {
+            // Is this OK in initialize?  I think it depends 
+            // on the Store(s) being initialized first.
+            super.clear();
         } else {
-            /* get the array of all matching event keyed entries 
-             * in the event-indexed MMap.  Using an iterator gives 
-             * a concurrent modification exception.
-             */
-            Object[] obs = coll.toArray();
-            for (int i=0;i<obs.length; i++) {
-                if (obs[i] != null) {
-                    PipelineCacheKey pck = (PipelineCacheKey)obs[i];
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Processing cache event, found Pipeline key: " + pck.toString());
-                    }
-                    /* every pck associated with this event needs to be
-                     * removed -- regardless of event mapping. and every 
-                     * event mapped to those keys needs to be removed 
-                     * recursively.
-                     * 
-                     * TODO: what happens in this recursive removal?  is 
-                     * it a deadlock danger, or NPE danger?? 
-                     */ 
-                    remove(pck);
+            // Not sure if we want this overhead here, but where else?
+            veryifyEventCache();
+        }
+	}
+    
+    /**
+     * Ensure that all PipelineCacheKeys registered to events still 
+     * point to valid cache entries.  Having an isTotallyEmpty() on 
+     * Store might make this less necessary, as the most likely time 
+     * to discover orphaned entries is at startup.  This is because
+     * stray events could hang around indefinitely if the cache is 
+     * removed abnormally or is not configured with persistence.
+     */
+    public void veryifyEventCache() {
+        PipelineCacheKey[] pcks = m_eventRegistry.allKeys();
+        for (int i=0; i<pcks.length; i++) {
+            if (!this.containsKey(pcks[i])) {
+                m_eventRegistry.removeKey(pcks[i]);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Cache key no longer valid: " + 
+                            pcks[i]);
                 }
             }
         }
-        // This may be unnecessary because the pck removal is done recursively.
-        m_eventMMap.remove(e);
     }
 
     /**
-     * Registers (stores) a two-way mapping between this Event and this 
-     * PipelineCacheKey for later retrieval on receipt of an event.
-     * 
-     * @param event 
-     * @param key
+     * Release resources
      */
-    private void registerEvent(Event e, PipelineCacheKey key) {
-        m_keyMMap.put(key,e);
-        m_eventMMap.put(e,key);
-    }
-    
-    private MultiHashMap m_keyMMap;
-    private MultiHashMap m_eventMMap;
-    
-	/** Release all held components.  
-     * 
-     * TODO: is this the place to persist the event mappings?
-     * 
-	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
-	 */
 	public void dispose() {
-		// TODO need to store event listing persistently - serialize?
-        // for now: TODO: uncache all events.
+        m_manager.release(m_eventRegistry);
 		super.dispose();
+        m_manager = null;
+        m_eventRegistry = null;
 	}
+
+    private void examineValidity(SourceValidity val, PipelineCacheKey key) {
+        if (val instanceof AggregatedValidity) {
+            handleAggregatedValidity((AggregatedValidity)val, key);
+        } else if (val instanceof EventValidity) {
+            handleEventValidity((EventValidity)val, key);
+        }
+    }
+
+    private void handleAggregatedValidity(
+                                    AggregatedValidity val,
+                                    PipelineCacheKey key) {
+        // AggregatedValidity must be investigated further.
+         Iterator it = val.getValidities().iterator();
+         while (it.hasNext()) {
+             SourceValidity thisVal = (SourceValidity)it.next();
+             // Allow recursion
+             examineValidity(thisVal, key);
+         }
+    }
+
+    private void handleEventValidity(EventValidity val, PipelineCacheKey key) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Found EventValidity: " + val.toString());
+        }
+        m_eventRegistry.register(val.getEvent(),key); 
+    }
 
 }
