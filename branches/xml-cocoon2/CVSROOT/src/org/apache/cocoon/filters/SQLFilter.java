@@ -35,7 +35,7 @@ import java.util.Enumeration;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-03-31 19:53:25 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-04-19 06:28:01 $ $Author: balld $
  */
 
 public class SQLFilter extends AbstractFilter {
@@ -278,6 +278,13 @@ public class SQLFilter extends AbstractFilter {
 
     /** BEGIN SAX ContentHandler handlers **/
 
+    public void setDocumentLocator(Locator locator) {
+		System.err.println("PUBLIC ID"+locator.getPublicId());
+		System.err.println("SYSTEM ID"+locator.getSystemId());
+        if (super.contentHandler!=null)
+            super.contentHandler.setDocumentLocator(locator);
+    }
+
     public void startElement(String uri, String name, String raw, Attributes attributes) 
             throws SAXException {
         if (!uri.equals(my_uri)) {
@@ -368,8 +375,8 @@ class Query {
 	protected Properties properties;
 
     /** Dummy static variables for the moment **/
-    protected static final String rowset_name = "ROWSET";
-    protected static final String row_name = "ROW";
+    protected final String rowset_name = "ROWSET";
+    protected final String row_name = "ROW";
 
 	/** The connection, once opened **/
 	protected Connection conn;
