@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Request;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.2 2003/05/23 13:08:35 bruno Exp $
+ * @version CVS $Id: NetUtils.java,v 1.3 2003/05/27 08:46:58 bruno Exp $
  */
 
 public class NetUtils {
@@ -309,7 +309,7 @@ public class NetUtils {
      * Relativize an absolute resource on a given absolute path.
      *
      * @param path The absolute path
-     * @param relativeResource The absolute resource
+     * @param absoluteResource The absolute resource
      * @return the resource relative to the given path
      */
     public static String relativize(String path, String absoluteResource) {
