@@ -96,48 +96,10 @@
      test).</li>
      
    </ul>
-     	<p>
-     	Utilize the pipeline <code>expires</code> parameter to dramatically reduce
-     	redundand requests. Even the most dynamic application pages have a 
-     	reasonable period of time during which they are static. 
-     	Even if a page doesn't change for just one minute, still use the 
-     	<code>expires</code> parameter. Here is an example:
-     	</p>
-<source><![CDATA[
-<map:pipeline>
-  <map:parameter name="expires" value="access plus 1 minutes"/>
-  ...
-</map:pipeline> 
-]]></source>
-		<p>
-     	The value of the parameter is in a format borrowed from the Apache HTTP module mod_expires.
-     	Examples of other possible values are:
-     	</p>
-<source><![CDATA[
-access plus 1 hours
-access plus 1 month
-access plus 4 weeks
-access plus 30 days
-access plus 1 month 15 days 2 hours
-]]></source>
-     	<p>
-     	Imagine 1'000 users hitting your web site at the same time.
-     	Say that they are split into 5 groups, each of which has the same ISP.
-     	Most ISPs use intermediate proxy servers to reduce traffic, hense
-     	improving their end user experience and also reducing their operating costs.
-     	In our case the 1'000 end user requests will result in just 5 requests to Cocoon.
-     	</p>
-     	<p>
-     	After the first request from each group reaches the server, the expires header will
-     	be recognized by the proxy servers which will serve the following requests from their cache.
-     	Keep in mind however that most proxies cache HTTP GET requests, but will not cache HTTP POST requests.
-     	</p>
-     	<p>
-		 To feel the difference, set an expires parameter on one of your pipelines and
-		 load the page with the browser. Notice that after the first time, there are no 
-		 access records in the server logs until the specified time expires.
-     	</p>
-
+     <p>More information about caching can be found 
+       <link href="userdocs/concepts/caching.html">in the Caching documentation</link>.
+       Especially have a look at the information about the expires configuration.
+     </p>
  </s1>
  
  <s1 title="JVM and OS">
