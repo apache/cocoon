@@ -28,7 +28,7 @@ import org.apache.cocoon.forms.event.*;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.10 2004/05/07 13:42:09 mpo Exp $
+ * @version $Id$
  */
 public class Action extends AbstractWidget implements ActionListenerEnabled {
     private final ActionDefinition definition;
@@ -42,38 +42,40 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     protected WidgetDefinition getDefinition() {
         return this.definition;
     }
-    
+
     public void readFromRequest(final FormContext formContext) {
-        Form form = getForm();
-        
-        // Set the submit widget if we can determine it from the request
-        String fullId = getRequestParameterName();
-        Request request = formContext.getRequest();
-        
-        String value = request.getParameter(fullId);
-        if (value != null && value.length() > 0) {
-            form.setSubmitWidget(this);
-            
-        } else {
-            // Special workaround an IE bug for <input type="image" name="foo"> :
-            // in that case, IE only sends "foo.x" and "foo.y" and not "foo" whereas
-            // standards-compliant browsers such as Mozilla do send the "foo" parameter.
-            //
-            // Note that since actions are terminal widgets, there's no chance of conflict
-            // with a child "x" or "y" widget.
-            value = request.getParameter(fullId + ".x");
-            if ((value != null) && value.length() > 0) {
+        if(getProcessRequests() == true) {
+            Form form = getForm();
+
+            // Set the submit widget if we can determine it from the request
+            String fullId = getRequestParameterName();
+            Request request = formContext.getRequest();
+
+            String value = request.getParameter(fullId);
+            if (value != null && value.length() > 0) {
                 form.setSubmitWidget(this);
+
+            } else {
+                // Special workaround an IE bug for <input type="image" name="foo"> :
+                // in that case, IE only sends "foo.x" and "foo.y" and not "foo" whereas
+                // standards-compliant browsers such as Mozilla do send the "foo" parameter.
+                //
+                // Note that since actions are terminal widgets, there's no chance of conflict
+                // with a child "x" or "y" widget.
+                value = request.getParameter(fullId + ".x");
+                if ((value != null) && value.length() > 0) {
+                    form.setSubmitWidget(this);
+                }
+            }
+
+            if (form.getSubmitWidget() == this) {
+                form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
+
+                handleActivate();
             }
         }
-        
-        if (form.getSubmitWidget() == this) {
-            form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
-            
-            handleActivate();
-        }
     }
-    
+
     /**
      * Handle the fact that this action was activated. The default here is to end the
      * current form processing and redisplay the form, which means that actual behaviour

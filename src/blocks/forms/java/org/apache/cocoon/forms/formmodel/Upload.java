@@ -35,9 +35,14 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.13 2004/07/04 14:36:59 joerg Exp $
+ * @version CVS $Id$
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
+
+    private static final String UPLOAD_EL = "upload";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     private final UploadDefinition uploadDefinition;
     private Part part;
     private ValidationError validationError;
@@ -66,33 +71,35 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void readFromRequest(FormContext formContext) {
-        Object obj = formContext.getRequest().get(getRequestParameterName());
-        
-        // If the request object is a Part, keep it
-        if (obj instanceof Part) {
-            Part requestPart = (Part)obj;
-            if (this.part != null) {
-                // Replace the current part
-                this.part.dispose();
+        if(getProcessRequests() == true) {
+            Object obj = formContext.getRequest().get(getRequestParameterName());
+
+            // If the request object is a Part, keep it
+            if (obj instanceof Part) {
+                Part requestPart = (Part)obj;
+                if (this.part != null) {
+                    // Replace the current part
+                    this.part.dispose();
+                }
+
+                // Keep the request part
+                requestPart.setDisposeWithRequest(false);
+                this.part = requestPart;
+                this.validationError = null;
+
+            // If it's not a part and not null, clear any existing value
+            // We also check if we're the submit widget, as a result of clicking the "..." button
+            } else if (obj != null || getForm().getSubmitWidget() == this){
+                // Clear the part, if any
+                if (this.part != null) {
+                    this.part.dispose();
+                    this.part = null;
+                }
+                this.validationError = null;
             }
-        
-            // Keep the request part
-            requestPart.setDisposeWithRequest(false);
-            this.part = requestPart;
-            this.validationError = null;
-            
-        // If it's not a part and not null, clear any existing value
-        // We also check if we're the submit widget, as a result of clicking the "..." button
-        } else if (obj != null || getForm().getSubmitWidget() == this){
-            // Clear the part, if any
-            if (this.part != null) {
-                this.part.dispose();
-                this.part = null;
-            }
-            this.validationError = null;
-        }
-        
-        // And keep the current state if the parameter doesn't exist or is null
+
+            // And keep the current state if the parameter doesn't exist or is null
+       }
     }
 
     public boolean validate() {
@@ -137,11 +144,6 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         this.validationError = error;
     }
 
-
-    private static final String UPLOAD_EL = "upload";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
-    
     /**
      * @return "upload"
      */

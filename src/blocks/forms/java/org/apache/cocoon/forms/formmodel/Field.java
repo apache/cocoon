@@ -42,10 +42,15 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.19 2004/07/11 17:18:26 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
+
+    private static final String FIELD_EL = "field";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     /** Overrides selection list defined in FieldDefinition, if any. */
     protected SelectionList selectionList;
     /** Additional listeners to those defined as part of the widget definition (if any). */
@@ -170,13 +175,14 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void readFromRequest(FormContext formContext) {
-        String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
-        // FIXME: Should we consider only non-null values, which allows to
-        // split a form across several screens?
-        //if (newEnteredValue != null) {
-            readFromRequest(newEnteredValue);
-        //}
-
+        if(getProcessRequests() == true) {
+            String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
+            // FIXME: Should we consider only non-null values, which allows to
+            // split a form across several screens?
+            //if (newEnteredValue != null) {
+                readFromRequest(newEnteredValue);
+            //}
+        }
     }
 
     protected void readFromRequest(String newEnteredValue) {
@@ -312,12 +318,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public boolean isRequired() {
         return getFieldDefinition().isRequired();
     }
-
-
-    private static final String FIELD_EL = "field";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
-
 
     /**
      * @return "field"

@@ -39,9 +39,14 @@ import org.apache.cocoon.forms.validation.ValidationError;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.11 2004/07/02 09:17:08 jeremy Exp $
+ * @version $Id$
  */
 public class BooleanField extends AbstractWidget implements ValidationErrorAware, ValueChangedListenerEnabled {
+
+    private static final String BOOLEAN_FIELD_EL = "booleanfield";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     // FIXME(SW) : should the initial value be false or null ? This would allow
     // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
@@ -59,16 +64,18 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     }
 
     public void readFromRequest(FormContext formContext) {
-        validationError = null;
-        Object oldValue = value;
-        String param = formContext.getRequest().getParameter(getRequestParameterName());
-        if (param != null && param.equalsIgnoreCase("true"))
-            value = Boolean.TRUE;
-        else
-            value = Boolean.FALSE;
-        
-        if (value != oldValue) {
-            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
+        if(getProcessRequests() == true) {
+            validationError = null;
+            Object oldValue = value;
+            String param = formContext.getRequest().getParameter(getRequestParameterName());
+            if (param != null && param.equalsIgnoreCase("true"))
+                value = Boolean.TRUE;
+            else
+                value = Boolean.FALSE;
+            
+            if (value != oldValue) {
+                getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
+            }
         }
     }
 
@@ -102,11 +109,6 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         this.validationError = error;
     }
 
-
-    private static final String BOOLEAN_FIELD_EL = "booleanfield";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
-    
     /**
      * @return "booleanfield"
      */
