@@ -28,11 +28,10 @@ public class DateTestJavaSelectionList extends AbstractJavaSelectionList {
     protected boolean build() throws Exception {
         Calendar c = Calendar.getInstance();
         c.set(2003, 0, 1);
-        this.addItem(c.getTime(), null);
+        this.addItem(c.getTime(), (String)null);
         c.set(2004, 0, 1);
-        this.addItem(c.getTime(), null);
-        this.addItem(new Date(), null);
+        this.addItem(c.getTime(), (String)null);
+        this.addItem(new Date(), (String)null);
         return false;
     }
-
 }
