@@ -48,39 +48,37 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.layout.aspect;
 
 import org.apache.cocoon.portal.aspect.AspectStatus;
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * Is this layout maximizable?
  * 
- * @version CVS $Id: TabLayoutStatus.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: MaximizableLayoutStatus.java,v 1.1 2003/05/08 13:38:10 cziegeler Exp $
  */
-public class TabLayoutStatus 
+public class MaximizableLayoutStatus 
 implements AspectStatus {
 
-    protected int selectedItem;
+    protected boolean maximizable;
 
-    public TabLayoutStatus() {
+    public MaximizableLayoutStatus() {
     }
     
     /**
-     * Returns the selectedTab.
-     * @return int
+     * @return
      */
-    public int getSelectedItem() {
-        return selectedItem;
+    public boolean isMaximizable() {
+        return maximizable;
     }
 
     /**
-     * Sets the selectedTab.
-     * @param selectedTab The selectedTab to set
+     * @param b
      */
-    public void setSelectedItem(int selectedTab) {
-        this.selectedItem = selectedTab;
+    public void setMaximizable(boolean b) {
+        maximizable = b;
     }
 
 }

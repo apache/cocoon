@@ -68,7 +68,7 @@ import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.*;
-import org.apache.cocoon.portal.layout.impl.FrameStatus;
+import org.apache.cocoon.portal.layout.aspect.FrameStatus;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
@@ -76,7 +76,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @version CVS $Id: FrameEventAspect.java,v 1.2 2003/05/08 13:38:10 cziegeler Exp $
  */
 public class FrameEventAspect
     extends AbstractLogEnabled

@@ -48,34 +48,86 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.cocoon.portal.aspect.AspectStatus;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.EventManager;
+import org.apache.cocoon.portal.event.Filter;
+import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.impl.MaximizeEvent;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.aspect.MaximizableLayoutStatus;
+import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.xml.XMLUtils;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayoutStatus.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: MaximizableAspect.java,v 1.1 2003/05/08 13:38:11 cziegeler Exp $
  */
-public class CompositeLayoutStatus implements AspectStatus {
+public class MaximizableAspect 
+    extends AbstractAspect
+    implements Subscriber, Initializable {
 
-    protected Layout maxpageLayout;
-    
-    /**
-     * @return Layout
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 */
+	public void toSAX(RendererAspectContext context,
+                		Layout layout,
+                		PortalService service,
+                		ContentHandler handler)
+	throws SAXException {
+        
+        MaximizableLayoutStatus maximizable = (MaximizableLayoutStatus) this.getStatus(MaximizableLayoutStatus.class, ProfileManager.SESSION_STATUS, layout.getId());
+        if ( maximizable != null ) {
+            MaximizeEvent event = new MaximizeEvent(layout);
+            XMLUtils.createElement(handler, "maxpage-uri", service.getLinkService().getLinkURI(event));
+
+        } 
+
+        context.invokeNext(layout, service, handler);
+	}
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
      */
-    public Layout getMaxpageLayout() {
-        return this.maxpageLayout;
+    public Class getEventType() {
+        return MaximizeEvent.class;
     }
 
-    /**
-     * Sets the maxpageLayout.
-     * @param maxpageLayout The maxpageLayout to set
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
      */
-    public void setMaxpageLayout(Layout maxpageLayout) {
-        this.maxpageLayout = maxpageLayout;
+    public Filter getFilter() {
+        return null;
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     */
+    public void inform(final Event e) {
+        final MaximizeEvent event = (MaximizeEvent)e;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        EventManager eventManager = null;
+        try {
+            eventManager = (EventManager)this.manager.lookup( EventManager.ROLE);
+            eventManager.getRegister().subscribe( this );
+        } finally {
+            this.manager.release(eventManager);
+        }
+
+    }
+
 }
