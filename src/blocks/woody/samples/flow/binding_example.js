@@ -54,7 +54,7 @@ cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 
 // the form2 function is not directly called by the sitemap but by
 // a generic "woody" function that instantiates the form based on
-// parameters passed from the sitemap (see woody.js file)
+// parameters passed from the sitemap (see above loaded woody2.js file)
 function form2xml(form) {
     // get the documentURI parameter from the sitemap which contains the
     // location of the file to be edited
@@ -66,7 +66,7 @@ function form2xml(form) {
     // bind the document data to the form
     form.load(document);
 
-    // shows the form to the user until is validated successfully
+    // show the form to the user until it is validated successfully
     form.showForm("form2-display-pipeline");
 
     // bind the form's data back to the document
