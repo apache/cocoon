@@ -105,7 +105,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.13 2003/06/27 13:50:38 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.14 2003/07/18 05:00:06 joerg Exp $
  */
 public class CocoonBean {
 
@@ -158,6 +158,7 @@ public class CocoonBean {
     public void initialize() throws Exception {
         // @todo@ when does the logger get initialised? uv
         // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
+        setLogLevel("ERROR");
 
         if (contextDir.equals("")) {
             String error =
@@ -178,7 +179,6 @@ public class CocoonBean {
             log.fatalError(error);
             throw new ProcessingException(error);
         }
-        setLogLevel("ERROR");
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");
 
