@@ -61,6 +61,16 @@ function prot_buildTeam() {
     // set the label to the localized message using i18n
     positionList[i + 1] = {value: key, label: new I18nMessage(key)};
   }
+  /* 
+  // add the first player to the team
+  var firstPlayer = allPersons.get(keys[0]).getTeam().get(0);
+  var member = new Packages.org.apache.cocoon.samples.dreamteam.TeamMember();
+  member.position = firstPlayer.position;
+  member.memberId = firstPlayer.memberId;
+  member.name = firstPlayer.name;
+  member.country = firstPlayer.country;
+  list.addMember(member);	
+  */  
 
   var form = new Form(formDef);
   form.setAttribute("counter", new java.lang.Long(0));
