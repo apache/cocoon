@@ -32,7 +32,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-29 19:12:08 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-01-31 05:21:44 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -173,15 +173,20 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       }
 
       if (!compiler.compile()) {
-        StringBuffer message = new StringBuffer("Error compiling " + filename + ":\n");
+        StringBuffer message = new StringBuffer("Error compiling ");
+        message.append(filename);
+        message.append(":\n");
 
         List errors = compiler.getErrors();
         int count = errors.size();
         for (int i = 0; i < count; i++) {
           CompilerError error = (CompilerError) errors.get(i);
-          message.append("Line " + error.getStartLine()
-            + ", column " + error.getStartColumn()
-            + ": " + error.getMessage());
+          message.append("Line ");
+          message.append(error.getStartLine());
+          message.append(", column ");
+          message.append(error.getStartColumn());
+          message.append(": ");
+          message.append(error.getMessage());
         }
 
         throw new LanguageException(message.toString());

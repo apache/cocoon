@@ -53,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.46 $ $Date: 2001-01-30 17:25:35 $
+ * @version CVS $Revision: 1.1.4.47 $ $Date: 2001-01-31 05:21:48 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -105,8 +105,6 @@ public class CocoonServlet extends HttpServlet {
         this.root = this.context.getRealPath("/");
 
         ClassUtils.setClassLoader(this.getClass().getClassLoader());
-
-        this.setupCocoonJar(conf.getInitParameter("cocoon-jar"), this.context);
 
         this.createCocoon();
     }
@@ -188,19 +186,6 @@ public class CocoonServlet extends HttpServlet {
 
         this.classpath = buildClassPath.toString();
      }
-
-    /**
-     * Set up the Cocoon Jar path.  That way it can be loaded by the Cocoon
-     * classloader instead of the servlet classloader.  This is to protect
-     * Cocoon from broken classloaders.
-     */
-    private void setupCocoonJar(String cocoonJar, ServletContext context) {
-        try {
-            ClassUtils.setCocoonURL(context.getResource(cocoonJar));
-        } catch (MalformedURLException mue) {
-            log.debug("Could not set the Cocoon URL for the jar file.", mue);
-        }
-    }
 
     /**
      * Set up the log level and path.  The default log level is

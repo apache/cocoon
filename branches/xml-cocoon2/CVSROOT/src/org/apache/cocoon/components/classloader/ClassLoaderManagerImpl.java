@@ -19,7 +19,7 @@ import org.apache.avalon.ThreadSafe;
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-30 17:25:18 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-31 05:21:39 $
  */
 public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**
@@ -63,10 +63,6 @@ public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
    *
    */
   public synchronized void reinstantiate() {
-    try {
-      instance = new RepositoryClassLoader(new URL[] {ClassUtils.getCocoonURL()}, ClassUtils.getClassLoader());
-    } catch (MalformedURLException mue) {
-      instance = new RepositoryClassLoader();
-    }
+    instance = new RepositoryClassLoader();
   }
 }
