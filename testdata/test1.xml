@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- A comment -->
+<root attribute="1">
+  <child id="X">Text</child>
+  Mixed content
+  <child id="Y"/>
+</root>
