@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: samples.xml,v 1.1 2003/04/17 20:38:40 haul Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.2 2003/11/06 16:23:41 cziegeler Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="mail block">
 
   <group name="Sendmail">
      <note>
-       You need to have SMTP up and running on the server for this.
+       You need to have SMTP up and running on the server for this and propably
+       you have to put a mail.jar in your WEB-INF/lib directory.
      </note>
      <sample name="Action documentation" href="/docs/userdocs/actions/sendmail-action.html">
        Documentation for the Sendmail action component.
