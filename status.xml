@@ -203,6 +203,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="30065" due-to="Johnson Hsu" due-to-email="johnson@soho.club.tw">
+     GetInstance don't work with upgrade from db-ojb-1.0rc6.
+   </action>
    <action dev="AG" type="fix" fixes-bug="30038" due-to="Jorg Heymans" due-to-email="jh@domek.be">
      Fixing lucene-block samples dependencies.
    </action>
