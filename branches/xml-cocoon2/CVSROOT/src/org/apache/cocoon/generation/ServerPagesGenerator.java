@@ -44,7 +44,7 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-20 20:50:07 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-23 13:28:51 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -150,7 +150,24 @@ public class ServerPagesGenerator
     generator.setLexicalHandler(this);
     generator.setup(this.resolver, this.objectModel, this.source, this.parameters);
 
-    generator.generate();
+    // log exception and ensure that generator is released.
+    try {
+        generator.generate();
+    } catch (IOException e){
+        getLogger().error("IOException in ServerPagesGenerator.generate()", e);
+        throw e;
+    } catch (SAXException e){
+        getLogger().error("SAXException in ServerPagesGenerator.generate()", e);
+        throw e;
+    } catch (ProcessingException e){
+        getLogger().error("ProcessingException in ServerPagesGenerator.generate()", e);
+        throw e;
+    } catch (Exception e){
+        getLogger().error("Exception in ServerPagesGenerator.generate()", e);
+    } finally {
+        if(generator != null)
+            programGenerator.release(generator);
+    }
 
     // End any started events in case of premature return
     while (this.eventStack.size()!=0) {
@@ -181,8 +198,6 @@ public class ServerPagesGenerator
           break;
       }
     }
-
-    programGenerator.release(generator);
   }
 
   /* Handlers */
