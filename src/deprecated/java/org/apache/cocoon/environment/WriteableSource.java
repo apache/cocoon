@@ -76,12 +76,9 @@ import org.xml.sax.SAXException;
  *
  * @deprecated Use the {@link org.apache.excalibur.source.ModifiableSource} interface instead
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: WriteableSource.java,v 1.1 2003/03/09 00:07:13 pier Exp $
+ * @version CVS $Id: WriteableSource.java,v 1.2 2003/04/27 15:16:15 cziegeler Exp $
  */
 public interface WriteableSource extends ModifiableSource {
-
-//FIXME(SW) : should this be also Parameterizable to accept more parameters
-// such as user/password, headers, etc ?
 
     /**
      * Does this source actually exist ?
