@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!--
+  CVS $Id$
+  
+  Event Cache Sample
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:generators default="file"/>
+    <map:transformers default="xslt"/>
+    <map:readers default="resource"/>
+    <map:serializers default="html"/>
+    <map:matchers default="wildcard"/>
+    <map:selectors default="browser"/>
+    <map:actions>
+    	<map:action name="cacheevent" src="org.apache.cocoon.acting.CacheEventAction"/>
+    </map:actions>
+  </map:components>
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:act type="cacheevent">
+        	<map:parameter name="event" value="{request-param:event}"/>
+        </map:act>
+        <map:generate type="serverpages" src="eventcache.xsp"/>
+	    <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+	        <map:parameter name="servletPath" value="{request:servletPath}"/>
+	        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+	        <map:parameter name="contextPath" value="{request:contextPath}"/>
+	        <map:parameter name="file" value="xsp/{1}.xsp"/>
+	        <map:parameter name="remove" value="{0}"/>
+	    </map:transform>
+        <map:serialize/>
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
+
