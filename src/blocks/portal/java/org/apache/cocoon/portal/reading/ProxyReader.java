@@ -84,7 +84,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: ProxyReader.java,v 1.2 2003/09/02 08:56:43 cziegeler Exp $
  */
 public class ProxyReader extends AbstractReader implements Composable {
     /**
@@ -131,9 +131,6 @@ public class ProxyReader extends AbstractReader implements Composable {
                 copletID,
                 portalName);
 
-        PortalApplicationConfig pac =
-            (PortalApplicationConfig) copletInstanceData.getAttribute(
-                ProxyTransformer.CONFIG);
     }
 
     /**
@@ -209,9 +206,6 @@ public class ProxyReader extends AbstractReader implements Composable {
         throws IOException {
         String cookie =
             (String) copletInstanceData.getAttribute(ProxyTransformer.COOKIE);
-        String sessionToken =
-            (String) copletInstanceData.getAttribute(
-                ProxyTransformer.SESSIONTOKEN);
 
         Enumeration enum = request.getParameterNames();
 
