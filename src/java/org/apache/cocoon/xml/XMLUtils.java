@@ -44,7 +44,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.7 2004/03/17 11:50:21 cziegeler Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.8 2004/05/25 14:24:01 cziegeler Exp $
  */
 public class XMLUtils {
 
@@ -142,46 +142,6 @@ public class XMLUtils {
      */
     public static XMLConsumer getConsumer(ContentHandler ch) {
         return getConsumer(ch, null);
-    }
-
-    /**
-     * Serialize a DOM node to a String.
-     * The defaultSerializeToXMLFormat() is used to format the serialized xml.
-     * @deprecated use serializeNode(Node, Properties) instead
-     */
-    public static String serializeNodeToXML(Node node)
-    throws ProcessingException {
-        return serializeNode(node, XMLUtils.defaultSerializeToXMLFormat());
-    }
-
-    /**
-     * This is the default properties set used to serialize xml.
-     * It is used by the serializeNodeToXML() method.
-     * The format is as follows:
-     * Method: xml
-     * Encoding: ISO-8859-1
-     * Omit xml declaration: no
-     * Indent: yes
-     * @deprecated Use createPropertiesForXML(false) instead and add the encoding
-     */
-    public static Properties defaultSerializeToXMLFormat() {
-        return defaultSerializeToXMLFormat(false);
-    }
-
-    /**
-     * This is the default properties set used to serialize xml.
-     * It is used by the serializeNodeToXML() method.
-     * The omit xml declaration property can be controlled by the flag.
-     * Method: xml
-     * Encoding: ISO-8859-1
-     * Omit xml declaration: according to the flag
-     * Indent: yes
-     * @deprecated Use createPropertiesForXML(boolean) instead and add the encoding
-     */
-    public static Properties defaultSerializeToXMLFormat(boolean omitXMLDeclaration) {
-        final Properties format = createPropertiesForXML(omitXMLDeclaration);
-        format.put(OutputKeys.ENCODING, "ISO-8859-1");
-        return format;
     }
 
     /**
