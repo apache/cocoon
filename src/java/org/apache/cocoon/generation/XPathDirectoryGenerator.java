@@ -94,18 +94,21 @@ import org.xml.sax.helpers.AttributesImpl;
  * resource. A <code>nsmapping</code> parameter can be specified to point to a file containing lines to map prefixes
  * to namespaces like this:
  * </p>
+ * 
  * <p>
- *  prefix=namespace-uri<br/>
- *  prefix2=namespace-uri-2
+ * prefix=namespace-uri<br/> prefix2=namespace-uri-2
  * </p>
+ * 
  * <p>
  * A parameter <code>nsmapping-reload</code> specifies if the prefix-2-namespace mapping file should be checked to be
- * reloaded on each request to this generator if it was modified since the last time it was read. 
+ * reloaded on each request to this generator if it was modified since the last time it was read.
  * </p>
+ * 
  * <p>
- * An additional parameter <code>xmlFiles</code> can be set in the sitemap setting the regular expression pattern for 
- * determining if a file should be handled as XML file or not. The default value for this param is 
- * <code>\.xml$</code>, so that it * matches all files ending <code>.xml</code>.
+ * An additional parameter <code>xmlFiles</code> can be set in the sitemap setting the regular expression pattern for
+ * determining if a file should be handled as XML file or not. The default value for this param is
+ * <code>\.xml$</code>, so that it  matches all files ending <code>.xml</code>.
+ * </p>
  * 
  * <p></p>
  * <br>Sample usage: <br><br>Sitemap:
@@ -143,7 +146,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.5 2003/11/07 09:37:13 giacomo Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.6 2003/11/07 13:00:17 giacomo Exp $
  */
 public class XPathDirectoryGenerator
 extends DirectoryGenerator {
@@ -249,12 +252,11 @@ extends DirectoryGenerator {
 
             if ((null == mappingInfo) || (mappingInfo.reload == false) ||
                 (mappingInfo.mappingSource.getLastModified() < mappingSource.getLastModified())) {
-                this.prefixResolver = new MappingInfo(getLogger().getChildLogger( "prefix-resolver" ), mappingSource, mapping_reload);
+                this.prefixResolver =
+                    new MappingInfo(getLogger().getChildLogger("prefix-resolver"), mappingSource, mapping_reload);
                 XPathDirectoryGenerator.mappingFiles.put(mappingKey, this.prefixResolver);
-            }
-            else
-            {
-            	this.prefixResolver = mappingInfo;
+            } else {
+                this.prefixResolver = mappingInfo;
             }
         }
 
@@ -311,7 +313,10 @@ extends DirectoryGenerator {
         }
 
         if (doc != null) {
-            NodeList nl = this.processor.selectNodeList(this.doc.getDocumentElement(), this.xpath,this.prefixResolver);
+            NodeList nl =
+                (null == this.prefixResolver)
+                ? this.processor.selectNodeList(this.doc.getDocumentElement(), this.xpath)
+                : this.processor.selectNodeList(this.doc.getDocumentElement(), this.xpath, this.prefixResolver);
             AttributesImpl attributes = new AttributesImpl();
             attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA", xpath);
             super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
@@ -347,7 +352,7 @@ extends DirectoryGenerator {
      * The MappingInfo class to reolve namespace prefixes to their namespace URI
      *
      * @author <a href="mailto:giacomo(at)apache.org">Giacomo Pati</a>
-     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.5 2003/11/07 09:37:13 giacomo Exp $
+     * @version CVS $Id: XPathDirectoryGenerator.java,v 1.6 2003/11/07 13:00:17 giacomo Exp $
      */
     private static class MappingInfo
     implements PrefixResolver {
@@ -357,15 +362,16 @@ extends DirectoryGenerator {
         /** Whether to reload if mapping file has changed */
         public final boolean reload;
 
-        /** Map of prefixes to namespaces */
-        private final Map prefixMap;
-
         /** Our Logger */
         private final Logger logger;
+
+        /** Map of prefixes to namespaces */
+        private final Map prefixMap;
 
         /**
          * Creates a new MappingInfo object.
          *
+         * @param logger DOCUMENT ME!
          * @param mappingSource The Source of the mapping file
          * @param reload Whether to reload if mapping file has changed
          *
@@ -388,7 +394,7 @@ extends DirectoryGenerator {
                     final String prefix = line.substring(0, i);
                     final String namespace = line.substring(i + 1);
                     prefixMap.put(prefix, namespace);
-                    logger.debug( "added mapping: '" + prefix + "'='" + namespace + "'" );
+                    logger.debug("added mapping: '" + prefix + "'='" + namespace + "'");
                 }
             }
         }
@@ -398,7 +404,11 @@ extends DirectoryGenerator {
          */
         public String prefixToNamespace(String prefix) {
             final String namespace = (String)this.prefixMap.get(prefix);
-            logger.debug( "have to resolve prefix='" + prefix + ", found namespace='" + namespace + "'" );
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("have to resolve prefix='" + prefix + ", found namespace='" + namespace + "'");
+            }
+
             return namespace;
         }
     }
