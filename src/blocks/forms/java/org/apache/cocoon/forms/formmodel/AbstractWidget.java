@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -34,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.14 2004/04/28 16:34:12 bruno Exp $
+ * @version $Id: AbstractWidget.java,v 1.15 2004/04/30 08:19:04 bruno Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -74,7 +73,7 @@ public abstract class AbstractWidget implements Widget {
      *
      * If subclasses decide to return <code>null</code> they should also organize 
      * own implementations of {@link #getId()}, {@link #getLocation()},
-     * {@link #validate(FormContext)}, {@link #generateLabel(ContentHandler)} and
+     * {@link #validate()}, {@link #generateLabel(ContentHandler)} and
      * {@link #generateDisplayData(ContentHandler)} to avoid NPE's.
      * 
      * @return the widgetDefinition from which this widget was instantiated. 
