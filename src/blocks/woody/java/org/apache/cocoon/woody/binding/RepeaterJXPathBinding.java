@@ -74,7 +74,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     private final String rowPath;
     private final String uniqueRowId;
     private final String uniqueRowPath;
-    private final FieldJXPathBinding uniqueFieldBinding;
+    private final ValueJXPathBinding uniqueFieldBinding;
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
     private final JXPathBindingBase deleteRowBinding;
@@ -91,7 +91,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.uniqueRowId = uniqueRowId;
         this.uniqueRowPath = uniqueRowPath;
         this.uniqueFieldBinding =
-            new FieldJXPathBinding(uniqueRowId, uniqueRowPath, true, null, null, null);
+            new ValueJXPathBinding(uniqueRowId, uniqueRowPath, true, null, null, null);
         this.rowBinding = new ComposedJXPathBindingBase(childBindings);
         this.insertRowBinding = insertBinding;
         this.deleteRowBinding = new ComposedJXPathBindingBase(deleteBindings);
