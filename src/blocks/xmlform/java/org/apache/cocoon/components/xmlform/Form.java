@@ -77,7 +77,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
+ * @version CVS $Id: Form.java,v 1.3 2003/05/30 21:20:47 joerg Exp $
  */
 public class Form {
 
@@ -87,7 +87,7 @@ public class Form {
 
     public static String FORM_VIEW_PARAM = "cocoon-xmlform-view";
 
-    public static String VIOLATION_MESSAGE_DATA_FORMAT_ERROR = "Invalid data format";
+    public static String VIOLATION_MESSAGE_DATA_FORMAT_ERROR = "Invalid data format or invalid reference path.";
 
     /**
      * An XMLForm is only usable when it has an id and an underlying model.
@@ -132,6 +132,13 @@ public class Form {
 
     public List getViolations() {
         return violations_;
+    }
+
+    /**
+     *  Expose the JXPathContext for the sake of subclasses
+     */
+    protected JXPathContext getJXContext() {
+        return jxcontext_;
     }
 
     /**
