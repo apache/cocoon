@@ -398,7 +398,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/groovy-20040415.114632.jar</lib>
+    <lib>bsf/lib/groovy-1.0-beta-6.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
@@ -411,7 +411,20 @@
 	  before they are loaded into the Java Virtual Machine.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/asm-1.4.2.jar</lib>
+    <lib>bsf/lib/asm-1.4.3.jar</lib>
+    <homepage>http://asm.objectweb.org/</homepage>
+  </file>
+
+  <file>
+    <title>ASM Util</title>
+    <description>
+      ASM is a Java bytecode manipulation framework. It can be used to
+          dynamically generate stub classes or other proxy classes, directly in
+          binary form, or to dynamically modify classes at load time, i.e., just
+          before they are loaded into the Java Virtual Machine.
+    </description>
+    <used-by>BSF Block (Script generator, script action)</used-by>
+    <lib>bsf/lib/asm-util-1.4.3.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
