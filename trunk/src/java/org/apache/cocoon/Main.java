@@ -76,13 +76,12 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.23 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: Main.java,v 1.24 2003/10/24 12:51:49 cziegeler Exp $
  */
 public class Main {
 
     protected static final String HELP_OPT =               "h";
     protected static final String VERSION_OPT =            "v";
-    protected static final String VERBOSE_OPT =            "V";
     protected static final String LOG_KIT_OPT =            "k";
     protected static final String LOGGER_OPT =             "l";
     protected static final String LOG_LEVEL_OPT =          "u";
@@ -140,11 +139,6 @@ public class Main {
                                      VERSION_LONG,
                                      false,
                                      "print the version information and exit"));
-
-        options.addOption(new Option(VERBOSE_OPT,
-                                     VERBOSE_LONG,
-                                     false,
-                                     "enable verbose messages to System.out"));
 
         options.addOption(new Option(LOG_KIT_OPT,
                                      LOG_KIT_LONG,
@@ -278,9 +272,6 @@ public class Main {
             destDir = line.getOptionValue(DEST_DIR_OPT);
         }
 
-        if (line.hasOption(VERBOSE_OPT)) {
-            cocoon.setVerbose(true);
-        }
         if (line.hasOption(PRECOMPILE_ONLY_OPT)) {
             cocoon.setPrecompileOnly(true);
         }
