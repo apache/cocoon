@@ -32,7 +32,7 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-12 14:17:43 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-20 14:46:41 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer implements Composer {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
@@ -61,7 +61,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
             documentFactory = (DOMFactory) manager.lookup(Roles.PARSER);
         } catch ( ComponentManagerException cme ) {
             documentFactory = null;
-            getLogger().error("ImageBankTransformer could not lookup parser.");
+            getLogger().error("FragmentExtractorTransformer could not lookup parser.");
         }
     }
     
@@ -75,7 +75,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         
         if ( documentFactory == null ) {
             throw new ProcessingException(
-                "ImageBankTransformer has no document factory. "
+                "FragmentExtractorTransformer has no document factory. "
                 + "This is likely to be because a parser could not be "
                 + "Retrived."
             );
@@ -147,7 +147,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         if ( uri.equals(this.EXTRACT_URI) && loc.equals(this.EXTRACT_ELEMENT) ) {
             extractLevel++;
             imageID++;
-            getLogger().debug("ImageBankTransformer extractLevel now " + extractLevel + ".");
+            getLogger().debug("FragmentExtractorTransformer extractLevel now " + extractLevel + ".");
 
             
             // Start the DOM document
@@ -190,7 +190,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
             this.currentBuilder.endElement(uri,loc,raw);
             if ( uri.equals(this.EXTRACT_URI) && loc.equals(this.EXTRACT_ELEMENT) ) {
                 extractLevel--;
-                getLogger().debug("ImageBankTransformer extractLevel now " + extractLevel + ".");
+                getLogger().debug("FragmentExtractorTransformer extractLevel now " + extractLevel + ".");
                 
                 if ( extractLevel == 0 ) {
                     // finish building the DOM. remove existing prefix mappings.
@@ -386,6 +386,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
     }
     
     public void processDocument(Document doc) {
-        getLogger().debug("ImageBankTransformer recieved document.");
+        getLogger().debug("FragmentExtractorTransformer recieved document.");
     }
 }
