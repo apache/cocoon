@@ -79,7 +79,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.6 2003/10/24 13:36:40 vgritsenko Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.7 2003/11/06 21:31:05 vgritsenko Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector
@@ -142,8 +142,8 @@ implements OutputComponentSelector, SitemapComponentSelector {
     throws ComponentException {
         super.setParentLocator(locator);
 
-        if (this.parentSelector instanceof SitemapComponentSelector) {
-            this.parentSitemapSelector = (SitemapComponentSelector)this.parentSelector;
+        if (super.parentSelector instanceof SitemapComponentSelector) {
+            this.parentSitemapSelector = (SitemapComponentSelector)super.parentSelector;
         }
     }
 
