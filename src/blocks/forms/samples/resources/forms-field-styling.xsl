@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.8 2004/04/22 14:27:58 mpo Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.9 2004/05/25 15:46:47 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -363,7 +363,9 @@
         </span>
       </xsl:when>
       <xsl:otherwise>
-        <input type="file" id="{@id}" name="{@id}" title="{fi:hint}" accept="{@mime-types}"/>
+        <input type="file" id="{@id}" name="{@id}" title="{fi:hint}" accept="{@mime-types}">
+          <xsl:apply-templates select="." mode="styling"/>
+        </input>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="." mode="common"/>
