@@ -9,7 +9,7 @@
   </header>
 
   <body>
-    <s1 title="Overview">
+    <s1 title="Introduction">
       <p>
         This is a coordination table to assist the systematic review of the
         "sitemap component documentation" which is the set of documentation
@@ -19,7 +19,16 @@
         (actions generators matchers readers selectors serializers transformers).
       </p>
       <p>
-        Please see the <link href="#To+Do">To Do</link> section at the bottom.
+        This review focusses only on this set of documentation, as part of
+        the overall documentation review. This set is a key part, because it
+        addresses the heart of Cocoon - the sitemap components. Having a
+        well-defined "User Guide" will assist both users and developers to
+        be more productive.
+      </p>
+      <p>
+        Please assist by sending discussion to the dev mailing list and
+        patches of xdocs and java code via the issue tracker.
+        See the <link href="#To+Do">To Do</link> section at the bottom.
       </p>
       <p>
         This documentation is generated as part of the Cocoon 'build docs' process.
@@ -38,7 +47,7 @@
         <li>@cocoon.sitemap.component.label - The label for views (optional)</li>
         <li>@cocoon.sitemap.component.mimetype - The mime type for serializers and readers (optional)</li>
         <li>@cocoon.sitemap.component.hide - If this tag is specified, the component is not added to the sitemap (optional)</li>
-        <li>@cocoon.sitemap.component.documentation.disabled - If this tag is specified no documentation is generated (optional)</li>
+        <li>@cocoon.sitemap.component.documentation.disabled - If this tag is specified, no documentation is generated (optional)</li>
         <li>@cocoon.sitemap.component.documentation description - The documentation (optional)</li>
         <li>@cocoon.sitemap.component.configuration - Configuration (optional)</li>
         <li>@cocoon.sitemap.component.documentation.caching - Caching info (optional)</li>
@@ -52,8 +61,9 @@
       <p>The table columns are:</p>
       <ul>
         <li>Java source - The name of the Java source file and link to javadoc.</li>
-        <li>Document - The name of the generated document and a link to it.</li>
-        <li>A - The xdoc is present to supply additional manual content.</li>
+        <li>Document - The name of the generated document and a link to it.
+        This is also the @cocoon.sitemap.component.name</li>
+        <li>A - The xdoc is available to supply additional manual content.</li>
         <li>B - The java code is in "core" or as a "block".</li>
         <li>C - The javadoc-like tags (SitemapTask attributes) are available in the code.</li>
         <li>D - The component parameters are properly described.</li>
