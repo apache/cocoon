@@ -1,4 +1,4 @@
-/*-- $Id: HttpServletResponseFacade.java,v 1.2 2001-01-23 18:37:32 greenrd Exp $ --
+/*-- $Id: HttpServletResponseFacade.java,v 1.3 2001-01-23 18:48:50 greenrd Exp $ --
  
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Hack to handle redirects correctly with Tomcat 3.1.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.2 $ $Date: 2001-01-23 18:37:32 $
+ * @version $Revision: 1.3 $ $Date: 2001-01-23 18:48:50 $
  */
 
 public class HttpServletResponseFacade implements HttpServletResponse {
@@ -125,7 +125,7 @@ public class HttpServletResponseFacade implements HttpServletResponse {
     r.sendError (sc);
   }
 
-  public void sendRedirect(String location) throws IOException, RedirectException {
+  public void sendRedirect(String location) throws IOException {
     r.sendRedirect (location);
     //this breaks too much code
     //throw new RedirectException ();
