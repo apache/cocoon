@@ -46,7 +46,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.15 $ $Date: 2004/05/26 11:37:05 $
+ * @version CVS $Revision: 1.16 $ $Date: 2004/05/26 13:12:40 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -91,7 +91,7 @@ public final class SitemapTask extends AbstractQdoxTask {
     private String directory;
     
     /** The name of the block */
-    private String blockName;
+    protected String blockName;
     
     /** Is this block deprecated? */
     protected boolean deprecated = false;
@@ -320,14 +320,31 @@ public final class SitemapTask extends AbstractQdoxTask {
             final String htmlName = docFile.getName().substring(0, docFile.getName().length()-3) + "html";
             Node oldEntry = XPathAPI.selectSingleNode(sectionNode, "menu-item[@href='"+htmlName+"']");
             Node newEntry = indexDoc.createElement("menu-item");
-            ((Element)newEntry).setAttribute("href", htmlName);            
-            ((Element)newEntry).setAttribute("label", capitalize(component.getName()) + " " + capitalize(component.getType()));
+            ((Element)newEntry).setAttribute("href", htmlName);  
+            final String label = capitalize(component.getName()) + " " + capitalize(component.getType());
+            ((Element)newEntry).setAttribute("label", label);
             if ( oldEntry != null ) {
                 oldEntry.getParentNode().replaceChild(newEntry, oldEntry);
             } else {
-                sectionNode.appendChild(newEntry);
+                Node nextLabel = null;
+                final NodeList childs = sectionNode.getChildNodes();
+                int i = 0;
+                while ( nextLabel == null && i < childs.getLength() ) {
+                    final Node current = childs.item(i);
+                    if ( current instanceof Element ) {
+                        final String currentLabel = ((Element)current).getAttribute("label");
+                        if ( label.compareTo(currentLabel) < 0 ) {
+                            nextLabel = current;
+                        }
+                    }
+                    i++;
+                }
+                if ( nextLabel == null ) {
+                    sectionNode.appendChild(newEntry);
+                } else {
+                    sectionNode.insertBefore(newEntry, nextLabel);
+                }
             }
-            // FIXME we should sort the entries!
             DocumentCache.writeDocument(indexFile, indexDoc, this);
         }
         
