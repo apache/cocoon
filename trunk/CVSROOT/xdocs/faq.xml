@@ -5,6 +5,15 @@
 <faqs title="Frequently Asked Questions">
 
 <faq>
+ <question>I get the exception <em>java.lang.NoClassDefFoundError: sun/tools/javac/Main</em></question>
+ <answer>
+ <p>
+  Look at the question below.
+ </p>
+ </answer>
+</faq>
+
+<faq>
  <question>I can't get XSP to work. What might be wrong?</question>
  <answer>
   <p>
