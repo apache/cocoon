@@ -60,12 +60,17 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *
+ * An abstract class that can be used to implement an own generator.
+ * If you need other components, use the {@link ServiceableGenerator}
+ * instead.
+ * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: AbstractGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
  */
-public abstract class AbstractGenerator extends AbstractXMLProducer implements Generator {
+public abstract class AbstractGenerator 
+    extends AbstractXMLProducer 
+    implements Generator {
 
     /** The current <code>SourceResolver</code>. */
     protected SourceResolver resolver=null;

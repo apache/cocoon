@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.3 2003/06/16 23:46:10 stefano Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
  */
 public class RequestGenerator extends ServletGenerator implements Parameterizable {
 
@@ -252,7 +252,7 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
         } catch (Exception e) {
             throw e;
         } finally {
-            if (parser != null) manager.release((Component) parser);
+            if (parser != null) manager.release( (Component)parser);
         }
     }
     

@@ -65,7 +65,6 @@ import java.util.Map;
 
 /**
  *
- *
  * The <code>FileGenerator</code> is a class that reads XML from a source
  * and generates SAX Events.
  * The FileGenerator implements the <code>CacheableProcessingComponent</code> interface.
@@ -73,9 +72,9 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.3 2003/05/16 07:04:54 cziegeler Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
  */
-public class FileGenerator extends ComposerGenerator
+public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
 
     /** The input source */

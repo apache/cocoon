@@ -56,16 +56,18 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 
 /**
- *
+ * A default implementation that can be used for writing own generators.
+ * 
+ * @deprecated Use the {@link ServiceableGenerator} instead.
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: ComposerGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: ComposerGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
  */
 public abstract class ComposerGenerator extends AbstractGenerator
 implements Composable, Disposable {
 
     /** The component manager instance */
-    protected ComponentManager manager = null;
+    protected ComponentManager manager;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
