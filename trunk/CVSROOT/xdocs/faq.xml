@@ -941,6 +941,22 @@
 
 <faqsection title="General">
 
+ <faq id="outofmemory">
+  <question>Why do I sometimes get OutOfMemoryErrors? How can I prevent this?
+  </question>
+  <answer>
+   <p>The memory management in Cocoon is not perfect, and we are working on
+    improving it.</p>
+
+   <p>For now, to reduce the likelihood of OutOfMemory errors,
+    you need to configure your JVMs maximum heap size setting (<strong>consult your JDK
+    documentation for how to do this</strong>) to be
+    <strong>as large as possible</strong> and <strong>the same as the heapsize
+    line in cocoon.properties</strong>. Obviously, buying more RAM as well will also help!
+   </p>
+  </answer>
+ </faq>
+
  <faq id="ejbs">
   <question>How can EJBs be used with Cocoon</question>
   <answer>

@@ -53,11 +53,14 @@
     <li><link href="http://www.smb-tec.com:7070/">Prowler Demo</link></li>
     <li><link href="http://www.kompetenznetz-paed-onkologie.de/">http://www.kompetenznetz-paed-onkologie.de
      </link></li>
+    <li><link href="http://sourcepole.com/">http://sourcepole.com</link></li>
+    <li><link href="http://www.mynet.com/">http://www.mynet.com</link></li>
 <!--<li><link href=""></link></li>-->
    </ul>
 
    <p>
-    If you don't find your site here, make sure you tell us (and confirm that you want
+    If you don't find your site here, make sure you 
+    <link href="mailto:cocoon-users@xml.apache.org">tell us</link> (and confirm that you want
     to be listed publicly on this list). We would like to see this list grow bigger 
     every day :-)
    </p>
