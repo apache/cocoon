@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.5 2003/08/04 09:53:49 joerg Exp $
+ * @version CVS $Id: JSPReader.java,v 1.6 2003/11/20 12:46:52 joerg Exp $
  */
 public class JSPReader extends ServiceableReader {
 
@@ -103,7 +103,12 @@ public class JSPReader extends ServiceableReader {
                 String servletPath = httpRequest.getServletPath();
                 // remove sitemap URI part
                 String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-                servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
+                if (sitemapURI != null) {
+                    servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
+                } else {
+                    // for example when using cocoon:/ pseudo protocol
+                    servletPath = servletPath.substring(0, servletPath.lastIndexOf("/") + 1);
+                }
                 url = servletPath + url;
             }
 
