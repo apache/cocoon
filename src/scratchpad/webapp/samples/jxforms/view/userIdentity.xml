@@ -77,7 +77,7 @@
     <xf:hidden ref="hidden">
       <xf:value>true</xf:value>
     </xf:hidden>
-    <xf:submit id="next" continuation="forward" class="button">
+    <xf:submit id="next" phase="userIdentity" continuation="forward" class="button">
       <xf:label>Next</xf:label>
       <xf:hint>Go to next page</xf:hint>    
     </xf:submit>

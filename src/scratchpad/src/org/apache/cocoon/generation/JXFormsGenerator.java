@@ -172,6 +172,7 @@ public class JXFormsGenerator extends AbstractGenerator {
     final static String BACK = "back";
     final static String FORWARD = "forward";
     final static String CONTINUATION = "continuation";
+    final static String PHASE = "phase";
 
 
     /**
@@ -179,7 +180,7 @@ public class JXFormsGenerator extends AbstractGenerator {
      */
 
     static private CompiledExpression 
-        compileExpr(JXPathContext context, String expr, Locator location) 
+        compileExpr(String expr, Locator location) 
         throws SAXParseException {
         if (expr == null) return null;
         try {
@@ -720,7 +721,6 @@ public class JXFormsGenerator extends AbstractGenerator {
     }
 
     static class Parser implements ContentHandler, LexicalHandler {
-        JXPathContext context;
         StartDocument startEvent;
         Event lastEvent;
         Stack stack = new Stack();
@@ -728,8 +728,7 @@ public class JXFormsGenerator extends AbstractGenerator {
         Locator charLocation;
         StringBuffer charBuf;
         
-        public Parser(JXPathContext context) {
-            this.context = context;
+        public Parser() {
         }
 
         StartDocument getStartEvent() {
@@ -901,7 +900,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 if (localName.equals(REPEAT)) {
                     String items = attrs.getValue(NODESET);
                     CompiledExpression expr =
-                        compileExpr(context, items, locator);
+                        compileExpr(items, locator);
                     StartRepeat startRepeat = 
                         new StartRepeat(locator, namespaceURI,
                                         localName, raw, attrs, expr);
@@ -909,7 +908,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 } else if (localName.equals(ITEMSET)) {
                     String items = attrs.getValue(NODESET);
                     CompiledExpression expr =
-                        compileExpr(context, items, locator);
+                        compileExpr(items, locator);
                     StartItemSet startItemSet =
                         new StartItemSet(locator, namespaceURI,
                                          localName, raw, attrs, expr);
@@ -917,7 +916,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 } else if (isReadonlyInputControl(localName)) {
                     String refStr = attrs.getValue("ref");
                     CompiledExpression ref = 
-                        compileExpr(context, refStr, locator);
+                        compileExpr(refStr, locator);
                     StartReadonlyInputControl startInputControl = 
                         new StartReadonlyInputControl(locator,
                                                       ref,
@@ -927,7 +926,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 } else if (isInputControl(localName)) {
                     String refStr = attrs.getValue("ref");
                     CompiledExpression ref = 
-                        compileExpr(context, refStr, locator);
+                        compileExpr(refStr, locator);
                     StartInputControl startInputControl = 
                         new StartInputControl(locator,
                                               ref,
@@ -960,11 +959,9 @@ public class JXFormsGenerator extends AbstractGenerator {
                     if (refStr != null && valueStr != null) {
                         throw new SAXParseException("ref and value are mutually exclusive", locator, null);
                     }
-                    CompiledExpression ref = compileExpr(context,
-                                                         refStr, 
+                    CompiledExpression ref = compileExpr(refStr, 
                                                          locator);
-                    CompiledExpression value = compileExpr(context,
-                                                           valueStr, 
+                    CompiledExpression value = compileExpr(valueStr, 
                                                            locator);
                     StartOutput startOutput = 
                         new StartOutput(locator,
@@ -985,7 +982,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 } else if (GROUP.equals(localName)) {
                     String refStr = attrs.getValue(REF);
                     CompiledExpression ref = 
-                        compileExpr(context, refStr, locator);
+                        compileExpr(refStr, locator);
                     StartGroup startGroup = 
                         new StartGroup(locator,
                                        ref,
@@ -994,7 +991,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 } else if (HIDDEN.equals(localName)) {
                     String refStr = attrs.getValue(REF);
                     CompiledExpression ref = 
-                        compileExpr(context, refStr, locator);
+                        compileExpr(refStr, locator);
                     StartHidden startHidden = 
                         new StartHidden(locator,
                                        ref,
@@ -1064,7 +1061,6 @@ public class JXFormsGenerator extends AbstractGenerator {
             public TemplateConsumer(SourceResolver resolver, Map objectModel,
                                     String src, Parameters parameters) 
                 throws ProcessingException, SAXException, IOException {
-                super(jxpathContextFactory.newContext(null, null));
                 this.template = new JXFormsGenerator();
                 this.template.setup(resolver, objectModel, null, parameters);
             }
@@ -1072,9 +1068,10 @@ public class JXFormsGenerator extends AbstractGenerator {
             public void endDocument() throws SAXException {
                 super.endDocument();
                 template.execute(template.getConsumer(),
-                                 null, 
-                                 null,
-                                 context,
+                                 null, // form
+                                 null, // view
+                                 null, // contextPath
+                                 jxpathContextFactory.newContext(null, null),
                                  getStartEvent(), 
                                  null);
             }
@@ -1164,7 +1161,7 @@ public class JXFormsGenerator extends AbstractGenerator {
         }
         if (startEvent == null) {
             long compileTime = inputSource.getLastModified();
-            Parser parser = new Parser(jxpathContextFactory.newContext(null, null));
+            Parser parser = new Parser();
             this.resolver.toSAX(this.inputSource, parser);
             startEvent = parser.getStartEvent();
             startEvent.compileTime = compileTime;
@@ -1173,8 +1170,9 @@ public class JXFormsGenerator extends AbstractGenerator {
             }
         }
         execute(consumer, 
-                null, 
-                null, 
+                null, // form
+                null, // view
+                null, // contextPath
                 jxpathContextFactory.newContext(null, null),
                 startEvent, 
                 null);
@@ -1182,11 +1180,11 @@ public class JXFormsGenerator extends AbstractGenerator {
 
     private void execute(final XMLConsumer consumer,
                          Form form,
+                         String currentView,
                          String contextPath,
                          JXPathContext jxpathContext,
                          Event startEvent, Event endEvent) 
         throws SAXException {
-        String currentView = null;
         Event ev = startEvent;
         while (ev != endEvent) {
             consumer.setDocumentLocator(ev.location);
@@ -1293,6 +1291,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                     path += ptr.asPath();
                     execute(consumer,
                             form,
+                            currentView,
                             path,
                             localJXPathContext,
                             startRepeat.next,
@@ -1326,6 +1325,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                     path += startElement.attributes.getValue(REF);
                     execute(consumer,
                             form,
+                            currentView,
                             path,
                             localJXPathContext,
                             startGroup.next,
@@ -1377,6 +1377,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                     path += ptr.asPath();
                     execute(consumer,
                             form,
+                            currentView,
                             ptr.asPath(),
                             localJXPathContext,
                             startItemSet.next,
@@ -1452,14 +1453,14 @@ public class JXFormsGenerator extends AbstractGenerator {
             } else if (ev instanceof StartForm) {
                 StartForm startForm = (StartForm)ev;
                 StartElement startElement = startForm.startElement;
-                currentView = startElement.attributes.getValue(VIEW);
+                String view = startElement.attributes.getValue(VIEW);
                 String id = startElement.attributes.getValue(ID);
                 Form newForm = Form.lookup(objectModel, id);
                 consumer.startElement(startElement.namespaceURI,
                                       startElement.localName,
                                       startElement.raw,
                                       startElement.attributes);
-                execute(consumer, newForm, contextPath, 
+                execute(consumer, newForm, view, contextPath, 
                         jxpathContextFactory.newContext(null, 
                                                         newForm.getModel()),
                         startForm.next, startForm.endForm);
@@ -1488,15 +1489,28 @@ public class JXFormsGenerator extends AbstractGenerator {
                     if (BACK.equals(cont)) {
                         level = 3;
                     }
-                    String kontId = kont.getContinuation(level).getId();
+                    WebContinuation wk = kont;
+                    for (int i = 0; i < level; i++) {
+                        wk = wk.getParentContinuation();
+                        if (wk == null) {
+                            throw new SAXParseException("No such continuation",
+                                                        ev.location,
+                                                        null);
+                        }
+                    }
+                    String kontId = wk.getId();
                     AttributesImpl newAttrs = 
                         new AttributesImpl(startElement.attributes);
                     int i = newAttrs.getIndex(ID);
+                    String phase = attrs.getValue(PHASE);
+                    if (phase == null) {
+                        phase = currentView;
+                    }
                     if (i >= 0) {
-                        newAttrs.setValue(i, kontId + ":" + id);
+                        newAttrs.setValue(i, kontId + ":" + phase + ":" +id);
                     } else {
                         newAttrs.addAttribute("", ID, ID, "CDATA", 
-                                              kontId + ":" + id);
+                                              kontId + ":" + phase + ":" + id);
                     }
                     attrs = newAttrs;
                 }

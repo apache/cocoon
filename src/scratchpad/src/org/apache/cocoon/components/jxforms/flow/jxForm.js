@@ -45,6 +45,14 @@ JXForm.prototype.getSubmitId = function() {
 }
 
 /**
+ * Return the phase of the xf:submit element of the current form submission
+ * @return [String] phase attribute of the button that caused this form to be submitted
+ */
+JXForm.prototype.getPhase = function() {
+    return this.phase;
+}
+
+/**
  * Set the model object of this form
  * @param model [Object] Any Java bean, JavaScript, DOM, or JDOM object 
  */
@@ -87,7 +95,7 @@ JXForm.prototype._start = function(lastWebCont, timeToLive) {
     var kont = new WebContinuation(this.cocoon, k, 
                                    lastWebCont, timeToLive);
     if (this.rootContinuation == null) {
-	this.rootContinuation = kont;
+        this.rootContinuation = kont;
     }
     return {kont: kont};
 } 
@@ -142,9 +150,9 @@ JXForm.prototype.iterate = function(expr) {
     return this.context.iterate(expr);
 }
 
-JXForm.prototype._sendView = function(uri, lastCont, timeToLive) {
+JXForm.prototype._sendView = function(uri, lastWebCont, timeToLive) {
     var k = new Continuation();
-    var wk = new WebContinuation(this.cocoon, k, lastCont, timeToLive);
+    var wk = new WebContinuation(this.cocoon, k, lastWebCont, timeToLive);
     var bizData = this.form.getModel();
     if (bizData == undefined) {
         bizData = null;
@@ -163,11 +171,10 @@ JXForm.prototype._sendView = function(uri, lastCont, timeToLive) {
  * for back/forward navigation in the form. When you move forward in the
  * form the second continuation is invoked. When you move back from the
  * following page the first continuation is invoked.
- * @param phase [String] phase to validate
- * @param uri [String] presentation pipeline resource identifier of view
+ * @param uri [String] presentation pipeline resource identifier of "view"
  * @param validator [Function] optional function invoked to perform validation
  */
-JXForm.prototype.sendView = function(view, uri, validator) {
+JXForm.prototype.sendView = function(uri, validator) {
     var lastWebCont = this.lastWebContinuation;
     var wk = this.start(lastWebCont);
     while (true) {
@@ -179,8 +186,6 @@ JXForm.prototype.sendView = function(view, uri, validator) {
             handleInvalidContinuation();
             suicide();
         }
-        // reset the view in case this is a re-invocation of a continuation
-        this.cocoon.request.setAttribute("view", view);
         this.form.remove(this.cocoon.environment.objectModel, this.id);
         this.form.save(this.cocoon.environment.objectModel, "request");
         var thisWebCont = this._sendView(uri, wk);
@@ -194,14 +199,16 @@ JXForm.prototype.sendView = function(view, uri, validator) {
         }
         this.form.populate(this.cocoon.environment.objectModel);
         this.submitId = 
-          this.cocoon.request.getAttribute("jxform-submit-id");
+            this.cocoon.request.getAttribute("jxform-submit-id");
+        this.phase = 
+            this.cocoon.request.getAttribute("jxform-submit-phase");
         if (validator != undefined) {
             validator(this);
         }
-        this.form.validate(view);
+        this.form.validate(this.phase);
         if (!this.hasViolations()) {
-	    this.lastWebContinuation = thisWebCont;
-	    break;
+            this.lastWebContinuation = thisWebCont;
+            break;
         }
     }
 }
@@ -209,13 +216,13 @@ JXForm.prototype.sendView = function(view, uri, validator) {
 JXForm.prototype._setValidator = function(schNS, schDoc) {
     // if validator params are not specified, then
     // there is no validation by default
-    if (schNS == null || schDoc == null ) return null;
+    if (schNS == null || schDoc == null) return null;
     var resolver =  this.cocoon.environment;
-    var schemaSrc = resolver.resolveURI( schDoc );
+    var schemaSrc = resolver.resolveURI(schDoc);
     try {
         var is = Packages.org.apache.cocoon.components.source.SourceUtil.getInputSource(schemaSrc);
-        var schf = Packages.org.apache.cocoon.components.jxforms.validation.SchemaFactory.lookup ( schNS );
-        var sch = schf.compileSchema ( is );
+        var schf = Packages.org.apache.cocoon.components.jxforms.validation.SchemaFactory.lookup(schNS);
+        var sch = schf.compileSchema(is);
         this.form.setValidator(sch.newValidator());
     } finally {
         resolver.release(schemaSrc);
@@ -238,7 +245,7 @@ JXForm.prototype.finish = function(uri) {
     if (this.rootContinuation != null) {
         this.rootContinuation.invalidate();
         this.rootContinuation = null;
-	this.lastContinuation = null;
+        this.lastContinuation = null;
     }
     
 }
@@ -276,17 +283,16 @@ function jxForm(application, id, validator_ns, validator_doc, scope) {
     var command = getCommand();
     if (command != undefined) {
         // invoke a continuation 
-        // command looks like kontId:id
-        var id = "";
+        // command looks like kontId:phase:id
         var kontId = command;
-        var index = command.indexOf(java.lang.String(":").charAt(0));
-        if (index > 0) {
-            var kontId = command.substring(0, index);
-            if (index + 1 < command.length()) {
-                id = command.substring(index + 1);
-            }
+        var izer = new java.util.StringTokenizer(command, ":");
+        if (izer.countTokens() == 3) {
+            kontId = izer.nextToken();
+            var phase = izer.nextToken();
+            var id = izer.nextToken();
+            cocoon.request.setAttribute("jxform-submit-phase", phase);
+            cocoon.request.setAttribute("jxform-submit-id", id);
         }
-        cocoon.request.setAttribute("jxform-submit-id", id);
         cocoon.interpreter.handleContinuation(kontId, 
                                               null,
                                               cocoon.environment);
