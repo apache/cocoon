@@ -79,7 +79,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.16 2004/07/14 06:07:21 antonio Exp $
+ * @version CVS $Id$
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -102,7 +102,7 @@ public class ContinuationClassLoader extends ClassLoader {
 
     private static boolean currentMethodStatic;
     
-    private boolean debug = false;
+    private boolean debug = true;
 	
     private List includes = new ArrayList();
 

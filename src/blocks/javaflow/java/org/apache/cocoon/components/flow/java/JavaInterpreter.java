@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -36,21 +37,20 @@ import org.apache.cocoon.components.flow.javascript.JavaScriptCompilingClassLoad
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.ReflectionUtils;
 import org.apache.commons.jxpath.JXPathIntrospector;
 
 /**
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.11 2004/06/26 18:29:30 stephan Exp $
+ * @version CVS $Id$
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
     private boolean initialized = false;
 
     private int timeToLive = 600000;
-
-    private static final String ACTION_METHOD_PREFIX = "do";
 
     /**
      * Key for storing a global scope object in the Cocoon session
@@ -59,7 +59,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
     private ContinuationClassLoader continuationclassloader;
 
-    private HashMap methods = new HashMap();
+    private Map methods = new HashMap();
 
     private JavaScriptCompilingClassLoader javascriptclassloader;
 
@@ -77,18 +77,13 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             throw new ConfigurationException(e.getMessage());
         }
         continuationclassloader = new ContinuationClassLoader(javascriptclassloader);
-        continuationclassloader.setDebug(config.getAttributeAsBoolean("debug", false));
+        continuationclassloader.setDebug(config.getAttributeAsBoolean("debug", true));
 
         Configuration[] includes = config.getChildren("include");
         for (int i = 0; i < includes.length; i++)
             continuationclassloader.addIncludeClass(includes[i].getAttribute("class"));
     }
 
-    private static String removePrefix(String name) {
-        int prefixLen = ACTION_METHOD_PREFIX.length();
-        return name.substring(prefixLen, prefixLen + 1).toLowerCase() + name.substring(prefixLen + 1);
-    }
-    
     public void initialize() throws Exception {
         
         if (getLogger().isDebugEnabled())
@@ -117,19 +112,8 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             //Class clazz = continuationclassloader.loadClass(name);
 
             try {
-                Method[] methods = clazz.getMethods();
-
-                for (int i = 0; i < methods.length; i++) {
-                    String methodName = methods[i].getName();
-                    if (methodName.startsWith(ACTION_METHOD_PREFIX)) {
-                        String function = removePrefix(methodName);
-                        this.methods.put(function, methods[i]);
-
-                        System.out.println("registered method \"" + methodName + "\" as function \"" + function + "\"");
-                        if (getLogger().isDebugEnabled())
-                            getLogger().debug("registered method \"" + methodName + "\" as function \"" + function + "\"");
-                    }
-                }
+                final Map m = ReflectionUtils.discoverMethods(clazz);
+                methods.putAll(m);
             } catch (Exception e) {
                 throw new ConfigurationException("cannot get methods by reflection", e);
             }
@@ -157,8 +141,9 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         Method method = (Method) methods.get(function);
 
-        if (method == null)
-            throw new ProcessingException("No method found for '" + function + "'");
+        if (method == null) {
+            throw new ProcessingException("No method '" + function + "' found. " + methods);
+        }
 
         if (getLogger().isDebugEnabled())
             getLogger().debug("calling method \"" + method + "\"");
