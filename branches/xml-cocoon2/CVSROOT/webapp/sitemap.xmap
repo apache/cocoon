@@ -45,13 +45,11 @@
     <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
    </map:serializer>
    <map:serializer name="svg2jpeg" mime-type="image/jpeg"     src="org.apache.cocoon.serialization.SVGSerializer">
-    <parameter name="transcoder" value="org.apache.batik.transcoder.image.JPEGTranscoder"/>
     <!-- example parameter - background colour is bright green
     <parameter name="background_color" type="color" value="#00FF00"/>
     -->
    </map:serializer>
    <map:serializer name="svg2png" mime-type="image/png"       src="org.apache.cocoon.serialization.SVGSerializer">
-    <parameter name="transcoder" value="org.apache.batik.transcoder.image.PNGTranscoder"/>
    </map:serializer>
   </map:serializers>
 

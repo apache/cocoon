@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.25 2001-03-03 16:08:38 prussell Exp $
+  $Id: changes.xml,v 1.9.2.26 2001-03-10 15:48:41 rossb Exp $
 -->
 
 <changes title="History of Changes">
@@ -12,7 +12,7 @@
  <devs>
   <!-- in strict alphabetical order -->
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
-  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
+  <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
@@ -23,6 +23,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RB" type="update">
+    Added a TranscoderFactory for Batik, and updated the SVG Serializer to use
+    it.
+  </action>
   <action dev="PR" type="add">
     Added support for SAXConnectors. This is the first stage in the
     implementation of content aggregation. SAXConnectors could also
@@ -54,7 +58,7 @@
   <action dev="BL" type="update">
     Put meat on the Action Framework for the ManageEmployees form.
   </action>
-  <action dev="RB" type="add"> 
+  <action dev="RB" type="update"> 
    SVG serializer now uses Batik.
   </action>
   <action dev="BL" type="add">

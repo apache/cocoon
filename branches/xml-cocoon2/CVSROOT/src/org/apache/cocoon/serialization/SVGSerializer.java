@@ -11,6 +11,8 @@ package org.apache.cocoon.serialization;
 import org.apache.cocoon.*;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.transcoder.TranscoderFactory;
+import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.xml.*;
 import org.apache.cocoon.xml.dom.*;
 import org.apache.avalon.*;
@@ -30,7 +32,7 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-02-23 15:25:07 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-10 15:48:42 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, Poolable {
 
@@ -50,6 +52,8 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
     private String mimetype = null;
     /** The current <code>Transcoder</code>.  */
     Transcoder transcoder = null;
+    /** The Transcoder Factory to use */
+    TranscoderFactory factory = ExtendableTranscoderFactory.getTranscoderFactoryImplementation();
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.
@@ -64,32 +68,32 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
     public void configure(Configuration conf) throws ConfigurationException {
         this.mimetype = conf.getAttribute("mime-type");
         log.debug("SVGSerializer mime-type:" + mimetype);
-        // TODO: take the mime type and create a transcoder from it
-        // allow the parameter "transcoder" to override it however
-        String transcoderName = null; // TODO: whatever the factory will say it is
 
+        // Using the Transcoder Factory, get the default transcoder
+        // for this MIME type.
+        this.transcoder = factory.createTranscoder(mimetype);
         // Iterate through the parameters, looking for a transcoder reference
         for (Iterator i = conf.getChildren("parameter"); i.hasNext(); ) {
             Configuration paramConf = (Configuration)i.next();
             String name = paramConf.getAttribute("name");
             if ("transcoder".equals(name)) {
-                transcoderName = paramConf.getAttribute("value");
+                String transcoderName = paramConf.getAttribute("value");
+                try {
+                    this.transcoder = (Transcoder)ClassUtils.newInstance(transcoderName);
+                } catch (Exception ex) {
+                    log.error("Cannot load  class " + transcoderName, ex);
+                    throw new ConfigurationException("Cannot load class " + transcoderName, ex);
+                }
             }
         }
-        // Now try creating this transcoder
-        if ( transcoderName == null ) {
+        // Do we have a transcoder yet?
+        if (this.transcoder == null ) {
             throw new ConfigurationException(
                 "Could not autodetect transcoder for SVGSerializer and "
                 + "no transcoder was specified in the sitemap configuration."
             );
         }
         
-        try {
-            this.transcoder = (Transcoder)ClassUtils.newInstance(transcoderName);
-        } catch (Exception ex) {
-            log.error("Cannot load  class " + transcoderName, ex);
-            throw new ConfigurationException("Cannot load class " + transcoderName, ex);
-        }
         // Now run through the other parameters, using them as hints
         // to the transcoder
         for (Iterator i = conf.getChildren("parameter"); i.hasNext(); ) {
