@@ -74,6 +74,16 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 </faq>
 
 <faq>
+ <question>can I place <em>cocoon.jar</em> in my servlet context or servlet zone instead of my classpath?</question>
+ <answer>
+  <p>Due to a problem in most custom classloader implementations (for example, both JServ and Tomcat suffer from this problem) local resources
+  cannot be loaded if they are located in custom repositories and packaged inside zip/jar files.</p>
+  <p>A workaround is to expand the <em>cocoon.jar</em> file and like that directory as your servlet context repository
+  or place the required resources in your classpath or wait for this problem to be fixed.</p>
+ </answer>
+</faq>
+
+<faq>
  <question>I get the exception <em>java.lang.AbstractMethodError: org/apache/jserv/JServContext.getContext</em>. What's wrong?</question>
  <answer>
   <p>You are probably using JServ with the wrong version of the Servlet Library. JServ supports Servlet API 2.0
