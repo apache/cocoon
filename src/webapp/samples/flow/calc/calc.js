@@ -20,19 +20,19 @@ function calculator()
 
 function getNumber(name, a, b)
 {
-  var uri = "getNumber" + name.toUpperCase();
+  var uri = "page/getNumber" + name.toUpperCase();
   sendPageAndWait(uri, { "a" : a, "b" : b });
   return parseFloat(cocoon.request.getParameter(name));
 }
 
 function getOperator(a, b)
 {
-  sendPageAndWait("getOperator", { "a" : a, "b" : b });
+  sendPageAndWait("page/getOperator", { "a" : a, "b" : b });
   return cocoon.request.getParameter("operator");
 }
 
 function sendResult(a, b, op, result)
 {
-  sendPage("displayResult",
+  sendPage("page/displayResult",
            { "a" : a, "b" : b, "operator" : op, "result" : result });
 }

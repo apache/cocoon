@@ -20,13 +20,13 @@
 	  tofile="${deploy-dir}${test-dir}/sendpage.js"
 	  overwrite="yes">
       <filterset>
-	    <filter token="REPLACEME" value="replaceme-abc"/>
+        <filter token="REPLACEME" value="replaceme-abc"/>
       </filterset>
     </copy>
 
     <httpRequest href="${url}" description="Send original request">
       <match>
-        <xpath select="html/body//p[1]" pattern=".*replaceme-abc.*"/>
+        <xpath select="html/body/p[1]" pattern=".*replaceme-abc.*"/>
       </match>
     </httpRequest>
 
@@ -45,10 +45,9 @@
 
     <httpRequest href="${url}" description="Send next request after flowscript was modified">
       <match>
-        <xpath select="html/body//p[1]" pattern=".*replaceme-123.*"/>
+        <xpath select="html/body/p[1]" pattern=".*replaceme-123.*"/>
       </match>
     </httpRequest>
 
   </target>
-
 </project>
