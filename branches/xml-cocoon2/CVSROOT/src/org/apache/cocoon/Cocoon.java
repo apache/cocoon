@@ -33,6 +33,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.DefaultComponentManager;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -41,7 +42,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.30 $ $Date: 2000-10-12 16:43:11 $
+ * @version CVS $Revision: 1.4.2.31 $ $Date: 2000-10-13 04:08:01 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -72,7 +73,10 @@ public class Cocoon
 
     /** The working directory (null if not available) */
     private String workDir;
-            
+
+    /** The component manager. */
+    private DefaultComponentManager componentManager = new DefaultComponentManager();
+
     /**
      * Create a new <code>Cocoon</code> instance.
      */
@@ -84,10 +88,12 @@ public class Cocoon
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
         try {
-            this.components.put("parser", ClassUtils.loadClass(parser));
-        } catch (Exception e) {
-            throw new ConfigurationException("Error creating parser (" + parser + ")", null);
+            this.componentManager.addComponent("parser", ClassUtils.loadClass(parser),null);
+        } catch ( Exception e ) {
+            throw new ConfigurationException("Could not load parser " + parser + ": " + e.getMessage(),null);
         }
+ 		this.componentManager.addComponentInstance("cocoon", this);
+ 		
         String processor = System.getProperty(PROCESSOR_PROPERTY, DEFAULT_PROCESSOR);
         try {
 			trax.Processor.setPlatformDefaultProcessor(processor);
@@ -172,10 +178,12 @@ public class Cocoon
             String role = co.getAttribute("role");
             String className = co.getAttribute("class");
             try {
-                this.components.put(role, ClassUtils.loadClass(className));
-                this.configurations.put(role, co);
-            } catch (Exception ex) {
-                // if the component is not found, there is no need to stop at this point.
+                componentManager.addComponent(role,ClassUtils.loadClass(className),co);
+            } catch ( Exception ex ) {
+                throw new ConfigurationException("Could not get class " + className
+                    + " for role " + role + ": " + ex.getMessage(),
+                    (Configuration)e
+                );
             }
         }
 
@@ -184,7 +192,7 @@ public class Cocoon
         if (sconf == null) {
             throw new ConfigurationException("No sitemap configuration", conf);
         }
-        this.sitemapManager = new Manager();
+        this.sitemapManager = new Manager(null);
         this.sitemapManager.setComponentManager(this);
         this.sitemapManager.setConfiguration(conf);
         this.sitemapFileName = sconf.getAttribute("file");
@@ -198,29 +206,7 @@ public class Cocoon
      */
     public Component getComponent(String role)
     throws ComponentNotFoundException, ComponentNotAccessibleException {
-
-        if (role == null) throw new ComponentNotFoundException("Role cannot be null");
-        if (role.equals("cocoon")) return this;
-        
-        Class c = (Class) this.components.get(role);
-        if (c == null) {
-            throw new ComponentNotFoundException("Can't find component " + role);
-        }
-        
-        try {
-            Component comp = (Component) c.newInstance();
-            if (comp instanceof Composer)
-                ((Composer)comp).setComponentManager(this);
-            if (comp instanceof Configurable) {
-                Configuration conf = (Configuration) this.configurations.get(role);
-                if (conf != null) ((Configurable) comp).setConfiguration(conf);
-            }
-            return comp;
-        } catch (Exception e) {
-            throw new ComponentNotAccessibleException("Can't access class '" +
-                        c.getName() + "' with role '" + role + "' due to a " +
-                        e.getClass().getName() + "[" + e.getMessage() + "]", e);
-        }
+        return this.componentManager.getComponent(role);
     }
     
     /**
