@@ -68,6 +68,7 @@
         <xsp:include>java.text.SimpleDateFormat</xsp:include>
       </xsp:structure>
 
+      <xsl:apply-templates select="xsp:structure/util:cacheable"/>
       <xsl:apply-templates/>
     </xsp:page>
   </xsl:template>

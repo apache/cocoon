@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.229 2001-03-28 18:00:32 greenrd Exp $ 
+  $Id: changes.xml,v 1.230 2001-04-10 17:15:37 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Paul Nock" due-to-email="pnock@medicineplanet.com">
+   Workaround for XSP isCacheable bug.
+  </action>
   <action dev="RDG" type="fix" due-to="Ulrich Mayring" due-to-email="ulim@denic.de">
    Fixed error reporting on some servlet engines for case where getWriter had already been called.
   </action>
