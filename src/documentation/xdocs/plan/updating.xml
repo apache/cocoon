@@ -124,7 +124,7 @@
         <li><em>org.apache.cocoon.components.url.URLFactoryImpl</em> - Not needed anymore</li>
       </ul>
     </s2>
-    <s2 title="XML Parsing (TBD)">
+    <s2 title="XML Parsing">
       <ul>
         <li><em>org.apache.cocoon.components.parser.JaxpParser</em> - Excalibur XMLUtils</li>
         <li><em>org.apache.cocoon.components.parser.Parser</em> - Excalibur XMLUtils</li>
@@ -132,13 +132,13 @@
         <li><em>org.apache.cocoon.components.parser.XercesParser</em> - Excalibur XMLUtils</li>
       </ul>
     </s2>
-    <s2 title="XML Entity Resolver (TBD)">
+    <s2 title="XML Entity Resolver">
       <ul>
         <li><em>org.apache.cocoon.components.resolver.Resolver</em> - Excalibur XMLUtils</li>
         <li><em>org.apache.cocoon.components.resolver.ResolverImpl</em> - Excalibur XMLUtils</li>
       </ul>
     </s2>
-    <s2 title="Stores (TBD)">
+    <s2 title="Stores">
       <ul>
         <li><em>org.apache.cocoon.components.store.FilesystemStore</em> - Excalibur Store</li>
         <li><em>org.apache.cocoon.components.store.JispFilesystemStore</em> - Excalibur Store</li>
@@ -148,6 +148,7 @@
         <li><em>org.apache.cocoon.components.store.Store</em> - Excalibur Store</li>
         <li><em>org.apache.cocoon.components.store.StoreJanitor</em> - Excalibur Store</li>
         <li><em>org.apache.cocoon.components.store.StoreJanitorImpl</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.impl.DefaultPersistentStore</em> - JCS Store</li>
       </ul>
     </s2>
     <s2 title="XSLT Processor">
