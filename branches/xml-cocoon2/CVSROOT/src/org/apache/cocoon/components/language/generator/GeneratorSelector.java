@@ -12,7 +12,7 @@ import java.io.File;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.configuration.DefaultConfiguration;
 
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.Roles;
@@ -25,7 +25,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-12 05:18:06 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-16 20:02:23 $
  */
 public class GeneratorSelector extends CocoonComponentSelector {
     private ClassLoaderManager classManager;
@@ -38,7 +38,7 @@ public class GeneratorSelector extends CocoonComponentSelector {
         try {
             this.classManager.addDirectory((File) this.context.get(Constants.CONTEXT_WORK_DIR));
         } catch (Exception e) {
-            throw new ComponentNotAccessibleException("Could not add repository to ClassLoaderManager", e);
+            throw new ComponentManagerException("Could not add repository to ClassLoaderManager", e);
         }
     }
 
@@ -58,13 +58,13 @@ public class GeneratorSelector extends CocoonComponentSelector {
         try {
             generator = this.classManager.loadClass(className);
         } catch (Exception e) {
-            throw new ComponentNotAccessibleException("Could not add component for class: " + className, e);
+            throw new ComponentManagerException("Could not add component for class: " + className, e);
         }
 
         this.addGenerator(hint, generator);
     }
 
-    public void addGenerator(Object hint, Class generator) {
-        this.components.put(hint, generator);
+    public void addGenerator(Object hint, Class generator) throws ComponentManagerException {
+        super.addComponent(hint, generator, new DefaultConfiguration("", "-"));
     }
 }
