@@ -30,6 +30,7 @@
       <validation-rule name="range" factory="org.apache.cocoon.woody.datatype.validationruleimpl.RangeValidationRuleBuilder"/>
       <validation-rule name="assert" factory="org.apache.cocoon.woody.datatype.validationruleimpl.AssertValidationRuleBuilder"/>
       <validation-rule name="mod10" factory="org.apache.cocoon.woody.datatype.validationruleimpl.Mod10ValidationRuleBuilder"/>
+      <validation-rule name="regexp" factory="org.apache.cocoon.woody.datatype.validationruleimpl.RegExpValidationRuleBuilder"/>
     </validation-rules>
   </woody-datatype>
 </xconf>

@@ -56,6 +56,10 @@
           <td valign="top"><wt:widget-label id="visa"/></td>
           <td valign="top"><wt:widget id="visa"/></td>
         </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="ipaddress"/></td>
+          <td valign="top"><wt:widget id="ipaddress"/></td>
+        </tr>
       </table>
 
       <wt:widget-label id="contacts"/><br/>
