@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * This implements a type-aware List of Widgets that automatically can distribute
  * the common Widget operations over the contained Widgets.
  *  
- * @version $Id: WidgetList.java,v 1.1 2004/04/21 20:30:49 mpo Exp $
+ * @version $Id: WidgetList.java,v 1.2 2004/04/28 16:34:12 bruno Exp $
  */
 public class WidgetList {
 
@@ -91,17 +91,16 @@ public class WidgetList {
     /** 
      * Validates all contained widgets and returns the combined result.
      * 
-     * @param formContext to pass to the {@link Widget#validate(FormContext)
      * @return <code>false</code> if at least one of the contained widgets is not valid.
      * 
-     * @see Widget#validate(FormContext)
+     * @see Widget#validate()
      */
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         boolean valid = true;
         Iterator widgetIt = iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();
-            valid = valid & widget.validate(formContext);
+            valid = valid & widget.validate();
         }
         return valid;
     }

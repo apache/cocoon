@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
  * 
- * @version CVS $Id: WidgetDefinition.java,v 1.3 2004/04/09 16:43:21 mpo Exp $
+ * @version CVS $Id: WidgetDefinition.java,v 1.4 2004/04/28 16:34:12 bruno Exp $
  */
 public interface WidgetDefinition {
 
@@ -54,10 +54,9 @@ public interface WidgetDefinition {
      * fails, the validator has set a validation error on the widget or one of its children.
      * 
      * @param widget the widget
-     * @param context the form context
      * @return <code>true</code> if validation was successful.
      */
-    public boolean validate(Widget widget, FormContext context);
+    public boolean validate(Widget widget);
     
 
     /**

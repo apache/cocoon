@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
+ * @version $Id: AbstractWidgetDefinition.java,v 1.5 2004/04/28 16:34:12 bruno Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
@@ -135,7 +135,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         }   
     }
     
-    public boolean validate(Widget widget, FormContext context) {
+    public boolean validate(Widget widget) {
         if (this.validators == null) {
             // No validators
             return true;
@@ -144,7 +144,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             Iterator iter = this.validators.iterator();
             while(iter.hasNext()) {
                 WidgetValidator validator = (WidgetValidator)iter.next();
-                if (! validator.validate(widget, context)) {
+                if (! validator.validate(widget)) {
                     // Stop at the first validator that fails
                     return false;
                 }

@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.9 2004/04/28 13:09:59 bruno Exp $
+ * @version CVS $Id: Widget.java,v 1.10 2004/04/28 16:34:12 bruno Exp $
  */
 public interface Widget {
 
@@ -112,7 +112,7 @@ public interface Widget {
      * @return <code>true</code> to indicate all validations were ok, 
      *         <code>false</code> otherwise
      */
-    public boolean validate(FormContext formContext);
+    public boolean validate();
 
     public void addValidator(WidgetValidator validator);
 

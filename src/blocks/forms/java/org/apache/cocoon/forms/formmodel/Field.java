@@ -41,7 +41,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.11 2004/04/28 13:11:10 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.12 2004/04/28 16:34:12 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -112,7 +112,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.needsValidate) {
             isValidating = true;
             try {
-                if (super.validate(null)) {
+                if (super.validate()) {
                     // New-style validators were successful. Check the old-style ones.
                     if (this.value != null) {
                         this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
