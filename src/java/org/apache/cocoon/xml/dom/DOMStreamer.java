@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ import org.xml.sax.helpers.AttributesImpl;
 public class DOMStreamer implements XMLProducer {
 
     /** Default value for normalizeNamespaces. */
-    private final boolean DEFAULT_NORMALIZE_NAMESPACES = true;
+    private final static boolean DEFAULT_NORMALIZE_NAMESPACES = true;
 
     /** Indicates whether namespace normalization should happen. */
     protected boolean normalizeNamespaces = DEFAULT_NORMALIZE_NAMESPACES;
@@ -78,7 +78,7 @@ public class DOMStreamer implements XMLProducer {
     protected DefaultDOMStreamer defaultDOMStreamer = new DefaultDOMStreamer();
 
     /** The transformer factory shared by all instances (only used by DefaultDOMStreamer) */
-    protected static TransformerFactory factory = TransformerFactory.newInstance();
+    protected final static TransformerFactory factory = TransformerFactory.newInstance();
 
     /**
      * Create a new <code>DOMStreamer</code> instance.
@@ -184,7 +184,7 @@ public class DOMStreamer implements XMLProducer {
      * @author Bruno Dumon (bruno at outerthought dot org)
      * @author Xalan team
      */
-    public class NamespaceNormalizingDOMStreamer extends AbstractXMLProducer {
+    public static class NamespaceNormalizingDOMStreamer extends AbstractXMLProducer {
         /**
          * Information about the current element. Used to remember the localName, qName
          * and namespaceURI for generating the endElement event, and holds the namespaces
@@ -260,8 +260,10 @@ public class DOMStreamer implements XMLProducer {
         }
 
         private final void dispatchChars(Node node) throws SAXException {
-            String data = ((Text) node).getData();
-            contentHandler.characters(data.toCharArray(), 0, data.length());
+            final String data = ((Text) node).getData();
+            if ( data != null ) {
+                contentHandler.characters(data.toCharArray(), 0, data.length());
+            }
         }
 
         /**
@@ -275,8 +277,10 @@ public class DOMStreamer implements XMLProducer {
                 case Node.COMMENT_NODE:
                     {
                         if (lexicalHandler != null) {
-                            String data = ((Comment) node).getData();
-                            lexicalHandler.comment(data.toCharArray(), 0, data.length());
+                            final String data = ((Comment) node).getData();
+                            if ( data != null ) {
+                                lexicalHandler.comment(data.toCharArray(), 0, data.length());
+                            }
                         }
                     }
                     break;
@@ -598,7 +602,7 @@ public class DOMStreamer implements XMLProducer {
             }
         }
 
-        public class ElementInfo {
+        public static class ElementInfo {
             public String localName;
             public String namespaceURI;
             public String qName;
@@ -658,9 +662,8 @@ public class DOMStreamer implements XMLProducer {
                 }
                 if (parent != null) {
                     return parent.findPrefix(namespaceURI);
-                } else {
-                    return null;
                 }
+                return null;
             }
 
             /**
@@ -673,10 +676,10 @@ public class DOMStreamer implements XMLProducer {
                         return uri;
                     }
                 }
-                if (parent != null)
+                if (parent != null) {
                     return parent.findNamespaceURI(prefix);
-                else
-                    return null;
+                }
+                return null;
             }
         }
     }
@@ -689,7 +692,7 @@ public class DOMStreamer implements XMLProducer {
      * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
      *         (Apache Software Foundation)
      */
-    public class DefaultDOMStreamer extends AbstractXMLProducer {
+    public static class DefaultDOMStreamer extends AbstractXMLProducer {
 
         /** The private transformer for this instance */
         protected Transformer transformer;
