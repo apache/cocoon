@@ -31,6 +31,8 @@
       <pathelement path="${src}/deprecated/java"/>
       <!-- scratchpad source dir -->
       <pathelement path="${src}/scratchpad/src"/>
+      <!-- test source dir -->
+      <pathelement path="${src}/test"/>
       <!-- blocks source dirs -->
       <dirset dir="${blocks}">
         <include name="*/java"/>
@@ -66,7 +68,7 @@
       <!-- tools libs -->
       <fileset dir="${tools}/lib">
         <include name="*.jar"/>
-        <exclude name="x*.jar"/>
+        <exclude name="xalan*, xml-api*, xerces*"/>
       </fileset>      
     </path>
 
