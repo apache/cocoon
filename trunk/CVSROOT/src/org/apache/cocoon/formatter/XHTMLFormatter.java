@@ -1,4 +1,4 @@
-/*-- $Id: XHTMLFormatter.java,v 1.2 2001-03-01 16:05:40 greenrd Exp $ -- 
+/*-- $Id: XHTMLFormatter.java,v 1.3 2001-03-26 15:30:31 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * (for example, <em>&lt;br /&gt;</em>).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2001-03-01 16:05:40 $
+ * @version $Revision: 1.3 $ $Date: 2001-03-26 15:30:31 $
  */
 
 public class XHTMLFormatter extends AbstractFormatter {
@@ -81,7 +81,11 @@ public class XHTMLFormatter extends AbstractFormatter {
     public void init(Configurations conf) {
         super.init(conf);
         format.setMethod(Method.XHTML);
-        format.setOmitXMLDeclaration(true);
+        if( omitXMLDeclaration != null) {
+            format.setOmitXMLDeclaration(Boolean.valueOf(omitXMLDeclaration).booleanValue());
+        } else {
+            format.setOmitXMLDeclaration(true);
+        }
     }       
         
     public void format(Document document, OutputStream stream, Dictionary p) throws Exception {

@@ -1,4 +1,4 @@
-/*-- $Id: HTMLFormatter.java,v 1.7 2001-03-01 16:05:39 greenrd Exp $ -- 
+/*-- $Id: HTMLFormatter.java,v 1.8 2001-03-26 15:30:31 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,12 +62,12 @@ import org.apache.cocoon.framework.*;
  * have any semantic information about the document type being formatted,
  * this class handles tags like <em>&lt;br/&gt;</em> and transforms them to
  * HTML that non-XML-aware browsers can understand. Note that this creates
- * markap that is non-well-formed XML. If you want to be able to send HTML 
+ * markup that is non-well-formed XML. If you want to be able to send HTML 
  * code to old-browser but still create well-formed XML, use the XHTMLFormatter
  * instead.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2001-03-01 16:05:39 $
+ * @version $Revision: 1.8 $ $Date: 2001-03-26 15:30:31 $
  */
 
 public class HTMLFormatter extends AbstractFormatter {

@@ -1,4 +1,4 @@
-/*-- $Id: XMLFormatter.java,v 1.6 2001-03-01 16:05:41 greenrd Exp $ -- 
+/*-- $Id: XMLFormatter.java,v 1.7 2001-03-26 15:30:32 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2001-03-01 16:05:41 $
+ * @version $Revision: 1.7 $ $Date: 2001-03-26 15:30:32 $
  */
 
 public class XMLFormatter extends AbstractFormatter {
@@ -74,7 +74,11 @@ public class XMLFormatter extends AbstractFormatter {
     public void init(Configurations conf) {
         super.init(conf);
         format.setMethod(Method.XML);
-        format.setOmitXMLDeclaration(false);
+        if( omitXMLDeclaration != null) {
+            format.setOmitXMLDeclaration(Boolean.valueOf(omitXMLDeclaration).booleanValue());
+        } else {
+            format.setOmitXMLDeclaration(false);
+        }
     }
 
     public void format(Document document, OutputStream stream, Dictionary p) throws Exception {

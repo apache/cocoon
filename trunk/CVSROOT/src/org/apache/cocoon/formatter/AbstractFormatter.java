@@ -1,4 +1,4 @@
-/*-- $Id: AbstractFormatter.java,v 1.6 2001-03-26 00:20:46 greenrd Exp $ -- 
+/*-- $Id: AbstractFormatter.java,v 1.7 2001-03-26 15:30:30 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2001-03-26 00:20:46 $
+ * @version $Revision: 1.7 $ $Date: 2001-03-26 15:30:30 $
  */
 
 public abstract class AbstractFormatter 
@@ -115,6 +115,8 @@ implements Configurable, Formatter, Status, Cacheable {
         if (lineWidth != null) {
             format.setLineWidth(Integer.parseInt(lineWidth));
         }        
+
+        omitXMLDeclaration = (String) conf.get("omit-XML-declaration");
     }
 
     public String getEncoding() {
