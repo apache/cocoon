@@ -76,7 +76,7 @@
     <script type="text/javascript">
       var helpWin<xsl:value-of select="$id"/> = woody_createPopupWindow('help<xsl:value-of select="$id"/>');
     </script>
-    <a id="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;"><img border="0" src="resources/help.gif"/></a>
+    <a id="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;"><img border="0" src="{$resources-uri}/help.gif"/></a>
   </xsl:template>
 
   <!--+
