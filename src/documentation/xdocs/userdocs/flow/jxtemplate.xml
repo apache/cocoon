@@ -56,7 +56,7 @@ Jexl Example:
 <p>
 JXPath Example:
 <source>
-  The content type of the current request is #{request/contentType}
+  The content type of the current request is #{$request/contentType}
 </source>
 </p>
 <p> 
@@ -224,7 +224,7 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
 </p>
 <p>JXPath Example:
 <source>
-&lt;forEach items="#{cart/cartItems[position() &lt;=$count]}}&gt;
+&lt;forEach items="#{cart/cartItems[position() &lt;= $count]}}&gt;
    &lt;td&gt;#{./productId}&lt;/td&gt;
 &lt;/forEach&gt;
 </source>
