@@ -27,11 +27,17 @@
 
   <body>
     <s1 title="Flowscript">
-    <p>Cocoon Flowscript is a JavaScript API to manage control flow based on an
-        <link href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</link>
-        version of the <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> JavaScript interpreter that supports continuations.</p>
+    <p>
+      Cocoon Flowscript is a JavaScript API to manage control flow based on an
+      <link href="http://svn.cocoondev.org/viewsvn/?root=rhino%2Bcont">extended</link>
+      version of the <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> JavaScript
+      interpreter that supports continuations. This extension has been incorporated into
+      official Mozilla Rhino version and is shipped with Cocoon 2.2.
+    </p>
     </s1>
-    <anchor id="FOM"/><s1 title="Flow Object Model">
+
+    <anchor id="FOM"/>
+    <s1 title="Flow Object Model">
       <p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the <em>Flow Object Model</em> (FOM).
       The Flow Object Model consists of the following objects:</p>
     <ul>
@@ -44,14 +50,15 @@
       <li><link href="#log">Log</link></li>
       <li><link href="#WebContinuation">WebContinuation</link></li>
     </ul>
+
     <s2 title = "Cocoon Object"><anchor id="cocoon"/>
     <p>The <code>Cocoon</code> object represents the current Cocoon Sitemap. This is the entry point into the FOM. There is one instance of <code>Cocoon</code> which you may access in your scripts as the global variable <code>cocoon</code>, for example like this:</p>
     <source>
-         var value = cocoon.request.getAttribute("blah");
+      var value = cocoon.request.getAttribute("blah");
     </source>
-    <p>
-     The <code>Cocoon</code> object supports the following properties and functions:
-    </p>
+
+    <p>The <code>Cocoon</code> object supports the following properties and functions:</p>
+
     <s3 title="request">
     <p>The current Cocoon request:</p>
     <p>
@@ -185,8 +192,8 @@ function processPage() {
 
   var bkm = cocoon.createWebContinuation();
   var biz = getBizData();
-  cocoon.sendPageAndWait("uri", 
-                         {bookmark: bkm, biz: biz}, 
+  cocoon.sendPageAndWait("uri",
+                         {bookmark: bkm, biz: biz},
                          function() { releaseData(biz); });
 }
 </source>
@@ -196,19 +203,19 @@ function processPage() {
     <p><em>Function</em> <code>load([String] uri)</code></p>
     <p>
       Load the JavaScript script specified by <code>uri</code>. The Cocoon
-     source resolver is used to resolve <code>uri</code>. 
+     source resolver is used to resolve <code>uri</code>.
     </p>
     </s3>
     <s3 title="getComponent">
     <p><em>Function</em> <code>Object getComponent([String] id)</code></p>
     <p>
-      Access an Avalon component. 
+      Access an Avalon component.
     </p>
     </s3>
     <s3 title="releaseComponent">
     <p><em>Function</em> <code>releaseComponent([Object] component)</code></p>
     <p>
-      Release a pooled Avalon component. 
+      Release a pooled Avalon component.
     </p>
     </s3>
     <s3 title="createObject">
@@ -225,37 +232,37 @@ function processPage() {
     </s3>
     </s2>
     <s2 title="Request Object"><anchor id="request"/>
-     
+
     <p>The <code>Request</code> object represents the current Cocoon request. It provides the following functions and properties:</p>
 
     <s3 title="get">
     <p><em>Function</em> <code>[String] get([String] name)</code></p>
     <p>
-      Get the request parameter or attribute with the specified <code>name</code>. 
+      Get the request parameter or attribute with the specified <code>name</code>.
     </p>
     </s3>
     <s3 title="getAttribute">
     <p><em>Function</em> <code>[String] getAttribute([String] name)</code></p>
     <p>
-      Get the request attribute with the specified <code>name</code>. 
+      Get the request attribute with the specified <code>name</code>.
     </p>
     </s3>
     <s3 title="getAttributeNames">
     <p><em>Function</em> <code>[java.util.Enumeration] getAttributeNames()</code></p>
     <p>
-      Get an enumeration of request attribute names. 
+      Get an enumeration of request attribute names.
     </p>
     </s3>
     <s3 title="setAttribute">
     <p><em>Function</em> <code>setAttribute([String] name, [Object] value)</code></p>
     <p>
-      Set the value of a request attribute. 
+      Set the value of a request attribute.
     </p>
     </s3>
     <s3 title="removeAttribute">
     <p><em>Function</em> <code>removeAttribute([String] name)</code></p>
     <p>
-      Remove the attribute with the name <code>name</code> from this request. 
+      Remove the attribute with the name <code>name</code> from this request.
     </p>
     </s3>
 
@@ -290,14 +297,14 @@ function processPage() {
     <s3 title="getParameter">
     <p><em>Function</em> <code>[String] getParameter([String] name)</code></p>
     <p>
-      Get the request parameter with the specified <code>name</code>. 
+      Get the request parameter with the specified <code>name</code>.
     </p>
     </s3>
 
     <s3 title="getParameterValues">
     <p><em>Function</em> <code>[Array] getParameterValues([String] name)</code></p>
     <p>
-      Get an array of request parameters with the specified <code>name</code>. 
+      Get an array of request parameters with the specified <code>name</code>.
     </p>
     </s3>
 
@@ -429,7 +436,7 @@ function processPage() {
     <s3 title="Properties">
     <p>
     <code>Request</code> properties map to request parameters, i.e. <code>request.blah</code> is equivalent to <code>request.getParameter("blah")</code>.
-    </p> 
+    </p>
     </s3>
     </s2>
     <s2 title="Response Object"><anchor id="response"/>
@@ -441,13 +448,13 @@ function processPage() {
     <s3 title="createCookie">
     <p><em>Function</em> <code>[Cookie] createCookie([String] name, [String] value)</code></p>
     <p>
-      Creates a new <link href="#cookie">Cookie</link>. 
+      Creates a new <link href="#cookie">Cookie</link>.
     </p>
     </s3>
     <s3 title="addCookie">
     <p><em>Function</em> <code>addCookie([Cookie] cookie)</code></p>
     <p>
-      Adds <code>cookie</code> to the current response. 
+      Adds <code>cookie</code> to the current response.
     </p>
     </s3>
     <s3 title="containsHeader">
@@ -586,7 +593,7 @@ function processPage() {
     </s3>
     <s3 title="Properties">
     <p>
-      <code>Context</code> properties map to context attributes, i.e. <code>context.blah</code> is equivalent to <code>context.getAttribute("blah")</code>. 
+      <code>Context</code> properties map to context attributes, i.e. <code>context.blah</code> is equivalent to <code>context.getAttribute("blah")</code>.
     </p>
     </s3>
     </s2>
@@ -792,7 +799,7 @@ function processPage() {
       means that the continuation object associated with it will no
       longer be accessible from Web pages. Invalidating a
       <code>WebContinuation</code> invalidates all the
-      <code>WebContinuation</code>s which are children of it.    
+      <code>WebContinuation</code>s which are children of it.
     </p>
     </s3>
     </s2>
