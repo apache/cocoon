@@ -156,7 +156,7 @@
 
   <map:component-configurations>
     <global-variables>
-      <home>/samples/linotype</home>
+      <home>/samples/linotype/</home>
       <count>3</count>
     </global-variables>
   </map:component-configurations>
@@ -299,8 +299,8 @@
 
     <map:match pattern="private/edit/news/*/*">
       <map:call function="main">
-        <map:parameter name="page" value="edit"/>
-        <map:parameter name="root" value="{realpath:/}"/>
+        <map:parameter name="action" value="edit"/>
+        <map:parameter name="home" value="{realpath:/}{global:home}"/>
         <map:parameter name="id" value="{1}"/>
         <map:parameter name="type" value="news"/>
         <map:parameter name="subpage" value="{2}"/>
@@ -309,8 +309,8 @@
 
     <map:match pattern="private/**">
       <map:call function="main">
-        <map:parameter name="page" value="{1}"/>
-        <map:parameter name="root" value="{realpath:/}"/>
+        <map:parameter name="action" value="{1}"/>
+        <map:parameter name="home" value="{realpath:/}{global:home}"/>
       </map:call>
     </map:match>
 

@@ -1,17 +1,3 @@
-/*
- +-----------------------------------------------------------------------------+
- |                                                                             |
- |   This flowscript is based upon a unsupported object model. The flow        |
- |   interpreter that supports it has been commented out in cocoon.xcon        |
- |                                                                             | 
- +-----------------------------------------------------------------------------+
-*/
-
-/*
- * Yeah, I know that hardwiring those is hacky as hell. But I'll try to
- * fix this with link translation later on.
- */
-
 var repo = new Packages.org.apache.cocoon.components.Repository.getInstance();
 
 var users;
@@ -22,12 +8,13 @@ var username = "";
 /*
  * Main entry point for the flow. This is where user authorization takes place.
  */
-function main(action, root) {
-	home = root + "samples/linotype/";
-    var args = new Array(arguments.length - 2);
-    for (var i = 2; i < arguments.length; i++) {
-        args[i-2] = arguments[i];
-    }            
+function main() {
+    var action = cocoon.parameters["action"];
+    home = cocoon.parameters["home"];
+    var args = new Array(3);
+    args[0] = cocoon.parameters["id"];
+    args[1] = cocoon.parameters["type"];
+    args[2] = cocoon.parameters["subpage"];
 
     if ((userid == undefined) || (userid == "")) {
         login(action, args);
@@ -37,7 +24,7 @@ function main(action, root) {
 }
 
 /*
- * If the user is not yet authorized, than authentication takes place
+ * If the user is not yet authorized, then authentication takes place
  */
 function login(action, args) {
     var name = "";
