@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.language.programming;
 
+import org.apache.avalon.framework.component.Component;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -26,7 +28,7 @@ import java.util.List;
  * @version CVS $Id$
  * @since 2.0
  */
-public interface LanguageCompiler {
+public interface LanguageCompiler extends Component {
 
     /**
      * Set the name of the file containing the source program
@@ -66,6 +68,17 @@ public interface LanguageCompiler {
      */
     void setEncoding(String encoding);
 
+    /**
+     * Set the version of the java source code to be compiled
+     *
+     * @param sourceCodeVersion The version of the JVM for wich the code was written.
+     * i.e: Posible level's values are:
+     * 130 = for Java 1.3, 140 = for Java 1.4 and 150 = for Java 1.5
+     * 
+     * @since 2.1.7
+     */
+    void setCompilerComplianceLevel(int level);
+    
     /**
      * Compile a source file yielding a loadable program file.
      *
