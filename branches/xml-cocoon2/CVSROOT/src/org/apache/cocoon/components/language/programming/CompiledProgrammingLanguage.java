@@ -26,7 +26,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-07 17:10:47 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-13 16:14:54 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -171,19 +171,42 @@ public abstract class CompiledProgrammingLanguage
       baseDirectory, filename + "." + this.getSourceExtension()
     );
 
-    if (sourceFile.exists() && sourceFile.isFile() && sourceFile.canRead()) {
-      this.compile(filename, baseDirectory, encoding);
-
-      if (this.deleteSources) {
-        sourceFile.delete();
-      }
-
-      return this.loadProgram(filename, baseDirectory);
+    if (!sourceFile.exists()) {
+        throw new LanguageException(
+          "Can't load program - File doesn't exist: " +
+          baseDirectory.toString() + File.separator + filename
+        );
     }
 
-    throw new LanguageException(
-      "Can't load program: " +
-      baseDirectory.toString() + File.separator + filename
-    );
+    if (!sourceFile.isFile()) {
+        throw new LanguageException(
+          "Can't load program - File is not a normal file: " +
+          baseDirectory.toString() + File.separator + filename
+        );
+    }
+
+    if (!sourceFile.canRead()) {
+        throw new LanguageException(
+          "Can't load program - File cannot be read: " +
+          baseDirectory.toString() + File.separator + filename
+        );
+    }
+
+    this.compile(filename, baseDirectory, encoding);
+
+    if (this.deleteSources) {
+      sourceFile.delete();
+    }
+
+    Object program = this.loadProgram(filename, baseDirectory);
+
+    if(program == null) {
+        throw new LanguageException(
+          "Can't load program : " +
+          baseDirectory.toString() + File.separator + filename
+        );
+    }
+
+    return program;
   }
 }
