@@ -15,17 +15,12 @@
  <s1 title="Timeframe">
   <p>This is the current time frame for the next releases:</p>
   <ul>
-   <li>Not schedulded yet : 2.1 Beta 1</li>
+   <li>Not schedulded yet : 2.2 Milestone 1</li>
    <li>On request         : 2.0.5 (bug fix release)</li>
   </ul>
  </s1>
 
- <s1 title="Version 2.1 Beta 1">
-<ul>
-<li>Attend to the <link href="../todo.html">To Do List</link></li>
-</ul>
- </s1>
- <s1 title="Version 2.2 Beta 1">
+ <s1 title="Version 2.2 Milestone 1">
  <p>Although this version might be long in the future, we already have some plans...</p>
  <ul>
   <li>Design and implement blocks</li>
