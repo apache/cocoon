@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.8 2004/01/15 15:24:31 kpiroumian Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.9 2004/01/16 15:58:27 kpiroumian Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -17,7 +17,7 @@
         <catalogues default="messages">
           <catalogue id="messages" name="messages" location="translations"/>
           <catalogue id="menu" name="menu" location="translations"/>
-          <catalogue id="tiered" name="messages" location="translations/tiered">
+          <catalogue id="tiered" name="messages">
         <location>translations/tiered</location>
         <location>translations</location>
       </catalogue>
