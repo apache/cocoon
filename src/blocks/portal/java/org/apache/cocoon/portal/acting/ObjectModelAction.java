@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.portal.acting;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -62,20 +61,19 @@ import org.apache.cocoon.environment.SourceResolver;
  * Stores all parameters in the object model adding prefix "cocoon-portal-".
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ObjectModelAction.java,v 1.2 2003/07/10 13:17:04 cziegeler Exp $
+ * @version CVS $Id: ObjectModelAction.java,v 1.3 2003/08/04 03:13:22 joerg Exp $
  */
 public class ObjectModelAction 
 extends AbstractAction {
 
 	public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) 
     throws Exception {
-        Iterator names = parameters.getParameterNames();
+        String[] names = parameters.getNames();
         String name;
-        while (names.hasNext()) {
-            name = (String)names.next();
-            objectModel.put("cocoon-portal-"+name, parameters.getParameter(name));
+        for(int i = 0; i < names.length; i++) {
+            name = names[i];
+            objectModel.put("cocoon-portal-" + name, parameters.getParameter(name));
         }
-        
 		return EMPTY_MAP;
 	}
 }
