@@ -79,7 +79,7 @@ public class Form1Handler implements FormHandler {
     private void removeSelectedContacts() {
         Repeater repeater = (Repeater)form.getWidget("contacts");
         for (int i = repeater.getSize() - 1; i >= 0; i--) {
-            boolean selected = ((Boolean)repeater.getRow(i).getWidget("select").getValue()).booleanValue();
+            boolean selected = ((Boolean)repeater.getWidget(i, "select").getValue()).booleanValue();
             if (selected)
                 repeater.removeRow(i);
         }
