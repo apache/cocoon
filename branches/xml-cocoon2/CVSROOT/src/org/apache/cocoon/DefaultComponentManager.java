@@ -25,8 +25,10 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.DefaultConfiguration;
 
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.RoleUtils;
 import org.apache.cocoon.util.ComponentPool;
 import org.apache.cocoon.util.ComponentPoolController;
 import org.apache.cocoon.CocoonComponentSelector;
@@ -36,7 +38,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-05 16:20:59 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-16 15:27:00 $
  */
 public class DefaultComponentManager implements ComponentManager {
 
@@ -91,11 +93,23 @@ public class DefaultComponentManager implements ComponentManager {
         if ( componentClass == null ) {
             component = (Component)this.instances.get(role);
             if ( component == null ) {
-                log.error(role + " could not be found");
-                throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
+                String className = RoleUtils.defaultClass(role);
+                if (className == null) {
+                    log.error(role + " could not be found");
+                    throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
+                }
+                try {
+                    componentClass = ClassUtils.loadClass(className);
+                } catch (Exception e) {
+                    throw new ComponentNotAccessibleException("Could not load component for role '" + role + "'.", e);
+                }
+                this.components.put(role, componentClass);
+                if (Configurable.class.isAssignableFrom(componentClass)) {
+                    this.configurations.put(role, new DefaultConfiguration("", "-"));
+                }
             } else {
                 // we found an individual instance of a component.
-				log.debug("DefaultComponentManager returned instance for role " + role + ".");
+                log.debug("DefaultComponentManager returned instance for role " + role + ".");
                 return component;
             }
         }
@@ -110,7 +124,7 @@ public class DefaultComponentManager implements ComponentManager {
 
         // Work out what class of component we're dealing with.
         if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
-			log.debug("DefaultComponentManager using threadsafe instance of " + componentClass.getName() + " for role " + role + ".");
+            log.debug("DefaultComponentManager using threadsafe instance of " + componentClass.getName() + " for role " + role + ".");
             component = getThreadsafeComponent(componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
             log.debug("DefaultComponentManager using poolable instance of "
