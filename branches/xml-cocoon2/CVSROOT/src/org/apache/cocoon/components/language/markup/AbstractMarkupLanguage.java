@@ -50,7 +50,7 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-08 20:38:51 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-11 15:05:55 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable
@@ -316,6 +316,11 @@ public abstract class AbstractMarkupLanguage
     {
         String systemId = null;
         InputSource inputSource = null;
+
+        if (codeGenerator == null) {
+            log.debug("This should never happen: codeGenerator is null");
+            throw new SAXException("codeGenerator must never be null.");
+        }
 
         if (logicsheetLocation.indexOf(":/") < 0) { // Relative to Cocoon root
             inputSource = entityResolver.resolveEntity(null, logicsheetLocation);

@@ -41,7 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-08 20:40:42 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-11 15:06:10 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -275,7 +275,7 @@ public class SQLTransformer extends AbstractTransformer {
                     level = Integer.parseInt( attributes.getValue(my_uri,
                                               MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
                 } catch (Exception e) {
-		    log.debug("SQLTransformer", e);
+            log.debug("SQLTransformer", e);
                     throwIllegalStateException("Ancestor value elements must have a "+
                                                MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
                 }
@@ -594,7 +594,7 @@ public class SQLTransformer extends AbstractTransformer {
 
     }
 
-    class AncestorValue {
+    private class AncestorValue {
 
         protected int level;
         protected String name;

@@ -51,7 +51,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-30 21:40:56 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-11 15:05:56 $
  */
 public class Logicsheet {
     /**
@@ -96,8 +96,10 @@ public class Logicsheet {
     {
         try {
             return tfactory.newTransformerHandler(templates);
-        } catch (TransformerConfigurationException e){
-            log.error("Logicsheet.getTransformerHandler", e);
+        } catch (TransformerConfigurationException e) {
+            log.error("Logicsheet.getTransformerHandler:TransformerConfigurationException", e);
+        } catch (Exception e) {
+            log.error("Logicsheet.getTransformerHandler:Exception", e);
         }
         return null;
     }

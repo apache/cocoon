@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:38:41 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-11 15:05:49 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -62,28 +62,34 @@ class RepositoryClassLoader extends ClassLoader {
    * repository
    */
   public void addDirectory(File repository) throws IOException {
-    String directoryName = repository.getCanonicalPath();
+    String fullFilename = null;
 
     // Ensure the same directory isn't specified twice
-    int count = this.repositories.size();
-    String fullFilename = IOUtils.getFullFilename(repository);
-    for (int i = 0; i < count; i++) {
-      File directory = (File) this.repositories.elementAt(i);
-      if (fullFilename.equals(IOUtils.getFullFilename(directory))) {
-        return;
-      }
+    try {
+        int count = this.repositories.size();
+        fullFilename = IOUtils.getFullFilename(repository);
+
+        for (int i = 0; i < count; i++) {
+            File directory = (File) this.repositories.elementAt(i);
+            if (fullFilename.equals(IOUtils.getFullFilename(directory))) {
+                return;
+            }
+        }
+    } catch (SecurityException se) {
+        log.debug("RepositoryClassLoader:SecurityException", se);
+        throw new IOException("Cannot access directory" + fullFilename);
     }
 
     if (!repository.exists()) {
-      throw new IOException("Non-existent: " + directoryName);
+      throw new IOException("Non-existent: " + fullFilename);
     }
 
     if (!repository.isDirectory()) {
-      throw new IOException("Not a directory: " + directoryName);
+      throw new IOException("Not a directory: " + fullFilename);
     }
 
     if (!(repository.canRead() && repository.canWrite())) {
-      throw new IOException("Not readable/writable: " + directoryName);
+      throw new IOException("Not readable/writable: " + fullFilename);
     }
 
     this.repositories.addElement(repository);

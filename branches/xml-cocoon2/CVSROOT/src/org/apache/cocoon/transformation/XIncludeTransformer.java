@@ -48,7 +48,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-08 20:40:43 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-11 15:06:10 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -258,9 +258,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
     class XIncludeContentHandler implements ContentHandler, LexicalHandler {
 
-        ContentHandler content_handler;
+        private ContentHandler content_handler;
         LexicalHandler lexical_handler;
-        boolean debug;
 
         XIncludeContentHandler(ContentHandler content_handler, LexicalHandler lexical_handler) {
             this.content_handler = content_handler;

@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-12-08 20:38:46 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-12-11 15:05:54 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable, ThreadSafe
@@ -67,7 +67,7 @@ public class ProgramGeneratorImpl
   protected MemoryStore cache = new MemoryStore();
 
   /** The component manager */
-  protected ComponentManager manager;
+  protected ComponentManager manager = null;
 
   /** The markup language component selector */
   protected ComponentSelector markupSelector;
@@ -86,17 +86,19 @@ public class ProgramGeneratorImpl
    * @param manager The global component manager
    */
   public void compose(ComponentManager manager) {
-      this.manager = manager;
+      if ((this.manager == null) && (manager != null)) {
+          this.manager = manager;
 
-      try {
-          log.debug("Lookup " + Roles.MARKUP_LANGUAGE);
-          this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
-      log.debug("Lookup " + Roles.PROGRAMMING_LANGUAGE);
-          this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
-      log.debug("Lookup " + Roles.COCOON);
-          this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
-      } catch (Exception e) {
-          log.warn("Could not lookup Component", e);
+          try {
+              log.debug("Lookup " + Roles.MARKUP_LANGUAGE);
+              this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
+          log.debug("Lookup " + Roles.PROGRAMMING_LANGUAGE);
+              this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
+          log.debug("Lookup " + Roles.COCOON);
+              this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
+          } catch (Exception e) {
+              log.warn("Could not lookup Component", e);
+          }
       }
   }
 

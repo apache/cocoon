@@ -31,12 +31,12 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-08 20:39:16 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-11 15:06:02 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
   /** The class loader */
-  ClassLoaderManager classLoaderManager;
+  private ClassLoaderManager classLoaderManager;
 
   /**
    * Return the language name

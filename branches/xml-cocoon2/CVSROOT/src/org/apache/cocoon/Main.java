@@ -48,7 +48,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.16 $ $Date: 2000-12-07 17:10:30 $
+ * @version CVS $Revision: 1.1.4.17 $ $Date: 2000-12-11 15:05:47 $
  */
 
 public class Main {
@@ -363,7 +363,7 @@ public class Main {
         return filename;
     }
 
-    void resourceUnavailable(File file) throws IOException {
+    private void resourceUnavailable(File file) throws IOException {
         PrintStream out = new PrintStream(new FileOutputStream(file));
         out.println(
            "<html><head><title>Page Not Available</title></head>" +
@@ -375,7 +375,7 @@ public class Main {
         out.close();
     }
 
-    String mangle(String uri) {
+    private String mangle(String uri) {
         log.debug("mangle(\"" + uri + "\")");
         if (uri.charAt(uri.length() - 1) == '/') uri += Cocoon.INDEX_URI;
         uri = uri.replace('"', '\'');
@@ -384,7 +384,7 @@ public class Main {
         return uri;
     }
 
-    String leaf(int level) {
+    private String leaf(int level) {
         if (level == 0) return "";
         return tree(level - 2) + "+--";
     }

@@ -49,6 +49,11 @@ public class JAIPNGEncoder implements ImageEncoder, Configurable, ThreadSafe {
     }
 
     public void encode(BufferedImage image, OutputStream out) throws IOException {
+        if (image == null || out == null) {
+            log.error("You should never get this: Image is null and/or OutputStream is null");
+            throw new IOException("You cannot serialize a null image and/or to a null stream");
+        }
+
         PNGEncodeParam param = PNGEncodeParam.getDefaultEncodeParam(image);
         // Set the alpha (defaults to on)
         if (!alpha)

@@ -25,13 +25,13 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-08 20:40:33 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 15:06:07 $
  */
 
 public class XSLTFactoryLoader {
     protected Logger log = LogKit.getLoggerFor("cocoon");
 
-    HashMap obj = new HashMap();
+    private HashMap obj = new HashMap();
 
     public String getClassSource(String className, String prefix, String pattern, NodeIterator conf)
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {

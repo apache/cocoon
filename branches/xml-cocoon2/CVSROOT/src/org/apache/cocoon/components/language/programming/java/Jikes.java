@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:17 $
+ * @version $Revision: 1.1.2.8 $ $Date: 2000-12-11 15:06:02 $
  * @since 2.0
  */
 
@@ -25,7 +25,7 @@ public class Jikes extends AbstractJavaCompiler {
     static final int OUTPUT_BUFFER_SIZE = 1024;
     static final int BUFFER_SIZE = 512;
 
-    class StreamPumper extends Thread {
+    private class StreamPumper extends Thread {
 
         private BufferedInputStream stream;
         private boolean endOfStream = false;

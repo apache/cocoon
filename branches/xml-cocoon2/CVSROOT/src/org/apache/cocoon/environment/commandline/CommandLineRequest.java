@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-05 22:02:02 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 15:06:05 $
  */
 
 /*
@@ -38,7 +38,7 @@ import javax.servlet.http.HttpSession;
  */
 public class CommandLineRequest implements HttpServletRequest {
 
-    class IteratorWrapper implements Enumeration {
+    private class IteratorWrapper implements Enumeration {
         private Iterator iterator;
         public IteratorWrapper(Iterator i) {
             this.iterator = i;
@@ -70,7 +70,7 @@ public class CommandLineRequest implements HttpServletRequest {
     public CommandLineRequest(String contextPath, String servletPath, String pathInfo, Map attributes, Map parameters) {
         this(contextPath, servletPath, pathInfo, attributes, parameters, null);
     }
-      
+
     public CommandLineRequest(String contextPath, String servletPath, String pathInfo, Map attributes, Map parameters, Map headers) {
         this.contextPath = contextPath;
         this.servletPath = servletPath;
@@ -83,7 +83,7 @@ public class CommandLineRequest implements HttpServletRequest {
     public String getContextPath() { return contextPath; }
     public String getServletPath() { return servletPath; }
     public String getPathInfo() { return pathInfo; }
-    public String getRequestURI() { 
+    public String getRequestURI() {
         StringBuffer buffer = new StringBuffer();
         if (servletPath != null) buffer.append(servletPath);
         if (contextPath != null) buffer.append(contextPath);
@@ -96,37 +96,37 @@ public class CommandLineRequest implements HttpServletRequest {
     public Object getAttribute(String name) {
         return (attributes != null) ? attributes.get(name) : null;
     }
-    public Enumeration getAttributeNames() { 
+    public Enumeration getAttributeNames() {
         return (attributes != null) ? new IteratorWrapper(attributes.keySet().iterator()) : null;
     }
-    public void setAttribute(String name, Object value) { 
+    public void setAttribute(String name, Object value) {
         if (attributes != null) attributes.put(name, value);
     }
     public void removeAttribute(String name) {
         if (attributes != null) attributes.remove(name);
     }
 
-    public String getParameter(String name) { 
+    public String getParameter(String name) {
         return (parameters != null) ? (String) parameters.get(name) : null;
     }
-    public Enumeration getParameterNames() { 
+    public Enumeration getParameterNames() {
         return (parameters != null) ? new IteratorWrapper(parameters.keySet().iterator()) : null;
     }
-    public String[] getParameterValues(String name) { 
+    public String[] getParameterValues(String name) {
         throw new RuntimeException (this.getClass().getName() + ".getParameterValues(String name) method not yet implemented!");
     } // FIXME
 
-    public String getHeader(String name) { 
+    public String getHeader(String name) {
         return (headers != null) ? (String) headers.get(name) : null;
     }
     public int getIntHeader(String name) {
         String header = (headers != null) ? (String) headers.get(name) : null;
         return (header != null) ? Integer.parseInt(header) : -1;
     }
-    public long getDateHeader(String name) { 
+    public long getDateHeader(String name) {
         throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
     } // FIXME
-    public Enumeration getHeaders(String name) { 
+    public Enumeration getHeaders(String name) {
         throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
     } // FIXME
     public Enumeration getHeaderNames() {
