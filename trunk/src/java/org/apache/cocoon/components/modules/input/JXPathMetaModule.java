@@ -76,10 +76,10 @@ import java.util.Map;
  * <td>When set to true, non-existing attributes return null, when set to false,
  *     an exception is thrown. Default is true.</td> 
  *</tr>
- * <tr><td><code>&lt;parameter&gt;false&lt;/lenient&gt;</td>
+ * <tr><td><code>&lt;parameter&gt;false&lt;/parameter&gt;</td>
  * <td>Attribute name to be used instead of passed attribute name.</td> 
  *</tr>
- * <tr><td><code>&lt;from-parameter&gt;false&lt;/lenient&gt;</td>
+ * <tr><td><code>&lt;from-parameter&gt;false&lt;/from-parameter&gt;</td>
  * <td>Attribute name to pass to configured input module</td> 
  *</tr>
  * <tr><td><code>&lt;input-module name="request-attr"/&gt;</td>
@@ -104,7 +104,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: JXPathMetaModule.java,v 1.3 2003/05/17 05:53:03 jefft Exp $
+ * @version CVS $Id: JXPathMetaModule.java,v 1.4 2003/05/21 14:05:15 mlangham Exp $
  */
 public class JXPathMetaModule extends AbstractMetaModule implements Configurable, ThreadSafe {
 
