@@ -55,7 +55,7 @@ import java.io.StringReader;
  * </pre>
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptGenerator.java,v 1.6 2004/04/04 04:44:09 antonio Exp $
+ * @version CVS $Id: ScriptGenerator.java,v 1.7 2004/04/15 08:39:30 bdelacretaz Exp $
  */
 public class ScriptGenerator extends ServiceableGenerator implements Configurable {
 
@@ -135,26 +135,42 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
             }
             StringBuffer output = new StringBuffer();
 
+            // make useful objects available to scripts
             mgr.registerBean("resolver", this.resolver);
             mgr.registerBean("source", super.source);
             mgr.registerBean("objectModel", this.objectModel);
             mgr.registerBean("parameters", this.parameters);
-            mgr.registerBean("output", output);
             mgr.registerBean("logger", getLogger());
 
-            getLogger().debug("BSFManager execution begining");
+            // provide both a StringBuffer and ContentHandler to script,
+            // so that it can provide XML either as a String or as SAX events
+            mgr.registerBean("output", output);
+            mgr.registerBean("contentHandler",contentHandler);
 
             // Execute the script
+            if(getLogger().isDebugEnabled()) {
+                getLogger().debug("BSFManager execution begining (" + inputSource.getURI() + ")");
+            }
             mgr.exec(BSFManager.getLangFromFilename(this.inputSource.getURI()),
                      this.inputSource.getURI(), 0, 0, IOUtils.getStringFromReader(in));
+            if(getLogger().isDebugEnabled()) {
+                getLogger().debug("BSFManager execution complete");
+            }
 
-            getLogger().debug("BSFManager execution complete");
-            getLogger().debug("output = [" + output.toString() + "]");
+            // If script wrote something to output buffer, use it
+            if(output.length() > 0) {
+                if(getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using String output provided by script (" + output.toString() + ")");
+                }
+                InputSource xmlInput = new InputSource(new StringReader(output.toString()));
+                parser = (SAXParser)(this.manager.lookup(SAXParser.ROLE));
+                parser.parse(xmlInput, this.xmlConsumer);
+            } else {
+                if(getLogger().isDebugEnabled()) {
+                    getLogger().debug("Script provided no String output, content should have been written to contentHandler");
+                }
+            }
 
-            // Extract the XML string from the BSFManager and parse it
-            InputSource xmlInput = new InputSource(new StringReader(output.toString()));
-            parser = (SAXParser)(this.manager.lookup(SAXParser.ROLE));
-            parser.parse(xmlInput, this.xmlConsumer);
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } catch (FileNotFoundException e) {
@@ -162,12 +178,14 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
                 "Could not load script " + this.inputSource.getURI(), e);
         } catch (BSFException e) {
             throw new ProcessingException(
-                    "Exception in ScriptGenerator.generate()", e);
+                    "BSFException in ScriptGenerator.generate()", e);
         } catch (Exception e) {
             throw new ProcessingException(
                     "Exception in ScriptGenerator.generate()", e);
         } finally {
-            this.manager.release(parser);
+            if(parser!=null) {
+                this.manager.release(parser);
+            }
         }
     }
 }
