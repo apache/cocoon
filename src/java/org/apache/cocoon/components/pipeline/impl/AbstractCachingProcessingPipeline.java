@@ -491,23 +491,23 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 while (responseIsValid && i < fromCacheValidityObjects.length) {
                     boolean isValid = false;
 
-                    // BH check if validities[i] is null, may happen
-                    // if exception was thrown due to malformed content
+                    // BH Check if validities[i] is null, may happen
+                    //    if exception was thrown due to malformed content
                     SourceValidity validity = fromCacheValidityObjects[i];
-                    int valid = validity != null ? validity.isValid() : -1;
-                    if (valid == 0) { // don't know if valid, make second test
-
-                        validity = this.getValidityForInternalPipeline(i);
+                    int valid = validity == null ? SourceValidity.INVALID : validity.isValid();
+                    if (valid == SourceValidity.UNKNOWN) {
+                        // Don't know if valid, make second test
+                        validity = getValidityForInternalPipeline(i);
                         if (validity != null) {
-                            valid = fromCacheValidityObjects[i].isValid( validity );
-                            if (valid == 0) {
+                            valid = fromCacheValidityObjects[i].isValid(validity);
+                            if (valid == SourceValidity.UNKNOWN) {
                                 validity = null;
                             } else {
-                                isValid = (valid == 1);
+                                isValid = (valid == SourceValidity.VALID);
                             }
                         }
                     } else {
-                        isValid = (valid == 1);
+                        isValid = (valid == SourceValidity.VALID);
                     }
 
                     if (!isValid) {
@@ -564,7 +564,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         this.cacheCompleteResponse = false;
                     } else {
                         // the entry is invalid, remove it
-                        this.cache.remove( this.fromCacheKey );
+                        this.cache.remove(this.fromCacheKey);
                     }
 
                     // try a shorter key
@@ -686,7 +686,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     SourceValidity[] validities = cachedObject.getValidityObjects();
                     if (validities == null || validities.length != 1) {
                         // to avoid getting here again and again, we delete it
-                        this.cache.remove( pcKey );
+                        this.cache.remove(pcKey);
                         if (getLogger().isDebugEnabled()) {
                             getLogger().debug("Cached response for '" + environment.getURI() +
                                               "' using key: " + pcKey + " is invalid.");
@@ -694,31 +694,31 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         this.cachedResponse = null;
                     } else {
                         SourceValidity cachedValidity = validities[0];
-                        int result = cachedValidity.isValid();
-                        boolean valid = false;
-                        if ( result == 0 ) {
+                        boolean isValid = false;
+                        int valid = cachedValidity.isValid();
+                        if (valid == SourceValidity.UNKNOWN) {
                             // get reader validity and compare
                             if (isCacheableProcessingComponent) {
-                                readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
+                                readerValidity = ((CacheableProcessingComponent) super.reader).getValidity();
                             } else {
-                                CacheValidity cv = ((Cacheable)super.reader).generateValidity();
+                                CacheValidity cv = ((Cacheable) super.reader).generateValidity();
                                 if (cv != null) {
-                                    readerValidity = CacheValidityToSourceValidity.createValidity( cv );
+                                    readerValidity = CacheValidityToSourceValidity.createValidity(cv);
                                 }
                             }
                             if (readerValidity != null) {
-                                result = cachedValidity.isValid(readerValidity);
-                                if ( result == 0 ) {
+                                valid = cachedValidity.isValid(readerValidity);
+                                if (valid == SourceValidity.UNKNOWN) {
                                     readerValidity = null;
                                 } else {
-                                    valid = (result == 1);
+                                    isValid = (valid == SourceValidity.VALID);
                                 }
                             }
                         } else {
-                            valid = (result > 0);
+                            isValid = (valid == SourceValidity.VALID);
                         }
 
-                        if (valid) {
+                        if (isValid) {
                             if (getLogger().isDebugEnabled()) {
                                 getLogger().debug("processReader: using valid cached content for '" +
                                                   environment.getURI() + "'.");
@@ -726,10 +726,10 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                             byte[] response = cachedObject.getResponse();
                             if (response.length > 0) {
                                 usedCache = true;
-                                if ( cachedObject.getContentType() != null ) {
+                                if (cachedObject.getContentType() != null) {
                                     environment.setContentType(cachedObject.getContentType());
                                 } else {
-                                    this.setMimeTypeForReader(environment);
+                                    setMimeTypeForReader(environment);
                                 }
                                 outputStream = environment.getOutputStream(0);
                                 environment.setContentLength(response.length);
