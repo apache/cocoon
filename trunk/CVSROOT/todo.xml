@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.43 2000-11-07 19:58:53 greenrd Exp $
+  $Id: todo.xml,v 1.44 2000-11-09 15:35:56 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -18,6 +18,9 @@
  <actions priority="high">
   <action context="code">
    Track down cause of OutOfMemoryError.
+  </action>
+  <action context="docs" assigned-to="RDG">
+   Contribution / patch management system (will be primitive!)
   </action>
   <action context="code">
    Work out how to integrate inline XSP docs (such as inline esql docs)
@@ -60,6 +63,9 @@
   <action context="docs">
    Cleanup and improve documentation. (in progress.)
   </action>
+  <action context="code">
+   Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
+  </action>
   <action context="code" assigned-to="RDG">
    Class auto-reloading for XSP pages
    (code written; just needs to be merged in and documented.)
@@ -79,6 +85,10 @@
  <actions priority="low">
   <action context="docs">
    Make &lt;connect&gt; tags work correctly when xdocs are transformed to HTML docs.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Add GroupingProcessor which makes it easy to group elements together in bundles
+   of N (this is messy in XSLT).
   </action>
   <action context="code" assigned-to="RDG">
    Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.

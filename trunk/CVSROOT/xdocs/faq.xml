@@ -274,12 +274,24 @@
    <note>
     Unfortunately, some servlet engines require DOM Level 1 to be ahead of
     DOM Level 2 in the CLASSPATH - conflicting with Cocoon! There is no known
-    workaround for this problem - please let us know at
+    workaround for this problem (but see the next question) - please let us know at
     <link href="mailto:cocoon-users@xml.apache.org">
     cocoon-users@xml.apache.org</link> if you find one.
    </note>
   </answer>
  </faq>
+
+ <faq id="nojsp">
+  <question>I put xerces.jar before another xml jar but now JSP has stopped working.
+   How can I get both XSP and JSP to work?
+  </question>
+  <answer>
+   <p>Run two copies (each in a separate virtual machine)
+    of your servlet engine, one for JSP and one for Cocoon. How to
+    do this will depend on what servlet engine you are using - consult
+    its documentation.</p>
+  </answer>
+ </question>
 
  <faq id="noclasspath">
   <question>I used xsp:include to import my classes, but it comes up
@@ -876,11 +888,11 @@
     <code>util:get-file-contents name=</code>.
    </p>
 
-   <note>The current Servlet API does not include any explicit support for
+   <note>The current Servlet API (2.2) does not include any explicit support for
     servlet chaining. However, the Cocoon Project is in close contact with the
     Servlet API Expert Group at
-    Sun (Stefano Mazzocchi being a member of that board) and will propose
-    post-processing hooks for inclusion in the next Servlet API specifications.
+    Sun (Stefano Mazzocchi being a member of that board), and Filter APIs
+    should be part of the Servlet 2.3 API specification.
    </note>
   </answer>
  </faq>
