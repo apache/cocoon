@@ -18,7 +18,6 @@ package org.apache.cocoon.kernel;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.URL;
 
 import org.apache.cocoon.kernel.composition.Component;
 import org.apache.cocoon.kernel.composition.Composer;
@@ -50,7 +49,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * this planned new feature.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public final class ProxyWire implements InvocationHandler {
     
@@ -66,9 +65,6 @@ public final class ProxyWire implements InvocationHandler {
     /** <p>The {@link Wire#dispose()} method used for interception.</p> */
     private static Method dispose = null;
     
-    /** <p>The {@link Wire#resolve(URL)} method used for interception.</p> */
-    private static Method resolve = null;
-    
     /** <p>A static flag indicating whether this class was initialized.</p> */
     private static boolean initialized = false;
     
@@ -79,9 +75,6 @@ public final class ProxyWire implements InvocationHandler {
 
     /* <p>The {@link Compser} to which the instance should be released.</p> */
     private Composer composer = null;
-
-    /* <p>The {@link Resolver} for the wire.</p> */
-    private Resolver resolver = null;
 
     /* <p>The {@link Wire} instance generated with proxies.</p> */
     private Wire wire = null;
@@ -102,12 +95,15 @@ public final class ProxyWire implements InvocationHandler {
      *                 disposal of proxied component instances will occur.
      * @param role an interface {@link Class} to which the {@link Wire}
      *             returned by {@link #getWire()} <b>must</b> be castable to.
-     * @param resolver The {@link Resolver} providing resolution.
+     * @param w The {@link Wirings} instance associated with the block instance
+     *          where the proxied component is deployed.
+     * @param r The {@link Resolver} providing resolution in the context of the
+     *          block instance requesting the component instance.
      * @throws WiringException if an error occurred acquiring the original
      *                              object or creating the {@link Wire}.
      * @throws NullPointerException if any of the parameters were <b>null</b>.
      */
-    public ProxyWire(Composer composer, Class role, Resolver resolver)
+    public ProxyWire(Composer composer, Class role, Wirings w, Resolver r)
     throws WiringException {
         ProxyWire.initialize();
 
@@ -145,21 +141,17 @@ public final class ProxyWire implements InvocationHandler {
 
         try {
             /* Create the proxy instance */
-            Class i[] = instance.getClass().getInterfaces();
-            Class c[] = new Class[i.length + 1];
-            for (int x = 0; x < i.length; x++) c[x + 1] = i[x];
-            c[0] = Wire.class;
+            Class c[] = new Class[] { Wire.class, role };
             this.wire = (Wire)Proxy.newProxyInstance(loader, c, this);
 
             /* Contextualize the instance with the wire */
             if (instance instanceof Component) {
-                ((Component)instance).contextualize(this.wire);
+                ((Component)instance).contextualize(this.wire, null, r);
             }
 
-            /* Record the original composer, resolver, and instance */
+            /* Record the original composer and instance */
             this.composer = composer;
             this.instance = instance;
-            this.resolver = resolver;
         } catch (Throwable t) {
             /* Something bad happened releasing, release the instance */
             composer.release(instance);
@@ -217,11 +209,6 @@ public final class ProxyWire implements InvocationHandler {
 
         /* If it's simply the wiring status they require, that they will get */
         if (this.check(method, wired)) return(new Boolean(this.isConnected()));
-
-        /* Intercept lookup on the proxied Wire */
-        if (this.check(method, resolve)) {
-            return(method.invoke(this.resolver, arguments));
-        }
 
         /* Invoke the method on the remote instance */
         if (this.instance != null) {
@@ -309,7 +296,6 @@ public final class ProxyWire implements InvocationHandler {
                 ProxyWire.dispose = Wire.class.getDeclaredMethod("dispose", parameters);
                 ProxyWire.finalize = Object.class.getDeclaredMethod("finalize", parameters);
                 parameters = new Class[] { String.class };
-                ProxyWire.resolve = Wire.class.getDeclaredMethod("resolve", parameters);
             } catch (NoSuchMethodException exception) {
                 /* If the methods were not found, then we're in BIG troubles */
                 String message = "Unable to locate interceptable methods in the \""
