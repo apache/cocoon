@@ -319,6 +319,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
+     BetwixtTransformer: removed deprecation warning with latest betwixt
+   </action>
    <action dev="VG" type="fix" fixes-bug="27176" due-to="Guillaume Deflache" due-to-email="guillaume@anyware-tech.com">
      XSP Block: Add space="strip" attribute support for &lt;xsp:page&gt;
      element. When present, all extra whitespace from XSP source is stripped.
