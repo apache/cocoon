@@ -14,6 +14,7 @@
   <page id="xsp" label="XSP" source="xsp.xml"/>
   <page id="xsp-internals" label="XSP Internals" source="xsp-internals.xml"/>
   <page id="logicsheet-concepts" label="XSP Logicsheets" source="logicsheet-concepts.xml"/>
+  <page id="sessions" label="Sessions" source="sessions.xml"/>
 <separator/>
   <page id="actions" label="Actions" source="actions.xml"/>
   <page id="datasources" label="Using Databases" source="datasources.xml"/>
