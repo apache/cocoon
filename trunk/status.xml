@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.184 2004/03/05 02:24:35 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.185 2004/03/06 14:34:40 joerg Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="25594" due-to="Gernot Koller" due-to-email="grizzly@gmx.at">
+     Allow streaming of uploaded files into a pipeline using StreamGenerator.
+   </action>
    <action dev="JH" type="fix" fixes-bug="27254" due-to="Georg Ragaller" due-to-email="georg.ragaller@nse.de">
      Fixed path separator handling in cocoon.bat/.sh and Loader.java.
    </action>

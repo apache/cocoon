@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.4 2003/07/29 03:15:48 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.5 2004/03/06 14:34:40 joerg Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -29,14 +29,14 @@
 
   <map:pipeline>
 
-   <map:match pattern="order">
-     <map:generate src="OrderPage.xml"/>
+   <map:match pattern="upload*">
+     <map:generate src="{0}.xml"/>
      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
         <map:parameter name="remove" value="order"/>
-        <map:parameter name="file" value="OrderPage.xml"/>
+        <map:parameter name="file" value="{0}.xml"/>
      </map:transform>
      <map:serialize type="html"/>
    </map:match>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: components-samples.xml,v 1.1 2003/09/07 06:16:41 vgritsenko Exp $ -->
+<!-- CVS $Id: components-samples.xml,v 1.2 2004/03/06 14:34:40 joerg Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Components Samples">
   
@@ -11,8 +11,11 @@
   </group>
 
   <group name="Generators">
-    <sample href="stream/order" name="B2B: Order Page" xlink:role="dynamic">
-      An example of B2B processing using StreamGenerator.
+    <sample href="stream/uploadstring" name="Stream parameter value" xlink:role="dynamic">
+      An example getting a parameter value streamed into a pipeline using StreamGenerator.
+    </sample>   
+    <sample href="stream/uploadfile" name="Stream upload file" xlink:role="dynamic">
+      An example getting an uploaded file streamed into a pipeline using StreamGenerator.
     </sample>   
     <sample href="request.html" name="Request Page">
       This example shows the usage of the RequestGenerator.

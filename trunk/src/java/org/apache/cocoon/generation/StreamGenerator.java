@@ -51,6 +51,8 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +62,7 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.util.PostInputStream;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
@@ -87,7 +90,7 @@ import org.xml.sax.SAXException;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.9 2003/12/30 11:25:45 unico Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.10 2004/03/06 14:34:40 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type=Generator
@@ -127,12 +130,13 @@ public class StreamGenerator extends ServiceableGenerator
             if (contentType == null) {
                 contentType = parameters.getParameter("defaultContentType", null);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("no Content-Type header - using contentType parameter");
+                    getLogger().debug("no Content-Type header - using contentType parameter: " + contentType);
+                }
+                if (contentType == null) {
+                    throw new IOException("both Content-Type header and defaultContentType parameter are not set");
                 }
             }
-            if (contentType == null) {
-                throw new IOException("both Content-Type header and defaultContentType parameter are not set");
-            } else if (contentType.startsWith("application/x-www-form-urlencoded") ||
+            if (contentType.startsWith("application/x-www-form-urlencoded") ||
                     contentType.startsWith("multipart/form-data")) {
                 String parameter = parameters.getParameter(FORM_NAME, null);
                 if (parameter == null) {
@@ -141,8 +145,17 @@ public class StreamGenerator extends ServiceableGenerator
                         FORM_NAME + "' for handling form data"
                     );
                 }
-                String sXml = request.getParameter(parameter);
-                inputSource = new InputSource(new StringReader(sXml));
+                Object xmlObject = request.get(parameter);
+                Reader xmlReader = null;
+                if (xmlObject instanceof String) {
+                    xmlReader  = new StringReader((String)xmlObject);
+                } else if (xmlObject instanceof Part) {
+                    xmlReader = new InputStreamReader(((Part)xmlObject).getInputStream());
+                } else {
+                    throw new ProcessingException("Unknown request object encountered named " + 
+                                                  parameter + " : " + xmlObject);
+                }                
+                inputSource = new InputSource(xmlReader);
             } else if (contentType.startsWith("text/plain") ||
                     contentType.startsWith("text/xml") ||
                     contentType.startsWith("application/xml")) {
