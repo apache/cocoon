@@ -18,6 +18,7 @@ package org.apache.cocoon.util.jxpath;
 import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -26,7 +27,7 @@ import org.w3c.dom.Node;
  * that creates DOM elements.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version $Id: DOMFactory.java,v 1.2 2004/03/08 14:04:01 cziegeler Exp $
+ * @version $Id: DOMFactory.java,v 1.3 2004/03/17 09:35:35 cziegeler Exp $
  */
 
 public class DOMFactory extends AbstractFactory {
@@ -44,20 +45,18 @@ public class DOMFactory extends AbstractFactory {
          //FIXME: JXPath automatically creates attributes if the element already exists,
          //but does not call this method if the element does not exit 
 
-        addDOMElement((Element) parent, index, name);
+        addDOMElement((Node) parent, index, name);
         
         return true;
     }
 
-    private void addDOMElement(Element parent, int index, String tag) {
+    private void addDOMElement(Node parent, int index, String tag) {
         int pos = tag.indexOf(':');
         String prefix = null;
         if (pos != -1) {
             prefix = tag.substring(0, pos);
         }
-        String uri = getNamespaceURI(parent, prefix);
-                
-        //System.out.println("Found namespace '" + uri + "' for tag " + tag);
+        String uri = null;
         
         Node child = parent.getFirstChild();
         int count = 0;
@@ -68,9 +67,28 @@ public class DOMFactory extends AbstractFactory {
             child = child.getNextSibling();
         }
 
+        Document doc = parent.getOwnerDocument();
+        
+        if (doc != null) {
+            uri = getNamespaceURI((Element)parent, prefix);
+        } else {
+            if (parent instanceof Document) {
+                doc = (Document)parent;
+                if (prefix != null) {
+                    throw new RuntimeException("Cannot map non-null prefix " +
+                        "when creating a document element");    
+                }
+            } else { // Shouldn't happen (must be a DocumentType object)
+                throw new RuntimeException("Node of class " +
+                    parent.getClass().getName() + " has null owner document " +
+                    "but is not a Document"); 
+            }
+
+        }
+
         // Keep inserting new elements until we have index + 1 of them
         while (count <= index) {
-            Node newElement = parent.getOwnerDocument().createElementNS(uri, tag);
+            Node newElement = doc.createElementNS(uri, tag);
             parent.appendChild(newElement);
             count++;
         }
