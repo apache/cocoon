@@ -31,6 +31,7 @@ function form1(form) {
 
 function selectCar() {
     var form = new Form("forms/carselector_form.xml");
+    form.getWidget("make").setValue(cocoon.parameters.defaultMake);
     form.showForm("carselector-display-pipeline");
     cocoon.request.setAttribute("carselectorform", form.getWidget());
     cocoon.sendPage("carselector-success-pipeline.xsp");

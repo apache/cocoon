@@ -69,4 +69,12 @@
     <type name="Espace">
     </type>
   </make>
+  <make name="Maserati">
+    <type name="Quattroporte">
+    </type>
+    <type name="Coupe">
+    </type>
+    <type name="Spyder">
+    </type>
+  </make>
 </cars>
