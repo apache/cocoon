@@ -75,7 +75,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.4 2003/03/20 01:04:22 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.5 2003/03/20 02:46:32 vgritsenko Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
@@ -114,6 +114,7 @@ public class ContinuationsManagerImpl
      */
     protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
+
     public ContinuationsManagerImpl() throws Exception {
         random = SecureRandom.getInstance("SHA1PRNG");
         random.setSeed(System.currentTimeMillis());
@@ -135,20 +136,20 @@ public class ContinuationsManagerImpl
     }
 
     public WebContinuation createWebContinuation(Object kont,
-                                                 WebContinuation parentKont,
+                                                 WebContinuation parent,
                                                  int timeToLive) {
         int ttl = (timeToLive == 0 ? defaultTimeToLive : timeToLive);
 
-        WebContinuation wk = new WebContinuation(kont, parentKont, this, ttl);
+        WebContinuation wk = generateContinuation(kont, parent, ttl);
         wk.enableLogging(getLogger());
 
-        if (parentKont == null) {
+        if (parent == null) {
             forrest.add(wk);
         }
 
         // REVISIT: This Places only the "leaf" nodes in the expirations Sorted Set.
         // do we really want to do this?
-        if (parentKont != null) {
+        if (parent != null) {
             if (wk.getParentContinuation().getChildren().size() < 2) {
                 expirations.remove(wk.getParentContinuation());
             }
@@ -168,9 +169,9 @@ public class ContinuationsManagerImpl
 
     public void invalidateWebContinuation(WebContinuation wk) {
         WebContinuation parent = wk.getParentContinuation();
-        if (parent == null)
+        if (parent == null) {
             forrest.remove(wk);
-        else {
+        } else {
             List parentKids = parent.getChildren();
             parentKids.remove(wk);
         }
@@ -178,7 +179,7 @@ public class ContinuationsManagerImpl
         _invalidate(wk);
     }
 
-    protected void _invalidate(WebContinuation wk) {
+    private void _invalidate(WebContinuation wk) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Manual Expire of Continuation " + wk.getId());
         }
@@ -188,8 +189,9 @@ public class ContinuationsManagerImpl
         // Invalidate all the children continuations as well
         List children = wk.getChildren();
         int size = children.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             _invalidate((WebContinuation) children.get(i));
+        }
     }
 
     public WebContinuation lookupWebContinuation(String id) {
@@ -199,22 +201,21 @@ public class ContinuationsManagerImpl
     }
 
     /**
-     * Generate a unique identifier for a
-     * <code>WebContinuation</code>. The identifier is generated using a
-     * cryptographically strong algorithm to prevent people to generate
-     * their own identifiers.
+     * Create <code>WebContinuation</code> and generate unique identifier
+     * for it. The identifier is generated using a cryptographically strong
+     * algorithm to prevent people to generate their own identifiers.
      *
      * <p>It has the side effect of interning the continuation object in
      * the <code>idToWebCont</code> hash table.
      *
-     * @param wk a <code>WebContinuation</code> object for which the
-     * identifier should be generated.
-     * @return the <code>String</code> identifier of the
-     * <code>WebContinuation</code>
+     * @param kont an <code>Object</code> value representing continuation
+     * @param parent value representing parent <code>WebContinuation</code>
+     * @param ttl <code>WebContinuation</code> time to live
+     * @return the generated <code>WebContinuation</code> with unique identifier
      */
-    public String generateContinuationId(WebContinuation wk) {
+    private WebContinuation generateContinuation(Object kont, WebContinuation parent, int ttl) {
         char[] result = new char[bytes.length * 2];
-        String continuationId = null;
+        WebContinuation wk = null;
 
         while (true) {
             random.nextBytes(bytes);
@@ -224,18 +225,19 @@ public class ContinuationsManagerImpl
                 result[2 * i] = Character.forDigit(Math.abs(ch >> 4), 16);
                 result[2 * i + 1] = Character.forDigit(Math.abs(ch & 0x0f), 16);
             }
-            continuationId = new String(result);
+
+            String id = new String(result);
             synchronized (idToWebCont) {
-                if (!idToWebCont.containsKey(continuationId)) {
-                    idToWebCont.put(continuationId, wk);
+                if (!idToWebCont.containsKey(id)) {
+                    wk = new WebContinuation(id, kont, parent, ttl);
+                    idToWebCont.put(id, wk);
                     break;
                 }
             }
         }
 
-        return continuationId;
+        return wk;
     }
-
 
     /**
      * Removes an expired leaf <code>WebContinuation</code> node
@@ -244,7 +246,7 @@ public class ContinuationsManagerImpl
      *
      * @param wk <code>WebContinuation</code> node
      */
-    public void removeContinuation(WebContinuation wk) {
+    private void removeContinuation(WebContinuation wk) {
         if (wk.getChildren().size() != 0) {
             return;
         }
@@ -270,12 +272,11 @@ public class ContinuationsManagerImpl
         }
     }
 
-
     /**
      * Dump to Log file the current contents of
      * the expirations <code>SortedSet</code>
      */
-    public void displayExpireSet() {
+    private void displayExpireSet() {
         Iterator iter = expirations.iterator();
         StringBuffer wkSet = new StringBuffer("\nWK; Expire Set Size: " + expirations.size());
         while (iter.hasNext()) {
@@ -311,7 +312,7 @@ public class ContinuationsManagerImpl
      * Remove all continuations which have
      * already expired
      */
-    public void expireContinuations() {
+    private void expireContinuations() {
         // log state before continuations clean up
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Forrest size: " + forrest.size());
@@ -346,7 +347,8 @@ public class ContinuationsManagerImpl
         m_commandSink = (Sink) context.get(Queue.ROLE);
     }
 
-    public final class ContinuationInterrupt implements RepeatedCommand {
+
+    final class ContinuationInterrupt implements RepeatedCommand {
         private final long m_interval;
         private final long m_initialDelay;
 

@@ -70,7 +70,6 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.flow.ContinuationsManagerImpl;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.acting.Action;
@@ -85,7 +84,7 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.6 2003/03/17 00:38:39 coliver Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.7 2003/03/20 02:46:32 vgritsenko Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -221,8 +220,9 @@ public class JSCocoon extends ScriptableObject
 
             WebContinuation kont = null;
 
-            if (cont != null)
+            if (cont != null) {
                 kont = ((JSWebContinuation)cont).getWebContinuation();
+            }
 
             interpreter.forwardTo(uri, bizData, kont, environment);
         } catch (JavaScriptException e) {
@@ -283,10 +283,8 @@ public class JSCocoon extends ScriptableObject
             = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
 
         try {
-            if (continuationsMgr instanceof ContinuationsManagerImpl)
-                ((ContinuationsManagerImpl)continuationsMgr).displayAllContinuations();
-        }
-        finally {
+            continuationsMgr.displayAllContinuations();
+        } finally {
             manager.release((Component)continuationsMgr);
         }
     }
@@ -346,8 +344,7 @@ public class JSCocoon extends ScriptableObject
                                 this.environment.getObjectModel(),
                                 source,
                                 jsobjectToParameters(parameters));
-        }
-        finally {
+        } finally {
             actionSelector.release(action);
         }
 
@@ -363,10 +360,11 @@ public class JSCocoon extends ScriptableObject
         for (int i = 0; i < ids.length; i++) {
             String key = ScriptRuntime.toString(ids[i]);
             Object value = jsobject.get(key, jsobject);
-            if (value == Undefined.instance)
+            if (value == Undefined.instance) {
                 value = null;
-            else
+            } else {
                 value = ScriptRuntime.toString(value);
+            }
             params.setParameter(key, (String) value);
         }
         return params;
@@ -385,8 +383,7 @@ public class JSCocoon extends ScriptableObject
         try {
             result = input.getAttribute(attribute, null,
                                         this.environment.getObjectModel());
-        }
-        finally {
+        } finally {
             inputSelector.release(input);
         }
         return result;
@@ -422,8 +419,7 @@ public class JSCocoon extends ScriptableObject
         OutputModule output = (OutputModule) outputSelector.select(type);
         try {
             output.commit(null, this.environment.getObjectModel());
-        }
-        finally {
+        } finally {
             outputSelector.release(output);
         }
     }
@@ -439,8 +435,7 @@ public class JSCocoon extends ScriptableObject
         OutputModule output = (OutputModule) outputSelector.select(type);
         try {
             output.rollback(null, this.environment.getObjectModel(), null);
-        }
-        finally {
+        } finally {
             outputSelector.release(output);
         }
     }

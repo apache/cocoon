@@ -1,4 +1,5 @@
-// system.js
+//
+// CVS $Id: system.js,v 1.3 2003/03/20 02:46:32 vgritsenko Exp $
 //
 // JavaScript definitions
 //
