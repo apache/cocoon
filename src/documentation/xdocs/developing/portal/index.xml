@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "../../dtd/document-v11.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 <document> 
   <header> 
     <title>Configuring the Cocoon Portal</title> 
@@ -13,40 +13,31 @@
   </header> 
   <body> 
 
-	<section>
-		<title>Introducing the Cocoon Portal</title>
+	<s1 title="Introducing the Cocoon Portal">
         <p>
     	This document describes the use and configuration 
     	of the (new) cocoon portal that you can find in the "portal" block.
     	(Don't mix this with the older portal version that you can
     	find in the "portal-fw" block.)
         </p>
-		<section>
-			<title>Important parts of the Cocoon Portal</title>
-		</section>
-		<section>
-			<title>How is a portal page created by Cocoon?</title>
-		</section>
-		<section>
-			<title>I want to build my own portal! An approach</title>
-		</section>
-	</section>
+		<s2 title="Important parts of the Cocoon Portal">
+		</s2>
+		<s2 title="How is a portal page created by Cocoon?">
+		</s2>
+		<s2 title="I want to build my own portal! An approach">
+		</s2>
+	</s1>
 
-	<section>
-		<title>Configuring the Portal contents</title>
-		<section>
-			<title>Configuring Coplets</title>
-		</section>
-		<section>
-			<title>Configuring the arrangement of the defined Coplets</title>
-		</section>
-		<section>
-			<title>...</title>
-		</section>
-	</section>
+	<s1 title="Configuring the Portal contents">
+		<s2 title="Configuring Coplets">
+		</s2>
+		<s2 title="Configuring the arrangement of the defined Coplets">
+		</s2>
+		<s2 title="...">
+		</s2>
+	</s1>
 
-	<section>
-	  	<title>Create a new skin for your portal</title>
+	<s1 title="Create a new skin for your portal">
 
 		<p>This section will explain the concepts of the portal layout, 
 		considering the <code>skins/basic/</code> skin provided with cocoon, 
@@ -66,8 +57,7 @@
 		<figure alt="Parts of the portal" height="300" src="/images/portal-parts.gif" width="400"></figure>	
 		<p>The tab row is actually a part of the content section. As well, a tab row can
 		be provided to any coplet window.</p>
-  		<section>
-  			<title>The skin&apos;s stylesheets</title>
+  		<s2 title="The skin&apos;s stylesheets">
   			<p>If we take a look at the <code>skins/basic/styles</code> directory, we 
   			find a number of stylesheets:
   			</p>
@@ -98,9 +88,8 @@
   			are used by the portal components directly and won&apos;t be found 
   			anywhere in the sitemap. The <code>cocoon.xconf</code>
   			defines which stylesheets will be used by the portal.</note>
-  			</section>
-  			<section>
-  				<title>The portal-page.xsl</title>
+  			</s2>
+  			<s2 title="The portal-page.xsl">
   				<p>
   					Here is the place to change the design of the header and footer row. 
   					This stylesheet is used to construct the final HTML page, which displays
@@ -176,9 +165,8 @@
 </xsl:template>
 ...]]>
 		    </source>
-  		</section>
-  		<section>
-  			<title>The tab.xsl</title>
+  		</s2>
+  		<s2 title="The tab.xsl">
   			<p>From the <code>portal-page.xsl</code> stylesheet, we will now
   			move upwards in the XSL transformation steps and take a look at the
   			stylesheet that was processed before, the <code>tab.xsl</code>.</p>
@@ -259,9 +247,8 @@
 		with the contents of the tabbed area. This content will have been processed
 		by the <code>columns.xsl</code> stylesheet before - and before that by the 
 		<code>row.xsl</code> stylesheet.</p>
-  	</section>
-  	<section>
-  		<title>The column.xsl and row.xsl</title>
+  	</s2>
+  	<s2 title="The column.xsl and row.xsl">
   		<p>The <code>column.xsl</code> and <code>row.xsl</code> stylesheets
   		define the look of the tables in which the coplet windows will be placed.
   		Usually, nothing exciting happens in these stylesheets. Here is a listing of the
@@ -329,9 +316,8 @@
  </table>
 </xsl:template>
 ...]]></source>
-  	</section>
-  	<section>
-  		<title>The window.xsl</title>
+  	</s2>
+  	<s2 title="The window.xsl">
   		<p>The <code>window.xsl</code> stylesheet determines the design of the coplet
   		windows and probably takes the most design effort compared to the other stylesheets.
   		A coplet window consists of a table header with the window title and a number
@@ -401,12 +387,11 @@
 </table>
 </xsl:template>
 ...]]></source>
-  	</section>
-  </section>
+  	</s2>
+  </s1>
 
-	<section>
-		<title>Further topics</title>
-	</section>
+	<s1 title="Further topics">
+	</s1>
 
   </body> 
 </document>
