@@ -376,7 +376,22 @@ public final class SitemapTask extends AbstractQdoxTask {
         public SitemapComponent(JavaClass javaClass) {
             this.javaClass = javaClass;
             
-            this.name = javaClass.getTagByName( NAME_TAG ).getValue();            
+            this.name = this.javaClass.getTagByName( NAME_TAG ).getValue();
+            // TEST CODE
+            System.out.println("Name: " + this.name);
+            System.out.println("className: " + this.javaClass.getName());
+            System.out.println();
+            
+            
+            JavaClass[] jc = this.javaClass.getImplementedInterfaces();
+            if (jc.length> 0) {
+                System.out.println("Implemented interfaces:");
+            }
+            for (int i = 0; i < jc.length; i++) {
+                System.out.println(jc[i].getName() + ". Full name: " + jc[i].getFullyQualifiedName());
+            }
+            System.out.println("==== END of implements ===");
+            // END TEST CODE
             this.type = getType(this.javaClass);
         }
         
@@ -674,6 +689,25 @@ public final class SitemapTask extends AbstractQdoxTask {
                 return "selector";
             } else if ( clazz.isA(PIPELINE) ) {
                 return "pipe";
+            // Should qdox resolve recursively? ie: HTMLGenerator isA ServiceableGenerator isA AbstractGenerator isA Generator
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.generation") && (clazz.isA("Generator") || clazz.isA("ServiceableGenerator")) ) {
+                return "generator";
+            } else if ( clazz.isA("org.apache.cocoon.generation.ServiceableGenerator") ) {
+                return "generator";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.transformation") && clazz.isA("Transformer") ) {
+                return "transformer";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.reading") && clazz.isA("Reader") ) {
+                return "reader";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.serialization") && clazz.isA("Serializer") ) {
+                return "serializer";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.acting") && clazz.isA("Action") ) {
+                return "action";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.matching") && clazz.isA("Matcher") ) {
+                return "matcher";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.selection") && clazz.isA("Selector") ) {
+                return "selector";
+            } else if ( clazz.getPackage().equals("org.apache.cocoon.components.pipeline") && clazz.isA("ProcessingPipeline") ) {
+                return "selector";
             } else {
                 throw new BuildException("Sitemap component " + clazz.getFullyQualifiedName() + " does not implement a sitemap component interface.");
             }            
