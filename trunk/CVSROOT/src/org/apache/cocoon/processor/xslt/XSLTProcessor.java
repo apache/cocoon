@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.1 1999-12-14 23:42:39 stefano Exp $ -- 
+/*-- $Id: XSLTProcessor.java,v 1.2 2000-01-08 13:03:45 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-14 23:42:39 $
+ * @version $Revision: 1.2 $ $Date: 2000-01-08 13:03:45 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -91,7 +91,11 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         try {
             Document stylesheet = getStylesheet(document, parameters);
             Document result = this.parser.createEmptyDocument();
-            return transformer.transform(document, stylesheet, result);
+            
+            // FIXME: the line below uses null systemIDs because there is no
+            // clean way to have access to this information. We are waiting for
+            // the sitemap code to be started before changing these.
+            return transformer.transform(document, null, stylesheet, null, result);
         } catch (PINotFoundException e) {
             return document;
         }

@@ -1,4 +1,4 @@
-/*-- $Id: XalanTransformer.java,v 1.1 1999-12-14 23:41:08 stefano Exp $ -- 
+/*-- $Id: XalanTransformer.java,v 1.2 2000-01-08 13:03:45 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * Xalan XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-14 23:41:08 $
+ * @version $Revision: 1.2 $ $Date: 2000-01-08 13:03:45 $
  */
 
 public class XalanTransformer extends AbstractActor implements Transformer, Status {
@@ -85,9 +85,11 @@ public class XalanTransformer extends AbstractActor implements Transformer, Stat
         );
     }
 
-    public Document transform(Document in, Document sheet, Document out) throws Exception {
+    public Document transform(Document in, String inBase, Document sheet, String sheetBase, Document out) throws Exception {
         XSLTInputSource i = new XSLTInputSource(in);
+        i.setSystemId(inBase);
         XSLTInputSource s = new XSLTInputSource(sheet);
+        s.setSystemId(sheetBase);
         XSLTResultTarget o = new XSLTResultTarget(out);
         processor.process(i, s, o);
         return out;
