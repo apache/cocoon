@@ -32,6 +32,7 @@ import org.apache.pluto.util.StringUtils;
  * @version CVS $Id$
  */
 public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Serializable {
+    
     private final static String NULL_VALUE = "#*!0_NULL_0!*#";
     private final static String NULL_ARRAYENTRY = "#*!1_NULL_1!*#";
 
@@ -39,19 +40,17 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
     private ArrayList value;
     private Boolean readOnly;
 
-    public PreferenceImpl()
-    {
+    public PreferenceImpl() {
+        // nothing to do 
     }
 
     // Preference implementation.
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public Iterator getValues()
-    {
+    public Iterator getValues() {
         // replace the NULL_VALUE String by NULL
         if (value.contains(NULL_VALUE)) {
             return null;
@@ -70,8 +69,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         return returnValue.iterator();
     }
 
-    public boolean isReadOnly()
-    {
+    public boolean isReadOnly() {
         if (readOnly == null) {
             return false;
         }
@@ -84,13 +82,11 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
 
     // PreferenceCtrl implementation.
     
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setValues(java.util.List _value)
-    {
+    public void setValues(java.util.List _value) {
         if (this.value == null) {
             this.value = new ArrayList();
         } else {
@@ -117,8 +113,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         this.value.addAll(addValue);
     }
 
-    public void setReadOnly(String readOnly)
-    {
+    public void setReadOnly(String readOnly) {
         this.readOnly = new Boolean(readOnly);
     }
 
@@ -126,21 +121,18 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
     
     // internal methods only used by castor
 
-    public String getReadOnly()
-    {
+    public String getReadOnly() {
         if (readOnly == null) {
             return Boolean.FALSE.toString();
         }
         return readOnly.toString();
     }
 
-    public Collection getCastorValues() 
-    {
+    public Collection getCastorValues() {
         return value;
     }
 
-    public void setCastorValues(Collection _value) 
-    {
+    public void setCastorValues(Collection _value) {
         if (value == null) {
             value = new ArrayList();
         } else {
@@ -149,8 +141,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         value.addAll(_value);
     }
 
-    protected List getClonedCastorValuesAsList()
-    {
+    protected List getClonedCastorValuesAsList() {
         List returnValue = new ArrayList(value.size());
 
         Iterator iter = value.iterator();
@@ -161,13 +152,11 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         return returnValue;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());

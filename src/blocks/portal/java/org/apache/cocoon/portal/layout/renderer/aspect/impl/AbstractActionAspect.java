@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.event.Subscriber;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractActionAspect.java,v 1.2 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractActionAspect
     extends AbstractAspect
@@ -49,6 +49,7 @@ public abstract class AbstractActionAspect
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
                 eventManager.getRegister().unsubscribe( this );
             } catch (Exception ignore) {
+                // ignore exceptions
             } finally {
                 this.manager.release( eventManager ); 
             }

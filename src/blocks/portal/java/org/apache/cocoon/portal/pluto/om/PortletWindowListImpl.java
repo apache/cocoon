@@ -27,12 +27,12 @@ import org.apache.pluto.om.window.PortletWindowListCtrl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowListImpl.java,v 1.4 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletWindowListImpl implements PortletWindowList, PortletWindowListCtrl {
 
     
-    HashMap windows = null;
+    private final HashMap windows;
 
     public PortletWindowListImpl() {
         windows = new HashMap();
@@ -59,8 +59,7 @@ public class PortletWindowListImpl implements PortletWindowList, PortletWindowLi
      * @return the portlet window object or null if the list does not
      *         contain a portlet window with the given id
      **/
-    public PortletWindow get(ObjectID id)
-    {
+    public PortletWindow get(ObjectID id) {
         return (PortletWindow)windows.get(id.toString());
     }
 

@@ -44,8 +44,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
 
     // PreferenceSet implementation.
 
-    public Preference get(String name)
-    {
+    public Preference get(String name) {
         Iterator iterator = this.preferences.iterator();
         while (iterator.hasNext()) {
             Preference preference = (Preference)iterator.next();
@@ -60,8 +59,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         return this.preferences.iterator();
     }
 
-    public PreferencesValidator getPreferencesValidator()
-    {
+    public PreferencesValidator getPreferencesValidator() {
         if (this.classLoader == null)
             throw new IllegalStateException("Portlet class loader not yet available to load preferences validator.");
 
@@ -73,6 +71,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
             if (validator instanceof PreferencesValidator)
                 return(PreferencesValidator)validator;
         } catch (Exception ignore) {
+            // ignore it
         }
 
         return null;
@@ -80,8 +79,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
 
     // PreferenceSetCtrl implementation.
 
-    public Preference add(String name, List values)
-    {
+    public Preference add(String name, List values) {
         PreferenceImpl preference = new PreferenceImpl();
         preference.setName(name);
         preference.setValues(values);
@@ -96,8 +94,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
     }
 
 
-    public Preference remove(String name)
-    {
+    public Preference remove(String name) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             Preference preference = (Preference)iterator.next();
@@ -109,20 +106,17 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         return null;
     }
 
-    public void remove(Preference preference)
-    {
+    public void remove(Preference preference) {
         this.preferences.remove(preference);
     }
 
     // additional methods.
     
-    public String toString()
-    {
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());
@@ -137,23 +131,19 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
 
     // additional internal methods
 
-    public String getCastorPreferencesValidator()
-    {
+    public String getCastorPreferencesValidator() {
         return castorPreferencesValidator;
     }
 
-    public void setCastorPreferencesValidator(String castorPreferencesValidator)
-    {
+    public void setCastorPreferencesValidator(String castorPreferencesValidator) {
         this.castorPreferencesValidator = castorPreferencesValidator;
     }
 
-    public Set getPreferences()
-    {
+    public Set getPreferences() {
         return this.preferences;
     }
 
-    public void setClassLoader(ClassLoader loader)
-    {
+    public void setClassLoader(ClassLoader loader) {
         this.classLoader = loader;
     }
 

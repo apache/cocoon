@@ -75,7 +75,7 @@ import org.apache.pluto.util.impl.NamespaceMapperFactoryImpl;
  * @see Factory
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.5 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FactoryManagerServiceImpl 
 extends AbstractLogEnabled
@@ -172,6 +172,7 @@ implements FactoryManagerService, Initializable, Contextualizable, Serviceable, 
             try {
                 factory.destroy ();
             } catch (Exception exc) {
+                // ignore it
             }
         }
 

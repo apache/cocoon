@@ -27,35 +27,38 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ContentTypeImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ContentTypeImpl
 implements ContentType, java.io.Serializable, Support {
 
-    private String contentType = null;
+    private String contentType;
     private Collection portletModes = new ArrayList();
 
     private Collection castorPortletModes = new ArrayList();
 
-    public ContentTypeImpl()
-    {
+    public ContentTypeImpl()  {
+        // nothing to do 
     }
 
-    // ContentType implementation.
-
-    public String getContentType()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.ContentType#getContentType()
+     */
+    public String getContentType() {
         return contentType;
     }
 
-    public Iterator getPortletModes()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.portlet.ContentType#getPortletModes()
+     */
+    public Iterator getPortletModes() {
         return portletModes.iterator();
     }
     
-    // Support implementation.
-    public void postLoad(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {
         portletModes.clear();
         Iterator iterator = castorPortletModes.iterator();
         while (iterator.hasNext()) {
@@ -67,16 +70,24 @@ implements ContentType, java.io.Serializable, Support {
         }
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
+    public void preBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void postBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
+    public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
+    public void preStore(Object parameter) throws Exception {
         castorPortletModes.clear();
         Iterator iterator = portletModes.iterator();
         while (iterator.hasNext()) {
@@ -85,34 +96,35 @@ implements ContentType, java.io.Serializable, Support {
         }
     }
 
-    public void postStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
+    public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     // additional methods.
 
-    public void setContentType(String contentType)
-    {
+    public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
-    public void setPortletModes(Collection portletModes)
-    {
+    public void setPortletModes(Collection portletModes) {
         this.portletModes = portletModes;
     }
 
-    public boolean supportsPortletMode(javax.portlet.PortletMode portletMode)
-    {
+    public boolean supportsPortletMode(javax.portlet.PortletMode portletMode) {
     	return portletModes.contains(portletMode);
     }	
     
-    public String toString()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString()); buffer.append(":");
@@ -135,8 +147,7 @@ implements ContentType, java.io.Serializable, Support {
         return buffer.toString();
     }
 
-    public Collection getCastorPortletModes()
-    {
+    public Collection getCastorPortletModes() {
         return castorPortletModes;
     }
 

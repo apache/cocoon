@@ -26,7 +26,7 @@ import org.apache.pluto.om.window.PortletWindowCtrl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowImpl.java,v 1.5 2004/03/16 15:56:43 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
         
@@ -47,10 +47,8 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
      *
      * @return the object identifier
      **/
-    public ObjectID getId()
-    {
-        if (objectId==null)
-        {
+    public ObjectID getId() {
+        if (objectId==null) {
             objectId = org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl.createFromString(id);
         }
         return objectId;
@@ -61,8 +59,7 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
      *
      * @return the portlet entity
      **/
-    public PortletEntity getPortletEntity()
-    {
+    public PortletEntity getPortletEntity() {
         return portletEntity;
     }
 
@@ -72,8 +69,7 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
      *
      * @param id the new identifier
      */
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
         objectId = null;
     }

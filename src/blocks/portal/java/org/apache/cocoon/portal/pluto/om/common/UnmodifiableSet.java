@@ -25,7 +25,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: UnmodifiableSet.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class UnmodifiableSet implements Set, Serializable {
 
@@ -34,109 +34,88 @@ public class UnmodifiableSet implements Set, Serializable {
 
     protected Set c;
 
-    public UnmodifiableSet(Set c)
-    {
+    public UnmodifiableSet(Set c) {
         if (c == null) {
             throw new NullPointerException();
         }
         this.c = c;
     }
 
-    public int size()
-    {
+    public int size() {
         return c.size();
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return c.isEmpty();
     }
 
-    public boolean contains(Object o)
-    {
+    public boolean contains(Object o) {
         return c.contains(o);
     }
 
-    public Object[] toArray()
-    {
+    public Object[] toArray() {
         return c.toArray();
     }
 
-    public Object[] toArray(Object[] a)
-    {
+    public Object[] toArray(Object[] a) {
         return c.toArray(a);
     }
 
-    public String toString()
-    {
+    public String toString() {
         return c.toString();
     }
 
-    public Iterator iterator()
-    {
-        return new Iterator()
-        {
+    public Iterator iterator() {
+        return new Iterator() {
             Iterator i = c.iterator();
 
-            public boolean hasNext()
-            {
+            public boolean hasNext() {
                 return i.hasNext();
             }
 
-            public Object next()
-            {
+            public Object next() {
                 return i.next();
             }
 
-            public void remove()
-            {
+            public void remove() {
                 throw new UnsupportedOperationException();
             }
         };
     }
 
-    public boolean add(Object o)
-    {
+    public boolean add(Object o) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean remove(Object o)
-    {
+    public boolean remove(Object o) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean containsAll(Collection coll)
-    {
+    public boolean containsAll(Collection coll) {
         return c.containsAll(coll);
     }
 
-    public boolean addAll(Collection coll)
-    {
+    public boolean addAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean removeAll(Collection coll)
-    {
+    public boolean removeAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean retainAll(Collection coll)
-    {
+    public boolean retainAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public void clear()
-    {
+    public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         return c.equals(o);
     }
 
-    public int hashCode()
-    {
+    public int hashCode() {
         return c.hashCode();
     }
 
@@ -149,8 +128,7 @@ public class UnmodifiableSet implements Set, Serializable {
      * 
      * @return the modifiable set
      */
-    public Set getModifiableSet()
-    {
+    public Set getModifiableSet() {
         return c;
     }
 }

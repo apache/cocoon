@@ -31,16 +31,15 @@ import org.exolab.castor.mapping.MapItem;
  * 
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AttributesFieldHandler.java,v 1.7 2004/03/05 13:02:17 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AttributesFieldHandler extends AbstractFieldHandler {
 
     protected Map getAttributes(Object object) {
         if (object instanceof CopletData) {
             return ((CopletData) object).getAttributes();
-        } else {
-            return ((CopletInstanceData) object).getAttributes();
         }
+        return ((CopletInstanceData) object).getAttributes();
     }
 
     public Object getValue(Object object) {

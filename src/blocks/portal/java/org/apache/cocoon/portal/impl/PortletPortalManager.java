@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletPortalManager.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
@@ -119,6 +119,17 @@ public class PortletPortalManager
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
+        if ( this.manager != null ) {
+            EventManager eventManager = null;
+            try {
+                eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+                eventManager.getRegister().unsubscribe(this);
+            } catch (Exception ignore) {
+                // let's ignore it
+            } finally {
+                this.manager.release(eventManager);
+            }
+        }
         try {
             if (this.portletContainer != null ) {
                 this.portletContainer.shutdown();
@@ -133,6 +144,7 @@ public class PortletPortalManager
             this.servletConfig.getServletContext().removeAttribute(PortalManager.ROLE);
             this.servletConfig = null;
         }
+        this.manager = null;
     }
 
     /* (non-Javadoc)

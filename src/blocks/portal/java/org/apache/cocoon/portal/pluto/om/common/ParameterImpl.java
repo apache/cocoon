@@ -31,60 +31,51 @@ public class ParameterImpl implements Parameter, ParameterCtrl, java.io.Serializ
     private String value;
     private DescriptionSet descriptions;
 
-    public ParameterImpl()
-    {
+    public ParameterImpl() {
         descriptions = new DescriptionSetImpl();
     }
 
     // Parameter implementation.
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return value;
     }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.common.Parameter#getDescription(Locale)
      */
-    public Description getDescription(Locale locale)
-    {
+    public Description getDescription(Locale locale) {
         return descriptions.get(locale);
     }
 
     // ParameterCtrl implementation.
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.common.ParameterCtrl#setDescriptionSet(DescriptionSet)
      */
-    public void setDescriptionSet(DescriptionSet descriptions)
-    {
+    public void setDescriptionSet(DescriptionSet descriptions) {
         this.descriptions = descriptions;
     }
 
     // additional methods.
 
-    public String toString()
-    {
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());
@@ -98,13 +89,11 @@ public class ParameterImpl implements Parameter, ParameterCtrl, java.io.Serializ
         return buffer.toString();
     }
 
-    public Collection getCastorDescriptions()
-    {
+    public Collection getCastorDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-    public void setCastorDescriptions(DescriptionSet castorDescriptions)
-    {
+    public void setCastorDescriptions(DescriptionSet castorDescriptions) {
         this.descriptions = castorDescriptions;
     }
 }

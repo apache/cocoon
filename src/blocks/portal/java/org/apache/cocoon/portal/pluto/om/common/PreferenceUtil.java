@@ -26,7 +26,7 @@ import org.apache.pluto.om.common.Preference;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PreferenceUtil.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PreferenceUtil {
 
@@ -37,8 +37,7 @@ public class PreferenceUtil {
      * @param preferences the preferences to be converted
      * @return the preferences as map
      */
-    static public HashMap createPreferenceMap(Collection preferences)
-    {
+    static public HashMap createPreferenceMap(Collection preferences) {
         HashMap returnValue = new HashMap();
         Iterator iterator = preferences.iterator();
         while (iterator.hasNext()) {

@@ -50,7 +50,7 @@ import org.apache.pluto.om.servlet.ServletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionImpl.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletDefinitionImpl 
 implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Support {
@@ -61,24 +61,24 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
 
     // contains String objects
     private ArrayList castorSupportedLocales = new ArrayList();
-    private ClassLoader classLoader = null;
-    private String className = null;
+    private ClassLoader classLoader;
+    private String className;
     private ContentTypeSet contentTypes = new ContentTypeSetImpl();
     private DescriptionSet descriptions = new DescriptionSetImpl();
 
     private DisplayNameSet displayNames = new DisplayNameSetImpl();
-    private String expirationCache = null;
+    private String expirationCache;
     public  String id = "";    
     private ParameterSet initParams = new ParameterSetImpl();
     private SecurityRoleRefSet initSecurityRoleRefs = new SecurityRoleRefSetImpl();
-    private String name = null;
+    private String name;
 
-    private ObjectID objectId = null;
+    private ObjectID objectId;
     private PreferenceSet preferences = new PreferenceSetImpl();
 
     //    private PortletInfoImpl portletInfo = null;
-    private String resourceBundle = null;
-    private ServletDefinition servlet = null;
+    private String resourceBundle;
+    private ServletDefinition servlet;
 
     // contains Locale objects
     private ArrayList supportedLocales = new ArrayList();

@@ -122,5 +122,6 @@ public class PageLabelEventConverter extends AbstractLogEnabled
     * @see org.apache.cocoon.portal.event.EventConverter#finish()
     */
     public void finish() {
+        // nothing to do         
     }
 }

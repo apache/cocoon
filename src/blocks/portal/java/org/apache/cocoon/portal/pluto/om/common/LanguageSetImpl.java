@@ -51,14 +51,12 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
 
     private String title;
 
-    public LanguageSetImpl()
-    {
+    public LanguageSetImpl() {
         locales = new Vector();
     }
 
     // create Language object with data from this class (title, short-title, description, keywords)
-    private Language createLanguage(Locale locale, ResourceBundle bundle)
-    {
+    private Language createLanguage(Locale locale, ResourceBundle bundle) {
         LanguageImpl lang = new LanguageImpl(locale, bundle, title, shortTitle, castorKeywords);
 
         return lang;
@@ -87,27 +85,23 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
     }
     */
 
-    // AbstractSupportSet implementation.
-
-    public Language get(Locale locale)
-    {
-        if (resources!=null && resourceBundleInitialized==false)
-        {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.LanguageSet#get(java.util.Locale)
+     */
+    public Language get(Locale locale) {
+        if (resources != null && !resourceBundleInitialized) {
             initResourceBundle();
             this.resourceBundleInitialized = true;
         }
 
-        if (!locales.contains(locale))
-        {
+        if (!locales.contains(locale)) {
             locale = matchLocale(locale);
         }
 
         Iterator iterator = this.iterator();
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             Language language = (Language)iterator.next();
-            if (language.getLocale().equals(locale) || size()==1)
-            {
+            if (language.getLocale().equals(locale) || size()==1) {
                 return language;
             }
         }
@@ -115,27 +109,27 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
         return null;
     }
 
-    public Iterator getLocales()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.LanguageSet#getLocales()
+     */
+    public Iterator getLocales() {
         return locales.iterator();
     }
 
-    public Locale getDefaultLocale()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.LanguageSet#getDefaultLocale()
+     */
+    public Locale getDefaultLocale() {
         Locale defLoc = null;
 
-        if (locales != null && locales.size() > 0)
-        {
+        if (locales != null && locales.size() > 0) {
             defLoc = (Locale)locales.firstElement();
 
-            if (defLoc == null)
-            {
+            if (defLoc == null) {
                 defLoc = new Locale("en","");
                 locales.add(defLoc);
             }
-        }
-        else
-        {
+        } else {
             defLoc = new Locale("en","");
             locales.add(defLoc);
         }
@@ -143,69 +137,72 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
         return defLoc;
     }
 
-    // Support implementation.
-
-    public void postBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
+    public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-
-    public void postLoad(Object parameter) throws Exception
-    {   
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {   
         locales.addAll((Collection)parameter);                 
         initInlinedInfos();
     }
 
-    public void postStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
+    public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
+    public void preBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
+    public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
 
     // internal methods.
 
-    private void initInlinedInfos() throws Exception
-    {   
+    private void initInlinedInfos() throws Exception {   
         // if resource-bundle is given
         // must be initialized later when classloader is known by initResourceBundle()            
 
-        if (locales.isEmpty())
-        {
+        if (locales.isEmpty()) {
             getDefaultLocale(); //the defualt gets automaticaly added to the locals
         }
-        if (castorKeywords == null)
-        {
+        if (castorKeywords == null) {
             castorKeywords="";
         }
-        if (shortTitle == null)
-        {
+        if (shortTitle == null) {
             shortTitle="";
         }
-        if (title == null)
-        {
+        if (title == null) {
             title="";
         }
         add(createLanguage(getDefaultLocale(), null));
     }
 
     // create and add all resource bundle information as Language objects to this set
-    private void initResourceBundle()
-    {
+    private void initResourceBundle() {
         Iterator iter = locales.iterator();
-        while (iter.hasNext())
-        {
+        while (iter.hasNext()) {
             Locale locale = (Locale)iter.next();
             ResourceBundle bundle = null;
             bundle = loadResourceBundle(locale);
-            if (bundle != null)
-            {
+            if (bundle != null) {
                 /*String title;
                 String shortTitle;
                 String keywords;
@@ -236,26 +233,21 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
     }
 
     // try to match the given locale to a supported locale
-    private Locale matchLocale(Locale locale)
-    {
+    private Locale matchLocale(Locale locale) {
 
         String variant = locale.getVariant();
-        if (variant != null && variant.length() > 0)
-        {
+        if (variant != null && variant.length() > 0) {
             locale = new Locale(locale.getLanguage(), locale.getCountry());                                
         }
 
-        if (! locales.contains(locale))
-        {
+        if (! locales.contains(locale)) {
             String country = locale.getCountry();
-            if (country != null && country.length() > 0)
-            {
+            if (country != null && country.length() > 0) {
                 locale = new Locale(locale.getLanguage(), "");
             }
         }
 
-        if (! locales.contains(locale))
-        {
+        if (! locales.contains(locale)) {
             locale = getDefaultLocale();
         }
 
@@ -264,85 +256,70 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
 
     // additional methods.
 
-    public String getCastorKeywords()
-    {
+    public String getCastorKeywords() {
         return this.castorKeywords;
     }
 
     // additional methods
 
-    public String getResources()
-    {
+    public String getResources() {
         return resources;
     }
 
-    public String getShortTitle()
-    {
+    public String getShortTitle() {
         return this.shortTitle;
     }
 
     // internal methods used by castor  
-    public String getTitle()
-    {
+    public String getTitle() {
         return this.title;
     }
 
     // loads resource bundle files from WEB-INF/classes directory
-    protected ResourceBundle loadResourceBundle(Locale locale)
-    {
+    protected ResourceBundle loadResourceBundle(Locale locale) {
         ResourceBundle resourceBundle = null;
-        try
-        {
-            if (classLoader != null)
-            {
+        try {
+            if (classLoader != null) {
                 resourceBundle=ResourceBundle.getBundle(resources, locale, classLoader);
-            }
-            else
-            {
+            } else {
                 resourceBundle=ResourceBundle.getBundle(resources, locale, Thread.currentThread().getContextClassLoader());
             }
-        }
-        catch (MissingResourceException x)
-        {
+        } catch (MissingResourceException x) {
             return null;
         }
         return resourceBundle;
     }
 
-    public void setCastorKeywords(String keywords)
-    {
+    public void setCastorKeywords(String keywords) {
         this.castorKeywords = keywords;
     }
     // end castor methods
 
 
-    public void setClassLoader(ClassLoader loader)
-    {
+    public void setClassLoader(ClassLoader loader) {
         this.classLoader = loader;
     }
 
-    public void setResources(String resources)
-    {
+    public void setResources(String resources) {
         this.resources = resources;
     }
 
-    public void setShortTitle(String shortTitle)
-    {
+    public void setShortTitle(String shortTitle) {
         this.shortTitle = shortTitle;
     }
 
-    public void setTitle(String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public String toString()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());
