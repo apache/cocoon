@@ -30,6 +30,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.saxconnector.SAXConnector;
 
+import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.sitemap.ErrorNotifier;
 
 import org.xml.sax.SAXException;
@@ -38,7 +39,7 @@ import org.xml.sax.EntityResolver;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:49:59 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-24 19:07:40 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -57,11 +58,18 @@ implements EventPipeline, Disposable {
     /** the component manager */
     protected ComponentManager manager;
 
+    /** the sitemap */
+    protected Sitemap sitemap;
+
     public void compose (ComponentManager manager)
     throws ComponentException {
         this.manager = manager;
         generatorSelector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
         transformerSelector = (ComponentSelector)this.manager.lookup(Roles.TRANSFORMERS);
+    }
+
+    public void setSitemap(Sitemap sitemap) {
+        this.sitemap = sitemap;
     }
 
     public void setGenerator (String role, String source, Parameters param, Exception e)
@@ -190,6 +198,7 @@ implements EventPipeline, Disposable {
                 // connect SAXConnector
                 SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
                 connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
+                connect.setSitemap(sitemap);
                 this.connectors.add(connect);
                 next = (XMLConsumer) connect;
                 prev.setConsumer(next);
@@ -204,6 +213,8 @@ implements EventPipeline, Disposable {
 
             // insert SAXConnector
             SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
+            connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
+            connect.setSitemap(sitemap);
             this.connectors.add(connect);
             next = (XMLConsumer) connect;
             prev.setConsumer(next);

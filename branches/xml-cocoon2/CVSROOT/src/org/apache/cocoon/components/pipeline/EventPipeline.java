@@ -16,10 +16,11 @@ import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.sitemap.Sitemap;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:50:00 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-24 19:07:41 $
  */
 public interface EventPipeline extends Component, Composable, Recyclable, Processor {
     public void setGenerator (String role, String source, Parameters param, Exception e) throws Exception;
@@ -27,4 +28,5 @@ public interface EventPipeline extends Component, Composable, Recyclable, Proces
     public Generator getGenerator ();
     public void addTransformer (String role, String source, Parameters param) throws Exception;
     public boolean process(Environment environment) throws Exception;
+    public void setSitemap(Sitemap sitemap);
 }

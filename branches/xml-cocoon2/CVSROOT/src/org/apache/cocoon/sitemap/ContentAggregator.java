@@ -41,16 +41,13 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.4 2001-04-22 08:13:37 giacomo Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.5 2001-04-24 19:07:47 dims Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
         implements Generator, Cacheable, Composable {
     /** the current sitemap */
     protected Sitemap sitemap;
-
-    /** the root sitemap */
-    protected Sitemap rootSitemap;
 
     /** the root element of the aggregated content */
     protected String rootElement;
@@ -160,6 +157,7 @@ public class ContentAggregator extends ContentHandlerWrapper
                         + (String)this.partURIs.get(i));
                 try {
                     eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
+                    eventPipeline.setSitemap(this.sitemap);
                     this.partEventPipelines.add(eventPipeline);
                     pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
                 } catch (ComponentException cme) {
@@ -193,14 +191,6 @@ public class ContentAggregator extends ContentHandlerWrapper
      * @return The generated key hashes the src
      */
     public long generateKey() {
-        try {
-            collectParts();
-        } catch (Exception e) {
-            getLogger().error ("cannot collect pipeline parts", e);
-        }
-        //if (this.systemID.startsWith("file:") == true) {
-        //    return HashUtil.hash(super.source);
-        //}
         return 0;
     }
 
@@ -211,10 +201,6 @@ public class ContentAggregator extends ContentHandlerWrapper
      *         component is currently not cacheable.
      */
     public CacheValidity generateValidity() {
-        //if (this.systemID.startsWith("file:") == true) {
-        //    File xmlFile = new File(this.systemID.substring("file:".length()));
-        //    return new TimeStampCacheValidity(xmlFile.lastModified());
-        //}
         return null;
     }
 
@@ -224,10 +210,6 @@ public class ContentAggregator extends ContentHandlerWrapper
 
     public void setSitemap(Sitemap sitemap) {
         this.sitemap = sitemap;
-    }
-
-    public void setRootSitemap(Sitemap sitemap) {
-        this.rootSitemap = sitemap;
     }
 
     public void setRootElement(String element, String namespace) {
@@ -284,7 +266,6 @@ public class ContentAggregator extends ContentHandlerWrapper
     public void recycle () {
         super.recycle();
         this.sitemap = null;
-        this.rootSitemap = null;
         this.resolver = null;
         this.objectModel = null;
         this.source = null;

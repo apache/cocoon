@@ -27,6 +27,7 @@ import org.apache.excalibur.pool.Poolable;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.sitemap.Sitemap;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
@@ -37,7 +38,7 @@ import java.io.IOException;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-24 14:12:38 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-24 19:07:44 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Poolable, SAXConnector, Disposable {
 
@@ -52,6 +53,10 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
     public static final String XINCLUDE_INCLUDE_ELEMENT = "include";
     public static final String XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE = "href";
     public static final String XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE = "parse";
+
+
+    /** the current sitemap */
+    protected Sitemap sitemap;
 
     protected URL base_xmlbase_uri = null;
 
@@ -82,6 +87,10 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         } catch (Exception e) {
             getLogger().error("cannot obtain URLFactory", e);
         }
+    }
+
+    public void setSitemap(Sitemap sitemap) {
+        this.sitemap = sitemap;
     }
 
     public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
@@ -155,7 +164,8 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
     }
 
     protected void processXIncludeElement(String href, String parse) throws SAXException,MalformedURLException,IOException {
-        getLogger().debug("Processing XInclude element: href="+href+", parse="+parse);
+        getLogger().debug("Processing XInclude element: href="+href+", parse="+parse+", sitemap="+sitemap);
+        //System.out.println("Processing XInclude element: href="+href+", parse="+parse+", sitemap="+sitemap);
     }
 
     public void dispose()

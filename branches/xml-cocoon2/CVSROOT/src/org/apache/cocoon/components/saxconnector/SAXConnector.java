@@ -4,13 +4,15 @@ package org.apache.cocoon.components.saxconnector;
 
 import org.xml.sax.XMLFilter;
 import org.apache.avalon.component.Component;
+import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.xml.XMLPipe;
 
 /**
  * Provides a connection between SAX components.
  * @author <a href="mailto:prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:50:02 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-24 19:07:44 $
  */
 public interface SAXConnector extends XMLPipe, Component, SitemapModelComponent {
+    public void setSitemap(Sitemap sitemap);
 }
