@@ -202,6 +202,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="NN" type="add">
+      Dummy
+    </action>
+  </release>
+  <release version="2.1.7" date="March 23 2005">
    <action dev="AG" type="update">
      Updated hsqldb to 1.7.3.3.
    </action>
