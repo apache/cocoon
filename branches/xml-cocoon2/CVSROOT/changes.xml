@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.31 2001-04-11 11:08:11 cziegeler Exp $
+  $Id: changes.xml,v 1.9.2.32 2001-04-17 10:41:32 cziegeler Exp $
 -->
 
 <changes title="History of Changes">
@@ -24,6 +24,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    Added initial caching algorithm for StreamPipelines. The caching system
+    is pluggable and offers caching of the whole response.
+  </action>
   <action dev="CZ" type="add">
     Added initial caching algorithm for EventPipelines. The caching system
     is pluggable and includes caching of generators and transformers.

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.24 2001-04-15 12:50:02 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.25 2001-04-17 10:41:33 cziegeler Exp $
 -->
 
 
@@ -82,6 +82,10 @@
    Finish caching of intermediate SAX events between sitemap pipeline components.
   </action>
 
+  <action context="code" assigned-to="CZ">
+   Finish caching of StreamPipelines.
+  </action>
+
  </actions>
 
  <actions priority="medium">
@@ -110,12 +114,6 @@
 
   <action context="code">
    Complete/write documentation in general
-  </action>
-
-  <action context="code" assigned-to="CZ">
-   Caching of StreamPipelines.
-   The current caching algorithm caches only the event pipeline. For FOP and SVG it
-   would be very nice to cache the whole response.
   </action>
 
   <action context="code">
