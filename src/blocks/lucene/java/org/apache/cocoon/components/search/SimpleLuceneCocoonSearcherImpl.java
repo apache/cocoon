@@ -92,7 +92,7 @@ import java.io.IOException;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.3 2003/12/12 08:14:41 huber Exp $
  */
 public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          implements LuceneCocoonSearcher, Configurable, Composable, Disposable, Recyclable
@@ -105,7 +105,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   <code>analyzer-classname</code>.
      * </p>
      *
-     * @since
      */
     protected final static String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
     /**
@@ -115,7 +114,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   <code>org.apache.lucene.analysis.standard.StandardAnalyzer</code>.
      * </p>
      *
-     * @since
      */
     protected final static String ANALYZER_CLASSNAME_DEFAULT = "org.apache.lucene.analysis.standard.StandardAnalyzer";
 
@@ -126,7 +124,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   <code>default-seach-field</code>.
      * </p>
      *
-     * @since
      */
     protected final static String DEFAULT_SEARCH_FIELD_CONFIG = "default-search-field";
     /**
@@ -135,7 +132,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   Its value is <code>body</code>.
      * </p>
      *
-     * @since
      */
     protected final static String DEFAULT_SEARCH_FIELD_DEFAULT = "body";
 
@@ -146,7 +142,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   <code>default-query</code>.
      * </p>
      *
-     * @since
      */
     protected final static String DEFAULT_QUERY_CONFIG = "default-query";
     /**
@@ -155,7 +150,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   Its value is <code>null</code>.
      * </p>
      *
-     * @since
      */
     protected final static String DEFAULT_QUERY_DEFAULT = null;
 
@@ -166,7 +160,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   <code>queryparser-classname</code>.
      * </p>
      *
-     * @since
      */
     protected final static String QUERYPARSER_CLASSNAME_CONFIG = "queryparser-classname";
     /**
@@ -176,7 +169,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   <code>org.apache.lucene.queryParser.QueryParser</code>.
      * </p>
      *
-     * @since
      */
     protected final static String QUERYPARSER_CLASSNAME_DEFAULT = "org.apache.lucene.queryParser.QueryParser";
 
@@ -187,7 +179,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   Its value is <code>directory</code>.
      * </p>
      *
-     * @since
      */
     protected final static String DIRECTORY_CONFIG = "directory";
     /**
@@ -196,14 +187,12 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *   Its value is <code>null</code>.
      * </p>
      *
-     * @since
      */
     protected final static String DIRECTORY_DEFAULT = null;
 
     /**
      * The component manager instance
      *
-     * @since
      */
     protected ComponentManager manager = null;
 
@@ -236,7 +225,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      * set an analyzer, overriding the analyzerClassnameDefault.
      *
      * @param  analyzer  The new analyzer value
-     * @since
      */
     public void setAnalyzer(Analyzer analyzer) {
         this.analyzer = analyzer;
@@ -247,7 +235,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      *Sets the directory attribute of the SimpleLuceneCocoonSearcherImpl object
      *
      * @param  directory  The new directory value
-     * @since
      */
     public void setDirectory(Directory directory) {
         this.directory = directory;
@@ -266,8 +253,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      * </p>
      *
      * @return                  IndexReader an up to date indexReader
-     * @exception  IOException  Description of Exception
-     * @since
+     * @exception  IOException  is thrown iff it's impossible to create 
+     * an IndexReader
      */
     public IndexReader getReader() throws IOException {
         if (indexReaderCache == null) {
@@ -278,11 +265,11 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     * configure
+     * configure this component
      *
-     * @param  conf                        Description of Parameter
-     * @exception  ConfigurationException  Description of Exception
-     * @since
+     * @param  conf                        of this component
+     * @exception  ConfigurationException  is thrown iff configuration of 
+     *   this component fails
      */
     public void configure(Configuration conf) throws ConfigurationException {
         Configuration child;
@@ -290,7 +277,9 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
         child = conf.getChild(ANALYZER_CLASSNAME_CONFIG, false);
         if (child != null) {
-            value = conf.getValue(ANALYZER_CLASSNAME_DEFAULT);
+            // fix Bugzilla Bug 25277, use child.getValue
+            // and in all following blocks
+            value = child.getValue(ANALYZER_CLASSNAME_DEFAULT);
             if (value != null) {
                 analyzerClassnameDefault = value;
                 try {
@@ -304,7 +293,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
         child = conf.getChild(DEFAULT_SEARCH_FIELD_CONFIG, false);
         if (child != null) {
-            value = conf.getValue(DEFAULT_SEARCH_FIELD_DEFAULT);
+            value = child.getValue(DEFAULT_SEARCH_FIELD_DEFAULT);
             if (value != null) {
                 defaultSearchFieldDefault = value;
             }
@@ -312,7 +301,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
         child = conf.getChild(DEFAULT_QUERY_CONFIG, false);
         if (child != null) {
-            value = conf.getValue(DEFAULT_QUERY_DEFAULT);
+            value = child.getValue(DEFAULT_QUERY_DEFAULT);
             if (value != null) {
                 defaultQueryDefault = value;
             }
@@ -320,7 +309,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
         child = conf.getChild(QUERYPARSER_CLASSNAME_CONFIG, false);
         if (child != null) {
-            value = conf.getValue(QUERYPARSER_CLASSNAME_DEFAULT);
+            value = child.getValue(QUERYPARSER_CLASSNAME_DEFAULT);
             if (value != null) {
                 queryparserClassnameDefault = value;
             }
@@ -328,7 +317,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
         child = conf.getChild(DIRECTORY_CONFIG, false);
         if (child != null) {
-            value = conf.getValue(DIRECTORY_DEFAULT);
+            value = child.getValue(DIRECTORY_DEFAULT);
             if (value != null) {
                 directoryDefault = value;
                 try {
@@ -345,9 +334,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composable</code>.
      *
-     * @param  manager                 Description of Parameter
-     * @exception  ComponentException  Description of Exception
-     * @since
+     * @param  manager                 of this component
+     * @exception  ComponentException  is never thrown
      */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
@@ -355,9 +343,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
-     *
-     * @since
+     * Dispose this component, releasing IndexSearcher, and IndexReaderCache.
      */
     public void dispose() {
         releaseIndexSearcher();
@@ -366,9 +352,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
-     *
-     * @since
+     * Recycle this component, releasing IndexSearcher, and IndexReaderCache.
      */
     public void recycle() {
         releaseIndexSearcher();
@@ -377,13 +361,12 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
+     * Search lucene index.
      *
-     * @param  query_string             Description of Parameter
-     * @param  default_field            Description of Parameter
-     * @return                          Description of the Returned Value
-     * @exception  ProcessingException  Description of Exception
-     * @since
+     * @param  query_string             is lucene's query string
+     * @param  default_field            the lucene field to run the query
+     * @return                          lucene Hits
+     * @exception  ProcessingException  iff its not possible do run the query
      */
     public Hits search(String query_string, String default_field) throws ProcessingException {
         Hits hits = null;
@@ -415,9 +398,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
+     * Release the index searcher.
      *
-     * @since
      */
     private void releaseIndexSearcher() {
         if (indexSearcher != null) {
@@ -432,9 +414,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
+     * Release the IndexReaderCache
      *
-     * @since
      */
     private void releaseIndexReaderCache() {
         if (indexReaderCache != null) {
@@ -446,10 +427,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
     /**
      * This class should help to minimise usage of IndexReaders.
      *
-     * @author     huberb1
-     * @version
      */
-    static class IndexReaderCache
+    static class IndexReaderCache 
     {
         private IndexReader indexReader;
         private long lastModified;
@@ -458,7 +437,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
         /**
          * Create an IndexReaderCache.
          *
-         * @since
          */
         IndexReaderCache() { }
 
@@ -468,7 +446,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          *
          * @param  directory  lucene index directory
          * @return            The indexReader value
-         * @since
          */
         public IndexReader getIndexReader(Directory directory) throws IOException {
             if (indexReader == null) {
@@ -485,7 +462,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
         /**
          * Close an opened lucene IndexReader
          *
-         * @since
          */
         public void close() {
             if (indexReader != null) {
@@ -507,7 +483,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          *   and its lastModified date is greater equal than the lastModified date
          *   of its lucene Directory.
          * @exception  IOException  Description of Exception
-         * @since
          */
         public boolean indexReaderIsValid(Directory directory) throws IOException {
             return indexReader != null &&
@@ -519,7 +494,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          *  Release all resources, most notably the lucene IndexReader.
          *
          * @exception  Throwable  Description of Exception
-         * @since
          */
         protected void finalize() throws Throwable {
             close();
@@ -531,7 +505,6 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          *
          * @param  directory        lucene index directory
          * @exception  IOException  Description of Exception
-         * @since
          */
         private void createIndexReader(Directory directory) throws IOException {
             close();
