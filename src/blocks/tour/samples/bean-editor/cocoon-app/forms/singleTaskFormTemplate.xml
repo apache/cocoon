@@ -91,7 +91,9 @@
                         </td>
                         <td>
                             <ft:widget id="date">
-                                <fi:styling size="10"/>
+				<!-- specify a text input field to disable javascript-driven calendar -->
+				<!-- (because it is not setup for this demo) -->
+                                <fi:styling type="text" size="10"/>
                             </ft:widget>
                         </td>
                         <td>
