@@ -38,6 +38,7 @@ import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.JavaArchiveFilter;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * The Java programming language processor
@@ -57,8 +58,12 @@ public class JavaLanguage extends CompiledProgrammingLanguage
     /** Classpath */
     private String classpath;
 
+    /** The Class Loader Class Name */
     private String classLoaderClass;
     
+    /** Source code version */
+    private int compilerComplianceLevel;
+
     /**
      * Return the language's canonical source file extension.
      *
@@ -88,6 +93,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
     public void parameterize(Parameters params) throws ParameterException {
         super.parameterize(params);
 
+        
         this.classLoaderClass = params.getParameter("class-loader", null);
         if (this.classLoaderClass != null) {
             try {
@@ -106,6 +112,17 @@ public class JavaLanguage extends CompiledProgrammingLanguage
                 throw new ParameterException("Lookup of ClassLoaderManager failed", e);
             }
         }
+        // Get the compiler compliance level (source Code version)
+        String sourceVer = params.getParameter("compiler-compliance-level", "auto");
+        if (sourceVer.equalsIgnoreCase("auto")) {
+            this.compilerComplianceLevel = SystemUtils.JAVA_VERSION_INT;
+        } else {
+            try {
+                compilerComplianceLevel = new Float(Float.parseFloat(sourceVer) * 100).intValue();
+            } catch (NumberFormatException e) {
+                throw new ParameterException("XSP: compiler-compliance-level parameter value not valid!", e);
+            }
+        }
     }
 
     /**
@@ -121,8 +138,8 @@ public class JavaLanguage extends CompiledProgrammingLanguage
 
         // Initialize the classpath
         String systemBootClasspath = System.getProperty("sun.boot.class.path");
-        String systemClasspath = System.getProperty("java.class.path");
-        String systemExtDirs = System.getProperty("java.ext.dirs");
+        String systemClasspath = SystemUtils.JAVA_CLASS_PATH;
+        String systemExtDirs = SystemUtils.JAVA_EXT_DIRS;
         String systemExtClasspath = null;
 
         try {
@@ -169,7 +186,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
             throws LanguageException {
 
         try {
-            LanguageCompiler compiler = (LanguageCompiler) this.compilerClass.newInstance();
+            LanguageCompiler compiler = (LanguageCompiler)this.compilerClass.newInstance();
             // AbstractJavaCompiler is LogEnabled
             if (compiler instanceof LogEnabled) {
                 ((LogEnabled)compiler).enableLogging(getLogger());
@@ -182,19 +199,21 @@ public class JavaLanguage extends CompiledProgrammingLanguage
             String filename = name.substring(pos + 1);
 
             final String basePath = baseDirectory.getCanonicalPath();
-            String filepath = basePath + File.separator
-                    + name + "." + getSourceExtension();
+            String filepath = basePath + File.separator + name + "." + getSourceExtension();
 
             compiler.setFile(filepath);
             compiler.setSource(basePath);
             compiler.setDestination(basePath);
             compiler.setClasspath(basePath + this.classpath);
+            compiler.setCompilerComplianceLevel(compilerComplianceLevel);
 
             if (encoding != null) {
                 compiler.setEncoding(encoding);
             }
 
-            getLogger().debug("Compiling " + filepath);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Compiling " + filepath);
+            }
             if (!compiler.compile()) {
                 StringBuffer message = new StringBuffer("Error compiling ");
                 message.append(filename);
@@ -264,7 +283,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage
             File dir = new File(d);
             if (!dir.isDirectory()) {
                 // The absence of a listed directory may not be an error.
-                if (getLogger().isWarnEnabled()) getLogger().warn("Attempted to retrieve directory listing of non-directory " + dir.toString());
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Attempted to retrieve directory listing of non-directory " + dir.toString());
+                }
             } else {
                 File[] files = dir.listFiles(new JavaArchiveFilter());
                 for (int i = 0; i < files.length; i++) {
@@ -272,7 +293,6 @@ public class JavaLanguage extends CompiledProgrammingLanguage
                 }
             }
         }
-
         return buffer.toString();
     }
 

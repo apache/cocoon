@@ -202,6 +202,22 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="add">
+     Add &lt;compiler-compliance-level&gt; parameter for java XSP compiler.
+     This new parameter allow to specify the java code source version used to compile the XSP code.
+     It is useful to run cocoon using java 1.5 while using source code for 1.4.
+          
+     Posible values:
+           1.3 = Java version 1.3
+           1.4 = Java version 1.4
+           1.5 = Java version 1.5
+           auto = The version of the JVM where cocoon is running. (Default value).
+          
+     NOTE: The parameter is optional to keep backward compatibility.
+           The parameter currently works only with Sun Javac compiler.
+           The eclipse compiler version 3.0.1 currently does not support java 1.5.
+           The pizza compiler does not support java 1.5.
+   </action>
    <action dev="RG" type="fix" fixes-bug="32838" due-to="Roy Huang" due-to-email="lingererhuang@hotmail.com">
      PageLabel url's were not properly encoded.
    </action>
