@@ -219,5 +219,9 @@ public class JXPathBindingManager implements BindingManager, LogEnabled, Service
             return datatypeManager;
         }
 
+        public ServiceManager getServiceManager() {
+            return serviceManager;
+        }
+
     }
 }
