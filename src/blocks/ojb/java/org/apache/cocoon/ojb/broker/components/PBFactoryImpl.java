@@ -31,49 +31,42 @@ import org.apache.ojb.broker.PersistenceBrokerFactory;
 * Implementation of the JdoPMF. Create one PMF and store it for future use
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PBFactoryImpl.java,v 1.2 2004/03/05 13:02:01 bdelacretaz Exp $
+ * @version CVS $Id: PBFactoryImpl.java,v 1.3 2004/03/23 19:21:33 stephan Exp $
 */
-public class PBFactoryImpl extends AbstractOjbImpl implements PBFactory, Configurable, Initializable,
-Disposable, ThreadSafe
-{
+public class PBFactoryImpl extends AbstractOjbImpl implements PBFactory, Configurable, Initializable, Disposable, ThreadSafe {
+	
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void configure(Configuration myconf) throws ConfigurationException
-    {
-		if (this.getLogger().isDebugEnabled())
-			this.getLogger().debug("OJB-JDO: configuration");
+    public void configure(Configuration myconf) throws ConfigurationException {
+        if (this.getLogger().isDebugEnabled())
+            this.getLogger().debug("OJB-JDO: configuration");
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public void dispose()
-    {
+    public void dispose() {
         super.dispose();
-		if (this.getLogger().isDebugEnabled())
-			this.getLogger().debug("OJB-PB: Disposed OK!");
+        if (this.getLogger().isDebugEnabled())
+            this.getLogger().debug("OJB-PB: Disposed OK!");
     }
 
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.activity.Initializable#initialize()
-	 */
-	public void initialize() throws Exception
-	{
-        super.initialize();
-		try
-		{
-			if (this.getLogger().isDebugEnabled()) {
-				this.getLogger().debug("OJB-PB: Started OK!");
-            }
-		}
-		catch (Throwable t)
-		{
-			if (this.getLogger().isFatalErrorEnabled()) {
-				this.getLogger().fatalError("OJB-PB: Started failed: Cannot create a Persistence Broker Factory.",t);
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+          super.initialize();
+          try {
+              if (this.getLogger().isDebugEnabled()) {
+                  this.getLogger().debug("OJB-PB: Started OK!");
+              }
+          } catch (Throwable t) {
+              if (this.getLogger().isFatalErrorEnabled()) {
+                  this.getLogger().fatalError("OJB-PB: Started failed: Cannot create a Persistence Broker Factory.",t);
+              }
+          }
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.ojb.broker.components.PBFactory#defaultPersistenceBroker()
