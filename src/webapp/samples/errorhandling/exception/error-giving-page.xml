@@ -15,8 +15,6 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: error-giving-page.xml,v 1.3 2004/03/06 02:26:04 antonio Exp $ -->
-
 <!DOCTYPE page [
  <!ELEMENT page (title?, content)>
  <!ELEMENT title (#PCDATA)>
@@ -24,11 +22,19 @@
  <!ELEMENT para (#PCDATA)>
 ]>
 
+<!--+
+    | Broken Page.
+    |
+    | NOTE: This page is intentionally not well-formed in order
+    |       to trigger an exception and show how the sitemap
+    |       error handling works!
+    |
+    | $Id$
+    +-->
+
 <page>
- <!-- NOTE: this page is not well-formed intentionally in order to trigger an exception
-      and show how the sitemap error handling works -->
- <title>Hello<title>
- <content>
-  <para>This is my first Cocoon page!</para>
- </content>
+  <title>Hello<title>
+  <content>
+    <para>This is my first Cocoon page!</para>
+  </content>
 </page>

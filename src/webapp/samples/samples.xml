@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.40 2004/05/24 01:48:24 crossley Exp $
+    | CVS $Id$
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -42,7 +42,7 @@
       languages. Here is an example of the power of such an approach with
       the help of those i18n and l10n Cocoon facilities.
     </sample>
-    <sample name="Syndication and Content Aggregation" href="aggregation/">
+    <sample name="Content Syndication &amp; Aggregation" href="aggregation/">
       Separation of content and style allows not only to serve your content
       in different ways, but also to syndicate, aggregate or otherwise include
       and transform content provided by other web sites.
@@ -67,7 +67,7 @@
       An example page producing exceptions and handling them. Demonstrates the 
       handler hierarchy and the exception selectors.
     </sample>
-    <sample href="components" name="Components">
+    <sample href="components" name="Core Components">
       Some samples of various components that are included with the core,
       e.g. Stream Generators, Paginator Transformers, Image Readers.
     </sample>

@@ -15,26 +15,21 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.7 2004/03/06 02:26:04 antonio Exp $ -->
-
+<!--+
+    |
+    | $Id$
+    +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
-  <map:components>
-    <map:generators default="file">
-      <map:generator name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionGenerator"/>
-    </map:generators>
-  </map:components>
 
   <map:pipelines>
     <map:pipeline>
-
-      <map:match pattern="exception">
-        <map:generate type="exception"/>
+      <map:match pattern="generror">
+        <map:generate src="error-giving-page.xml"/>
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="generror">
-        <map:generate src="error-giving-page.xml"/>
+      <map:match pattern="*">
+        <map:generate type="exception" src="{1}"/>
         <map:serialize/>
       </map:match>
 
