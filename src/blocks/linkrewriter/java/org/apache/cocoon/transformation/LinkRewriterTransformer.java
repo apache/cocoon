@@ -159,7 +159,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  <dt>schemes</dt>
  *  <dd>Space-separated list of URI schemes to explicitly include.  If specified, all URIs with unlisted schemes will not be converted.</dd>
  *  <dt>exclude-schemes</dt>
- *  <dd>Space-separated list of URI schemes to explicitly exclude. Defaults to 'http https'.</dd>
+ *  <dd>Space-separated list of URI schemes to explicitly exclude. Defaults to 'http https ftp news mailto'.</dd>
  *  <dt>bad-link-str</dt>
  *  <dd>String to use for links with a correct InputModule prefix, but no value
  *  therein.  Defaults to the original URI.</dd>
@@ -169,7 +169,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.3 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.4 2003/03/26 10:36:57 jefft Exp $
  */
 public class LinkRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
@@ -228,8 +228,10 @@ public class LinkRewriterTransformer
         this.badLinkStr = parameters.getParameter("bad-link-str", null);
         this.linkAttrs = split(parameters.getParameter("link-attrs", "href"), " ");
         this.inSchemes = split(parameters.getParameter("schemes", ""), " ");
-        this.outSchemes = split(parameters.getParameter("exclude-schemes", ""), "http https");
-
+        this.outSchemes = split(parameters.getParameter("exclude-schemes", "http https ftp news mailto"), " ");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Will ignore the following schemes: " + outSchemes);
+        }
         // Generate conf
         VariableConfiguration varConf = new VariableConfiguration(this.origConf);
         varConf.addVariable("src", src);
