@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.27 2000-11-01 19:25:31 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.28 2000-11-07 19:56:22 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.27 $ $Date: 2000-11-01 19:25:31 $
+ * @version $Revision: 1.28 $ $Date: 2000-11-07 19:56:22 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -260,7 +260,7 @@ public class XSPProcessor extends AbstractActor
       try {
         Object resource = Utils.getLocationResource(location);
         if (resource == null) throw new Exception("Resource not found or retrieving error.");
-        
+       
         XSPPreprocessor preprocessor = null;
         String preprocessorName =
           (String) lsConf.get(namespace + "." + language + ".preprocessor");
@@ -270,17 +270,11 @@ public class XSPProcessor extends AbstractActor
 
         this.refreshLogicsheet(resource, preprocessor);
         byLanguage.put(language, this.store.get(resource.toString()));
-      } catch (Exception ex) {
-        // should we consider this fatal and throw an exception? (SM)
-        logger.log(this, "Logicsheet for namespace '" +
-                   namespace + "' not found at '" +
-                   location +
-                   "' due to " +
-                   ex,
-                   Logger.WARNING);
+        this.byNamespace.put(namespace, byLanguage);
       }
-
-      this.byNamespace.put(namespace, byLanguage);
+      catch (Exception ex) {
+        throw new RuntimeException ("Error loading logicsheet at " + location + " due to " + ex);
+      }
     }
     
     Configurations poolConf = conf.getConfigurations("pool");
