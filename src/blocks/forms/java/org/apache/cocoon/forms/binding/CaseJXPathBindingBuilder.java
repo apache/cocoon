@@ -24,14 +24,14 @@ import org.w3c.dom.Element;
  * actual {@link CaseJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:case id="<i>widget-id</i>" path="<i>xpath-expression</i>"
+ * &lt;fb:case id="<i>widget-id</i>" path="<i>xpath-expression</i>"
  *     direction="<i>load|save</i>" lenient="<i>true|false</i>" &gt;
- *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
- * &lt;/wb:case&gt;
+ *   &lt;fb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
+ * &lt;/fb:case&gt;
  * </code></pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.2 2004/04/01 13:07:55 mpo Exp $
  */
 public class CaseJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
