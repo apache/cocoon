@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.39 2004/01/31 16:58:24 unico Exp $
+    | CVS $Id: sitemap.xmap,v 1.40 2004/02/22 19:11:44 unico Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -79,13 +79,19 @@
       label="content" 
       pool-grow="2" pool-max="16" pool-min="2" 
     />
+    <map:generator
+      name="jx"
+      src="org.apache.cocoon.generation.JXTemplateGenerator"
+      label="content"
+      logger="sitemap.generator.jx"
+      pool-grow="2" pool-max="16" pool-min="2"
+    />
     <!--
     <map:generator label="content" logger="sitemap.generator.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.generation.ServerPagesGenerator"/>
     <map:generator label="content" logger="sitemap.generator.directory" name="directory" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.DirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.xpathdirectory" name="xpathdirectory" src="org.apache.cocoon.generation.XPathDirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.imagedirectory" name="imagedirectory" src="org.apache.cocoon.generation.ImageDirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.mp3directory" name="mp3directory" src="org.apache.cocoon.generation.MP3DirectoryGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
     -->
     <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
          representation of the exception that caused the error handler to be executed -->
@@ -151,7 +157,7 @@
       | Serializers consume SAX events and produce a character stream. Every
       | pipeline needs to be terminated by a serializer.
       +-->
-  <map:serializers default="xhtml">
+  <map:serializers default="html">
     <map:serializer 
       name="xml" 
       src="org.apache.cocoon.serialization.XMLSerializer"
@@ -343,6 +349,16 @@
       | entirely and execution proceeds from the element right below the action.
       +-->
   <map:actions>
+   <map:action 
+     name="clear-cache" 
+     src="org.apache.cocoon.acting.ClearCacheAction"
+     logger="sitemap.action.clear-cache" 
+   />
+   <map:action
+     name="clear-persistent-store"
+     src="org.apache.cocoon.acting.ClearPersistentStoreAction"
+     logger="sitemap.action.clear-persistent-store"
+   />
    <!--
    <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
    <map:action logger="sitemap.action.form-validator" name="form-validator" src="org.apache.cocoon.acting.FormValidatorAction"/>
@@ -350,8 +366,6 @@
    <map:action logger="sitemap.action.session-isvalid" name="session-isvalid" src="org.apache.cocoon.acting.SessionIsValidAction"/>
    <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
    <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
-   <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
-   <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
    <map:action logger="sitemap.action.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.acting.ServerPagesAction"/>
    -->
   </map:actions>
