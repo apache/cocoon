@@ -78,15 +78,32 @@ import org.apache.excalibur.source.SourceResolver;
 public class PropertiesFileModule extends AbstractJXPathModule 
 implements InputModule, Serviceable, Configurable, ThreadSafe {
     
+    private ServiceManager m_manager;
+    
     private SourceResolver m_resolver;
     
     private Properties m_properties;
     
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
-        m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+        m_manager = manager;
+        m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
     }
     
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
+	 */
+	public void dispose() {		
+		super.dispose();
+        if ( this.m_manager != null ) {
+            this.m_manager.release( this.m_resolver );
+            this.m_manager = null;
+            this.m_resolver = null;
+        }
+	}
     /**
      * Configure the location of the properties file:
      * <p>

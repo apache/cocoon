@@ -119,7 +119,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.13 2004/02/19 22:13:28 joerg Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.14 2004/02/22 18:07:16 cziegeler Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -244,7 +244,18 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
     }
 
 
-
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
+	 */
+	public void dispose() {
+		super.dispose();
+        if ( this.manager != null ) {
+            this.manager.release( this.resolver );
+            this.manager = null;
+            this.resolver = null;
+        }
+	}
+    
     /**
      * Static (cocoon.xconf) configuration.
      * Configuration is expected to be of the form:
