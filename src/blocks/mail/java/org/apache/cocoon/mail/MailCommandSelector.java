@@ -17,6 +17,7 @@ package org.apache.cocoon.mail;
 
 import java.util.Map;
 import org.apache.cocoon.selection.AbstractSwitchSelector;
+import org.apache.cocoon.util.log.DeprecationLogger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -45,58 +46,60 @@ usage:
 
 /**
  * @deprecated use RequestAttributeSelector, RequestParameterSelector, or ParameterSelector instead.
- * @version CVS $Id: MailCommandSelector.java,v 1.3 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MailCommandSelector extends AbstractSwitchSelector {
   
-  public Object getSelectorContext(Map objectModel, Parameters parameters) {
-      Request request = ObjectModelHelper.getRequest(objectModel);
-      // try to get the command from the request-attribute
-      String cmdName = MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY;
-      String cmd = (String)request.getAttribute( cmdName );
+    public Object getSelectorContext(Map objectModel, Parameters parameters) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        // try to get the command from the request-attribute
+        String cmdName = MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY;
+        String cmd = (String)request.getAttribute( cmdName );
       
-      // try to get command from the request parameter
-      if (cmd == null) {
-          cmdName = "cmd";
-          cmd = request.getParameter( cmdName );
-      }
-      
-      // try to get command from the session attribute
-      if (cmd == null) {
-          Session session = request.getSession( false );
-          if (session != null) {
-              MailContext mailContext = (MailContext)session.getAttribute( MailContext.SESSION_MAIL_CONTEXT );
-              if (mailContext != null) {
-                  try {
-                      cmd = (String)mailContext.get(MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY);
-                  } catch (ContextException ce) {
-                      String message = "Cannot get command entry " + 
-                        String.valueOf(MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY) + " " + 
-                        "from mailContext from session";
-                      getLogger().warn( message, ce );
-                  }
-              }
-          }
-      }
-      MailCommandBuilder mcb = new MailCommandBuilder();
-      boolean isMapped = mcb.isCommandMapped( cmd );
-      if (isMapped) {
-          return cmd;
-      } else {
-          // uup the command is invalid, we will surly be not able to map it to a valid
-          // AbstractMailAction
-          return null;
-      }
-  }
+        // try to get command from the request parameter
+        if (cmd == null) {
+            cmdName = "cmd";
+            cmd = request.getParameter( cmdName );
+        }
 
-  public boolean select(String expression, Object selectorContext) {
-      if (selectorContext == null) {
-          return false;
-      } else {
-          String cmd = (String)selectorContext;
-          return cmd.equals( expression );
-      }
-  }
+        // try to get command from the session attribute
+        if (cmd == null) {
+            Session session = request.getSession( false );
+            if (session != null) {
+                MailContext mailContext = (MailContext)session.getAttribute( MailContext.SESSION_MAIL_CONTEXT );
+                if (mailContext != null) {
+                    try {
+                        cmd = (String)mailContext.get(MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY);
+                    } catch (ContextException ce) {
+                        String message = "Cannot get command entry " + 
+                            String.valueOf(MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY) + " " + 
+                            "from mailContext from session";
+                        getLogger().warn( message, ce );
+                    }
+                }
+            }
+        }
+        MailCommandBuilder mcb = new MailCommandBuilder();
+        boolean isMapped = mcb.isCommandMapped( cmd );
+        if (isMapped) {
+            return cmd;
+        } else {
+            // uup the command is invalid, we will surly be not able to map it to a valid
+            // AbstractMailAction
+            return null;
+        }
+    }
+
+    public boolean select(String expression, Object selectorContext) {
+        DeprecationLogger.log("The MailCommandSelector is deprecated."
+                 + " Use RequestAttributeSelector, RequestParameterSelector, or ParameterSelector instead.");
+        if (selectorContext == null) {
+            return false;
+        } else {
+            String cmd = (String)selectorContext;
+            return cmd.equals( expression );
+        }
+    }
 
 }
 

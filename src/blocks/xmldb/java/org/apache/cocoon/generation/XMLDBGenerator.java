@@ -25,6 +25,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.log.DeprecationLogger;
 
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
@@ -127,7 +128,8 @@ public class XMLDBGenerator extends ServiceableGenerator
                       Map objectModel,
                       String src,
                       Parameters par)
-            throws ProcessingException, SAXException,IOException {
+    throws ProcessingException, SAXException,IOException {
+        DeprecationLogger.log("The XMLDBGenerator is deprecated. Use the XML:DB pseudo protocol instead");
         super.setup(resolver, objectModel, src, par);
     }
 
