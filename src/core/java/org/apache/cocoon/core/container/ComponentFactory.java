@@ -31,7 +31,7 @@ import org.apache.cocoon.components.ServiceInfo;
 /**
  * Factory for Avalon based components.
  *
- * @version CVS $Id: ComponentFactory.java 55172 2004-10-20 17:52:18Z cziegeler $
+ * @version CVS $Id$
  */
 public class ComponentFactory {
     

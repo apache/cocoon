@@ -35,7 +35,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Base class for all service managers: ServiceManager and ServiceSelector
  *
- * @version CVS $Id: AbstractServiceManager.java 55144 2004-10-20 12:26:09Z ugo $
+ * @version CVS $Id$
  */
 public abstract class AbstractServiceManager
 extends AbstractLogEnabled

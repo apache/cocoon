@@ -23,7 +23,7 @@ import org.apache.cocoon.components.ServiceInfo;
  * The DefaultComponentHandler to make sure components are initialized
  * and destroyed correctly.
  *
- * @version CVS $Id: SingleThreadedComponentHandler.java 55144 2004-10-20 12:26:09Z ugo $
+ * @version CVS $Id$
  */
 public class SingleThreadedComponentHandler
 extends AbstractComponentHandler {

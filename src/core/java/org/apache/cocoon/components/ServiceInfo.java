@@ -22,7 +22,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 /**
  * Meta-information about a service
  *  
- * @version CVS $Id: LifecycleHelper.java 55255 2004-10-21 19:41:15Z cziegeler $
+ * @version CVS $Id$
  */
 public class ServiceInfo {
 

@@ -41,7 +41,7 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  * Default service manager for Cocoon's components.
  *
- * @version SVN $Revision: 1.6 $Id: CocoonServiceManager.java 55165 2004-10-20 16:51:50Z cziegeler $
+ * @version SVN $Revision: 1.6 $Id$
  */
 public class CocoonServiceManager
 extends AbstractServiceManager
