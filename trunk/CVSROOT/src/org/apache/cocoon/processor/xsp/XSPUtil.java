@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.15 2000-04-13 10:42:56 stefano Exp $ --
+/*-- $Id: XSPUtil.java,v 1.16 2000-07-20 00:17:02 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.15 $ $Date: 2000-04-13 10:42:56 $
+ * @version $Revision: 1.16 $ $Date: 2000-07-20 00:17:02 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -211,6 +211,19 @@ public class XSPUtil {
       }
       case Node.TEXT_NODE: {
         return factory.createTextNode(node.getNodeValue());
+      }
+      case Node.DOCUMENT_FRAGMENT_NODE: {
+        DocumentFragment input = (DocumentFragment) node;
+        DocumentFragment output = factory.createDocumentFragment();
+
+        NodeList nodeList = input.getChildNodes();
+        int childCount = nodeList.getLength();
+        for (int i = 0; i < childCount; i++) {
+          Node child = cloneNode(nodeList.item(i), factory);
+          if (child != null) output.appendChild(child);
+        }
+
+        return output;
       }
       default:
         return null;
