@@ -24,6 +24,10 @@
         instance, and building an index file.
         Searching is the process of querying the once built index.
       </p>
+      <p>
+        See also Wiki: 
+        <link href="http://wiki.cocoondev.org/Wiki.jsp?page=LuceneIndexTransformer">LuceneIndexTransformer</link>
+      </p>
     </s1>
  
     <s1 title="Decomposition of XMLSearching">
