@@ -67,7 +67,7 @@ import org.xml.sax.ContentHandler;
  *
  * @author  <a href="mailto:mge@efp.co.at>Michael Gerzabek</a>
  * @since 21. Oct. 2002
- * @version CVS $Id: DefaultWeb3StreamerImpl.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
+ * @version CVS $Id: DefaultWeb3StreamerImpl.java,v 1.3 2003/03/19 09:04:40 haul Exp $
  */
 public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
 
@@ -78,7 +78,6 @@ public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
         attributes.clear();
         attributes.addAttribute( Web3.URI, Web3.INCLUDE_NAME_ATTR,  
             Web3.INCLUDE_NAME_ATTR, "CDATA", function.getName().toUpperCase() );
-        attributes.clear();
         contentHandler.startElement( Web3.URI, Web3.INCLUDE_ELEM, 
             Web3.INCLUDE_ELEM, attributes );
         contentHandler.startElement( Web3.URI, Web3.IMPORT_ELEM, 
