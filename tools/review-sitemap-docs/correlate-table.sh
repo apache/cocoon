@@ -14,6 +14,17 @@
 #  cd /usr/local/svn/cocoon-2_1_X
 #  tools/review-sitemap-docs/correlate-table.sh
 
+if [ ! -e cocoon.sh ]; then
+ echo "Please run from top-level of cocoon source."
+ echo " cd cocoon-2_1_X; tools/review-sitemap-docs/correlate-table.sh"
+ exit
+fi
+
+if [ ! -e build/cocoon-2.1.7-dev/javadocs ]; then
+ echo "Please run 'build javadocs' first"
+ exit
+fi
+
 echo
 echo "Scanning Cocoon javadocs to find sitemap components java source files."
 echo " (See components-source.txt and do diff with that file from last run.)"
@@ -36,24 +47,32 @@ echo "Comparing the table list with the list obtained via javadocs."
 echo "Whitespace lines are table entries which are missing a javadoc reference."
 echo "doing 'diff components-source.txt components-table.txt'"
 echo " (See components-javadoc-diff.txt)"
-diff components-source.txt components-table.txt > components-javadoc-diff.txt
+echo "[localhost]$ diff components-source.txt components-table.txt" > components-javadoc-diff.txt
+echo "                  <                     >" >> components-javadoc-diff.txt
+diff components-source.txt components-table.txt >> components-javadoc-diff.txt
 
 echo
 echo "Comparing the list obtained via javadocs with that obtained via SitemapTask."
 echo "doing 'diff components-source.txt components-sitemaptask.txt'"
 echo " (See components-javadoc-sitemaptask-diff.txt)"
+echo "[localhost]$ diff components-source.txt components-sitemaptask.txt" > components-javadoc-sitemaptask-diff.txt
+echo "                  <                     >" >> components-javadoc-sitemaptask-diff.txt
 cat build/all-sitemap-components.txt build/all-sitemap-components-blocks.txt \
-| sed 's/\./\//g' | sort > components-sitemaptask.txt
+| sed 's/\./\//g' \
+| grep -v -f tools/review-sitemap-docs/grep-sitemaptask-exclude.txt \
+| sort > components-sitemaptask.txt
 diff components-source.txt components-sitemaptask.txt \
-> components-javadoc-sitemaptask-diff.txt
+>> components-javadoc-sitemaptask-diff.txt
 
 echo
 echo "Comparing the table list with the list obtained via SitemapTask."
 echo "Whitespace lines are table entries which are missing a javadoc reference."
 echo "doing 'diff components-sitemaptask.txt components-table.txt'"
 echo " (See components-sitemaptask-diff.txt)"
-diff components-sitemaptask.txt components-table.txt > components-sitemaptask-diff.txt
+echo "[localhost]$ diff components-sitemaptask.txt components-table.txt" > components-sitemaptask-diff.txt
+echo "                  <                          >" >> components-sitemaptask-diff.txt
+diff components-sitemaptask.txt components-table.txt >> components-sitemaptask-diff.txt
 
 echo
-echo "Counting the number of components in the table."
-wc -l components-table.txt
+echo "Counting the number of lines in components data files."
+wc -l components-*.txt
