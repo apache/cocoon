@@ -16,7 +16,7 @@
 -->
 <!--+
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <logkit>
   <targets>
