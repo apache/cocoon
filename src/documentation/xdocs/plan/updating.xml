@@ -76,10 +76,78 @@
         <em>org.apache.cocoon.environment.SourceResolver</em> 
         interface has been removed. Use the <em>resolveURI</em> and
         the <em>release</em> method instead.</p>
-      <p>In addition the following interfaces have been removed:</p>
+      <p>In addition the following interfaces and implementations have been 
+        removed in favour of their new versions:</p>
       <ul>
         <li><em>org.apache.cocoon.environment.Source</em> : Use the 
           <em>org.apache.excalibur.source.Source</em> interface instead.</li>
+        <li><em>org.apache.cocoon.environment.ModifiableSource</em> - Excalibur SourceResolver</li>
+        <li><em>org.apache.cocoon.environment.URLFactorySourceResolver</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.environment.WriteableSource</em> - Excalibur SourceResolver</li>
+        <li><em>org.apache.cocoon.components.source.AbstractSAXSource</em> - Not needed anymore></li>
+        <li><em>org.apache.cocoon.components.source.AbstractStreamSource</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.AbstractStreamWriteableSource</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.CocoonSourceFactory</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.DelayedRefreshSourceWrapper</em> - org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper</li>
+        <li><em>org.apache.cocoon.components.source.FileSource</em> - Excalibur SourceResolver</li>
+        <li><em>org.apache.cocoon.components.source.FileSourceFactory</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.SitemapSource</em> - org.apache.cocoon.components.source.impl.SitemapSource</li>
+        <li><em>org.apache.cocoon.components.source.SourceFactory</em> - org.apache.cocoon.components.source.impl.SitemapSourceFactory</li>
+        <li><em>org.apache.cocoon.components.source.SourceHandler</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.SourceHandlerImpl</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.URLSource</em> - Excalibur SourceResolver</li>
+        <li><em>org.apache.cocoon.components.source.impl.AvalonToCocoonSource</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.impl.AvalonToCocoonSourceInvocationHandler</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.impl.CocoonToAvalonSource</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.impl.SourceFactoryWrapper</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.impl.URLFactoryWrapper</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.url.ContextURLFactory</em> - org.apache.cocoon.components.source.impl.ContextSourceFactory</li>
+        <li><em>org.apache.cocoon.components.url.ResourceURLFactory</em> - Excalibur SourceResolver</li>
+        <li><em>org.apache.cocoon.components.url.URLFactory</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.url.URLFactoryImpl</em> - Not needed anymore</li>
+      </ul>
+    </s2>
+    <s2 title="XML Parsing">
+      <ul>
+        <li><em>org.apache.cocoon.components.parser.JaxpParser</em> - Excalibur XMLUtils</li>
+        <li><em>org.apache.cocoon.components.parser.Parser</em> - Excalibur XMLUtils</li>
+        <li><em>org.apache.cocoon.components.parser.PooledJaxpParser</em> - Excalibur XMLUtils</li>
+        <li><em>org.apache.cocoon.components.parser.XercesParser</em> - Excalibur XMLUtils</li>
+      </ul>
+    </s2>
+    <s2 title="XML Entity Resolver">
+      <ul>
+        <li><em>org.apache.cocoon.components.resolver.Resolver</em> - Excalibur XMLUtils</li>
+        <li><em>org.apache.cocoon.components.resolver.ResolverImpl</em> - Excalibur XMLUtils</li>
+      </ul>
+    </s2>
+    <s2 title="Stores">
+      <ul>
+        <li><em>org.apache.cocoon.components.store.FilesystemStore</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.JispFilesystemStore</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.JispStringKey</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.MemoryStore</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.MRUMemoryStore</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.Store</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.StoreJanitor</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.StoreJanitorImpl</em> - Excalibur Store</li>
+      </ul>
+    </s2>
+    <s2 title="XSLT Processor">
+      <ul>
+        <li><em>org.apache.cocoon.components.xslt.XSLTProcessor</em> - Excalibur XMLUtils</li>
+        <li><em>org.apache.cocoon.components.xslt.XSLTProcessorImpl</em> - Excalibur XMLUtils</li>
+      </ul>
+    </s2>
+    <s2 title="Sitemap Components">
+      <ul>
+        <li><em>org.apache.cocoon.matching.RegexpTargetHostMatcher</em> - org.apache.cocoon.matching.RegexpHostMatcher</li>
+        <li><em>org.apache.cocoon.matching.RequestParamMatcher</em> - org.apache.cocoon.matching.RequestParameterMatcher</li>
+        <li><em>org.apache.cocoon.matching.WildcardParameterValueMatcher</em> - org.apache.cocoon.matching.WildcardRequestParameterMatcher</li>
+        <li><em>org.apache.cocoon.matching.helpers.WildcardURIMatcher</em> - org.apache.cocoon.matching.helpers.WildcardHelper</li>
+        <li><em>org.apache.cocoon.selection.RequestSelector</em> - org.apache.cocoon.selection.RequestParameterSelector</li>
+        <li><em>org.apache.cocoon.selection.SessionStateSelector</em> - org.apache.cocoon.selection.SessionAttributeSelector</li>
+        <li><em>org.apache.cocoon.transformation.CachingCIncludeTransformer</em> - org.apache.cocoon.transformation.CIncludeTransformer</li>
       </ul>
     </s2>
   </s1>
