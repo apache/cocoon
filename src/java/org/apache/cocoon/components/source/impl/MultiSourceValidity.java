@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,21 +26,25 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
 /**
  * <p>An aggregated {@link SourceValidity} for multiple sources.</p>
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
  * @version CVS $Id$
  */
 public class MultiSourceValidity extends AbstractAggregatedValidity
-implements SourceValidity {
+                                 implements SourceValidity {
 
     /** <p>When validity expiration is performed.</p> */
     private long expiry;
+
     /** <p>The delay from <b>now</b> used to calculate the expiration time.</p> */
     private long delay;
+
     /** <p>An ordered list of URIs which should be checked.</p> */
     private List uris = new ArrayList();
+
     /** <p>Is this instance is closed (accepts modifications or is validable)? */
     private boolean isClosed = false;
+
     /** <p>The {@link SourceResolver} to use (transient not to be serialized). */
     private transient SourceResolver resolver;
 
@@ -54,9 +58,9 @@ implements SourceValidity {
      *
      * <p>If the number of milliseconds is less than <b>zero</b>, or it's sum with
      * the number of <b>now</b> milliseconds is greater than the biggest long
-     * representable, the expiration date will be set to {@link Long.MAX_VALUE}
+     * representable, the expiration date will be set to {@link Long#MAX_VALUE}
      * milliseconds from the epoch.</p>
-     * 
+     *
      * @param resolver the {@link SourceResolver} used to access the sources.
      * @param delay the number of milliseconds from <b>now</b> defining for how long
      *              this instance will be valid.
@@ -71,7 +75,7 @@ implements SourceValidity {
     /**
      * <p>Add a {@link Source} to the list of {@link Source}s monitored by this
      * instance.</p>
-     * 
+     *
      * @param src a <b>non-null</b> {@link Source}.
      */
     public void addSource(Source src) {
@@ -97,7 +101,7 @@ implements SourceValidity {
         this.isClosed = true;
         this.resolver = null;
     }
-    
+
     /**
      * <p>Check the validity of this {@link SourceValidity} instance.</p>
      *
@@ -108,7 +112,7 @@ implements SourceValidity {
             /* Validity not expired, so, don't even check */
             return SourceValidity.VALID;
         }
-        
+
         /* Re-calculate the expiry time based on the current time */
         expiry = System.currentTimeMillis() + delay;
 
@@ -144,7 +148,7 @@ implements SourceValidity {
 
     /**
      * <p>Compute the status of this instance by checking every source.</p>
-     * 
+     *
      * @param resolver The {@link SourceResolver} to use to access sources.
      * @return {@link SourceValidity.VALID}, {@link SourceValidity.INVALID} or
      *         {@link SourceValidity.UNKNOWN} depending on the status.
@@ -187,7 +191,7 @@ implements SourceValidity {
 
                     /* If the source is still valid, go to the next one */
                     if (newValidity == SourceValidity.VALID) break;
-                    
+
                     /* The source is not valid (or unknown), we invalidate the lot */
                     return SourceValidity.INVALID;
 
@@ -196,7 +200,7 @@ implements SourceValidity {
                     return SourceValidity.INVALID;
             }
         }
-        
+
         /* All items checked successfully */
         return 1;
     }

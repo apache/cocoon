@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
  * @see javax.portlet.PortletSession
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletSession.java,v 1.5 2004/06/24 11:29:56 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class PortletSession implements Session {
 
@@ -165,8 +165,9 @@ public final class PortletSession implements Session {
      * containing the names of all the objects bound to this session.
      *
      * <p>Objects' names in portlet session scope will be prefixed with
-     * {@link #PORTLET_SCOPE}, and names in application scope will be prefixed
-     * with {@link #APP_SCOPE}.
+     * {@link PortletEnvironment#SESSION_PORTLET_SCOPE}, and names in
+     * application scope will be prefixed with
+     * {@link PortletEnvironment#SESSION_APPLICATION_SCOPE}.</p>
      *
      * @return                        an <code>Enumeration</code> of
      *                                <code>String</code> objects specifying the
