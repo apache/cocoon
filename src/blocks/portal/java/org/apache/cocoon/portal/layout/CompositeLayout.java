@@ -73,4 +73,14 @@ public interface CompositeLayout
      */
     Item createNewItem();
     
+    /**
+     * @return Returns the item class name.
+     */
+    String getItemClassName();
+    
+    /**
+     * @param itemClassName The item class name to set.
+     */
+    void setItemClassName(String value);
+    
 }
