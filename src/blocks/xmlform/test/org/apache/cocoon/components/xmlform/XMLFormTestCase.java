@@ -61,7 +61,7 @@ import org.apache.cocoon.AbstractCompositeTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: XMLFormTestCase.java,v 1.1 2003/04/25 08:34:59 stephan Exp $
+ * @version CVS $Id: XMLFormTestCase.java,v 1.2 2003/04/26 12:09:44 stephan Exp $
  */
 public class XMLFormTestCase extends AbstractCompositeTestCase {
 
@@ -74,21 +74,28 @@ public class XMLFormTestCase extends AbstractCompositeTestCase {
         getRequest().addParameter("cocoon-action-start", "true");
 
         Parameters parameters = new Parameters();
-        parameters.setParameter("xmlform-validator-schema-ns", "http://www.ascc.net/xml/schematron");
-        parameters.setParameter("xmlform-validator-schema", "resource://org/apache/cocoon/components/xmlform/testschema.xml");
+
+        parameters.setParameter("xmlform-validator-schema-ns",
+                                "http://www.ascc.net/xml/schematron");
+        parameters.setParameter("xmlform-validator-schema",
+                                "resource://org/apache/cocoon/components/xmlform/testschema.xml");
         parameters.setParameter("xmlform-id", "testform");
         parameters.setParameter("xmlform-scope", "session");
-        parameters.setParameter("xmlform-model", "org.apache.cocoon.components.xmlform.TestBean");
+        parameters.setParameter("xmlform-model",
+                                "org.apache.cocoon.components.xmlform.TestBean");
 
         Map result = act("xmlform", null, parameters);
 
         assertNotNull("Test if resource exists", result);
-        assertEquals("Test for parameter", "view1", (String)result.get("page"));
+        assertEquals("Test for parameter", "view1",
+                     (String) result.get("page"));
 
         String testform1 = "resource://org/apache/cocoon/components/xmlform/testform1.xml";
         String testresult1 = "resource://org/apache/cocoon/components/xmlform/testresult1.xml";
 
-        assertEqual(load(testresult1), transform("xmlform", testform1, new Parameters(), load(testform1)));
+        assertEqual(load(testresult1),
+                    transform("xmlform", testform1, new Parameters(),
+                              load(testform1)));
 
         // Second request
 
@@ -104,14 +111,17 @@ public class XMLFormTestCase extends AbstractCompositeTestCase {
         result = act("xmlform", null, parameters);
 
         assertNotNull("Test if resource exists", result);
-        assertEquals("Test for parameter", "view2", (String)result.get("page"));
+        assertEquals("Test for parameter", "view2",
+                     (String) result.get("page"));
 
         String testform2 = "resource://org/apache/cocoon/components/xmlform/testform2.xml";
         String testresult2 = "resource://org/apache/cocoon/components/xmlform/testresult2.xml";
 
-        //print(transform("xmlform", testform2, new Parameters(), load(testform2)));
+        // print(transform("xmlform", testform2, new Parameters(), load(testform2)));
 
-        assertEqual(load(testresult2), transform("xmlform", testform1, new Parameters(), load(testform2)));
+        assertEqual(load(testresult2),
+                    transform("xmlform", testform1, new Parameters(),
+                              load(testform2)));
 
         // Third request
 
@@ -119,15 +129,18 @@ public class XMLFormTestCase extends AbstractCompositeTestCase {
         getRequest().addParameter("cocoon-xmlform-view", "view2");
         getRequest().addParameter("/number", "3");
         getRequest().addParameter("/liveUrl", "http://xml.apache.org");
-        getRequest().addParameter("/publish", "false"); 
-        getRequest().addParameter("/favorite[1]/.", "http://cocoon.apache.org");
-        getRequest().addParameter("/favorite[2]/.", "http://jakarta.apache.org");
+        getRequest().addParameter("/publish", "false");
+        getRequest().addParameter("/favorite[1]/.",
+                                  "http://cocoon.apache.org");
+        getRequest().addParameter("/favorite[2]/.",
+                                  "http://jakarta.apache.org");
         getRequest().addParameter("/favorite[3]/.", "http://www.google.com");
         getRequest().addParameter("cocoon-action-next", "true");
 
         result = act("xmlform", null, parameters);
 
         assertNotNull("Test if resource exists", result);
-        assertEquals("Test for parameter", "start", (String)result.get("page"));
+        assertEquals("Test for parameter", "start",
+                     (String) result.get("page"));
     }
 }

@@ -48,94 +48,66 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
+package org.apache.cocoon.components.validation;
 
-package org.apache.cocoon.components.xmlform;
-
-import org.apache.cocoon.acting.AbstractXMLFormAction;
-import org.apache.cocoon.components.xmlform.Form;
-import org.apache.cocoon.components.xmlform.FormListener;
-
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
+ * Just a test bean.
  *
- *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TestXMLFormAction.java,v 1.2 2003/04/26 12:09:44 stephan Exp $
+ * @version CVS $Id: ZTestBean.java,v 1.1 2003/04/26 12:09:44 stephan Exp $
  */
-public class TestXMLFormAction extends AbstractXMLFormAction
-  implements FormListener {
+public class ZTestBean {
+    private String name = "dog";
+    private String scope = "galaxy";
+    private int count = 0;
+    private ArrayList preferences = new ArrayList();
+    private ZNestedBean personal = new ZNestedBean();
 
-    // different form views
-    // participating in the wizard
-
-    final String VIEW_START = "start";
-
-    final String VIEW_FIRST = "view1";
-
-    final String VIEW_SECOND = "view2";
-
-    // action commands used in the wizard
-
-    final String CMD_START = "start";
-
-    final String CMD_NEXT = "next";
-
-    final String CMD_PREV = "prev";
-
-    public Map prepare() {
-        if (getCommand()==null) {
-            return page(VIEW_START);
-        } else if (getCommand().equals(CMD_START)) {
-            return page(VIEW_FIRST);
-        } else if (Form.lookup(getObjectModel(), getFormId())==null) {
-            return page(VIEW_START);
-        }
-
-        return super.PREPARE_RESULT_CONTINUE;
+    public ZTestBean() {
+        preferences.add("likeVodka");
+        preferences.add("likeSkiing");
     }
 
-    public Map perform() {
-        TestBean model = (TestBean) getForm().getModel();
-
-        model.incrementCount();
-
-        if ((getCommand().equals(CMD_NEXT)) &&
-            (getForm().getViolations()!=null)) {
-            return page(getFormView());
-        } else {
-            getForm().clearViolations();
-
-            // get the user submitted command (through a submit button)
-            String command = getCommand();
-            // get the form view which was submitted
-            String formView = getFormView();
-
-            // apply state machine (flow control) rules
-            if (formView.equals(VIEW_FIRST)) {
-                if (command.equals(CMD_NEXT)) {
-                    return page(VIEW_SECOND);
-                } else if (command.equals(CMD_PREV)) {
-                    return page(VIEW_START);
-                }
-            } else if (formView.equals(VIEW_SECOND)) {
-                if (command.equals(CMD_NEXT)) {
-                    return page(VIEW_START);
-                } else if (command.equals(CMD_PREV)) {
-                    return page(VIEW_FIRST);
-                }
-            }
-        }
-
-        return page(VIEW_START);
+    public ZTestBean(String newName, String newScope) {
+        this();
+        name = newName;
+        scope = newScope;
     }
 
-    public void reset(Form form) {
-        return;
+    public String getName() {
+        return name;
     }
 
-    public boolean filterRequestParameter(Form form, String parameterName) {
-        return false;
+    public void setName(String newName) {
+        name = newName;
+    }
+
+    public void setScope(String newScope) {
+        scope = newScope;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public ArrayList getPreferences() {
+        return preferences;
+    }
+
+    public ZNestedBean getPersonalInfo() {
+        return personal;
+    }
+
+    public void setPersonalInfo(ZNestedBean newPersonal) {
+        personal = newPersonal;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void incrementCount() {
+        count++;
     }
 }
-
