@@ -78,7 +78,7 @@ import java.io.RandomAccessFile;
  * </blockquote>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.2 2003/07/03 23:34:38 joerg Exp $
+ * @version CVS $Id: MP3DirectoryGenerator.java,v 1.3 2003/07/05 04:33:57 joerg Exp $
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {
@@ -171,12 +171,12 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
     }
 
     private String getID3TagValue(byte[] buf, int offset, int length) {
-        String s = new String(buf, offset, length).trim();
-        int index = s.indexOf(0x00); 
+        String s = new String(buf, offset, length);
+        int index = s.indexOf(0x00);
         if (index != -1) {
             s = s.substring(0, index);
         }
-        return s;
+        return s.trim();
     }
 
     private void setID3HeaderAttributes(RandomAccessFile in) throws IOException
