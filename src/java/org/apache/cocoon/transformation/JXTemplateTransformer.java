@@ -19,6 +19,7 @@ import org.apache.cocoon.generation.JXTemplateGenerator;
 
 /**
  * Transformer adapter for {@link org.apache.cocoon.generation.JXTemplateGenerator}
+ * 
  */
 
 public class JXTemplateTransformer extends JXTemplateGenerator.TransformerAdapter {

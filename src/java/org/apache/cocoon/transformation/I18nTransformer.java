@@ -58,8 +58,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Internationalization transformer is used to transform i18n markup into text
  * based on a particular locale.
+ * 
+ * @cocoon.sitemap.component.name   i18n
+ * @cocoon.sitemap.component.logger sitemap.transformer.i18n
+ * @cocoon.sitemap.component.documentation.caching
+ *               TBD
+ * 
+ * 
  *
  * <h3>i18n transformer</h3>
  * <p>The <strong>i18n transformer</strong> works by obtaining the users locale
@@ -238,7 +246,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.25 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.26 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,

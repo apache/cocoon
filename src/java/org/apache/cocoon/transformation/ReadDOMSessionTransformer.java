@@ -31,6 +31,14 @@ import java.util.Map;
 
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * With this transformer, an object that is stored in the session, can be inserted
+ * in the SAX stream at a given position, using usual &lt;xsp:expr&gt; rules.
+ * Object can be DOM Node, XMLizable, or any other object supported by &lt;xsp:expr&gt;.
+ * 
+ * @cocoon.sitemap.component.name   readDOMsession
+ * @cocoon.sitemap.component.logger sitemap.transformer.readDOMsession
+ * 
  * With this transformer, an object that is stored in the session, can be inserted
  * in the SAX stream at a given position, using usual &lt;xsp:expr&gt; rules.
  * Object can be DOM Node, XMLizable, or any other object supported by &lt;xsp:expr&gt;.
@@ -54,7 +62,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ReadDOMSessionTransformer.java,v 1.3 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: ReadDOMSessionTransformer.java,v 1.4 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class ReadDOMSessionTransformer extends AbstractTransformer  {
 

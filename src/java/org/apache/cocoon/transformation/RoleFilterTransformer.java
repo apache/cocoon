@@ -29,6 +29,16 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * Filter XML fragments based on a user's role.  This will help in
+ * the development of smart forms that must only show information to
+ * people who are logged in and have the correct role.  The Role is
+ * specified by the Request semantics.  You can specify multiple roles
+ * by using comma delimiting.
+ * 
+ * @cocoon.sitemap.component.name   role-filter
+ * @cocoon.sitemap.component.logger sitemap.transformer.role-filter
+ * 
  * Filter XML fragments based on a user's role.  This will help in
  * the development of smart forms that must only show information to
  * people who are logged in and have the correct role.  The Role is
@@ -51,7 +61,7 @@ import java.util.StringTokenizer;
  * will work as expected.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: RoleFilterTransformer.java,v 1.4 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: RoleFilterTransformer.java,v 1.5 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class RoleFilterTransformer extends FilterTransformer {
     private final static String URI = "http://apache.org/cocoon/role-filter/1.0";

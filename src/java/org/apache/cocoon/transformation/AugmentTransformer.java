@@ -28,20 +28,17 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * <p>Augments all <code>href</code> attributes with the full path to
- * the request.</p>
- *
- * <p>Usage in sitemap:</p>
- *
- * <pre>
- *    &lt;map:transform type="augment"&gt
- *      &lt;map:parameter name="mount" value="directory/to/be/appended"/&gt;
- *    &lt;/map:transform&gt;
- * </pre>
- *
+* @cocoon.sitemap.component.documentation
+ * Augments all <code>href</code> attributes with the full path to
+ * the request. You can optionally specify the <code>mount</code>
+ * parameter.
+ * 
+ * @cocoon.sitemap.component.name   augment
+ * @cocoon.sitemap.component.logger sitemap.transformer.augment
+ * 
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since October 10, 2001
- * @version CVS $Id: AugmentTransformer.java,v 1.5 2004/03/06 02:26:13 antonio Exp $
+ * @version CVS $Id: AugmentTransformer.java,v 1.6 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class AugmentTransformer
     extends AbstractTransformer {

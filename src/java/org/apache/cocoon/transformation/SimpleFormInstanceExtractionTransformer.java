@@ -39,6 +39,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This transformer sieves an incoming stream of xml and extracts a
  * document fragment from it depending on a given tag and stores the
  * fragment using an OutputModule with a name based an attribute of
@@ -49,9 +50,12 @@ import org.xml.sax.SAXException;
  * InputModule for it to a chain of request-param and request-attr so
  * that the extracted form instance data is used only when no similar
  * request parameter exists.
- *
+ * 
+ * @cocoon.sitemap.component.name   simple-form-instance
+ * @cocoon.sitemap.component.logger sitemap.transformer.simple-form-instance
+ * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.3 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.4 2004/06/17 14:55:24 cziegeler Exp $
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
     implements Configurable, Serviceable, Recyclable {
