@@ -50,28 +50,60 @@
 */
 package org.apache.cocoon.woody.datatype.convertor;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import junit.framework.TestCase;
+
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.impl.ResourceSource;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Builds {@link EnumConvertor}s.
+ * Test case for the {@link EnumConvertorBuilder} class.
  * 
- * @version CVS $Id: EnumConvertorBuilder.java,v 1.3 2003/11/16 08:55:29 ugo Exp $
+ * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.1 2003/11/16 08:55:29 ugo Exp $
  */
-public class EnumConvertorBuilder implements ConvertorBuilder {
+public class EnumConvertorBuilderTestCase extends TestCase {
+
+    protected DocumentBuilder parser;
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder#build(org.w3c.dom.Element)
+     * @see junit.framework.TestCase#setUp()
      */
-    public Convertor build(Element configElement) throws Exception {
-        if (configElement == null) {
-            return null;
-        }
-        Element enumEl = DomHelper.getChildElement(configElement,
-                Constants.WD_NS, "enum", true);
-        String clazz = enumEl.getFirstChild().getNodeValue();
-        return new EnumConvertor(clazz);
+    protected void setUp() throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        parser = factory.newDocumentBuilder();
     }
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+    }
+
+    public EnumConvertorBuilderTestCase(String name) {
+        super(name);
+    }
+
+    /**
+     * Test the {@link EnumConvertorBuilder#build(org.w3c.dom.Element)
+     * build} method.
+     * @throws Exception
+     */
+    public void testBuild() throws Exception {
+        Source confSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/EnumConvertorTestCase.conf.xml");
+        Document sample = parser.parse(confSource.getInputStream());
+        Element convertorElement = (Element) sample.getElementsByTagNameNS(Constants.WD_NS, "convertor").item(0);
+        String enumClassName = convertorElement.getElementsByTagNameNS(Constants.WD_NS, "enum").item(0).getFirstChild().getNodeValue();
+        EnumConvertorBuilder builder = new EnumConvertorBuilder();
+        Convertor convertor = builder.build(convertorElement);
+        assertTrue("The returned convertor is not an EnumConvertor",
+                convertor instanceof EnumConvertor);
+        assertEquals("The convertor does not convert the expected class",
+                Class.forName(enumClassName), convertor.getTypeClass());
+    }
 }
