@@ -37,15 +37,17 @@ import java.util.Stack;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: LuceneIndexContentHandler.java,v 1.5 2004/03/06 14:44:46 joerg Exp $
+ * @version CVS $Id: LuceneIndexContentHandler.java,v 1.6 2004/03/17 21:21:55 joerg Exp $
  */
 public class LuceneIndexContentHandler implements ContentHandler
 {
     public static final String LUCENE_URI = "http://apache.org/cocoon/lucene/1.0";
 
-    /** If this attribute is specified on element, values of all attributes
-     * if this element added to the text of the element, and to the document
-     * body text */
+    /**
+     * If this attribute is specified on element, values of all attributes
+     * are added to the text of the element, and to the document
+     * body text
+     */
     public static final String LUCENE_ATTR_TO_TEXT_ATTRIBUTE = "text-attr";
 
     StringBuffer bodyText;
@@ -55,9 +57,7 @@ public class LuceneIndexContentHandler implements ContentHandler
     private HashSet fieldTags;
 
     /**
-     *Constructor for the LuceneIndexContentHandler object
-     *
-     * @since
+     * Constructor for the LuceneIndexContentHandler object
      */
     public LuceneIndexContentHandler() {
         this.bodyText = new StringBuffer();
@@ -69,56 +69,30 @@ public class LuceneIndexContentHandler implements ContentHandler
     }
 
     /**
-     *Sets the fieldTags attribute of the LuceneIndexContentHandler object
+     * Sets the fieldTags attribute of the LuceneIndexContentHandler object
      *
      * @param  fieldTags  The new fieldTags value
-     * @since
      */
     public void setFieldTags(HashSet fieldTags) { 
     	this.fieldTags = fieldTags;
     }
 
     /**
-     *Sets the documentLocator attribute of the LuceneIndexContentHandler object
+     * Sets the documentLocator attribute of the LuceneIndexContentHandler object
      *
      * @param  locator  The new documentLocator value
-     * @since
      */
     public void setDocumentLocator(Locator locator) { }
 
-
-    /**
-     *Description of the Method
-     *
-     * @return    Description of the Returned Value
-     * @since
-     */
     public List allDocuments() {
         return documents;
     }
 
-
-    /**
-     *Description of the Method
-     *
-     * @return    Description of the Returned Value
-     * @since
-     */
     public Iterator iterator() {
         return documents.iterator();
     }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  ch      Description of Parameter
-     * @param  start   Description of Parameter
-     * @param  length  Description of Parameter
-     * @since
-     */
     public void characters(char[] ch, int start, int length) {
-
         if (ch.length > 0 && start >= 0 && length > 1) {
             if (elementStack.size() > 0) {
                 IndexHelperField tos = (IndexHelperField) elementStack.peek();
@@ -129,28 +103,10 @@ public class LuceneIndexContentHandler implements ContentHandler
         }
     }
 
-
-    /**
-     *Description of the Method
-     *
-     * @since
-     */
     public void endDocument() {
-        /*
-         *  empty
-         */
         bodyDocument.add(Field.UnStored(LuceneXMLIndexer.BODY_FIELD, bodyText.toString()));
     }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  namespaceURI  Description of Parameter
-     * @param  localName     Description of Parameter
-     * @param  qName         Description of Parameter
-     * @since
-     */
     public void endElement(String namespaceURI, String localName, String qName) {
         IndexHelperField tos = (IndexHelperField) elementStack.pop();
         String lname = tos.getLocalFieldName();
@@ -174,7 +130,6 @@ public class LuceneIndexContentHandler implements ContentHandler
         }
 
         if (text != null && text.length() > 0) {
-        
         	if (isFieldTag(lname)) {
         		bodyDocument.add(Field.UnIndexed(lname, text.toString()));
         	}
@@ -182,76 +137,21 @@ public class LuceneIndexContentHandler implements ContentHandler
         }
     }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  prefix  Description of Parameter
-     * @since
-     */
     public void endPrefixMapping(String prefix) { }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  ch      Description of Parameter
-     * @param  start   Description of Parameter
-     * @param  length  Description of Parameter
-     * @since
-     */
     public void ignorableWhitespace(char[] ch, int start, int length) { }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  target  Description of Parameter
-     * @param  data    Description of Parameter
-     * @since
-     */
     public void processingInstruction(String target, String data) { }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  name  Description of Parameter
-     * @since
-     */
     public void skippedEntity(String name) { }
 
-
-    /**
-     *Description of the Method
-     *
-     * @since
-     */
     public void startDocument() { }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  namespaceURI  Description of Parameter
-     * @param  localName     Description of Parameter
-     * @param  qName         Description of Parameter
-     * @param  atts          Description of Parameter
-     * @since
-     */
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
         IndexHelperField ihf = new IndexHelperField(localName, qName, new AttributesImpl(atts));
         elementStack.push(ihf);
     }
 
-
-    /**
-     *Description of the Method
-     *
-     * @param  prefix  Description of Parameter
-     * @param  uri     Description of Parameter
-     * @since
-     */
     public void startPrefixMapping(String prefix, String uri) { }
 
     /**
@@ -259,7 +159,6 @@ public class LuceneIndexContentHandler implements ContentHandler
      *
      * @param  tag  local name of the tag we are processing
      * @return      boolean
-     * @since
      */
     private boolean isFieldTag(String tag) {
         // by default do not make field
