@@ -13,14 +13,19 @@
   	<sql:execute-query>
 		<sql:driver>org.gjt.mm.mysql.Driver</sql:driver>
 		<sql:dburl>jdbc:mysql://localhost/test</sql:dburl>
-		<sql:doc-element>options</sql:doc-element>
-		<sql:row-element>options</sql:row-element>
-		<sql:tag-case>lower</sql:tag-case>
-		<sql:null-indicator>yes</sql:null-indicator>
-		<sql:id-attribute>ID</sql:id-attribute>
-		<sql:id-attribute-column>foo_id</sql:id-attribute-column>
-		<sql:query>select * from foo_table</sql:query>
-		<sql:count-attribute>count</sql:count-attribute>
+		<sql:query>select * from column_type_table</sql:query>
+		<sql:doc-element>things</sql:doc-element>
+		<sql:row-element>thing</sql:row-element>
+		<sql:column-format>
+			<sql:name>my_date</sql:name>
+			<sql:class>java.text.SimpleDateFormat</sql:class>
+			<sql:parameter>MM/dd/yyyy</sql:parameter>
+		</sql:column-format>
+		<sql:column-format>
+			<sql:name>my_time</sql:name>
+			<sql:class>java.text.SimpleDateFormat</sql:class>
+			<sql:parameter>hh:mm (ss)</sql:parameter>
+		</sql:column-format>
 	</sql:execute-query>
 
   </page>
