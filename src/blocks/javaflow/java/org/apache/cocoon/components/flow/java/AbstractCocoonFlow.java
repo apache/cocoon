@@ -15,8 +15,7 @@
  */
 package org.apache.cocoon.components.flow.java;
 
-import java.io.OutputStream;
-
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -24,12 +23,14 @@ import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceUtil;
 
+import java.io.OutputStream;
+
 /**
  * Abstract class to add basic methods for flow handling.
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCocoonFlow.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: AbstractCocoonFlow.java,v 1.2 2004/03/31 20:32:45 vgritsenko Exp $
  */
 public abstract class AbstractCocoonFlow implements Continuable {
 
@@ -50,7 +51,7 @@ public abstract class AbstractCocoonFlow implements Continuable {
         System.out.println("send page and wait '" + uri + "'");
         if (Continuation.currentContinuation()!=null) {
             ContinuationContext context = getContext();
-            
+
             FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 
             if (SourceUtil.indexOfSchemeColon(uri) == -1) {
@@ -61,8 +62,8 @@ public abstract class AbstractCocoonFlow implements Continuable {
                 try {
                     context.getRedirector().redirect(false, uri);
                 } catch (Exception e) {
-                    throw new RuntimeException("Cannot redirect to '"+uri+"'", e);
-                } 
+                    throw new CascadingRuntimeException("Cannot redirect to '"+uri+"'", e);
+                }
             } else {
                 throw new IllegalArgumentException("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
             }
@@ -79,7 +80,7 @@ public abstract class AbstractCocoonFlow implements Continuable {
 
         System.out.println("send page '" + uri + "'");
         ContinuationContext context = getContext();
-   
+
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
@@ -90,7 +91,7 @@ public abstract class AbstractCocoonFlow implements Continuable {
             try {
                 context.getRedirector().redirect(false, uri);
             } catch (Exception e) {
-                throw new RuntimeException("Cannot redirect to '"+uri+"'", e);
+                throw new CascadingRuntimeException("Cannot redirect to '"+uri+"'", e);
             }
         } else {
             throw new IllegalArgumentException("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
@@ -111,7 +112,7 @@ public abstract class AbstractCocoonFlow implements Continuable {
             pipeUtil.service(context.getServiceManager());
             pipeUtil.processToStream(uri, bizdata, out);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot process pipeline to '"+uri+"'", e);
+            throw new CascadingRuntimeException("Cannot process pipeline to '"+uri+"'", e);
         }
     }
 
@@ -119,7 +120,7 @@ public abstract class AbstractCocoonFlow implements Continuable {
         try {
             getContext().getRedirector().redirect(false, uri);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot redirect to '"+uri+"'", e);
+            throw new CascadingRuntimeException("Cannot redirect to '"+uri+"'", e);
         }
     }
 
@@ -134,7 +135,7 @@ public abstract class AbstractCocoonFlow implements Continuable {
         try {
             return getContext().getServiceManager().lookup(id);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot lookup component '"+id+"'", e);
+            throw new CascadingRuntimeException("Cannot lookup component '"+id+"'", e);
         }
     }
 
@@ -144,7 +145,8 @@ public abstract class AbstractCocoonFlow implements Continuable {
      * @param component a component
      */
     public void releaseComponent( Object component ) {
-        if (component!=null)
+        if (component != null) {
             getContext().getServiceManager().release(component);
+        }
     }
 }
