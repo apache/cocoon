@@ -5,6 +5,7 @@
                 exclude-result-prefixes="wi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
+      | Version CVS $Id: woody-field-styling.xsl,v 1.41 2004/02/07 10:15:23 ugo Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -15,7 +16,7 @@
     <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
     <script src="{$resources-uri}/woody-lib.js" type="text/javascript"/>
     <script type="text/javascript">
-      _editor_url = "resources/htmlarea/";
+      _editor_url = "<xsl:value-of select="concat($resources-uri, '/htmlarea/')"/>";
       _editor_lang = "en";
     </script>
     <script type="text/javascript" src="{$resources-uri}/htmlarea/htmlarea.js"></script>
