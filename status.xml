@@ -431,6 +431,10 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="RG" type="fix" fixes-bug="32417">
+     Portal: attributes "javax.portlet.request" and "javax.portlet.response" were not set for JSR-168
+     portlets running in the Cocoon webapp.
+   </action>
    <action dev="SW" type="add">
      CForms: add a new "link" styling for action widgets, that renders the action
      as an hypertext link.
