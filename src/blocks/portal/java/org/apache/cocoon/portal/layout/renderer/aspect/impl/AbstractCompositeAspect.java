@@ -27,11 +27,20 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Insert a composite layout's elements into the resulting XML. Elements (items)
+ * are processed in order. Concrete descendents of this class need to implement the
+ * actual handling of layout elements.
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
+ * </ul>
+ * 
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCompositeAspect.java,v 1.6 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: AbstractCompositeAspect.java,v 1.7 2004/04/25 20:09:34 haul Exp $
  */
 public abstract class AbstractCompositeAspect
     extends AbstractAspect {
@@ -56,11 +65,20 @@ public abstract class AbstractCompositeAspect
         }
 	}
 
+    /**
+     * Process a single layout element. 
+     * 
+     * @param item layout item to be processed
+     * @param handler SAX handler taking events
+     * @param service portal service providing component access
+     * @throws SAXException
+     */
     protected abstract void processItem(Item item, ContentHandler handler, PortalService service)
         throws SAXException;
 
     /**
-     * Process a Layout
+     * Default implementation for processing a Layout. Calls the associated
+     * renderer for a layout to render it.
      */
     protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
         final String rendererName = layout.getRendererName();

@@ -41,11 +41,20 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Container for chain of aspect renderers. All aspect renderers are applied in order
+ * of appearance.
+ * 
+ * <h2>Configuration</h2>
+ * <table><tbody>
+ * <tr><th>aspects</th><td>List of aspect renderers to apply. See 
+ *      {@link org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain}</td>
+ *      <td></td><td>Configuration</td><td><code>EmptyConfiguration</code></td></tr>
+ * </tbody></table>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectRenderer.java,v 1.5 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id: AspectRenderer.java,v 1.6 2004/04/25 20:10:29 haul Exp $
  */
 public class AspectRenderer
     extends AbstractLogEnabled

@@ -27,11 +27,14 @@ import org.xml.sax.SAXException;
 
 /**
  * This is the adapter to use pipelines as coplets. The result of the called 
- * pipeline is cached until the coplet gets a new CopletLinkEvent.
+ * pipeline is cached until a 
+ * {@link org.apache.cocoon.portal.event.CopletInstanceEvent}
+ * for that coplet is received. Configuration options of super
+ * classes apply.
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: CachingURICopletAdapter.java,v 1.4 2004/03/31 09:32:24 cziegeler Exp $
+ * @version CVS $Id: CachingURICopletAdapter.java,v 1.5 2004/04/25 20:09:34 haul Exp $
  */
 public class CachingURICopletAdapter
     extends URICopletAdapter
@@ -116,11 +119,11 @@ public class CachingURICopletAdapter
 
                 bi.deserialize(bc.getSAXFragment());
             } else {
-                this.toCache(coplet, bc.getSAXFragment());
+            this.toCache(coplet, bc.getSAXFragment());
 
-                this.toSAXFromCache(coplet, contentHandler);
-            }
+            this.toSAXFromCache(coplet, contentHandler);
         }
+    }
     }
 
     /**

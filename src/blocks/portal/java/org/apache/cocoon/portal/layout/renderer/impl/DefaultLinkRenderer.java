@@ -22,12 +22,18 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Include a linked layout in the generated XML.
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.LinkLayout}</li>
+ * </ul>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: DefaultLinkRenderer.java,v 1.4 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id: DefaultLinkRenderer.java,v 1.5 2004/04/25 20:10:29 haul Exp $
  */
 public class DefaultLinkRenderer extends AbstractRenderer {
 

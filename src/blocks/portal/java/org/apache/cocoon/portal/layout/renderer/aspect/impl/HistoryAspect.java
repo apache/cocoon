@@ -34,11 +34,24 @@ import org.xml.sax.SAXException;
 
 
 /**
- * Save the current state of the layout into the session
+ * Save the current state of the layout into the session. Takes into account
+ * state already present as request attribute. Includes aspect data and parameters
+ * as well as aspect data and attributes of a coplet instance if layout is a 
+ * coplet layout. This aspect does not add to the XML created by the renderer chain.
+ * 
+ * <h2>Example XML</h2>
+ * <pre>
+ *   &lt;!-- output from following renderers --&gt; 
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.Layout}</li>
+ * </ul>
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: HistoryAspect.java,v 1.3 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: HistoryAspect.java,v 1.4 2004/04/25 20:09:34 haul Exp $
  */
 public class HistoryAspect 
     extends AbstractAspect {

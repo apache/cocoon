@@ -26,11 +26,24 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Add a tag holding a URI used to remove a coplet from a layout to the
+ * output stream if the coplet is not set to mandatory.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *   &lt;remove-uri&gt;layout-remove-event&lt;/remove-uri&gt;
+ *   &lt;!-- output from following renderers --&gt;
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RemovableAspect.java,v 1.6 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: RemovableAspect.java,v 1.7 2004/04/25 20:09:34 haul Exp $
  */
 public class RemovableAspect 
     extends AbstractAspect {

@@ -19,11 +19,13 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.AbstractLayout;
 
 /**
+ * A coplet layout holds a coplet.
+ * 
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletLayout.java,v 1.3 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: CopletLayout.java,v 1.4 2004/04/25 20:09:34 haul Exp $
  */
 public final class CopletLayout extends AbstractLayout {
     

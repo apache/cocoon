@@ -30,11 +30,27 @@ import org.xml.sax.SAXException;
 
 /**
  * This aspect directly invokes the coplet adapter to stream out the coplet content.
+ * An alternative solution is to generate only cinclude tags by using the
+ * {@link org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect}
+ * and include the coplet contents later. That would allow caching up to the point 
+ * of the cinclude transformer.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ * &lt;content&gt;
+ *   &lt;!-- content streamed from coplet --&gt;
+ * &lt;/content&gt;
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultCopletAspect.java,v 1.4 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: DefaultCopletAspect.java,v 1.5 2004/04/25 20:09:34 haul Exp $
  */
 public class DefaultCopletAspect extends AbstractAspect {
 

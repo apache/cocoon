@@ -35,11 +35,12 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This coplet adapter is used to connect to external applications that are plugged into the portal
+ * This coplet adapter is used to connect to external applications that are 
+ * plugged into the portal
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: ApplicationCopletAdapter.java,v 1.4 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id: ApplicationCopletAdapter.java,v 1.5 2004/04/25 20:09:34 haul Exp $
  */
 public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 

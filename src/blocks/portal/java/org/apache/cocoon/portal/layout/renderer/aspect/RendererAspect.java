@@ -27,12 +27,13 @@ import org.xml.sax.SAXException;
 
 /**
  * A renderer aspect extends a renderer with a distinct functionality.
+ * It can add a particular decoration like a border or buttons for example.
  * A renderer aspect has to be thread safe!
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspect.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: RendererAspect.java,v 1.6 2004/04/25 20:09:34 haul Exp $
  */
 public interface RendererAspect 
     extends Component {

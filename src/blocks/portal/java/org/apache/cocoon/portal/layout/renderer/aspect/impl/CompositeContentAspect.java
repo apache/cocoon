@@ -30,11 +30,38 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Add several contents.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *  &lt;composite&gt;
+ *   &lt;item param1="value1" param2="value2"&gt;
+ *     &lt;!-- included content from following renderers for this item's layout--&gt;
+ *   &lt;/item&gt;
+ *   &lt;item&gt;
+ *     &lt;!-- included content from following renderers for this item's layout--&gt;
+ *   &lt;/item&gt;
+ *   &lt;item param1="value1"&gt;
+ *     &lt;!-- included content from following renderers for this item's layout--&gt;
+ *   &lt;/item&gt;
+ *  &lt;/composite&gt;
+ * </pre>
+ *
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
+ * </ul>
+ *
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ * <tr><th>root-tag</th><td><Enclose result in root tag?/td><td></td><td>boolean</td><td><code>true</code></td></tr>
+ * <tr><th>tag-name</th><td>Name of root tag to  use.</td><td></td><td>String</td><td><code>"composite"</code></td></tr>
+ * </tbody></table>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeContentAspect.java,v 1.6 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: CompositeContentAspect.java,v 1.7 2004/04/25 20:09:34 haul Exp $
  */
 public class CompositeContentAspect extends AbstractCompositeAspect {
 

@@ -26,11 +26,28 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * Includes a tag containing a URI that is connected with a fullscreen
+ * display of a coplet. If fullscreen is explicitly unsupported, no tag
+ * will be created. Otherwise, it depends on the current layout being the
+ * fullscreen layout or not whether the URI contains an event that switches
+ * to this layout or not.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *   &lt;fullscreen-uri&gt;fullscreen-event-if-supported&lt;/fullscreen-uri&gt;
+ *   &lt;!-- output from following renderers --&gt;
+ * </pre>
+ * 
+ * <h2>Applicable to:</h2>
+ * <ul>
+ *  <li>{@link org.apache.cocoon.portal.layout.impl.CopletLayout}</li>
+ * </ul>
+ * 
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletAspect.java,v 1.7 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: FullScreenCopletAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
  */
 public class FullScreenCopletAspect extends AbstractAspect {
 
