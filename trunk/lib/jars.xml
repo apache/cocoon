@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.110 2003/10/02 23:29:48 antonio Exp $
+    | CVS $Id: jars.xml,v 1.111 2003/10/08 16:42:44 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -892,7 +892,7 @@
 	    for Java Objects against relational databases.
 	</description>
 	<used-by>OJB</used-by>
-	<lib>ojb/lib/db-ojb-1.0.rc4-20030926.jar</lib>
+	<lib>ojb/lib/db-ojb-1.0.rc4-20031008.jar</lib>
 	<homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
