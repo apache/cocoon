@@ -236,7 +236,7 @@ browser.5=netscape=Mozilla
   <p>The Cocoon publishing system has an engine based on the <em>reactor</em> design
   pattern which is described in the picture below:</p>
   
-  <img-block alt="Cocoon Schema" src="images/schema.jpg"/>
+  <figure alt="Cocoon Schema" src="images/schema.jpg"/>
   
   <p>Let's describe the components that appear on the schema:</p>
   

@@ -14,7 +14,7 @@
  <body>
  <s1 title="What is it?">
   
-  <img-block src="images/cocoon.jpg" alt="Cocoon"/>
+  <figure src="images/cocoon.jpg" alt="Cocoon"/>
   
   <p>
    Cocoon is a 100% pure Java publishing framework that relies on new W3C
@@ -180,7 +180,7 @@
   <p>
    Thank you very much.
   </p>
-  <img-block src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
+  <figure src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
  </s1>
  </body>
 </document>

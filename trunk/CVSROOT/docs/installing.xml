@@ -8,6 +8,7 @@
   <authors>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
    <person name="Brett McLaughlin" email="bmclaugh@algx.net"/>
+   <person name="Russell Castagnaro" email="russell@synctank.com"/>
   </authors>
  </header>
  
@@ -48,16 +49,13 @@
   
   <table>
    <caption>XML Parsers</caption>
-   <thead>
     <tr>
      <th>Name</th>
      <th>Version</th>
      <th>Location</th>
     </tr>
-   </thead>
-   <tbody>
     <tr>
-     <td><strong>Apache Xerces</strong></td>
+     <td>Apache Xerces</td>
      <td>1.0 (java edition)</td>
      <td><link href="http://xml.apache.org/dist/">xml.apache.org</link></td>
     </tr>
@@ -66,24 +64,18 @@
      <td>TR2</td>
      <td><link href="http://java.sun.com/xml/">java.sun.com</link></td>
     </tr>
-   </tbody>
-   <tfoot>
     <tr>
      <td colspan="3">Cocoon comes preconfigured for Xerces</td>
     </tr>
-   </tfoot>
   </table>
    
   <table>
    <caption>XSLT Processor</caption>
-   <thead>
     <tr>
      <th>Name</th>
      <th>Minimum Version</th>
      <th>Location</th>
     </tr>
-   </thead>
-   <tbody>
     <tr>
      <td>Apache Xalan</td>
      <td>0.19.1</td>
@@ -94,24 +86,18 @@
      <td>19991102</td>
      <td><link href="http://www.jclark.com/">www.jclark.com</link></td>
     </tr>
-   </tbody>
-   <tfoot>
     <tr>
      <td colspan="3">Cocoon comes preconfigured for Xalan</td>
     </tr>
-   </tfoot>
   </table>   
    
   <table>
    <caption>Other Required Components</caption>
-   <thead>
     <tr>
      <th>Name</th>
      <th>Minimum Version</th>
      <th>Location</th>
     </tr>
-   </thead>
-   <tbody>
     <tr>
      <td>Apache FOP</td>
      <td>0.12.0</td>
@@ -127,7 +113,6 @@
      <td>1.0.8</td>
      <td><link href="http://www.cacas.org/java/gnu/regexp/">www.cacas.org/java/gnu/regexp</link></td>
     </tr>
-   </tbody>
   </table>   
   
   <note>
@@ -152,6 +137,7 @@
     <li>Your favorite XSLT processor</li>
     <li>Apache FOP (optional, unless you want PDF rendering)</li>
     <li>GNU Regexp (optional, unless you use <em>ProducerFromMap</em>)</li>
+    <li>FESI (optional, unless you use <em>DCP</em>)</li>
    </ul>
    
   <p>
@@ -344,6 +330,33 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
      and try accessing the samples contained in the distribution to see
      Cocoon in action.
     </p>   
+  </s2>
+
+  <s2 title="Installing Cocoon on BEA WebLogic">
+   <p>
+    After you have obtained all the jar packages you need (see the above
+    section), you should add all of them (included the <code>cocoon.jar</code>
+    package to your <code>weblogic.class.path</code> variable either
+    using the <em>t3config</em> utility or use the <code>-Dweblogic.class.path</code>
+    argument with the java runtime that invokes the system.
+   </p>
+   <p>
+    Once you've done that, you should register Cocoon by adding these lines
+    to your configuration files:
+   </p>
+   <source>
+    weblogic.httpd.register.*.xml=\org.apache.cocoon.Cocoon
+    weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
+   </source>
+   <p>
+    making sure that you replaced <em>[path-to-cocoon]</em> with the actual
+    path in your system.
+   </p>
+   <p>
+    At this point your system is configured. Access the "/Cocoon.xml" page
+    with your browser to see the Cocoon status screen that will tell you
+    that Cocoon is up and running.
+   </p>
   </s2>
   
   <s2 title="Installing Cocoon on Allaire JRun">
