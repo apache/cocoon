@@ -279,6 +279,7 @@ CHANGE HISTORY:
     <optional><ref name="use-browser-capabilities-db"/></optional>
     <optional><ref name="use-session-info"/></optional>
     <optional><ref name="use-deli"/></optional>
+    <optional><ref name="xslt-processor-role"/></optional>
     <optional><ref name="transformer-factory"/></optional> 
   </define>
 
@@ -610,6 +611,16 @@ CHANGE HISTORY:
     </element>
   </define>
   <define name="use-deli.attlist" combine="interleave">
+    <ref name="universal.attr"/>
+  </define>
+
+  <define name="xslt-processor-role">
+    <element name="xslt-processor-role">
+      <ref name="xslt-processor-role.attlist"/>
+      <data type="string" />
+    </element>
+  </define>
+  <define name="xslt-processor-role.attlist" combine="interleave">
     <ref name="universal.attr"/>
   </define>
 
