@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.4 2003/03/10 18:08:34 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.5 2003/03/11 06:50:00 jefft Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -340,9 +340,10 @@ public class DOMStreamer implements XMLProducer {
                     String namespaceURI = node.getNamespaceURI();
                     String prefix = node.getPrefix();
                     String localName = node.getLocalName();
+                    String nodeName = node.getNodeName();  // SAX 1 node name, for debugging
 
                     if (localName == null)
-                        throw new SAXException("[NamespaceNormalizingDOMStreamer] Encountered a DOM Element without a localName. DOM Level 1 trees are not supported by this DOMStreamer.");
+                        throw new SAXException("[NamespaceNormalizingDOMStreamer] Encountered a DOM Element '"+nodeName+"' without a localName. DOM Level 1 trees are not supported by this DOMStreamer.");
 
                     if (namespaceURI != null) {
                         // no prefix means: make this the default namespace
@@ -390,7 +391,7 @@ public class DOMStreamer implements XMLProducer {
                         String attrPrefix = null;
 
                         if (attr.getLocalName() == null)
-                            throw new SAXException("[NamespaceNormalizingDOMStreamer] Encountered an attribute without a local name, this DOM streamer does not support that.");
+                            throw new SAXException("[NamespaceNormalizingDOMStreamer] Encountered an attribute '"+attrName+"' without a local name, on node '"+nodeName+"'. This DOM streamer does not support DOM 1 attributes.");
 
                         // only do non-namespace attributes
                         if (!(attrName.equals("xmlns") || attrName.startsWith("xmlns:"))) {
