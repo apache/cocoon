@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.thread;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -187,6 +186,8 @@ public class DefaultRunnableManager
      *        pending commands?
      * @param shutdownWaitTime After what time a normal shutdown should take
      *        into account if a graceful shutdown has not come to an end
+     *
+     * @throws IllegalArgumentException If the pool already exists
      */
     public void createPool( final String name,
                             final int queueSize,
@@ -199,6 +200,12 @@ public class DefaultRunnableManager
                             final boolean shutdownGraceful,
                             final int shutdownWaitTime )
     {
+        if( null != m_pools.get( name ) )
+        {
+            throw new IllegalArgumentException( "ThreadPool \"" + name +
+                                                "\" alrady exists" );
+        }
+
         createPool( new DefaultThreadPool(  ), name, queueSize, maxPoolSize,
                     minPoolSize, priority, isDaemon, keepAliveTime,
                     blockPolicy, shutdownGraceful, shutdownWaitTime );
@@ -566,45 +573,25 @@ public class DefaultRunnableManager
         final String name = config.getChild( "name" ).getValue(  );
         final int queueSize =
             config.getChild( "queue-size" ).getValueAsInteger( DEFAULT_QUEUE_SIZE );
-        int maxPoolSize =
+        final int maxPoolSize =
             config.getChild( "max-pool-size" ).getValueAsInteger( DEFAULT_MAX_POOL_SIZE );
-
-        if( maxPoolSize < 0 )
-        {
-            maxPoolSize = Integer.MAX_VALUE;
-        }
-
         int minPoolSize =
             config.getChild( "min-pool-size" ).getValueAsInteger( DEFAULT_MIN_POOL_SIZE );
 
         // make sure we have enough threads for the default thread pool as we 
         // need one for ourself
         if( DEFAULT_THREADPOOL_NAME.equals( name ) &&
-            ( minPoolSize < DEFAULT_MIN_POOL_SIZE ) )
+            ( ( minPoolSize > 0 ) && ( minPoolSize < DEFAULT_MIN_POOL_SIZE ) ) )
         {
             minPoolSize = DEFAULT_MIN_POOL_SIZE;
-        }
-        else if( minPoolSize < 1 )
-        {
-            getLogger(  ).warn( "Config element min-pool-size < 1 for pool \"" +
-                                name + "\". Set to 1" );
-            minPoolSize = 1;
         }
 
         final String priority =
             config.getChild( "priority" ).getValue( DEFAULT_THREAD_PRIORITY );
         final boolean isDaemon =
             config.getChild( "daemon" ).getValueAsBoolean( DEFAULT_DAEMON_MODE );
-        long keepAliveTime =
+        final long keepAliveTime =
             config.getChild( "keep-alive-time-ms" ).getValueAsLong( DEFAULT_KEEP_ALIVE_TIME );
-
-        if( keepAliveTime < 0 )
-        {
-            getLogger(  ).warn( "Config element keep-alive-time-ms < 0 for pool \"" +
-                                name + "\". Set to 1000" );
-            keepAliveTime = 1000;
-        }
-
         final String blockPolicy =
             config.getChild( "block-policy" ).getValue( DefaultThreadPool.POLICY_DEFAULT );
         final boolean shutdownGraceful =
@@ -676,9 +663,24 @@ public class DefaultRunnableManager
         factory.setDaemon( isDaemon );
         pool.setThreadFactory( factory );
         pool.setQueue( queueSize );
-        pool.setMaximumPoolSize( maxPoolSize );
-        pool.setMinimumPoolSize( minPoolSize );
-        pool.setKeepAliveTime( keepAliveTime );
+        pool.setMaximumPoolSize( ( maxPoolSize < 0 ) ? Integer.MAX_VALUE
+                                 : maxPoolSize );
+
+        if( minPoolSize < 1 )
+        {
+            getLogger(  ).warn( "min-pool-size < 1 for pool \"" +
+                                name + "\". Set to 1" );
+        }
+
+        pool.setMinimumPoolSize( ( minPoolSize < 1 ) ? 1 : minPoolSize );
+
+        if( keepAliveTime < 0 )
+        {
+            getLogger(  ).warn( "keep-alive-time-ms < 0 for pool \"" +
+                                name + "\". Set to 1000" );
+        }
+
+        pool.setKeepAliveTime( ( keepAliveTime < 0 ) ? 1000 : keepAliveTime );
         pool.setBlockPolicy( blockPolicy );
         pool.setShutdownGraceful( shutdownGraceful );
         pool.setShutdownWaitTimeMs( shutdownWaitTime );
@@ -818,10 +820,10 @@ public class DefaultRunnableManager
         {
             if( getLogger(  ).isDebugEnabled(  ) )
             {
-                getLogger(  ).debug( "Executing Command: " +
-                                     m_command.toString(  ) + ",pool=" +
-                                     m_pool.getName(  ) + ",delay=" + m_delay +
-                                     ",interval=" + m_interval );
+                getLogger(  ).debug( "Hand over Command " +
+                                     m_command.toString(  ) + " to pool \"" +
+                                     m_pool.getName(  ) + "\" with delay=" + m_delay +
+                                     " and interval=" + m_interval );
             }
 
             synchronized( m_commandStack )
