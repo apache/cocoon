@@ -56,9 +56,7 @@ import java.io.Writer;
 
 import org.apache.garbage.serializer.encoding.Charset;
 import org.apache.garbage.serializer.encoding.CharsetFactory;
-import org.apache.garbage.serializer.util.DocType;
 import org.apache.garbage.serializer.util.Namespaces;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -67,7 +65,7 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: AbstractSerializer.java,v 1.1 2003/06/21 21:11:48 pier Exp $
+ * @version CVS $Id: AbstractSerializer.java,v 1.2 2003/06/24 16:59:19 cziegeler Exp $
  */
 public abstract class AbstractSerializer implements Serializer, Locator {
 

@@ -47,7 +47,8 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/package org.apache.cocoon;
+*/
+package org.apache.cocoon;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -80,7 +81,7 @@ import org.apache.cocoon.bean.CocoonBean;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: Main.java,v 1.6 2003/06/24 16:44:33 cziegeler Exp $
+ * @version CVS $Id: Main.java,v 1.7 2003/06/24 16:59:24 cziegeler Exp $
  */
 public class Main {
 

@@ -64,7 +64,7 @@ import org.apache.garbage.serializer.encoding.CharsetFactory;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: GarbageServlet.java,v 1.1 2003/06/21 21:11:53 pier Exp $
+ * @version CVS $Id: GarbageServlet.java,v 1.2 2003/06/24 16:59:28 cziegeler Exp $
  */
 public class GarbageServlet extends HttpServlet {
 
@@ -108,7 +108,7 @@ public class GarbageServlet extends HttpServlet {
         if (req.getPathInfo() != null) resource += req.getPathInfo();
         URL url = this.getServletContext().getResource(resource);
         if (url == null) {
-            res.sendError(res.SC_NOT_FOUND, "Unable to locate template \""
+            res.sendError(HttpServletResponse.SC_NOT_FOUND, "Unable to locate template \""
                           + resource + "\" in application context.");
             return;
         }

@@ -47,14 +47,13 @@
  * ============================================================================ */
 package org.apache.garbage.tree;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 
 /**
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: LocatedEvent.java,v 1.1 2003/06/21 21:11:53 pier Exp $
+ * @version CVS $Id: LocatedEvent.java,v 1.2 2003/06/24 16:59:19 cziegeler Exp $
  */
 public abstract class LocatedEvent extends AbstractEvent implements Locator {
 

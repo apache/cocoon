@@ -55,24 +55,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Iterator;
 
-import org.apache.garbage.tree.Attribute;
-import org.apache.garbage.tree.CData;
-import org.apache.garbage.tree.Characters;
-import org.apache.garbage.tree.Comment;
-import org.apache.garbage.tree.DocType;
-import org.apache.garbage.tree.ElementEnd;
-import org.apache.garbage.tree.ElementStart;
-import org.apache.garbage.tree.Events;
-import org.apache.garbage.tree.Expression;
-import org.apache.garbage.tree.ProcessingInstruction;
-import org.apache.garbage.tree.TemplateFor;
-import org.apache.garbage.tree.TemplateIf;
-import org.apache.garbage.tree.TemplateVar;
-import org.apache.garbage.tree.Tree;
-import org.apache.garbage.tree.TreeException;
-
+import org.apache.garbage.tree.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -222,7 +206,7 @@ public class Parser implements Locator, ParserTables, ParserConstants {
     }
     int expected[][] = new int[kind.length][1];
     for (int x = 0; x < kind.length; x++) expected[x][0] = kind[x];
-    throw new ParseException(prev_token, expected, this.tokenImage);
+    throw new ParseException(prev_token, expected, tokenImage);
   }
 
   /**
