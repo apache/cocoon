@@ -68,7 +68,7 @@ import org.apache.cocoon.portal.event.EventConverter;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventConverter.java,v 1.2 2003/10/20 13:36:42 cziegeler Exp $
+ * @version CVS $Id: DefaultEventConverter.java,v 1.3 2003/12/08 14:24:14 cziegeler Exp $
  */
 public class DefaultEventConverter
     extends AbstractLogEnabled
@@ -86,6 +86,9 @@ public class DefaultEventConverter
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventConverter#encode(org.apache.cocoon.portal.event.Event)
+     */
     public String encode(Event event) {
         PortalService service = null;
         try {
@@ -95,8 +98,12 @@ public class DefaultEventConverter
                 list = new ArrayList();
                 service.setAttribute(ENCODE_LIST, list);
             }
-            list.add(event);
-            return String.valueOf(list.size()-1);
+            int index = list.indexOf(event);
+            if ( index == -1 ) {
+                list.add(event);
+                index = list.size() - 1;
+            }
+            return String.valueOf(index);
         } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup component.", ce);            
         } finally {
@@ -105,6 +112,9 @@ public class DefaultEventConverter
         
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventConverter#decode(java.lang.String)
+     */
     public Event decode(String value) {
         if (value != null) {
             PortalService service = null;
@@ -126,6 +136,9 @@ public class DefaultEventConverter
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventConverter#start()
+     */
     public void start() {
         PortalService service = null;
         try {
@@ -142,6 +155,9 @@ public class DefaultEventConverter
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventConverter#finish()
+     */
     public void finish() {
         PortalService service = null;
         try {
