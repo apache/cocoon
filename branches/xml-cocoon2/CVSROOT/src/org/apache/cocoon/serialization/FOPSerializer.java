@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-05 17:27:28 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-15 16:11:38 $
  *
  */
 public class FOPSerializer extends XMLConsumerBridge implements Serializer, MessageListener {
@@ -46,17 +46,18 @@ public class FOPSerializer extends XMLConsumerBridge implements Serializer, Mess
      */
     public FOPSerializer() {
         this.driver = new Driver();
-        this.driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
-        this.driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
-        this.driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-	    this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
-	    this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
 
         // the use of static resources sucks for servlet enviornments
         // since we could have multiple FOP that all logs in this pipe
         // It's a concurrency and security nightmare! (SM)
         MessageHandler.setOutputMethod(MessageHandler.EVENT);
         MessageHandler.addListener(this);
+
+        this.driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
+        this.driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
+        this.driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
+        this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
+        this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
     }
     
     /**
