@@ -120,6 +120,54 @@
       </p>
      </s3>
     </s2>
+    <s2 title="Using the Data Source Component">
+      <p>
+       No matter how you defined your DataSourceComponent, you access
+       it the same way.  Because The DataSourceComponent is a Component,
+       your class needs to implement the Avalon Composer interface.  The
+       Avalon Framework will give your class a ComponentManager.  At that
+       point, it is up to you how and when you pull the DataSourceComponent
+       out of the ComponentManager.
+      </p>
+      <source>
+       <![CDATA[
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentSelector;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.component.datasource.DataSourceComponent;
+
+import java.sql.Connection;
+
+// .... Skip a lot of lines until we are in the method you use
+//      to initialize the DataSourceComponent ....
+
+private DataSourceComponent datasource;
+
+public void compose(ComponentManager manager) {
+    ComponentSelector selector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+    this.datasource = (DataSourceComponent) selector.select("MyConnectionName");
+}
+
+// .... Skip more lines until we actually need to use the datasource
+
+private void meMethod() {
+    Connection myConnection = this.datasource.getConnection();
+
+    // .... perform SQL code here
+
+    myConnection.close();
+}
+       ]]>
+      </source>
+      <p>
+       Notice that once you obtained your connection, you did nothing out of the
+       ordinary to return the connection to the pool?  This is by design, and a
+       result of the JDBC specification.  Basically the JDBC specification states
+       that if a driver implements pooled connections, then it should not alter
+       the way those connections are used.  This maintains the portability of
+       your code.
+      </p>
+    </s2>
    </s1> 
   </body>
 </document>
