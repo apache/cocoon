@@ -18,7 +18,7 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-31 12:20:16 $ 
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-09-08 18:10:30 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -133,40 +133,42 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
         // Must start from beginning
         expr[y++] = MATCH_BEGIN;
         
-        if (buff[0]=='\\') {
-            slash = true;
-        } else if (buff[0] == '*') {
-            expr[y++] = MATCH_FILE;
-        }  else {
-            expr[y++] = buff[0];
-        }
+        if (buff.length > 0) {
+            if (buff[0]=='\\') {
+                slash = true;
+            } else if (buff[0] == '*') {
+                expr[y++] = MATCH_FILE;
+            }  else {
+                expr[y++] = buff[0];
+            }
         
-        // Main translation loop
-        for (int x = 1; x < buff.length; x++) {
-            // If the previous char was '\' simply copy this char.
-            if (slash) {
-                expr[y++] = buff[x];
-                slash = false;
-            // If the previous char was not '\' we have to do a bunch of checks
-            } else {
-                int prev = (y - 1);
-                // If this char is '\' declare that and continue
-                if (buff[x] == '\\') {
-                    slash = true;
-                // If this char is '*' check the previous one
-                } else if (buff[x] == '*') {
-                    // If the previous character als was '*' match a path
-                    if (expr[y-1] <= MATCH_FILE) {
-                        expr[y-1] = MATCH_PATH;
-                    } else {
-                        expr[y++] = MATCH_FILE;
-                    }
+            // Main translation loop
+            for (int x = 1; x < buff.length; x++) {
+                // If the previous char was '\' simply copy this char.
+                if (slash) {
+                    expr[y++] = buff[x];
+                    slash = false;
+                // If the previous char was not '\' we have to do a bunch of checks
                 } else {
-                    expr[y++]=buff[x];
+                    int prev = (y - 1);
+                    // If this char is '\' declare that and continue
+                    if (buff[x] == '\\') {
+                        slash = true;
+                    // If this char is '*' check the previous one
+                    } else if (buff[x] == '*') {
+                        // If the previous character als was '*' match a path
+                        if (expr[y-1] <= MATCH_FILE) {
+                            expr[y-1] = MATCH_PATH;
+                        } else {
+                            expr[y++] = MATCH_FILE;
+                        }
+                    } else {
+                        expr[y++]=buff[x];
+                    }
                 }
             }
         }
-        
+
         // Must match end at the end
         expr[y] = MATCH_THEEND;
         return expr;
