@@ -28,7 +28,7 @@ import org.apache.cocoon.portal.layout.LayoutDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultLayoutDescription.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultLayoutDescription
     extends AbstractProducibleDescription
@@ -37,6 +37,8 @@ public class DefaultLayoutDescription
     protected String defaultRendererName;
     
     protected List rendererNames = new ArrayList(2);
+    
+    protected String itemClassName;
     
     public String getDefaultRendererName() {
         return defaultRendererName;
@@ -58,5 +60,18 @@ public class DefaultLayoutDescription
 
     public void addRendererName(String name) {
         this.rendererNames.add( name );
+    }
+    
+    /**
+     * @return Returns the itemClassName.
+     */
+    public String getItemClassName() {
+        return this.itemClassName;
+    }
+    /**
+     * @param itemClassName The itemClassName to set.
+     */
+    public void setItemClassName(String itemClassName) {
+        this.itemClassName = itemClassName;
     }
 }

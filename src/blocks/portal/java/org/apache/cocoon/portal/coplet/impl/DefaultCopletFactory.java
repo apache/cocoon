@@ -61,6 +61,8 @@ public class DefaultCopletFactory
     
     protected ServiceSelector storeSelector;
 
+    protected static long idCounter = System.currentTimeMillis();
+	
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.coplet.CopletFactory#prepare(org.apache.cocoon.portal.coplet.CopletData)
      */
@@ -127,8 +129,10 @@ public class DefaultCopletFactory
         
         String id = null;
         if ( copletDescription.createId() ) {
-            // TODO - create unique id
-            id = name + '-' + System.currentTimeMillis();
+            synchronized (this) {
+                id = copletData.getId() + '-' + idCounter;
+                idCounter += 1;
+            }
         }
         instance.initialize( name, id );
         

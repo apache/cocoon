@@ -72,5 +72,15 @@ public interface CompositeLayout
      * This item is not added to the composite layout
      */
     Item createNewItem();
+
+    /**
+     * @return Returns the item class name.
+     */
+    String getItemClassName();
+    
+    /**
+     * @param itemClassName The item class name to set.
+     */
+    void setItemClassName(String value);
     
 }
