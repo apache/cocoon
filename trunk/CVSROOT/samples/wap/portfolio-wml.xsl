@@ -14,7 +14,7 @@
      <a href="#stocks">Stocks</a><br/>
     </p>
     <do type="accept" label="About">
-     <go href="#About"/>
+     <go href="#about"/>
     </do>
    </card>
 
