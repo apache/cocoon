@@ -82,11 +82,23 @@
                               <annotation>
                                 <documentation>Returns a sequence of elements whose names are the current row's column names, and whose values are the current row's column values</documentation>
                               </annotation>
+                              <element name="esql:encoding" minOccurs="0" maxOccurs="1">
+                                <annotation>
+                                  <documentation>The encoding used for this column, specified as a Java encoding 
+name.</documentation>
+                                </annotation>
+                              </element>
                             </element>
                             <element name="esql:get-string" minOccurs="0" maxOccurs="unbounded" type="EsqlColumnFunction">
                               <annotation>
                                 <documentation>Returns the value of the given column in the current row as a string</documentation>
                               </annotation>
+                              <element name="esql:encoding" minOccurs="0" maxOccurs="1">
+                                <annotation>
+                                  <documentation>The encoding used for this column, specified as a Java encoding
+name.</documentation>
+                                </annotation>
+                              </element>
                             </element>
                             <element name="esql:get-date" minOccurs="0" maxOccurs="unbounded" type="EsqlFormattedColumnFunction">
                               <annotation>
