@@ -66,7 +66,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
@@ -94,7 +93,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.21 2003/12/09 21:21:07 sylvain Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.22 2003/12/12 05:39:38 antonio Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 

@@ -248,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.18 2003/12/10 15:37:36 vgritsenko Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.19 2003/12/12 05:39:38 antonio Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -2148,7 +2148,7 @@ public class I18nTransformer extends AbstractTransformer
         public Bundle getCatalogue() throws Exception {
             if (catalogue == null) {
                 resolve();
-                catalogue = (Bundle) factory.select(resolvedLocation, resolvedName, locale);
+                catalogue = factory.select(resolvedLocation, resolvedName, locale);
             }
             return catalogue;
         }
