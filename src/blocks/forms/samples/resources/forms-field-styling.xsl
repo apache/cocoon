@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.11 2004/06/08 20:39:24 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.12 2004/06/29 19:44:25 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -258,7 +258,7 @@
   <!--+
       | Labels for pure outputs must not contain <label/> as there is no element to point to.
       +-->
-  <xsl:template match="fi:output | fi:field[fi:styling/@type='output'] | fi:messages" mode="label">
+  <xsl:template match="fi:output | fi:field[fi:styling/@type='output'] | fi:messages | fi:field[fi:selection-list][fi:styling/@list-type='radio']" mode="label">
     <xsl:copy-of select="fi:label/node()"/>
   </xsl:template>
 
