@@ -38,7 +38,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.application.PortalApplicationConfig;
+import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.transformation.AbstractTransformer;
@@ -85,7 +85,6 @@ public class ProxyTransformer
     public static final String COOKIE = "cookie";
     public static final String START_URI = "start-uri";
     public static final String LINK = "link";
-    public static final String CONFIG = "config";
     public static final String DOCUMENT_BASE = "documentbase";
 
     /**
@@ -163,40 +162,37 @@ public class ProxyTransformer
     /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters parameters)
-        throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver,
+                      Map objectModel,
+                      String src,
+                      Parameters parameters)
+    throws ProcessingException, SAXException, IOException {
 
-        request = ObjectModelHelper.getRequest(objectModel);
+        this.request = ObjectModelHelper.getRequest(objectModel);
 
-        copletInstanceData =
-            getInstanceData(this.manager, objectModel, parameters);
+        this.copletInstanceData = getInstanceData(this.manager, objectModel, parameters);
 
-        PortalApplicationConfig pac =
-            (PortalApplicationConfig) copletInstanceData.getAttribute(CONFIG);
+        final CopletData copletData = this.copletInstanceData.getCopletData();
+        
+        final String startURI = (String)copletData.getAttribute(START_URI);
 
-        String startURI = pac.getAttribute(START_URI);
+        this.link = (String) this.copletInstanceData.getAttribute(LINK);
 
-        link = (String) copletInstanceData.getAttribute(LINK);
+        this.documentBase = (String) this.copletInstanceData.getAttribute(DOCUMENT_BASE);
 
-        documentBase = (String) copletInstanceData.getAttribute(DOCUMENT_BASE);
-
-        if (link == null) {
-            link = startURI;
+        if (this.link == null) {
+            this.link = startURI;
         }
 
         if (documentBase == null) {
-            documentBase = link.substring(0, link.lastIndexOf('/') + 1);
+            documentBase = this.link.substring(0, this.link.lastIndexOf('/') + 1);
             copletInstanceData.setAttribute(DOCUMENT_BASE, documentBase);
         }
 
-        String encodingString = pac.getAttribute("encoding");
-        configuredEncoding = encodingConstantFromString(encodingString);
-        userAgent = pac.getAttribute("user-agent");
-        envelopeTag = parameters.getParameter("envelope-tag", envelopeTag);
+        String encodingString = (String)copletData.getAttribute("encoding");
+        this.configuredEncoding = encodingConstantFromString(encodingString);
+        this.userAgent = (String)copletData.getAttribute("user-agent");
+        this.envelopeTag = parameters.getParameter("envelope-tag", envelopeTag);
 
         if (envelopeTag == null) {
             throw new ProcessingException("Can not initialize RSFHtmlTransformer - sitemap parameter envelope-tag missing");
@@ -584,9 +580,7 @@ public class ProxyTransformer
                 + documentBaseURL.getAuthority()
                 + uri;
         }
-        else {
-            return documentBaseURL.toExternalForm() + uri;
-        }
+        return documentBaseURL.toExternalForm() + uri;
     }
 
     public static CopletInstanceData getInstanceData(ServiceManager manager,
