@@ -28,7 +28,7 @@
         shorthand="xml-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
 
-  <!-- This is the usual SAX parser -->
+  <!-- This is the usual DOM parser -->
   <role name="org.apache.excalibur.xml.dom.DOMParser"
         shorthand="dom-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
