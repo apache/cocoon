@@ -56,7 +56,7 @@
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
-  xmlns:util="http://www.plenix.com/dtd/xsp/util"
+  xmlns:util="http://apache.org/DTD/XSP/util"
 >
   <xsl:template match="xsp:page">
     <xsp:page>
