@@ -14,7 +14,6 @@
 <role-list>
 
   <!-- Parser:
-
        Starting with Cocoon 2.1 we have a bunch of different parser:
        - a SAX parser (producing SAX events)
        - a DOM parser (producint a document)
@@ -22,7 +21,7 @@
        ...
   -->
 
-  <!-- This is the usual SAX parser -->
+  <!-- This is the default SAX parser -->
   <role name="org.apache.excalibur.xml.sax.SAXParser">
     <component
       shorthand="xml-parser"
@@ -31,7 +30,7 @@
     />
   </role>
 
-  <!-- This is the usual DOM parser 
+  <!-- This is the default DOM parser 
   <role name="org.apache.excalibur.xml.dom.DOMParser">
     <component
       shorthand="dom-parser"
@@ -41,7 +40,6 @@
   </role>
   -->
   
-  <!-- XSLT: -->
   <role name="org.apache.excalibur.xml.xslt.XSLTProcessor">
     <component 
       shorthand="xslt-processor"
@@ -62,15 +60,6 @@
     <component
       shorthand="xpath-processor"
       class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
-
-  <!-- The entity resolver used by most parsers -->
-  <role name="org.apache.excalibur.xml.EntityResolver">
-    <component
-      shorthand="entity-resolver"
-      class="org.apache.cocoon.components.resolver.DefaultResolver"
       handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
     />
   </role>

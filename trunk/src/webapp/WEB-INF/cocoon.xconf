@@ -29,8 +29,9 @@
     file="context://sitemap.xmap"
     check-reload="yes"
     logger="sitemap"
-    activation="inline"
   />
+
+<!-- ================================= XML ================================ -->
 
   <!--+
       | XML Parser
@@ -109,18 +110,15 @@
       |          * incremental processing is a 'static' thing in Xalan: if you
       |            enable it on one xslt-processor, enable it on all.
       +-->
-  <xslt-processor id="xslt" logger="core.xslt-processor">
+  <xslt-processor id="xslt" logger="core.xslt-processor" default="true">
      <parameter name="use-store" value="false"/>
      <parameter name="incremental-processing" value="false"/>
   </xslt-processor>
 
   <!--+
       | XSLT Processor using xsltc from Xalan
-      | For Interpreted Xalan use:
-      | <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
       +-->
-  <xslt-processor id="xsltc"
-             logger="core.xslt-processor">
+  <xslt-processor id="xsltc" logger="core.xslt-processor">
      <parameter name="use-store" value="false"/>
      <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
   </xslt-processor>
@@ -128,15 +126,19 @@
   <!--+
       | Xalan XSLT Processor
       +-->
-  <xslt-processor id="xalan" 
-                  logger="core.xslt-processor">
+  <xslt-processor id="xalan" logger="core.xslt-processor">
      <parameter name="use-store" value="false"/>
      <parameter name="incremental-processing" value="false"/>
      <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
   </xslt-processor>
 
+  <!--+
+      | Xpath Processor
+      +-->
+  <xpath-processor id="xpath-processor" logger="core.xpath-processor" />
+
   <!-- The XMLizers converts different mime-types to XML -->
-  <xmlizer id="xmlizer">
+  <xmlizer id="xmlizer" logger="core.xmlizer">
       <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml" />
   </xmlizer>
   
@@ -158,13 +160,59 @@
       |
       | Each source factory adds a special uri schemes to the system.
       +-->
-	<url-source id="url" logger="core.source.url" />
-	<context-source id="context" logger="core.source.context" />
-	<cocoon-source id="cocoon" logger="core.source.cocoon" />
-	<file-source id="file" logger="core.source.file" />
-	<resource-source id="resource" logger="core.source.resource" />
+  <url-source id="url" logger="core.source.url" />
+  <context-source id="context" logger="core.source.context" />
+  <cocoon-source id="cocoon" logger="core.source.cocoon" />
+  <file-source id="file" logger="core.source.file" />
+  <resource-source id="resource" logger="core.source.resource" />
 	
-    <source-resolver id="cocoon-source-resolver" logger="core.source-resolver" />
+  <!--+
+      | Source Resolver
+      | 
+      | Custom source resolver acting both as Cocoon's own environment
+      | SourceResolver and excalibur SourceResolver.
+      +-->
+  <source-resolver id="cocoon-source-resolver" logger="core.source-resolver" />
+
+    <!--+
+      | Entity resolution catalogs
+      |
+      | The default catalog is distributed at WEB-INF/entities/catalog
+      | This is the contextual pathname for Cocoon resources.
+      | You can override this path, if necessary, using the "catalog" parameter:
+      |
+      |    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
+      |
+      | However, it is probably desirable to leave this default catalog config
+      | and declare your own local catalogs, which are loaded in addition to
+      | the system catalog.
+      |
+      | There are various ways to do local configuration (see "Entity Catalogs"
+      | documentation). One way is via the CatalogManager.properties file.
+      | As an additional method, you can specify the "local-catalog"
+      | parameter here.
+      |
+      | local-catalog:
+      |   The full filesystem pathname to a single local catalog file.
+      |
+      |  <parameter name="local-catalog" value="/usr/local/sgml/mycatalog"/>
+      |
+      | verbosity:
+      | The level of messages for status/debug (messages go to standard output)
+      | The following messages are provided ...
+      |  0 = none
+      |  1 = ? (... not sure yet)
+      |  2 = 1+, Loading catalog, Resolved public, Resolved system
+      |  3 = 2+, Catalog does not exist, resolvePublic, resolveSystem
+      |  10 = 3+, List all catalog entries when loading a catalog
+      |    (Cocoon also logs the "Resolved public" messages.)
+      |
+      |     <parameter name="verbosity" value="2"/>
+      +-->
+  <entity-resolver id="entity-resolver" logger="core.entity-resolver">
+   <parameter name="catalog" value="WEB-INF/entities/catalog"/>
+   <parameter name="verbosity" value="1"/>
+  </entity-resolver>
 
 <!-- TODO: entries below are still 2.1 configuration -->
 
@@ -356,51 +404,6 @@
     <component-instance logger="core.modules.output" name="request-attr-map" class="org.apache.cocoon.components.modules.output.RequestAttributeMap"/>
     <component-instance logger="core.modules.output" name="session-attr"   class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
   </output-modules>
-
-<!-- ================================= XML ================================ -->
-
-  <!--+
-      | Entity resolution catalogs
-      |
-      | The default catalog is distributed at WEB-INF/entities/catalog
-      | This is the contextual pathname for Cocoon resources.
-      | You can override this path, if necessary, using the "catalog" parameter:
-      |
-      |    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
-      |
-      | However, it is probably desirable to leave this default catalog config
-      | and declare your own local catalogs, which are loaded in addition to
-      | the system catalog.
-      |
-      | There are various ways to do local configuration (see "Entity Catalogs"
-      | documentation). One way is via the CatalogManager.properties file.
-      | As an additional method, you can specify the "local-catalog"
-      | parameter here.
-      |
-      | local-catalog:
-      |   The full filesystem pathname to a single local catalog file.
-      |
-      |  <parameter name="local-catalog" value="/usr/local/sgml/mycatalog"/>
-      |
-      | verbosity:
-      | The level of messages for status/debug (messages go to standard output)
-      | The following messages are provided ...
-      |  0 = none
-      |  1 = ? (... not sure yet)
-      |  2 = 1+, Loading catalog, Resolved public, Resolved system
-      |  3 = 2+, Catalog does not exist, resolvePublic, resolveSystem
-      |  10 = 3+, List all catalog entries when loading a catalog
-      |    (Cocoon also logs the "Resolved public" messages.)
-      |
-      |     <parameter name="verbosity" value="2"/>
-      +-->
-  <entity-resolver logger="core.resolver">
-   <parameter name="catalog" value="WEB-INF/entities/catalog"/>
-   <parameter name="verbosity" value="1"/>
-  </entity-resolver>
-
-  <!-- Xpath Processor: -->
-  <xpath-processor class="org.apache.excalibur.xml.xpath.XPathProcessorImpl" logger="core.xpath-processor"/>
 
 <!-- ============================ Object Stores =========================== -->
 
