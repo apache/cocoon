@@ -61,6 +61,8 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
@@ -73,11 +75,10 @@ import org.xmldb.api.DatabaseManager;
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.5 2003/12/05 20:05:37 vgritsenko Exp $
  */
-public final class XMLDBSourceFactory
-        extends AbstractLogEnabled
-        implements SourceFactory, Configurable, Serviceable {
+public final class XMLDBSourceFactory extends AbstractLogEnabled
+                                      implements SourceFactory, Configurable, Serviceable, ThreadSafe {
 
     /** The ServiceManager instance */
     protected ServiceManager m_manager;
@@ -89,12 +90,11 @@ public final class XMLDBSourceFactory
      * Configure the instance and initialize XML:DB connections (load and register the drivers).
      */
     public void configure(final Configuration conf)
-            throws ConfigurationException {
+    throws ConfigurationException {
 
         credentialMap = new HashMap();
 
         Configuration[] xmldbConfigs = conf.getChildren("driver");
-
         for (int i = 0; i < xmldbConfigs.length; i++) {
             String type = xmldbConfigs[i].getAttribute("type");
             String driver = xmldbConfigs[i].getAttribute("class");
@@ -109,19 +109,16 @@ public final class XMLDBSourceFactory
             }
 
             try {
-
                 Class c = Class.forName(driver);
                 DatabaseManager.registerDatabase((Database)c.newInstance());
 
             } catch (XMLDBException xde) {
-
                 String error = "Unable to connect to the XMLDB database. Error "
                                + xde.errorCode + ": " + xde.getMessage();
                 getLogger().debug(error, xde);
                 throw new ConfigurationException(error, xde);
 
             } catch (Exception e) {
-
                 getLogger().warn("There was a problem setting up the connection. "
                                  + "Make sure that your driver is available");
                 throw new ConfigurationException("Problem setting up the connection to XML:DB: "
@@ -142,7 +139,7 @@ public final class XMLDBSourceFactory
      * Resolve the source
      */
     public Source getSource(String location, Map parameters)
-            throws MalformedURLException, IOException {
+    throws MalformedURLException, IOException {
 
         int start = location.indexOf(':') + 1;
         int end = location.indexOf(':', start);
