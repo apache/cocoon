@@ -56,13 +56,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 
@@ -97,10 +97,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.5 2003/09/05 07:10:54 cziegeler Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.6 2003/11/20 15:13:54 joerg Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
-    implements CacheableProcessingComponent, Configurable, Composable, Disposable, Recyclable {
+    implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
 
     private static final String EXTRACT_URI_NAME = "extract-uri";
     private static final String EXTRACT_ELEMENT_NAME = "extract-element";
@@ -113,8 +113,8 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     private String extractURI;
     private String extractElement;
 
-    /** The component manager instance */
-    protected ComponentManager manager = null;
+    /** The ServiceManager instance */
+    protected ServiceManager manager = null;
 
     private XMLSerializer serializer;
 
@@ -149,10 +149,10 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     }
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -263,8 +263,8 @@ public class FragmentExtractorTransformer extends AbstractTransformer
 
             try {
                 this.serializer = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
-            } catch (ComponentException ce) {
-                throw new SAXException("Could not lookup for XMLSerializer.", ce);
+            } catch (ServiceException se) {
+                throw new SAXException("Could not lookup for XMLSerializer.", se);
             }
 
             // Start the DOM document
@@ -323,17 +323,15 @@ public class FragmentExtractorTransformer extends AbstractTransformer
                     this.serializer.endDocument();
 
                     Store store = null;
-                    String id = Long.toHexString((hashCode()^HashUtil.hash(requestURI))+fragmentID);
+                    String id = Long.toHexString((hashCode()^HashUtil.hash(requestURI)) + fragmentID);
                     try {
                         store = (Store) this.manager.lookup(Store.TRANSIENT_STORE);
-
                         store.store(id, this.serializer.getSAXFragment());
-                    } catch (ComponentException ce) {
-                        throw new SAXException("Could not lookup for transient store.", ce);
+                    } catch (ServiceException se) {
+                        throw new SAXException("Could not lookup for transient store.", se);
                     } catch (IOException ioe) {
                         throw new SAXException("Could not store fragment.", ioe);
-                    } finally
-                    {
+                    } finally {
                         this.manager.release(store);
                         this.manager.release(this.serializer);
                         this.serializer = null;
