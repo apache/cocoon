@@ -1,9 +1,16 @@
 <?xml version="1.0"?>
 
+<!-- CVS: $Id: protected.xsp,v 1.2 2003/05/22 13:37:46 vgritsenko Exp $ -->
+
 <xsp:page language="java"
-  xmlns:xsp="http://apache.org/xsp"
-  xmlns:session="http://apache.org/xsp/session/2.0">
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:session="http://apache.org/xsp/session/2.0">
   <page>
+    <resources>
+      <resource type="file" href="descriptors/auth.xml">Authenticator</resource>
+      <resource type="file" href="descriptors/params.xml">Validator</resource>
+      <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
+    </resources>
     <title>Protected area</title>
     <content>
       <linkbar/>
@@ -13,8 +20,9 @@
         think about what can be improved regarding flow control and especially
         aspect capturing, so that it is not necessary to check session in every
         map:match fragment. :-))
+        <br/>
+        &#160; -- Martin Man
       </para>
-      <para>Martin Man</para>
       <para>You are logged in under username: 
         <session:get-attribute name="username"/></para>
       <para>Your department id is: 
