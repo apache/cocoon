@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
 
 	<xsl:template match="page">
 		<xsl:processing-instruction name="cocoon-format">type="model/vrml"</xsl:processing-instruction>

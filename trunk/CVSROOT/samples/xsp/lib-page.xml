@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: lib-page.xml,v 1.4 2000-01-09 23:44:19 stefano Exp $ -->
+<!-- Version: $Id: lib-page.xml,v 1.5 2000-03-01 16:05:40 stefano Exp $ -->
 
 <?cocoon-process type="xsp"?>
 
 <?cocoon-process type="xslt"?>
 <?xml-stylesheet href="page-html.xsl" type="text/xsl"?>
 
-<xsp:page 
+<xsp:page
   language="java"
   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
   xmlns:request="http://www.apache.org/1999/XSP/Request"
@@ -21,20 +21,20 @@
   <name>Stefano Mazzocchi</name>
   <address>stefano@apache.org</address>
  </author>
- 
+
  <p>Hi, I'm your first XSP page ever.</p>
- 
+
  <p>I've been requested <util:counter/> times.</p>
- 
+
  <p>The content you are seeing in this page is provided to you
  by an XML content producer that was compiled into Java bytecode
  and executed at request time. This allows greater flexibility and
  ease of use for page programmers without any performance degradation
  since all XML parsing and such is precompiled and it's avoided at
  request time.</p>
- 
+
  <p>Let's show some useful information with expression evaluation...</p>
- 
+
  <list title="Request Data">
   <element name="Request method"><request:get-method/></element>
   <element name="Request URI"><request:get-request-uri/></element>
@@ -52,28 +52,26 @@
   <element name="Remote host"><request:get-remote-host/></element>
   <element name="Authorization scheme"><request:get-auth-type/></element>
  </list>
-   
+
  <p>Ok. Now that you know how logic can be transformed into content, let's
  add some juice and mix logic with content generation
  in a way that allows you to forget about what method is used to generate and
- handle the content as XML and concentrate on having your work done. 
+ handle the content as XML and concentrate on having your work done.
  Note, how XSP don't allow you to explicitly write something on the response
  from the logic realm: this is one of the major
  differences between XSP and other server pages technologies and allows
  further processing of the produced content, as required, for example, by
  XSL-transformations.</p>
- 
- <!-- FIXME (SM): here should go some taglib to emulate the other two 
+
+ <!-- FIXME (SM): here should go some taglib to emulate the other two
       examples, but we don't have yet a good way to iterate over items
       and so on without using logic directly... more feedback is needed on
       the taglib issue. -->
-      
+
  <p>All right, the first XSP page is over, but you can see the dynamically syntax highlighted
  <link href="view-source.xml?filename=lib-page.xml">source of this page</link>,
- <link href="view-source.xml?url=resource://org/apache/cocoon/processor/xsp/library/java/request.xsl">the servlet request library logicsheet</link>,
- <link href="view-source.xml?url=resource://org/apache/cocoon/processor/xsp/library/java/util.xsl">the utility library logicsheet</link>,
  all provided to you by another XSP page.</p>
- 
+
  <p>Enjoy XSP!</p>
 </page>
 </xsp:page>
