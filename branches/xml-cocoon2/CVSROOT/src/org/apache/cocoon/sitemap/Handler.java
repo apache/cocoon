@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.net.URL;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -36,7 +38,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 00:59:07 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-15 18:18:25 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Processor {
 
@@ -118,13 +120,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         } else {
             s = this.source;
         }
-        this.sourceFile = new File (
-                urlFactory.getURL(
-                        environment.resolveEntity(
-                                null, s
-                        ).getSystemId()
-                ).getFile()
-        );
+        this.sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, s).getSystemId()).getFile());
         if (!this.sourceFile.canRead()) {
             throw new FileNotFoundException ("file " + this.sourceFile.toString() + " not found or cannot be opened for reading");
         }

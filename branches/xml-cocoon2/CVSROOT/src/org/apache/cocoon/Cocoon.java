@@ -49,7 +49,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.51 $ $Date: 2001-02-14 05:08:42 $
+ * @version CVS $Revision: 1.4.2.52 $ $Date: 2001-02-15 18:17:05 $
  */
 public class Cocoon extends AbstractLoggable
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Contextualizable {
@@ -221,8 +221,7 @@ public class Cocoon extends AbstractLoggable
      */
     public boolean process(Environment environment)
     throws Exception {
-        String file = ((URLFactory)componentManager.lookup(Roles.URL_FACTORY)).getURL(environment.resolveEntity(null, this.sitemapFileName).getSystemId()).getFile();
-        return this.sitemapManager.invoke(environment, "", file, true);
+        return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true);
     }
 
   /**
