@@ -109,6 +109,13 @@ public class GroupBasedProfileManager
         }
     }
 
+    protected void storeUserProfile(String layoutKey, PortalService service, UserProfile profile) {
+        if ( layoutKey == null ) {
+            layoutKey = this.getDefaultLayoutKey();
+        }
+        service.setAttribute(KEY_PREFIX + layoutKey, profile);
+    }
+    
     /**
      * Prepares the object by using the specified factory.
      */
@@ -369,14 +376,15 @@ public class GroupBasedProfileManager
         try {
             loader = (ProfileLS)this.manager.lookup( ProfileLS.ROLE );
             final UserProfile profile = new UserProfile();
-        
+            this.storeUserProfile(layoutKey, service, profile);
+            
             // first "load" the global data
             profile.setCopletBaseDatas( this.getGlobalBaseDatas(loader, info, service) );
             profile.setCopletDatas( this.getGlobalDatas(loader, info, service) );
             
             // now load the user/group specific data
             if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_USER) ) {
-                if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_GROUP)) {
+                if ( info.getGroup() == null || !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_GROUP)) {
                     if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_GLOBAL) ) {
                         throw new ProcessingException("No profile for copletinstancedatas found.");
                     }
@@ -384,7 +392,7 @@ public class GroupBasedProfileManager
             }
 
             if ( !this.getLayout(loader, profile, info, service, CATEGORY_USER) ) {
-                if ( !this.getLayout(loader, profile, info, service, CATEGORY_GROUP)) {
+                if ( info.getGroup() == null || !this.getLayout(loader, profile, info, service, CATEGORY_GROUP)) {
                     if ( !this.getLayout(loader, profile, info, service, CATEGORY_GLOBAL) ) {
                         throw new ProcessingException("No profile for layout found.");
                     }
