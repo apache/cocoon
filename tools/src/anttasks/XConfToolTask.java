@@ -62,14 +62,14 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.15 $ $Date: 2004/03/05 13:21:22 $
+ * @version CVS $Revision: 1.16 $ $Date: 2004/03/08 07:57:06 $
  */
 public final class XConfToolTask extends MatchingTask {
 
     private static final String NL=System.getProperty("line.separator");
     private static final String FSEP=System.getProperty("file.separator");
     private File file;
-    private File directory;
+    //private File directory;
     private File srcdir;
     private boolean addComments;
     /** for resolving entities such as dtds */
@@ -98,8 +98,7 @@ public final class XConfToolTask extends MatchingTask {
      *
      * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
      */
-    public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog)
-    {
+    public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog) {
       this.xmlCatalog.addConfiguredXMLCatalog(xmlCatalog);
     }
 
@@ -114,8 +113,7 @@ public final class XConfToolTask extends MatchingTask {
     /**
      * Initialize internal instance of XMLCatalog
      */
-    public void init() throws BuildException
-    {
+    public void init() throws BuildException {
       super.init();
       xmlCatalog.setProject(project);
     }
@@ -124,12 +122,9 @@ public final class XConfToolTask extends MatchingTask {
      * Execute task.
      */
     public void execute() throws BuildException {
-
-        if (this.file==null) {
-            throw new BuildException("file attribute is required",
-                                     location);
+        if (this.file == null) {
+            throw new BuildException("file attribute is required", location);
         }
-
         try {
             final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             builderFactory.setValidating(false);
@@ -145,17 +140,16 @@ public final class XConfToolTask extends MatchingTask {
             log("Reading: " + this.file, Project.MSG_DEBUG);
             final Document document = builder.parse(this.file.toURL().toExternalForm());
 
-            if (this.srcdir==null)
+            if (this.srcdir == null) {
                 this.srcdir = project.resolveFile(".");
+            }
 
             DirectoryScanner scanner = getDirectoryScanner(this.srcdir);
-
             String[] list = scanner.getIncludedFiles();
-
             boolean hasChanged = false;
             // process recursive
             File patchfile;
-            for (int i = 0; i<list.length; i++) {
+            for (int i = 0; i < list.length; i++) {
                 patchfile = new File(this.srcdir, list[i]);
                 try {
                     // Adds configuration snippet from the file to the configuration
@@ -168,7 +162,7 @@ public final class XConfToolTask extends MatchingTask {
             }
 
             if (hasChanged) {
-                log("Writing: "+this.file);
+                log("Writing: " + this.file);
                 // Set the DOCTYPE output option on the transformer 
                 // if we have any DOCTYPE declaration in the input xml document
                 final DocumentType doctype = document.getDoctype();
@@ -218,7 +212,7 @@ public final class XConfToolTask extends MatchingTask {
         String extension = file.lastIndexOf(".")>0?file.substring(file.lastIndexOf(".")+1):"";
         String basename = basename(file);
 
-        if ( !elem.getTagName().equals(extension)) {
+        if (!elem.getTagName().equals(extension)) {
             log("Skipping non xconf-tool file: "+file);
             return false;
         }
@@ -233,40 +227,40 @@ public final class XConfToolTask extends MatchingTask {
 
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
-        if (nodes.getLength()!=1) {
+        if (nodes.getLength() !=1 ) {
             log("Error in: "+file);
-            throw new IOException("XPath ("+xpath+
+            throw new IOException("XPath (" + xpath +
                                   ") returned not one node, but "+
-                                  nodes.getLength()+" nodes");
+                                  nodes.getLength() + " nodes");
         }
         Node root = nodes.item(0);
 
         // Test that 'root' node satisfies 'component' insertion criteria
         String testPath = getAttribute(elem, "unless-path", replaceProperties);
-        if (testPath == null || testPath.length()==0) {
+        if (testPath == null || testPath.length() == 0) {
             // only look for old "unless" attr if unless-path is not present
             testPath = getAttribute(elem, "unless", replaceProperties);
         }
         // Is if-path needed?
         String ifProp = getAttribute(elem, "if-prop", replaceProperties);
         boolean ifValue = false;
-        if (ifProp != null && !ifProp.equals(""))
+        if (ifProp != null && !ifProp.equals("")) {
             Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
+        }
 
-        if (ifProp != null && (ifProp.length()>0) && !ifValue ) {
+        if (ifProp != null && ifProp.length() > 0 && !ifValue ) {
             log("Skipping: " + file, Project.MSG_DEBUG);
             return false;
-        } else if ((testPath!=null) && (testPath.length()>0) &&
-            (XPathAPI.selectNodeList(root, testPath).getLength()!=0)) {
+        } else if (testPath != null && testPath.length() > 0 &&
+            XPathAPI.selectNodeList(root, testPath).getLength() != 0) {
             log("Skipping: " + file, Project.MSG_DEBUG);
             return false;
         } else {
             // Test if component wants us to remove a list of nodes first
             xpath = getAttribute(elem, "remove", replaceProperties);
-
             Node remove = null;
 
-            if ((xpath!=null) && (xpath.length()>0)) {
+            if (xpath != null && xpath.length() > 0) {
                 nodes = XPathAPI.selectNodeList(configuration, xpath);
 
                 for (int i = 0, length = nodes.getLength(); i<length; i++) {
@@ -281,8 +275,8 @@ public final class XConfToolTask extends MatchingTask {
             String name = getAttribute(elem, "add-attribute", replaceProperties);
             String value = getAttribute(elem, "value", replaceProperties);
 
-            if ((name!=null) && (name.length()>0)) {
-                if (value==null) {
+            if (name != null && name.length() > 0) {
+                if (value == null) {
                     throw new IOException("No attribute value specified for 'add-attribute' "+
                                           xpath);
                 }
@@ -295,22 +289,21 @@ public final class XConfToolTask extends MatchingTask {
             xpath = getAttribute(elem, "insert-before", replaceProperties);
             Node before = null;
 
-            if ((xpath!=null) && (xpath.length()>0)) {
+            if (xpath != null && xpath.length() > 0) {
                 nodes = XPathAPI.selectNodeList(root, xpath);
-                if (nodes.getLength()==0) {
+                if (nodes.getLength() == 0) {
                     log("Error in: "+file);
                     throw new IOException("XPath ("+xpath+") returned zero nodes");
                 }
                 before = nodes.item(0);
             } else {
                 xpath = getAttribute(elem, "insert-after", replaceProperties);
-                if ((xpath!=null) && (xpath.length()>0)) {
+                if (xpath != null && xpath.length() > 0) {
                     nodes = XPathAPI.selectNodeList(root, xpath);
-                    if (nodes.getLength()==0) {
+                    if (nodes.getLength() == 0) {
                         log("Error in: "+file);
                         throw new IOException("XPath ("+xpath+") zero nodes.");
                     }
-                    
                     before = nodes.item(nodes.getLength()-1).getNextSibling();
                 }
             }
@@ -356,10 +349,9 @@ public final class XConfToolTask extends MatchingTask {
     }
 
     private void replaceProperties(Node n) throws DOMException {
-
         NamedNodeMap attrs = n.getAttributes();
-        if (attrs!=null) {
-            for (int i = 0; i< attrs.getLength(); i++) {
+        if (attrs != null) {
+            for (int i = 0; i < attrs.getLength(); i++) {
                 Node attr = attrs.item(i);
                 attr.setNodeValue(getProject().replaceProperties(attr.getNodeValue()));     
             } 
@@ -392,8 +384,9 @@ public final class XConfToolTask extends MatchingTask {
         int start = file.lastIndexOf(FSEP)+1; // last '/'
         int end = file.lastIndexOf(".");  // last '.'
 
-        if (end == 0) end = file.length();
-
+        if (end == 0) {
+            end = file.length();
+        }
         return file.substring(start, end);
     }
 }
