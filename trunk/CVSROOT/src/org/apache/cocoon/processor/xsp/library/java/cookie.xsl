@@ -334,7 +334,7 @@
 
     <xsp:logic>
       cookie.setMaxAge(
-        Integer.ParseInt(
+        Integer.parseInt(
           String.valueOf(
             <xsl:copy-of select="$expiry"/>
           )
@@ -422,7 +422,7 @@
 
     <xsp:logic>
       cookie.setVersion(
-        Integer.ParseInt(
+        Integer.parseInt(
           String.valueOf(
             <xsl:copy-of select="$value"/>
           )
