@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.5 $ $Date: 2000-08-31 15:57:53 $
+ * @version $Revision: 1.1.2.6 $ $Date: 2000-09-08 18:19:32 $
  * @since 2.0
  */
 
@@ -127,7 +127,7 @@ public class Javac extends AbstractJavaCompiler {
     int startcolumn = pointer.indexOf("^");
     int endcolumn = context.indexOf(" ", startcolumn);
     if (endcolumn == -1) endcolumn = context.length();*/
-    
+
     return new CompilerError(error);
   }
 
@@ -177,7 +177,12 @@ public class Javac extends AbstractJavaCompiler {
     if (file.length() == 1) file += ":" + tokens.nextToken();
     int line = Integer.parseInt(tokens.nextToken());
 
-    tokens = new StringTokenizer(tokens.nextToken().trim(), "\n");
+    String last = tokens.nextToken();
+    // In case the message contains ':', it should be reassembled
+    while (tokens.hasMoreElements()) {
+      last += tokens.nextToken();
+    }
+    tokens = new StringTokenizer(last.trim(), "\n");
     String message = tokens.nextToken();
     String context = tokens.nextToken();
     String pointer = tokens.nextToken();
