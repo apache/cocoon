@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,11 +34,11 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @cocoon.sitemap.component.documentation
  *  Transformer implementation of the JPath XSP tag library.
- * 
+ *
  * @cocoon.sitemap.component.name   jpath
  * @cocoon.sitemap.component.logger sitemap.transformer.jpath
- * 
- * 
+ *
+ *
  * <p>
  *  This transformer (so far) supports the following jpath elements:
  *
@@ -54,7 +54,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: JPathTransformer.java,v 1.6 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class JPathTransformer
 extends AbstractSAXTransformer implements Initializable {
@@ -96,14 +96,18 @@ extends AbstractSAXTransformer implements Initializable {
     private Map m_cache;
 
     /**
+     * Constructor. Set namespace.
+     */
+    public JPathTransformer() {
+        super.defaultNamespaceURI = JPATH_NAMESPACE_URI;
+    }
+
+    /**
      * Initialize this transformer.
      *
      * @exception Exception if an error occurs
      */
-    public void initialize()
-        throws Exception {
-
-        namespaceURI = JPATH_NAMESPACE_URI;
+    public void initialize() throws Exception {
         m_re = new RE("id");
         m_cache = new HashMap();
     }

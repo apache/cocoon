@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-/** 
+/**
  * Rewrites URIs in links to a value determined by an InputModule.
  * The URI scheme identifies the InputModule to use, and the rest of the URI is
  * used as the attribute name.
@@ -134,13 +134,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: VariableRewriterTransformer.java,v 1.8 2004/05/26 11:23:47 unico Exp $
+ * @version CVS $Id$
  */
 public class VariableRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Disposable
 {
 
-    private static String NAMESPACE="";
+    private static String NAMESPACE = "";
 
     /** A list of attributes considered 'links' */
     private Set linkAttrs;
@@ -150,15 +150,22 @@ public class VariableRewriterTransformer
     private Set outSchemes;
 
     /** Configuration passed to the component once through configure(). */
-    private Configuration origConf; 
+    private Configuration origConf;
 
     /** Derivation of origConf with variables obtained from setup() parameters.
      * Recreated once per invocation. */
-    private Configuration conf; 
+    private Configuration conf;
 
     private InputModuleHelper modHelper;
 
     private String badLinkStr;
+
+    /**
+     * Constructor. Set the namespace.
+     */
+    public VariableRewriterTransformer() {
+        super.defaultNamespaceURI = NAMESPACE;
+    }
 
     /**
      * Configure this component from the map:transformer block.  Called before
@@ -169,12 +176,11 @@ public class VariableRewriterTransformer
         super.configure(conf);
         this.origConf = conf;
     }
- 
+
     /**
      * Initiate resources prior to this component becoming active.
      */
     public void initialize() throws Exception {
-        this.namespaceURI = NAMESPACE;
         this.modHelper = new InputModuleHelper();
         modHelper.setup(this.manager);
     }
@@ -231,7 +237,7 @@ public class VariableRewriterTransformer
             String name,
             String raw,
             Attributes attr)
-        throws ProcessingException, IOException, SAXException 
+        throws ProcessingException, IOException, SAXException
     {
         Attributes newAttrs = null;
         boolean matched = false;
@@ -339,7 +345,7 @@ public class VariableRewriterTransformer
         // Note: configure() and initialize() are not called after every
         //recycle, so don't null origConf
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */

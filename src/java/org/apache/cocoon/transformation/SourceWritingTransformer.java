@@ -229,7 +229,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.13 2004/06/18 14:17:59 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer
@@ -285,11 +285,10 @@ public class SourceWritingTransformer
     protected XPathProcessor xpathProcessor;
 
     /**
-     * Constructor.
-     * Sets the namespace.
+     * Constructor. Set the namespace.
      */
     public SourceWritingTransformer() {
-        this.namespaceURI = SWT_URI;
+        super.defaultNamespaceURI = SWT_URI;
     }
 
     /**
