@@ -152,6 +152,27 @@ function showForm1() {
     }
 
     //
+    // By calling the Form's setBookmark() function you can set the
+    // point in your script to return to when it is redisplayed. This
+    // is useful if you need to acquire resources to process the 
+    // pipeline used by the form but also have them be released
+    // before the script is suspended e.g.:
+    //
+    //   form.setBookmark();
+    //   var resource = getResource();
+    //   form.showForm(uri, function() {
+    //      releaseResource(resource);
+    //      resource = null;
+    //   });
+    //
+    // Each time the form is redisplayed (e.g. during validation) your
+    // script will resume right after the call to setBookmark() and
+    // the resource will be reacquired.
+    //
+    form.setBookmark();
+
+    print("hit bookmark");
+    //
     // You can set additional properties on any widget that will
     // be accessible in the pipeline (e.g. with JXTemplateGenerator)
     //
@@ -161,7 +182,14 @@ function showForm1() {
     // showForm() repeatedly sends the form to the browser and doesn't return
     // until validation is complete.
     //
-    form.showForm("form1-display-pipeline");
+    form.showForm("form1-display-pipeline", function() {
+                    // if you supply a function as the second argument
+                    // to showForm() it will be called after pipeline
+                    // processing, but before the script is suspended.
+                    // This is where you would release resources you
+                    // don't want to become part of the continuation.
+                    delete wid.buttonName;
+                  });
     print("cowheight = "+wid.cowheight.value);
 }
 

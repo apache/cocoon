@@ -70,9 +70,9 @@ function Form(uri) {
         resolver = cocoon.getComponent(SourceResolver.ROLE);
         src = resolver.resolveURI(uri);
         var form = formMgr.createForm(src);
-        this.binding = null;
-        this.formWidget = new Widget(form);
-        this.local = cocoon.createPageLocal();
+        this.binding_ = null;
+        this.formWidget_ = new Widget(form);
+        this.local_ = cocoon.createPageLocal();
     } finally {
         cocoon.releaseComponent(formMgr);
         if (src != null) resolver.release(src);
@@ -89,30 +89,54 @@ function Form(uri) {
 Form.prototype.getWidget = function(name) {
     var result;
     if (name == undefined) {
-        result = this.formWidget;
+        result = this.formWidget_;
     } else {
-        result = this.formWidget.getWidget(name);
+        result = this.formWidget_.getWidget(name);
     }
     return result;
 }
 
 /**
- * Manages the display of a form and its validation.
- * @parameter uri the page uri (like in cocoon.sendPageAndWait())
+ * Sets the point in your script that will be returned to when the form is 
+ * redisplayed. If setBookmark() is not called, this is implicitly set to 
+ * the beginning of showForm().
  */
 
-Form.prototype.showForm = function(uri, fun) {
+Form.prototype.setBookmark = function() {
+    return (this.local_.webContinuation = cocoon.createWebContinuation());
+}
+
+/**
+ * Returns the bookmark continuation associated with this form, or undefined
+ * if setBookmark() has not been called.
+ * 
+ */
+Form.prototype.getBookmark = function() {
+    return this.local_.webContinuation;
+}
+
+/**
+ * Manages the display of a form and its validation.
+ * @parameter uri the page uri (like in cocoon.sendPageAndWait())
+ * @parameter fun optional function which will be executed after pipeline processing. Useful for releasing resources needed during pipeline processing but which should not become part of the continuation
+ * @parameter ttl Time to live (in milliseconds) for the continuation created
+ * @returns The web continuation associated with submitting this form
+ */
+
+Form.prototype.showForm = function(uri, fun, ttl) {
+    if (!this.getBookmark()) {
+        this.setBookmark();
+    }
     var FormContext = Packages.org.apache.cocoon.woody.FormContext;
-    this.local.webContinuation = cocoon.createWebContinuation();
     // this is needed by the WoodyTemplateTransformer:
-    var javaWidget = this.formWidget.unwrap();;
-    this.formWidget["woody-form"] = javaWidget;
+    var javaWidget = this.formWidget_.unwrap();;
+    this.formWidget_["woody-form"] = javaWidget;
     cocoon.request.setAttribute("woody-form", javaWidget);
-    var wk = cocoon.sendPageAndWait(uri, this.formWidget, fun);
+    var wk = cocoon.sendPageAndWait(uri, this.formWidget_, fun, ttl); 
     var formContext = 
         new FormContext(cocoon.request, javaWidget.getLocale());
     var userErrors = 0;
-    this.formWidget.validationErrorListener = function(widget, error) {
+    this.formWidget_.validationErrorListener = function(widget, error) {
         if (error != null) {
             userErrors++;
         }
@@ -122,14 +146,10 @@ Form.prototype.showForm = function(uri, fun) {
         this.onValidate(this);
     }
     if (!finished || userErrors > 0) {
-        this.redisplay();
+        cocoon.continuation = this.local_.webContinuation;
+        this.local_.webContinuation.continuation(this.local_.webContinuation);
     }
     return wk;
-}
-
-Form.prototype.redisplay = function() {
-    cocoon.continuation = this.local.webContinuation;
-    this.local.webContinuation.continuation(this.local.webContinuation);
 }
 
 Form.prototype.createEmptySelectionList = function(message) {
@@ -148,7 +168,7 @@ Form.prototype.createBinding = function(bindingURI) {
         bindingManager = cocoon.getComponent(BindingManager.ROLE);
         resolver = cocoon.getComponent(SourceResolver.ROLE);
         source = resolver.resolveURI(bindingURI);
-        this.binding = bindingManager.createBinding(source);
+        this.binding_ = bindingManager.createBinding(source);
     } finally {
         if (source != null) {
             resolver.release(source);
@@ -159,15 +179,15 @@ Form.prototype.createBinding = function(bindingURI) {
 }
 
 Form.prototype.load = function(object) {
-    if (this.binding == null) {
+    if (this.binding_ == null) {
         throw new Error("Binding not configured for this form.");
     }
-    this.binding.loadFormFromModel(this.formWidget.unwrap(), object);
+    this.binding_.loadFormFromModel(this.formWidget_.unwrap(), object);
 }
 
 Form.prototype.save = function(object) {
-    if (this.binding == null) {
+    if (this.binding_ == null) {
         throw new Error("Binding not configured for this form.");
     }
-    this.binding.saveFormToModel(this.formWidget.unwrap(), object);
+    this.binding.saveFormToModel(this.formWidget_.unwrap(), object);
 }
