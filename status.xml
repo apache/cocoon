@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.89 2003/07/12 13:30:02 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.90 2003/07/12 18:39:48 cziegeler Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="update">
+   The authentication framework now uses a configurable component to try to authenticate a user.
+   This allows to drop in own authentication services or e.g. the servlet authentication mechanism.
+  </action>
   <action dev="JH" type="fix" fixes-bug="4934" due-to="Ryder Rishel" due-to-email="	ryderblue@yahoo.com">
    Made JSPs working in Resin that don't end on *.jsp.
   </action>
