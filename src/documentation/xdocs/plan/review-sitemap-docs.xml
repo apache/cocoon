@@ -2707,7 +2707,7 @@
 </tr>
 <tr>
   <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/JXTemplateTransformer.html">JXTemplateTransformer</link></td>
-  <!-- 2 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/jx-template-transformer.html">jx-template</link></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
