@@ -74,7 +74,7 @@ import javax.servlet.http.HttpServletRequest;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartParser.java,v 1.2 2003/05/07 05:09:39 vgritsenko Exp $
+ * @version CVS $Id: MultipartParser.java,v 1.3 2003/10/29 19:44:21 vgritsenko Exp $
  */
 public class MultipartParser {
 
@@ -111,13 +111,12 @@ public class MultipartParser {
      * @param maxUploadSize The maximum content length accepted.
      * @param characterEncoding The character encoding to be used.
      */
-    public MultipartParser(
-            boolean saveUploadedFilesToDisk, 
-            File uploadDirectory, 
-            boolean allowOverwrite, 
-            boolean silentlyRename, 
-            int maxUploadSize,
-            String characterEncoding)
+    public MultipartParser(boolean saveUploadedFilesToDisk,
+                           File uploadDirectory,
+                           boolean allowOverwrite,
+                           boolean silentlyRename,
+                           int maxUploadSize,
+                           String characterEncoding)
     {
         this.saveUploadedFilesToDisk = saveUploadedFilesToDisk;
         this.uploadDirectory = uploadDirectory;
@@ -127,21 +126,25 @@ public class MultipartParser {
         this.characterEncoding = characterEncoding;
     }
 
+    public Hashtable getParts(int contentLength, String contentType, InputStream requestStream)
+    throws IOException, MultipartException {
+        if (contentLength > this.maxUploadSize) {
+            throw new IOException("Content length exceeds maximum upload size");
+        }
+
+        this.parts = new Hashtable();
+
+        BufferedInputStream bufferedStream = new BufferedInputStream(requestStream);
+        PushbackInputStream pushbackStream = new PushbackInputStream(bufferedStream, MAX_BOUNDARY_SIZE);
+        TokenStream stream = new TokenStream(pushbackStream);
+
+        parseMultiPart(stream, getBoundary(contentType));
+
+        return this.parts;    
+    }
+    
     public Hashtable getParts(HttpServletRequest request) throws IOException, MultipartException {
-        if (request.getContentLength() > this.maxUploadSize) {
-             throw new IOException("Content length exceeds maximum upload size");
-         }
-
-         this.parts = new Hashtable();
-
-         InputStream requestStream = request.getInputStream();
-         BufferedInputStream bufferedStream = new BufferedInputStream(requestStream);
-         PushbackInputStream pushbackStream = new PushbackInputStream(bufferedStream, MAX_BOUNDARY_SIZE);
-         TokenStream stream = new TokenStream(pushbackStream);
-                        
-         parseMultiPart(stream,getBoundary(request.getContentType()));
-
-         return this.parts;    
+        return getParts(request.getContentLength(), request.getContentType(), request.getInputStream());    
     }
     
     /**
