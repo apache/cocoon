@@ -166,14 +166,19 @@ public class DynamicSelectionList implements SelectionList {
                         convertor = datatype.getConvertor();
                     }
                     hasLabel = false;
+
                     String unparsedValue = attributes.getValue("value");
-                    if (unparsedValue == null)
-                        throw new SAXException("Missing value attribute on " + qName + " element.");
-                    currentValue = convertor.convertFromString(unparsedValue, locale, fromFormatCache);
-                    if (currentValue == null)
-                        throw new SAXException("Could not interpret the following value: \"" + unparsedValue + "\".");
+                    if (unparsedValue == null || "".equals(unparsedValue)) {
+                        // Empty (or null) value translates into the empty string
+                        currentValueAsString = "";
+                    } else {
+                        currentValue = convertor.convertFromString(unparsedValue, locale, fromFormatCache);
+                        if (currentValue == null) {
+                            throw new SAXException("Could not interpret the following value: \"" + unparsedValue + "\".");
+                        }
+                        currentValueAsString = datatype.getConvertor().convertToString(currentValue, locale, toFormatCache);
+                    }
                     AttributesImpl attrs = new AttributesImpl();
-                    currentValueAsString = datatype.getConvertor().convertToString(currentValue, locale, toFormatCache);
                     attrs.addCDATAAttribute("value", currentValueAsString);
                     super.startElement(Constants.WI_NS, localName, Constants.WI_PREFIX_COLON + localName, attrs);
                 } else if (localName.equals("label")) {
