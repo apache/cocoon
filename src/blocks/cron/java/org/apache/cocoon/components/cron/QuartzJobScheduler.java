@@ -74,8 +74,6 @@ public class QuartzJobScheduler extends AbstractLogEnabled
                                            Serviceable, Configurable, Startable,
                                            Disposable, Contextualizable, Initializable {
 
-    private org.apache.cocoon.environment.Context environmentContext;
-
     /** ThreadPool policy RUN */
     private static final String POLICY_RUN = "RUN";
 
@@ -100,6 +98,9 @@ public class QuartzJobScheduler extends AbstractLogEnabled
 
     /** Map key for the job name */
     static final String DATA_MAP_NAME = "QuartzJobScheduler.JobName";
+
+    /** Map key for the avalon context */
+    static final String DATA_MAP_CONTEXT = "QuartzJobScheduler.Context";
 
     /** Map key for the service manager */
     static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
@@ -131,6 +132,12 @@ public class QuartzJobScheduler extends AbstractLogEnabled
 
     /** The scheduler name */
     static final String DEFAULT_QUARTZ_SCHEDULER_NAME = "Cocoon";
+
+    /** The Avalon Context instance */
+    private Context applicationContext;
+
+    /** The Cocoon environment Context instance */
+    private org.apache.cocoon.environment.Context environmentContext;
 
     /** The PooledExecutor instance */
     private PooledExecutor executor;
@@ -307,6 +314,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
+    	this.applicationContext = context;
         this.environmentContext = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 
@@ -547,6 +555,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
 
         jobDataMap.put(DATA_MAP_NAME, name);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
+        jobDataMap.put(DATA_MAP_CONTEXT, this.applicationContext);
         jobDataMap.put(DATA_MAP_MANAGER, this.manager);
         jobDataMap.put(DATA_MAP_ENV_CONTEXT, this.environmentContext);
         jobDataMap.put(DATA_MAP_RUN_CONCURRENT, new Boolean(canRunConcurrently));

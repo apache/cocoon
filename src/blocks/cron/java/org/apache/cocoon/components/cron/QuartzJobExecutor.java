@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.cron;
 
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -66,6 +68,7 @@ public class QuartzJobExecutor implements Job {
             logger.info("Scheduling cron job named '" + name + "'");
         }
 
+        Context appContext = (Context) data.get(QuartzJobScheduler.DATA_MAP_CONTEXT);
         ServiceManager manager = (ServiceManager)data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
         org.apache.cocoon.environment.Context envContext =
                 (org.apache.cocoon.environment.Context)data.get(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT);
@@ -84,6 +87,9 @@ public class QuartzJobExecutor implements Job {
 
             if (null == jobrole) {
                 job = data.get(QuartzJobScheduler.DATA_MAP_OBJECT);
+                ContainerUtil.enableLogging(job, logger);
+                ContainerUtil.contextualize(job, appContext);
+                ContainerUtil.service(job, manager);
             } else {
                 job = manager.lookup(jobrole);
                 release = true;
@@ -120,6 +126,9 @@ public class QuartzJobExecutor implements Job {
 
             if (release && manager != null) {
                 manager.release(job);
+            }
+            else if (job != null) {
+            	ContainerUtil.dispose(job);
             }
         }
     }
