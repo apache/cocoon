@@ -56,7 +56,6 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.woody.FormManager;
-import org.apache.cocoon.woody.formmodel.FormDefinition;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.parameters.Parameters;
