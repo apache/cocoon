@@ -71,10 +71,6 @@
       <user>test</user>
       <password>test</password>
     </component-instance>
-
-    <component-instance name="j2eePersonnel" class="org.apache.cocoon.components.datasource.J2eeDataSource">
-      <dbname>cocoonPersonnel</dbname>
-    </component-instance>
   </component>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
