@@ -6,7 +6,7 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: simple-samples2html.xsl,v 1.6 2003/05/07 10:18:18 bdelacretaz Exp $
+    | CVS $Id: simple-samples2html.xsl,v 1.7 2003/05/07 10:24:21 bdelacretaz Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,7 +16,7 @@
  <xsl:template match="/">
   <html>
    <head>
-     <title>Apache Cocoon 2.1-M2-dev</title>
+     <title>Apache Cocoon @version@</title>
      <link rel="SHORTCUT ICON" href="favicon.ico"/>
      <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
    </head>
@@ -25,7 +25,7 @@
       <tr>
         <td width="*">The Apache Software Foundation is proud to present...</td>
         <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
-        <td width="30%" align="center">Version: <b>2.1-M2-dev</b></td>
+        <td width="30%" align="center">Version: <b>@version@</b></td>
       </tr>
     </table>
 
@@ -48,7 +48,7 @@
     <xsl:apply-templates select="samples"/>
 
     <p class="copyright">
-      Copyright &#169; 1999-2003 <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+      Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
       All rights reserved.
     </p>
    </body>
