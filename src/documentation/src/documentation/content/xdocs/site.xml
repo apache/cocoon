@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2002-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<site label="Apache Cocoon" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="docs">
+  
+  <docs label="Documentation" href="" tab="docs">
+    <index label="Overview" href="index.html"/>
+    <doc label="Core Technologies">
+      <doc label="Concepts" href="concepts.html"/>      
+      <doc label="Sitemap">
+        <doc label="sitemap.xmap"/>
+        <doc label="Aggregation"/>
+        <doc label="..."/>        
+        <doc label="Components">
+          <doc label="Generators"/>
+          <doc label="Transformers"/>
+          <doc label="..."/>          
+        </doc>        
+      </doc>
+      <doc label="Control Flow">
+        <doc label="Flowscript">
+          <doc label="..."/>          
+        </doc>
+        <doc label="Javaflow">
+          <doc label="..."/>         
+        </doc>
+      </doc>
+      <doc label="Cocoon Forms">
+        <doc label="Widgets"/>
+        <doc label="Binding"/>
+        <doc label="Flowscript API"/>
+        <doc label="..."/>        
+      </doc>
+    </doc>
+    
+    <doc label="Configuration">
+      <doc label="Overview"/>
+      <doc label="sitemap.xmap"/>
+      <doc label="cocoon.xconf"/>
+      <doc label="web.xml"/>
+      <doc label="Logging"/>
+      <doc label="Choosing implementations">
+        <doc label="XSLT Processor"/>
+        <doc label="Store"/>
+      </doc>
+      <doc label="Caching"/>
+      <doc label="Performance"/>
+      <doc label="..."/>            
+    </doc>
+    
+    <doc label="More technologies">
+      <doc label="Protocols"/>
+      <doc label="Input Modules"/>
+      <doc label="Internationalization"/>
+      <doc label="Encoding &amp; Entity resolution"/>
+      <doc label="..."/>      
+    </doc>
+
+    <doc label="Your own project">
+      <doc label="Building Cocoon"/>      
+      <doc label="Ant integration" href="custom-cocoon-based-project-using-ant.html"/>
+      <doc label="Maven integration"/>
+      <doc label="Eclipse integration"/>
+      <doc label="Deployment">
+        <doc label="Tomcat"/>
+        <doc label="Jetty"/>
+      </doc>
+      <doc label="..."/>
+    </doc>
+
+    <doc label="Extending Cocoon">
+      <doc label="Understanding the Cocoon Container"/>
+      <doc label="Custom sitemap components"/>
+      <doc label="Custom general components"/>
+      <doc label="..."/>
+    </doc> 
+    
+    <doc label="Blocks">
+      <doc label="Overview"  href="blocks.html"/>
+      <doc label="Core blocks">
+        <doc label="Cocoon Forms"/>      
+      </doc>
+      <doc label="Core blocks under heavy development">
+        <doc label="XML-Templating"/> 
+        <doc label="Javaflow"/>         
+      </doc>         
+      <doc label="Supported blocks">
+        <doc label="Cocoon Portal" href="http://brutus.apache.org/docs/build/cocoon-doco-portal/"/>
+          <!-- later to be removed by http://cocoon.apache.org/blocks/portal/1.0/index.html" -->        
+        <doc label="OJB"/>        
+        <doc label="..."/>
+      </doc>
+      <doc label="Unsupported blocks">
+        <doc label="ASCII-Art"/>       
+      </doc>        
+      <doc label="External blocks">
+        <doc label="List"/>    
+      </doc>      
+    </doc>
+    
+    <doc label="Tutorials">
+      <doc label="..."/>
+    </doc>
+    
+    <doc label="Cocoon Internals">
+      <doc label="Overview"/>
+      <doc label="How to work on Cocoon internals?"/>      
+      <doc label="From the request to the response"/>
+      <doc label="Cocoon container ('the core')"/>
+      <doc label="Pipeline machinery (Treeprocessor)"/>
+      <doc label="Flowscript integration"/>
+      <doc label="Javaflow integration"/>
+      <doc label="How does logging work?"/>    
+    </doc>
+    
+    <doc label="External resources">
+      <doc label="Articles"/>
+      <doc label="Books"/>
+      <doc label="Other resources"/>
+    </doc>   
+        
+  </docs>
+
+  <get label="Getting started" tab="getting-started">
+    <doc label="Overview" href="getting-started.html"/>
+    <doc label="Run Cocoon in 2 Minutes"/>
+    <doc label="What can Cocoon do for you?"/>
+    <doc label="Overview Cocoon concepts"/>
+    <doc label="Publishing (pipelines)"/>
+    <doc label="Applications (control flow)"/>
+    <doc label="Form Handling (Ccooon Forms)"/>
+  </get>
+  
+</site>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<comments>
+  <comment name="Reinhard Poetz" by="http://www.poetz.cc" subject="the first comment">
+    <p>Here follows the comment text.<strong>more</strong></p>
+  </comment>
+  <comment name="Reinhard Poetz" by="http://www.poetz.cc" subject="second comment">
+    <p>Here follows the comment text.<strong>more</strong></p>
+  </comment>  
+</comments>
