@@ -33,7 +33,6 @@
 %right hardbreak "(\r(\n?) | \n) (\r(\n?) | \n)+";
 
 %token bulleteditem "\*+";
-                                                                                                                                                             
 %token numbered1item "#";
 %token numbered2item "##";
 %token numbered3item "###";
@@ -213,4 +212,3 @@ strongblock
 codeblock 
   : codeopenitem text codecloseitem
   ;
-
