@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.341 2004/05/27 08:36:15 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.342 2004/05/27 13:20:42 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="udpate">
+     Remove deprecated methods from SimpleCharStream, Notifier, AbstractComplementaryConfigurableAction,
+     StringUtils. Remove deprecated parser constant from Constants and remove
+     deprecated class DefaultsMetaModule.
+   </action>
    <action dev="CZ" type="update">
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>

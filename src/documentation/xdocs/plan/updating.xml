@@ -47,6 +47,12 @@
     If you follow the instructions of this document closely, however,
     you should be able to quickly upgrade your Cocoon 2.1.x installation.
    </p>
+   <p>
+    In general, a good advice is that you avoid any calls to private or deprecated
+    API. If you are calling deprecated API, look up for an alternative. In most 
+    case this is documented in the java docs. If not or if you are calling private
+    API please ask on the mailing lists for a the "right way".
+   </p>
   </s1>
   <s1 title="Updating Your Application">
     <p>Currently, updating your application from an older version to the latest
