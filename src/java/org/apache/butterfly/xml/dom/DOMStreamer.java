@@ -57,7 +57,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <li>if false, the standard JAXP identity transformer is used.
  * </ul>
  *
- * @version CVS $Id: DOMStreamer.java,v 1.1 2004/07/23 08:47:20 ugo Exp $
+ * @version CVS $Id$
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -186,12 +186,6 @@ public class DOMStreamer implements XMLProducer {
 
         /** Counter used when generating new namespace prefixes. */
         protected int newPrefixCounter = 0;
-
-        public void recycle() {
-            super.recycle();
-            currentElementInfo = null;
-            newPrefixCounter = 0;
-        }
 
         /**
          * Start the production of SAX events.
