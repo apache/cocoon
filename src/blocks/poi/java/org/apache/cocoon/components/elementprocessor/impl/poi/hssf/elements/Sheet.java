@@ -72,7 +72,7 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
+ * @version CVS $Id: Sheet.java,v 1.3 2003/03/24 14:33:53 stefano Exp $
  */
 
 // package scope
@@ -95,7 +95,6 @@ class Sheet extends AbstractLogEnabled
     //optimization constant
     private final static int REGION_CAPACITY = 20;
 
-    private final static int DEBUG=0;
 
     /**
      * Constructor Sheet
@@ -345,12 +344,13 @@ class Sheet extends AbstractLogEnabled
         return ((points >= 0) && (points <= ((Short.MAX_VALUE + 0.5) / 48)));
     }
 
+    /* this method doesn't appear to be used
     private boolean isValidCharacters(double characters)
     {
         return ((characters >= 0)
                 && (characters <= ((Short.MAX_VALUE + 0.5) / 256)));
 
-    }
+    } */
 
     /**
      * assigns blank cells to regions where no cell is currently allocated.

@@ -66,8 +66,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -79,7 +77,7 @@ import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
  * A facade for Cocoon processing
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonProcessorDelegate.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ * @version CVS $Id: CocoonProcessorDelegate.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
  */
 public class CocoonProcessorDelegate extends AbstractLogEnabled
          implements Contextualizable, Configurable, Initializable {
@@ -127,13 +125,14 @@ public class CocoonProcessorDelegate extends AbstractLogEnabled
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         Configuration child;
-        Configuration[] children;
 
         child = configuration.getChild("follow-links");
         this.followLinks = child.getValueAsBoolean();
 
+        /* FIXME (SM): the code below is dead. What was it supposed to do?
         child = configuration.getChild("headers");
         Parameters headers = Parameters.fromConfiguration(child);
+        */
     }
 
 

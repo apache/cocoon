@@ -66,15 +66,13 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author     <a href="mailto:tom.klaasen@pandora.be">Tom Klaasen</a>
- * @version CVS $Id: AbstractConstrainedTransformer.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
+ * @version CVS $Id: AbstractConstrainedTransformer.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
  */
 public abstract class AbstractConstrainedTransformer
 		 extends AbstractTransformer {
 
 	/**  The URI of the namespace this class processes */
 	private String my_uri;
-	/**  The prefix that is used in the XML document to indicate the namespace */
-	private String my_prefix = "unknown";
 	/**
 	 *  The 'name' of the namespace this class processes. FIXME: Seems to be the
 	 *  last path element of the URI -- is that correct?

@@ -50,6 +50,10 @@
 */
 package org.apache.cocoon.serialization;
 
+import java.awt.Color;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -70,7 +74,6 @@ import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.components.url.ParsedContextURLProtocolHandler;
 import org.apache.cocoon.components.url.ParsedResourceURLProtocolHandler;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.SVGBuilder;
@@ -81,16 +84,12 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
-import java.awt.Color;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-
 /**
  * A Batik based Serializer for generating PNG/JPEG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -111,10 +110,6 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
     private LexicalHandler lexicalHandler=null;
     /** The component manager instance */
     private ComponentManager manager=null;
-    /** The current <code>Environment</code>. */
-    private Environment environment=null;
-    /** The current <code>Parameters</code>. */
-    private Configuration config=null;
     /** The current <code>OutputStream</code>. */
     private OutputStream output=null;
     /** The current <code>mime-type</code>. */

@@ -83,7 +83,7 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          implements LuceneCocoonIndexer, Configurable, Composable, Disposable
@@ -136,7 +136,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
     Analyzer analyzer;
     private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
-    private String directoryDefault = DIRECTORY_DEFAULT;
     private int mergeFactor = MERGE_FACTOR_DEFAULT;
 
 

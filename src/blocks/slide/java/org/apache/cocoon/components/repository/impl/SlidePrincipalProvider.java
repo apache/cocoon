@@ -94,7 +94,7 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.2 2003/03/16 17:49:06 vgritsenko Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
   implements PrincipalProvider, Composable, Configurable, Initializable {
@@ -696,12 +696,14 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
                                                                     1);
 
                         // FIXME the CVS code from slide does only implement getRoles
+                        /*
                         Enumeration roles = this.security.getRoles(userobject);
                         String role = null;
 
                         if (roles.hasMoreElements()) {
                             role = (String) roles.nextElement();
                         }
+                        */
 
                         NodeRevisionDescriptors revisionDescriptors = content.retrieve(slidetoken,
                                                                           userobject.getUri());

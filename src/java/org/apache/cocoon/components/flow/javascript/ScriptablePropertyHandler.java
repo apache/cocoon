@@ -50,7 +50,7 @@ import org.mozilla.javascript.*;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyHandler.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: ScriptablePropertyHandler.java,v 1.3 2003/03/24 14:33:56 stefano Exp $
  */
 public class ScriptablePropertyHandler implements DynamicPropertyHandler {
 
@@ -88,9 +88,8 @@ public class ScriptablePropertyHandler implements DynamicPropertyHandler {
     }
     
     public String[] getPropertyNames(Object obj) {
-        Context cx = null;
+        Context.enter();
         try {
-            cx = Context.enter();
             Object[] ids;
             if (obj instanceof ScriptableObject) {
                 ids = ((ScriptableObject)obj).getAllIds();
@@ -109,9 +108,8 @@ public class ScriptablePropertyHandler implements DynamicPropertyHandler {
     
     public void setProperty(Object obj, String propertyName,
                             Object value) {
-        Context cx = null;
+        Context.enter();
         try {
-            cx = Context.enter();
             if (!(value == null
                   || value instanceof String 
                   || value instanceof Number 

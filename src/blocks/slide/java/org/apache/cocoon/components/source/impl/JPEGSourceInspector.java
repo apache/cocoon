@@ -58,13 +58,10 @@ package org.apache.cocoon.components.source.impl;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
@@ -73,7 +70,7 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: JPEGSourceInspector.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
+ * @version CVS $Id: JPEGSourceInspector.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
  */
 public class JPEGSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {
@@ -81,12 +78,6 @@ public class JPEGSourceInspector extends AbstractLogEnabled implements
     private String PROPERTY_NS = "http://xml.apache.org/cocoon/JPEGSourceInspector";
     private static String IMAGE_WIDTH_PROPERTY_NAME = "width";
     private static String IMAGE_HEIGHT_PROPERTY_NAME = "height";
-
-    private String propertyname = "result";
-    private String extension = null;
-    private String xpath = null;
-
-    private ComponentManager manager = null;
 
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException {

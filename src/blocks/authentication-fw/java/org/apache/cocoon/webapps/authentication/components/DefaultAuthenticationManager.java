@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.2 2003/03/21 08:54:30 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractSessionComponent
@@ -634,9 +634,10 @@ implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent
         }
     }
 
-    /**
+    /*
      * Check if application for path is loaded
      */
+    /* FIXME(SM): this method appears to be unused. Should we remove it?
     private void checkLoaded(SessionContextImpl context,
                                String             path,
                                ApplicationHandler applicationHandler)
@@ -654,7 +655,7 @@ implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent
         if ( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END checkLoaded");
         }
-    }
+    } */
     
     /**
      * Build parameters for loading and saving of application data

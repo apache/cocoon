@@ -59,6 +59,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.WebContinuation;
@@ -66,24 +67,22 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
 
-import org.mozilla.javascript.tools.debugger.ScopeProvider;
-import org.mozilla.javascript.tools.ToolErrorReporter;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.PropertyException;
 import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.ScriptRuntime;
-import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.PropertyException;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
+import org.mozilla.javascript.tools.ToolErrorReporter;
 
 /**
  * Interface with the JavaScript interpreter.
@@ -91,7 +90,7 @@ import org.mozilla.javascript.Wrapper;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.10 2003/03/23 19:42:38 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.11 2003/03/24 14:33:56 stefano Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable

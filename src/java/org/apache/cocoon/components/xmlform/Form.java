@@ -77,7 +77,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com 
- * @version CVS $Id: Form.java,v 1.3 2003/03/18 01:01:26 vgritsenko Exp $
+ * @version CVS $Id: Form.java,v 1.4 2003/03/24 14:33:54 stefano Exp $
  */
 public class Form {
 
@@ -174,7 +174,6 @@ public class Form {
         }
 
         public void setValue(String xpath, Object[] values) {
-            Pointer ptr = jxcontext_.getPointer(xpath);
 
                 //    // Dmitri Plotnikov's patch
                 //    
@@ -295,7 +294,6 @@ public class Form {
                 if (model_ == null)
                         throw new IllegalStateException("Form model not set");
                 List nodeset = new LinkedList();
-                Pointer ptr = jxcontext_.getPointer(xpathSelector);
                 Iterator iter = jxcontext_.iteratePointers(xpathSelector);
                 while (iter.hasNext()) {
                     Pointer nextPointer = (Pointer) iter.next();
@@ -392,7 +390,6 @@ public class Form {
                         } catch (JXPathException ex) {
                                 Violation v = new Violation();
                                 v.setPath(path);
-                                String message = VIOLATION_MESSAGE_DATA_FORMAT_ERROR;
                                 v.setMessage(ex.getMessage());
                                 pviolations.add(v);
                         }

@@ -51,7 +51,7 @@
 package org.apache.cocoon.mail;
 
 import java.io.IOException;
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -84,7 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Bernhard Huber
  * @since 24. Oktober 2002
- * @version CVS $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
+ * @version CVS $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
  */
 
 /*
@@ -777,14 +777,15 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
     }
 
 
-    /**
+    /*
      *  Description of the Method
      *
      *@param  is                Description of Parameter
      *@exception  IOException   Description of Exception
      *@exception  SAXException  thrown iff generating SAX events fails
      */
-    private void encodeInputStreamForXML(InputStream is) throws IOException, SAXException {
+    /* FIXME (SM) This method doesn't appear to be used
+     private void encodeInputStreamForXML(InputStream is) throws IOException, SAXException {
         int contentLength = is.available();
         if (contentLength < 16) {
             contentLength = 2048;
@@ -799,10 +800,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
             characters(strContent);
         }
         endElement("encoding");
-    }
+    } */
 
 
-    /**
+    /*
      *  A simple byte as hex encodeing
      *
      *@param  bytes   Description of Parameter
@@ -810,6 +811,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *@param  length  Description of Parameter
      *@return         Description of the Returned Value
      */
+    /* FIXME (SM) This method doesn't appear to be used
     private String encodeBytes(final byte[] bytes, final int offset, final int length) {
         StringBuffer sb = new StringBuffer();
         final String ENCODE_TABLE[] = {
@@ -826,7 +828,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
             sb.append(" ");
         }
         return sb.toString();
-    }
+    } */
 
 
     /**
@@ -834,7 +836,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
      */
     static class FolderXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -885,7 +887,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -961,7 +963,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
      */
     static class MessageXMLizer extends AbstractLogEnabled
              implements XMLizable {

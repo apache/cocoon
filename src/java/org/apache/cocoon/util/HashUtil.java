@@ -59,14 +59,12 @@ package org.apache.cocoon.util;
  *
  * @author <a href="mailto:buz@zis.com">Robert Uzgalis</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HashUtil.java,v 1.1 2003/03/09 00:09:43 pier Exp $
+ * @version CVS $Id: HashUtil.java,v 1.2 2003/03/24 14:33:58 stefano Exp $
  */
 public final class HashUtil {
 
-
     private static long initial_hash = 0xe12398c6d9ae3b8aL; // initial values
-    private static long hash_true = 0x851dcaa2656c6af4L; // are arbitrary
-    private static long hash_false = 0x1af84a6b589285f7L; // 64-bit rands
+
     private static long mix_master[/* 0:255 */] = {
 /* 000 */ 0x4476081a7043a46fL, 0x45768b8a6e7eac19L, 0xebd556c1cf055952L,
 /* */ 0x72ed2da1bf010101L, 0x3ff2030b128e8a64L,
@@ -171,24 +169,6 @@ public final class HashUtil {
 /* 250 */ 0x46e87f2664a31712L, 0x8c1dc526c2f6acfaL, 0x7b4826726e560b10L,
 /* */ 0x2966e0099d8d7ce1L, 0xbb0dd5240d2b2adeL, 0x0d527cc60bbaa936L
 };
-
-
-    /**
-     * Move the bits in an integer long into a StringBuffer without
-     * conversion, then hash the string buffer, returning a long.
-     */
-    private static long lhv (long arg) {
-        // Hash a long
-        StringBuffer tmp = new StringBuffer(4);
-        long aval = arg;
-
-        tmp.setLength(4);
-        for ( int i=0; i<4; ++i, aval >>>= 16 )
-            tmp.setCharAt( i, (char) aval);
-
-        return buzhash( tmp );
-    }
-
 
     /**
      * This is buzhash the hash function on which most other Hash methods

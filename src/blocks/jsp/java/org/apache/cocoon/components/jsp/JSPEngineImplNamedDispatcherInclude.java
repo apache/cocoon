@@ -74,7 +74,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.1 2003/03/09 00:04:13 pier Exp $
+ * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.2 2003/03/24 14:33:56 stefano Exp $
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -126,7 +126,6 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
           rd.include( request, response );
           response.flushBuffer();
           bytes = response.toByteArray();
-          ByteArrayInputStream input = new ByteArrayInputStream( bytes );
         } else {
           getLogger().error( "Specify a correct " + CONFIG_SERVLET_NAME + " " + servletName );
         }

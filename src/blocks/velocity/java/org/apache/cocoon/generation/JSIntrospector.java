@@ -53,7 +53,7 @@ import org.apache.velocity.util.introspection.*;
  * Velocity Introspector that supports Rhino JavaScript objects
  * as well as Java Objects
  *
- * @version CVS $Id: JSIntrospector.java,v 1.3 2003/03/16 17:49:09 vgritsenko Exp $
+ * @version CVS $Id: JSIntrospector.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
  */
 public class JSIntrospector extends UberspectImpl {
 
@@ -134,7 +134,7 @@ public class JSIntrospector extends UberspectImpl {
         }
 
         public Object invoke(Object thisArg) throws Exception {
-            Context cx = Context.enter();
+            Context.enter();
             try {
                 Scriptable thisObj;
                 if (!(thisArg instanceof Scriptable)) {
@@ -176,7 +176,7 @@ public class JSIntrospector extends UberspectImpl {
         }
 
         public Object invoke(Object thisArg, Object rhs) throws Exception {
-            Context cx = Context.enter();
+            Context.enter();
             try {
                 Scriptable thisObj;
                 Object arg = rhs;
@@ -223,7 +223,7 @@ public class JSIntrospector extends UberspectImpl {
         }
 
         public Object next() {
-            Context cx = Context.enter();
+            Context.enter();
             try {
                 Object result = arr.get(index++, arr);
                 if (result == Undefined.instance ||
@@ -260,7 +260,7 @@ public class JSIntrospector extends UberspectImpl {
         }
 
         public Object next() {
-            Context cx = Context.enter();
+            Context.enter();
             try {
                 Object result = 
                     ScriptableObject.getProperty(scope, 
@@ -278,7 +278,7 @@ public class JSIntrospector extends UberspectImpl {
         }
 
         public void remove() {
-            Context cx = Context.enter();
+            Context.enter();
             try {
                 scope.delete(ids[index].toString());
             } finally {

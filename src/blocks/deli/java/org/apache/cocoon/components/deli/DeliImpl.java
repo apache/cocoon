@@ -98,7 +98,7 @@ import java.util.*;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: DeliImpl.java,v 1.2 2003/03/11 17:44:20 vgritsenko Exp $
+ * @version CVS $Id: DeliImpl.java,v 1.3 2003/03/24 14:33:55 stefano Exp $
  */
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable,
@@ -109,14 +109,8 @@ public final class DeliImpl extends AbstractLogEnabled
                ThreadSafe,
                Contextualizable {
 
-    /** The path to the Cocoon configuration files */
-    private String defaultPath = null;
-
     /** The name of the main DELI configuration file */
     private String deliConfig = "resources/deli/config/deliConfig.xml";
-
-    /** The DELI workspace */
-    private Workspace workspace;
 
     /** The component manager */
     protected ComponentManager manager = null;

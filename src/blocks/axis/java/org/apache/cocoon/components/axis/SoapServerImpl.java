@@ -50,10 +50,8 @@
 */
 package org.apache.cocoon.components.axis;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,11 +76,9 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.axis.AxisEngine;
 import org.apache.axis.Constants;
 import org.apache.axis.EngineConfiguration;
-import org.apache.axis.Message;
 import org.apache.axis.MessageContext;
 import org.apache.axis.configuration.FileProvider;
 import org.apache.axis.deployment.wsdd.WSDDDeployment;
@@ -94,14 +90,11 @@ import org.apache.axis.transport.http.HTTPConstants;
 import org.apache.axis.transport.http.HTTPTransport;
 import org.apache.axis.transport.http.ServletEndpointContextImpl;
 import org.apache.axis.utils.XMLUtils;
-
 import org.apache.cocoon.components.axis.providers.AvalonProvider;
 import org.apache.cocoon.util.IOUtils;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.dom.DOMParser;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -129,7 +122,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  * 
- * @version CVS $Id: SoapServerImpl.java,v 1.1 2003/03/09 00:02:27 pier Exp $
+ * @version CVS $Id: SoapServerImpl.java,v 1.2 2003/03/24 14:33:58 stefano Exp $
  */
 public class SoapServerImpl extends AbstractLogEnabled
     implements SoapServer, Composable, Configurable, Contextualizable, Initializable,
@@ -628,13 +621,14 @@ public class SoapServerImpl extends AbstractLogEnabled
         return env;
     }
 
-    /**
+    /*
      * Helper method to convert a <code>Message</code> structure
      * into a <code>String</code>.
      *
      * @param msg a <code>Message</code> value
      * @return a <code>String</code> value
      */
+    /* FIXME (SM): this method appears to be unused, should we remove it?
     private String messageToString(final Message msg)
     {
         try
@@ -654,5 +648,5 @@ public class SoapServerImpl extends AbstractLogEnabled
 
             return null;
         }
-    }
+    } */
 }

@@ -52,17 +52,14 @@ package org.apache.cocoon.sitemap;
 
 import org.w3c.dom.NodeList;
 
-import java.util.HashMap;
-
 /**
  * This class is used as a XSLT extension class.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSLTFactoryLoader.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: XSLTFactoryLoader.java,v 1.2 2003/03/24 14:33:58 stefano Exp $
  */
 public class XSLTFactoryLoader {
-    private HashMap obj = new HashMap();
 
     public String getClassSource(String className, String prefix, String pattern, NodeList conf) throws ClassNotFoundException,
         InstantiationException, IllegalAccessException, Exception {
