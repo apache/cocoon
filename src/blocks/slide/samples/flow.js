@@ -97,7 +97,7 @@ function protected_delete() {
 // ---------------------------------------------- property management
 
 function protected_addproperty() {
-  var baseUri      = "slide://" + principal + "@" + namespace + "/";
+  var baseUri      = "slide://" + principal + "@" + nat.getName() + "/";
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var location     = baseUri + resourcePath;
   var source = null;
@@ -119,7 +119,7 @@ function protected_addproperty() {
 }
 
 function protected_removeproperty() {
-  var baseUri = "slide://" + principal + "@" + namespace + "/";
+  var baseUri = "slide://" + principal + "@" + nat.getName() + "/";
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var location = baseUri + resourcePath;
   var source = null;
