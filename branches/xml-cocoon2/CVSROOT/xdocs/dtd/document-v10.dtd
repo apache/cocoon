@@ -50,6 +50,7 @@ CHANGE HISTORY:
   20000125 Added the "icon" image (SM)
   20000126 Allowed "anchor" in all levels (SM)
   20000404 Removed the "role" attribute from common-xxx.att (SM)
+  20000606 Allowed nested markup tags (SM)
 
 COPYRIGHT:
   Copyright (c) 1999-2000 The Apache Software Foundation.
@@ -244,23 +245,23 @@ COPYRIGHT:
     <!-- ==================================================== -->
 
     <!-- Strong (typically bold) -->
-    <!ELEMENT strong (%text;)>
+    <!ELEMENT strong (%text;|%markup;)*>
     <!ATTLIST strong %common.att;>
 
     <!-- Emphasis (typically italic) -->
-    <!ELEMENT em (%text;)>
+    <!ELEMENT em (%text;|%markup;)*>
     <!ATTLIST em %common.att;>
 
     <!-- Code (typically monospaced) -->
-    <!ELEMENT code (%text;)>
+    <!ELEMENT code (%text;|%markup;)*>
     <!ATTLIST code %common.att;>
 
     <!-- Superscript (typically smaller and higher) -->
-    <!ELEMENT sup (%text;)>
+    <!ELEMENT sup (%text;|%markup;)*>
     <!ATTLIST sup %common.att;>
 
     <!-- Subscript (typically smaller and lower) -->
-    <!ELEMENT sub (%text;)>
+    <!ELEMENT sub (%text;|%markup;)*>
     <!ATTLIST sub %common.att;>
 
     <!-- FIXME (SM): should we add these HTML 4.0 markups
@@ -288,7 +289,8 @@ COPYRIGHT:
 
     <!-- Hard window replacing link (equivalent of <a ... target="_top">) -->
     <!ELEMENT jump (%link-content.mix;)*>
-    <!ATTLIST jump %common.att;
+    <!ATTLIST jump anchor CDATA #IMPLIED
+                   %common.att;
                    %xlink-simple.att;
                    %xlink-user-new.att;>
 
