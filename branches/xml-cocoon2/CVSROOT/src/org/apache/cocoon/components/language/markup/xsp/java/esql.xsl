@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.51 2001-03-26 20:26:01 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.52 2001-03-26 20:28:58 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -260,7 +260,7 @@
             throw new RuntimeException("Error getting clob data: " + e.getMessage());
         } finally {
             if (asciiStream != null) try {asciiStream.close();} catch (Exception ase) {
-                throw new RuntimeException("Error closing clob stream: " + e.getMessage());
+                throw new RuntimeException("Error closing clob stream: " + ase.getMessage());
             }
         }
 
