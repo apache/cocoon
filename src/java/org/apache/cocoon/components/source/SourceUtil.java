@@ -35,6 +35,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -64,7 +65,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.17 2004/03/29 13:52:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class SourceUtil {
 
@@ -505,7 +506,7 @@ public final class SourceUtil {
                         buffer.append(separator)
                                 .append(current)
                                 .append('=')
-                                .append(org.apache.excalibur.source.SourceUtil.encode((String) values.next()));
+                                .append(NetUtils.encode((String) values.next(), "utf-8"));
                         separator = '&';
                     }
                 }
