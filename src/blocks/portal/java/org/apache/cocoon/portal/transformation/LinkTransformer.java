@@ -30,9 +30,9 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This Transformer deals with tags containing links to external applications that need to be converted so
@@ -54,7 +54,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: LinkTransformer.java,v 1.5 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LinkTransformer
     extends AbstractTransformer
@@ -68,22 +68,22 @@ public class LinkTransformer
     /**
      * Used for appending a request parameter containing the coplet id
      */
-    protected String copletIdParamString = null;
+    protected String copletIdParamString;
 
     /**
      * Used for appending a request parameter containing the portal name
      */
-    protected String portalNameParamString = null;
+    protected String portalNameParamString;
 
     /**
      * The coplet instance data
      */
-    protected CopletInstanceData copletInstanceData = null;
+    protected CopletInstanceData copletInstanceData;
 
     /**
      * The html document base uri
      */
-    protected String documentBase = null;
+    protected String documentBase;
 
     /**
      * Used to store elements' name between startTransformingElement and endTransformingElement. 
@@ -102,28 +102,31 @@ public class LinkTransformer
         this.manager = manager;
     }
 
+    /** The prefix */
+    protected String prefix;
+
     /**
      * @see AbstractTransformer#setup(SourceResolver, Map, String, Parameters)
      */
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters par)
-        throws ProcessingException, SAXException, IOException {
-        copletInstanceData =
+    public void setup(SourceResolver resolver,
+                      Map objectModel,
+                      String src,
+                      Parameters par)
+    throws ProcessingException, SAXException, IOException {
+        this.copletInstanceData =
             ProxyTransformer.getInstanceData(
                 this.manager,
                 objectModel,
                 par);
-        copletIdParamString =
+        this.copletIdParamString =
             ProxyTransformer.COPLETID + "=" + copletInstanceData.getId();
 
         Map context = (Map) objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-        portalNameParamString =
+        this.portalNameParamString =
             ProxyTransformer.PORTALNAME
                 + "="
                 + (String) context.get(Constants.PORTAL_NAME_KEY);
+        this.prefix = par.getParameter("prefix", ProxyTransformer.PROXY_PREFIX);
     }
 
     /**
@@ -131,10 +134,11 @@ public class LinkTransformer
      * All instance variables are set to <code>null</code>.
      */
     public void recycle() {
-        copletInstanceData = null;
-        elementStack.clear();
-        copletIdParamString = null;
-        portalNameParamString = null;
+        super.recycle();
+        this.copletInstanceData = null;
+        this.elementStack.clear();
+        this.copletIdParamString = null;
+        this.portalNameParamString = null;
     }
 
     /**
@@ -172,17 +176,13 @@ public class LinkTransformer
                 attributes,
                 true,
                 (attributes.getIndex("target") > -1));
-        }
-        else if ("script".equalsIgnoreCase(name)) {
+        } else if ("script".equalsIgnoreCase(name)) {
             handleTag("src", uri, name, raw, attributes, false, false);
-        }
-        else if ("img".equalsIgnoreCase(name)) {
+        } else if ("img".equalsIgnoreCase(name)) {
             handleTag("src", uri, name, raw, attributes, false, false);
-        }
-        else if ("link".equalsIgnoreCase(name)) {
+        } else if ("link".equalsIgnoreCase(name)) {
             handleTag("href", uri, name, raw, attributes, false, false);
-        }
-        else if ("a".equalsIgnoreCase(name)) {
+        } else if ("a".equalsIgnoreCase(name)) {
             handleTag(
                 "href",
                 uri,
@@ -191,19 +191,15 @@ public class LinkTransformer
                 attributes,
                 true,
                 (attributes.getIndex("target") > -1));
-        }
-        else if ("menu-item".equalsIgnoreCase(name)) {
+        } else if ("menu-item".equalsIgnoreCase(name)) {
             handleTag("href", uri, name, raw, attributes, true, false);
-        }
-        else if ("input".equalsIgnoreCase(name)) {
+        } else if ("input".equalsIgnoreCase(name)) {
             handleTag("src", uri, name, raw, attributes, false, false);
-        }
-        else if ("applet".equalsIgnoreCase(name)) {
+        } else if ("applet".equalsIgnoreCase(name)) {
             if (attributes.getIndex("codebase") > -1) {
                 handleTag("codebase", uri, name, raw, attributes, false, true);
             }
-        }
-        else {
+        } else {
             super.startElement(uri, name, raw, attributes);
         }
     }
@@ -220,12 +216,12 @@ public class LinkTransformer
         }
 
         if (elementName != null && elementName.equals(name)) {
+            elementStack.pop();
             super.endElement(
                 NewEventLinkTransformer.NAMESPACE_URI,
                 NewEventLinkTransformer.EVENT_ELEM,
                 NAMESPACE_PREFIX + ":" + NewEventLinkTransformer.EVENT_ELEM);
-        }
-        else {
+        } else {
             super.endElement(uri, name, raw);
         }
     }
@@ -262,15 +258,14 @@ public class LinkTransformer
      * @param direct True signals that the uri should point directly to the external resource (no proxys)
      * @throws SAXException if an invalid URL was detected.
      */
-    public void handleTag(
-        String attributeName,
-        String uri,
-        String elementName,
-        String raw,
-        Attributes attributes,
-        boolean eventLink,
-        boolean direct)
-        throws SAXException {
+    public void handleTag(String attributeName,
+                          String uri,
+                          String elementName,
+                          String raw,
+                          Attributes attributes,
+                          boolean eventLink,
+                          boolean direct)
+    throws SAXException {
         String remoteURI = attributes.getValue(attributeName);
 
         if ((remoteURI == null)
@@ -281,21 +276,18 @@ public class LinkTransformer
             || remoteURI.startsWith("javascript:")
             || remoteURI.startsWith("mailto:")) {
             super.startElement(uri, elementName, raw, attributes);
-        }
-        else {
+        } else {
             if (attributes.getIndex("target") > -1 || direct) {
                 try {
                     remoteURI =
                         ProxyTransformer.resolveURI(remoteURI, documentBase);
                     eventLink = false;
-                }
-                catch (MalformedURLException ex) {
+                } catch (MalformedURLException ex) {
                     throw new SAXException(
                         "Invalid URL encountered: " + remoteURI,
                         ex);
                 }
-            }
-            else {
+            } else {
                 remoteURI = this.buildUrlString(remoteURI, !eventLink);
             }
 
@@ -307,8 +299,7 @@ public class LinkTransformer
                     elementName,
                     attributeName,
                     newAttributes);
-            }
-            else {
+            } else {
                 super.startElement(uri, elementName, raw, newAttributes);
             }
         }
@@ -321,10 +312,9 @@ public class LinkTransformer
      * @param attributes List of attributes
      * @return The modified List of attributes
      */
-    protected Attributes modifyLinkAttribute(
-        String attribute,
-        String remoteURI,
-        Attributes attributes) {
+    protected Attributes modifyLinkAttribute(String attribute,
+                                             String remoteURI,
+                                             Attributes attributes) {
         AttributesImpl newAttributes = new AttributesImpl(attributes);
 
         int index = newAttributes.getIndex(attribute);
@@ -340,32 +330,21 @@ public class LinkTransformer
      * @param attributes Original list of attributes
      * @throws SAXException
      */
-    protected void startEventLinkElement(
-        String element,
-        String attribute,
-        Attributes attributes)
-        throws SAXException {
+    protected void startEventLinkElement(String element,
+                                         String attribute,
+                                         Attributes attributes)
+    throws SAXException {
         elementStack.push(element);
         AttributesImpl eventAttributes = null;
         if (attributes instanceof AttributesImpl) {
             eventAttributes = (AttributesImpl) attributes;
-        }
-        else {
+        } else {
             eventAttributes = new AttributesImpl(attributes);
         }
+        eventAttributes.addCDATAAttribute(NewEventLinkTransformer.ATTRIBUTE_ATTR, attribute);
+        eventAttributes.addCDATAAttribute(NewEventLinkTransformer.ELEMENT_ATTR, element);
+        eventAttributes.addCDATAAttribute("coplet", this.copletInstanceData.getId());
 
-        eventAttributes.addAttribute(
-            "",
-            NewEventLinkTransformer.ATTRIBUTE_ATTR,
-            NewEventLinkTransformer.ATTRIBUTE_ATTR,
-            "CDATA",
-            attribute);
-        eventAttributes.addAttribute(
-            "",
-            NewEventLinkTransformer.ELEMENT_ATTR,
-            NewEventLinkTransformer.ELEMENT_ATTR,
-            "CDATA",
-            element);
         super.startElement(
             NewEventLinkTransformer.NAMESPACE_URI,
             NewEventLinkTransformer.EVENT_ELEM,
@@ -380,9 +359,8 @@ public class LinkTransformer
      * @return the converted uri
      * FIXME: anchors (#) should be treated right!
      */
-    protected String buildUrlString(
-        String uri,
-        boolean applyPrefixAndPortalParams) {
+    protected String buildUrlString(String uri,
+                                    boolean applyPrefixAndPortalParams) {
         StringBuffer uriBuffer = new StringBuffer(uri.length());
 
         int index_semikolon = uri.indexOf(";");
@@ -399,7 +377,7 @@ public class LinkTransformer
         }
 
         if (applyPrefixAndPortalParams) {
-            uriBuffer.append(ProxyTransformer.PROXY_PREFIX);
+            uriBuffer.append(this.prefix);
         }
 
         uriBuffer.append(uri);
