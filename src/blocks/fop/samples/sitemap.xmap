@@ -2,7 +2,7 @@
 
 <!--
     FOP block samples sitemap
-    $Id: sitemap.xmap,v 1.4 2003/05/02 14:05:46 bdelacretaz Exp $
+    $Id: sitemap.xmap,v 1.5 2003/05/05 09:30:12 bdelacretaz Exp $
  -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -22,6 +22,13 @@
                     <map:parameter name="contextPath" value="{request:contextPath}"/>
                 </map:transform>
                 <map:serialize/>
+            </map:match>
+
+            <!-- hello world -->
+            <map:match pattern="hello.pdf">
+                <map:generate src="context://samples/hello-world/content/hello.xml"/>
+                <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+                <map:serialize type="fo2pdf"/>
             </map:match>
 
             <!-- xsl-fo document access -->

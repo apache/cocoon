@@ -108,6 +108,13 @@
 
    <!-- ========================= jfor ================================ -->
 
+   <!-- hello world -->
+   <map:match pattern="hello.rtf">
+    <map:generate src="context://samples/hello-world/content/hello.xml"/>
+    <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+    <map:serialize type="fo2rtf"/>
+   </map:match>
+
    <map:match pattern="*.fo.xml">
     <map:generate src="misc/{1}.fo.xml"/>
     <map:serialize type="xml"/>
