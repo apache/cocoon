@@ -397,6 +397,36 @@ public class CocoonWrapper {
         }
     }
 
+    /**
+     * Process single URI into given content handler, skipping final
+     * serializer
+     *
+     * @param uri to process
+     * @param handler to write generated contents into
+     */
+    public void processURI(String uri, ContentHandler handler)
+        throws Exception {
+
+        if (!initialized) {
+            initialize();
+        }
+        log.info("Processing URI: " + uri);
+
+        // Get parameters, deparameterized URI and path from URI
+        final TreeMap parameters = new TreeMap();
+        final String deparameterizedURI =
+            NetUtils.deparameterize(uri, parameters);
+        parameters.put("user-agent", userAgent);
+        parameters.put("accept", accept);
+
+        int status =
+            getPage(deparameterizedURI, 0L, parameters, null, null, handler);
+
+        if (status >= 400) {
+            throw new ProcessingException("Resource not found: " + status);
+        }
+    }
+
     public void dispose() {
         if (this.initialized) {
             this.initialized = false;
@@ -458,6 +488,47 @@ public class CocoonWrapper {
 
         // Here Cocoon can throw an exception if there are errors in processing the page
         cocoon.process(env);
+
+        // if we get here, the page was created :-)
+        int status = env.getStatus();
+        if (!env.isModified()) {
+            status = -1;
+        }
+        return status;
+    }
+
+    /**
+     * Processes an URI for its content.
+     *
+     * @param deparameterizedURI a <code>String</code> value of an URI to start sampling from
+     * @param parameters a <code>Map</code> value containing request parameters
+     * @param links a <code>Map</code> value
+     * @param stream an <code>OutputStream</code> to write the content to
+     * @return a <code>String</code> value for the content
+     * @exception Exception if an error occurs
+     */
+    protected int getPage(String deparameterizedURI,
+                          long lastModified,
+                          Map parameters,
+                          Map links,
+                          List gatheredLinks,
+                          ContentHandler handler)
+    throws Exception {
+
+        parameters.put("user-agent", userAgent);
+        parameters.put("accept", accept);
+
+        FileSavingEnvironment env =
+            new FileSavingEnvironment(deparameterizedURI, lastModified, context,
+                                      attributes, parameters, links,
+                                      gatheredLinks, cliContext, null, log);
+
+        XMLConsumer consumer = new ContentHandlerWrapper(handler);
+        ProcessingPipeline pipeline = cocoon.buildPipeline(env);
+        CocoonComponentManager.enterEnvironment(env, cocoon.getComponentManager(), cocoon);
+        pipeline.prepareInternal(env);
+        CocoonComponentManager.leaveEnvironment();
+        pipeline.process(env, consumer);
 
         // if we get here, the page was created :-)
         int status = env.getStatus();
