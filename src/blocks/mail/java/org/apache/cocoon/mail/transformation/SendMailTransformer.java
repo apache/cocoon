@@ -205,7 +205,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.5 2003/10/06 11:47:42 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.6 2003/10/07 13:53:24 cziegeler Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -477,9 +477,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
             trans = session.getTransport("smtp");
             trans.connect();
 
-            if (this.smtpMessage == null) {
-                this.smtpMessage = setUpMessage(session);
-            }
+            this.smtpMessage = setUpMessage(session);
 
             super.sendStartElementEvent("email:result");
 
