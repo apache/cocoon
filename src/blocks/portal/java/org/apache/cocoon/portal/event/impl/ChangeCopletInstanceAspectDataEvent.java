@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.event.CopletInstanceEvent;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ChangeCopletInstanceAspectDataEvent.java,v 1.1 2003/05/26 10:34:52 cziegeler Exp $
+ * @version CVS $Id: ChangeCopletInstanceAspectDataEvent.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
  */
 public class ChangeCopletInstanceAspectDataEvent
     extends ChangeAspectDataEvent
@@ -66,10 +66,6 @@ public class ChangeCopletInstanceAspectDataEvent
 
     public ChangeCopletInstanceAspectDataEvent(CopletInstanceData target, String aspectName, Object data) {
         super( target, aspectName, data );
-    }
-
-    public CopletInstanceData getCopletInstanceData() {
-        return (CopletInstanceData)this.getTarget();
     }
 
 }

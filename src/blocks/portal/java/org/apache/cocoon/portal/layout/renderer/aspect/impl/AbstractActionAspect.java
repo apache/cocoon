@@ -48,38 +48,24 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.subscriber.impl;
+package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.portal.event.Event;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Subscriber;
-import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
-import org.apache.cocoon.portal.layout.Layout;
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * This aspect creates an event and subscribes to it as well
  * 
- * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.4 2003/05/19 14:10:12 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: AbstractActionAspect.java,v 1.1 2003/05/26 12:49:13 cziegeler Exp $
  */
-public final class DefaultLayoutEventSubscriber 
-    implements Subscriber {
-
-    private ComponentManager componentManager;
-
-    public DefaultLayoutEventSubscriber(ComponentManager manager) {
-        this.componentManager = manager;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
-     */
-    public Class getEventType() {
-        return LayoutEvent.class;
-    }
+public abstract class AbstractActionAspect
+    extends AbstractAspect
+    implements Subscriber, Disposable, Initializable {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
@@ -89,13 +75,33 @@ public final class DefaultLayoutEventSubscriber
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public void inform(Event event) {
-        if (event instanceof LayoutRemoveEvent) { 
-            LayoutRemoveEvent removeEvent = (LayoutRemoveEvent)event;
-            Layout layout = (Layout)removeEvent.getTarget();
-            layout.getParent().getParent().removeItem(layout.getParent());
+    public void dispose() {
+        if ( this.manager != null ) {
+            EventManager eventManager = null;
+            try { 
+                eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+                eventManager.getRegister().unsubscribe( this );
+            } catch (Exception ignore) {
+            } finally {
+                this.manager.release( eventManager ); 
+            }
+            
+            this.manager = null;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        EventManager eventManager = null;
+        try { 
+            eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+            eventManager.getRegister().subscribe( this );
+        } finally {
+            this.manager.release( eventManager );
         }
     }
 

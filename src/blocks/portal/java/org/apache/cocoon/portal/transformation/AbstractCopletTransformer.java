@@ -50,79 +50,80 @@
 */
 package org.apache.cocoon.portal.transformation;
 
-import java.io.IOException;
+import java.util.Map;
 
-import org.apache.cocoon.ProcessingException;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.portal.Constants;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.commons.jxpath.JXPathContext;
-import org.xml.sax.Attributes;
+import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.xml.sax.SAXException;
 
 /**
- * Includes coplet instance data by using JXPath expressions.
+ * Abstract transformer implementation
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.1 2003/05/26 12:49:13 cziegeler Exp $
  */
-public class CopletTransformer 
-extends AbstractCopletTransformer {
+public abstract class AbstractCopletTransformer 
+extends AbstractSAXTransformer {
 
     /**
-     * The namespace URI to listen for.
+     * Parameter name.
      */
-    public static final String NAMESPACE_URI = "http://apache.org/cocoon/portal/coplet/1.0";
-    
-    /**
-     * The XML element name to listen for.
-     */
-    public static final String COPLET_ELEM = "coplet";
+    public static final String COPLET_ID_PARAM = "copletId";
 
     /**
-     * The attribute containing the JXPath expression.
+     * Parameter name.
      */
-    public static final String SELECT_ATTR = "select";
+    public static final String PORTAL_NAME_PARAM = "portalName";
 
-        
-    /**
-     * Creates new CopletTransformer.
-     */
-    public CopletTransformer() {
-        this.defaultNamespaceURI = NAMESPACE_URI;
-    }
-    
-    /**
-     * Overridden from superclass.
-     */
-    public void startTransformingElement(String uri, String name, String raw, Attributes attr) 
-    throws ProcessingException, IOException, SAXException {
-        if (name.equals(COPLET_ELEM)) {
-            String expression = attr.getValue(SELECT_ATTR);
-            if (expression == null) {
-                throw new ProcessingException("Attribute "+SELECT_ATTR+" must be spcified.");
+    protected CopletInstanceData getCopletInstanceData() 
+    throws SAXException {
+        ProfileManager profileManager = null;
+        try {
+            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+
+            // determine coplet id
+            String copletId = null;            
+            Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+            if (context != null) {
+                copletId = (String)context.get(Constants.COPLET_ID_KEY);
+            } else {
+                try {
+                    copletId = this.parameters.getParameter(COPLET_ID_PARAM);
+                        
+                    // set portal name
+                    PortalService portalService = null;
+                    try {
+                        portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+                        portalService.setPortalName(this.parameters.getParameter(PORTAL_NAME_PARAM));
+                    } finally {
+                        this.manager.release(portalService);
+                    }
+                } catch (ParameterException e) {
+                    throw new SAXException("copletId and portalName must be passed as parameter or in the object model within the parent context.");
+                }
             }
-                
-            CopletInstanceData cid = this.getCopletInstanceData();
-            
-            JXPathContext jxpathContext = JXPathContext.newContext( cid );
-            Object object = jxpathContext.getValue(expression);
+            if (copletId == null) {
+                throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
+            }
+
+
+            CopletInstanceData object = profileManager.getCopletInstanceData( copletId );
                 
             if (object == null) {
-                throw new ProcessingException("Could not find value for expression "+expression);
+                throw new SAXException("Could not find coplet instance data for " + copletId);
             }
                 
-        } else {
-            super.startTransformingElement(uri, name, raw, attr);
+            return object;
+        } catch (ComponentException e) {
+            throw new SAXException("Error getting profile manager.", e);
+        } finally {
+            this.manager.release(profileManager);
         }
     }
-
-    /**
-     * Overridden from superclass.
-     */
-    public void endTransformingElement(String uri, String name, String raw) 
-    throws ProcessingException, IOException, SAXException {
-        if (!name.equals(COPLET_ELEM)) {
-            super.endTransformingElement(uri, name, raw);
-        }
-    }
-
 }

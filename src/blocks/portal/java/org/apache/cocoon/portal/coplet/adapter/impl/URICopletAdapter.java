@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.8 2003/05/26 10:34:52 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.9 2003/05/26 12:49:14 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -194,7 +194,7 @@ public class URICopletAdapter
             if ( list == null ) {
                 list = new ArrayList();
             }
-            list.add(event.getCopletInstanceData());
+            list.add(event.getTarget());
             service.setTemporaryAttribute(URICopletAdapter.class.getName(), list);
         } catch (ComponentException ignore ) {            
         } finally {

@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultChangeAspectDataEventSubscriber.java,v 1.1 2003/05/23 14:20:09 cziegeler Exp $
+ * @version CVS $Id: DefaultChangeAspectDataEventSubscriber.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
  */
 public final class DefaultChangeAspectDataEventSubscriber 
     implements Subscriber {
@@ -91,7 +91,7 @@ public final class DefaultChangeAspectDataEventSubscriber
      */
     public void inform(Event e) {
         final ChangeAspectDataEvent event = (ChangeAspectDataEvent)e;
-        final Aspectalizable target = event.getTarget();
+        final Aspectalizable target = event.getAspectalizable();
         target.setAspectData(event.getAspectName(), event.getData());
     }
 
