@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -35,7 +36,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.11 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: MountNode.java,v 1.12 2004/03/10 14:18:01 stephan Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -74,13 +75,17 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
-        TreeProcessor processor = getProcessor(resolvedSource);
-
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
+
+        if (resolvedSource.length()==0)
+            throw new ProcessingException("Source of mount statement is empty"); 
+
+        TreeProcessor processor = getProcessor(resolvedSource);
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
         String oldContext   = env.getContext();
+				
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
 
@@ -99,7 +104,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             }
         } finally {
             // Restore context
-			env.setContext(oldPrefix, oldURI, oldContext);
+            env.setContext(oldPrefix, oldURI, oldContext);
 
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
