@@ -8,48 +8,52 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.Poolable;
-import java.io.IOException;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
 
 import java.net.URL;
+import java.io.IOException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 
-import org.w3c.dom.Document;
+import org.w3c.tidy.Tidy;
 
 /**
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-27 20:58:03 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-30 18:51:25 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
-
     /**
      * Generate XML data.
      */
     public void generate()
     throws IOException, SAXException {
-        ByteArrayOutputStream ostream = new ByteArrayOutputStream();
         URL url = new URL(this.source);
+        ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 
-        // Get a spruced up document.
-        org.w3c.tidy.Tidy tidy = new org.w3c.tidy.Tidy();
-        System.out.println(">>>> Opening URL: " + url.toString());
+        // Setup an instance of Tidy.
+        Tidy tidy = new Tidy();
         tidy.setXmlOut(true);
         tidy.setXHTML(true);
-		Document newdoc = tidy.parseDOM(url.openStream(),ostream);
 
-        byte[] bytes = ostream.toByteArray();
+        // FIXME (DIMS): Using DOMStreamer will eliminate the need for an 
+        // intermediate ByteArrayOutput Stream. But the document created
+        // by JTidy has problems. So for now we use the ByteArrayOutputStream.
+		tidy.parseDOM(new BufferedInputStream(url.openStream()),
+                                          new BufferedOutputStream(ostream));
 
-        // pipe the results into the parser
+        // Pipe the results into the parser
         Parser parser=(Parser) this.manager.lookup(Roles.PARSER);
         parser.setContentHandler(this.contentHandler);
         parser.setLexicalHandler(this.lexicalHandler);
-        parser.parse(new InputSource(new ByteArrayInputStream(bytes)));
+        parser.parse(new InputSource
+                        (new ByteArrayInputStream
+                            (ostream.toByteArray())));
     }    
 }
+
