@@ -199,6 +199,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="GP" type="add">
+     Added replacement for Excalibut Event package in org.apache.cocoon.components.thread
+   </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
      Javaflow: also support inherited methods
    </action>
