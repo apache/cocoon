@@ -28,8 +28,7 @@ import org.w3c.dom.Element;
 public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         BooleanFieldDefinition definition = new BooleanFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
+        setCommonProperties(widgetElement, definition);
         setDisplayData(widgetElement, definition);
         setValidators(widgetElement, definition);
         Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();

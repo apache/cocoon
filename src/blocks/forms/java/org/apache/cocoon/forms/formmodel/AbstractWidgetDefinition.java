@@ -42,6 +42,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     //TODO consider final on these
     private String location = null;
     private String id;
+    /** The initial map of attributes (can be null) */
+    private Map attributes;
     private Map displayData;
     private List validators;
 
@@ -87,6 +89,18 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
     protected void setId(String id) {
         this.id = id;
+    }
+    
+    protected void setAttributes(Map attributes) {
+        this.attributes = attributes;   
+    }
+    
+    public Object getAttribute(String name) {
+        if (this.attributes != null) {
+            return this.attributes.get(name);
+        } else {
+            return null;
+        }
     }
 
     protected void addCreateListener(CreateListener listener) {

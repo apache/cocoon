@@ -204,6 +204,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="add">
+     Forms block: allow widget attributes which were only accessible programmatically
+     to be set in the form definition. This allows e.g. generic form processing code
+     to find widgets having a particular attribute.
+   </action>
    <action dev="SW" type="update">
      Mail block: the MailSender now gets its source resolver from the service manager.
      This allows its use from flowscript where the old SourceResolver is not available.

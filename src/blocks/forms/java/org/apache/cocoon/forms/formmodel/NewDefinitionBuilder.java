@@ -20,14 +20,13 @@ import org.w3c.dom.Element;
 /**
  * Builds {NewDefinition}s.
  *
- * @version $Id: NewDefinitionBuilder.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class NewDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         NewDefinition definition = new NewDefinition();
-        setLocation(element, definition);
-        setId(element, definition);
+        setCommonProperties(element, definition);
         return definition;
     }
 }

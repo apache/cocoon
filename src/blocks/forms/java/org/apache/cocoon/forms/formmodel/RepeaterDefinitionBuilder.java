@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link RepeaterDefinition}s.
  * 
- * @version $Id: RepeaterDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id$
  */
 public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
@@ -31,8 +31,7 @@ public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
         
         RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize);
-        setLocation(repeaterElement, repeaterDefinition);
-        setId(repeaterElement, repeaterDefinition);
+        setCommonProperties(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
         setValidators(repeaterElement, repeaterDefinition);
 

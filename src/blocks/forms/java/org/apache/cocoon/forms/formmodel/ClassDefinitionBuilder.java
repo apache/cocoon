@@ -22,14 +22,13 @@ import org.w3c.dom.Element;
 /**
  * Builds {ClassDefinition}s.
  *
- * @version $Id: ClassDefinitionBuilder.java,v 1.3 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class ClassDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         ClassDefinition definition = new ClassDefinition();
-        setLocation(element, definition);
-        setId(element, definition);
+        setCommonProperties(element, definition);
         setDisplayData(element, definition);
         setValidators(element, definition);
 

@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: UploadDefinitionBuilder.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version CVS $Id$
  */
 public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
@@ -32,8 +32,7 @@ public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         
         UploadDefinition uploadDefinition = new UploadDefinition(required, mimeTypes);
-        setLocation(widgetElement, uploadDefinition);
-        setId(widgetElement, uploadDefinition);
+        setCommonProperties(widgetElement, uploadDefinition);
 
         setDisplayData(widgetElement, uploadDefinition);
         setValidators(widgetElement, uploadDefinition);
