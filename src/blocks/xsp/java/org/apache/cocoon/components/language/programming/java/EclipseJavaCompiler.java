@@ -19,6 +19,8 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.ClassFile;
@@ -54,7 +56,7 @@ import java.util.StringTokenizer;
 /**
  * Eclipse Java Compiler
  *
- * @version CVS $Id: EclipseJavaCompiler.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id: EclipseJavaCompiler.java,v 1.2 2004/07/11 21:08:53 antonio Exp $
  */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
@@ -63,12 +65,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
     static {
         // Detect JDK version we are running under
-        String version = System.getProperty("java.specification.version");
-        try {
-            source14 = target14 = Float.parseFloat(version) >= 1.4;
-        } catch (NumberFormatException e) {
-            source14 = target14 = false;
-        }
+        source14 = target14 = SystemUtils.isJavaVersionAtLeast(140);
     }
 
     boolean debug;
@@ -132,12 +129,10 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         String str = fileName;
         str = str.replace('\\', '/');
         if (sourceDir != null) {
-            String prefix = 
-                new File(sourceDir).getCanonicalPath().replace('\\', '/');
+            String prefix = new File(sourceDir).getCanonicalPath().replace('\\', '/');
             if (canonical != null) {
                 if (canonical.startsWith(prefix)) {
-                    String result = canonical.substring(prefix.length() + 1,
-                                                        canonical.length() -5);
+                    String result = canonical.substring(prefix.length() + 1, canonical.length() -5);
                     result = result.replace('/', '.');
                     return result;
                 }
@@ -145,8 +140,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                 File t = new File(sourceDir, fileName);
                 if (t.exists()) {
                     str = t.getCanonicalPath().replace('\\', '/');
-                    String result = str.substring(prefix.length()+1,
-                                                  str.length() - 5).replace('/', '.');
+                    String result = str.substring(prefix.length() + 1, str.length() - 5).replace('/', '.');
                     return result;
                 }
             }
@@ -154,8 +148,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         if (fileName.endsWith(".java")) {
             fileName = fileName.substring(0, fileName.length() - 5);
         }
-        fileName = fileName.replace('\\', '.');
-        return fileName.replace('/', '.');
+        return StringUtils.replaceChars(fileName, "\\/", "..");
     }
 
     public boolean compile() throws IOException {
@@ -328,33 +321,24 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                 }
 
             };
-        final IErrorHandlingPolicy policy = 
-            DefaultErrorHandlingPolicies.proceedWithAllProblems();
+        final IErrorHandlingPolicy policy = DefaultErrorHandlingPolicies.proceedWithAllProblems();
         final Map settings = new HashMap();
-        settings.put(CompilerOptions.OPTION_LineNumberAttribute,
-                     CompilerOptions.GENERATE);
-        settings.put(CompilerOptions.OPTION_SourceFileAttribute,
-                     CompilerOptions.GENERATE);
-        settings.put(CompilerOptions.OPTION_ReportDeprecation,
-                     CompilerOptions.IGNORE);
+        settings.put(CompilerOptions.OPTION_LineNumberAttribute, CompilerOptions.GENERATE);
+        settings.put(CompilerOptions.OPTION_SourceFileAttribute, CompilerOptions.GENERATE);
+        settings.put(CompilerOptions.OPTION_ReportDeprecation, CompilerOptions.IGNORE);
         if (sourceEncoding != null) {
-            settings.put(CompilerOptions.OPTION_Encoding,
-                         sourceEncoding);
+            settings.put(CompilerOptions.OPTION_Encoding, sourceEncoding);
         }
         if (debug) {
-            settings.put(CompilerOptions.OPTION_LocalVariableAttribute,
-                         CompilerOptions.GENERATE);
+            settings.put(CompilerOptions.OPTION_LocalVariableAttribute, CompilerOptions.GENERATE);
         }
         if (source14) {
-            settings.put(CompilerOptions.OPTION_Source,
-                         CompilerOptions.VERSION_1_4);
+            settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_4);
         }
         if (target14) {
-            settings.put(CompilerOptions.OPTION_TargetPlatform,
-                         CompilerOptions.VERSION_1_4);
+            settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_4);
         }
-        final IProblemFactory problemFactory = 
-            new DefaultProblemFactory(Locale.getDefault());
+        final IProblemFactory problemFactory = new DefaultProblemFactory(Locale.getDefault());
 
         final ICompilerRequestor requestor = new ICompilerRequestor() {
                 public void acceptResult(CompilationResult result) {
@@ -363,34 +347,24 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                             IProblem[] problems = result.getProblems();
                             for (int i = 0; i < problems.length; i++) {
                                 IProblem problem = problems[i];
-                                String name = 
-                                    new String(problems[i].getOriginatingFileName());
-                                handleError(name,
-                                            problem.getSourceLineNumber(),
-                                            -1,
-                                            problem.getMessage());
+                                String name = new String(problems[i].getOriginatingFileName());
+                                handleError(name, problem.getSourceLineNumber(), -1, problem.getMessage());
                             }
                         } else {
                             ClassFile[] classFiles = result.getClassFiles();
                             for (int i = 0; i < classFiles.length; i++) {
                                 ClassFile classFile = classFiles[i];
-                                char[][] compoundName = 
-                                    classFile.getCompoundName();
+                                char[][] compoundName = classFile.getCompoundName();
                                 String className = "";
                                 String sep = "";
-                                for (int j = 0; 
-                                     j < compoundName.length; j++) {
-                                    className += sep;
-                                    className += new String(compoundName[j]);
+                                for (int j = 0; j < compoundName.length; j++) {
+                                    className += sep + new String(compoundName[j]);
                                     sep = ".";
                                 }
                                 byte[] bytes = classFile.getBytes();
-                                String outFile = destDir + "/" + 
-                                    className.replace('.', '/') + ".class";
-                                FileOutputStream fout = 
-                                    new FileOutputStream(outFile);
-                                BufferedOutputStream bos = 
-                                    new BufferedOutputStream(fout);
+                                String outFile = destDir + "/" + className.replace('.', '/') + ".class";
+                                FileOutputStream fout = new FileOutputStream(outFile);
+                                BufferedOutputStream bos = new BufferedOutputStream(fout);
                                 bos.write(bytes);
                                 bos.close();
                             }
@@ -400,32 +374,20 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                     }
                 }
             };
-        ICompilationUnit[] compilationUnits = 
-            new ICompilationUnit[classNames.length];
+        ICompilationUnit[] compilationUnits = new ICompilationUnit[classNames.length];
         for (int i = 0; i < compilationUnits.length; i++) {
             String className = classNames[i];
             compilationUnits[i] = new CompilationUnit(fileNames[i], className);
         }
-        Compiler compiler = new Compiler(env,
-                                         policy,
-                                         settings,
-                                         requestor,
-                                         problemFactory);
+        Compiler compiler = new Compiler(env, policy, settings, requestor, problemFactory);
         compiler.compile(compilationUnits);
         return errors.size() == 0;
     }
 
     void handleError(String className, int line, int column, Object errorMessage) {
-        String fileName = 
-            className.replace('.', File.separatorChar) + ".java";
+        String fileName = className.replace('.', File.separatorChar) + ".java";
         if (column < 0) column = 0;
-        errors.add(new CompilerError(fileName,
-                                     true,
-                                     line,
-                                     column,
-                                     line,
-                                     column,
-                                     errorMessage.toString()));
+        errors.add(new CompilerError(fileName, true, line, column, line, column, errorMessage.toString()));
     }
 
     public List getErrors() throws IOException {
