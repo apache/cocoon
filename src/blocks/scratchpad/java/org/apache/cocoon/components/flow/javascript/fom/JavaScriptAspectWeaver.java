@@ -60,7 +60,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.environment.Environment;
 import org.apache.excalibur.source.Source;
@@ -75,25 +78,30 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * <p>
  * Known restrictions, to be implemented, open questions:<br/>
  * <ul>
- *   <li>after() interceptions are added *after* the return statement</li>
- *   <li>after() interceptions have to be added in reverse order</li>
- *   <li>continuations are not supported (needs another interception event like
- *       before-sendPageAndWait() and after-sendPageAndWait()</li>
- *   <li>does not support object property functions</li>
- *   <li>does not work for scripts loaded by "cocoon.load(...)"</li>
- *   <li>throw appropriate exeptions</li>
- *   <li>if applied scripts change they are not reloaded (a change in
- *       the base script is necessary)</li>
- *   <li>no syntax check for base script</li>
- *   <li>no syntax check for scripts containing interceptions</li>
- *   <li>intercepted script (result) should be pretty printed</li>
- *   <li>put the result script in the directory of the base script
- *       (if file protocol is used)</li>
+ *  <li>after() interceptions are added *after* the "return"
+ *      which is of course wrong</li>
+ *  <li>after() interceptions have to be added in reverse order</li>
+ *  <li>no support for object property functions</li>
+ *  <li>how to deal with more than one around interception?</li>
+ *  <li>does not work for scripts loaded by "cocoon.load(...)"</li>
+ *  <li>if applied scripts change they are not reloaded (a change in
+        the base script is necessary)</li>
+ *  <li>no syntax check for base script</li>
+ *  <li>no syntax check for result scripts</li>
+ *  <li>no syntax check for interception definitions</li>
+ *  <li>the result script should be pretty printed
+ *      and put into the directory of the base script
+ *      if file protocol is used
+ *      --&gt;enables easier debugging</li>
+ *   <li>pass the calling function name to the interception scripts</li>
+ *   <li>review the naming of all classes and methods</li>
+ *   <li>What's the purpose of the arguments in continueExecution(arguments)?
+ *       See Stefano's proposal?</li>
  * </ul>
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.1 2003/09/06 13:23:30 reinhard Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.2 2003/09/08 22:56:34 reinhard Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -111,6 +119,9 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
     /** Does this base script contain applied scripts? */
     boolean areScriptsApplied = false;
+    
+    /** Provided configuration (part of the Interpreter configuration) **/
+    ArrayList stopExecutionFunctions = null;
 
     /**
      * Set the base script (the script which is scanned for applied
@@ -143,7 +154,9 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         this.baseScriptTokenList.commentScriptsApplied();
         
         // add the interceptions
-        this.baseScriptTokenList.addInterceptions( this.interceptorGroups );
+        this.baseScriptTokenList.addInterceptions( 
+                this.interceptorGroups,
+                this.stopExecutionFunctions );
 
         // pretty print script
         // TODO tbd 
@@ -170,7 +183,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         JSTokenList interceptorsTokensList = JSParser.parse( 
             readSourceIntoCharArray( this.environement.resolveURI(source).getInputStream() ) );
 
-        InterceptorList interceptors = interceptorsTokensList.readInterceptionTokens();
+        InterceptionList interceptors = interceptorsTokensList.readInterceptionTokens();
         interceptors.setSourceScript( source );
         for( int i = 0; i < interceptors.size(); i++ ) {
             Interceptor interceptor = (Interceptor) interceptors.get( i );
@@ -186,6 +199,17 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      */
     public void setEnvironment( Environment env ) {
         this.environement = env;
+    }
+    
+    /** 
+     * Provide configuration (part of the Interpreter configuration) 
+     */    
+    public void setStopExecutionFunctionsConf( Configuration conf ) throws ConfigurationException {
+        this.stopExecutionFunctions = new ArrayList();
+        Configuration stopExecutionFunctionsConf[] = conf.getChildren();
+        for( int i = 0; i < stopExecutionFunctionsConf.length; i++ ) {
+            stopExecutionFunctions.add( stopExecutionFunctionsConf[i].getValue() );
+        }
     }
     
     /**
@@ -221,7 +245,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     }
 
     /**
-     * parse JavaScript and get JSTokens
+     * parse JavaScript and get a <code>JSTokenList</code>
      */
     static class JSParser {
 
@@ -532,14 +556,24 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
 
         /**
          * Token ids of all cocoon object occurencies followed by '.apply'
-         * ( --> cocoon.apply( "bla" ); )
+         * ( cocoon.apply( "bla" ); )
          */
         ArrayList cocoonPositions = new ArrayList();   
         
         /**
+         * List of all functions that lead to new continuations
+         */
+        List stopExecutionFunctions = null;
+
+        
+        /**
          * Add the code fragement of the passed interceptions at the right places
          */
-        private void addInterceptions(ArrayList interceptionsList) {
+        private void addInterceptions( ArrayList interceptionsList, 
+                                       List stopExecutionFunctions ) {
+            
+            this.stopExecutionFunctions = stopExecutionFunctions;
+                                           
             // add events to make parsing easier
             addInterceptionEvents();
             
@@ -566,7 +600,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                                                           Interceptor.STR_AROUND, 
                                                           li );
                     }
-                    if( type == InterceptorEvent.FNC_END ) {
+                    else if( type == InterceptorEvent.FNC_END ) {
                         // add all after interceptors
                         addInterceptionTokens( interceptionsList, 
                                                ie.getName(), 
@@ -574,6 +608,18 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                                                li );                        
                         inAround = false;
                     }
+                    else if( type == InterceptorEvent.CONT_EXEC ) {
+                        addInterceptionTokens( interceptionsList, 
+                                               ie.getName(), 
+                                               Interceptor.STR_CONT_EXEC, 
+                                               li );                           
+                    }
+                    else if( type == InterceptorEvent.STOP_EXEC ) {
+                        addInterceptionTokens( interceptionsList, 
+                                               ie.getName(), 
+                                               Interceptor.STR_STOP_EXEC, 
+                                               li );                               
+                    }                    
                 }
             }
         }
@@ -581,7 +627,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * Add all tokens in the correct order 
          * 
-         * TODO currently tokens are streamed - that's the wrong place!
+         * TODO tokens from events are streamed here --> better: add tokens to tokensList
          * 
          * @param interceptionsList - sorted list of all available interceptions
          * @param functionName - name of the intercepted function
@@ -590,7 +636,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          *        in the interceptionsList are added
          * @return true if the those elements replace other JSTokens
          */
-        private boolean addInterceptionTokens( ArrayList interceptionsList, 
+        private boolean addInterceptionTokens( ArrayList interceptionGroupList, 
                                                String functionName,
                                                String eventType, 
                                                ListIterator tokensListIt 
@@ -600,12 +646,12 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
             ArrayList matchingInterceptors = new ArrayList();
 
             // read out all matching interceptions from interceptionsList
-            for( int i = 0; i < interceptionsList.size(); i++ ) {
-                InterceptorList interceptorList = (InterceptorList) interceptionsList.get(i);
-                ListIterator li = interceptorList.listIterator();
+            for( int i = 0; i < interceptionGroupList.size(); i++ ) {
+                InterceptionList interceptionList = (InterceptionList) interceptionGroupList.get(i);
+                ListIterator li = interceptionList.listIterator();
                 while( li.hasNext() ) {
                     Interceptor interceptor = (Interceptor) li.next();
-                    interceptor.setBaseScript( interceptorList.getSourceScript() );                
+                    interceptor.setBaseScript( interceptionList.getSourceScript() );                
                     boolean success = WildcardHelper.match( 
                         new HashMap(), functionName + Interceptor.DELIMITER + eventType, 
                         WildcardHelper.compilePattern( interceptor.getName() ));
@@ -676,7 +722,49 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         }
         
         /**
-         * to make the interceptions easier "function start" and "function end" events
+         * TODO current
+         * Check a token if it is function call that leads to a stop of
+         * execution (continuation is created)
+         */
+        private String isStopFunction( JSToken curToken, ListIterator liTokens ) {
+            JSToken n1token = (JSToken) liTokens.next();
+            JSToken n2token = (JSToken) liTokens.next();
+            liTokens.previous();
+            liTokens.previous();    
+                       
+            ListIterator li = this.stopExecutionFunctions.listIterator();
+            while( li.hasNext() ) {
+                String object = "";
+                String function = "";
+                StringTokenizer st = new StringTokenizer( (String) li.next(), ".");
+                int countTokens = st.countTokens();
+
+                if( countTokens == 1 ) {
+                   function = st.nextToken();
+                   function = function.substring( 0, function.indexOf("(") );                   
+                   if( function.equals( curToken.toString() ) ) return function;
+                }
+                else if( countTokens == 2 ) {
+                   object = st.nextToken();
+                   function = st.nextToken();
+                   function = function.substring( 0, function.indexOf("(") );
+                   if( object.equals( curToken.toString() ) && 
+                       n1token.getType() == JSToken.POINT &&
+                       function.equals( n2token.toString() ) ) {
+                       return object + "." + function;
+                   } 
+                }
+                else {
+                    // not allowed! 
+                }
+                
+            }
+            return null;
+        }
+        
+        
+        /**
+         * to make intercepting easier "function start" and "function end" events
          * are added
          */
         private void addInterceptionEvents() {
@@ -691,11 +779,17 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                 String functionName = getFunctionName( pos + diff );
                 ListIterator li = this.listIterator( pos + diff );
                 boolean functionStartSet = false;
+                boolean isExecStopFunctionSet = false;
                 int countOpenBrackets = 0;
+                String curStopFunction = "";
+                int countCurToken = pos - 1;  // get the current index
+                
                 // continue in the token list to find opening and closing brackets
                 while( li.hasNext() ) {
+                    countCurToken++;                    
                     JSToken t = (JSToken) li.next();
                     int type = t.getType();
+                    // function start is found
                     if( type == JSToken.BRACKET2_LEFT &&  ! functionStartSet ) {
                         li.add( new InterceptorEvent( InterceptorEvent.FNC_START, 
                                                       functionName ) );
@@ -703,7 +797,9 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                         functionStartSet = true;
                         continue;
                     }
+                    // within a function
                     if( functionStartSet ) {
+                        // end of a function is reached
                         if( type == JSToken.BRACKET2_RIGHT && countOpenBrackets == 0 ) {
                             li.previous();
                             li.add( new InterceptorEvent( InterceptorEvent.FNC_END, 
@@ -711,15 +807,43 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                             diff++;
                             break;                         
                         }
+                        // count brackets
                         if( type == JSToken.BRACKET2_LEFT ) {
                             countOpenBrackets++;
                         }
                         else if ( type == JSToken.BRACKET2_RIGHT ) {
                             countOpenBrackets--;
                         }
+                        // end of a continuation creating function reached
+                        else if( isExecStopFunctionSet ) {
+                            if( type == JSToken.SEMICOLON ) {
+                                li.add( new InterceptorEvent( 
+                                            InterceptorEvent.CONT_EXEC,
+                                            functionName ));
+                                diff++;
+                                isExecStopFunctionSet = false;                          
+                            }
+                            continue;
+                        }                        
+                        // check if a function is reached that creates continuations
+                        else if( type == JSToken.CODE ) { 
+                            String fnc = isStopFunction( t, li );
+                            if( null != fnc ) {
+                                curStopFunction = t.toString();     
+                                li.previous();                   
+                                li.add( new InterceptorEvent( InterceptorEvent.STOP_EXEC,
+                                   functionName ));
+                                diff++;                           
+                                isExecStopFunctionSet = true;
+                                continue;
+                            }
+                        }
                     }
                 } // end while
             } // end for
+            
+            
+            
         } // end method
         
         /**
@@ -791,7 +915,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         // ------------ TokenList of appield files ---------------------------
 
         /**
-         * help method to read a intercepting function name - the difference
+         * help method to read an intercepting function name - the difference
          * to getFunctionName( pos ) is the wildcards "*"
          */
         private String getInterceptorFunctionName( int functionPosition ) { 
@@ -821,8 +945,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          *   <li>around(): { ... }</li> 
          * </ul>
          */
-        private InterceptorList readInterceptionTokens() {
-            InterceptorList interceptors = new InterceptorList();
+        private InterceptionList readInterceptionTokens() {
+            InterceptionList interceptors = new InterceptionList();
             List functionPositions = this.getFunctionPositions();   
             // loop over all intercepting functions
             for( int i = 0; i < functionPositions.size(); i++ ) {
@@ -847,15 +971,21 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                          // find an interception definition
                          if( !inInterceptor && type == JSToken.CODE ) {
                                  
-                             if( t.equals( "before") ) {
+                             if( t.equals( Interceptor.STR_BEFORE ) ) {
                                  interceptorType = Interceptor.STR_BEFORE;
                              }
-                             else if( t.equals( "after") ) {
+                             else if( t.equals( Interceptor.STR_AFTER ) ) {
                                  interceptorType = Interceptor.STR_AFTER;
                              }   
-                             else if( t.equals( "around") ) {
+                             else if( t.equals( Interceptor.STR_AROUND ) ) {
                                  interceptorType = Interceptor.STR_AROUND;
                              }    
+                             else if( t.equals( Interceptor.STR_STOP_EXEC )) {
+                                 interceptorType = Interceptor.STR_STOP_EXEC;   
+                             }
+                             else if( t.equals( Interceptor.STR_CONT_EXEC )) {
+                                 interceptorType = Interceptor.STR_CONT_EXEC;   
+                             }                             
                          }
                          // after interception defintion is found 
                          else if( !inInterceptor && type == JSToken.BRACKET2_LEFT ) {    
@@ -865,7 +995,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                                                                interceptorType );
                              countOpenBrackets++;
                          }
-                         // end of intercepting code is reached - clone interception token 
                          // and add it to the list
                          else if( inInterceptor && type == JSToken.BRACKET2_RIGHT &&
                                   countOpenBrackets == 0 ) {
@@ -873,18 +1002,21 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                          }                        
                          // within intercepting code add all tokens
                          else if( inInterceptor ) {
+                             // count brackets
                              if( type == JSToken.BRACKET2_LEFT) {
                                  countOpenBrackets++; 
                              }
                              else if( type == JSToken.BRACKET2_RIGHT ) {
                                  countOpenBrackets--;                            
                              }
+                             // end of intercepting code is reached - clone interception token                              
                              if( type == JSToken.BRACKET2_RIGHT && countOpenBrackets == 0) {
                                  interceptors.add( curInterceptor.getClone() );
                                  inInterceptor = false;
                                  interceptorType = "";
                                  curInterceptor = null;                                
                              }
+                             // within intercepting code
                              else {
                                  curInterceptor.addToken( t );
                              }
@@ -923,6 +1055,18 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
             }                   
             return sb.toString();
         }
+
+        public String debugToString() {
+            StringBuffer sb = new StringBuffer();
+            ListIterator li = this.listIterator();
+            while( li.hasNext() ) {
+                JSToken t = (JSToken) li.next();   
+                sb.append("\n------------------------------------\n");
+                sb.append("type: ").append(t.getType()).append("\n");   
+                sb.append( t.stream() );
+            }                   
+            return sb.toString();
+        }        
                    
     }    
     
@@ -930,7 +1074,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      * A collection of interceptors with the possibility to
      * set the source of the script where they are read from
      */
-    static class InterceptorList extends ArrayList {
+    static class InterceptionList extends ArrayList {
            
         String sourceScript;
         
@@ -952,6 +1096,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         public static String STR_BEFORE            = "before";   
         public static String STR_AFTER             = "after";          
         public static String STR_AROUND            = "around";  
+        public static String STR_STOP_EXEC         = "stopExecution";
+        public static String STR_CONT_EXEC         = "continueExecution";        
         
         public static String DELIMITER             = ":";        
         
@@ -1134,7 +1280,9 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     static class InterceptorEvent extends JSToken {
 
         public static int FNC_START                = 51;
-        public static int FNC_END                  = 52;        
+        public static int FNC_END                  = 52;     
+        public static int STOP_EXEC                = 53;
+        public static int CONT_EXEC            = 54;  
 
         String interceptorName;
         int type;
