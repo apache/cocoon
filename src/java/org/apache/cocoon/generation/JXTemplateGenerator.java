@@ -353,7 +353,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.28 2004/01/04 20:40:26 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.29 2004/01/06 12:41:39 joerg Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -1185,7 +1185,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             int ch;
             boolean inExpr = false;
             boolean xpath = false;
-            int line = location.getLineNumber();
+//            int line = location.getLineNumber();
             int column = location.getColumnNumber();
             try {
                 top: while ((ch = in.read()) != -1) {
@@ -3004,7 +3004,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
-    private void executeRaw(final XMLConsumer consumer,
+/*    private void executeRaw(final XMLConsumer consumer,
                             Event startEvent, Event endEvent) 
     throws SAXException {
         Event ev = startEvent;
@@ -3091,7 +3091,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             ev = ev.next;
         }
     } 
-
+*/
     private void executeDOM(final XMLConsumer consumer,
                             MyJexlContext jexlContext,
                             JXPathContext jxpathContext,
