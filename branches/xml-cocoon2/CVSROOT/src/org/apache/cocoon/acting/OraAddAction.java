@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-12 18:44:28 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-12 18:54:40 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -94,10 +94,7 @@ public class OraAddAction extends DatabaseAddAction {
             }
 
             for (int i = 0; i < values.length; i++) {
-                if (this.isLargeObject(values[i].getAttribute("type")) == false) {
-                    this.setColumn(statement, currentIndex, request, values[i]);
-                    currentIndex++;
-                } else if (values[i].getAttribute("type").equals("image")) {
+                if (values[i].getAttribute("type").equals("image")) {
                     File binaryFile = (File) request.get(values[i].getAttribute("param"));
                     Parameters iparam = new Parameters();
 
@@ -110,6 +107,11 @@ public class OraAddAction extends DatabaseAddAction {
                     synchronized (this.files) {
                         this.files.put(binaryFile, param);
                     }
+                }
+
+                if (this.isLargeObject(values[i].getAttribute("type")) == false) {
+                    this.setColumn(statement, currentIndex, request, values[i]);
+                    currentIndex++;
                 }
             }
 
