@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.4 2003/03/20 06:23:13 crossley Exp $
+  CVS $Id: todo.xml,v 1.5 2003/03/20 10:42:04 stephan Exp $
 -->
 
 <todo title="Things To Do">
@@ -19,6 +19,7 @@
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Stephan Michels" email="stephan@apache.org" id="SMS"/>
   <person name="John Morrison" email="morrijr@apache.org" id="JM"/>  
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
@@ -117,6 +118,13 @@
    <link href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=104814093018956">email discussion</link>.
   </action>
 
+  <action context="code" assigned-to="SMS">
+   For 2.1: Enable the 'use-store' parameter of the XSLT processor component. Test for occuring 
+   memory leaks. Seems only occuring if the xalan transformer is used. There also seems to be
+   a problem during the serialization of the transient store, if the servlet container were
+   stopped.
+  </action>
+
  </actions>
 
  <actions priority="medium">
@@ -134,6 +142,11 @@
   <action context="code">
    For 2.1: Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
    server : store fragments in the session rather than in a local store. <br/>
+  </action>
+
+  <action context="code" assigned-to="SMS">
+   Measure also the time of the setup() method in the profiler components, which sometimes
+   need more time than the processing.
   </action>
  </actions>
 
