@@ -87,7 +87,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.24 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.25 2004/01/31 16:56:24 unico Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -156,6 +156,7 @@ implements Source, XMLizable {
         this.enableLogging(logger);
 
         SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
+        this.protocol = info.protocol;
 
         // does the uri point to this sitemap or to the root sitemap?
         String prefix;
