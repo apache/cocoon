@@ -66,7 +66,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: PortalApplicationConfigFactory.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: PortalApplicationConfigFactory.java,v 1.2 2003/09/18 14:38:46 vgritsenko Exp $
  */
 public class PortalApplicationConfigFactory {
     /**
@@ -130,7 +130,7 @@ public class PortalApplicationConfigFactory {
 
     /**
      * Returns a list of all application configurations
-     * @return List a list of JDOM elements, which hold the portal application config
+     * @return List a list of DOM elements, which hold the portal application config
      */
     private static NodeList getApplicationList() throws Exception {
         Source s =
