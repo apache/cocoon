@@ -304,7 +304,7 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
-   <action dev="VG" type="add">
+   <action dev="CZ" type="add">
      Portal block: New Group Based Profile Manager.
    </action>
    <action dev="AG" type="update">
