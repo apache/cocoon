@@ -327,7 +327,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.41 2004/04/24 15:59:52 coliver Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.42 2004/04/24 21:35:35 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -1136,7 +1136,31 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 boolean oldLenient = jxpathContext.isLenient();
                 if (lenient != null) jxpathContext.setLenient(lenient.booleanValue());
                 try {
-                    return e.getPointer(jxpathContext, expr.raw).getNode();
+                    Iterator iter = 
+                        e.iteratePointers(jxpathContext);
+                    if (!iter.hasNext()) {
+                        return null;
+                    }
+                    Pointer first = (Pointer)iter.next();
+                    if (!iter.hasNext()) {
+                        return first.getNode();
+                    }
+                    List result = new LinkedList();
+                    result.add(first.getNode());
+                    boolean dom = (first.getNode() instanceof Node);
+                    while (iter.hasNext()) {
+                        Object obj = ((Pointer)iter.next()).getNode();
+                        dom = dom && (obj instanceof Node);
+                        result.add(obj);
+                    }
+                    Object[] arr;
+                    if (dom) {
+                        arr = new Node[result.size()];
+                    } else {
+                        arr = new Object[result.size()];
+                    }
+                    result.toArray(arr);
+                    return arr;
                 } finally {
                     jxpathContext.setLenient(oldLenient);
                 }
