@@ -17,6 +17,7 @@ package org.apache.cocoon.forms.transformation;
 
 import java.util.LinkedList;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -26,6 +27,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.LocatorImpl;
 
 // TODO: Reduce the Element creation and deletion churn by providing startElement
 // and endElement methods which do not create or use Elements on the stack.
@@ -170,6 +172,33 @@ public class EffectPipe extends AbstractXMLPipe {
     }
 
     protected class Output extends AbstractXMLPipe {
+
+        protected class Buffer extends SaxBuffer {
+            LocatorImpl myLocator = new LocatorImpl();
+
+            public void setDocumentLocator(Locator locator) {
+                super.setDocumentLocator(locator);
+                if (locator != null) {
+                    try {
+                        myLocator.setPublicId(locator.getPublicId());
+                        myLocator.setSystemId(locator.getSystemId());
+                        myLocator.setLineNumber(locator.getLineNumber());
+                        myLocator.setColumnNumber(locator.getColumnNumber());
+                    } catch (Exception e) {
+                         throw new CascadingRuntimeException("Error while handling locator", e);
+                    }
+                }
+            }
+            public void toSAX(ContentHandler contentHandler) throws SAXException {
+                if (locators == null)
+                    locators = new LinkedList();
+                locators.addFirst(EffectPipe.this.locator);
+                EffectPipe.this.locator = myLocator;
+                super.toSAX(contentHandler);
+                EffectPipe.this.locator = (Locator)locators.removeFirst();
+            }
+        }
+
         private LinkedList buffers = null;
         private SaxBuffer saxBuffer = null;
         private LinkedList elements  = null;
@@ -280,7 +309,8 @@ public class EffectPipe extends AbstractXMLPipe {
                 }
                 buffers.addFirst(saxBuffer);
             }
-            saxBuffer = new SaxBuffer();
+            saxBuffer = (SaxBuffer)new Buffer();
+            ((Buffer)saxBuffer).setDocumentLocator(locator);
         }
 
         protected void bufferFini() {
@@ -331,6 +361,7 @@ public class EffectPipe extends AbstractXMLPipe {
     protected LinkedList elements = null;
     protected Element input = null;
 
+    protected LinkedList locators = null;
     protected Locator locator = null;
     protected String name     = null;
     protected String publicId = null;
@@ -348,6 +379,7 @@ public class EffectPipe extends AbstractXMLPipe {
     public void init() {
         handlers = new LinkedList();
         elements = new LinkedList();
+        locators = new LinkedList();
         out = new Output();
     }
 
@@ -374,6 +406,8 @@ public class EffectPipe extends AbstractXMLPipe {
         super.recycle();
         handlers = null;
         elements = null;
+        locators = null;
+        locator = null;
         out = null;
     }
 
@@ -386,9 +420,13 @@ public class EffectPipe extends AbstractXMLPipe {
         }
     }
 
-    public void startDocument() throws SAXException { event = EVENT_START_DOCUMENT; handler = handler.process(); }
+    public void startDocument() throws SAXException {
+        event = EVENT_START_DOCUMENT; handler = handler.process();
+    }
 
-    public void endDocument() throws SAXException { event = EVENT_END_DOCUMENT; handler = handler.process(); }
+    public void endDocument() throws SAXException {
+        event = EVENT_END_DOCUMENT; handler = handler.process();
+    }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         input = new Element(prefix, uri);
