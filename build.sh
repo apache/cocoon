@@ -11,28 +11,24 @@ else
   S=':'
 fi
 
-# ----- Set Up The Runtime Classpath ------------------------------------------
-
-OLD_ANT_HOME="$ANT_HOME"
-unset ANT_HOME
-
-CP=$CLASSPATH
-export CP
+# ----- Ignore system CLASSPATH variable
+OLD_CLASSPATH=$CLASSPATH
 unset CLASSPATH
-
-CLASSPATH="`echo ./lib/endorsed/*.jar | tr ' ' $S`"
+CLASSPATH="`echo lib/endorsed/*.jar | tr ' ' $S`"
 export CLASSPATH
 
 echo Using classpath: \"$CLASSPATH\"
-"$PWD/tools/bin/ant" -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
 
-unset CLASSPATH
+# ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
+OLD_ANT_HOME="$ANT_HOME"
+export ANT_HOME=tools
 
-CLASSPATH=$CP
-export CLASSPATH
-ANT_HOME=OLD_ANT_HOME
-export ANT_HOME
+"$ANT_HOME/bin/ant" -Djava.endorsed.dirs=lib/endorsed -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
 
-# ----- Clean the environment ------------------------------------------
-unset OLD_ANT_HOME
-unset CP
+# ----- Restore ANT_HOME
+export ANT_HOME=$OLD_ANT_HOME
+unset OLD_ANT_HOME=
+
+# ----- Restore CLASSPATH
+export CLASSPATH=$OLD_CLASSPATH
+unset OLD_CLASSPATH=
