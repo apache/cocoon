@@ -1401,6 +1401,16 @@ FIXME:
         </choice>
       </attribute>
     </optional>
+    <optional>
+      <attribute name="pass-through" a:defaultValue="false">
+        <choice>
+          <value>true</value>
+          <value>false</value>
+          <value>yes</value>
+          <value>no</value>
+        </choice>
+      </attribute>
+    </optional>    
   </define>
 
   <define name="map.redirect-to">
