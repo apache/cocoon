@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.5 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.6 2004/02/09 09:25:12 cziegeler Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -632,37 +632,24 @@ public class ProxyTransformer
         }
     }
 
-    public static CopletInstanceData getInstanceData(
-        ServiceManager manager,
-        Map objectModel,
-        String copletID,
-        String portalName)
-        throws ProcessingException, IOException, SAXException {
-        ProfileManager profileManager = null;
+    public static CopletInstanceData getInstanceData(ServiceManager manager,
+                                                     Map objectModel,
+                                                     String copletID,
+                                                     String portalName)
+    throws ProcessingException, IOException, SAXException {
+        // set portal name
+        PortalService portalService = null;
         try {
-            profileManager =
-                (ProfileManager) manager.lookup(ProfileManager.ROLE);
-
-            // set portal name
-            PortalService portalService = null;
-            try {
-                portalService =
-                    (PortalService) manager.lookup(PortalService.ROLE);
-                portalService.setPortalName(portalName);
-            }
-            finally {
-                manager.release(portalService);
-            }
-
-            CopletInstanceData data =
-                profileManager.getCopletInstanceData(copletID);
+            portalService = (PortalService) manager.lookup(PortalService.ROLE);
+            portalService.setPortalName(portalName);
+                
+            ProfileManager profileManager = portalService.getComponentManager().getProfileManager();
+            CopletInstanceData data = profileManager.getCopletInstanceData(copletID);
             return data;
-        }
-        catch (ServiceException e) {
-            throw new ProcessingException("Error getting profile manager.", e);
-        }
-        finally {
-            manager.release(profileManager);
+        } catch (ServiceException e) {
+            throw new ProcessingException("Error getting portal service.", e);
+        } finally {
+            manager.release(portalService);
         }
     }
 
@@ -676,53 +663,37 @@ public class ProxyTransformer
     * @throws IOException
     * @throws SAXException
     */
-    public static CopletInstanceData getInstanceData(
-        ServiceManager manager,
-        Map objectModel,
-        Parameters parameters)
-        throws ProcessingException, IOException, SAXException {
+    public static CopletInstanceData getInstanceData(ServiceManager manager,
+                                                     Map objectModel,
+                                                     Parameters parameters)
+    throws ProcessingException, IOException, SAXException {
 
-        ProfileManager profileManager = null;
+        PortalService portalService = null;
         try {
-            profileManager =
-                (ProfileManager) manager.lookup(ProfileManager.ROLE);
+            portalService = (PortalService) manager.lookup(PortalService.ROLE);
+
             // determine coplet id
             String copletId = null;
-            Map context =
-                (Map) objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+            Map context = (Map) objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
             if (context != null) {
                 copletId = (String) context.get(Constants.COPLET_ID_KEY);
                 if (copletId == null) {
                     throw new ProcessingException("copletId must be passed as parameter or in the object model within the parent context.");
                 }
-            }
-            else {
+            } else {
                 try {
                     copletId = parameters.getParameter(COPLET_ID_PARAM);
 
-                    // set portal name
-                    PortalService portalService = null;
-                    try {
-                        portalService =
-                            (PortalService) manager.lookup(PortalService.ROLE);
-                        portalService.setPortalName(
-                            parameters.getParameter(PORTAL_NAME_PARAM));
-                    }
-                    finally {
-                        manager.release(portalService);
-                    }
-                }
-                catch (ParameterException e) {
+                    portalService.setPortalName(parameters.getParameter(PORTAL_NAME_PARAM));
+                } catch (ParameterException e) {
                     throw new ProcessingException("copletId and portalName must be passed as parameter or in the object model within the parent context.");
                 }
             }
-            return profileManager.getCopletInstanceData(copletId);
-        }
-        catch (ServiceException e) {
-            throw new ProcessingException("Error getting profile manager.", e);
-        }
-        finally {
-            manager.release(profileManager);
+            return portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId);
+        } catch (ServiceException e) {
+            throw new ProcessingException("Error getting portal service.", e);
+        } finally {
+            manager.release(portalService);
         }
     }
 
