@@ -928,12 +928,15 @@ servlets.properties:servlet.org.apache.cocoon.Cocoon.preload=false</source>
     <link href="http://www.allaire.com/Handlers/index.cfm?ID=17501&amp;Method=Full">
      the JRun website</link>
    <strong>and</strong> below, 
-    you also need to do the following to 
+    you also need to do the following to configure XSP and
     avoid conflicts with JRun 3.0's own XML classes.</p>
 
    <ol>
     <li>Make sure you first stop the admin server and the default server.</li>
-    <li>Delete jaxp.jar, parser.jar and xt.jar from the JRun\lib\ext
+    <li>In JRUN_HOME/lib/global.properties add the line (without any spaces or newlines):
+      <code>java.classpath={jrun.classpath};{user.classpath};{servlet.classpath};
+            {jrun.rootdir}/servers/default/cocoon-web-pub/WEB-INF/lib</code></li>
+    <li>Delete jaxp.jar and parser.jar - <strong>but not</strong> xt.jar - from the JRun\lib\ext
      directory.</li>
     <li>Copy the xerces.jar which is in the Cocoon package,
      and also the tools.jar of the JDK 1.2.2 to the
