@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.345 2004/06/02 07:42:27 tcurdt Exp $:-->
+<!-- CVS $Id: status.xml,v 1.346 2004/06/03 13:01:53 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -114,8 +114,8 @@
    <actions priority="high">
     <action context="code" assigned-to="all">
       Test, test, test :-)
-    </action>   
- 
+    </action>
+
     <action context="docs" assigned-to="open">
       Attend to any high+ issues in the
       <link href="plan/todo-doc.html">Documentation To Do List</link>
@@ -164,7 +164,7 @@
       they are not pooled. The easiest way is to make them disposable and clean up
       in dispose.
     </action>
-    
+
     <action context="code">
       EventRecorder classes in o.a.c.transformation.helpers package are similar
       to SaxBuffer. SaxBuffer should be extended (if it misses some functionality),
@@ -194,45 +194,49 @@
       This couldn't work, because if you working with caching pipelines, you cannot be sure
       that the entries are in the session(Stephan).
     </action>
-    
+
     <action context="code" assigned-to="MPO">
       Remove ContainerWidget concept from cforms.
     </action>
 
    </actions>
   </todo>
-  
+
   <changes>
 
  <release version="@version@" date="@date@">
    <action dev="TC" type="fix">
-     Fixed the namespace handling.
+     Serializers: Fixed the namespace handling.
    </action>
    <action dev="TC" type="add">
-     Added support for indentation to the new XML Serializer.
+     Serializers: Added support for indentation to the new XML Serializer.
    </action>
    <action dev="CZ" type="update">
-     Remove deprecated methods from SimpleCharStream, Notifier, AbstractComplementaryConfigurableAction,
-     StringUtils. Remove deprecated parser constant from Constants and remove
-     deprecated class DefaultsMetaModule.
+     Remove deprecated methods from SimpleCharStream, Notifier,
+     AbstractComplementaryConfigurableAction, StringUtils. Remove deprecated
+     parser constant from Constants and remove deprecated class
+     DefaultsMetaModule.
    </action>
    <action dev="CZ" type="update">
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
    <action dev="DC" type="update" fixes-bug="28809" due-to="Dave Brondsema">
-   Improvements for Chaperon JSPWiki to xdocs conversion:
-   * handle nested bullet lists (number lists already supported)
-   * if 'name' parameter is specified, use it as title (and add spaces between
-   WikiWords) instead of first section title
-   * handle images with alt text
-   * 'spaceless-filenames' parameter will squash out spaces in relative links
-   * fix anchors to use 'id' instead of 'name'
-   * emphasize anchors a bit
-   * selftest.txt tests for lists and tables
-   * more known issues listed in selftest.txt
+     Chaperon: Improvements for Chaperon JSPWiki to xdocs conversion:
+     <ul>
+       <li>Handle nested bullet lists (number lists already supported)</li>
+       <li>If 'name' parameter is specified, use it as title (and add spaces between
+           WikiWords) instead of first section title</li>
+       <li>Handle images with alt text</li>
+       <li>'spaceless-filenames' parameter will squash out spaces in relative
+           links</li>
+       <li>Fix anchors to use 'id' instead of 'name'</li>
+       <li>Emphasize anchors a bit</li>
+       <li>selftest.txt tests for lists and tables</li>
+       <li>More known issues listed in selftest.txt</li>
+     </ul>
    </action>
    <action dev="CZ" type="update">
-     Remove deprecated class AbstractSessionComponent from session block.
+     Session-fw: Remove deprecated class AbstractSessionComponent from session block.
    </action>
    <action dev="CZ" type="update">
      Redesign the internal environment handling (request processing) and moved
@@ -262,9 +266,8 @@
    <action dev="CZ" type="update">
      Remove deprecated getOutputStream() method from Environment.
    </action>
-   <action dev="CZ" type="fix">
-     Change the mime-type setting of a reader. For more information, see
-     <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.
+   <action dev="CZ" type="fix" fixes-bug="10277">
+     Change the mime-type setting of a reader.
    </action>
  </release>
  <release version="2.1.5" date="May 24 2004">
@@ -287,7 +290,7 @@
      Deprecated getWidget from the Widget interface in cforms.
      People should consider using getChild(id) or lookupWidget(path) instead.
      On the level of the flowscript 'Form' API a semantical distinct getWidget()
-     (notice: no arguments!) is still available to return the actual wrapped 
+     (notice: no arguments!) is still available to return the actual wrapped
      Java form instance.
    </action>
    <action dev="AG" type="fix" fixes-bug="28889" due-to="Juan Jose Pablos" due-to-email="cheche@che-che.com">
@@ -308,9 +311,9 @@
      for description of use. Also enable suppression of comments.
    </action>
    <action dev="UV" type="add">
-     Extended FOM so that cocoon.redirectTo("url", true) will do a global 
+     Extended FOM so that cocoon.redirectTo("url", true) will do a global
      redirect. cocoon.redirectTo("url") will act as before. This enables
-     FOM to redirect when it is called from within cocoon: protocol 
+     FOM to redirect when it is called from within cocoon: protocol
      requests, aggregations, etc.
    </action>
    <action dev="UV" type="fix">
@@ -321,7 +324,7 @@
      CForms: Remove custom flow level forms validators.
    </action>
    <action dev="BD" type="add">
-     Added the "tour" block: "Supersonic Tour of Apache Cocoon". 
+     Added the "tour" block: "Supersonic Tour of Apache Cocoon".
      Tutorial/example app focused on the Power Trio: Pipelines, Flow, Forms.
    </action>
    <action dev="DC" type="fix" due-to="Ralph Goers" fixes-bug="27878">
@@ -341,7 +344,7 @@
      inside the servlet's context.
    </action>
    <action dev="MPO" type="update">
-     CForms: Change to generated instance xml &lt;fi:form&gt;.  
+     CForms: Change to generated instance xml &lt;fi:form&gt;.
      Nested widgets are now grouped in &lt;fi:widgets&gt; and no longer in &lt;fi:children&gt;.
      This aligns with other container-widgets.
    </action>
@@ -463,14 +466,14 @@
    <action dev="BD" type="update">
      Licenses changed to ASF 2.0 in all source files which had a license, using
      the ReplaceLicense tool from the committers CVS module.
-   </action>  
+   </action>
    <action dev="RP" type="add">
-     Ant task (correctLinefeed) that corrects linefeed characters according to 
+     Ant task (correctLinefeed) that corrects linefeed characters according to
      our standard (LF).
-   </action>  
+   </action>
    <action dev="RP" type="update">
      Apples use the new CocoonForms classes
-   </action> 
+   </action>
    <action dev="RP" type="update">
      Petstore samples use the new CocoonForms names
    </action>
@@ -481,7 +484,7 @@
    <action dev="RP" type="update">
      Renaming Woody to CocoonForms
      <ul>
-       <li>The Woody block (src/blocks/woody) has moved into the new Cocoon Forms 
+       <li>The Woody block (src/blocks/woody) has moved into the new Cocoon Forms
            block (src/blocks/forms).</li>
        <li>new namespaces:<br/>
            <ul>
@@ -497,7 +500,7 @@
        </li>
        <li>Java packages moved from org.apache.cocoon.woody to org.apache.cocoon.forms</li>
      </ul>
-   </action> 
+   </action>
    <action dev="AG" type="update">
      Updated Velocity engine to 1.4-rc1
    </action>
@@ -664,15 +667,15 @@
    </action>
    <action dev="CZ" type="update">
      Remove dependencies to Xalan (from portal-fw, authentication-fw, session-fw and core)
-   </action> 
+   </action>
    <action dev="CZ" type="update">
      Portal-Engine: Added some new samples (for inter-coplet communication,
      cleaned up the sample, fixed some bugs and added some new components
      for developing own coplets.
-   </action> 
+   </action>
    <action dev="MPO" type="add" >
-     Changed semantics on the cforms binding. Added a @direction (which replaces 
-     the @read-only) and a @lenient attribute on all binding implementations in 
+     Changed semantics on the cforms binding. Added a @direction (which replaces
+     the @read-only) and a @lenient attribute on all binding implementations in
      the pool.
    </action>
    <action dev="AG" type="fix" due-to-email="ltrillaud@jouve.fr" due-to="Laurent Trillaud">
@@ -786,7 +789,7 @@
    </action>
    <action dev="CZ" type="fix" fixes-bug="24093">
      Disable accessing files outside the context via the context protocol.
-   </action> 
+   </action>
  </release>
  <release version="2.1.3" date="November 13 2003">
    <action dev="DC" type="fix" fixes-bug="24463" due-to-email="tek@leonid.de" due-to="Leo Leonid">
@@ -795,14 +798,14 @@
      unfinished parts. See the the bug report and its attached notes.
    </action>
    <action dev="CZ" type="fix">
-     The CachingPointProcessingPipeline now uses Parameters instead of 
+     The CachingPointProcessingPipeline now uses Parameters instead of
      an own configuration scheme. See the demo sitemap for the changed configuration.
-   </action> 
+   </action>
    <action dev="JH" type="fix" fixes-bug="23299" due-to-email="simon.mieth@t-online.de" due-to="Simon Mieth">
      XMLByteStreamCompiler now handles also text nodes longer than 32 k.
    </action>
    <action dev="CZ" type="fix" fixes-bug="23538" due-to-email="samc@atnet.net.au" due-to="Sam Coward">
-     Reducing 
+     Reducing
      setDocumentLocator calls in JXTemplateGenerator and JXFormsGenerator.
    </action>
    <action dev="BD" type="add" fixes-bug="24294" due-to="Jelle Alten" due-to-email="jelle@ordina.nl">
@@ -827,7 +830,7 @@
    <action dev="BRD" type="update">
       Woody: in the form definition, for widgets that have child widgets, those
       child widgets should now be embedded inside a wd:widgets element.
-      Practical update information can be found 
+      Practical update information can be found
       <link href="http://wiki.cocoondev.org/Wiki.jsp?page=WoodySyntaxUpdateForWidgetsElement">
       in the wiki</link>.
    </action>
@@ -878,7 +881,7 @@
    </action>
    <action dev="GR" type="update" fixes-bug="23575" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
     TraversableGenerators  can now be used with plain resources too (not only
-    collections). XPathTraversableGenerator has been revamped 
+    collections). XPathTraversableGenerator has been revamped
     in the XML recognition pattern (using mime type mapping too).
     While at it, a bug regarding non-existent sources has been
     fixed.
@@ -969,7 +972,7 @@
      have own configurations.
    </action>
    <action dev="CZ" type="update">
-     Extended the build system. If one block depends on the other it 
+     Extended the build system. If one block depends on the other it
      can now also use the libraries of the other block. This avoids
      moving the libs to the lib/optional directory.
    </action>
@@ -992,11 +995,11 @@
    </action>
    <action dev="CZ" type="add">
      Adding new RequestDataStore component that can be used as a replacement
-     for the component marker interfaces RequestLifeCycleComponent and 
+     for the component marker interfaces RequestLifeCycleComponent and
      GlobalRequestLifeCycleComponent obsolete.
    </action>
    <action dev="UV" type="fix">
-     Changed logkit attribute of &lt;logging in cli.xconf to be relative to context dir, 
+     Changed logkit attribute of &lt;logging in cli.xconf to be relative to context dir,
      rather than CLI invocation dir.
    </action>
    <action dev="UV" type="add">
@@ -1024,7 +1027,7 @@
      Lucene block: LuceneIndexTransformer configuration fixed.
    </action>
    <action dev="CZ" type="fix" fixes-bug="12173">
-     Applying patch from Renaud Bruyeron (bruyeron@fullsix.com) that fixes 
+     Applying patch from Renaud Bruyeron (bruyeron@fullsix.com) that fixes
      the prematurely closing of the connection causing in the SQL Transformer.
    </action>
    <action dev="JH" type="update" fixes-bug="22479"
@@ -1109,7 +1112,7 @@
   <action dev="CZ" type="fix" fixes-bug="21213" due-to="Frank Taffelt"
     due-to-email="frank.taffelt@interface-business.de">
     Paginator now caches dynamic pagesheet correctly.
-  </action>  
+  </action>
   <action dev="CZ" type="add">
     Configuration logkit.xconf can now be read from any location.
   </action>
@@ -1128,12 +1131,12 @@
     due-to-email="gcasper@s-und-n.de">
     Add a defaultContentType parameter to StreamGenerator, to comply
     with misbehaving clients.
-  </action>  
+  </action>
   <action dev="GR" type="add" fixes-bug="21778" due-to="Guido Casper"
     due-to-email="gcasper@s-und-n.de">
     Add a new set of WebDAV samples, with the capability of serving
     WebDAV content straight from Cocoon.
-  </action>  
+  </action>
   <action dev="DC" type="fix" fixes-bug="21557" due-to="Conal Tuohy" due-to-email="conal@nzetc.org">
     Various fixes and enhancements to Lucene search. Propagate the lucene:*
     elements to the result tree and add "elapsed-time" attribute, so now
@@ -1148,7 +1151,7 @@
     tidy an XML containing escaped (and possibly incorrect) HTML
   </action>
   <action dev="GR" type="update">
-    Added URL encoding of user/password in the WebDAV source 
+    Added URL encoding of user/password in the WebDAV source
     (webdav://user:password@host/path)
   </action>
   <action dev="VG" type="update">
@@ -1173,7 +1176,7 @@
    a modifiable and traversable WebDAV source.
   </action>
   <action dev="GR" type="add">
-   Added a DirectoryGenerator implementation on scratchpad 
+   Added a DirectoryGenerator implementation on scratchpad
    working on any Traversable Source.
   </action>
   <action dev="CZ" type="add">
@@ -1194,10 +1197,10 @@
   <action dev="RP" type="fix">
     Web3: The stylesheets in the examples use Xalan as transformer and work correctly now
     as XSLTC has problems with the 'rfc' namespace.
-  </action>  
+  </action>
   <action dev="RP" type="update">
     Changed namespace for Web3RfcTransformer to 'http://apache.org/cocoon/Web3-Rfc/1.0'.
-  </action> 
+  </action>
   <action dev="CZ" type="add">
     ParanoidCocoonServlet can optionally configured with a file containing the classpath.
   </action>
@@ -1282,7 +1285,7 @@
     Upgraded to new Axis 1.1 release
   </action>
   <action dev="CZ" type="add">
-    Adding concept of parent-aware components, making e.g. the usage of 
+    Adding concept of parent-aware components, making e.g. the usage of
     selectors with a component manager hierarchy much easier.
   </action>
   <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
@@ -1499,11 +1502,11 @@
    Updating to the latest official Avalon and Excalibur releases.
   </action>
   <action dev="NKB" type="add" fixes-bug="17671" due-to="Upayavira" due-to-email="uv@upaya.co.uk">
-    Enhancements to the CLI to reduce the number of times it 
-    needs to render a page. Using the option to prevent checking of extensions, it 
-    is now possible to generate a site generating each page only once. 
+    Enhancements to the CLI to reduce the number of times it
+    needs to render a page. Using the option to prevent checking of extensions, it
+    is now possible to generate a site generating each page only once.
 
-    Allow the configuration of the CLI using 
+    Allow the configuration of the CLI using
     an xconf file.
 
     Switch cli to using the Jakarta Commons CLI package.
@@ -1518,7 +1521,7 @@
     FOP serializer's &lt;user-config&gt; relative path now resolves relative
     to sitemap's directory. All Cocoon URIs are supported too.
   </action>
-  <action dev="PF" type="fix"> 
+  <action dev="PF" type="fix">
     The CVS repository for Cocoon 2.1 is now called "cocoon-2.1" (no branches, just HEAD).
   </action>
   <action dev="TC" type="add">
@@ -1537,10 +1540,10 @@
    the aggregated content for a distinct period of time. In addition it can
    fetch the content in parallel or pre-emptive.
   </action>
-  <action dev="PF" type="update">   
-   The repository for Cocoon 2.1 is now called "cocoon-2-historical" (the old      
-   "xml-cocoon2" repository is deprecated).     
-  </action>   
+  <action dev="PF" type="update">
+   The repository for Cocoon 2.1 is now called "cocoon-2-historical" (the old
+   "xml-cocoon2" repository is deprecated).
+  </action>
   <action dev="PF" type="update">
     The "javadocs" build target now links offline to the appropriate JavaDOC
     repositiories available on the web.
