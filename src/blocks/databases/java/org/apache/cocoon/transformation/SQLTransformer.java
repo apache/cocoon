@@ -88,7 +88,7 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.7 2003/07/18 14:46:30 gianugo Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.8 2003/08/18 13:00:46 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1093,8 +1093,9 @@ public class SQLTransformer
                 transformer.getTheLogger().error( "Caught a SQLException", e );
                 throw e;
             } finally {
-                conn.close();
-                conn = null;        // To make sure we don't use this connection again.
+                // Not closing the connection here fixes bug 12173!
+                // conn.close();
+                // conn = null;        // To make sure we don't use this connection again.
             }
         }
 
