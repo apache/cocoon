@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: xsp.xsl,v 1.2 2003/03/26 15:37:09 crafterm Exp $-->
+<!-- $Id: xsp.xsl,v 1.3 2003/07/13 17:16:54 vgritsenko Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.2 $ $Date: 2003/03/26 15:37:09 $
+ * @version CVS $Revision: 1.3 $ $Date: 2003/07/13 17:16:54 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -108,7 +108,6 @@
     import org.apache.avalon.framework.component.ComponentManager;
     import org.apache.avalon.framework.component.ComponentSelector;
     import org.apache.avalon.framework.context.Context;
-    import org.apache.avalon.excalibur.datasource.DataSourceComponent;
     //import org.apache.avalon.framework.util.*;
 
     import org.apache.cocoon.Constants;
