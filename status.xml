@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.206 2003/12/10 14:22:32 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.207 2003/12/10 14:33:16 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -183,6 +183,17 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="VG" type="add">
+     In XMLDBTransformer, create operation now is able to create collections.
+     It will create collection if oid attribute value ends with '/', otherwise
+     it will work as before (creates XML resource)
+   </action>
+   <action dev="VG" type="add">
+     Added optional collection attribute on &lt;xmldb:query/&gt; element of XMLDBTransformer.
+     This attribute specifies collection name, relative to the transformer's base
+     collection, which is used as base collection for current create/delete/update
+     operation
+   </action>
    <action dev="VG" type="remove">
      Remove deprecated XMLDB generators from the sitemap
    </action>

@@ -73,6 +73,7 @@ import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XUpdateQueryService;
 
 import java.io.IOException;
@@ -93,7 +94,10 @@ import javax.xml.transform.stream.StreamResult;
 
 /**
  * This transformer allows to perform resource creation, deletion, and
- * XUpdate command execution in XML:DB.
+ * XUpdate command execution in XML:DB. All operations are performed either
+ * in <code>base</code> collection, or context collection, which
+ * is specified as <code>collection</code> attribute on the <code>query</code>
+ * element. Context collection must be specified relative to the base collection.
  *
  * <p>Definition:</p>
  * <pre>
@@ -103,7 +107,7 @@ import javax.xml.transform.stream.StreamResult;
  * &lt;/map:transformer&gt;
  * </pre>
  *
- * <p>Invokation:</p>
+ * <p>Invocation:</p>
  * <pre>
  * &lt;map:transform type="xmldb"&gt;
  *   &lt;map:parameter name="base" value="xmldb:xindice:///db/collection"/&gt;
@@ -112,39 +116,52 @@ import javax.xml.transform.stream.StreamResult;
  *
  * <p>Input XML document example:</p>
  * <pre>
- * &lt;page xmlns:xindice="http://apache.org/cocoon/xmldb/1.0"&gt;
+ * &lt;page xmlns:xmldb="http://apache.org/cocoon/xmldb/1.0"&gt;
  *   ...
- *   &lt;xindice:query type="create" oid="xmldb-object-id"&gt;
+ *   &lt;p&gt;Create XML resource in base collection with specified object ID&lt;/p&gt;
+ *   &lt;xmldb:query type="create" oid="xmldb-object-id"&gt;
  *     &lt;page&gt;
  *       XML Object body
  *     &lt;/page&gt;
- *   &lt;/xindice:query&gt;
+ *   &lt;/xmldb:query&gt;
  *
- *   &lt;xindice:query type="delete" oid="xmldb-object-id"/&gt;
+ *   &lt;p&gt;Delete XML resource from the base collection with specified object ID&lt;/p&gt;
+ *   &lt;xmldb:query type="delete" oid="xmldb-object-id"/&gt;
  *
- *   &lt;xindice:query type="update" oid="xmldb-object-id"&gt;
+ *   &lt;p&gt;Update XML resource with specified object ID&lt;/p&gt;
+ *   &lt;xmldb:query type="update" oid="xmldb-object-id"&gt;
  *     &lt;xu:modifications version="1.0" xmlns:xu="http://www.xmldb.org/xupdate"&gt;
  *       &lt;xu:remove select="/person/phone[@type = 'home']"/&gt;
  *       &lt;xu:update select="/person/phone[@type = 'work']"&gt;
  *         480-300-3003
  *       &lt;/xu:update&gt;
  *       &lt;/xu:modifications&gt;
- *   &lt;/xindice:query&gt;
+ *   &lt;/xmldb:query&gt;
+ *
+ *   &lt;p&gt;Create collection nested into the base collection&lt;/p&gt;
+ *   &lt;xmldb:query type="create" oid="inner/"/&gt;
+ *
+ *   &lt;p&gt;Create XML resource in context collection with specified object ID&lt;/p&gt;
+ *   &lt;xmldb:query type="create" collection="inner" oid="xmldb-object-id"&gt;
+ *     &lt;page&gt;
+ *       XML Object body
+ *     &lt;/page&gt;
+ *   &lt;/xmldb:query&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
  *
  * <p>Output XML document example:</p>
  * <pre>
- * &lt;page xmlns:xindice="http://apache.org/cocoon/xmldb/1.0"&gt;
+ * &lt;page xmlns:xmldb="http://apache.org/cocoon/xmldb/1.0"&gt;
  *   ...
- *   &lt;xindice:query type="create" oid="xmldb-object-id" result="success"/&gt;
+ *   &lt;xmldb:query type="create" oid="xmldb-object-id" result="success"/&gt;
  *
- *   &lt;xindice:query type="delete" oid="xmldb-object-id" result="success"/&gt;
+ *   &lt;xmldb:query type="delete" oid="xmldb-object-id" result="success"/&gt;
  *
- *   &lt;xindice:query type="update" oid="xmldb-object-id" result="failure"&gt;
+ *   &lt;xmldb:query type="update" oid="xmldb-object-id" result="failure"&gt;
  *     Resource xmldb-object-id is not found
- *   &lt;/xindice:query&gt;
+ *   &lt;/xmldb:query&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
@@ -155,14 +172,15 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.7 2003/10/06 16:07:33 gianugo Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.8 2003/12/10 14:33:16 vgritsenko Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
-    implements CacheableProcessingComponent, Configurable, Initializable {
+        implements CacheableProcessingComponent, Configurable, Initializable {
 
     private static String XMLDB_URI = "http://apache.org/cocoon/xmldb/1.0";
     private static String XMLDB_QUERY_ELEMENT = "query";
     private static String XMLDB_QUERY_TYPE_ATTRIBUTE = "type";
+    private static String XMLDB_QUERY_CONTEXT_ATTRIBUTE = "collection";
     private static String XMLDB_QUERY_OID_ATTRIBUTE = "oid";
     private static String XMLDB_QUERY_RESULT_ATTRIBUTE = "result";
 
@@ -177,10 +195,13 @@ public class XMLDBTransformer extends AbstractTransformer
     private String driver = null;
 
     /** Default collection name. */
-    private String default_base = null;
+    private String default_base;
 
     /** Current collection name. */
-    private String base = null;
+    private String local_base;
+
+    /** Current collection name. */
+    private String xbase;
 
     /** Current collection. */
     private Collection collection;
@@ -191,11 +212,18 @@ public class XMLDBTransformer extends AbstractTransformer
     /** Document ID. Can be null if update or insert is performed on collection. */
     private String key;
 
+    /** Result of current operation. Success or failure. */
+    private String result;
+
+    /** Message in case current operation failed. */
+    private String message;
+
     private StringWriter queryWriter;
     private TransformerHandler queryHandler;
 
     /** True when inside &lt;query&gt; element. */
     private boolean processing;
+
 
     public XMLDBTransformer() {
         format.put(OutputKeys.ENCODING, "utf-8");
@@ -204,14 +232,12 @@ public class XMLDBTransformer extends AbstractTransformer
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
-        Configuration driver = configuration.getChild("driver");
-        if (driver == null || driver.getValue() == null)
+        this.driver = configuration.getChild("driver").getValue(null);
+        if (driver == null) {
             throw new ConfigurationException("Required driver parameter is missing.");
-        this.driver = driver.getValue();
+        }
 
-        Configuration default_base = configuration.getChild("base");
-        if (default_base != null)
-            this.default_base = default_base.getValue();
+        this.default_base = configuration.getChild("base").getValue(null);
     }
 
     /**
@@ -227,26 +253,27 @@ public class XMLDBTransformer extends AbstractTransformer
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
 
-        this.base = par.getParameter("base", this.default_base);
-        if (this.base == null)
+        this.local_base = par.getParameter("base", this.default_base);
+        if (this.local_base == null) {
             throw new ProcessingException("Required base parameter is missing. Syntax is: xmldb:xindice:///db/collection");
-
-        try {
-            this.collection = DatabaseManager.getCollection(base);
-        } catch (XMLDBException e) {
-            throw new ProcessingException("Could not get collection " + base + ": " + e.errorCode, e);
         }
 
-        if(this.collection == null)
-            throw new ResourceNotFoundException("Collection " + base + " does not exist");
+        try {
+            this.collection = DatabaseManager.getCollection(this.local_base);
+        } catch (XMLDBException e) {
+            throw new ProcessingException("Could not get collection " + this.local_base + ": " + e.errorCode, e);
+        }
+
+        if (this.collection == null) {
+            throw new ResourceNotFoundException("Collection " + this.local_base + " does not exist");
+        }
     }
 
     /**
      * Helper for TransformerFactory.
      */
-    protected SAXTransformerFactory getTransformerFactory()
-    {
-        if(tfactory == null)  {
+    protected SAXTransformerFactory getTransformerFactory() {
+        if (tfactory == null)  {
             tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
             tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
         }
@@ -301,7 +328,7 @@ public class XMLDBTransformer extends AbstractTransformer
         if (!processing) {
             super.startPrefixMapping(prefix,uri);
             prefixMap.put(prefix,uri);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.startPrefixMapping(prefix, uri);
         }
     }
@@ -339,17 +366,24 @@ public class XMLDBTransformer extends AbstractTransformer
             if (XMLDB_URI.equals(uri) && XMLDB_QUERY_ELEMENT.equals(loc)){
 
                 this.operation = a.getValue(XMLDB_QUERY_TYPE_ATTRIBUTE);
-                if(!"create".equals(operation) && !"delete".equals(operation) && !"update".equals(operation)) {
-                    throw new SAXException("Supported operation types are: create, delete");
+                if (!"create".equals(operation) && !"delete".equals(operation) && !"update".equals(operation)) {
+                    throw new SAXException("Supported operation types are: create, delete, update");
                 }
 
                 this.key = a.getValue(XMLDB_QUERY_OID_ATTRIBUTE);
-                if("delete".equals(operation) && this.key == null) {
-                    throw new SAXException("Object ID is missing in xmldb element");
+                if ("delete".equals(operation) && this.key == null) {
+                    throw new SAXException("Object ID attribute is missing on query element");
                 }
+
+                this.xbase = a.getValue(XMLDB_QUERY_CONTEXT_ATTRIBUTE);
+
+                // Start processing
+                result = "failure";
+                message = null;
                 processing = true;
 
-                if (!"delete".equals(operation)) {
+                if ("create".equals(operation) && this.key != null && this.key.endsWith("/")) {
+                } else if (!"delete".equals(operation)) {
                     // Prepare SAX query writer
                     queryWriter = new StringWriter(256);
                     try {
@@ -362,20 +396,19 @@ public class XMLDBTransformer extends AbstractTransformer
 
                     // Start query document
                     this.queryHandler.startDocument();
-                    Iterator itt = prefixMap.entrySet().iterator();
-                    while ( itt.hasNext() ) {
-                        Map.Entry entry = (Map.Entry)itt.next();
+                    Iterator i = prefixMap.entrySet().iterator();
+                    while (i.hasNext()) {
+                        Map.Entry entry = (Map.Entry)i.next();
                         this.queryHandler.startPrefixMapping((String)entry.getKey(), (String)entry.getValue());
                     }
                 }
             } else {
-                super.startElement(uri,loc,raw,a);
+                super.startElement(uri, loc, raw, a);
             }
-        } else if (this.queryHandler != null){
-            this.queryHandler.startElement(uri,loc,raw,a);
+        } else if (this.queryHandler != null) {
+            this.queryHandler.startElement(uri, loc, raw, a);
         }
     }
-
 
     /**
      * Receive notification of the end of an element.
@@ -393,64 +426,95 @@ public class XMLDBTransformer extends AbstractTransformer
         if (!processing) {
             super.endElement(uri,loc,raw);
         } else {
-            if (XMLDB_URI.equals(uri) && XMLDB_QUERY_ELEMENT.equals(loc)){
+            if (XMLDB_URI.equals(uri) && XMLDB_QUERY_ELEMENT.equals(loc)) {
                 processing = false;
 
                 String document = null;
-                if (this.queryHandler != null){
+                if (this.queryHandler != null) {
                     // Finish building query. Remove existing prefix mappings.
-                    Iterator itt = prefixMap.entrySet().iterator();
-                    while ( itt.hasNext() ) {
-                        Map.Entry entry = (Map.Entry) itt.next();
+                    Iterator i = prefixMap.entrySet().iterator();
+                    while (i.hasNext()) {
+                        Map.Entry entry = (Map.Entry) i.next();
                         this.queryHandler.endPrefixMapping((String)entry.getKey());
                     }
                     this.queryHandler.endDocument();
-
                     document = this.queryWriter.toString();
                 }
 
                 // Perform operation
-                String result = "failure";
-                String message = null;
-                if("create".equals(operation)) {
-                    try {
-                        if (key == null) key = collection.createId();
-                        Resource resource = collection.createResource(key, "XMLResource");
-                        resource.setContent(document);
-                        collection.storeResource(resource);
-                        result = "success";
-                        key = resource.getId();
-                    } catch (XMLDBException e) {
-                        message = "Failed to create resource " + key + ": " + e.errorCode;
-                        getLogger().debug(message, e);
-                    }
-                } else if("delete".equals(operation)) {
-                    try {
-                        Resource resource = collection.getResource(this.key);
-                        if (resource == null) {
-                            message = "Resource " + this.key + " does not exist";
-                            getLogger().debug(message);
+                Collection collection = null;
+                try {
+                    // Obtain collection for the current operation
+                    collection = (xbase != null)? DatabaseManager.getCollection(local_base + "/" + xbase) : this.collection;
+
+                    if ("create".equals(operation)) {
+                        if (key != null && key.endsWith("/")) {
+                            try {
+                                // Cut trailing '/'
+                                String k = this.key.substring(0, this.key.length() - 1);
+                                CollectionManagementService service =
+                                        (CollectionManagementService) collection.getService("CollectionManagementService", "1.0");
+                                service.createCollection(k);
+                                result = "success";
+                            } catch (XMLDBException e) {
+                                message = "Failed to create collection " + this.key + ": " + e.errorCode;
+                                getLogger().error(message, e);
+                            }
                         } else {
-                            collection.removeResource(resource);
-                            result = "success";
+                            try {
+                                if (key == null) {
+                                    key = collection.createId();
+                                }
+                                // Support of binary objects can be added. Content can be obtained using Source.
+                                Resource resource = collection.createResource(key, "XMLResource");
+                                resource.setContent(document);
+                                collection.storeResource(resource);
+                                result = "success";
+                                key = resource.getId();
+                            } catch (XMLDBException e) {
+                                message = "Failed to create resource " + key + ": " + e.errorCode;
+                                getLogger().debug(message, e);
+                            }
                         }
-                    } catch (XMLDBException e) {
-                        message = "Failed to delete resource " + key + ": " + e.errorCode;
-                        getLogger().debug(message, e);
+                    } else if ("delete".equals(operation)) {
+                        try {
+                            Resource resource = collection.getResource(this.key);
+                            if (resource == null) {
+                                message = "Resource " + this.key + " does not exist";
+                                getLogger().debug(message);
+                            } else {
+                                collection.removeResource(resource);
+                                result = "success";
+                            }
+                        } catch (XMLDBException e) {
+                            message = "Failed to delete resource " + key + ": " + e.errorCode;
+                            getLogger().debug(message, e);
+                        }
+                    } else if ("update".equals(operation)) {
+                        try {
+                            XUpdateQueryService service =
+                                    (XUpdateQueryService) collection.getService("XUpdateQueryService", "1.0");
+                            long count = (this.key == null)?
+                                    service.update(document) : service.updateResource(this.key, document);
+                            message = count + " entries updated.";
+                            result = "success";
+                        } catch (XMLDBException e) {
+                            message = "Failed to update resource " + key + ": " + e.errorCode;
+                            getLogger().debug(message, e);
+                        }
                     }
-                } else if("update".equals(operation)) {
-                    try {
-                        XUpdateQueryService service =
-                                (XUpdateQueryService) collection.getService("XUpdateQueryService", "1.0");
-                        long count = (this.key == null)?
-                                service.update(document) : service.updateResource(this.key, document);
-                        message = count + " entries updated.";
-                        result = "success";
-                    } catch (XMLDBException e) {
-                        message = "Failed to update resource " + key + ": " + e.errorCode;
-                        getLogger().debug(message, e);
+                } catch (XMLDBException e) {
+                    message = "Failed to get context collection for the query (base: " + local_base + ", context: " + xbase + "): " + e.errorCode;
+                    getLogger().debug(message, e);
+                } finally {
+                    if (xbase != null) {
+                        try {
+                            collection.close();
+                        } catch (XMLDBException ignored) {
+                        }
                     }
                 }
+
 
                 // Report result
                 AttributesImpl attrs = new AttributesImpl();
@@ -465,7 +529,7 @@ public class XMLDBTransformer extends AbstractTransformer
                     super.characters(message.toCharArray(), 0, message.length());
                 }
                 super.endElement(uri, loc, raw);
-            } else if (this.queryHandler != null){
+            } else if (this.queryHandler != null) {
                 this.queryHandler.endElement(uri, loc, raw);
             }
         }
@@ -481,7 +545,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void characters(char c[], int start, int len) throws SAXException {
         if (!processing) {
             super.characters(c,start,len);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.characters(c,start,len);
         }
     }
@@ -496,7 +560,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void ignorableWhitespace(char c[], int start, int len) throws SAXException {
         if (!processing) {
             super.ignorableWhitespace(c,start,len);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.ignorableWhitespace(c,start,len);
         }
     }
@@ -511,7 +575,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void processingInstruction(String target, String data) throws SAXException {
         if (!processing) {
             super.processingInstruction(target,data);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.processingInstruction(target,data);
         }
     }
@@ -525,7 +589,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void skippedEntity(String name) throws SAXException {
         if (!processing) {
             super.skippedEntity(name);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.skippedEntity(name);
         }
     }
@@ -541,7 +605,7 @@ public class XMLDBTransformer extends AbstractTransformer
      */
     public void startDTD(String name, String publicId, String systemId) throws SAXException {
         if (!processing) {
-            super.startDTD(name,publicId,systemId);
+            super.startDTD(name, publicId, systemId);
         } else {
             throw new SAXException(
                 "Recieved startDTD after beginning SVG extraction process."
@@ -569,7 +633,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void startEntity(String name) throws SAXException {
         if (!processing) {
             super.startEntity(name);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.startEntity(name);
         }
     }
@@ -582,7 +646,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void endEntity(String name) throws SAXException {
         if (!processing) {
             super.endEntity(name);
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.endEntity(name);
         }
     }
@@ -593,7 +657,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void startCDATA() throws SAXException {
         if (!processing) {
             super.startCDATA();
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.startCDATA();
         }
     }
@@ -604,7 +668,7 @@ public class XMLDBTransformer extends AbstractTransformer
     public void endCDATA() throws SAXException {
         if (!processing) {
             super.endCDATA();
-        } else if (this.queryHandler != null){
+        } else if (this.queryHandler != null) {
             this.queryHandler.endCDATA();
         }
     }
@@ -618,9 +682,9 @@ public class XMLDBTransformer extends AbstractTransformer
      */
     public void comment(char ch[], int start, int len) throws SAXException {
         if (!processing) {
-            super.comment(ch,start,len);
-        } else if (this.queryHandler != null){
-            this.queryHandler.comment(ch,start,len);
+            super.comment(ch, start, len);
+        } else if (this.queryHandler != null) {
+            this.queryHandler.comment(ch, start, len);
         }
     }
 
@@ -630,12 +694,13 @@ public class XMLDBTransformer extends AbstractTransformer
         this.queryWriter = null;
 
         try {
-            if (collection != null) collection.close();
+            if (collection != null) {
+                collection.close();
+            }
         } catch (XMLDBException e) {
-            getLogger().error("Failed to close collection " + base + ". Error " + e.errorCode, e);
+            getLogger().error("Failed to close collection " + this.local_base + ". Error " + e.errorCode, e);
         }
         collection = null;
         super.recycle();
     }
-
 }

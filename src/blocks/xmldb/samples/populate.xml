@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<html>
+  <h2>Populating DB with samples data</h2>
+  <h3>Create Collection</h3>
+  <p>Create collection should succeed on the first run, but will fail on subsequent runs</p>
+  <textarea cols="75" rows="3">
+    <x:query type="create" oid="cocoon/" xmlns:x="http://apache.org/cocoon/xmldb/1.0"/>
+  </textarea>
+
+  <h3>Create Samples Document</h3>
+  <textarea cols="75" rows="3">
+    <x:query type="create" collection="cocoon" oid="welcome" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <!-- i:include src="samples.xml" xmlns:i="http://apache.org/cocoon/include/1.0"/ -->
+      <samples name="XMLDB Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <group name="Main examples page.">
+          <sample name="Back" href="..">to Cocoon examples main page</sample>
+        </group>
+        <group name="Init Database">
+          <sample name="Init" href="populate">
+            Populate sample XMLDB Database
+          </sample>
+        </group>
+        <group name="XMLDB Samples">
+          <note>
+            This page is served from the XMLDB. Click below to go back to file system
+            version of the file.
+          </note>
+          <sample name="From File System" href="welcome">
+            This samples page, but served from the file system.
+          </sample>
+        </group>
+      </samples>
+    </x:query>
+  </textarea>
+
+  <h3>Done</h3>
+  <a href="./">Go Back</a>
+</html>
