@@ -57,7 +57,6 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.w3c.dom.Element;
-import org.w3c.dom.Element;
 
 /**
  * A simple multi field binding that will replace (i.e. delete then re-add all) its
@@ -73,7 +72,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:multi-value&gt;
  * </code></pre>
  *
- * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.1 2004/02/17 09:54:40 danielf Exp $
+ * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.2 2004/02/17 13:54:28 joerg Exp $
  */
 public class MultiValueJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

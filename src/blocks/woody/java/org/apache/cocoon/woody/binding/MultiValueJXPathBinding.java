@@ -56,7 +56,6 @@ import java.util.Locale;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.woody.datatype.convertor.Convertor;
-import org.apache.cocoon.woody.formmodel.MultiValueField;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -65,7 +64,7 @@ import org.apache.commons.jxpath.Pointer;
  * Simple binding for multi fields: on save, first deletes the target data
  * before recreating it from scratch.
  *
- * @version CVS $Id: MultiValueJXPathBinding.java,v 1.1 2004/02/17 09:54:40 danielf Exp $
+ * @version CVS $Id: MultiValueJXPathBinding.java,v 1.2 2004/02/17 13:54:28 joerg Exp $
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 
@@ -153,7 +152,6 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
             }
 
             // now perform any other bindings that need to be performed when the value is updated
-            JXPathContext subContext = null;
             this.updateBinding.saveFormToModel(frmModel, multiValueContext);
 
             update = true;
