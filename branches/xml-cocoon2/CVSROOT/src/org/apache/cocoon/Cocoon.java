@@ -28,6 +28,7 @@ import org.apache.avalon.SAXConfigurationHandler;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Initializable;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.store.FilesystemStore;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
@@ -44,7 +45,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.53 $ $Date: 2001-02-15 20:28:22 $
+ * @version CVS $Revision: 1.4.2.54 $ $Date: 2001-02-15 21:55:50 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -96,17 +97,29 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         this.componentManager = new DefaultComponentManager();
         this.componentManager.contextualize(this.context);
         this.componentManager.setLogger(getLogger());
+
         getLogger().debug("New Cocoon object.");
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
         String parser = System.getProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         getLogger().debug("Using parser: " + parser);
+
         try {
             this.componentManager.addComponent(Roles.PARSER, ClassUtils.loadClass(parser), null);
         } catch (Exception e) {
             getLogger().error("Could not load parser, Cocoon object not created.", e);
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
+
+        try {
+            getLogger().debug("Creating Repository with this directory: " + this.workDir);
+            FilesystemStore repository = new FilesystemStore(this.workDir);
+            this.componentManager.addComponentInstance(Roles.REPOSITORY, repository);
+        } catch (IOException e) {
+            getLogger().error("Could not create repository!", e);
+            throw new ConfigurationException("Could not create the repository!", e);
+        }
+
         getLogger().debug("Classpath = " + classpath);
         getLogger().debug("Work directory = " + workDir.getCanonicalPath());
         this.configure();
