@@ -131,7 +131,7 @@ implements ComponentHandler {
         }
 
         if( info.getModel() == ComponentInfo.MODEL_POOLED )  {
-            handler = new PoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
+            handler = new NonThreadSafePoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
         } else if( info.getModel() == ComponentInfo.MODEL_SINGLETON ) {
             handler = new ThreadSafeComponentHandler( info, componentEnv.logger, factory );
         } else {
