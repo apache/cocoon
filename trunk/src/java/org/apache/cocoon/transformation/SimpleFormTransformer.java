@@ -50,33 +50,35 @@
 */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.avalon.excalibur.pool.Recyclable;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
 import org.apache.cocoon.components.language.markup.xsp.XSPFormValidatorHelper;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
+import org.apache.cocoon.xml.dom.DOMStreamer;
+
+import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 /** 
- * Eliminates the need for XSP to use FormValidatorAction. 
+ * Eliminates the need for XSP to use FormValidatorAction or HTML forms. 
  * Caveat: Select options need a value attribute to work correctly.
  *
  * <p>This transformer fills all HTML 4 form elements with values from
@@ -104,6 +106,21 @@ import java.util.Stack;
  *
  * <p><em>Names of error elements are never augmented by prefix, suffix or
  * form name.</em></p>
+ * 
+ * <p>Page parts with multiple occurrences depending on the number of
+ * actual parameters can be enclosed in &lt;repeat on="expr" using="var"/&gt;
+ * elements. <em>expr</em> is used to determine the number of occurrences
+ * and <em>var</em> will be expanded with the ordinary number. Repeat elements
+ * can be nested.</p>
+ * 
+ * <p>Example:</p>
+ * <pre>
+ *  <repeat on="mult" using="i"><input type="text" name="mult[${i}]"/></repeat>
+ * </pre>
+ * <p>Will include as many input elements as mult parameters are present. Adding
+ * the repeater variable to the elements name is necessary only with structured
+ * parameters or when they should be numbered. See also the <em>strip-number</em>
+ * configuration parameter.</p>
  *
  * <p>To use this transformer, add the following to your
  * transformation pipeline: <pre>
@@ -133,6 +150,10 @@ import java.util.Stack;
  *           separator will be added between rest of the name and suffix. ("")</td></tr>
  *   <tr><td>ignore-validation</td><td>(boolean) If set to true, all error
  *           tags are copied as is regardless of the validation results.("false")</td></tr>
+ *   <tr><td>decoration</td><td>(int) Length of decorations around repeat variable. Example:
+ *           when using JXPath based module, decoration would be "[" and "]", hence 1. (1)</td></tr>
+ *   <tr><td>strip-number</td><td>(boolean) If set to false, element names of repeated
+ *           elements will contain the expanded repeater variable. ("true")</td></tr>
  * </table>
  * </p>
  *
@@ -142,6 +163,8 @@ import java.util.Stack;
  *   <tr><td>prefix</td><td>(String) Added to the input element's name</td></tr>
  *   <tr><td>suffix</td><td>(String) Added to the input element's name</td></tr>
  *   <tr><td>input</td><td>(String) InputModule name</td></tr>
+ *   <tr><td>decoration</td><td>(int) Length of decorations around repeat variable.</td></tr>
+ *   <tr><td>strip-number</td><td>(boolean) Expanded repeater variable.</td></tr>
  * </table>
  * </p>
  *
@@ -151,12 +174,13 @@ import java.util.Stack;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.4 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.5 2003/10/01 14:50:17 haul Exp $
  */
-public class SimpleFormTransformer
-    extends AbstractTransformer
-    implements Composable, Configurable, Recyclable {
+public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
+    /** strip numbers from repeated element name attributes */
+    private boolean stripNumber = true;
+    ;
     /** Symbolic names for elements */
     /** unknown element */
     private static final int ELEMENT_DEFAULT = 0;
@@ -172,6 +196,8 @@ public class SimpleFormTransformer
     private static final int ELEMENT_ERROR = 5;
     /** form element */
     private static final int ELEMENT_FORM = 6;
+    /** repeat element */
+    private static final int ELEMENT_REPEAT = 7;
     /** default element as Integer (needed as default in org.apache.cocoon.util.HashMap.get()) */
     private static final Integer defaultElement = new Integer(ELEMENT_DEFAULT);
 
@@ -205,6 +231,7 @@ public class SimpleFormTransformer
         names.put("textarea", new Integer(ELEMENT_TXTAREA));
         names.put("error", new Integer(ELEMENT_ERROR));
         names.put("form", new Integer(ELEMENT_FORM));
+        names.put("repeat", new Integer(ELEMENT_REPEAT));
         elementNames = names;
         names = null;
 
@@ -236,28 +263,11 @@ public class SimpleFormTransformer
         names = null;
     }
 
-    /** nesting level of ignored elements */
-    protected int ignoreCount;
-    /** ignored element needs closing tag */
-    protected boolean ignoreThis = false;
-
-    /** stack of ignored element names */
-    protected Stack stack = new Stack();
-
     /** current element's request parameter values */
     protected Object[] values = null;
 
     /** current request's validation results (all validated elements) */
     protected Map validationResults = null;
-
-    /** The current Request object */
-    protected Request request;
-    /** The current objectModel of the environment */
-    protected Map objectModel;
-    /** The parameters specified in the sitemap */
-    protected Parameters parameters;
-    /** The Avalon ComponentManager for getting Components */
-    protected ComponentManager manager;
 
     /** Should we skip inserting values? */
     private boolean fixed = false;
@@ -274,6 +284,7 @@ public class SimpleFormTransformer
     private boolean useFormName = false;
     private boolean useFormNameTwice = false;
     private boolean ignoreValidation = false;
+    private int decorationSize = 1;
 
     private String defaultInput = "request-param";
     private Configuration defaultInputConf = null;
@@ -282,24 +293,76 @@ public class SimpleFormTransformer
     private ComponentSelector inputSelector = null;
     private String inputName = null;
 
-    /** Empty attributes (for performance). This can be used
-     *  do create own attributes, but make sure to clean them
-     *  afterwords.
+    /** Skip element's content only. Otherwise skip also surrounding element. */
+    protected boolean skipChildrenOnly = false;
+
+    /** Count nested repeat elements. */
+    protected int recordingCount = 0;
+
+    /** List of {@link RepeaterStatus} elements keeping track of nested repeat blocks. */
+    protected List repeater = null;
+
+    /** Map of {@link ValueList} to track multiple parameters. */
+    protected Map formValues = null;
+
+    /**
+     * Keep track of repeater status. 
      */
-    protected AttributesImpl emptyAttributes = new AttributesImpl();
+    protected class RepeaterStatus {
+        public String var = null;
+        public String expr = null;
+        public int count = 0;
+
+        public RepeaterStatus(String var, int count, String expr) {
+            this.var = var;
+            this.count = count;
+            this.expr = expr;
+        }
+
+        public String toString() {
+            return "[" + this.var + "," + this.expr + "," + this.count + "]";
+        }
+    }
+
+    /**
+     * Keep track of multiple values. 
+     */
+    protected class ValueList {
+        private int current = -1;
+        private Object[] values = null;
+
+        public ValueList(Object[] values) {
+            this.values = values;
+            this.current = (values != null && values.length > 0 ? 0 : -1);
+        }
+
+        public Object getNext() {
+            Object result = null;
+            if (this.values != null) {
+                if (this.current < this.values.length) {
+                    result = this.values[this.current++];
+                }
+            }
+            return result;
+        }
+    }
+
+    public SimpleFormTransformer() {
+        this.defaultNamespaceURI = "";
+        this.namespaceURI = "";
+    }
 
     /** set per instance variables to defaults */
     private void reset() {
-        this.objectModel = null;
-        this.request = null;
-        this.parameters = null;
-        this.stack.clear();
-        this.ignoreCount = 0;
+        this.skipChildrenOnly = false;
         this.values = null;
         this.validationResults = null;
         this.documentFixed = false;
         this.fixed = false;
         this.formName = null;
+        this.recordingCount = 0;
+        this.repeater = new LinkedList();
+        this.formValues = new HashMap();
 
         if (this.inputSelector != null) {
             if (this.input != null)
@@ -329,6 +392,22 @@ public class SimpleFormTransformer
         }
         this.ignoreValidation =
             config.getChild("ignore-validation").getValueAsBoolean(this.ignoreValidation);
+        this.decorationSize = config.getChild("decoration").getValueAsInteger(this.decorationSize);
+        this.stripNumber = config.getChild("strip-number").getValueAsBoolean(this.stripNumber);
+    }
+
+    /**
+     * Read sitemap parameters and set properties accordingly.
+     */
+    private void evaluateParameters() {
+        this.documentFixed = this.parameters.getParameterAsBoolean("fixed", false);
+        this.fixed = this.documentFixed;
+        this.prefix = this.parameters.getParameter("prefix", this.defaultPrefix);
+        this.suffix = this.parameters.getParameter("suffix", this.defaultSuffix);
+        this.inputName = this.parameters.getParameter("input", null);
+        this.decorationSize =
+            this.parameters.getParameterAsInteger("decoration", this.decorationSize);
+        this.stripNumber = this.parameters.getParameterAsBoolean("strip-number", this.stripNumber);
     }
 
     /**
@@ -343,24 +422,27 @@ public class SimpleFormTransformer
         throws ProcessingException, SAXException, IOException {
 
         this.reset();
-        this.objectModel = objectModel;
 
-        this.request = ObjectModelHelper.getRequest(objectModel);
+        super.setup(resolver, objectModel, src, par);
+
         if (request == null) {
             getLogger().debug("no request object");
             throw new ProcessingException("no request object");
         }
-        this.parameters = par;
-        this.documentFixed = par.getParameterAsBoolean("fixed", false);
-        this.fixed = this.documentFixed;
-        this.prefix = par.getParameter("prefix", this.defaultPrefix);
-        this.suffix = par.getParameter("suffix", this.defaultSuffix);
-        this.inputName = par.getParameter("input", null);
+        this.evaluateParameters();
+        this.setupInputModule();
+
+    }
+
+    /**
+     * Setup and obtain reference to the input module.
+     */
+    private void setupInputModule() {
         this.inputConf = null;
         if (this.ignoreValidation) {
             this.validationResults = null;
         } else {
-            this.validationResults = XSPFormValidatorHelper.getResults(objectModel);
+            this.validationResults = XSPFormValidatorHelper.getResults(this.objectModel);
         }
 
         if (this.inputName == null) {
@@ -401,7 +483,6 @@ public class SimpleFormTransformer
                 getLogger().warn(
                     "A problem occurred setting up '" + this.inputName + "': " + e.getMessage());
         }
-
     }
 
     /**
@@ -410,14 +491,6 @@ public class SimpleFormTransformer
     public void recycle() {
         super.recycle();
         this.reset();
-    }
-
-    /**
-     * Avalon Composable Interface
-     * @param manager The Avalon Component Manager
-     */
-    public void compose(ComponentManager manager) {
-        this.manager = manager;
     }
 
     /** 
@@ -440,6 +513,7 @@ public class SimpleFormTransformer
      * i.e. checkbox and radio.
      */
     protected void startCheckableElement(
+        String aName,
         String uri,
         String name,
         String raw,
@@ -447,6 +521,7 @@ public class SimpleFormTransformer
         throws SAXException {
 
         // @fixed and this.fixed already considered in startInputElement
+        this.values = this.getValues(aName);
         String checked = attributes.getValue("checked");
         String value = attributes.getValue("value");
         boolean found = false;
@@ -473,7 +548,7 @@ public class SimpleFormTransformer
                 attributes.removeAttribute(attributes.getIndex("checked"));
             }
         }
-        super.startElement(uri, name, raw, attributes);
+        this.relayStartElement(uri, name, raw, attributes);
     }
 
     /**
@@ -481,6 +556,7 @@ public class SimpleFormTransformer
      * attributes, e.g. text, password, button.
      */
     protected void startNonCheckableElement(
+        String aName,
         String uri,
         String name,
         String raw,
@@ -488,6 +564,7 @@ public class SimpleFormTransformer
         throws SAXException {
 
         // @fixed and this.fixed already considered in startInputElement
+        Object fValue = this.getNextValue(aName);
         String value = attributes.getValue("value");
         if (getLogger().isDebugEnabled())
             getLogger().debug(
@@ -495,21 +572,16 @@ public class SimpleFormTransformer
                     + name
                     + " attributes "
                     + this.printAttributes(attributes));
-        if (this.values != null) {
+        if (fValue != null) {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
             if (value != null) {
-                attributes.setValue(attributes.getIndex("value"), String.valueOf(this.values[0]));
+                attributes.setValue(attributes.getIndex("value"), String.valueOf(fValue));
             } else {
-                attributes.addAttribute(
-                    "",
-                    "value",
-                    "value",
-                    "CDATA",
-                    String.valueOf(this.values[0]));
+                attributes.addAttribute("", "value", "value", "CDATA", String.valueOf(fValue));
             }
         }
-        super.startElement(uri, name, raw, attributes);
+        this.relayStartElement(uri, name, raw, attributes);
     }
 
     /**
@@ -527,13 +599,13 @@ public class SimpleFormTransformer
             getLogger().debug(
                 "startInputElement " + name + " attributes " + this.printAttributes(attr));
         if (aName == null || this.fixed || (fixed != null && parseBoolean(fixed))) {
-            super.startElement(uri, name, raw, attr);
+            this.relayStartElement(uri, name, raw, attr);
 
         } else {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
 
-            this.values = this.getValues(aName);
+            attr = this.normalizeAttributes(attr);
 
             AttributesImpl attributes = null;
             if (attr instanceof AttributesImpl) {
@@ -545,11 +617,11 @@ public class SimpleFormTransformer
             switch (((Integer) inputTypes.get(type, defaultType)).intValue()) {
                 case TYPE_CHECKBOX :
                 case TYPE_RADIO :
-                    this.startCheckableElement(uri, name, raw, attributes);
+                    this.startCheckableElement(aName, uri, name, raw, attributes);
                     break;
 
                 case TYPE_DEFAULT :
-                    this.startNonCheckableElement(uri, name, raw, attributes);
+                    this.startNonCheckableElement(aName, uri, name, raw, attributes);
                     break;
             }
             this.values = null;
@@ -571,9 +643,20 @@ public class SimpleFormTransformer
             getLogger().debug(
                 "startSelectElement " + name + " attributes " + this.printAttributes(attr));
         if (aName != null && !(this.fixed || (fixed != null && parseBoolean(fixed)))) {
-            this.values = this.getValues(aName);
+            if (attr.getIndex("multiple") > -1) {
+                this.values = this.getValues(aName);
+            } else {
+                Object val = this.getNextValue(aName);
+                if (val != null) {
+                    this.values = new Object[1];
+                    this.values[0] = val;
+                } else {
+                    this.values = null;
+                }
+            }
+            attr = this.normalizeAttributes(attr);
         }
-        super.startElement(uri, name, raw, attr);
+        this.relayStartElement(uri, name, raw, attr);
     }
 
     /**
@@ -590,7 +673,7 @@ public class SimpleFormTransformer
             getLogger().debug(
                 "startOptionElement " + name + " attributes " + this.printAttributes(attr));
         if (this.values == null || this.fixed) {
-            super.startElement(uri, name, raw, attr);
+            this.relayStartElement(uri, name, raw, attr);
         } else {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
@@ -617,7 +700,7 @@ public class SimpleFormTransformer
                 attributes.removeAttribute(attributes.getIndex("selected"));
             }
 
-            super.startElement(uri, name, raw, attributes);
+            this.relayStartElement(uri, name, raw, attributes);
         }
     }
 
@@ -630,24 +713,25 @@ public class SimpleFormTransformer
 
         String aName = getName(attributes.getValue("name"));
         String fixed = attributes.getValue(this.fixedName);
-        Object[] value = null;
+        Object value = null;
         if (getLogger().isDebugEnabled())
             getLogger().debug(
                 "startTextareaElement " + name + " attributes " + this.printAttributes(attributes));
         if (aName != null) {
-            value = this.getValues(aName);
+            value = this.getNextValue(aName);
         }
         if (value == null || this.fixed || (fixed != null && parseBoolean(fixed))) {
-            super.startElement(uri, name, raw, attributes);
+            this.relayStartElement(uri, name, raw, attributes);
         } else {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("replacing");
-            this.ignoreCount++;
-            this.stack.push(name);
-            this.ignoreThis = false;
-            super.startElement(uri, name, raw, attributes);
-            String valString = String.valueOf(value[0]);
-            super.characters(valString.toCharArray(), 0, valString.length());
+            this.relayStartElement(uri, name, raw, this.normalizeAttributes(attributes));
+            String valString = String.valueOf(value);
+            this.characters(valString.toCharArray(), 0, valString.length());
+            // well, this doesn't really work out nicely. do it the hard way.
+            if (this.ignoreEventsCount == 0)
+                this.skipChildrenOnly = true;
+            this.ignoreEventsCount++;
         }
     }
 
@@ -665,15 +749,13 @@ public class SimpleFormTransformer
             getLogger().debug(
                 "startErrorElement " + name + " attributes " + this.printAttributes(attr));
         if (this.ignoreValidation) {
-            super.startElement(uri, name, raw, attr);
+            this.relayStartElement(uri, name, raw, attr);
         } else if (this.validationResults == null || this.fixed) {
-            this.ignoreCount++;
-            this.stack.push(name);
-            this.ignoreThis = true;
+            this.relayStartElement(true, false, uri, name, raw, attr);
         } else {
             String aName = attr.getValue("name");
             if (aName == null) {
-                super.startElement(uri, name, raw, attr);
+                this.relayStartElement(uri, name, raw, attr);
             } else {
                 ValidatorActionResult validation =
                     XSPFormValidatorHelper.getParamResult(this.objectModel, aName);
@@ -698,11 +780,9 @@ public class SimpleFormTransformer
                         attributes.removeAttribute(attributes.getIndex("when"));
                     if (when_ge != null)
                         attributes.removeAttribute(attributes.getIndex("when-ge"));
-                    super.startElement(uri, name, raw, attributes);
+                    this.relayStartElement(uri, name, raw, this.normalizeAttributes(attributes));
                 } else {
-                    this.ignoreCount++;
-                    this.stack.push(name);
-                    this.ignoreThis = true;
+                    this.relayStartElement(true, true, uri, name, raw, attr);
                 }
             }
         }
@@ -725,9 +805,9 @@ public class SimpleFormTransformer
             this.formName = attr.getValue("name");
         }
         if (fixed == null) {
-            super.startElement(uri, name, raw, attr);
+            this.relayStartElement(uri, name, raw, attr);
         } else {
-            if (!this.fixed && ("true".equals(fixed) || "yes".equals(fixed))) {
+            if (!this.fixed && parseBoolean(fixed)) {
                 this.fixed = true;
             }
             // remove attributes not meant for client
@@ -738,7 +818,66 @@ public class SimpleFormTransformer
                 attributes = new AttributesImpl(attr);
             }
             attributes.removeAttribute(attributes.getIndex(this.fixedName));
-            super.startElement(uri, name, raw, attributes);
+            this.relayStartElement(uri, name, raw, this.normalizeAttributes(attributes));
+        }
+    }
+
+    /**
+     * Start recording repeat element contents and push repeat expression and
+     * variable to repeater stack. Only start recording, if no other recorder is
+     * currently running.
+     * 
+     * @param uri
+     * @param name
+     * @param raw
+     * @param attr
+     * @throws SAXException
+     */
+    protected void startRepeatElement(String uri, String name, String raw, Attributes attr)
+        throws SAXException {
+
+        if (this.recordingCount == 0) {
+            if (!(this.fixed || parseBoolean(attr.getValue(this.fixedName)))) {
+                RepeaterStatus status =
+                    new RepeaterStatus("${" + attr.getValue("using") + "}", 0, attr.getValue("on"));
+                this.repeater.add(status);
+                this.startRecording();
+                this.recordingCount++;
+            } else {
+                this.relayStartElement(uri, name, raw, attr);
+            }
+        } else {
+            this.relayStartElement(uri, name, raw, attr);
+            this.recordingCount++;
+        }
+    }
+
+    /**
+     * Stop recording repeat contents and replay required number of times.
+     * Stop only if outmost repeat element is ending.
+     * 
+     * @param uri
+     * @param name
+     * @param raw
+     * @throws SAXException
+     */
+    protected void endRepeatElement(String uri, String name, String raw) throws SAXException {
+        this.recordingCount--;
+        if (this.recordingCount == 0) {
+            DocumentFragment fragment = this.endRecording();
+            RepeaterStatus status = (RepeaterStatus) this.repeater.get(this.repeater.size() - 1);
+            Object[] vals = this.getValues(this.getName(status.expr));
+            int count = (vals != null ? vals.length : 0);
+            for (status.count = 1; status.count <= count; status.count++) {
+                DOMStreamer streamer = new DOMStreamer(this, this);
+                streamer.stream(fragment);
+            }
+            this.repeater.remove(this.repeater.size() - 1);
+        } else {
+            this.relayEndElement(uri, name, raw);
+            if (this.recordingCount < 0) {
+                this.recordingCount = 0;
+            }
         }
     }
 
@@ -750,46 +889,54 @@ public class SimpleFormTransformer
      * @param raw The qualified name of the element.
      * @param attr The attributes of the element.
      */
-    public void startElement(String uri, String name, String raw, Attributes attr)
+    public void startTransformingElement(String uri, String name, String raw, Attributes attr)
         throws SAXException {
 
-        if (this.ignoreCount == 0) {
-            if (uri != "") {
-                super.startElement(uri, name, raw, attr);
-            } else {
-                switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
-                    case ELEMENT_INPUT :
-                        this.startInputElement(uri, name, raw, attr);
-                        break;
+        if (this.ignoreEventsCount == 0 && this.recordingCount == 0) {
+            switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
+                case ELEMENT_INPUT :
+                    this.startInputElement(uri, name, raw, attr);
+                    break;
 
-                    case ELEMENT_SELECT :
-                        this.startSelectElement(uri, name, raw, attr);
-                        break;
+                case ELEMENT_SELECT :
+                    this.startSelectElement(uri, name, raw, attr);
+                    break;
 
-                    case ELEMENT_OPTION :
-                        this.startOptionElement(uri, name, raw, attr);
-                        break;
+                case ELEMENT_OPTION :
+                    this.startOptionElement(uri, name, raw, attr);
+                    break;
 
-                    case ELEMENT_TXTAREA :
-                        this.startTextareaElement(uri, name, raw, attr);
-                        break;
+                case ELEMENT_TXTAREA :
+                    this.startTextareaElement(uri, name, raw, attr);
+                    break;
 
-                    case ELEMENT_ERROR :
-                        this.startErrorElement(uri, name, raw, attr);
-                        break;
-                    case ELEMENT_FORM :
-                        this.startFormElement(uri, name, raw, attr);
-                        break;
+                case ELEMENT_ERROR :
+                    this.startErrorElement(uri, name, raw, attr);
+                    break;
 
-                    default :
-                        super.startElement(uri, name, raw, attr);
-                }
+                case ELEMENT_FORM :
+                    this.startFormElement(uri, name, raw, attr);
+                    break;
+
+                case ELEMENT_REPEAT :
+                    this.startRepeatElement(uri, name, raw, attr);
+                    break;
+
+                default :
+                    this.relayStartElement(uri, name, raw, attr);
+            }
+
+        } else if (this.recordingCount > 0) {
+            switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
+                case ELEMENT_REPEAT :
+                    this.startRepeatElement(uri, name, raw, attr);
+                    break;
+
+                default :
+                    this.relayStartElement(uri, name, raw, attr);
             }
         } else {
-            this.ignoreCount++;
-            this.stack.push(name);
-            if (((Integer) elementNames.get(name, defaultElement)).intValue() == ELEMENT_ERROR) {
-            }
+            this.relayStartElement(uri, name, raw, attr);
         }
     }
 
@@ -800,99 +947,45 @@ public class SimpleFormTransformer
      * @param name The local name of the element.
      * @param raw The qualified name of the element.
      */
-    public void endElement(String uri, String name, String raw) throws SAXException {
+    public void endTransformingElement(String uri, String name, String raw) throws SAXException {
 
-        if (uri != "") {
-            if (this.ignoreCount == 0)
-                super.endElement(uri, name, raw);
-        } else {
-            if (this.ignoreCount > 0) {
-                if (((String) this.stack.peek()).equals(name)) {
-                    this.stack.pop();
-                    this.ignoreCount--;
-                }
+        if (this.ignoreEventsCount > 0) {
+            this.relayEndElement(uri, name, raw);
+        } else if (this.recordingCount > 0) {
+            switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
+                case ELEMENT_REPEAT :
+                    this.endRepeatElement(uri, name, raw);
+                    break;
+
+                default :
+                    this.relayEndElement(uri, name, raw);
             }
-            if (this.ignoreCount == 0 && this.ignoreThis) {
-                this.ignoreThis = false;
-                // skip event 
-            } else if (this.ignoreCount > 0) {
-                // skip event 
-            } else {
-                switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
-                    case ELEMENT_INPUT :
-                        super.endElement(uri, name, raw);
-                        break;
-                    case ELEMENT_SELECT :
-                        this.values = null;
-                        super.endElement(uri, name, raw);
-                        break;
-                    case ELEMENT_OPTION :
-                        super.endElement(uri, name, raw);
-                        break;
-                    case ELEMENT_TXTAREA :
-                        super.endElement(uri, name, raw);
-                        break;
-                    case ELEMENT_ERROR :
-                        super.endElement(uri, name, raw);
-                        break;
-                    case ELEMENT_FORM :
-                        this.fixed = this.documentFixed;
-                        this.formName = null;
-                        super.endElement(uri, name, raw);
-                        break;
+        } else {
+            switch (((Integer) elementNames.get(name, defaultElement)).intValue()) {
+                case ELEMENT_SELECT :
+                    this.values = null;
+                    this.relayEndElement(uri, name, raw);
+                    break;
+                case ELEMENT_INPUT :
+                case ELEMENT_OPTION :
+                case ELEMENT_TXTAREA :
+                case ELEMENT_ERROR :
+                    this.relayEndElement(uri, name, raw);
+                    break;
+                case ELEMENT_FORM :
+                    this.fixed = this.documentFixed;
+                    this.formName = null;
+                    this.relayEndElement(uri, name, raw);
+                    break;
 
-                    default :
-                        super.endElement(uri, name, raw);
-                }
+                case ELEMENT_REPEAT :
+                    this.endRepeatElement(uri, name, raw);
+                    break;
+
+                default :
+                    this.relayEndElement(uri, name, raw);
             }
         }
-    }
-
-    /**
-     * Receive notification of character data.
-     *
-     * @param c The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     */
-    public void characters(char c[], int start, int len) throws SAXException {
-        if (this.ignoreCount == 0)
-            super.characters(c, start, len);
-    }
-
-    /**
-     * Receive notification of ignorable whitespace in element content.
-     *
-     * @param c The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     */
-    public void ignorableWhitespace(char c[], int start, int len) throws SAXException {
-        if (this.ignoreCount == 0)
-            super.ignorableWhitespace(c, start, len);
-    }
-
-    /**
-     * Receive notification of a processing instruction.
-     *
-     * @param target The processing instruction target.
-     * @param data The processing instruction data, or null if none was
-     *             supplied.
-     */
-    public void processingInstruction(String target, String data) throws SAXException {
-        if (this.ignoreCount == 0)
-            super.processingInstruction(target, data);
-    }
-
-    /**
-     * Receive notification of a skipped entity.
-     *
-     * @param name The name of the skipped entity.  If it is a  parameter
-     *             entity, the name will begin with '%'.
-     */
-    public void skippedEntity(String name) throws SAXException {
-        if (this.ignoreCount == 0)
-            super.skippedEntity(name);
     }
 
     /**
@@ -902,6 +995,40 @@ public class SimpleFormTransformer
      */
     private static boolean parseBoolean(String aBoolean) {
         return "true".equalsIgnoreCase(aBoolean) || "yes".equalsIgnoreCase(aBoolean);
+    }
+
+    /**
+     * Remove extra information from element's attributes. Currently only removes
+     * the repeater variable from the element's name attribute if present.
+     * 
+     * @param attr
+     * @return modified attributes
+     */
+    private Attributes normalizeAttributes(Attributes attr) {
+        Attributes result = attr;
+        if (this.stripNumber && this.repeater.size() > 0) {
+            String name = attr.getValue("name");
+            if (name != null) {
+                for (Iterator i = this.repeater.iterator(); i.hasNext();) {
+                    RepeaterStatus status = (RepeaterStatus) i.next();
+                    int pos = name.indexOf(status.var);
+                    if (pos >= 0) {
+                        AttributesImpl attributes;
+                        if (result instanceof AttributesImpl) {
+                            attributes = (AttributesImpl) result;
+                        } else {
+                            attributes = new AttributesImpl(result);
+                        }
+                        name =
+                            name.substring(0, pos - this.decorationSize)
+                                + name.substring(pos + status.var.length() + this.decorationSize);
+                        attributes.setValue(attributes.getIndex("name"), name);
+                        result = attributes;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -933,6 +1060,38 @@ public class SimpleFormTransformer
         }
         if (this.suffix != null) {
             result = result + this.prefix;
+        }
+        if (this.repeater.size() > 0) {
+            for (Iterator i = this.repeater.iterator(); i.hasNext();) {
+                RepeaterStatus status = (RepeaterStatus) i.next();
+                int pos = result.indexOf(status.var);
+                if (pos != -1) {
+                    result =
+                        result.substring(0, pos)
+                            + status.count
+                            + result.substring(pos + status.var.length());
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Obtain values from used InputModule if not done already and return the
+     * next value. If no more values exist, returns null.
+     * 
+     * @param name
+     * @return
+     */
+    private Object getNextValue(String name) {
+        Object result = null;
+        if (this.formValues.containsKey(name)) {
+            ValueList vList = (ValueList) this.formValues.get(name);
+            result = vList.getNext();
+        } else {
+            ValueList vList = new ValueList(this.getValues(name));
+            result = vList.getNext();
+            this.formValues.put(name, vList);
         }
         return result;
     }
@@ -993,6 +1152,85 @@ public class SimpleFormTransformer
         }
 
         return values;
+    }
+
+    /**
+     * Calls the super's method startTransformingElement.
+     * 
+     * @param uri
+     * @param name
+     * @param raw
+     * @param attr
+     * @throws SAXException
+     */
+    protected void relayStartElement(String uri, String name, String raw, Attributes attr)
+        throws SAXException {
+        this.relayStartElement(false, false, uri, name, raw, attr);
+    }
+
+    /**
+     * Calls the super's method startTransformingElement and increments the
+     * ignoreEventsCount if skip is true. Increment can be done either before
+     * invoking super's method, so that the element itself is skipped, or afterwards,
+     * so that only the children are skipped.
+     * 
+     * @param increment skip counter 
+     * @param skip only children
+     * @param uri
+     * @param name
+     * @param raw
+     * @param attr
+     * @throws SAXException
+     */
+    protected void relayStartElement(
+        boolean skip,
+        boolean children,
+        String uri,
+        String name,
+        String raw,
+        Attributes attr)
+        throws SAXException {
+
+        if (skip)
+            this.skipChildrenOnly = children;
+        if (skip && !children)
+            this.ignoreEventsCount++;
+        try {
+            super.startTransformingElement(uri, name, raw, attr);
+        } catch (ProcessingException e) {
+            throw new SAXException(e);
+        } catch (IOException e) {
+            throw new SAXException(e);
+        }
+        if (skip && children)
+            this.ignoreEventsCount++;
+    }
+
+    /**
+     * Calls the super's method endTransformingElement and decrements the
+     * ignoreEventsCount if larger than zero.
+     * 
+     * @param uri
+     * @param name
+     * @param raw
+     * @throws SAXException
+     */
+    protected void relayEndElement(String uri, String name, String raw) throws SAXException {
+
+        if (this.ignoreEventsCount == 1 && this.skipChildrenOnly)
+            this.ignoreEventsCount--;
+        try {
+            super.endTransformingElement(uri, name, raw);
+        } catch (ProcessingException e) {
+            throw new SAXException(e);
+        } catch (IOException e) {
+            throw new SAXException(e);
+        } catch (Exception e) {
+            getLogger().error("exception", e);
+        }
+
+        if (this.ignoreEventsCount > 0)
+            this.ignoreEventsCount--;
     }
 
 }
