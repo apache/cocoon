@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="RP" type="add">
+     hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
+   </action>     
    <action dev="CZ" type="fix" fixes-bug="32987" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
      Apply patch for a better exception handling in the Meta-InputModule when an input module is not found.
    </action>
