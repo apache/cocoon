@@ -21,11 +21,11 @@ import org.apache.avalon.logger.Loggable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.Modifiable;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.excalibur.pool.Poolable;
 import org.apache.avalon.Disposable;
 
+import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
@@ -72,7 +72,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-20 20:50:18 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-24 15:27:49 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composable, Loggable, Poolable, Disposable {
