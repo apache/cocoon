@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.254 2004/03/03 09:26:24 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.255 2004/03/03 14:35:49 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Pass notification object to coplet error pipelines so it can react on it.
+   </action>
    <action dev="AG" type="update" fixes-bug="24457" due-to-email="ouzo@wlkp.org" due-to="Leszek Gawron">
      Updated xalan to 2.6.0
    </action>

@@ -54,13 +54,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -80,14 +88,24 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.12 2004/02/09 12:14:20 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.13 2004/03/03 14:35:49 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
-    implements Disposable, Subscriber, Initializable {
+    implements Disposable, Subscriber, Initializable, Contextualizable {
 	
     /** The source resolver */
     protected SourceResolver resolver;
+    
+    /** The application context */
+    protected Context context;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -225,20 +243,50 @@ public class URICopletAdapter
 
     /**
      * Render the error content for a coplet
-     * @param coplet
-     * @param handler
+     * @param coplet  The coplet instance data
+     * @param handler The content handler
+     * @param error   The exception that occured
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstanceData coplet, ContentHandler handler)
+    protected boolean renderErrorContent(CopletInstanceData coplet, 
+                                         ContentHandler     handler,
+                                         Exception          error)
     throws SAXException {
         final String uri = (String) this.getConfiguration(coplet, "error-uri");
         if ( uri != null ) {
             // TODO - if an error occured for this coplet, remember this
             //         and use directly the error-uri from now on
-            // We need for this the ability to dynamically add aspects to
-            // objects!
+
+            if ( uri.startsWith("cocoon:") && error != null) {
+                // Create a Notifying
+                NotifyingBuilder notifyingBuilder = null;
+                Notifying currentNotifying = null;
+                try {
+                    notifyingBuilder= (NotifyingBuilder)this.manager.lookup(NotifyingBuilder.ROLE);
+                    currentNotifying = notifyingBuilder.build(this, error);
+                } catch (Exception ignore) {
+                } finally {
+                    this.manager.release(notifyingBuilder);
+                }
+
+                final Map objectModel = ContextHelper.getObjectModel(this.context);
+                // Add it to the object model
+                if ( currentNotifying != null ) {
+                    objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);                    
+                    objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, error);
+                }
+            
+                try {
+                    this.streamContent( coplet, uri, handler);
+                } finally {
+                    objectModel.remove(org.apache.cocoon.Constants.NOTIFYING_OBJECT);
+                    objectModel.remove(ObjectModelHelper.THROWABLE_OBJECT);
+                }
+            }
+            
             this.streamContent( coplet, uri, handler);
+                        
             return true;
         }
         return false;

@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.8 2004/03/01 20:34:28 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.9 2004/03/03 14:35:49 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -121,6 +121,7 @@ public abstract class AbstractCopletAdapter
         if ( bool != null && bool.booleanValue() ) {
             boolean read = false;
             SaxBuffer buffer = new SaxBuffer();
+            Exception error = null;
             try {
                 
                 if ( timeout != null ) {
@@ -140,13 +141,14 @@ public abstract class AbstractCopletAdapter
                     read = true;
                 }
             } catch (Exception exception ) {
+                error = exception;
                 this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), exception);
             }
             
             if ( read ) {
                 buffer.toSAX( contentHandler );
             } else {
-                if ( !this.renderErrorContent(coplet, contentHandler)) {
+                if ( !this.renderErrorContent(coplet, contentHandler, error)) {
                     // FIXME - get correct error message
                     contentHandler.startDocument();
                     XMLUtils.startElement( contentHandler, "p");
@@ -196,12 +198,15 @@ public abstract class AbstractCopletAdapter
     
     /**
      * Render the error content for a coplet
-     * @param coplet
-     * @param handler
+     * @param coplet  The coplet instance data
+     * @param handler The content handler
+     * @param error   The exception that occured
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstanceData coplet, ContentHandler handler)
+    protected boolean renderErrorContent(CopletInstanceData coplet, 
+                                         ContentHandler     handler,
+                                         Exception          error)
     throws SAXException {
         return false;
     }
