@@ -15,8 +15,13 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
+import org.xml.sax.Attributes;
+
 public class StartComment extends StartInstruction {
-    public StartComment(StartElement raw) {
+    public StartComment(StartElement raw, Attributes attrs, Stack stack) {
+        // <jx:comment>This will be parsed</jx:comment>
         super(raw);
     }
 }

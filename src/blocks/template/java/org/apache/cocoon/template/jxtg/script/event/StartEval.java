@@ -15,17 +15,26 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public class StartEval extends StartInstruction {
-    public StartEval(StartElement raw, JXTExpression value) {
+    private final JXTExpression value;
+
+    public StartEval(StartElement raw, Attributes attrs, Stack stack)
+        throws SAXException {
+
         super(raw);
-        this.value = value;
+
+        String select = attrs.getValue("select");
+        this.value = Parser.compileExpr(select, "eval: \"select\":", getLocation());
     }
 
     public JXTExpression getValue() {
         return value;
     }
-
-    private final JXTExpression value;
 }

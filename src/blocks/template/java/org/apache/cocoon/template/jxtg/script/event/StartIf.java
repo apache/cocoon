@@ -15,15 +15,31 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartIf extends StartInstruction {
-    public StartIf(StartElement raw, JXTExpression test) {
-        super(raw);
-        this.test = test;
-    }
-
     final JXTExpression test;
+
+    public StartIf(StartElement raw, Attributes attrs, Stack stack) 
+        throws SAXException {
+
+        super(raw);
+
+        Locator locator = getLocation();
+        String test = attrs.getValue("test");
+        if (test != null) {
+            this.test = Parser.compileExpr(test, "if: \"test\": ", locator);
+        } else {
+            throw new SAXParseException("if: \"test\" is required", locator, null);
+        }
+    }
 
     public JXTExpression getTest() {
         return test;

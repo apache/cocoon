@@ -15,8 +15,16 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
+import org.xml.sax.Attributes;
+
 public class StartChoose extends StartInstruction {
-    public StartChoose(StartElement raw) {
+
+    private StartWhen firstChoice;
+    private StartOtherwise otherwise;
+
+    public StartChoose(StartElement raw, Attributes attrs, Stack stack) {
         super(raw);
     }
 
@@ -35,7 +43,4 @@ public class StartChoose extends StartInstruction {
     public StartOtherwise getOtherwise() {
         return otherwise;
     }
-
-    private StartWhen firstChoice;
-    private StartOtherwise otherwise;
 }

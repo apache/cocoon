@@ -15,8 +15,12 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
+import org.xml.sax.Attributes;
+
 public class StartTemplate extends StartInstruction {
-    public StartTemplate(StartElement raw) {
+    public StartTemplate(StartElement raw, Attributes attrs, Stack stack) {
         super(raw);
     }
 }

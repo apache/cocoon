@@ -15,12 +15,46 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class StartWhen extends StartInstruction {
-    public StartWhen(StartElement raw, JXTExpression test) {
+    private final JXTExpression test;
+    private StartWhen nextChoice;
+
+    public StartWhen(StartElement raw, Attributes attrs, Stack stack) 
+        throws SAXException {
+
         super(raw);
-        this.test = test;
+
+        Locator locator = getLocation();
+
+        if (stack.size() == 0 || !(stack.peek() instanceof StartChoose)) {
+            throw new SAXParseException("<when> must be within <choose>", locator, null);
+        }
+        String test = attrs.getValue("test");
+        if (test != null) {
+            this.test = Parser.compileExpr(test, "when: \"test\": ", locator);
+            
+            StartChoose startChoose = (StartChoose) stack.peek();
+            if (startChoose.getFirstChoice() != null) {
+                StartWhen w = startChoose.getFirstChoice();
+                while (w.getNextChoice() != null) {
+                    w = w.getNextChoice();
+                }
+                w.setNextChoice(this);
+            } else {
+                startChoose.setFirstChoice(this);
+            }
+        } else {
+            throw new SAXParseException("when: \"test\" is required", locator, null);
+        }
     }
 
     public JXTExpression getTest() {
@@ -34,7 +68,4 @@ public class StartWhen extends StartInstruction {
     public StartWhen getNextChoice() {
         return nextChoice;
     }
-
-    private final JXTExpression test;
-    private StartWhen nextChoice;
 }

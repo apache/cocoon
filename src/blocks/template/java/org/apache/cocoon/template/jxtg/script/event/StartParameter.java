@@ -15,20 +15,37 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 public class StartParameter extends StartInstruction {
-    public StartParameter(StartElement raw, String name, String optional,
-            String defaultValue) {
+    final String name;
+    final String optional;
+    private final String defaultValue;
+
+    public StartParameter(StartElement raw, Attributes attrs, Stack stack) 
+        throws SAXException {
+
         super(raw);
-        this.name = name;
-        this.optional = optional;
-        this.defaultValue = defaultValue;
+
+        Locator locator = getLocation();
+        if (stack.size() == 0 || !(stack.peek() instanceof StartDefine)) {
+            throw new SAXParseException("<parameter> not allowed here", locator, null);
+        } else {
+            this.name = attrs.getValue("name");
+            this.optional = attrs.getValue("optional");
+            this.defaultValue = attrs.getValue("default");
+            if (this.name == null) {
+                throw new SAXParseException("parameter: \"name\" is required", locator, null);
+            }
+        }
     }
 
     public String getDefaultValue() {
         return defaultValue;
     }
-
-    final String name;
-    final String optional;
-    private final String defaultValue;
 }

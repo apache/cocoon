@@ -17,24 +17,42 @@ package org.apache.cocoon.template.jxtg.script.event;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
+import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.Parser;
+import org.apache.commons.lang.StringUtils;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class StartDefine extends StartInstruction {
-    public StartDefine(StartElement raw, String namespace, String name) {
-        super(raw);
-        this.namespace = namespace;
-        this.name = name;
-        this.qname = "{" + namespace + "}" + name;
-        this.parameters = new HashMap();
-    }
 
     final String name;
     final String namespace;
     private final String qname;
     private final Map parameters;
     private Event body;
+
+    public StartDefine(StartElement raw, Attributes attrs, Stack stack) 
+        throws SAXException {
+
+        super(raw);
+
+        // <macro name="myTag" targetNamespace="myNamespace">
+        // <parameter name="paramName" required="Boolean"
+        // default="value"/>
+        // body
+        // </macro>
+        this.namespace = StringUtils.defaultString(attrs.getValue("targetNamespace"));
+        this.name = attrs.getValue("name");
+        if (this.name == null) {
+            throw new SAXParseException("macro: \"name\" is required", getLocation(), null);
+        }
+        
+        this.qname = "{" + namespace + "}" + name;
+        this.parameters = new HashMap();
+    }
 
     public void finish() throws SAXException {
         Event e = next;

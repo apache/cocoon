@@ -15,8 +15,24 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Stack;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 public class StartOtherwise extends StartInstruction {
-    public StartOtherwise(StartElement raw) {
+    public StartOtherwise(StartElement raw, Attributes attrs, Stack stack)
+        throws SAXException {
+
         super(raw);
+
+        if (stack.size() != 0 && (stack.peek() instanceof StartChoose)) {
+            StartChoose startChoose = (StartChoose) stack.peek();
+            startChoose.setOtherwise(this);
+        } else {
+            throw new SAXParseException("<otherwise> must be within <choose>",
+                                        getLocation(), null);
+        }
     }
 }
