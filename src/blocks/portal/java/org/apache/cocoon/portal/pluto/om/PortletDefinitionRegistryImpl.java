@@ -53,7 +53,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionRegistryImpl.java,v 1.5 2004/06/29 12:12:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortletDefinitionRegistryImpl 
 extends AbstractLogEnabled
@@ -274,7 +274,7 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
                 if (this.contextName.equals(webModule)) {
                     ((PortletDefinitionImpl)portlet).setLocalPortlet(true);
                 }
-
+                ((PortletDefinitionImpl) portlet).setPortletClassLoader(Thread.currentThread().getContextClassLoader());
             }
         }
 
