@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
- * You may obtain a copy of the License at 
- * 
+ * You may obtain a copy of the License at
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed  under the  License is distributed on an "AS IS" BASIS,
  * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
  * implied.
- * 
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -65,16 +65,16 @@ import org.apache.excalibur.source.TraversableSource;
 public class CoreServiceManager
         extends AbstractLogEnabled
         implements Contextualizable, ThreadSafe, Disposable, Initializable, ServiceManager, Configurable {
-    
+
     /**
      * An empty configuration object, that can be used when no configuration is known but one
      * is needed.
      */
     public static final Configuration EMPTY_CONFIGURATION = new DefaultConfiguration("-", "unknown location");
-    
+
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
-    
+
     /** The application context for components */
     protected Context context;
 
@@ -95,20 +95,21 @@ public class CoreServiceManager
 
     /** LoggerManager. */
     protected LoggerManager loggerManager;
-    
+
     private ComponentEnvironment componentEnv;
-    
-    private boolean lazyMode = Boolean.getBoolean("org.apache.cocoon.core.LazyMode");
-    
+
+    /** The settings */
+    private Settings settings;
+
     /** The location where this manager is defined */
     protected String location;
-    
+
     /** The parent ServiceManager */
     protected ServiceManager parentManager;
-    
+
     /** The classloader to get classes from */
     protected ClassLoader classloader;
-    
+
     /** The resolver used to resolve includes. It is lazily loaded in {@link #getSourceResolver()}. */
     private SourceResolver cachedSourceResolver;
 
@@ -121,14 +122,14 @@ public class CoreServiceManager
     public CoreServiceManager( final ServiceManager parent, final ClassLoader classloader ) {
         this.parentManager = parent;
         this.classloader = classloader;
-        
+
         RoleManager parentRoleManager = null;
         // get role manager and logger manager
         if ( parent instanceof CoreServiceManager ) {
             parentRoleManager = ((CoreServiceManager)parent).roleManager;
             this.loggerManager = ((CoreServiceManager)parent).loggerManager;
         }
-        
+
         // Always create a role manager, it can be filled several times either through
         // the root "roles" attribute or through loading of includes
         this.roleManager = new RoleManager(parentRoleManager);
@@ -144,8 +145,6 @@ public class CoreServiceManager
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.roleManager.enableLogging(logger);
-        String msg = "Lazy mode: " + this.lazyMode;
-        logger.debug(msg);
     }
 
     /* (non-Javadoc)
@@ -153,15 +152,16 @@ public class CoreServiceManager
      */
     public void contextualize( final Context context ) {
         this.context = context;
+        this.settings = Core.getSettings(context);
     }
-    
+
     /**
      * Configure the LoggerManager.
      */
     public void setLoggerManager( final LoggerManager manager ) {
         this.loggerManager = manager;
     }
-    
+
     public void setRoleManager (RoleManager rm) {
         if (rm != null) {
             // Override the one eventually got in the parent (see constructor)
@@ -173,12 +173,12 @@ public class CoreServiceManager
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
-                
+
         this.componentEnv = new ComponentEnvironment(this.classloader, getLogger(), this.roleManager, this.loggerManager, this.context, this);
-        
+
         // Setup location
         this.location = configuration.getLocation();
-        
+
         // Find the current URI
         String currentURI;
         int pos = this.location.lastIndexOf(':');
@@ -189,7 +189,7 @@ public class CoreServiceManager
             pos = this.location.lastIndexOf(':', pos);
             currentURI = this.location.substring(0, pos-1);
         }
-        
+
         try {
             // and load configuration with a empty list of loaded configurations
             parseConfiguration(configuration, currentURI, new HashSet());
@@ -227,7 +227,7 @@ public class CoreServiceManager
                 throw e;
             }
         }
-        
+
 //        Object[] keyArray = this.componentHandlers.keySet().toArray();
 //        java.util.Arrays.sort(keyArray);
 //        for (int i = 0; i < keyArray.length; i++) {
@@ -454,11 +454,11 @@ public class CoreServiceManager
                               " but its handler could not be located." );
         }
     }
-    
+
     //=============================================================================================
     // Additional public & protected contract
     //=============================================================================================
-    
+
     /**
      * Add a new component to the manager.
      *
@@ -480,7 +480,7 @@ public class CoreServiceManager
         if ( "org.apache.cocoon.components.ExtendedComponentSelector".equals(className)) {
             className = DefaultServiceSelector.class.getName();
         }
-        
+
         if( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug( "Adding component (" + role + " = " + className + ")" );
         }
@@ -491,7 +491,7 @@ public class CoreServiceManager
             // the new definition to feed this manager with its components.
             checkComponentOverride(role, className, configuration, handler);
         }
-        
+
         try {
             handler = this.getComponentHandler(role, className, configuration, info);
 
@@ -505,7 +505,7 @@ public class CoreServiceManager
         } catch( final Exception e ) {
             throw new ConfigurationException( "Could not add component defined at " + configuration.getLocation(), e );
         }
-        
+
 //        // Initialize shadow selector now, it will feed this service manager
 //        if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
 //            try {
@@ -517,7 +517,7 @@ public class CoreServiceManager
 //            }
 //        }
     }
-    
+
     /**
      * Add an existing object to the manager. The object should be fully configured as no
      * setup lifecycle methods are called. On manager disposal, the <code>Disposable</code>
@@ -532,16 +532,16 @@ public class CoreServiceManager
             throw new ServiceException(role,
                 "Cannot add components to an initialized CoreServiceManager.");
         }
-        
+
         ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
         if (handler != null) {
             ComponentInfo info = handler.getInfo();
             throw new ServiceException(role, "Component already defined at " + info.getLocation()); 
         }
-        
+
         this.componentHandlers.put(role, new InstanceComponentHandler(getLogger(), instance));
     }
-    
+
     /**
      * Add an alias to a role, i.e. define a synonym for the role.
      * 
@@ -563,14 +563,14 @@ public class CoreServiceManager
                 handler = (ComponentHandler)current.componentHandlers.get(existingRole);
             }
         }
-        
+
         if (handler == null) {
             throw new ServiceException(newRole, "Cannot alias non-existing role " + existingRole);
         }
- 
+
         this.componentHandlers.put(newRole, new AliasComponentHandler(this.getLogger(), handler));
     }
-    
+
     /**
      * Initialize the component
      * @throws ServiceException
@@ -579,11 +579,11 @@ public class CoreServiceManager
     throws ServiceException {
         // we do nothing here, can be used in subclasses
     }
-    
+
     //=============================================================================================
     // Private methods
     //=============================================================================================
-    
+
     /**
      * Obtain a new ComponentHandler for the specified component. 
      * 
@@ -609,8 +609,8 @@ public class CoreServiceManager
         }
         info.setConfiguration(configuration);
         info.setServiceClassName(className);
-        
-        if (!lazyMode || configuration.getAttributeAsBoolean("preload", false) || role.endsWith("Selector")) {
+
+        if (!this.settings.isLazyMode() || configuration.getAttributeAsBoolean("preload", false) || role.endsWith("Selector")) {
             return AbstractComponentHandler.getComponentHandler(
                     role, this.componentEnv, info);
         }
@@ -624,9 +624,9 @@ public class CoreServiceManager
 
         for( int i = 0; i < configurations.length; i++ ) {
             final Configuration componentConfig = configurations[i];
-            
+
             final String componentName = componentConfig.getName();
-            
+
             if ("classpath".equals(componentName)) {
                 // Ignore
             } else if ("include".equals(componentName)) {
@@ -645,7 +645,7 @@ public class CoreServiceManager
                             "' at " + componentConfig.getLocation());
                     }
                 }
-                
+
                 // Find the className
                 String className = componentConfig.getAttribute("class", null);
                 if (className == null) {
@@ -656,7 +656,7 @@ public class CoreServiceManager
                     }
                     className = info.getServiceClassName();
                 }
-                
+
                 // If it has a "name" attribute, add it to the role (similar to the
                 // declaration within a service selector)
                 // Note: this has to be done *after* finding the className above as we change the role
@@ -669,7 +669,7 @@ public class CoreServiceManager
             }
         }
     }
-    
+
     private void handleInclude(String contextURI, Set loadedURIs, Configuration includeStatement)
             throws ConfigurationException {
         String includeURI = includeStatement.getAttribute("src", null);
@@ -682,10 +682,10 @@ public class CoreServiceManager
             throw new ConfigurationException("Include statement must either have a 'src' or 'dir' attribute, at " +
                     includeStatement.getLocation());
         }
-        
+
         // Setup the source resolver if needed
         setupSourceResolver();
-        
+
         if ( includeURI != null ) {
             Source src;
             try {
@@ -727,9 +727,9 @@ public class CoreServiceManager
     throws ConfigurationException {
         // If already loaded: do nothing
         try {
-            
+
             String uri = src.getURI();
-            
+
             if (!loadedURIs.contains(uri)) {
                 if ( this.getLogger().isDebugEnabled() ) {
                     this.getLogger().debug("Loading configuration from: " + uri);
@@ -746,7 +746,7 @@ public class CoreServiceManager
                     throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);
                 }
                 loadedURIs.add(uri);
-                
+
                 // what is it?
                 String includeKind = includeConfig.getName();
                 if (includeKind.equals("components")) {
@@ -764,14 +764,14 @@ public class CoreServiceManager
             this.cachedSourceResolver.release(src);
         }
     }
-    
+
     /**
      * If the parent manager does not exist or does not
      * provide a source resolver, a simple one is created here to load the file.
      */
     private void setupSourceResolver() {
         if (this.cachedSourceResolver == null) {
-            
+
             if (this.parentManager != null && this.parentManager.hasService(SourceResolver.ROLE)) {
                 try {
                     this.cachedSourceResolver = (SourceResolver)this.parentManager.lookup(SourceResolver.ROLE);
@@ -812,7 +812,7 @@ public class CoreServiceManager
         }
         this.cachedSourceResolver = null;
     }
-    
+
     /** 
      * Check if a component can be overriden. Only {@link DefaultSelector} or its subclasses can be
      * overriden, as they directly feed this manager with their component definitions and are empty
@@ -827,7 +827,7 @@ public class CoreServiceManager
             throw new ConfigurationException("Role " + role + " redefined with a different class name, at " +
                     config.getLocation());
         }
-        
+
         Class clazz;
         try {
             clazz = this.componentEnv.loadClass(className);

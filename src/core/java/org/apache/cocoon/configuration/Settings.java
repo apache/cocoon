@@ -275,6 +275,12 @@ public class Settings {
     public static final String KEY_CONFIGURATION_RELOAD_DELAY = "configuration.reloaddelay";
 
     /**
+     * Lazy mode for component loading
+     */
+    protected boolean lazyMode = false;
+    public static final String KEY_LAZY_MODE = "core.LazyMode";
+
+    /**
      * Create a new settings object
      */
     public Settings() {
@@ -340,6 +346,8 @@ public class Settings {
                         this.formEncoding = value;
                     } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                         this.overrideLogLevel = value;
+                    } else if ( key.equals(KEY_LAZY_MODE) ) {
+                        this.lazyMode = BooleanUtils.toBoolean(value);
                     }
                 }
             }
@@ -695,6 +703,20 @@ public class Settings {
         this.configurationReloadDelay = configurationReloadDelay;
     }
 
+    /**
+     * @return Returns the lazyMode.
+     */
+    public boolean isLazyMode() {
+        return this.lazyMode;
+    }
+
+    /**
+     * @param lazyMode The lazyMode to set.
+     */
+    public void setLazyMode(boolean lazyMode) {
+        this.lazyMode = lazyMode;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
@@ -725,7 +747,8 @@ public class Settings {
           KEY_WORK_DIRECTORY + " : " + this.workDirectory + '\n' +
           KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
           KEY_SHOWTIME + " : " + this.showTime + '\n' +
-          KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n';
+          KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
+          KEY_LAZY_MODE + " : " + this.lazyMode + '\n';
     }
 
     public String getProperty(String name) {
@@ -785,6 +808,8 @@ public class Settings {
                 value = this.formEncoding;
             } else if ( sKey.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                 value = this.overrideLogLevel;
+            } else if ( sKey.equals(KEY_LAZY_MODE) ) {
+                value = String.valueOf(this.lazyMode);
             }
        }
 
