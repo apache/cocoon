@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-18 16:55:17 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-20 19:33:50 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -37,6 +37,10 @@
     import java.io.*;
     import java.net.*;
     import java.util.*;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import javax.servlet.http.HttpSession;
 
     import org.w3c.dom.*;
     import org.xml.sax.*;

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.9 2000-12-18 15:01:03 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.10 2000-12-20 19:33:49 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -165,7 +165,7 @@
    </xsl:call-template>
   </xsl:when>
   <xsl:otherwise>
-   <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_esql_sessions,_esql_session);</xsp:logic>
+   <xsp:logic>_esql_execute_query_<xsl:value-of select="generate-id(.)"/>(_esql_sessions,_esql_session);</xsp:logic>
   </xsl:otherwise>
  </xsl:choose>
 </xsl:template>
@@ -221,13 +221,6 @@
      <xsl:choose>
       <xsl:when test="$inner-method='yes'">
      void _esql_execute_query_<xsl:value-of select="generate-id(.)"/>(
-     HttpServletRequest request,
-     HttpServletResponse response,
-     Document document,
-     Node xspParentNode,
-     Node xspCurrentNode,
-     Stack xspNodeStack,
-     HttpSession session,
      Stack _esql_sessions,
      EsqlSession _esql_session) throws Exception {
       </xsl:when>
@@ -240,15 +233,15 @@
         }
         _esql_session = new EsqlSession();
         try {
-         _esql_session.max_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$max-rows"/>));
+         _esql_session.max_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$max-rows"/>).trim());
         } catch (Exception _esql_e) {
         cocoonLogger.warn("MaxRow exception", _esql_e);
          _esql_session.max_rows = -1;
         }
         try {
-         _esql_session.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skip-rows"/>));
+         _esql_session.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skip-rows"/>).trim());
         } catch (Exception _esql_e) {
-        cocoonLogger.warn("SkipRow exceptoin", _esql_e);
+        cocoonLogger.warn("SkipRow exception", _esql_e);
          _esql_session.skip_rows = 0;
         }
         try {
@@ -261,18 +254,18 @@
           <!-- FIXME - need to do avalon pooling here maybe? -->
          </xsl:when>
          <xsl:otherwise>
-          ClassUtils.newInstance(String.valueOf(<xsl:copy-of select="$driver"/>));
+          ClassUtils.newInstance(String.valueOf(<xsl:copy-of select="$driver"/>).trim());
           <xsl:choose>
            <xsl:when test="esql:username">
             _esql_session.connection = DriverManager.getConnection(
-             String.valueOf(<xsl:copy-of select="$dburl"/>),
-             String.valueOf(<xsl:copy-of select="$username"/>),
-             String.valueOf(<xsl:copy-of select="$password"/>)
+             String.valueOf(<xsl:copy-of select="$dburl"/>).trim(),
+             String.valueOf(<xsl:copy-of select="$username"/>).trim(),
+             String.valueOf(<xsl:copy-of select="$password"/>).trim()
             );
            </xsl:when>
            <xsl:otherwise>
             _esql_session.connection = DriverManager.getConnection(
-             String.valueOf(<xsl:copy-of select="$dburl"/>)
+             String.valueOf(<xsl:copy-of select="$dburl"/>).trim()
             );
            </xsl:otherwise>
           </xsl:choose>
@@ -280,12 +273,12 @@
             </xsl:choose>
            <xsl:choose>
             <xsl:when test="esql:query">
-             _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
+             _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>).trim();
              _esql_session.statement = _esql_session.connection.createStatement();
                  _esql_session.has_resultset = _esql_session.statement.execute(_esql_session.query);
         </xsl:when>
         <xsl:when test="esql:statement">
-         _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
+         _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>).trim());
          _esql_session.statement = _esql_session.prepared_statement;
          <xsl:for-each select=".//esql:parameter">
          <xsl:text>_esql_session.prepared_statement.</xsl:text>
@@ -296,7 +289,7 @@
             </xsl:text>
            </xsl:when>
            <xsl:otherwise>
-          <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
+          <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>).trim());<xsl:text>
           </xsl:text>
            </xsl:otherwise>
           </xsl:choose>
@@ -404,6 +397,9 @@
  <xspdoc:desc>returns the value of the given column as a date. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-date">
  <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>new SimpleDateFormat().format(<xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
+  </xsl:when>
   <xsl:when test="@format">
    <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
   </xsl:when>
@@ -416,6 +412,9 @@
  <xspdoc:desc>returns the value of the given column as a time. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-time">
  <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>new SimpleDateFormat().format(<xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>))</xsp:expr>
+  </xsl:when>
   <xsl:when test="@format">
    <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>))</xsp:expr>
   </xsl:when>
@@ -428,6 +427,9 @@
  <xspdoc:desc>returns the value of the given column as a timestamp. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-timestamp">
  <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>new SimpleDateFormat().format(<xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>))</xsp:expr>
+  </xsl:when>
   <xsl:when test="@format">
    <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>))</xsp:expr>
   </xsl:when>
@@ -439,17 +441,27 @@
 
  <xspdoc:desc>returns the value of the given column as true or false</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-boolean">
- <xsp:expr><xsl:call-template name="get-resultset"/>.getBoolean(<xsl:call-template name="get-column"/>) ? "true" : "false"</xsp:expr>
+ <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getBoolean(<xsl:call-template name="get-column"/>) ? "true" : "false"</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getBoolean(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column as a double. if a format attribute exists, its value is taken to be a decimal format string as defined in java.text.DecimalFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-double">
  <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>new DecimalFormat().format(new Double(<xsl:call-template name="get-resultset"/>.getDouble(<xsl:call-template name="get-column"/>)))</xsp:expr>
+  </xsl:when>
   <xsl:when test="@format">
    <xsp:expr>new DecimalFormat("<xsl:value-of select="@format"/>").format(new Double(<xsl:call-template name="get-resultset"/>.getDouble(<xsl:call-template name="get-column"/>)))</xsp:expr>
   </xsl:when>
   <xsl:otherwise>
-   <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getDouble(<xsl:call-template name="get-column"/>)</xsp:expr>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getDouble(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:otherwise>
  </xsl:choose>
 </xsl:template>
@@ -457,28 +469,52 @@
  <xspdoc:desc>returns the value of the given column as a float. if a format attribute exists, its value is taken to be a decimal format string as defined in java.text.DecimalFormat, and the result is formatted accordingly.</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-float">
  <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>new DecimalFormat().format(new Double(<xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)))</xsp:expr>
+  </xsl:when>
   <xsl:when test="@format">
    <xsp:expr>new DecimalFormat("<xsl:value-of select="@format"/>").format(new Float(<xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)))</xsp:expr>
   </xsl:when>
   <xsl:otherwise>
-   <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)</xsp:expr>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:otherwise>
  </xsl:choose>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column as an integer</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-int">
- <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getInt(<xsl:call-template name="get-column"/>)</xsp:expr>
+ <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>"" + <xsl:call-template name="get-resultset"/>.getInt(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getInt(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column as a long</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-long">
- <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getLong(<xsl:call-template name="get-column"/>)</xsp:expr>
+ <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>"" + <xsl:call-template name="get-resultset"/>.getLong(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getLong(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column as a short</xspdoc:desc>
 <xsl:template match="esql:results//esql:get-short">
- <xsp:expr>""+<xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
+ <xsl:choose>
+  <xsl:when test="@string='true'">
+   <xsp:expr>"" + <xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:when>
+  <xsl:otherwise>
+   <xsp:expr><xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
+  </xsl:otherwise>
+ </xsl:choose>
 </xsl:template>
 
  <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. the fragment is parsed by the default xsp parser and the document element is returned. if a root attribute exists, its value is taken to be the name of an element to wrap around the contents of the fragment before parsing.</xspdoc:desc>
