@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  *     which means: "continue in same leniency-mode as parent" </li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
@@ -92,7 +92,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
      * @return an instance of CommonAttributes
      * @throws BindingException
      */
-     static CommonAttributes getCommonAttributes(Element bindingElm) throws BindingException {
+    protected static CommonAttributes getCommonAttributes(Element bindingElm) throws BindingException {
         try {
             //TODO: should we eventually remove this?
             //throw an error if people are still using the old-style @read-only or @readonly
@@ -122,7 +122,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
       * member fields indicating the activity of the sepearate load and save
       * actions of a given binding.
       */
-     static class CommonAttributes{
+     protected static class CommonAttributes{
         /**
          * Flag which controls whether a binding is active during loading.
          */
