@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.23 2003/03/20 04:13:28 vgritsenko Exp $:
+       CVS $Id: build.xml,v 1.24 2003/03/21 08:40:09 stefano Exp $:
 
 ============================================================================ -->
 
@@ -1051,6 +1051,9 @@
 
 <!-- Admin targets ========================================================= -->
 
+  <!-- The Gump Target  -->
+  <target name="gump" depends="package, javadocs"/>
+  
   <!-- Creates the web site  -->
   <target name="site" depends="docs, javadocs">
     <mkdir dir="${site}"/>

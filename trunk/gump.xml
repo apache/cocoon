@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.18 2003/03/19 10:54:30 nicolaken Exp $
+  CVS $Id: gump.xml,v 1.19 2003/03/21 08:40:09 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -21,7 +21,7 @@
   <project name="cocoon">
     <package>org.apache.cocoon</package>
 
-    <ant target="package">
+    <ant target="gump">
       <property name="version" value="@@DATE@@"/>
       <depend property="logkit.jar"    project="dist-avalon-logkit"/>
       <depend property="avalonapi.jar" project="avalon"/>
@@ -93,13 +93,14 @@
 
     <ant target="block">
       <property name="block-name" value="fop"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="xml-fop" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="fop-block.jar"/>
 
@@ -111,13 +112,14 @@
 
     <ant target="block">
       <property name="block-name" value="batik"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="xml-batik" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="batik-block.jar"/>
 
@@ -129,13 +131,14 @@
 
     <ant target="block">
       <property name="block-name" value="chaperon"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="chaperon" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="chaperon-block.jar"/>
 
@@ -147,13 +150,14 @@
 
     <ant target="block">
       <property name="block-name" value="swf"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="spark" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="swf-block.jar"/>
 
@@ -165,13 +169,14 @@
 
     <ant target="block">
       <property name="block-name" value="jfor"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jfor" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="jfor-block.jar"/>
 
@@ -182,6 +187,7 @@
     <package>org.apache.cocoon</package>
     <ant target="block">
       <property name="block-name" value="itext"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -189,27 +195,27 @@
     <depend project="itext-xml" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="itext.jar"/>
+    <jar name="itext-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
-
 
   <project name="cocoon-block-session-fw">
     <package>org.apache.cocoon</package>
 
     <ant target="block">
       <property name="block-name" value="session-fw"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="session-fw.jar"/>
+    <jar name="session-fw-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -219,6 +225,7 @@
 
     <ant target="block">
       <property name="block-name" value="authentication-fw"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -227,7 +234,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
 
-    <jar name="authentication-fw.jar"/>
+    <jar name="authentication-fw-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -237,6 +244,7 @@
 
     <ant target="block">
       <property name="block-name" value="portal-fw"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -244,9 +252,9 @@
     <depend project="cocoon-block-authentication-fw"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="portal-fw.jar"/>
+    <jar name="portal-fw-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -256,15 +264,16 @@
 
     <ant target="block">
       <property name="block-name" value="databases"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="databases.jar"/>
+    <jar name="databases-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -274,6 +283,7 @@
 
     <ant target="block">
       <property name="block-name" value="hsqldb"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -281,9 +291,9 @@
     <depend project="hsqldb" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="hsqldb.jar"/>
+    <jar name="hsqldb-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -293,14 +303,15 @@
 
     <ant target="block">
       <property name="block-name" value="precept"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="precept.jar"/>
+    <jar name="precept-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -310,15 +321,16 @@
 
     <ant target="block">
       <property name="block-name" value="poi"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-poi" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="poi.jar"/>
+    <jar name="poi-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -328,15 +340,16 @@
 
     <ant target="block">
       <property name="block-name" value="naming"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jndi" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="naming.jar"/>
+    <jar name="naming-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -346,15 +359,16 @@
 
     <ant target="block">
       <property name="block-name" value="jsp"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/jsp/mocks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="jsp.jar"/>
+    <jar name="jsp-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -364,15 +378,16 @@
 
     <ant target="block">
       <property name="block-name" value="php"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <option project="phpservlt" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="php.jar"/>
+    <jar name="php-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -382,15 +397,16 @@
 
     <ant target="block">
       <property name="block-name" value="python"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <option project="jython" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="python.jar"/>
+    <jar name="python-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -400,15 +416,16 @@
 
     <ant target="block">
       <property name="block-name" value="lucene"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-lucene" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="lucene.jar"/>
+    <jar name="lucene-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -418,15 +435,16 @@
 
     <ant target="block">
       <property name="block-name" value="html"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jtidy" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="html.jar"/>
+    <jar name="html-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -436,15 +454,16 @@
 
     <ant target="block">
       <property name="block-name" value="bsf"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="bsf" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="bsf.jar"/>
+    <jar name="bsf-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -454,12 +473,13 @@
 
     <ant target="block">
       <property name="block-name" value="profiler"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="profiler.jar"/>
 
@@ -471,15 +491,16 @@
 
     <ant target="block">
       <property name="block-name" value="velocity"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-velocity" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="velocity.jar"/>
+    <jar name="velocity-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -489,14 +510,15 @@
     
     <ant target="block">
       <property name="block-name" value="linkrewriter"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
     
     <depend project="cocoon" inherit="all"/>
     
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
     
-    <jar name="linkrewriter.jar"/>
+    <jar name="linkrewriter-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -506,15 +528,17 @@
     
     <ant target="block">
       <property name="block-name" value="web3"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
     
     <depend project="cocoon" inherit="all"/>
+    <depend project="jta" version="supplied"/>
     
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/web3/mocks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
     
-    <jar name="web3.jar"/>
+    <jar name="web3-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>  
@@ -524,15 +548,16 @@
 
     <ant target="block">
       <property name="block-name" value="slide"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-slide" ids="kernel" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="slide.jar"/>
+    <jar name="slide-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -542,6 +567,7 @@
 
     <ant target="block">
       <property name="block-name" value="proxy"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -549,9 +575,9 @@
     <depend project="commons-logging" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="proxy.jar"/>
+    <jar name="proxy-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -561,6 +587,7 @@
 
     <ant target="block">
       <property name="block-name" value="xmldb"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -568,9 +595,9 @@
     <depend project="xmldb" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="xmldb.jar"/>
+    <jar name="xmldb-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -580,15 +607,16 @@
 
     <ant target="block">
       <property name="block-name" value="deli"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="deli" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="deli.jar"/>
+    <jar name="deli-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -598,14 +626,15 @@
 
     <ant target="block">
       <property name="block-name" value="asciiart"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="asciiart.jar"/>
+    <jar name="asciiart-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -615,6 +644,7 @@
 
     <ant target="block">
       <property name="block-name" value="mail"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -622,9 +652,9 @@
     <depend project="javamail" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="mail.jar"/>
+    <jar name="mail-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -634,15 +664,16 @@
 
     <ant target="block">
       <property name="block-name" value="axis"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
     <depend project="xml-axis" version="supplied"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="axis.jar"/>
+    <jar name="axis-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
@@ -652,14 +683,15 @@
 
     <ant target="block">
       <property name="block-name" value="taglib"/>
+      <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="taglib.jar"/>
+    <jar name="taglib-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
