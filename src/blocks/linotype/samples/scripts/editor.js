@@ -249,10 +249,9 @@ function keypress(e) {
 
     //window.status = "[" + key + "," + ch + "," + e.shiftKey + "," + e.ctrlKey + "," + e.altKey + "," + e.metaKey + "]";
 
-    /* FIXME: Intentions of this code are not exactly clear, and it disables
-              very essential Ctrl+LeftArrow/Ctrl+RightArrow key combinations
     try {
-        if (e.ctrlKey || e.metaKey) {
+        // Disable "Back" / "Forward" buttons (Alt|Apple+LeftArrow / Alt|Apple+RightArrow)
+        if (e.altKey || e.metaKey) {
             if (key > 0) {
                 switch (key) {
                     case 37: // left arrow
@@ -262,15 +261,15 @@ function keypress(e) {
                         e.returnValue = false;
                         return false;
                 }
-            } else if (ch > 0) {
-                switch (ch) {
-                    case 91: // [
-                    case 93: // ]
-                        e.stopPropagation();
-                        e.preventDefault();
-                        e.returnValue = false;
-                        return false;
-                }
+            //} else if (ch > 0) {
+            //    switch (ch) {
+            //        case 91: // [
+            //        case 93: // ]
+            //            e.stopPropagation();
+            //            e.preventDefault();
+            //            e.returnValue = false;
+            //            return false;
+            //    }
             }
         //} else if (e.shiftKey && (key == e.DOM_VK_TAB)) {
         //    editor.execCommand("outdent", false, null);
@@ -282,7 +281,6 @@ function keypress(e) {
         //    }
         }
     } catch (e) { }
-    */
 
     previousKey = key;
 }
