@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+	<document>
+	    <body>
+	        <section>
+	            <title>Cron Job Scheduler Sample</title>
+	
+	            <p>
+	                Some sample will follow ...
+	            </p>
+	        </section>
+	    </body>
+	</document>
+</xsp:page>

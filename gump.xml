@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.76 2003/08/25 07:41:18 cziegeler Exp $
+  CVS $Id: gump.xml,v 1.77 2003/09/03 16:04:01 giacomo Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -993,6 +993,25 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/midi-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+    
+  <project name="cocoon-block-cron" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="cron"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="quartz"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/cron-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
