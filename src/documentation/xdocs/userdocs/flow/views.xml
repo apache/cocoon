@@ -25,7 +25,7 @@
   </authors>
  </header>
  <body>
-  <s1 title="Flowscript-aware Generators and Form Frameworks">
+  <s1 title="Flowscript-aware Generators">
    <p>The second argument to <link href="api.html#sendPage"><code>cocoon.sendPage()</code></link> and
     <link href="api.html#sendPageAndWait"><code>cocoon.sendPageAndWait()</code></link> is a context object,
     which can be a simple dictionary with values that need to be displayed by the page. More
@@ -37,9 +37,6 @@
     <link href="jxtemplate.html">JXTemplate Generator</link>,
     <link href="jpath.html">JPath XSP Logic Sheet</link> and
     <link href="velocity.html">Velocity Generator</link>.
-   </p>
-   <p>
-     In addition, Cocoon provides several higher-level frameworks to create single and multi-page forms that can be used with your Flowscripts. Currently, these are <link href="jxforms.html">JXForms</link> and <link href="woody.html">Woody</link>.
    </p>
   </s1>
  </body>
