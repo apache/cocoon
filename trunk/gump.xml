@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.35 2003/04/07 11:55:19 stefano Exp $
+  CVS $Id: gump.xml,v 1.36 2003/04/10 08:59:13 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -124,14 +124,14 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-fop"/>
+    <depend project="xml-fop-maintenance"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/fop-block.jar"/>
 
-    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+    <nag from="Gump" to="cocoon-dev@xml.apache.org, fop-dev@xml.apache.org"/>
   </project>
 
   <project name="cocoon-block-batik">
