@@ -52,6 +52,8 @@ package org.apache.cocoon.xml;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import org.xml.sax.Attributes;
@@ -69,7 +71,7 @@ import org.w3c.dom.Node;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: IncludeXMLConsumer.java,v 1.1 2003/03/09 00:09:46 pier Exp $
+ * @version CVS $Id: IncludeXMLConsumer.java,v 1.2 2003/09/25 12:55:02 vgritsenko Exp $
  */
 public class IncludeXMLConsumer implements XMLConsumer {
 
@@ -110,7 +112,7 @@ public class IncludeXMLConsumer implements XMLConsumer {
 
     /**
      * Include a node into the current chain.
-     * @param docfrag The DocumentFragment to be included
+     * @param node The DOM Node to be included
      * @param contentHandler The SAX ContentHandler receiving the information
      * @param lexicalHandler The SAX LexicalHandler receiving the information (optional)
      */
@@ -126,9 +128,9 @@ public class IncludeXMLConsumer implements XMLConsumer {
                 SAXResult result = new SAXResult(filter);
                 result.setLexicalHandler(filter);
                 transformer.transform(source, result);
-            } catch (javax.xml.transform.TransformerConfigurationException e) {
+            } catch (TransformerConfigurationException e) {
                 throw new SAXException("TransformerConfigurationException", e);
-            } catch (javax.xml.transform.TransformerException e) {
+            } catch (TransformerException e) {
                 throw new SAXException("TransformerException", e);
             }
         }
@@ -183,23 +185,24 @@ public class IncludeXMLConsumer implements XMLConsumer {
 
     public void endElement(String uri, String local, String qName) throws SAXException {
         this.ignoreRootElementCount--;
-        if ( !this.ignoreRootElement  || this.ignoreRootElementCount > 0) {
+        if (!this.ignoreRootElement  || this.ignoreRootElementCount > 0) {
             this.contentHandler.endElement(uri, local, qName);
         }
     }
 
     public void characters(char[] ch, int start, int end) throws SAXException {
-
-        if ( this.ignoreEmptyCharacters ) {
+        if (this.ignoreEmptyCharacters) {
             String text = new String(ch, start, end).trim();
-            if (text.length() > 0) this.contentHandler.characters(text.toCharArray(),0,text.length());
+            if (text.length() > 0) {
+                this.contentHandler.characters(text.toCharArray(),0,text.length());
+            }
         } else {
             this.contentHandler.characters(ch, start, end);
         }
     }
 
     public void ignorableWhitespace(char[] ch, int start, int end) throws SAXException {
-        if ( !this.ignoreEmptyCharacters ) {
+        if (!this.ignoreEmptyCharacters) {
             this.contentHandler.ignorableWhitespace(ch, start, end);
         }
     }
@@ -224,28 +227,33 @@ public class IncludeXMLConsumer implements XMLConsumer {
     }
 
     public void startEntity(String name) throws SAXException {
-        if(lexicalHandler != null)
+        if (lexicalHandler != null) {
             lexicalHandler.startEntity(name);
+        }
     }
 
     public void endEntity(String name) throws SAXException {
-        if(lexicalHandler != null)
+        if (lexicalHandler != null) {
             lexicalHandler.endEntity(name);
+        }
     }
 
     public void startCDATA() throws SAXException {
-        if(lexicalHandler != null)
+        if (lexicalHandler != null) {
             lexicalHandler.startCDATA();
+        }
     }
 
     public void endCDATA() throws SAXException {
-        if(lexicalHandler != null)
+        if (lexicalHandler != null) {
             lexicalHandler.endCDATA();
+        }
     }
 
     public void comment(char ary[], int start, int length)
         throws SAXException {
-        if(!inDTD && lexicalHandler != null)
+        if (!inDTD && lexicalHandler != null) {
             lexicalHandler.comment(ary,start,length);
+        }
     }
 }
