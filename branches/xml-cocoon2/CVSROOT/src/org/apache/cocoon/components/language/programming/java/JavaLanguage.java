@@ -20,6 +20,7 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.*;
 import org.apache.cocoon.components.language.LanguageException;
@@ -28,7 +29,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-22 20:27:31 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-25 15:00:29 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
 
@@ -247,18 +248,11 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
   
   private String expandDirs(String d) {
     File dir = new File(d);
-    File[] files = dir.listFiles(new JavaArchivesFilter());
+    File[] files = dir.listFiles(new JavaArchiveFilter());
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < files.length; i++) {
         buffer.append(files[i] + File.pathSeparator);
     }
     return buffer.toString();
-  }
-  
-  class JavaArchivesFilter implements FileFilter {
-    public boolean accept(File file) {
-        String name = file.getName();
-        return (name.endsWith(".jar") || name.endsWith("zip"));
-    }
   }
 }
