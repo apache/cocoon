@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.57 2003/07/04 04:21:07 crossley Exp $
+    | CVS $Id: jars.xml,v 1.58 2003/07/05 04:23:38 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -392,17 +392,17 @@
  </file>
 
  <file>
-  <title>Jakart Commons httpClient</title>
+  <title>Jakart Commons HttpClient</title>
   <description>
    Although the java.net package provides basic support for accessing
    resources via HTTP, it doesn't provide the full flexibility or
-   functionality needed by many applications. The Jakarta Commons HTTP Client
+   functionality needed by many applications. The Jakarta Commons HttpClient
    component seeks to fill this void by providing an efficient, up-to-date,
    and feature-rich package implementing the client side of the most recent
    HTTP standards and recommendations.
   </description>
-  <used-by>SOAP logicsheet, WebServiceProxyGenerator</used-by>
-  <lib>optional/commons-httpclient-20030210.jar</lib>
+  <used-by>SOAP logicsheet, WebServiceProxyGenerator, HttpProxyGenerator</used-by>
+  <lib>core/commons-httpclient-2.0-beta2.jar</lib>
   <lib>optional/commons-logging-1.0.3.jar</lib>
   <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
  </file>
