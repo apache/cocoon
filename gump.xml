@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.109 2004/02/25 23:59:11 crossley Exp $
+    | CVS $Id: gump.xml,v 1.110 2004/02/26 00:41:31 crossley Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -520,7 +520,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="blocks/profiler.jar"/>
+    <jar name="blocks/profiler-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
