@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.14 2004/01/05 11:28:24 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.15 2004/01/05 12:41:48 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -79,10 +79,15 @@ implements SourceResolver, Serviceable, Disposable {
 
     /** The key used to store the current environment context
      * in the object model */
-    static final String PROCESS_KEY = EnvironmentHelper.class.getName();
+    static protected final String PROCESS_KEY = EnvironmentHelper.class.getName();
 
+    /** The key used to store the last processor information
+     * in the environment context
+     */
+    static protected final String LAST_PROCESSOR_KEY = "global:" + PROCESS_KEY + "/processor";
+    
     /** The environment information */
-    static protected InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
+    static protected final InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
     
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver resolver;
@@ -388,8 +393,7 @@ implements SourceResolver, Serviceable, Disposable {
         }
         stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), manager, env));
         stack.setOffset(stack.size()-1);
-        // FIXME - Put it somewhere else
-        env.setAttribute("EnvironmentHelper.processor", processor);
+        ((EnvironmentContext)env.getObjectModel().get(PROCESS_KEY)).addAttribute(LAST_PROCESSOR_KEY, processor);
     }
 
     /**
@@ -436,7 +440,7 @@ implements SourceResolver, Serviceable, Disposable {
     /**
      * Return the environment context
      */
-    public static EnvironmentContext getCurrentContext() {
+    public static EnvironmentContext getCurrentEnvironmentContext() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         final EnvironmentInfo info = stack.getCurrentInfo();
         final Map objectModel = info.environment.getObjectModel();
@@ -488,8 +492,8 @@ implements SourceResolver, Serviceable, Disposable {
      * Return the processor that is actually processing the request
      */
     public static Processor getLastProcessor(Environment env) {
-        // FIXME - Put it somewhere else
-        return (Processor)env.getAttribute("EnvironmentHelper.processor");
+        EnvironmentContext context = (EnvironmentContext) env.getObjectModel().get(PROCESS_KEY);
+        return (Processor)env.getAttribute(LAST_PROCESSOR_KEY);
     }
 
     /**

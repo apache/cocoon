@@ -63,7 +63,7 @@ import java.util.Map;
  * getting objects from the object model.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.6 2003/10/29 18:58:05 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.7 2004/01/05 12:41:48 cziegeler Exp $
  */
 
 public class ComponentContext
@@ -117,12 +117,12 @@ public class ComponentContext
     public Object get( final Object key )
     throws ContextException {
         if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
-            return EnvironmentHelper.getCurrentContext().getEnvironment().getObjectModel();
+            return EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment().getObjectModel();
         }
         if ( key instanceof String ) {
             String stringKey = (String)key;
             if ( stringKey.startsWith(OBJECT_MODEL_KEY_PREFIX) ) {
-                final Map objectModel = EnvironmentHelper.getCurrentContext().getEnvironment().getObjectModel();
+                final Map objectModel = EnvironmentHelper.getCurrentEnvironmentContext().getEnvironment().getObjectModel();
                 String objectKey = stringKey.substring(OBJECT_MODEL_KEY_PREFIX.length());
 
                 Object o = objectModel.get( objectKey );

@@ -78,7 +78,7 @@ class RequestLifecycleHelper {
 
     static EnvironmentDescription getEnvironmentDescription() {
         final EnvironmentContext context =
-            EnvironmentHelper.getCurrentContext();
+            EnvironmentHelper.getCurrentEnvironmentContext();
         EnvironmentDescription desc =
             (EnvironmentDescription) context.getAttribute(KEY);
         if (desc == null) {
