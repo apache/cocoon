@@ -1,4 +1,4 @@
-/*-- $Id: Configurations.java,v 1.10 2000-11-10 21:12:29 greenrd Exp $ --
+/*-- $Id: Configurations.java,v 1.11 2000-11-14 18:23:41 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.io.*;
  * class to work.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-11-10 21:12:29 $
+ * @version $Revision: 1.11 $ $Date: 2000-11-14 18:23:41 $
  */
 
 public class Configurations {
@@ -126,6 +126,7 @@ public class Configurations {
      * Create a subconfiguration starting from the base node.
      */
     public Configurations(Configurations parent, String base) {
+        properties = new Properties();
         root = parent.root;
         setBasename((parent.baseName == null) ? base : parent.baseName + "." + base);
         String prefix = base + ".";
