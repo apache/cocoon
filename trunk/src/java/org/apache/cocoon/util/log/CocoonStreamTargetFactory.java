@@ -55,7 +55,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.log.format.Formatter;
 
 /**
-/**
  * TargetFactory for {@link org.apache.log.output.io.StreamTarget}.
  *
  * This factory is able to create different StreamTargets according to the following
@@ -76,7 +75,7 @@ import org.apache.log.format.Formatter;
  * <p>The syntax of "format" is the same as in <code>CocoonTargetFactory</code>.</p>
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: CocoonStreamTargetFactory.java,v 1.1 2003/08/11 08:23:38 cziegeler Exp $
+ * @version CVS $Id: CocoonStreamTargetFactory.java,v 1.2 2003/08/12 01:06:47 vgritsenko Exp $
  */
 public class CocoonStreamTargetFactory
     extends StreamTargetFactory {
