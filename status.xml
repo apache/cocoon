@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="JQ" type="add">
+     Added QueryBean as a standalone block, copied over from 2.2.0. Removed the original from the Lucene Block. Stores Favourites using OJB in HSQLDB.
+   </action>
    <action dev="SW" type="update">
      CForms: separate <code>FormattingDateConvertor</code> that uses
      <code>java.text.SimpleDateFormat</code> and <code>Icu4jDateFormatter</code>
