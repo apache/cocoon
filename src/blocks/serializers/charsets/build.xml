@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="serializers-encodings" default="build">
+
+  <description>Serializers Block Encodings</description>
+
+  <!--
+   | Directory and location properties.
+   +-->
+  <property name="dir.source"         value="${basedir}/src"/>
+  <property name="dir.build"          value="${basedir}/bld"/>
+  <property name="version"            value="0.1"/>
+
+  <!-- ========================================================================
+   | Compile all Java source files (written or generated).
+   +-->
+  <target name="compile" description="  Compile all sources">
+    <mkdir dir="${dir.build}"/>
+    <javac optimize="true" debug="false" srcdir="${dir.source}" destdir="${dir.build}">
+      <compilerarg value="-sourcepath"/>
+      <compilerarg value="${basedir}/../java"/>
+    </javac>
+  </target>
+
+  <!-- ========================================================================
+   | Generate all charsets from Java 1.4 NIO encodings.
+   +-->
+  <target name="charsets" depends="compile" description="  Generate charsets">
+    <java classname="org.apache.cocoon.components.serializers.encoding.Compiler"
+        classpath="${dir.build}">
+      <arg value="${dir.source}/org/apache/cocoon/components/serializers/encoding"/>
+    </java>
+    <antcall target="compile"/>
+  </target>
+
+  <!-- ========================================================================
+   | Build the whole thing.
+   +-->
+  <target name="build" depends="charsets" description="* Build all targets">
+    <jar destfile="${basedir}/cocoon-serializers-charsets-${version}.jar"
+        basedir="${dir.build}" includes="**/cs_*.class" filesonly="true"/>
+  </target>
+
+  <!-- ========================================================================
+   | Clean the whole thing.
+   +-->
+  <target name="clean" description="  Clean up temporary directories">
+    <delete dir="${dir.build}"/>
+  </target>
+
+</project>
