@@ -1,4 +1,4 @@
-/*-- $Id: XalanTransformer.java,v 1.5 2000-01-23 23:15:29 stefano Exp $ -- 
+/*-- $Id: XalanTransformer.java,v 1.6 2000-01-31 21:53:19 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * Xalan XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-01-23 23:15:29 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-31 21:53:19 $
  */
 
 public class XalanTransformer extends AbstractActor implements Transformer, Status {
@@ -112,7 +112,7 @@ public class XalanTransformer extends AbstractActor implements Transformer, Stat
         }
 
         public void parse(InputSource in) throws IOException, SAXException {
-            this.document = this.parser.parse(in);
+            this.document = this.parser.parse(in, false);
             
             // The Xalan stylesheet is normally built from SAX events,
             // so if a DocumentHandler is specified, we need to produce

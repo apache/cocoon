@@ -1,4 +1,4 @@
-/*-- $Id: EcmaScriptModule.java,v 1.4 1999-12-14 23:43:58 stefano Exp $ -- 
+/*-- $Id: EcmaScriptModule.java,v 1.5 2000-01-31 21:53:14 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.interpreter.*;
 
 /**
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.4 $ $Date: 1999-12-14 23:43:58 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-31 21:53:14 $
  */
 
 public class EcmaScriptModule implements Module {
@@ -74,7 +74,7 @@ public class EcmaScriptModule implements Module {
 
   private static String initScript = null;
   private static URL url = null;
-  private static final String INIT_SCRIPT = "org/apache/cocoon/interpreter/ecmascript/initScript.es";
+  private static final String INIT_SCRIPT = "initScript.es";
 
   long lastModified;
   private File scriptFile;
@@ -92,7 +92,7 @@ public class EcmaScriptModule implements Module {
     // Load init script from resource file
     try {
         if (initScript == null) {
-            initScript = getFileContents(ClassLoader.getSystemResourceAsStream(INIT_SCRIPT));
+            initScript = getFileContents(EcmaScriptModule.class.getResourceAsStream(INIT_SCRIPT));
         }
     } catch (Exception e) {
         throw new LanguageException("Could not find ECMAScript initialization file. The archive is probably damaged: " + e.toString());

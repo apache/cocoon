@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.7 2000-01-23 23:00:00 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.8 2000-01-31 21:53:18 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.7 $ $Date: 2000-01-23 23:00:00 $
+ * @version $Revision: 1.8 $ $Date: 2000-01-31 21:53:18 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -121,7 +121,7 @@ public class XSPProcessor extends AbstractActor
           new InputStreamReader(
             this.getClass().getResourceAsStream("xsp.xml")
           )
-        )
+        ), false
       );
 
       Element root = document.getDocumentElement();
@@ -168,7 +168,7 @@ public class XSPProcessor extends AbstractActor
             new InputStreamReader(
               this.getClass().getResourceAsStream(templateName)
             )
-          )
+          ), false
         );
         template.setStylesheet(templateStylesheet);
 
@@ -184,7 +184,7 @@ public class XSPProcessor extends AbstractActor
 /* END: Create a new XSP core library given URI  */
       }
     } catch (Exception e) {
-      throw new RuntimeException("Error during initialization: " + e.getMessage());
+      throw new RuntimeException("Error during initialization: " + e);
     }
   }
 
@@ -262,7 +262,7 @@ public class XSPProcessor extends AbstractActor
         URL url = new URL(location);
 
         Document stylesheet = this.parser.parse(
-          new InputSource((new URL(location)).openStream())
+          new InputSource((new URL(location)).openStream()), false
         );
 
         template.setStylesheet(stylesheet);

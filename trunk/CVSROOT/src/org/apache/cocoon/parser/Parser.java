@@ -1,4 +1,4 @@
-/*-- $Id: Parser.java,v 1.5 1999-12-16 11:43:51 stefano Exp $ -- 
+/*-- $Id: Parser.java,v 1.6 2000-01-31 21:53:15 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import org.apache.cocoon.framework.*;
  * parsing capabilites in order to be used by Cocoon.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-16 11:43:51 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-31 21:53:15 $
  */
 
 public interface Parser {
@@ -71,7 +71,13 @@ public interface Parser {
      * given entity resolver.
      */
     public Document parse(InputSource input) throws SAXException, IOException;
-    
+
+    /**
+     * Creates a DOM tree parsing the given input source and using the 
+     * given entity resolver.
+     */
+    public Document parse(InputSource input, boolean validate) throws SAXException, IOException;
+        
     /**
      * Creates an empty DOM tree.
      */

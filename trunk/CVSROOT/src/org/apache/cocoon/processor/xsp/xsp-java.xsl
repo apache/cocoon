@@ -53,8 +53,8 @@
 <!-- written by Ricardo Rocha "ricardo@apache.org" -->
 
 
-<xsl:stylesheet
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
 >
 

@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.10 2000-01-23 23:16:21 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.11 2000-01-31 21:53:12 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-01-23 23:16:21 $
+ * @version $Revision: 1.11 $ $Date: 2000-01-31 21:53:12 $
  */
 
 public class Engine implements Defaults {
@@ -309,24 +309,25 @@ public class Engine implements Defaults {
         } else {
             // set the response content type
             response.setContentType(page.getContentType());
-	        // get the output writer
-        	PrintWriter out = response.getWriter();
 
-			// send the page
+            // get the output writer
+            PrintWriter out = response.getWriter();
+
+            // send the page
             out.println(page.getContent());
 
-	        // if verbose mode is on the the output type allows it
-	        // print some processing info as a comment
-	        if (VERBOSE && (page.isText())) {
-	            time = System.currentTimeMillis() - time;
-	            out.println("<!-- This page was served "
-	                + (page.isCached() ? "from cache " : "")
-	                + "in " + time + " milliseconds by "
-	                + Cocoon.version() + " -->");
-	        }
+            // if verbose mode is on the the output type allows it
+            // print some processing info as a comment
+            if (VERBOSE && (page.isText())) {
+                time = System.currentTimeMillis() - time;
+                out.println("<!-- This page was served "
+                    + (page.isCached() ? "from cache " : "")
+                    + "in " + time + " milliseconds by "
+                    + Cocoon.version() + " -->");
+            }
 
-	        // send all content so that client doesn't wait while caching.
-	        out.flush();
+            // send all content so that client doesn't wait while caching.
+            out.flush();
         }
 
         // cache the created page.

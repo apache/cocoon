@@ -12,7 +12,7 @@ import org.apache.cocoon.framework.*;
  * 'Technology Release 1'.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:08 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-31 21:53:15 $
  */
 
 public class SunXMLParser extends AbstractParser implements Status {
@@ -20,7 +20,7 @@ public class SunXMLParser extends AbstractParser implements Status {
     /**
      * Creates a DOM tree parsing the given input source.
      */
-    public Document parse(InputSource input) throws SAXException, IOException {
+    public Document parse(InputSource input, boolean validate) throws SAXException, IOException {
       	org.xml.sax.Parser parser;
         XmlDocumentBuilder builder;
 
@@ -30,9 +30,9 @@ public class SunXMLParser extends AbstractParser implements Status {
 		    parser = new com.sun.xml.parser.Parser();
 		}
 		
-	    //parser.setEntityResolver(resolver);
 	    builder = new XmlDocumentBuilder();
     	builder.setParser(parser);
+	    parser.setErrorHandler(this);
     	parser.parse(input);
 	    return builder.getDocument();
     }
@@ -45,6 +45,6 @@ public class SunXMLParser extends AbstractParser implements Status {
     }
 
     public String getStatus() {
-        return "Sun ProjectX TR2 XML Parser";
+        return "Sun ProjectX TR2 XML Parser (validation = " + validation + ")";
     }
 }

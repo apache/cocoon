@@ -1,4 +1,4 @@
-/*-- $Id: AbstractParser.java,v 1.2 1999-12-16 11:43:51 stefano Exp $ -- 
+/*-- $Id: AbstractParser.java,v 1.3 2000-01-31 21:53:15 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -51,20 +51,71 @@
 
 package org.apache.cocoon.parser;
 
+import java.io.*;
+import org.w3c.dom.*;
 import org.apache.cocoon.framework.*;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * This class implements all the common methods used by the XML parsers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-12-16 11:43:51 $
+ * @version $Revision: 1.3 $ $Date: 2000-01-31 21:53:15 $
  */
 
-public abstract class AbstractParser implements Parser, Configurable {
+public abstract class AbstractParser implements ErrorHandler, Parser, Configurable {
     
-    protected boolean validate;
+    protected boolean validation;
     
     public void init(Configurations conf) {
-        this.validate = "true".equals(((String) conf.get("validate")).toLowerCase()); 
+        this.validation = "true".equals(((String) conf.get("validate")).toLowerCase()); 
     }
+
+    /**
+     * Creates a DOM tree parsing the given input source and using the 
+     * given entity resolver.
+     */
+    public Document parse(InputSource input) throws SAXException, IOException {
+        return parse(input, validation);
+    }
+        
+    /**
+     * Receive notification of a recoverable error.
+     *
+     * @param e The Exception thrown during parsing.
+     * @exception SAXException The Exception notifying the client.
+     */
+    public void error(SAXParseException e) throws SAXException {
+        throw new SAXException(e.getMessage()+" [ERROR] [File: \"" + e.getSystemId() +
+                               "\" Line: " + e.getLineNumber() + " Column: " +
+                               e.getColumnNumber() + "]", e);
+    }
+
+    /**
+     * Receive notification of a non-recoverable error.
+     *
+     * @param e The Exception thrown during parsing.
+     * @exception SAXException The Exception notifying the client.
+     */
+    public void fatalError(SAXParseException e) throws SAXException {
+        throw new SAXException(e.getMessage()+" [FATAL ERROR] [File: \"" + e.getSystemId() +
+                               "\" Line: " + e.getLineNumber() + " Column: " +
+                               e.getColumnNumber() + "]", e);
+    }
+
+    /**
+     * Receive notification of a warning.
+     *
+     * @param e The Exception thrown during parsing.
+     * @exception SAXException The Exception notifying the client.
+     */
+    public void warning(SAXParseException e) throws SAXException {
+        throw new SAXException(e.getMessage()+" [WARNING] [File: \"" + e.getSystemId() +
+                               "\" Line: " + e.getLineNumber() + " Column: " +
+                               e.getColumnNumber() + "]", e);
+    }    
 }
