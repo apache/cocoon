@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.43 2000-12-08 11:50:45 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.44 2000-12-12 16:26:42 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.43 $ $Date: 2000-12-08 11:50:45 $
+ * @version $Revision: 1.44 $ $Date: 2000-12-12 16:26:42 $
  */
 
 public class Engine implements Defaults {
@@ -416,9 +416,12 @@ public class Engine implements Defaults {
             }
 
             if (page == null) {
-                if (LOG) logger.log(this, "System is out of memory", Logger.EMERGENCY);
-                throw new Exception("FATAL ERROR: the system ran out of memory when"
-                    + " processing the request. Increase your JVM memory.");
+                if (LOG) logger.log(this, "JVM ran out of memory", Logger.EMERGENCY);
+                throw new Exception("FATAL ERROR: the JVM ran out of memory when\n"
+                    + " processing the request. The maximum amount of memory used by your VM\n"
+                    + " can be changed at the command line (consult your JDK documentation)\n"
+                    + " and may not be at all related to the amount of physical memory\n"
+                    + " in your machine!");
             }
 
             if (DEBUG) {
