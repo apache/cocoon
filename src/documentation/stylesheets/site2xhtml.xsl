@@ -145,7 +145,7 @@ a.menu:hover {
           <tr>
             <td align="center">
               <font color="#0086b2" face="arial,helvetica,sanserif" size="-1">
-                <i>Copyright &#169; 1999-2003 The Apache Software Foundation. All Rights Reserved.</i>
+                <i>Copyright &#169; 1999-2004 The Apache Software Foundation. All Rights Reserved.</i>
               </font>
             </td>
           </tr>
