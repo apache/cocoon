@@ -16,12 +16,11 @@
 package org.apache.cocoon.components.treeprocessor.variables;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
@@ -44,7 +43,7 @@ import java.util.Stack;
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
 
     private ServiceManager manager;
-    private ComponentSelector selector;
+    private ServiceSelector selector;
     private List tokens;
     private boolean needsMapStack;
 
@@ -205,7 +204,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         if (this.selector == null) {
             try {
                 // First access to a module : lookup selector
-                this.selector = (ComponentSelector) this.manager.lookup(InputModule.ROLE + "Selector");
+                this.selector = (ServiceSelector) this.manager.lookup(InputModule.ROLE + "Selector");
             } catch(ServiceException ce) {
                 throw new PatternException("Cannot access input modules selector", ce);
             }
@@ -214,13 +213,13 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         // Get the module
         InputModule module;
         try {
-            module = (InputModule)this.selector.select(moduleName);
-        } catch(ComponentException ce) {
-            throw new PatternException("Cannot get InputModule named '" + moduleName +
-                "' in expression '" + this.originalExpr + "'", ce);
+            module = (InputModule) this.selector.select(moduleName);
+        } catch (ServiceException e) {
+            throw new PatternException("Cannot get module named '" + moduleName +
+                                       "' in expression '" + this.originalExpr + "'", e);
         }
-        Token token;
 
+        Token token;
         // Is this module threadsafe ?
         if (module instanceof ThreadSafe) {
             token = new Token(THREADSAFE_MODULE, module);
@@ -333,14 +332,14 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             InputModule im = null;
             String moduleName = module.getStringValue();
             try {
-                im = (InputModule)this.selector.select(moduleName);
+                im = (InputModule) this.selector.select(moduleName);
 
                 Object result = im.getAttribute(expr.getStringValue(), null, objectModel);
                 return new Token(EXPR, result==null ? "" : result.toString());
 
-            } catch(ComponentException compEx) {
+            } catch(ServiceException e) {
                 throw new PatternException("Cannot get module '" + moduleName +
-                    "' in expression '" + this.originalExpr + "'", compEx);
+                                           "' in expression '" + this.originalExpr + "'", e);
 
             } catch(ConfigurationException confEx) {
                 throw new PatternException("Cannot get variable '" + expr.getStringValue() +
