@@ -65,7 +65,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
  * internal representation of a Cell
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Cell.java,v 1.5 2003/08/20 17:29:07 joerg Exp $
+ * @version CVS $Id: Cell.java,v 1.6 2003/09/30 20:08:53 joerg Exp $
  */
 // package scope
 
@@ -126,7 +126,7 @@ class Cell {
             } catch (NumberFormatException e) {
                 throw new CascadingIOException("Invalid value for a numeric cell: " + content, e);
             } catch (ParseException e) {
-                throw new CascadingIOException("Invalid value for a numberic cell: " + content, e);
+                throw new CascadingIOException("Invalid value for a numeric cell: " + content, e);
             }
         } else if (_cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
             _cell.setCellValue(content);
