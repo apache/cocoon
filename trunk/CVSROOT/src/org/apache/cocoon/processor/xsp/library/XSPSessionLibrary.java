@@ -67,28 +67,44 @@ import org.apache.cocoon.framework.XObject;
 
 public class XSPSessionLibrary {
   // HttpSession
-  // JSDK 2.1 version: deprecated "name"
-  public static Object getAttribute(HttpSession session, String name) {
-    if (name == null || name.length() == 0) {
-      return null;
+
+  /* Begin Deprecated Methods */
+  public static Element getValue(HttpSession session, String name, Document document) {
+    Object value = session.getValue(name);
+    Element element = document.createElement("session:value");
+    element.setAttribute("name", name);
+
+    if (value == null) {
+      return element;
     }
 
-    return session.getValue(name);
-  }
-
-  // JSDK 2.2 version: "attribute" instead of 'name"
-  /*
-  public static Object getAttribute(HttpSession session, String name) {
-    if (name == null || name.length() == 0) {
-      return null;
+    if (value instanceof XObject) {
+      DocumentFragment fragment = document.createDocumentFragment();
+      ((XObject) value).toDOM(fragment);
+      element.appendChild(fragment);
+    } else {
+      element.appendChild(document.createTextNode(value.toString()));
     }
 
-    return session.getAttribute(name);
+    return element;
   }
-  */
+
+  public static Element getValueNames(HttpSession session, Document document) {
+    String[] attributeNames = session.getValueNames();
+    Element element = document.createElement("session:value-names");
+
+    for (int i = 0; i < attributeNames.length; i++) {
+      Element nameElement = document.createElement("session:value-name");
+      nameElement.appendChild(document.createTextNode(attributeNames[i]));
+      element.appendChild(nameElement);
+    }
+
+    return element;
+  }
+  /* End Deprecated Methods */
 
   public static Element getAttribute(HttpSession session, String name, Document document) {
-    Object value = getAttribute(session, name);
+    Object value = session.getAttribute(name);
 
     if (value == null) {
       return null;
@@ -109,16 +125,6 @@ public class XSPSessionLibrary {
     return element;
   }
 
-  // JSDK 2.1 version: deprecated "name"
-  public static String[] getAttributeNames(HttpSession session) {
-    String[] attributeNames = session.getValueNames();
-    Arrays.sort(attributeNames); // Since Java2
-
-    return attributeNames;
-  }
-
-  // JSDK 2.2 version: "attribute" instead of "name"
-  /*
   public static String[] getAttributeNames(HttpSession session) {
     Vector v = new Vector();
     Enumeration e = session.getAttributeNames();
@@ -129,12 +135,9 @@ public class XSPSessionLibrary {
 
     String[] attributeNames = new String[v.size()];
     v.copyInto(attributeNames);
-    Arrays.sort(attributeNames); // Since Java2
 
     return attributeNames;
   }
-  */
-
 
   public static Element getAttributeNames(HttpSession session, Document document) {
     String[] attributeNames = getAttributeNames(session);
@@ -149,31 +152,31 @@ public class XSPSessionLibrary {
     return element;
   }
 
-  public Element getCreationTime(HttpSession session, Document document) {
+  public static Element getCreationTime(HttpSession session, Document document) {
     Element element = document.createElement("session:creation-time");
     element.appendChild(document.createTextNode(String.valueOf(session.getCreationTime())));
     return element;
   }
 
-  public Element getId(HttpSession session, Document document) {
+  public static Element getId(HttpSession session, Document document) {
     Element element = document.createElement("session:id");
     element.appendChild(document.createTextNode(session.getId()));
     return element;
   }
 
-  public Element getLastAccessedTime(HttpSession session, Document document) {
+  public static Element getLastAccessedTime(HttpSession session, Document document) {
     Element element = document.createElement("session:last-accessed-time");
     element.appendChild(document.createTextNode(String.valueOf(session.getLastAccessedTime())));
     return element;
   }
 
-  public Element getMaxInactiveInterval(HttpSession session, Document document) {
+  public static Element getMaxInactiveInterval(HttpSession session, Document document) {
     Element element = document.createElement("session:max-inactive-interval");
     element.appendChild(document.createTextNode(String.valueOf(session.getMaxInactiveInterval())));
     return element;
   }
 
-  public Element isNew(HttpSession session, Document document) {
+  public static Element isNew(HttpSession session, Document document) {
     Element element = document.createElement("session:is-new");
     element.appendChild(document.createTextNode(String.valueOf(session.isNew())));
     return element;

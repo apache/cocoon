@@ -67,31 +67,19 @@ import org.apache.cocoon.framework.XObject;
 
 public class XSPContextLibrary {
   // ServletContext
-  public static Object getAttribute(ServletContext context, String name) {
-    if (name == null || name.length() == 0) {
-      return null;
-    }
-
-    return context.getAttribute(name);
-  }
-
   public static Element getAttribute(ServletContext context, String name, Document document) {
-    Object value = getAttribute(context, name);
-
-    if (value == null) {
-      return null;
-    }
-
+    Object value = context.getAttribute(name);
     Element element = document.createElement("context:attribute");
-
     element.setAttribute("name", name);
 
-    if (value instanceof XObject) {
-      DocumentFragment fragment = document.createDocumentFragment();
-      ((XObject) value).toDOM(fragment);
-      element.appendChild(fragment);
-    } else {
-      element.appendChild(document.createTextNode(value.toString()));
+    if (value != null) {
+      if (value instanceof XObject) {
+        DocumentFragment fragment = document.createDocumentFragment();
+        ((XObject) value).toDOM(fragment);
+        element.appendChild(fragment);
+      } else {
+        element.appendChild(document.createTextNode(value.toString()));
+      }
     }
 
     return element;
@@ -107,7 +95,6 @@ public class XSPContextLibrary {
 
     String[] attributeNames = new String[v.size()];
     v.copyInto(attributeNames);
-    Arrays.sort(attributeNames); // Since Java2
 
     return attributeNames;
   }
@@ -126,34 +113,18 @@ public class XSPContextLibrary {
     return element;
   }
 
-  // Not supported by JSDK versions prior to 2.2
-  /*
-  public static String getInitParameter(ServletContext context, String name) {
-    if (name == null || name.length() == 0) {
-      return null;
-    }
-
-    return context.getInitParameter(name);
-  }
-
   public static Element getInitParameter(ServletContext context, String name, Document document) {
-    String value = getInitParameter(context, name);
-
-    if (value == null) {
-      return null;
-    }
-
+    String value = context.getInitParameter(name);
     Element element = document.createElement("context:init-parameter");
-
     element.setAttribute("name", name);
-    element.appendChild(document.createTextNode(value));
+
+    if (value != null) {
+      element.appendChild(document.createTextNode(value));
+    }
 
     return element;
   }
-  */
 
-  // Not supported by JSDK versions prior to 2.2
-  /*
   public static String[] getInitParameterNames(ServletContext context) {
     Vector v = new Vector();
     Enumeration e = context.getInitParameterNames();
@@ -164,7 +135,6 @@ public class XSPContextLibrary {
 
     String[] attributeNames = new String[v.size()];
     v.copyInto(attributeNames);
-    Arrays.sort(attributeNames); // Since Java2
 
     return attributeNames;
   }
@@ -182,33 +152,32 @@ public class XSPContextLibrary {
 
     return element;
   }
-  */
 
-  public Element getMajorVersion(ServletContext context, Document document) {
+  public static Element getMajorVersion(ServletContext context, Document document) {
     Element element = document.createElement("context:major-version");
     element.appendChild(document.createTextNode(String.valueOf(context.getMajorVersion())));
     return element;
   }
 
-  public Element getMinorVersion(ServletContext context, Document document) {
+  public static Element getMinorVersion(ServletContext context, Document document) {
     Element element = document.createElement("context:minor-version");
     element.appendChild(document.createTextNode(String.valueOf(context.getMinorVersion())));
     return element;
   }
 
-  public Element getMimeType(ServletContext context, String file, Document document) {
+  public static Element getMimeType(ServletContext context, String file, Document document) {
     Element element = document.createElement("context:mime-type");
     element.appendChild(document.createTextNode(context.getMimeType(file)));
     return element;
   }
 
-  public Element getRealPath(ServletContext context, String path, Document document) {
+  public static Element getRealPath(ServletContext context, String path, Document document) {
     Element element = document.createElement("context:real-path");
     element.appendChild(document.createTextNode(context.getRealPath(path)));
     return element;
   }
 
-  public Element getServerInfo(ServletContext context, Document document) {
+  public static Element getServerInfo(ServletContext context, Document document) {
     Element element = document.createElement("context:real-server-info");
     element.appendChild(document.createTextNode(context.getServerInfo()));
     return element;
