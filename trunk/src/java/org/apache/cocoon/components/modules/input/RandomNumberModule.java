@@ -62,13 +62,13 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * RandomNumberModule returns a random number as string.
+ * RandomNumberModule returns a random number as a string.
  * Configuration through child elements: "min", "max" setting
  * range of random number. Defaults to "0" and "9999999999"
  * respectively.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RandomNumberModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: RandomNumberModule.java,v 1.2 2003/05/03 16:02:42 jefft Exp $
  */
 public class RandomNumberModule extends AbstractInputModule implements ThreadSafe {
 
