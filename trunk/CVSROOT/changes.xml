@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.75 2000-05-18 21:43:42 stefano Exp $
+  $Id: changes.xml,v 1.76 2000-05-22 13:46:05 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,13 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add">
+   Added printer friendly skin so tha documentation can now be generated to
+   be printer friendly when needed.
+  </action>
+ </release>
+ 
+ <release version="1.7.4" date="May 19 2000">
   <action dev="SM" type="fix">
    fixed xpath position() problem that caused the slideshow example to behave strangely. Weird.
   </action>

@@ -137,7 +137,7 @@ a Java 1.2 compatible JVM is required for this target.
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="1.7.4"/>
+    <property name="version" value="1.7.5-dev"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
@@ -156,7 +156,8 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="samples.dir" value="./samples"/>
     <property name="packages" value="org.apache.cocoon.*"/>
 
-    <property name="skin" value="./skins/xml.apache.org/"/>
+    <property name="browser.skin" value="${skins.dir}/xml.apache.org/"/>
+    <property name="printer.skin" value="${skins.dir}/printer/"/>
     <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
     <property name="doc.generator.package" value="${lib.dir}/stylebook-1.0-b2.jar"/>
 
@@ -164,6 +165,7 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="build.src" value="./build/src"/>
     <property name="build.dest" value="./build/classes"/>
     <property name="build.docs" value="./build/docs"/>
+    <property name="build.docs.printer" value="./build/printer-docs"/>
     <property name="build.javadocs" value="./build/javadocs"/>
 
     <property name="dist.root" value="./dist"/>
@@ -299,6 +301,9 @@ a Java 1.2 compatible JVM is required for this target.
 
     <replace file="${docs.dir}/changes.xml" token="./xdocs/dtd/" value="dtd/"/>
     <replace file="${docs.dir}/todo.xml" token="./xdocs/dtd/" value="dtd/"/>
+
+    <delete file="${docs.dir}/book.xml"/>
+    <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
   </target>
 
   <!-- =================================================================== -->
@@ -306,10 +311,17 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <target name="docs" depends="prepare-docs">
     <mkdir dir="${build.docs}"/>
-    <delete file="${docs.dir}/book.xml"/>
-    <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
-          args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}"/>
+          args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Generate printer-friendly HTML docs                                 -->
+  <!-- =================================================================== -->
+  <target name="printer-docs" depends="prepare-docs">
+    <mkdir dir="${build.docs.printer}"/>
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
+          args="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
   </target>
 
   <!-- =================================================================== -->
