@@ -15,9 +15,21 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.jxpath.JXPathCocoonContexts']">
+<!-- CVS $Id$ -->
 
-  <component role="org.apache.cocoon.jxpath.JXPathCocoonContexts"
-             class="org.apache.cocoon.jxpath.JXPathCocoonContexts"
-             logger="core.jxpath"/>
-</xconf>
+<samples name="Taglib Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Taglib Samples">
+    <sample name="Variables" href="variable-p.xhtml">
+      XPath-Resolving and Variables. Uses OutTag.
+    </sample>
+    <sample name="Parent" href="parent.xhtml">
+      ParentResolving and Iteration. Uses LocaleTag in combination with MonthTag
+    </sample>
+  </group>
+</samples>
