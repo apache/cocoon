@@ -71,10 +71,11 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.4 2003/06/14 01:16:59 joerg Exp $
+ * @version CVS $Id: Sheet.java,v 1.5 2003/07/01 23:43:21 joerg Exp $
  */
 
 // package scope
+
 class Sheet extends AbstractLogEnabled {
 
     private HSSFSheet _sheet;
@@ -309,7 +310,8 @@ class Sheet extends AbstractLogEnabled {
                         HSSFCell cell = row.getCell(colnum);
                         if (cell == null) {
                             //getLogger().debug("creating blank cell at "+rownum + "," +colnum);
-                            cell = row.createCell(colnum, HSSFCell.CELL_TYPE_BLANK);
+                            cell = row.createCell(colnum);
+                            cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
                             cell.setCellStyle((HSSFCellStyle)regions.get(region));
                         }
                     }

@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -52,6 +51,7 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import java.io.IOException;
@@ -60,12 +60,12 @@ import java.io.IOException;
  * internal representation of a Row
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Row.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
+ * @version CVS $Id: Row.java,v 1.3 2003/07/01 23:43:21 joerg Exp $
  */
 
 // package scope
-class Row
-{
+
+class Row {
     private HSSFRow _row;
     private Sheet _sheet;
 
@@ -75,8 +75,7 @@ class Row
      * @param row
      */
 
-    Row(final HSSFRow row, final Sheet sheet)
-    {
+    Row(final HSSFRow row, final Sheet sheet) {
         _row = row;
         _sheet = sheet;
     }
@@ -89,14 +88,11 @@ class Row
      * @exception IOException if any arguments are illegal
      */
 
-    void setHeight(final double points)
-        throws IOException
-    {
-        if (!isValid(points))
-        {
+    void setHeight(final double points) throws IOException {
+        if (!isValid(points)) {
             throw new IOException("points " + points + " is out of range");
         }
-        _row.setHeight(( short ) (points * 20));
+        _row.setHeight((short)(points * 20));
     }
 
     /**
@@ -105,8 +101,7 @@ class Row
      * @return row height in 1/20 of a point
      */
 
-    short getHeight()
-    {
+    short getHeight() {
         return _row.getHeight();
     }
 
@@ -122,23 +117,19 @@ class Row
      * @exception IOException
      */
 
-    Cell createCell(final int column, final int cellType)
-        throws IOException
-    {
-        if ((column < 0) || (column > Short.MAX_VALUE))
-        {
+    Cell createCell(final int column, final int cellType) throws IOException {
+        if ((column < 0) || (column > Short.MAX_VALUE)) {
             throw new IOException("Illegal column value: " + column);
         }
-        Cell retval =  new Cell(_row
-            .createCell(( short ) column, CellType
-                .convertCellType(cellType)), cellType);
-        retval.setStyle(_sheet.getCellStyleForRegion(_row.getRowNum(), (short)column));
-        return retval;
+        HSSFCell hssfCell = _row.createCell((short)column);
+        hssfCell.setCellType(CellType.convertCellType(cellType));
+
+        Cell cell = new Cell(hssfCell, cellType);
+        cell.setStyle(_sheet.getCellStyleForRegion(_row.getRowNum(), (short)column));
+        return cell;
     }
 
-    private boolean isValid(double points)
-    {
-        return ((points >= 0)
-                && (points <= ((( double ) Short.MAX_VALUE) / 20)));
+    private boolean isValid(double points) {
+        return ((points >= 0) && (points <= (((double)Short.MAX_VALUE) / 20)));
     }
 }   // end package scope class Row

@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -64,6 +63,7 @@ import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.util.HSSFColor;
 
 /**
@@ -76,42 +76,37 @@ import org.apache.poi.hssf.util.HSSFColor;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPStyle.java,v 1.3 2003/05/11 01:13:30 vgritsenko Exp $
+ * @version CVS $Id: EPStyle.java,v 1.4 2003/07/01 23:43:21 joerg Exp $
  */
-public class EPStyle
-    extends BaseElementProcessor
-{
-    private HorizontalAlignment    _h_align;
-    private VerticalAlignment      _v_align;
-    private BooleanResult          _wrap_text;
-    private StyleOrientation       _orient;
-    private NumericResult          _shade;
-    private NumericResult          _indent;
-    private ColorCode              _fore;
-    private ColorCode              _back;
-    private ColorCode              _pattern_color;
-    private String                 _format;   
-    private static final String    _h_align_attribute       = "HAlign";
-    private static final String    _v_align_attribute       = "VAlign";
-    private static final String    _wrap_text_attribute     = "WrapText";
-    private static final String    _orient_attribute        = "Orient";
-    private static final String    _shade_attribute         = "Shade";
-    private static final String    _indent_attribute        = "Indent";
-    private static final String    _fore_attribute          = "Fore";
-    private static final String    _back_attribute          = "Back";
-    private static final String    _pattern_color_attribute = "PatternColor";
-    private static final String    _format_attribute        = "Format";
-    
+public class EPStyle extends BaseElementProcessor {
+    private HorizontalAlignment     _h_align;
+    private VerticalAlignment       _v_align;
+    private BooleanResult           _wrap_text;
+    private StyleOrientation        _orient;
+    private NumericResult           _shade;
+    private NumericResult           _indent;
+    private ColorCode               _fore;
+    private ColorCode               _back;
+    private ColorCode               _pattern_color;
+    private String                  _format;
+    private static final String     _h_align_attribute       = "HAlign";
+    private static final String     _v_align_attribute       = "VAlign";
+    private static final String     _wrap_text_attribute     = "WrapText";
+    private static final String     _orient_attribute        = "Orient";
+    private static final String     _shade_attribute         = "Shade";
+    private static final String     _indent_attribute        = "Indent";
+    private static final String     _fore_attribute          = "Fore";
+    private static final String     _back_attribute          = "Back";
+    private static final String     _pattern_color_attribute = "PatternColor";
+    private static final String     _format_attribute        = "Format";
+
     private boolean invalid;
-    
-    private static final Validator _shade_validator         = new Validator()
-    {
-        public IOException validate(final Number number)
-        {
-            return StyleShading.isValid(number.intValue()) ? null
-                                                           : new IOException(
-                                                               "\"" + number
-                                                               + "\" is not a legal value");
+
+    private static final Validator _shade_validator = new Validator() {
+        public IOException validate(final Number number) {
+            return StyleShading.isValid(number.intValue())
+                    ? null
+                    : new IOException("\"" + number + "\" is not a legal value");
         }
     };
 
@@ -119,8 +114,7 @@ public class EPStyle
      * constructor
      */
 
-    public EPStyle()
-    {
+    public EPStyle() {
         super(null);
         _h_align       = null;
         _v_align       = null;
@@ -133,7 +127,7 @@ public class EPStyle
         _pattern_color = null;
         _format        = null;
     }
-    
+
     /**
      * Override of Initialize() implementation
      *
@@ -143,13 +137,11 @@ public class EPStyle
      *
      * @exception IOException if anything is wrong
      */
-    public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
+    public void initialize(final Attribute[] attributes, final ElementProcessor parent)
+            throws IOException {
         super.initialize(attributes, parent);
 
-        EPStyleRegion sregion = (EPStyleRegion) parent;
+        EPStyleRegion sregion = (EPStyleRegion)parent;
 
         if (sregion.isValid()) {
             Hashtable colorhash = sregion.getColorHash();
@@ -157,7 +149,7 @@ public class EPStyle
             HSSFCellStyle style = sregion.getStyle();
             short cnvhalign = convertAlignment(getHorizontalAlignment().getCode());
             style.setAlignment(cnvhalign);
-            short cnvvalign = convertVAlignment(getVerticalAlignment().getCode());            
+            short cnvvalign = convertVAlignment(getVerticalAlignment().getCode());
             style.setVerticalAlignment(cnvvalign);
             style.setFillPattern((short)getShade());
 
@@ -166,31 +158,31 @@ public class EPStyle
                 // TODO: change to constant when upgrade to new HSSF
                 // solid w/foreground, bg doesn't matter
                 getLogger().debug("shade = 1");
-                HSSFColor color = (HSSFColor) colorhash.get(getBackgroundColor().toString());
+                HSSFColor color = (HSSFColor)colorhash.get(getBackgroundColor().toString());
                 if (color == null) {
-                    getLogger().debug("s1 BG couldn't find color for "+ getBackgroundColor().toString());
-                    color = new HSSFColor.WHITE();           
+                    getLogger().debug("s1 BG couldn't find color for " + getBackgroundColor().toString());
+                    color = new HSSFColor.WHITE();
                 }
                 style.setFillForegroundColor(color.getIndex());
-                color = (HSSFColor) colorhash.get(getPatternColor().toString());
+                color = (HSSFColor)colorhash.get(getPatternColor().toString());
                 if (color == null) {
-                    getLogger().debug("s1 PC couldn't find color for "+ getPatternColor().toString());
-                    color = new HSSFColor.BLACK();   
+                    getLogger().debug("s1 PC couldn't find color for " + getPatternColor().toString());
+                    color = new HSSFColor.BLACK();
                 }
                 style.setFillBackgroundColor(color.getIndex());
             } else {
-                HSSFColor color = (HSSFColor) colorhash.get(getBackgroundColor().toString());
-                if (color == null) {                
-                    getLogger().debug("BG couldn't find color for "+ getBackgroundColor().toString());
-                    color = new HSSFColor.BLACK();   
-                }
-                style.setFillBackgroundColor(color.getIndex());            
-                color = (HSSFColor) colorhash.get(getPatternColor().toString());
+                HSSFColor color = (HSSFColor)colorhash.get(getBackgroundColor().toString());
                 if (color == null) {
-                    getLogger().debug("PC couldn't find color for "+ getPatternColor().toString());
-                    color = new HSSFColor.WHITE();     
+                    getLogger().debug("BG couldn't find color for " + getBackgroundColor().toString());
+                    color = new HSSFColor.BLACK();
                 }
-                style.setFillForegroundColor(color.getIndex());            
+                style.setFillBackgroundColor(color.getIndex());
+                color = (HSSFColor)colorhash.get(getPatternColor().toString());
+                if (color == null) {
+                    getLogger().debug("PC couldn't find color for " + getPatternColor().toString());
+                    color = new HSSFColor.WHITE();
+                }
+                style.setFillForegroundColor(color.getIndex());
             }
             style.setWrapText(getWrapText());
             style.setLocked(true);
@@ -205,8 +197,8 @@ public class EPStyle
             if (!format.equals("General")) {
                 format = kludgeForGnumericMisformats(format);
                 format = kludgeForGnumericDateDivergence(format);
-                short nformat = org.apache.poi.hssf.usermodel.HSSFDataFormat.getFormat(format);
-                getLogger().debug("setting format to "+ nformat);
+                short nformat = HSSFDataFormat.getBuiltinFormat(format);
+                getLogger().debug("setting format to " + nformat);
                 style.setDataFormat(nformat);
             }
         } else {
@@ -220,9 +212,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalGeneral()
-            throws IOException
-    {
+    public boolean isHorizontalGeneral() throws IOException {
         return getHorizontalAlignment().isGeneral();
     }
 
@@ -232,9 +222,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalLeft()
-            throws IOException
-    {
+    public boolean isHorizontalLeft() throws IOException {
         return getHorizontalAlignment().isLeft();
     }
 
@@ -244,9 +232,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalRight()
-            throws IOException
-    {
+    public boolean isHorizontalRight() throws IOException {
         return getHorizontalAlignment().isRight();
     }
 
@@ -256,9 +242,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalCenter()
-            throws IOException
-    {
+    public boolean isHorizontalCenter() throws IOException {
         return getHorizontalAlignment().isCenter();
     }
 
@@ -268,9 +252,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalFill()
-            throws IOException
-    {
+    public boolean isHorizontalFill() throws IOException {
         return getHorizontalAlignment().isFill();
     }
 
@@ -280,9 +262,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalJustify()
-            throws IOException
-    {
+    public boolean isHorizontalJustify() throws IOException {
         return getHorizontalAlignment().isJustify();
     }
 
@@ -293,9 +273,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isHorizontalCenterAcrossSelection()
-            throws IOException
-    {
+    public boolean isHorizontalCenterAcrossSelection() throws IOException {
         return getHorizontalAlignment().isCenterAcrossSelection();
     }
 
@@ -305,9 +283,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isVerticalTop()
-        throws IOException
-    {
+    public boolean isVerticalTop() throws IOException {
         return getVerticalAlignment().isTop();
     }
 
@@ -317,9 +293,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isVerticalBottom()
-        throws IOException
-    {
+    public boolean isVerticalBottom() throws IOException {
         return getVerticalAlignment().isBottom();
     }
 
@@ -329,9 +303,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isVerticalCenter()
-        throws IOException
-    {
+    public boolean isVerticalCenter() throws IOException {
         return getVerticalAlignment().isCenter();
     }
 
@@ -341,9 +313,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isVerticalJustify()
-        throws IOException
-    {
+    public boolean isVerticalJustify() throws IOException {
         return getVerticalAlignment().isJustify();
     }
 
@@ -353,14 +323,9 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean getWrapText()
-        throws IOException
-    {
-        if (_wrap_text == null)
-        {
-            _wrap_text =
-                BooleanConverter
-                    .extractBoolean(getValue(_wrap_text_attribute));
+    public boolean getWrapText() throws IOException {
+        if (_wrap_text == null) {
+            _wrap_text = BooleanConverter.extractBoolean(getValue(_wrap_text_attribute));
         }
         return _wrap_text.booleanValue();
     }
@@ -371,9 +336,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isStyleOrientationHoriz()
-        throws IOException
-    {
+    public boolean isStyleOrientationHoriz() throws IOException {
         return getStyleOrientation().isHoriz();
     }
 
@@ -383,9 +346,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isStyleOrientationVertHorizText()
-        throws IOException
-    {
+    public boolean isStyleOrientationVertHorizText() throws IOException {
         return getStyleOrientation().isVertHorizText();
     }
 
@@ -395,9 +356,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isStyleOrientationVertVertText()
-        throws IOException
-    {
+    public boolean isStyleOrientationVertVertText() throws IOException {
         return getStyleOrientation().isVertVertText();
     }
 
@@ -407,9 +366,7 @@ public class EPStyle
      * @exception IOException
      */
 
-    public boolean isStyleOrientationVertVertText2()
-        throws IOException
-    {
+    public boolean isStyleOrientationVertVertText2() throws IOException {
         return getStyleOrientation().isVertVertText2();
     }
 
@@ -419,14 +376,9 @@ public class EPStyle
      * @exception IOException
      */
 
-    public int getShade()
-        throws IOException
-    {
-        if (_shade == null)
-        {
-            _shade =
-                NumericConverter.extractInteger(getValue(_shade_attribute),
-                                                _shade_validator);
+    public int getShade() throws IOException {
+        if (_shade == null) {
+            _shade = NumericConverter.extractInteger(getValue(_shade_attribute), _shade_validator);
         }
         return _shade.intValue();
     }
@@ -437,13 +389,9 @@ public class EPStyle
      * @exception IOException
      */
 
-    public int getIndent()
-        throws IOException
-    {
-        if (_indent == null)
-        {
-            _indent =
-                NumericConverter.extractInteger(getValue(_indent_attribute));
+    public int getIndent() throws IOException {
+        if (_indent == null) {
+            _indent = NumericConverter.extractInteger(getValue(_indent_attribute));
         }
         return _indent.intValue();
     }
@@ -454,11 +402,8 @@ public class EPStyle
      * @exception IOException
      */
 
-    public ColorCode getForegroundColor()
-        throws IOException
-    {
-        if (_fore == null)
-        {
+    public ColorCode getForegroundColor() throws IOException {
+        if (_fore == null) {
             _fore = new ColorCode(getValue(_fore_attribute));
         }
         return _fore;
@@ -470,11 +415,8 @@ public class EPStyle
      * @exception IOException
      */
 
-    public ColorCode getBackgroundColor()
-        throws IOException
-    {
-        if (_back == null)
-        {
+    public ColorCode getBackgroundColor() throws IOException {
+        if (_back == null) {
             _back = new ColorCode(getValue(_back_attribute));
         }
         return _back;
@@ -486,13 +428,9 @@ public class EPStyle
      * @exception IOException
      */
 
-    public ColorCode getPatternColor()
-        throws IOException
-    {
-        if (_pattern_color == null)
-        {
-            _pattern_color =
-                new ColorCode(getValue(_pattern_color_attribute));
+    public ColorCode getPatternColor() throws IOException {
+        if (_pattern_color == null) {
+            _pattern_color = new ColorCode(getValue(_pattern_color_attribute));
         }
         return _pattern_color;
     }
@@ -503,11 +441,8 @@ public class EPStyle
      * @exception IOException
      */
 
-    public String getFormat()
-        throws IOException
-    {
-        if (_format == null)
-        {
+    public String getFormat() throws IOException {
+        if (_format == null) {
             _format = getValue(_format_attribute);
             /*if (_format == null)
             {
@@ -518,36 +453,27 @@ public class EPStyle
         return _format;
     }
 
-    private HorizontalAlignment getHorizontalAlignment()
-        throws IOException
-    {
-        if (_h_align == null)
-        {
+    private HorizontalAlignment getHorizontalAlignment() throws IOException {
+        if (_h_align == null) {
             _h_align = new HorizontalAlignment(getValue(_h_align_attribute));
         }
         return _h_align;
     }
 
-    private VerticalAlignment getVerticalAlignment()
-        throws IOException
-    {
-        if (_v_align == null)
-        {
+    private VerticalAlignment getVerticalAlignment() throws IOException {
+        if (_v_align == null) {
             _v_align = new VerticalAlignment(getValue(_v_align_attribute));
         }
         return _v_align;
     }
 
-    private StyleOrientation getStyleOrientation()
-        throws IOException
-    {
-        if (_orient == null)
-        {
+    private StyleOrientation getStyleOrientation() throws IOException {
+        if (_orient == null) {
             _orient = new StyleOrientation(getValue(_orient_attribute));
         }
         return _orient;
     }
-    
+
     /**
      * @return instance created in the EPStyles instance from HSSFColor.getTripletHash();
      * @see org.apache.poi.hssf.util.HSSFColor#getTripletHash()
@@ -555,107 +481,105 @@ public class EPStyle
     Hashtable getColorHash() {
         return ((EPStyleRegion)getAncestor(EPStyleRegion.class)).getColorHash();
     }
-    
+
     /**
      *  @return the HSSFCellStyle object associated with this style region.
      */
     HSSFCellStyle getStyle() {
         return ((EPStyleRegion)getAncestor(EPStyleRegion.class)).getStyle();
     }
-    
+
     /**
      *
      * @return validity (used to determine whether this is a big wasteful region with
      *  no purpose (gnumeric does this)
      */
-    public boolean isValid () {
+    public boolean isValid() {
         return (!invalid);
     }
-    
-   /**
-    * deal with mismatch between gnumeric align and Excel
-    */
-   private short convertAlignment(short alignment) {
-        short retval=HSSFCellStyle.ALIGN_GENERAL; // its 0
+
+    /**
+     * deal with mismatch between gnumeric align and Excel
+     */
+    private short convertAlignment(short alignment) {
+        short retval = HSSFCellStyle.ALIGN_GENERAL; // its 0
 
         switch (alignment) {
-        case 1:
+            case 1:
                 retval = HSSFCellStyle.ALIGN_GENERAL;
-        break;
-        case 2:
+                break;
+            case 2:
                 retval = HSSFCellStyle.ALIGN_LEFT;
-        break;
-        case 4:
+                break;
+            case 4:
                 retval = HSSFCellStyle.ALIGN_RIGHT;
-        break;
-        case 8:
+                break;
+            case 8:
                 retval = HSSFCellStyle.ALIGN_CENTER;
-        break;
-        case 16:
+                break;
+            case 16:
                 retval = HSSFCellStyle.ALIGN_FILL;
-       break;
-        case 32:
+                break;
+            case 32:
                 retval = HSSFCellStyle.ALIGN_JUSTIFY;
-        break;
-        case 64:
+                break;
+            case 64:
                 retval = HSSFCellStyle.ALIGN_CENTER_SELECTION;
-        break;
-        default:
+                break;
+            default:
                 retval = HSSFCellStyle.ALIGN_GENERAL;
-        } 
+        }
 
         return retval;
-   }
+    }
 
-   /**
-    * deal with mismatch between gnumeric valign and Excel
-    */
-   private short convertVAlignment(short alignment) {
-        short retval=HSSFCellStyle.VERTICAL_TOP; // its 0
+    /**
+     * deal with mismatch between gnumeric valign and Excel
+     */
+    private short convertVAlignment(short alignment) {
+        short retval = HSSFCellStyle.VERTICAL_TOP; // its 0
 
         switch (alignment) {
-        case 1:
+            case 1:
                 retval = HSSFCellStyle.VERTICAL_TOP;
-        break;
-        case 2:
+                break;
+            case 2:
                 retval = HSSFCellStyle.VERTICAL_BOTTOM;
-        break;
-        case 4:
+                break;
+            case 4:
                 retval = HSSFCellStyle.VERTICAL_CENTER;
-        break;
-        case 8:
+                break;
+            case 8:
                 retval = HSSFCellStyle.VERTICAL_JUSTIFY;
-        break;
-        default:
+                break;
+            default:
                 retval = HSSFCellStyle.VERTICAL_TOP;
         }
         return retval;
-   }
-   
+    }
+
     /**
      * Takes in a Gnumeric format string and applies some rules to it.  Some
-     * versions of Gnumeric seem to leave off the first parenthesis which 
+     * versions of Gnumeric seem to leave off the first parenthesis which
      * causes them not to match the Excel-style format string.  (which of course
      * makes it a little hard to match)
      */
-    private String kludgeForGnumericMisformats(String format) {        
+    private String kludgeForGnumericMisformats(String format) {
         String retval = format;
-        getLogger().debug("going out of the format kludger "+ retval);        
-        getLogger().debug("first )="+format.indexOf(')'));
-        getLogger().debug("first (="+format.indexOf('('));
-        if ( (format.indexOf(')') < format.indexOf('(')) && 
-             (format.indexOf(')') != -1 )
-             ) {
-            retval = "("+format;
+        getLogger().debug("going out of the format kludger " + retval);
+        getLogger().debug("first )=" + format.indexOf(')'));
+        getLogger().debug("first (=" + format.indexOf('('));
+        if ((format.indexOf(')') < format.indexOf('(')) && (format.indexOf(')') != -1)) {
+            retval = "(" + format;
         }
-        getLogger().debug("going out of the format kludger "+ retval);        
+        getLogger().debug("going out of the format kludger " + retval);
         return retval;
-    }    
+    }
 
     private String kludgeForGnumericDateDivergence(String format) {
         String retval = format;
-        getLogger().debug("going into the format kludgeForGnumericDateDivergence"+ retval);          
-       
+        getLogger().debug("going into the format kludgeForGnumericDateDivergence" + retval);
+
         if (retval.equals("mm/dd/yy")) {
             retval = "m/d/yy";
         } else if (retval.equals("dd-mmm-yy")) {
@@ -664,11 +588,9 @@ public class EPStyle
             retval = "d-mmm";
         }
 
-        getLogger().debug("going out of the format kludgeForGnumericDateDivergence"+ retval);        
+        getLogger().debug("going out of the format kludgeForGnumericDateDivergence" + retval);
         return retval;
     }
-   
-    
-   
+
 
 }   // end public class EPStyle
