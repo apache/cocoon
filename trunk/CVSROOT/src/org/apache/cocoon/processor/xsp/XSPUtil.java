@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.9 2000-01-15 04:41:10 ricardo Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.10 2000-01-15 11:19:25 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,9 +59,11 @@ import org.w3c.dom.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import org.apache.cocoon.Utils;
+
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.9 $ $Date: 2000-01-15 04:41:10 $
+ * @version $Revision: 1.10 $ $Date: 2000-01-15 11:19:25 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -130,7 +132,7 @@ public class XSPUtil {
       (
         new File(
           new File(
-            requestRealPath(request, context)
+            Utils.getBasename(request, context)
           ).getParent(),
           filename
         )
@@ -143,27 +145,6 @@ public class XSPUtil {
   ) throws IOException
   {
     return relativeFilename(filename, request, null);
-  }
-
-  public static String requestRealPath(
-    HttpServletRequest request,
-    ServletContext context
-  )
-    throws IOException
-  {
-    if (context != null) {
-      String path = context.getRealPath(request.getRequestURI()); // From 2.1
-
-      if (path != null) {
-        return path;
-      }
-    }
-
-    if (request.getPathInfo() == null) {
-      return request.getRealPath(request.getRequestURI());
-    } else {
-      return request.getPathTranslated();
-    }
   }
 
   public static boolean isAlphaNumeric(char c) {
