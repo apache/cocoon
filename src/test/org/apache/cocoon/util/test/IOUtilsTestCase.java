@@ -25,7 +25,7 @@ import org.apache.cocoon.util.IOUtils;
  *
  * @author <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: IOUtilsTestCase.java,v 1.5 2004/04/18 23:06:11 ugo Exp $
+ * @version CVS $Id: IOUtilsTestCase.java,v 1.6 2004/07/12 13:04:55 antonio Exp $
  */
 public class IOUtilsTestCase extends TestCase
 {
@@ -108,25 +108,6 @@ public class IOUtilsTestCase extends TestCase
                     "'" + test_file_path + "'";
             assertEquals(message, expected, result);
         }
-    }
-
-
-    /**
-     * A unit test for <code>objectToBytes()</code>, and <code>bytesToObject()</code>
-     *
-     * @exception  Exception  Description of Exception
-     * @since
-     */
-    public void testObjectToBytesBytesToObject() throws Exception {
-        String test = "test";
-        String expected = "test";
-
-        String message = "Test " + "'" + test + "'";
-
-        byte[] bytes = IOUtils.objectToBytes(test);
-        String result = (String) IOUtils.bytesToObject(bytes);
-
-        assertEquals(message, expected, result);
     }
 }
 
