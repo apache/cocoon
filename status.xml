@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.259 2004/03/06 02:05:27 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.260 2004/03/06 05:13:54 joerg Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,13 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="25483" due-to="Rui Alberto L. Gonçalves" due-to-email="rui-l-goncalves@ptinovacao.pt">
+     Avoid accumulating of addresses and attachements in SendMailTransformer,
+     when sending multiple mails, i.e. multiple sendmail elements at once.
+   </action>
+   <action dev="JH" type="fix" fixes-bug="25403" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
+     EncodeURLTransformer no longer creates a session.
+   </action>
    <action dev="JH" type="add" fixes-bug="22400" due-to="Steve Krulewitz" due-to-email="skrul@yahoo.com">
      Added additional property &lt;column-case&gt; to the SQLTransformer with
      the possible values "preserve", "uppercase", and "lowercase".
