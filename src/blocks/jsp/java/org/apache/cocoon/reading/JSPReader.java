@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.4 2003/08/04 09:44:23 joerg Exp $
+ * @version CVS $Id: JSPReader.java,v 1.5 2003/08/04 09:53:49 joerg Exp $
  */
 public class JSPReader extends ServiceableReader {
 
@@ -126,7 +126,6 @@ public class JSPReader extends ServiceableReader {
             bais.close();
             bais = null;
             out.flush();
-            //this.resolver.release(source);
         } catch (ServletException e) {
             throw new ProcessingException("ServletException in JSPReader.generate()", e.getRootCause());
         } catch (IOException e) {
