@@ -90,7 +90,7 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.12 2003/10/21 12:39:17 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.13 2003/11/07 09:14:34 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1237,8 +1237,15 @@ public class SQLTransformer
             if (value != null) {
                 value = value.trim();
                 // Could this be XML ?
-                if (value.length() > 0 && value.charAt(0) == '<') {
+                if ( value.length() > 0 && value.charAt(0) == '<') {
                     try {
+                        String  stripped = value;
+                
+                        // Strip off the XML Declaration if there is one!                
+                        if( stripped.startsWith( "<?xml " ) ) {
+                            stripped = stripped.substring( stripped.indexOf( "?>" ) + 2 );
+                        }
+                
                         if (transformer.parser == null) {
                             transformer.parser = (SAXParser)manager.lookup(SAXParser.ROLE);
                         }
@@ -1248,7 +1255,7 @@ public class SQLTransformer
                         if (transformer.interpreter == null) {
                             transformer.interpreter = (XMLDeserializer)manager.lookup(XMLDeserializer.ROLE);
                         }
-                        transformer.parser.parse(new InputSource(new StringReader("<root>" + value + "</root>")),
+                        transformer.parser.parse(new InputSource(new StringReader("<root>" + stripped + "</root>")),
                                                  transformer.compiler);
 
                         IncludeXMLConsumer filter = new IncludeXMLConsumer(transformer, transformer);
