@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -43,14 +44,25 @@ import org.xml.sax.SAXException;
  * be created with <code>cocoon.createObject(Packages.org.apache.cocoon.components.flow.util.PipelineUtil);
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: PipelineUtil.java,v 1.2 2004/03/05 13:02:47 bdelacretaz Exp $
+ * @version CVS $Id: PipelineUtil.java,v 1.3 2004/05/04 11:54:35 cziegeler Exp $
  */
-public class PipelineUtil implements Contextualizable, Serviceable {
+public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
     
     private Context context;
     private ServiceManager manager;
     private SourceResolver resolver;
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.resolver );
+            this.manager = null;
+            this.resolver = null;
+        }
+    }
+    
     public void contextualize(Context context) throws ContextException {
         this.context = context;
         
