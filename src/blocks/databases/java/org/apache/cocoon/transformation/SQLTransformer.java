@@ -88,7 +88,7 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.8 2003/08/18 13:00:46 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.9 2003/09/20 17:15:32 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -147,13 +147,13 @@ public class SQLTransformer
     //
 
     /** Is the old-driver turned on? (default is off) */
-    private boolean oldDriver = false;
+    protected boolean oldDriver = false;
 
     /** How many connection attempts to do? (default is 5 times) */
-    private int connectAttempts = 5;
+    protected int connectAttempts = 5;
 
     /** How long wait between connection attempts? (default is 5000 ms) */
-    private int connectWaittime = 5;
+    protected int connectWaittime = 5;
 
     //
     // State
@@ -768,7 +768,7 @@ public class SQLTransformer
     /**
      * Helper method for generating SAX events
      */
-    private void start( String name, AttributesImpl attr )
+    protected void start( String name, AttributesImpl attr )
     throws SAXException {
         try {
             super.startTransformingElement( outUri, name, nsQualify( name, outPrefix ), attr );
@@ -783,7 +783,7 @@ public class SQLTransformer
     /**
      * Helper method for generating SAX events
      */
-    private void end( String name ) throws SAXException {
+    protected void end( String name ) throws SAXException {
         try {
             super.endTransformingElement( outUri, name, nsQualify( name, outPrefix ) );
         } catch (IOException ioe) {
@@ -796,7 +796,7 @@ public class SQLTransformer
     /**
      * Helper method for generating SAX events
      */
-    private void data( String data ) throws SAXException {
+    protected void data( String data ) throws SAXException {
         if ( data != null ) {
             super.characters( data.toCharArray(), 0, data.length() );
         }
