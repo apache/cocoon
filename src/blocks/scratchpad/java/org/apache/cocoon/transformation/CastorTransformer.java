@@ -55,7 +55,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
@@ -120,7 +119,7 @@ import java.util.Iterator;
  * @author <a href="mailto:mauch@imkenberg.de">Thorsten Mauch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
- * @version CVS $Id: CastorTransformer.java,v 1.3 2003/10/06 16:27:33 stephan Exp $
+ * @version CVS $Id: CastorTransformer.java,v 1.4 2003/10/09 17:37:32 cziegeler Exp $
  */
 public class CastorTransformer extends AbstractTransformer implements Configurable {
     private static final String CASTOR_URI = "http://apache.org/cocoon/castor/1.0";
@@ -287,7 +286,7 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
             unmarshalHandler = unmarshaller.createHandler();
                                                                                                                                                                
             try {
-                unmarshalContentHandler = unmarshaller.getContentHandler(
+                unmarshalContentHandler = Unmarshaller.getContentHandler(
                                                   unmarshalHandler);
                                                                                                                                                                
                 unmarshalContentHandler.startDocument();

@@ -49,12 +49,9 @@
 */
 package org.apache.cocoon.bean.helpers;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,7 +62,7 @@ import org.apache.cocoon.ProcessingException;
  *   A simple Cocoon crawler
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Crawler.java,v 1.1 2003/10/06 14:38:39 upayavira Exp $
+ * @version CVS $Id: Crawler.java,v 1.2 2003/10/09 17:37:32 cziegeler Exp $
  */
 
 public class Crawler {
