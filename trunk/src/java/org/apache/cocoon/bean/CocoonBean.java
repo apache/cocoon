@@ -106,7 +106,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.10 2003/06/11 02:59:36 vgritsenko Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.11 2003/06/21 06:41:45 jefft Exp $
  */
 public class CocoonBean {
 
@@ -229,9 +229,10 @@ public class CocoonBean {
             cocoon.setLogKitManager(logKitManager);
             cocoon.initialize();
 
-            if (brokenLinkReportFile!=null && !(new File(brokenLinkReportFile).exists())) {
-              log.error("Broken Link Report File does not exist: " + brokenLinkReportFile);
-            }
+            // I don't understand why not having an error file (on startup) is an error (JT)
+            //if (brokenLinkReportFile!=null && !(new File(brokenLinkReportFile).exists())) {
+            //  log.error("Broken Link Report File does not exist: " + brokenLinkReportFile);
+            //}
 
             if (brokenLinkReportFile!=null) {
                 brokenLinks= new ArrayList();
