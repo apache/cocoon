@@ -22,7 +22,7 @@
         <map:part src="cocoon:/book-{full-filename}.xml"/>
         <map:part src="cocoon:/body-{full-filename}.xml"/>
       </map:aggregate>
-      <map:transform src="context://documentation/stylesheets/site2xhtml.xsl">
+      <map:transform src="context://docs/stylesheets/site2xhtml.xsl">
         <map:parameter name="use-request-parameters" value="true"/>
         <map:parameter name="header" value="graphics/{filename}-header.jpg"/>
       </map:transform>
@@ -46,7 +46,7 @@
         <map:transform type="augment">
           <map:parameter name="mount" value="samples/flow/"/>
         </map:transform>
-        <map:transform src="context://documentation/stylesheets/book2menu.xsl">
+        <map:transform src="context://docs/stylesheets/book2menu.xsl">
           <map:parameter name="use-request-parameters" value="true"/>
           <map:parameter name="resource" value="{2}.html"/>
         </map:transform>
@@ -61,7 +61,7 @@
 
       <map:match pattern="body-**.xml">
         <map:generate src="docs/{1}.xml"/>
-        <map:transform src="context://documentation/stylesheets/document2html.xsl"/>
+        <map:transform src="context://docs/stylesheets/document2html.xsl"/>
         <map:serialize/>
       </map:match>
 
@@ -80,17 +80,17 @@
       </map:match>
 
    <map:match pattern="**resources/script.js">
-     <map:read src="context://documentation/stylesheets/script-cli.js"
+     <map:read src="context://docs/stylesheets/script-cli.js"
 	       mime-type="application/javascript"/>
    </map:match>
 
    <map:match pattern="**resources/**.js">
-     <map:read src="context://documentation/stylesheets/{2}.js"
+     <map:read src="context://docs/stylesheets/{2}.js"
 	       mime-type="application/javascript"/>
    </map:match>
 
    <map:match pattern="**.css">
-    <map:read src="context://documentation/{1}.css" mime-type="text/css"/>
+    <map:read src="context://docs/{1}.css" mime-type="text/css"/>
    </map:match>
 
    <map:match pattern="**images/*.png">
