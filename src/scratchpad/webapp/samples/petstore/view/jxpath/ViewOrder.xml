@@ -35,9 +35,7 @@
                 <field empty="2">
                     <cart name="Status">
                         <jxpath:for-each select="itemList" >
-                            <item>
-                                <xsp:attribute name="product-id"><jxpath:value-of select="item/productId"/></xsp:attribute>
-                                <xsp:attribute name="id"><jxpath:value-of select="item/itemId"/></xsp:attribute>
+                            <item product-id="{item/productId}" id="{item/itemId}">
                                 <desc>
                                     <jxpath:value-of select="item/attr1"/> 
                                     <jxpath:value-of select="item/attr2"/> 
