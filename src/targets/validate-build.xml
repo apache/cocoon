@@ -51,6 +51,10 @@
           style="${tools}/src/check-jars.xsl">
       <param name="current-files" expression="../../${build.temp}/current-jars.xml"/>
     </xslt>
+
+    <copy file="${build.temp}/jars.xml"
+          tofile="${build.context}/xdocs/installing/jars.xml"
+          filtering="off"/>
   </target>
 
   <!-- Validate configuration files. -->
