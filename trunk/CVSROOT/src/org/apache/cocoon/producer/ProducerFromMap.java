@@ -64,13 +64,13 @@ import org.xml.sax.InputSource;
 
 /**
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version $Revision: 1.3 $ $Date: 1999-12-16 11:45:07 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-15 11:19:21 $
  */
 
 public class ProducerFromMap extends ProducerFromFile {
 
 	public Document getDocument(HttpServletRequest request) throws Exception {
-		String path = this.getBasename(request);
+		String path = Utils.getBasename(request, this.context);
 		File file = new File(path);
 		File sitemap_file = null;
 		String sitemap_path = path;
