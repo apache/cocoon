@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.text.StringCharacterIterator;
 
 import java.lang.reflect.Method;
@@ -35,6 +36,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
+import org.apache.cocoon.components.browser.Browser;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.TimeStampCacheValidity;
@@ -63,7 +65,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-13 16:02:27 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-13 18:19:32 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -71,6 +73,9 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
 
     /** The store service instance */
     private Store store = null;
+
+    /** The Browser service instance */
+    private Browser browser = null;
 
     /** The trax TransformerFactory */
     private SAXTransformerFactory tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
@@ -161,6 +166,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
             this.manager = manager;
             log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
+            this.browser = (Browser) manager.lookup(Roles.BROWSER);
         } catch (Exception e) {
             log.error("Could not find component", e);
         }
@@ -267,6 +273,39 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
             }
         }
 
+        try
+        {
+            /* Get the accept header; it's needed to get the browser type. */
+            String accept = request.getParameter("accept");
+            if (accept == null)
+                accept = request.getHeader("accept");
+
+            /* Get the user agent; it's needed to get the browser type. */
+            String agent = request.getParameter("user-Agent");
+            if (agent == null) 
+                agent = request.getHeader("user-Agent");
+            
+            /* add the accept param */
+            transformerHandler.getTransformer().setParameter("accept", accept);
+
+            /* add the user agent param */
+            transformerHandler.getTransformer().setParameter("user-agent", java.net.URLEncoder.encode(agent));
+
+            /* add the map param */
+            HashMap map = browser.getBrowser(agent, accept);
+            transformerHandler.getTransformer().setParameter("browser",map);
+
+            /* add the media param */
+            String browserMedia = browser.getMedia(map);
+            transformerHandler.getTransformer().setParameter("browser-media",map);
+
+            /* add the uaCapabilities param */
+            org.w3c.dom.Document uaCapabilities = browser.getUACapabilities(map);
+            transformerHandler.getTransformer().setParameter("ua-capabilities", uaCapabilities);
+        } catch (Exception e) {
+            getLogger().error("Error setting Browser info", e);
+        }    
+
         super.setContentHandler(transformerHandler);
         if(transformerHandler instanceof Loggable) {
             ((Loggable)transformerHandler).setLogger(this.log);
@@ -328,6 +367,8 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
     {
         if(this.store != null)
             this.manager.release((Component)this.store);
+        if(this.browser != null)
+            this.manager.release((Component)this.browser);
     }
 
     public void recycle()
