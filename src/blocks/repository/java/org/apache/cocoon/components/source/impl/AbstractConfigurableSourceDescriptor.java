@@ -55,14 +55,27 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * Abstract base class for configurable SourceInspectors.
+ * Abstract base class SourceDescriptors that want to 
+ * configure the set of properties they handle beforehand.
+ * 
+ * <p>
+ * Knowing which properties an inspector handles beforehand
+ * greatly improves property management performance.
+ * </p> 
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public abstract class AbstractConfigurableSourceDescriptor 
 extends AbstractConfigurableSourceInspector implements SourceDescriptor {
 
-    
+
+    // ---------------------------------------------------- SourceDescriptor methods
+
+    /**
+     * Checks if this SourceDescriptor is configured to handle the 
+     * given property and if so forwards the call to 
+     * <code>doRemoveSourceProperty()</code>.
+     */
     public final void removeSourceProperty(Source source, String namespace, String name)
         throws SourceException {
         
@@ -74,7 +87,12 @@ extends AbstractConfigurableSourceInspector implements SourceDescriptor {
             doRemoveSourceProperty(source,namespace,name);
         }
     }
-    
+
+    /**
+     * Checks if this SourceDescriptor is configured to handle the 
+     * given property and if so forwards the call to 
+     * <code>doSetSourceProperty()</code>.
+     */
     public final void setSourceProperty(Source source, SourceProperty property) 
         throws SourceException {
         
@@ -86,11 +104,19 @@ extends AbstractConfigurableSourceInspector implements SourceDescriptor {
             doSetSourceProperty(source,property);
         }
     }
-    
-    protected abstract void doRemoveSourceProperty(Source source, String namespace,String name) 
+
+    // ---------------------------------------------------- abstract methods
+
+    /**
+     * Do the actual work of removing the given property from the provided Source.
+     */
+    protected abstract void doRemoveSourceProperty(Source source, String namespace,String name)
         throws SourceException;
-    
-    protected abstract void doSetSourceProperty(Source source, SourceProperty property) 
+
+    /**
+     * Do the actual work of setting the provided SourceProperty on the given Source.
+     */
+    protected abstract void doSetSourceProperty(Source source, SourceProperty property)
         throws SourceException;
-    
+
 }
