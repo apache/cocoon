@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.3 2003/03/19 15:21:19 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.4 2003/03/20 08:54:18 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -109,7 +109,7 @@ implements SourceResolver
     private static ComponentManager rootManager;
     
     /** The {@link SitemapConfigurationHolder}s */
-    private static Map sitemapConfigurationHolders = new HashMap(5);
+    private static Map sitemapConfigurationHolders = new HashMap(15);
     
     /** Create the ComponentManager */
     public CocoonComponentManager() {
@@ -153,44 +153,6 @@ implements SourceResolver
 		final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
 		stack.push(new Object[] {env, processor, manager});
     
-        /* New:
-        // do we have the sitemap configurations prepared for this processor?
-        final Object o = sitemapConfigurationHolders.get(processor);
-        if ( null == o ) { 
-            // first we have to lookup the parent processor
-            final Processor parentProcessor = (Processor)env.getAttribute("CocoonComponentManager.processor");
-
-            // do we have configurations?
-            final Configuration currentConf = processor.getComponentConfigurations();
-            final Configuration[] childs = (currentConf == null ? null : currentConf.getChildren());
-            
-            if ( childs == null ) {
-                Map configurationMap = null;
-                if ( null == parentProcessor || parentProcessor.equals(processor)) {
-                    configurationMap = new HashMap(12);
-                } else {
-                    // use configuration from parent
-                    configurationMap = (Map)sitemapConfigurationHolders.get(parentProcessor); 
-                }
-                sitemapConfigurationHolders.put(processor, configurationMap);
-
-            } else {
-
-                Map configurationMap = null;
-                if ( null == parentProcessor || parentProcessor.equals(processor)) {
-                    configurationMap = new HashMap(12);
-                } else {
-                    // copy all configurations from parent
-                    configurationMap = new HashMap((Map)sitemapConfigurationHolders.get(parentProcessor)); 
-                }
-                // and now check for new configurations
-                for(int m = 0; m < childs.length; m++) {
-                    
-                    //final String r = this.roleManager.getRoleForName(childs[m].getName());
-                }
-            }
-        }
-        */
         final EnvironmentDescription desc = (EnvironmentDescription)env.getObjectModel().get(PROCESS_KEY);
         desc.addSitemapConfiguration(processor.getComponentConfigurations());
         env.setAttribute("CocoonComponentManager.processor", processor);
@@ -382,9 +344,18 @@ implements SourceResolver
                 }
             }
         }
+        
         /*
-        if ( null != component && component instanceof SitemapConfigurable) {
+         if ( null != component && component instanceof SitemapConfigurable) {
             // FIXME: how can we prevent that this is called over and over again?
+            SitemapConfigurationHolder holder;
+            
+            holder = (SitemapConfigurationHolder)sitemapConfigurationHolders.get( role );
+            if ( null == holder ) {
+                // create new holder
+                sitemapConfigurationHolders.put( role, holder );
+            }
+            ((SitemapConfigurable)component).configure(holder);
         }*/
         return component;
     }
