@@ -89,7 +89,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.16 2004/02/04 15:10:47 sylvain Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.17 2004/02/06 11:37:49 unico Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -145,6 +145,8 @@ implements Source, XMLizable {
 
     /** SourceResolver (for the redirect source) */
     private SourceResolver sourceResolver;
+    
+    private String mimeType;
     
     /**
      * Construct a new object
@@ -359,7 +361,7 @@ implements Source, XMLizable {
      * this can be null.
      */
      public String getMimeType() {
-        return "text/xml";
+         return this.mimeType;
      }
 
     /**
@@ -391,6 +393,8 @@ implements Source, XMLizable {
                 try {
                     this.processingPipeline.prepareInternal(this.environment);
                     this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
+                    this.mimeType = this.environment.getContentType();
+                    
                     final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
                     if (eventPipelineKey != null) {
                         StringBuffer buffer = new StringBuffer(this.systemId);
@@ -417,6 +421,7 @@ implements Source, XMLizable {
                 }
                 this.redirectSource = this.sourceResolver.resolveURI(redirectURL);
                 this.redirectValidity = this.redirectSource.getValidity();
+                this.mimeType = this.redirectSource.getMimeType();
             }
         } catch (SAXException e) {
             reset();
