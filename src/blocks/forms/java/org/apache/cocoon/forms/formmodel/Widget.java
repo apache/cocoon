@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -48,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.8 2004/04/23 23:34:56 joerg Exp $
+ * @version CVS $Id: Widget.java,v 1.9 2004/04/28 13:09:59 bruno Exp $
  */
 public interface Widget {
 
@@ -113,6 +114,10 @@ public interface Widget {
      */
     public boolean validate(FormContext formContext);
 
+    public void addValidator(WidgetValidator validator);
+
+    public boolean removeValidator(WidgetValidator validator);
+    
     /**
      * Generates an XML representation of this widget. The startDocument and endDocument
      * SAX events will not be called. It is assumed that the prefix for the CForms namespace
