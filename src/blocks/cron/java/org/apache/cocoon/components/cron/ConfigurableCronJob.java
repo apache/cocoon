@@ -59,12 +59,12 @@ import org.apache.avalon.framework.parameters.Parameters;
  * This is a configurable cron job. Before the execute/run method is called the setup method is invoked.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ConfigurableCronJob.java,v 1.1 2003/09/03 16:04:02 giacomo Exp $
+ * @version CVS $Id: ConfigurableCronJob.java,v 1.2 2003/09/05 10:16:54 giacomo Exp $
  *
  * @since 2.1.1
  */
 public interface ConfigurableCronJob
-    extends CronJob {
+extends CronJob {
     /**
      * Setup CronJob with additional information first
      *
