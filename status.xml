@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.136 2003/09/03 10:55:14 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.137 2003/09/03 13:13:27 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add" fixes-bug="13070" due-to="Antonio Gallardo" due-to-email="agallardo@agsoftware.dnsalias.com">
+     Applying patch for adding new session-fw logicsheet that allows access to a session context from with xsp.
+   </action>
    <action dev="BRD" type="fix">
      Fixed a StackOverflowError in errors2html.xslt that could occur with error
      pages containing very long stack traces.
