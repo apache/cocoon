@@ -439,6 +439,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="RG" type="fix" fixes-bug="32645">
+     Modified PortletURLProviderImpl.toString() to create a copy of itself and register that with the event.
+   </action>
    <action dev="AG" type="fix" fixes-bug="32083" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
      Update Deli to x031104 (include over 300 vendor, operator and third party profiles)
    </action>
