@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.5 1999-12-14 23:47:44 stefano Exp $ -- 
+/*-- $Id: Engine.java,v 1.6 1999-12-16 11:42:36 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-14 23:47:44 $
+ * @version $Revision: 1.6 $ $Date: 1999-12-16 11:42:36 $
  */
 
 public class Engine implements Defaults {
@@ -84,6 +84,7 @@ public class Engine implements Defaults {
     ProducerFactory producers;
     ProcessorFactory processors;
     FormatterFactory formatters;
+    InterpreterFactory interpreters;
 
     Manager manager;
     Browsers browsers;
@@ -97,58 +98,73 @@ public class Engine implements Defaults {
     /**
      * This method initializes the engine.
      */
-    public Engine(Configurations configurations) throws Exception {
-
-		// stores servlet config
-        servletContext = (ServletContext) configurations.get("servletContext");
-
-		// stores the configuration instance
-        this.configurations = configurations;
+    public Engine(Configurations configurations, Object context) throws Exception {
 
         // Create the object manager which is both Factory and Director
         // and register it
         manager = new Manager();
         manager.setRole("factory", manager);
 
+        // stores the configuration instance
+        this.configurations = configurations;
+
+        // stores the engine context
+        if ((context != null) && (context instanceof ServletContext)) {
+            this.servletContext = (ServletContext) context;
+        } else {
+            throw new Exception("Engine can't work in given context.");
+        }
+
+        // register the context        
+        manager.setRole("context", context);
+
         // Create the parser and register it
-        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP, PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
+        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP, 
+            PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
         manager.setRole("parser", parser);
 
         // Create the transformer and register it
-        transformer = (Transformer) manager.create((String) configurations.get(TRANSFORMER_PROP, TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
+        transformer = (Transformer) manager.create((String) configurations.get(TRANSFORMER_PROP, 
+            TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
         manager.setRole("transformer", transformer);
 
         // Create the store and register it
-        store = (Store) manager.create((String) configurations.get(STORE_PROP, STORE_DEFAULT), configurations.getConfigurations(STORE_PROP));
+        store = (Store) manager.create((String) configurations.get(STORE_PROP, 
+            STORE_DEFAULT), configurations.getConfigurations(STORE_PROP));
         manager.setRole("store", store);
 
         // Create the cache and register it
-        cache = (Cache) manager.create((String) configurations.get(CACHE_PROP, CACHE_DEFAULT), configurations.getConfigurations(CACHE_PROP));
+        cache = (Cache) manager.create((String) configurations.get(CACHE_PROP, 
+            CACHE_DEFAULT), configurations.getConfigurations(CACHE_PROP));
         manager.setRole("cache", cache);
 
         // Create the interpreter factory and register it
-        InterpreterFactory interpreters = (InterpreterFactory) manager.create("org.apache.cocoon.interpreter.InterpreterFactory", 
+        interpreters = (InterpreterFactory) manager.create(
+            "org.apache.cocoon.interpreter.InterpreterFactory", 
             configurations.getConfigurations(INTERPRETER_PROP));
         manager.setRole("interpreters", interpreters);
 
         // Create the producer factory and register it
-        producers = (ProducerFactory) manager.create("org.apache.cocoon.producer.ProducerFactory", 
+        producers = (ProducerFactory) manager.create(
+            "org.apache.cocoon.producer.ProducerFactory", 
             configurations.getConfigurations(PRODUCER_PROP));
         manager.setRole("producers", producers);
 
         // Create the processor factory and register it
-        Configurations processorConf = configurations.getConfigurations(PROCESSOR_PROP);
-        processorConf.put("servletContext", servletContext);
-        processors = (ProcessorFactory) manager.create("org.apache.cocoon.processor.ProcessorFactory", processorConf);
+        processors = (ProcessorFactory) manager.create(
+            "org.apache.cocoon.processor.ProcessorFactory", 
+            configurations.getConfigurations(PROCESSOR_PROP));
         manager.setRole("processors", processors);
 
         // Create the formatter factory and register it
-        formatters = (FormatterFactory) manager.create("org.apache.cocoon.formatter.FormatterFactory", 
+        formatters = (FormatterFactory) manager.create(
+            "org.apache.cocoon.formatter.FormatterFactory", 
             configurations.getConfigurations(FORMATTER_PROP));
         manager.setRole("formatters", formatters);
 
         // Create the browser table and register it
-        browsers = (Browsers) manager.create("org.apache.cocoon.Browsers", 
+        browsers = (Browsers) manager.create(
+            "org.apache.cocoon.Browsers", 
             configurations.getConfigurations(BROWSERS_PROP));
     }
 
@@ -287,7 +303,7 @@ public class Engine implements Defaults {
         Enumeration e = manager.getRoles();
         while (e.hasMoreElements()) {
             String role = (String)e.nextElement();
-            Actor actor = manager.getActor(role);
+            Object actor = manager.getActor(role);
             // Pretty print upper case first letter
             StringBuffer roleBuffer = new StringBuffer(role);
             if (roleBuffer.length() > 0) {

@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.6 1999-12-14 23:47:44 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.7 1999-12-16 11:42:36 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 1999-12-14 23:47:44 $
+ * @version $Revision: 1.7 $ $Date: 1999-12-16 11:42:36 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -115,11 +115,8 @@ public class Cocoon extends HttpServlet implements Defaults {
             statusURL = (String) confs.get(STATUS_URL, STATUS_URL_DEFAULT);
             errorsInternally = ((String) confs.get(ERROR_INTERNALLY, "false")).toLowerCase().equals("true");
 
-            // Put the servlet context
-    	    confs.put("servletContext", this.getServletConfig().getServletContext());
-
             // create the engine
-            engine = new Engine(confs);
+            engine = new Engine(confs, this.getServletConfig().getServletContext());
         } catch (Exception e) {
             exception = e;
             message = "Publishing Engine could not be initialized.";
@@ -147,7 +144,11 @@ public class Cocoon extends HttpServlet implements Defaults {
                 try {
                     engine.handle(request, response);
                 } catch (FileNotFoundException e) {
-                    response.sendError(404);
+                    if (errorsInternally) {
+                        Frontend.error(response, "File not found.", e);
+                    } else {
+                        response.sendError(404);
+                    }
                 } catch (Exception e) {
                     if (errorsInternally) {
                         Frontend.error(response, "Error found handling the request.", e);
