@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:11:46 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/03/05 02:24:35 $
  */
 public class Loader {
 
@@ -78,7 +78,7 @@ public class Loader {
 
         RepositoryClassLoader classLoader = new RepositoryClassLoader(this.getClass().getClassLoader());
 
-        StringTokenizer st = new StringTokenizer(repositories,",;:");
+        StringTokenizer st = new StringTokenizer(repositories, File.pathSeparator);
         while (st.hasMoreTokens()) {
             classLoader.addRepository(new File(st.nextToken()));        
         }        
