@@ -54,7 +54,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
@@ -105,8 +104,8 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public class SimpleJdbcSourceDescriptor
-    extends AbstractConfigurableSourceDescriptor
-    implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSafe {
+extends AbstractConfigurableSourceDescriptor
+implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSafe {
     
     
     private static final String STMT_SELECT_SINGLE =
@@ -158,14 +157,6 @@ public class SimpleJdbcSourceDescriptor
     public void configure(final Configuration configuration) throws ConfigurationException {
         super.configure(configuration);
         m_datasourceName = configuration.getChild("datasource",true).getValue("cocoondb");
-        
-        if (m_cache != null) {
-            m_eventName = "simple-jdbc:";
-            Iterator types = getPropertyTypes().iterator();
-            while (types.hasNext()) {
-                m_eventName += "/" + types.next();
-            }
-        }
     }
     
     public void initialize() throws Exception {
@@ -332,9 +323,34 @@ public class SimpleJdbcSourceDescriptor
     
     public SourceValidity getValidity(Source source) {
         if (m_cache != null) {
-            return new EventValidity(new NameValueEvent(m_eventName,source.getURI()));
+            return new EventValidity(new NameValueEvent(getEventName(),source.getURI()));
         }
         return null;
     }
 
+    private final String getEventName() {
+        if (m_eventName == null) {
+            Connection connection = null;
+            try {
+                connection = m_datasource.getConnection();
+                String catalogName = connection.getCatalog();
+                m_eventName = (catalogName != null) 
+                    ? catalogName + "/sourceprops"
+                    : "sourceprops";
+            }
+            catch (SQLException e) {
+                getLogger().warn("Error getting catalog name from jdbc connection.",e);
+                m_eventName = "sourceprops";
+            }
+            finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException e) {
+                    }
+                }
+            }
+        }
+        return m_eventName;
+    }
 }
