@@ -40,15 +40,15 @@ import org.xml.sax.SAXException;
 public class XMidiSerializer extends AbstractSerializer {
     private final static String mimeType = "audio/x-midi";
 
-    private final int OUTSIDE_XMIDI = 0;
-    private final int INSIDE_XMIDI = 1;
-    private final int INSIDE_CHUNK = 2;
-    private final int INSIDE_MTHD = 3;
-    private final int INSIDE_MTRK = 4;
-    private final int INSIDE_DELTA = 5;
-    private final int INSIDE_STATUS = 6;
-    private final int INSIDE_DELTA_CHANNEL = 7;
-    private final int INSIDE_STATUS_CHANNEL = 8;
+    private final static int OUTSIDE_XMIDI = 0;
+    private final static int INSIDE_XMIDI = 1;
+    private final static int INSIDE_CHUNK = 2;
+    private final static int INSIDE_MTHD = 3;
+    private final static int INSIDE_MTRK = 4;
+    private final static int INSIDE_DELTA = 5;
+    private final static int INSIDE_STATUS = 6;
+    private final static int INSIDE_DELTA_CHANNEL = 7;
+    private final static int INSIDE_STATUS_CHANNEL = 8;
 
     private int expectedBytes;
     private boolean preventDataWrite;

@@ -44,7 +44,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * A simple AsciiArt text SVG XML generator.
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.6 2004/06/11 20:32:19 vgritsenko Exp $
+ * @version CVS $Id$
  * @since Cocoon 2.1, 22 December 2002
  */
 public class AsciiArtSVGGenerator
@@ -59,24 +59,24 @@ public class AsciiArtSVGGenerator
     private AttributesImpl attributes = null;
     private AsciiArtPad asciiArtPad;
 
-    //private String PREFIX = "svg";
+    //private String static PREFIX = "svg";
     private String PREFIX = "";
     private String URI = "http://www.w3.org/2000/svg";
 
     /** default SVG line attributes
      */
-    private final String DEFAULT_LINE_ATTRIBUTE = "stroke:black; stroke-width:1.5";
+    private final static String DEFAULT_LINE_ATTRIBUTE = "stroke:black; stroke-width:1.5";
 
     /** default SVG text attribute
      */
-    private final String DEFAULT_TEXT_ATTRIBUTE = "font-size: 12; font-family:Times Roman; fill:blue;";
+    private final static String DEFAULT_TEXT_ATTRIBUTE = "font-size: 12; font-family:Times Roman; fill:blue;";
 
     private String lineAttribute = DEFAULT_LINE_ATTRIBUTE;
     private String textAttribute = DEFAULT_TEXT_ATTRIBUTE;
 
 
-    final int DEFAULT_X_GRID = 10;
-    final int DEFAULT_Y_GRID = 12;
+    final static int DEFAULT_X_GRID = 10;
+    final static int DEFAULT_Y_GRID = 12;
     private int xGrid = DEFAULT_X_GRID;
     private int yGrid = DEFAULT_Y_GRID;
 

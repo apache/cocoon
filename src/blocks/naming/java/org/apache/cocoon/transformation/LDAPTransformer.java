@@ -1449,7 +1449,7 @@ public class LDAPTransformer extends AbstractTransformer {
         protected String version = "2";
         protected String scope = "ONELEVEL_SCOPE";
         protected String authentication = "simple";
-        private final String LDAP_ENCODING = "ISO-8859-1"; 
+        private final static String LDAP_ENCODING = "ISO-8859-1"; 
         protected String encoding = LDAP_ENCODING;
 
         /** LDAP environment information */

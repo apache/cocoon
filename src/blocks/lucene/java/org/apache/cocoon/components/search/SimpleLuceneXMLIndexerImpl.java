@@ -64,7 +64,7 @@ import java.util.List;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.8 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id$
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
          implements LuceneXMLIndexer, Configurable, Serviceable, ThreadSafe {
@@ -94,7 +94,7 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
      * @since
      */
     
-    final String CONTENT_VIEW_QUERY_DEFAULT = "cocoon-view=content";
+    final static String CONTENT_VIEW_QUERY_DEFAULT = "cocoon-view=content";
 
     /**
      * Config element name specifying the tags to be added as Stored, Untokenised, Unindexed Fields.

@@ -84,7 +84,7 @@ import javax.xml.rpc.server.ServiceLifecycle;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: AvalonProvider.java,v 1.5 2004/03/05 13:01:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AvalonProvider extends RPCProvider
 {
@@ -237,7 +237,7 @@ public class AvalonProvider extends RPCProvider
     final class Handler implements InvocationHandler
     {
         // Constants describing the ServiceLifecycle.destroy method
-        private final String SL_DESTROY = "destroy";
+        private final static String SL_DESTROY = "destroy";
         private final Class  SL_CLASS = ServiceLifecycle.class;
 
         // Component & ComponentManager references
