@@ -102,7 +102,7 @@ public class Union extends AbstractContainerWidget {
                 widget = getChild(newValue);
             }
 
-            if (widget != null && !getCombinedState().isAcceptingInputs()) {
+            if (widget != null && getCombinedState().isAcceptingInputs()) {
                 widget.readFromRequest(formContext);
             }
         }
