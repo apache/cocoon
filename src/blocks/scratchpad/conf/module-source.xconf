@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='module']">
+
+    <!-- module pseudo protocol -->
+    <component-instance
+        name="module"
+        class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
+
+</xconf>
