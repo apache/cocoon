@@ -45,6 +45,7 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
 
 import org.apache.log.Hierarchy;
@@ -192,7 +193,7 @@ public class CocoonTask extends Task {
      * @param  preCompileOnly  The new precompileOnly value
      */
     public void setPrecompileOnly(boolean preCompileOnly) {
-        //this.preCompileOnly = new Boolean(preCompileOnly);
+        //this.preCompileOnly = BooleanUtils.toBooleanObject(preCompileOnly);
     }
 
 
@@ -202,7 +203,7 @@ public class CocoonTask extends Task {
      * @param  followLinks  The new followLinks value
      */
     public void setFollowLinks(boolean followLinks) {
-        this.followLinks = new Boolean(followLinks);
+        this.followLinks = BooleanUtils.toBooleanObject(followLinks);
     }
 
 

@@ -93,6 +93,7 @@ public final class ObjectModelHelper {
      * @param cookieName Name of the cookie which is to be found and returned back
      * @param cookieIndex Index of the cookie which is to be found and returned
      * @return cookie object is returned
+     * @since 2.1.7
      */
     public static Cookie getCookie(Map objectModel,
                                    String cookieName,
