@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: samples.xml,v 1.9 2004/04/05 12:25:36 antonio Exp $ -->
+<!-- CVS $Id$ -->
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="FOP Block Samples">
 
     <group name="Back">
@@ -28,6 +28,9 @@
     <group name="Simple FOP examples">
         <sample name="Hello, PDF world!" href="hello.pdf">
             The well-known hello.xml document rendered as PDF.
+        </sample>
+        <sample name="Hello, PS world!" href="hello.ps">
+            The well-known hello.xml document rendered as PS.
         </sample>
         <sample name="minimal XSL-FO document" href="misc/minimal.fo.xml">
             Source document used by FOP in the next example.
