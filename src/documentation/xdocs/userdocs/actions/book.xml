@@ -20,6 +20,7 @@
   </menu>
   <menu label="Optional">
     <menu-item label="Session Action" href="session-action.html"/>
+    <menu-item label="Sendmail Action" href="sendmail-action.html"/>
   </menu>
 
 </book>
