@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-26 21:13:42 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 21:15:36 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -50,7 +50,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
      * the file referenced by the "form-descriptor" parameter conforms
      * to the AbstractDatabaseAction specifications.
      */
-    public Map act(EntityResolver parm1, Map parm2, String parm3, Parameters parm4) throws java.lang.Exception {
+    public Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
 
