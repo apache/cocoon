@@ -17,6 +17,9 @@ CP=$CLASSPATH
 export CP
 unset CLASSPATH
 
+ANT_OPTS=-Djava.endorsed.dirs=lib/endorsed
+export ANT_OPTS
+
 $PWD/tools/bin/ant -logger org.apache.tools.ant.NoBannerLogger -emacs $@ 
 
 CLASSPATH=$CP

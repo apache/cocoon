@@ -2,7 +2,7 @@
 rem ----------------------------------------------------------------------------
 rem build.bat - Win32 Build Script for Apache Cocoon
 rem
-rem $Id: build.bat,v 1.2 2003/04/29 17:43:30 vgritsenko Exp $
+rem $Id: build.bat,v 1.3 2003/04/30 14:11:56 bruno Exp $
 rem ----------------------------------------------------------------------------
 
 rem ----- Copy Xalan and Xerces for the build system    ------------------------
@@ -36,6 +36,10 @@ rem ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 set OLD_ANT_HOME=%ANT_HOME%
 set ANT_HOME=tools
 
+rem ----- Set endorsed library path to be used by Ant
+set OLD_ANT_OPTS=%ANT_OPTS%
+set ANT_OPTS=-Djava.endorsed.dirs=lib\endorsed
+
 call %ANT_HOME%\bin\ant -logger org.apache.tools.ant.NoBannerLogger -emacs %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ----- Restore ANT_HOME
@@ -49,3 +53,7 @@ set OLD_PATH=
 rem ----- Restore CLASSPATH
 set CLASSPATH=%OLD_CLASSPATH%
 set OLD_CLASSPATH=
+
+rem ----- Restore ANT_OPTS
+set ANT_OPTS=%OLD_ANT_OPTS%
+set OLD_ANT_OPTS=
