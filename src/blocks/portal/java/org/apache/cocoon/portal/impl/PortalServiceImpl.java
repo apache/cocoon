@@ -47,12 +47,6 @@ import org.apache.cocoon.portal.layout.Layout;
  * 
  * @version CVS $Id$
  */
-/**
- * @author Carsten
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code Template
- */
 public class PortalServiceImpl
     extends AbstractLogEnabled
     implements Serviceable,
@@ -111,6 +105,9 @@ public class PortalServiceImpl
         return this.getInfo().getAttribute(key);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String key, Object value) {
         this.getInfo().setAttribute(key, value);
     }
