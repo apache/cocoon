@@ -18,9 +18,9 @@ package org.apache.cocoon.components.source.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.TraversableSource;
@@ -33,12 +33,12 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     private TraversableSource tsource;
     
     public TraversableCachingSource(String protocol,
-                                    String location,
+                                    String uri,
                                     TraversableSource source,
-                                    Parameters params,
                                     int expires,
+                                    String cacheName,
                                     boolean async) {
-        super(protocol, location, source, params, expires, async);
+        super(protocol, uri, source, expires, cacheName, async);
         this.tsource = source;
     }
     
@@ -148,18 +148,26 @@ public class TraversableCachingSource extends CachingSource implements Traversab
 
     // ---------------------------------------------------- helper methods
 
-    private TraversableCachingSource createSource(String uri, Source wrapped) 
+    
+    
+    protected final TraversableCachingSource createSource(String uri, Source wrapped) 
     throws SourceException {
-        final TraversableCachingSource source = 
-            new TraversableCachingSource(super.protocol,
-                                         uri,
-                                         (TraversableSource) wrapped,
-                                         new Parameters().merge(super.parameters),
-                                         super.expires,
-                                         super.async);
+        final TraversableCachingSource source = newSource(uri, wrapped);
+        initializeSource(source);
+        return source;
+    }
+
+    protected TraversableCachingSource newSource(String uri, Source wrapped) {
+        return  new TraversableCachingSource(super.protocol,
+                                             uri,
+                                             (TraversableSource) wrapped,
+                                             super.expires,
+                                             super.cacheName,
+                                             super.async);
+    }
+
+    protected void initializeSource(TraversableCachingSource source) throws SourceException {
         source.cache = super.cache;
-        source.resolver = super.resolver;
-        source.refresher = super.refresher;
         ContainerUtil.enableLogging(source, getLogger());
         try {
             ContainerUtil.service(source, super.manager);
@@ -167,14 +175,64 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         } catch (Exception e) {
             throw new SourceException("Unable to initialize source.", e);
         }
-        return source;
     }
     
+    protected SourceMeta createMeta() {
+        return new TraversableSourceMeta();
+    }
+    
+    protected void initMeta(SourceMeta meta, Source source) throws IOException {
+        super.initMeta(meta, source);
+
+        final TraversableSource tsource = (TraversableSource) source;
+        final TraversableSourceMeta tmeta = (TraversableSourceMeta) meta;
+
+        tmeta.setName(tsource.getName());
+        tmeta.setIsCollection(tsource.isCollection());
+
+        if (tmeta.isCollection()) {
+            final Collection children = tsource.getChildren();
+            if (children != null) {
+                final String[] names = new String[children.size()];
+                final Iterator iter = children.iterator();
+                int count = 0;
+                while(iter.hasNext()) {
+                    TraversableSource child = (TraversableSource) iter.next();
+                    names[count] = child.getName();
+                    count++;
+                }
+                tmeta.setChildren(names);
+            }
+        }
+
+    }
+    
+    protected void remove() {
+        remove(true);
+    }
+
+    /**
+     * The parent's cached response needs to be removed from cache
+     * as well because it's cached list of children is no longer valid.
+     */
+    private void remove(boolean flag) {
+        super.remove();
+        if (flag) {
+            try {
+                TraversableCachingSource parent = (TraversableCachingSource) getParent();
+                parent.remove(false);
+            }
+            catch (SourceException e) {
+                getLogger().error("Error removing parent's cached response");
+            }
+        }
+    }
+
     /**
      * Calculate the cached child URI based on a parent URI
      * and a child name.
      */
-    private String getChildURI(String parentURI, String childName) {
+    private static String getChildURI(String parentURI, String childName) {
         
         // separate query string from rest of parentURI
         String rest, qs;
@@ -203,7 +261,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     /**
      * Calculate the cached parent URI based on a child URI.
      */
-    private String getParentURI(String childURI) {
+    private static String getParentURI(String childURI) {
         
         // separate query string from rest of uri
         String rest, qs;
@@ -228,6 +286,36 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         }
         
         return parentUri + qs;
+    }
+
+    protected static class TraversableSourceMeta extends SourceMeta {
+        private String   m_name;
+        private boolean  m_isCollection;
+        private String[] m_children;
+
+        protected String getName() {
+            return m_name;
+        }
+
+        protected void setName(String name) {
+            m_name = name;
+        }
+
+        protected boolean isCollection() {
+            return m_isCollection;
+        }
+
+        protected void setIsCollection(boolean isCollection) {
+            m_isCollection = isCollection;
+        }
+
+        protected String[] getChildren() {
+            return m_children;
+        }
+
+        protected void setChildren(String[] children) {
+            m_children = children;
+        }
     }
 
 }

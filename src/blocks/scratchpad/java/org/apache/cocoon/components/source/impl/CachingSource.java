@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,19 +20,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
+import org.apache.cocoon.caching.EventAware;
 import org.apache.cocoon.caching.IdentifierCacheKey;
+import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -40,9 +40,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -54,7 +52,7 @@ import org.xml.sax.SAXException;
  * This class implements a proxy like source that uses another source
  * to get the content. This implementation can cache the content for
  * a given period of time
- * 
+ *
  * <h2>Syntax for Protocol</h2>
  * <p>
  * cached:http://www.apache.org/[?cocoon:cache-expires=60&cocoon:cache-name=main]
@@ -62,95 +60,95 @@ import org.xml.sax.SAXException;
  * <p>
  * The above examples show how the real source <code>http://www.apache.org</code>
  * is wrapped and the cached contents is used for <code>60</code> seconds.
- * The second querystring parameter instructs that the cache key be extended with the string 
+ * The second querystring parameter instructs that the cache key be extended with the string
  * <code>main</code>. This allows the use of multiple cache entries for the same source.
  * </p>
  * <p>
- * The value of the expires parameter holds some additional semantics. 
+ * The value of the expires parameter holds some additional semantics.
  * Specifying <code>-1</code> will yield the cached response to be considered valid
- * always. <code>0</code> can be used to achieve the exact opposite. That is to say, 
+ * always. <code>0</code> can be used to achieve the exact opposite. That is to say,
  * the cached contents will be thrown out and updated immediately and unconditionally.
  * <p>
- * @version CVS $Id: CachingSource.java,v 1.11 2004/04/15 08:05:56 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CachingSource extends AbstractLogEnabled
 implements Source, Serviceable, Initializable, XMLizable {
+
+    // ---------------------------------------------------- Constants
+    
+    public static final String CACHE_EXPIRES_PARAM = "cache-expires";
+    public static final String CACHE_NAME_PARAM = "cache-name";
+    
+    // ---------------------------------------------------- Instance variables
     
     /** The ServiceManager */
     protected ServiceManager manager;
-    
-    /** The SourceResolver to resolve the wrapped Source */
-    protected SourceResolver resolver;
-    
+
     /** The current cache */
     protected Cache cache;
-    
-    /** The refresher for asynchronous updates */
-    protected Refresher refresher;
-    
+
     /** The source object for the real content */
     protected Source source;
-    
+
     /** The cached response (if any) */
     protected CachedSourceResponse response;
-    
+
     /** Did we just update meta info? */
     protected boolean freshMeta;
-    
+
     /** The full location string */
     final protected String uri;
-    
+
     /** The used protocol */
     final protected String protocol;
-    
+
     /** The key used in the store */
     final protected IdentifierCacheKey cacheKey;
     
     /** number of seconds before cached object becomes invalid */
     final protected int expires;
     
-    /** Parameters */
-    final protected Parameters parameters;
+    /** cache key extension */
+    final protected String cacheName;
     
     /** asynchronic refresh strategy ? */
     final protected boolean async;
-    
+
     /**
      * Construct a new object.
      */
     public CachingSource(final String protocol,
                          final String uri,
                          final Source source,
-                         final Parameters parameters,
                          final int expires,
+                         final String cacheName,
                          final boolean async) {
         this.protocol = protocol;
         this.uri = uri;
         this.source = source;
         this.expires = expires;
+        this.cacheName = cacheName;
         this.async = async;
-        this.parameters = parameters;
         
         String key = "source:" + source.getURI();
-        String cacheName = parameters.getParameter("cache-name", null);
         if (cacheName != null) {
             key += ":" + cacheName;
         }
         this.cacheKey = new IdentifierCacheKey(key, false);
     }
-        
+
     /**
      * Set the ServiceManager.
      */
     public void service(final ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
-    
+
     /**
      * Initialize the Source.
      */
     public void initialize() throws Exception {
-        
+
         boolean checkValidity = true;
         if (this.expires == -1) {
             if (getLogger().isDebugEnabled()) {
@@ -158,115 +156,75 @@ implements Source, Serviceable, Initializable, XMLizable {
             }
             checkValidity = false;
         }
-        
+
         if (this.async && this.expires != 0) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Not invalidating cached response " +                    "for asynch source " + getSourceURI());
+                getLogger().debug("Using cached response if available.");
             }
             checkValidity = false;
         }
 
         this.response = (CachedSourceResponse) this.cache.get(this.cacheKey);
+
         if (this.response == null) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("No cached response found " +                    "for source " + getSourceURI());
+                getLogger().debug("No cached response found.");
             }
             checkValidity = false;
         }
-        
-        if (checkValidity) {
-            
-            final ExpiresValidity cacheValidity = (ExpiresValidity) this.response.getValidityObjects()[0];
-            final SourceValidity sourceValidity = this.response.getValidityObjects()[1];
-            
-            boolean remove = false;
-            if (this.expires == 0) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Force invalidation of cached response" +                        " of source " + getSourceURI());
-                }
-                remove = true;
+
+        if (this.expires == 0) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Not using cached response.");
             }
-            else {
-                boolean expired = cacheValidity.isValid() != SourceValidity.VALID;
-                if (expired) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Cached response of source " 
-                            + getSourceURI() + " is expired.");
-                    }
-                    boolean invalid = !isValid(sourceValidity, this.source);
-                    if (invalid) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Cached response of source "
-                                + getSourceURI() + " is invalid.");
-                        }
-                        remove = true;
-                    }
-                    else {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Cached response of source " 
-                                + getSourceURI() + " is still valid.");
-                        }
-                        // set new expiration period
-                        this.response.getValidityObjects()[0] = new ExpiresValidity(getExpiration());
-                    }
-                }
-            }
-            
-            if (remove) {
-                this.response = null;
-                // remove it if it no longer exists
-                if (!exists()) {
-                    this.cache.remove(this.cacheKey);
-                }
+            this.response = null;
+            checkValidity = false;
+        }
+
+        if (checkValidity && !checkValidity()) {
+            this.response = null;
+            // remove it if it no longer exists
+            if (!this.source.exists()) {
+                remove();
             }
         }
-        if (this.async && this.expires > 0) {
-            // schedule it with the refresher
-            this.refresher.refresh(this.cacheKey,
-                                   getSourceURI(),
-                                   this.parameters.getParameter("cache-role", null),
-                                   this.parameters);
-        }
+
     }
-    
+
     /**
      * Cleanup.
      */
     public void dispose() {
-        if (this.source != null) {
-            this.resolver.release(this.source);
-            this.source = null;
-        }
+        this.source = null;
         this.manager = null;
-        this.resolver = null;
         this.cache = null;
     }
-    
+
     /**
      * Initialize the cached response with meta info.
-     * 
+     *
      * @throws IOException  if an the binary response could not be initialized
      */
     protected void initMetaResponse() throws IOException {
         boolean storeResponse = false;
         CachedSourceResponse response = this.response;
         if (response == null) {
-            if (this.expires != 0) {
-                final SourceValidity cacheValidity = new ExpiresValidity(getExpiration());
-                final SourceValidity sourceValidity = source.getValidity();
-                response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
-                storeResponse = true;
+            SourceValidity[] validities;
+            if (this.cache instanceof EventAware) {
+                validities = new SourceValidity[] { new EventValidity(new NamedEvent(this.source.getURI())) };
             }
             else {
-                response = new CachedSourceResponse(null);
+                validities = new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() };
             }
+            response = new CachedSourceResponse(validities);
+            storeResponse = true;
         }
         if (response.getExtra() == null) {
             response.setExtra(readMeta(this.source));
             this.freshMeta = true;
         }
+        this.response = response;
         if (storeResponse) {
-            this.response = response;
             try {
                 this.cache.store(this.cacheKey, this.response);
             }
@@ -275,10 +233,10 @@ implements Source, Serviceable, Initializable, XMLizable {
             }
         }
     }
-    
+
     /**
      * Initialize the cached response with binary contents.
-     * 
+     *
      * @throws IOException  if an the binary response could not be initialized
      */
     protected void initBinaryResponse() throws IOException {
@@ -286,25 +244,19 @@ implements Source, Serviceable, Initializable, XMLizable {
         /* delay caching the response until we have a valid new one */
         CachedSourceResponse response = this.response;
         if (response == null) {
-            if (this.expires != 0) {
-                final SourceValidity cacheValidity = new ExpiresValidity(getExpiration());
-                final SourceValidity sourceValidity = source.getValidity();
-                response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
-                storeResponse = true;
-            }
-            else {
-                response = new CachedSourceResponse(null);
-            }
+            response = new CachedSourceResponse(new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity()});
+            storeResponse = true;
         }
         if (response.getBinaryResponse() == null) {
             response.setBinaryResponse(readBinaryResponse(this.source));
             if (!this.freshMeta) {
                 /* always refresh meta in this case */
                 response.setExtra(readMeta(this.source));
+                this.freshMeta = true;
             }
         }
+        this.response = response;
         if (storeResponse) {
-            this.response = response;
             try {
                 this.cache.store(this.cacheKey, this.response);
             }
@@ -313,10 +265,10 @@ implements Source, Serviceable, Initializable, XMLizable {
             }
         }
     }
-    
+
     /**
      * Initialize the cached response with XML contents.
-     * 
+     *
      * @param refresh  whether to force refresh.
      * @throws SAXException  if something happened during xml processing
      * @throws IOException  if an IO level error occured
@@ -327,15 +279,8 @@ implements Source, Serviceable, Initializable, XMLizable {
         /* delay caching the response until we have a valid new one */
         CachedSourceResponse response = this.response;
         if (response == null) {
-            if (this.expires != 0) {
-                final SourceValidity cacheValidity = new ExpiresValidity(getExpiration());
-                final SourceValidity sourceValidity = source.getValidity();
-                response = new CachedSourceResponse(new SourceValidity[] {cacheValidity, sourceValidity});
-                storeResponse = true;
-            }
-            else {
-                response = new CachedSourceResponse(null);
-            }
+            response = new CachedSourceResponse(new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() });
+            storeResponse = true;
         }
         if (response.getXMLResponse() == null || refresh) {
             byte[] binary = response.getBinaryResponse();
@@ -343,10 +288,11 @@ implements Source, Serviceable, Initializable, XMLizable {
             if (!this.freshMeta) {
                 /* always refresh meta in this case */
                 response.setExtra(readMeta(this.source));
+                this.freshMeta = true;
             }
         }
+        this.response = response;
         if (storeResponse) {
-            this.response = response;
             try {
                 this.cache.store(this.cacheKey, this.response);
             }
@@ -355,9 +301,9 @@ implements Source, Serviceable, Initializable, XMLizable {
             }
         }
     }
-    
+
     // ---------------------------------------------------- Source implementation
-    
+
     /**
      * Return the protocol identifier.
      */
@@ -400,7 +346,7 @@ implements Source, Serviceable, Initializable, XMLizable {
         }
         return ((SourceMeta) this.response.getExtra()).getMimeType();
     }
-    
+
     /**
      * Return an <code>InputStream</code> object to read from the source.
      */
@@ -424,9 +370,9 @@ implements Source, Serviceable, Initializable, XMLizable {
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
-		return this.source.exists();
+        return this.source.exists();
     }
-    
+
     /**
      *  Get the Validity object. This can either wrap the last modification
      *  date or the expires information or...
@@ -440,18 +386,62 @@ implements Source, Serviceable, Initializable, XMLizable {
         }
         return null;
     }
-     
+
     /**
      * Refresh this object and update the last modified date
-     * and content length.
+     * and content length. This method will try to refresh the
+     * cached contents.
      */
     public void refresh() {
-        this.response = null;
         this.source.refresh();
+        if (response != null && checkValidity()) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Cached response is still valid for source " + this.uri + ".");
+            }
+        }
+        else {
+            if (this.source.exists()) {
+                CachedSourceResponse response = this.response;
+                try {
+                    if (response == null) {
+                        // create a new cached response
+                        response = new CachedSourceResponse(new SourceValidity[] { 
+                                new ExpiresValidity(getExpiration()), source.getValidity()});
+                    }
+                    // only create objects that are cached
+                    if (response.getBinaryResponse() != null) {
+                        response.setBinaryResponse(readBinaryResponse(source));
+                    }
+                    if (response.getXMLResponse() != null) {
+                        response.setXMLResponse(readXMLResponse(
+                                source, response.getBinaryResponse(), this.manager));
+                    }
+                    // always refresh meta data
+                    response.setExtra(readMeta(source));
+                    this.response = response;
+                    cache.store(this.cacheKey, response);
+                }
+                catch (Exception e) {
+                    getLogger().warn("Error refreshing source " + this.uri +
+                        "Cached response (if any) may be stale.", e);
+                }
+            }
+            else if (this.response != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Source " + this.uri + " no longer exists." +
+                        " Throwing out cached response.");
+                }
+                remove();
+            }
+        }
+    }
+    
+    protected void remove() {
+        this.cache.remove(this.cacheKey);
     }
     
     // ---------------------------------------------------- XMLizable implementation
-    
+
     /**
      * Generates SAX events representing the object's state.
      */
@@ -476,46 +466,46 @@ implements Source, Serviceable, Initializable, XMLizable {
             this.manager.release(deserializer);
         }
     }
-    
+
     // ---------------------------------------------------- CachingSource specific accessors
-    
+
     /**
      * Return the uri of the cached source.
      */
     protected String getSourceURI() {
         return this.source.getURI();
     }
-    
+
     /**
      * Return the used key.
      */
     protected IdentifierCacheKey getCacheKey() {
         return this.cacheKey;
     }
-    
+
     /**
      * Expires (in milli-seconds)
      */
     protected long getExpiration() {
         return this.expires * 1000;
     }
-    
+
     /**
      * Read XML content from source.
-     * 
-	 * @return content from source
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws CascadingIOException
-	 */
-	protected static byte[] readXMLResponse(Source source, byte[] binary, ServiceManager manager) 
+     *
+     * @return content from source
+     * @throws SAXException
+     * @throws IOException
+     * @throws CascadingIOException
+     */
+    protected byte[] readXMLResponse(Source source, byte[] binary, ServiceManager manager)
     throws SAXException, IOException, CascadingIOException {
         XMLSerializer serializer = null;
         XMLizer xmlizer = null;
         byte[] result = null;
-		try {
-		    serializer = (XMLSerializer) manager.lookup(XMLSerializer.ROLE);
-            
+        try {
+            serializer = (XMLSerializer) manager.lookup(XMLSerializer.ROLE);
+
             if (source instanceof XMLizable) {
                 ((XMLizable) source).toSAX(serializer);
             }
@@ -532,75 +522,54 @@ implements Source, Serviceable, Initializable, XMLizable {
                                   serializer);
                 }
             }
-		    result = (byte[]) serializer.getSAXFragment();
-		} catch (ServiceException se) {
-		    throw new CascadingIOException("Missing service dependency.", se);
-		} finally {
+            result = (byte[]) serializer.getSAXFragment();
+        } catch (ServiceException se) {
+            throw new CascadingIOException("Missing service dependency.", se);
+        } finally {
             manager.release(xmlizer);
-		    manager.release(serializer);
-		}
-		return result;
-	}
+            manager.release(serializer);
+        }
+        return result;
+    }
 
-	/**
+    /**
      * Read binary content from source.
-     * 
-	 * @return content from source
-	 * @throws IOException
-	 * @throws SourceNotFoundException
-	 */
-	protected static byte[] readBinaryResponse(Source source) 
+     *
+     * @return content from source
+     * @throws IOException
+     * @throws SourceNotFoundException
+     */
+    protected byte[] readBinaryResponse(Source source)
     throws IOException, SourceNotFoundException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final byte[] buffer = new byte[2048];
-		final InputStream inputStream = source.getInputStream();
-		int length;
-		while ((length = inputStream.read(buffer)) > -1) {
-		    baos.write(buffer, 0, length);
-		}
-		baos.flush();
-		inputStream.close();
-		return baos.toByteArray();
-	}
-    
+        final byte[] buffer = new byte[2048];
+        final InputStream inputStream = source.getInputStream();
+        int length;
+        while ((length = inputStream.read(buffer)) > -1) {
+            baos.write(buffer, 0, length);
+        }
+        baos.flush();
+        inputStream.close();
+        return baos.toByteArray();
+    }
+
     /**
      * Read meta data from source.
-     * 
+     *
      * @return source meta data
      * @throws IOException
      */
-    protected static SourceMeta readMeta(Source source) throws IOException {
-        SourceMeta meta;
-        
-        if (source instanceof TraversableSource) {
-            
-            final TraversableSourceMeta tmeta = new TraversableSourceMeta();
-            final TraversableSource tsource = (TraversableSource) source;
-            
-            tmeta.setName(tsource.getName());
-            tmeta.setIsCollection(tsource.isCollection());
-            
-            if (tmeta.isCollection()) {
-                final Collection children = tsource.getChildren();
-                if (children != null) {
-                    final String[] names = new String[children.size()];
-                    final Iterator iter = children.iterator();
-                    int count = 0;
-                    while(iter.hasNext()) {
-                        TraversableSource child = (TraversableSource) iter.next();
-                        names[count] = child.getName();
-                        count++;
-                    }
-                    tmeta.setChildren(names);
-                }
-            }
-            
-            meta = tmeta;
-        }
-        else {
-            meta = new SourceMeta();
-        }
-        
+    protected final SourceMeta readMeta(Source source) throws IOException {
+        SourceMeta meta = createMeta();
+        initMeta(meta, source);
+        return meta;
+    }
+    
+    protected SourceMeta createMeta() {
+        return new SourceMeta();
+    }
+    
+    protected void initMeta(SourceMeta meta, Source source) throws IOException {
         final long lastModified = source.getLastModified();
         if (lastModified > 0) {
             meta.setLastModified(lastModified);
@@ -609,80 +578,89 @@ implements Source, Serviceable, Initializable, XMLizable {
             meta.setLastModified(System.currentTimeMillis());
         }
         meta.setMimeType(source.getMimeType());
+    }
+
+    private boolean checkValidity() {
+        if (this.response == null) return false;
         
-        return meta;
+        final SourceValidity[] validities = this.response.getValidityObjects();
+        boolean valid = true;
+        if (validities.length == 2) {
+            final ExpiresValidity expiresValidity = (ExpiresValidity) validities[0];
+            final SourceValidity sourceValidity = validities[1];
+
+            if (expiresValidity.isValid() != SourceValidity.VALID) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Cached response of source " + getSourceURI() + " is expired.");
+                }
+                if (!isValid(sourceValidity, source.getValidity())) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Cached response of source " + getSourceURI() + " is invalid.");
+                    }
+                    valid = false;
+                }
+                else {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Cached response of source " + getSourceURI() + " is still valid.");
+                    }
+                    // set new expiration period
+                    this.response.getValidityObjects()[0] = new ExpiresValidity(getExpiration());
+                }
+            }
+            else {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Cached response of source " + getSourceURI() + " is NOT expired.");
+                }
+            }
+        }
+        else {
+            // assert(validities.length == 1 && validities[0] instanceof EventValidity)
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Cached response of source does not expire");
+            }
+        }
+        return valid;
     }
     
-    protected static boolean isValid(SourceValidity validity, Source source) {
-        if (validity == null) return false;
-        return validity.isValid() == SourceValidity.VALID || 
-              (validity.isValid() == SourceValidity.UNKNOWN && 
-               validity.isValid(source.getValidity()) == SourceValidity.VALID);
+    private static boolean isValid(SourceValidity oldValidity, SourceValidity newValidity) {
+        return (oldValidity.isValid() == SourceValidity.VALID ||
+                (oldValidity.isValid() == SourceValidity.UNKNOWN &&
+                 oldValidity.isValid(newValidity) == SourceValidity.VALID));
     }
-    
+
     /**
      * Data holder for caching Source meta info.
      */
     protected static class SourceMeta implements Serializable {
-        
+
         private String m_mimeType;
         private long m_lastModified;
         private boolean m_exists;
-        
+
         protected String getMimeType() {
             return m_mimeType;
         }
-        
+
         protected void setMimeType(String mimeType) {
             m_mimeType = mimeType;
         }
-        
+
         protected long getLastModified() {
             return m_lastModified;
         }
-        
+
         protected void setLastModified(long lastModified) {
             m_lastModified = lastModified;
         }
-        
+
         protected boolean exists() {
             return m_exists;
         }
-        
+
         protected void setExists(boolean exists) {
             m_exists = exists;
         }
-        
-    }
-    
-    protected static class TraversableSourceMeta extends SourceMeta {
-        private String   m_name;
-        private boolean  m_isCollection;
-        private String[] m_children;
-        
-        protected String getName() {
-            return m_name;
-        }
-        
-        protected void setName(String name) {
-            m_name = name;
-        }
-        
-        protected boolean isCollection() {
-            return m_isCollection;
-        }
-        
-        protected void setIsCollection(boolean isCollection) {
-            m_isCollection = isCollection;
-        }
-        
-        protected String[] getChildren() {
-            return m_children;
-        }
-        
-        protected void setChildren(String[] children) {
-            m_children = children;
-        }
+
     }
 
 }

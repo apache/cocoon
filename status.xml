@@ -465,6 +465,11 @@
      AbstractMessageListener and AbstractMessagePublisher should be used as basis for
      custom publish/subscribe components.
    </action>
+   <action dev="UH" type="add">
+     Still in the scratchpad area at the time of this writing, added a
+     CachedSource proxy subclass for Sources that implement TraversableSource and
+     InspectableSource (for instance WebDAVSource).
+   </action> 
    <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
      Added support for stripping root elements in the CIncludeTransformer.
    </action>
