@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.165 2004/07/01 13:45:17 unico Exp $
+    | CVS $Id: gump.xml,v 1.166 2004/07/01 14:05:16 unico Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1030,7 +1030,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-eventcache" type="samples"/>
+    <!-- commented out because of circular dependency -->
+    <!--depend project="cocoon-block-eventcache" type="samples"/-->
     <depend project="cocoon-block-databases" type="samples"/>
     <depend project="cocoon-block-hsqldb"/>
 
