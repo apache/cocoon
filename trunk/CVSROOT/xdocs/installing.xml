@@ -510,11 +510,55 @@ Alias /cocoon/ "[cocoon-home]"</source>
   </s3>
 
   <s3 title="Cocoon with JRun and other web servers (iPlanet, IIS, etc)">
-  <p>Add your sucessful installation method here.  Volunteers welcome!</p>
+   <p>Add your sucessful installation method here.  Volunteers welcome!</p>
   </s3>
 
   </s2>
 
+  <s2 title="Installing Cocoon on iPlanet Web Server 4.x">
+   <p>This has been tested on v4.1 under NT 4.</p>
+   
+   <s3 title="If you prefer working with your file editor">
+    <p>Edit your <code>servlets.properties</code> file in the config folder 
+    of your server (something like <code>C:\Netscape\Server4\https-something.somewhere.com\config</code>), 
+    add the following lines:</p>
+    
+<source><![CDATA[servlet.cocoon.code=org.apache.cocoon.Cocoon
+servlet.cocoon.initArgs=properties=<yourpath to cocoon>/cocoon/conf/cocoon.properties]]>
+</source>
+
+    <p>In the <code>jvm12.conf</code>, add all the needed ".jar" to the <code>jvm.classpath</code> line 
+    and uncomment it. This would make the following line, for example, if you 
+    installed Netscape on D: drive:</p>
+
+    <source>jvm.classpath=d:/Netscape/Server4/plugins/samples/servlets/beans.10/SDKBeans10.jar;d:/Netscape/Server4/plugins/samples/servlets/beans/SDKBeans.jar;d:/Netscape/Server4/bin/https/jar/Bugbase.jar;d:/Netscape/Server4/bin/https/jar/Calljsac.jar;D:/Netscape/Server4/docs/cocoon/bin/cocoon.jar;D:/Netscape/Server4/docs/cocoon/lib/fop_0_12_1.jar;D:/Netscape/Server4/docs/cocoon/lib/stylebook-1.0-b2.jar;D:/Netscape/Server4/docs/cocoon/lib/xalan_1_0_1.jar;D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar</source>
+
+    <p>In the rules.properties file, add the following line (this is made to turn around a regexp bug in iWS):</p>
+
+    <source>@.*[.]xml=cocoon</source>
+   </s3>
+   
+   <s3 title="If you prefer the GUI interface">
+    <p>Everything is in the "Servlets" tab of your server setting:</p>
+    <ol>
+     <li>You need to set first "Configure Servlet Attributes". <strong>Don't try to set the classpath here</strong>. It is of no use :-(</li>
+      <sl>
+       <li>Servlet Name: Cocoon</li>
+       <li>Servlet Code (class name): org.apache.cocoon.Cocoon</li>
+       <li>Servlet Args: properties=&lt;yourpath to cocoon&gt;/cocoon/conf/cocoon.properties (This is a disk path)</li>
+      </sl>
+     <li>Then, go to "Configure JVM Attributes" and add to the classpath the 
+     path to the cocoon jar (like the jvm.classpath value in the above section)</li>
+     <li>To finish, go to "Configure Servlet Virtual Path Translation" and add 
+     the rule for "*.xml" to point to cocoon servlet:</li>
+     <sl>
+      <li>Virtual Path: @.*[.]xml</li>
+      <li>Servlet Name: cocoon</li>
+     </sl>
+    </ol>
+   </s3>
+  </s2>
+  
   <s2 title="Installing Cocoon on other platforms">
    <p>Yet to be written! <em>Volunteers welcome!</em></p>
   </s2>
