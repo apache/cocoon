@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.222 2004/01/05 15:01:19 unico Exp $:-->
+<!-- CVS $Id: status.xml,v 1.223 2004/01/14 17:54:27 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -148,6 +148,12 @@
    </actions>
 
    <actions priority="medium">
+    <action context="code">
+      Ensure that recyclable components always release their references, even when
+      they are not pooled. The easiest way is to make them disposable and clean up
+      in dispose.
+    </action>
+    
     <action context="code">
       EventRecorder classes in o.a.c.transformation.helpers package are similar
       to SaxBuffer. SaxBuffer should be extended (if it misses some functionality),
