@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.util.StringMessage;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -33,7 +34,7 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: Messages.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();
@@ -78,14 +79,14 @@ public class Messages extends AbstractWidget {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        contentHandler.startElement(Constants.INSTANCE_NS, MESSAGES_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGES_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, MESSAGES_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGES_EL, XMLUtils.EMPTY_ATTRIBUTES);
 
         definition.generateDisplayData(contentHandler);
 
         Iterator messagesIt = messages.iterator();
         while (messagesIt.hasNext()) {
             XMLizable message = (XMLizable)messagesIt.next();
-            contentHandler.startElement(Constants.INSTANCE_NS, MESSAGE_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGE_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, MESSAGE_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGE_EL, XMLUtils.EMPTY_ATTRIBUTES);
             message.toSAX(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, MESSAGE_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGE_EL);
         }

@@ -24,6 +24,7 @@ import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -44,7 +45,7 @@ import java.util.Locale;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: MultiValueField.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private SelectionList selectionList;
@@ -114,17 +115,17 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         attrs.addCDATAAttribute("id", getFullyQualifiedId());
         contentHandler.startElement(Constants.INSTANCE_NS, MULTIVALUEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + MULTIVALUEFIELD_EL, attrs);
 
-        contentHandler.startElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL, XMLUtils.EMPTY_ATTRIBUTES);
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
-                contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
                 String value = fieldDefinition.getDatatype().getPlainConvertor().convertToString(values[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
                 contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
             }
         } else if (enteredValues != null) {
             for (int i = 0; i < enteredValues.length; i++) {
-                contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
                 String value = fieldDefinition.getDatatype().getPlainConvertor().convertToString(enteredValues[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
                 contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
@@ -144,7 +145,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
         // validation message element
         if (validationError != null) {
-            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }

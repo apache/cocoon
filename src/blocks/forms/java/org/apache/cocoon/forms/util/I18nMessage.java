@@ -15,9 +15,9 @@
  */
 package org.apache.cocoon.forms.util;
 
-import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * <p>This generates an autonomous SAX-blurb, i.e. all necessary namespace
  * declarations will be made, and no start/endDocument events will be generated.
  *
- * @version CVS $Id: I18nMessage.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version CVS $Id: I18nMessage.java,v 1.2 2004/03/09 13:17:27 cziegeler Exp $
  */
 public class I18nMessage implements XMLizable {
     private String key;
@@ -104,7 +104,7 @@ public class I18nMessage implements XMLizable {
     public void toSAX(ContentHandler contentHandler) throws SAXException {
         contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
         if (parameters != null) {
-            contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT, XMLUtils.EMPTY_ATTRIBUTES);
         }
 
         AttributesImpl i18nAttrs = new AttributesImpl();
@@ -119,7 +119,7 @@ public class I18nMessage implements XMLizable {
         // the parameters
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
-                contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_PARAM_ELEMENT, "i18n:" + I18nTransformer.I18N_PARAM_ELEMENT, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_PARAM_ELEMENT, "i18n:" + I18nTransformer.I18N_PARAM_ELEMENT, XMLUtils.EMPTY_ATTRIBUTES);
                 if (keys != null && keys[i])
                     contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
                 contentHandler.characters(parameters[i].toCharArray(), 0, parameters[i].length());

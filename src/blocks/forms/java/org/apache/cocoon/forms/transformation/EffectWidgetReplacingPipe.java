@@ -27,6 +27,7 @@ import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathException;
 
 import org.xml.sax.Attributes;
@@ -57,7 +58,7 @@ import java.util.Map;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -690,7 +691,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     saxBuffer.toSAX(getContentHandler());
                 } else {
                     // Insert an enclosing <wi:styling>
-                    out.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
+                    out.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, XMLUtils.EMPTY_ATTRIBUTES);
                     saxBuffer.toSAX(getContentHandler());
                     out.endElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL);
                 }
@@ -718,7 +719,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (widget instanceof ValidationErrorAware) {
                     ValidationError error = ((ValidationErrorAware)widget).getValidationError();
                     if (error != null) {
-                        out.startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, Constants.EMPTY_ATTRS);
+                        out.startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, XMLUtils.EMPTY_ATTRIBUTES);
                         error.generateSaxFragment(stylingHandler);
                         out.endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
                     }

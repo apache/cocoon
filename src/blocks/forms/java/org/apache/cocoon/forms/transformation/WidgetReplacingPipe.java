@@ -24,6 +24,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -41,7 +42,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -442,7 +443,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     saxBuffer.toSAX(contentHandler);
                 } else {
                     // Insert an enclosing <wi:styling>
-                    contentHandler.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
+                    contentHandler.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, XMLUtils.EMPTY_ATTRIBUTES);
                     saxBuffer.toSAX(contentHandler);
                     contentHandler.endElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL);
                 } 

@@ -21,6 +21,7 @@ import org.apache.cocoon.forms.formmodel.AggregateFieldDefinition.SplitMapping;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -54,7 +55,7 @@ import java.util.Map;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
+ * @version CVS $Id: AggregateField.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class AggregateField extends Field {
 
@@ -215,7 +216,7 @@ public class AggregateField extends Field {
         contentHandler.startElement(Constants.INSTANCE_NS, AGGREGATEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
 
         if (enteredValue != null || value != null) {
-            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
             String stringValue;
             if (value != null) {
                 stringValue = getDatatype().convertToString(value, locale);
@@ -228,7 +229,7 @@ public class AggregateField extends Field {
 
         // validation message element: only present if the value is not valid
         if (validationError != null) {
-            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }

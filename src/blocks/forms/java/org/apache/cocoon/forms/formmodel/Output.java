@@ -19,6 +19,7 @@ import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -31,7 +32,7 @@ import java.util.Locale;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: Output.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     private OutputDefinition definition;
@@ -72,7 +73,7 @@ public class Output extends AbstractWidget implements DataWidget {
 
         // the value
         if (value != null) {
-            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
             String stringValue;
             stringValue = definition.getDatatype().convertToString(value, locale);
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());

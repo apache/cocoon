@@ -23,6 +23,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -35,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.3 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -98,7 +99,7 @@ public class FlowJXPathSelectionList implements SelectionList {
         }
 
         // Start the selection-list
-        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
 
         while(iter.hasNext()) {
             String stringValue = "";
@@ -131,7 +132,7 @@ public class FlowJXPathSelectionList implements SelectionList {
             itemAttrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
             if (label != null) {
-                contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
                 if (label instanceof XMLizable) {
                     ((XMLizable)label).toSAX(contentHandler);
                 } else {
