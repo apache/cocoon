@@ -32,7 +32,6 @@
   <categories>
     <category log-level="ERROR" name="portal">
       <log-target id-ref="portal" />
-      <log-target id-ref="error"/>
     </category>
   </categories>
 </logkit>

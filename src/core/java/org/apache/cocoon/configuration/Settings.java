@@ -32,6 +32,9 @@ import org.apache.commons.lang.math.NumberUtils;
  */
 public class Settings {
 
+    /** Prefix for properties */
+    protected static final String KEYPREFIX = "org.apache.cocoon.";
+
     /** Name of the property specifying a user properties file */
     public static final String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
     
@@ -67,29 +70,35 @@ public class Settings {
      * try setting this parameter to "true".
      */
     protected boolean initClassloader = INIT_CLASSLOADER;
+    protected static final String KEY_INIT_CLASSLOADER = "init.classloader";
 
     /**
      * This parameter allows to set system properties
      */
     protected Map forceProperties = new HashMap();
-
+    /** FIXME - implement the support for this key: */
+    protected static final String KEY_FORCE_PROPERTIES = "force.properties";
+    
     /**
      * This parameter points to the main configuration file for Cocoon.
      * Note that the path is specified in absolute notation but it will be
      * resolved relative to the application context path.
      */
     protected String configuration;
+    protected static final String KEY_CONFIGURATION = "configuration";
 
     /**
      * This parameter indicates the configuration file of the LogKit management
      */
     protected String loggingConfiguration;
+    protected static final String KEY_LOGGING_CONFIGURATION = "logging.configuration";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
     protected String accessLogger;
+    protected static final String KEY_LOGGING_ACCESS_LOGGER = "logging.logger.access";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
@@ -99,6 +108,7 @@ public class Settings {
      * logger="..." attribute in the component configuration file.
      */
     protected String cocoonLogger;
+    protected static final String KEY_LOGGING_COCOON_LOGGER = "logging.logger.cocoon";
 
     /**
      * This parameter indicates the log level to use throughout startup of the
@@ -107,12 +117,14 @@ public class Settings {
      * not readable/available this log level is of importance.
      */
     protected String bootstrapLogLevel;
+    protected static final String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "logging.bootstrap.level";
 
     /**
      * This parameter switches the logging system from LogKit to Log4J for Cocoon.
      * Log4J has to be configured already.
      */
     protected String loggerClassName;
+    protected static final String KEY_LOGGING_MANAGER_CLASS = "logging.manager.class";
 
     /**
      * If you want to configure log4j using Cocoon, then you can define
@@ -124,6 +136,7 @@ public class Settings {
      * for example.
      */
     protected String log4jConfiguration;
+    protected static final String KEY_LOGGING_LOG4J_CONFIGURATION = "logging.log4j.configuration";
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
@@ -132,6 +145,7 @@ public class Settings {
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
     protected boolean allowReload = ALLOW_RELOAD;
+    protected static final String KEY_ALLOW_RELOAD = "allow.reload";
 
     /**
      * This parameter is used to list classes that should be loaded at
@@ -140,12 +154,15 @@ public class Settings {
      * depending on your build properties.
      */
     protected List loadClasses = new ArrayList();
+    /** FIXME: Implement support for this: */
+    protected static final String KEY_LOAD_CLASSES = "load.classes";
 
     /**
      * Causes all files in multipart requests to be processed.
      * Default is false for security reasons. 
      */
     protected boolean enableUploads = ENABLE_UPLOADS;
+    protected static final String KEY_UPLOADS_ENABLE = "uploads.enable";
 
     /**
      * This parameter allows to specify where Cocoon should put uploaded files.
@@ -154,12 +171,14 @@ public class Settings {
      * with volume: C:\Path\To\Upload\Directory.
      */
     protected String uploadDirectory;
-
+    protected static final String KEY_UPLOADS_DIRECTORY = "uploads.directory";
+    
     /**
      * Causes all files in multipart requests to be saved to upload-dir.
      * Default is true for security reasons.
      */
     protected boolean autosaveUploads = SAVE_UPLOADS_TO_DISK;
+    protected static final String KEY_UPLOADS_AUTOSAVE = "uploads.autosave";
 
     /**
      * Specify handling of name conflicts when saving uploaded files to disk.
@@ -168,11 +187,13 @@ public class Settings {
      * filename unique.
      */
     protected String overwriteUploads;
+    protected static final String KEY_UPLOADS_OVERWRITE = "uploads.overwrite";
 
     /**
      * Specify maximum allowed size of the upload. Defaults to 10 Mb.
      */
     protected int maxUploadSize = MAX_UPLOAD_SIZE;
+    protected static final String KEY_UPLOADS_MAXSIZE = "uploads.maxsize";
 
     /**
      * This parameter allows to specify where Cocoon should create its page
@@ -181,6 +202,7 @@ public class Settings {
      * absolute directory must start with volume: C:\Path\To\Cache\Directory.
      */
     protected String cacheDirectory;
+    protected static final String KEY_CACHE_DIRECTORY = "cache.directory";
 
     /**
      * This parameter allows to specify where Cocoon should put it's
@@ -189,6 +211,7 @@ public class Settings {
      * absolute directory must start with volume: C:\Path\To\Work\Directory.
      */
     protected String workDirectory;
+    protected static final String KEY_WORK_DIRECTORY = "work.directory";
 
     /**
      * This parameter allows to specify additional directories or jars
@@ -197,6 +220,8 @@ public class Settings {
      * are rooted at the context root of the Cocoon servlet.
      */
     protected List extraClasspaths = new ArrayList();
+    /** FIXME: Implement support for this: */
+    protected static final String KEY_EXTRA_CLASSPATHS = "extra.classpaths";
 
     /**
      * This parameter allows you to select the parent service manager.
@@ -207,28 +232,33 @@ public class Settings {
      * this class, if it implements them.
      */
     protected String parentServiceManagerClassName;
+    protected static final String KEY_PARENT_SERVICE_MANAGER = "parentservicemanager";
 
     /**
      * Allow adding processing time to the response
      */
     protected boolean showTime = SHOW_TIME;
+    protected static final String KEY_SHOWTIME = "showtime";
 
     /**
      * If true, processing time will be added as an HTML comment
      */
     protected boolean hideShowTime = HIDE_SHOW_TIME;
-    
+    protected static final String KEY_HIDE_SHOWTIME = "hideshowtime";
+
     /**
      * If true or not set, this class will try to catch and handle all Cocoon exceptions.
      * If false, it will rethrow them to the servlet container.
      */
     protected boolean manageExceptions = MANAGE_EXCEPTIONS;
+    protected static final String KEY_MANAGE_EXCEPTIONS = "manageexceptions";
 
     /**
      * Set form encoding. This will be the character set used to decode request
      * parameters. If not set the ISO-8859-1 encoding will be assumed.
     */
     protected String formEncoding;
+    protected static final String KEY_FORM_ENCODING = "formencoding";
 
     /**
      * If this value is specified, it will be interpreted as a log level and
@@ -236,11 +266,13 @@ public class Settings {
      * definition in the logging configuration.
      */
     protected String overrideLogLevel;
+    protected static final String KEY_LOGGING_OVERRIDE_LOGLEVEL = "override.loglevel";
 
     /**
      * Delay between reload checks for the configuration
      */
     protected long configurationReloadDelay = 1000;
+    protected static final String KEY_CONFIGURATION_RELOAD_DELAY = "configuration.reloaddelay";
 
     /**
      * Create a new settings object
@@ -258,58 +290,57 @@ public class Settings {
             while ( i.hasNext() ) {
                 final Map.Entry current = (Map.Entry)i.next();
                 String key = current.getKey().toString();
-                if ( key.startsWith("org.apache.cocoon.") ) {
-                    key = key.substring("org.apache.cocoon.".length());
+                if ( key.startsWith(KEYPREFIX) ) {
+                    key = key.substring(KEYPREFIX.length());
                     final String value = current.getValue().toString();
 
-                    if ( key.equals("init.classloader") ) {
+                    if ( key.equals(KEY_INIT_CLASSLOADER) ) {
                         this.initClassloader = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("configuration") ) {
+                    } else if ( key.equals(KEY_CONFIGURATION) ) {
                         this.configuration = value;
-                    } else if ( key.equals("configuration.reloaddelay") ) {
+                    } else if ( key.equals(KEY_CONFIGURATION_RELOAD_DELAY) ) {
                         this.configurationReloadDelay = NumberUtils.toLong(value);
-                    } else if ( key.equals("logging.configuration") ) {
+                    } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
                         this.loggingConfiguration = value;
-                    } else if ( key.equals("logging.logger.access") ) {
+                    } else if ( key.equals(KEY_LOGGING_ACCESS_LOGGER) ) {
                         this.accessLogger = value;
-                    } else if ( key.equals("logging.logger.cocoon") ) {
+                    } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
                         this.cocoonLogger = value;
-                    } else if ( key.equals("logging.bootstrap.level") ) {
+                    } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                         this.bootstrapLogLevel = value;
-                    } else if ( key.equals("logging.manager.class") ) {
+                    } else if ( key.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                         this.loggerClassName = value;
-                    } else if ( key.equals("logging.log4j.configuration") ) {
+                    } else if ( key.equals(KEY_LOGGING_LOG4J_CONFIGURATION) ) {
                         this.log4jConfiguration = value;
-                    } else if ( key.equals("allow.reload") ) {
+                    } else if ( key.equals(KEY_ALLOW_RELOAD) ) {
                         this.allowReload = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("uploads.enable") ) {
+                    } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
                         this.enableUploads = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("uploads.directory") ) {
+                    } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
                         this.uploadDirectory = value;
-                    } else if ( key.equals("uploads.autosave") ) {
+                    } else if ( key.equals(KEY_UPLOADS_AUTOSAVE) ) {
                         this.autosaveUploads = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("uploads.overwrite") ) {
+                    } else if ( key.equals(KEY_UPLOADS_OVERWRITE) ) {
                         this.overwriteUploads = value;
-                    } else if ( key.equals("uploads.maxsize") ) {
+                    } else if ( key.equals(KEY_UPLOADS_MAXSIZE) ) {
                         this.maxUploadSize = NumberUtils.toInt(value);
-                    } else if ( key.equals("cache.directory") ) {
+                    } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
                         this.cacheDirectory = value;
-                    } else if ( key.equals("work.directory") ) {
+                    } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
                         this.workDirectory = value;
-                    } else if ( key.equals("parentservicemanager") ) {
+                    } else if ( key.equals(KEY_PARENT_SERVICE_MANAGER) ) {
                         this.parentServiceManagerClassName = value;
-                    } else if ( key.equals("showtime") ) {
+                    } else if ( key.equals(KEY_SHOWTIME) ) {
                         this.showTime = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("hideshowtime") ) {
+                    } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
                         this.hideShowTime = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("manageexceptions") ) {
+                    } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
                         this.manageExceptions = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals("formencoding") ) {
+                    } else if ( key.equals(KEY_FORM_ENCODING) ) {
                         this.formEncoding = value;
-                    } else if ( key.equals("override.loglevel") ) {
+                    } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                         this.overrideLogLevel = value;
                     }
-                    // TODO - force property, load classes, extra class path
                 }
             }
             this.properties.add(props);
@@ -600,12 +631,6 @@ public class Settings {
     public void setLog4jConfiguration(String log4jConfiguration) {
         this.log4jConfiguration = log4jConfiguration;
     }
-    public String get(String property, String defaultValue) {
-        if ( property == null ) {
-            return defaultValue;
-        }
-        return property;
-    }
     
     /**
      * @return Returns the accessLogger.
@@ -674,34 +699,33 @@ public class Settings {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        // FIXME - add all
         return "Settings:\n"+
-               "- Configuration: " + this.configuration + "\n" +
-               "- Configuration-reload-delay: " + this.configurationReloadDelay + "\n" +
-               "- InitClassloader: " + this.initClassloader + "\n" + 
-               "- ForceProperties: " + ( this.forceProperties == null ? "-" : this.forceProperties.toString() ) + "\n" +
-               "- Logging-Configuration: " + this.loggingConfiguration + "\n" +
-               "- Cocoon-Logger: " + this.cocoonLogger + "\n" + 
-               "- Access-Logger: " + this.accessLogger + "\n" +
-               "- Logger-Classname: " + this.loggerClassName + "\n" + 
-               "- Bootstrap-Loglevel: " + this.bootstrapLogLevel + "\n" +
-               "- Allow-Reload: " + this.allowReload + "\n" +
-               "- Enable-Uploads: " + this.enableUploads + "\n" +
-               "- Upload-Directory: " + this.uploadDirectory + "\n" +
-               "- Autosave-Uploads: " + this.autosaveUploads + "\n" +
-               "- Overwrite-Uploads: " + this.overwriteUploads + "\n" +
-               "- Max.Uploadsize: " + this.maxUploadSize + "\n" +
-               "- Cache-Directory: " + this.cacheDirectory + "\n" + 
-               "- Work-Directory: " + this.workDirectory + "\n" +
-               "- Load Classes: " + this.loadClasses + "\n" + 
-               "- Extra Classpath: " + this.extraClasspaths + "\n" +
-               "- Parent ServiceManager: " + this.parentServiceManagerClassName + "\n" +
-               "- Show Time: " + this.showTime + "\n" + 
-               "- Manage Exceptions: " + this.manageExceptions + "\n" +
-               "- Form-Encoding: " + this.formEncoding + "\n" + 
-               "- Log4J Configuration: " + this.log4jConfiguration + "\n" +
-               "- Override Loglevel: " + this.overrideLogLevel + "\n";
-
+          KEY_CONFIGURATION + " : " + this.configuration + '\n' +
+          KEY_CONFIGURATION_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
+          KEY_ALLOW_RELOAD + " : " + this.allowReload + '\n' +
+          KEY_INIT_CLASSLOADER + " : " + this.initClassloader + '\n' +
+          KEY_EXTRA_CLASSPATHS + " : " + this.extraClasspaths + '\n' +
+          KEY_LOAD_CLASSES + " : " + this.loadClasses + '\n' +
+          KEY_FORCE_PROPERTIES + " : " + this.forceProperties + '\n' +
+          KEY_LOGGING_CONFIGURATION + " : " + this.loggingConfiguration + '\n' +
+          KEY_LOGGING_ACCESS_LOGGER + " : " + this.accessLogger + '\n' +
+          KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.bootstrapLogLevel + '\n' +
+          KEY_LOGGING_COCOON_LOGGER + " : " + this.cocoonLogger + '\n' +
+          KEY_LOGGING_LOG4J_CONFIGURATION + " : " + this.log4jConfiguration + '\n' +
+          KEY_LOGGING_MANAGER_CLASS + " : " + this.loggerClassName + '\n' +
+          KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.overrideLogLevel + '\n' +
+          KEY_MANAGE_EXCEPTIONS + " : " + this.manageExceptions + '\n' +
+          KEY_PARENT_SERVICE_MANAGER + " : " + this.parentServiceManagerClassName + '\n' +
+          KEY_UPLOADS_DIRECTORY + " : " + this.uploadDirectory + '\n' +
+          KEY_UPLOADS_AUTOSAVE + " : " + this.autosaveUploads + '\n' +
+          KEY_UPLOADS_ENABLE + " : " + this.enableUploads + '\n' +
+          KEY_UPLOADS_MAXSIZE + " : " + this.maxUploadSize + '\n' +
+          KEY_UPLOADS_OVERWRITE + " : " + this.overwriteUploads + '\n' +
+          KEY_CACHE_DIRECTORY + " : " + this.cacheDirectory + '\n' +
+          KEY_WORK_DIRECTORY + " : " + this.workDirectory + '\n' +
+          KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
+          KEY_SHOWTIME + " : " + this.showTime + '\n' +
+          KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n';
     }
 
     public String getProperty(String name) {
@@ -713,56 +737,56 @@ public class Settings {
             return defaultValue;
         }
         String value = null;
-        if ( key.startsWith("org.apache.cocoon.") ) {
-            final String sKey = key.substring("org.apache.cocoon.".length());
-            if ( sKey.equals("init.classloader") ) {
+        if ( key.startsWith(KEYPREFIX) ) {
+            final String sKey = key.substring(KEYPREFIX.length());
+            if ( sKey.equals(KEY_INIT_CLASSLOADER) ) {
                 value = String.valueOf(this.initClassloader);
-            } else if ( sKey.equals("configuration") ) {
+            } else if ( sKey.equals(KEY_CONFIGURATION) ) {
                 value = this.configuration;
-            } else if ( sKey.equals("configuration.reloaddelay") ) {
+            } else if ( sKey.equals(KEY_CONFIGURATION_RELOAD_DELAY) ) {
                 value = String.valueOf(this.configurationReloadDelay);
-            } else if ( sKey.equals("logging.configuration") ) {
+            } else if ( sKey.equals(KEY_LOGGING_CONFIGURATION) ) {
                 value = this.loggingConfiguration;
-            } else if ( sKey.equals("logging.logger.access") ) {
+            } else if ( sKey.equals(KEY_LOGGING_ACCESS_LOGGER) ) {
                 value = this.accessLogger;
-            } else if ( sKey.equals("logging.logger.cocoon") ) {
+            } else if ( sKey.equals(KEY_LOGGING_COCOON_LOGGER) ) {
                 value = this.cocoonLogger;
-            } else if ( sKey.equals("logging.bootstrap.level") ) {
+            } else if ( sKey.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                 value = this.bootstrapLogLevel;
-            } else if ( sKey.equals("logging.manager.class") ) {
+            } else if ( sKey.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                 value = this.loggerClassName;
-            } else if ( sKey.equals("logging.log4j.configuration") ) {
+            } else if ( sKey.equals(KEY_LOGGING_LOG4J_CONFIGURATION) ) {
                 value = this.log4jConfiguration;
-            } else if ( sKey.equals("allow.reload") ) {
+            } else if ( sKey.equals(KEY_ALLOW_RELOAD) ) {
                 value = String.valueOf(this.allowReload);
-            } else if ( sKey.equals("uploads.enable") ) {
+            } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
                 value = String.valueOf(this.enableUploads);
-            } else if ( sKey.equals("uploads.directory") ) {
+            } else if ( sKey.equals(KEY_UPLOADS_DIRECTORY) ) {
                 value = this.uploadDirectory = value;
-            } else if ( sKey.equals("uploads.autosave") ) {
+            } else if ( sKey.equals(KEY_UPLOADS_AUTOSAVE) ) {
                 value = String.valueOf(this.autosaveUploads);
-            } else if ( sKey.equals("uploads.overwrite") ) {
+            } else if ( sKey.equals(KEY_UPLOADS_OVERWRITE) ) {
                 value = this.overwriteUploads;
-            } else if ( sKey.equals("uploads.maxsize") ) {
+            } else if ( sKey.equals(KEY_UPLOADS_MAXSIZE) ) {
                 value = String.valueOf(this.maxUploadSize);
-            } else if ( sKey.equals("cache.directory") ) {
+            } else if ( sKey.equals(KEY_CACHE_DIRECTORY) ) {
                 value = this.cacheDirectory;
-            } else if ( sKey.equals("work.directory") ) {
+            } else if ( sKey.equals(KEY_WORK_DIRECTORY) ) {
                 value = this.workDirectory;
-            } else if ( sKey.equals("parentservicemanager") ) {
+            } else if ( sKey.equals(KEY_PARENT_SERVICE_MANAGER) ) {
                 value = this.parentServiceManagerClassName;
-            } else if ( sKey.equals("showtime") ) {
+            } else if ( sKey.equals(KEY_SHOWTIME) ) {
                 value = String.valueOf(this.showTime);
-            } else if ( sKey.equals("hideshowtime") ) {
+            } else if ( sKey.equals(KEY_HIDE_SHOWTIME) ) {
                 value = String.valueOf(this.hideShowTime);
-            } else if ( sKey.equals("manageexceptions") ) {
+            } else if ( sKey.equals(KEY_MANAGE_EXCEPTIONS) ) {
                 value = String.valueOf(this.manageExceptions);
-            } else if ( sKey.equals("formencoding") ) {
+            } else if ( sKey.equals(KEY_FORM_ENCODING) ) {
                 value = this.formEncoding;
-            } else if ( sKey.equals("override.loglevel") ) {
+            } else if ( sKey.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                 value = this.overrideLogLevel;
             }
-        }
+       }
 
         int i = 0;
         while ( i < this.properties.size() && value == null ) {

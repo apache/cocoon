@@ -32,7 +32,6 @@
   <categories>
     <category log-level="ERROR" name="apples">
       <log-target id-ref="apples" />
-      <log-target id-ref="error" />
     </category>
   </categories>
 </logkit>

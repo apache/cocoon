@@ -31,7 +31,6 @@
   <categories>
     <category name="slide" log-level="INFO">
       <log-target id-ref="slide"/>
-      <log-target id-ref="error"/>
     </category>
   </categories>
 </logkit>
