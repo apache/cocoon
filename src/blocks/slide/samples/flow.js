@@ -16,12 +16,11 @@
 
 importPackage(Packages.org.apache.cocoon.components.modules.input);
 importPackage(Packages.org.apache.cocoon.components.slide);
-importPackage(Packages.org.apache.cocoon.components.source);
+importClass(Packages.org.apache.cocoon.components.source.SourceDTO);
 importPackage(Packages.org.apache.cocoon.components.source.helpers);
-importPackage(Packages.org.apache.cocoon.samples.slide);
+importPackage(Packages.org.apache.cocoon.slide.util);
 importPackage(Packages.org.apache.excalibur.source);
 
-var repository = cocoon.getComponent('org.apache.cocoon.components.repository.SourceRepository');
 var resolver = cocoon.getComponent(SourceResolver.ROLE);
 var global = cocoon.getComponent(InputModule.ROLE + "Selector").select("global");
 var namespace = global.getAttribute("namespace",null,null);
@@ -80,9 +79,18 @@ function makecollection() {
 
   login();
 
-  var baseUri        = "slide://" + principal + "@" + namespace + "/";
+  var baseUri  = "slide://" + principal + "@" + namespace + "/";
   var location = baseUri + parentPath + "/" + collectionName;
-  var status = repository.makeCollection(location);
+  var source = null;
+  try {
+    source = resolver.resolveURI(location);
+    source.makeCollection();
+  }
+  finally {
+    if (source != null) {
+      resolver.release(source);
+    }
+  }
 
   cocoon.redirectTo("viewcontent.do?path=" + parentPath);
 }
@@ -95,10 +103,24 @@ function uploadsource() {
   //FIXME: retrieve upload object before login
   login();
 
-  var baseUri      = "slide://" + principal + "@" + namespace + "/";
+  var baseUri = "slide://" + principal + "@" + namespace + "/";
   var dest = baseUri + parentPath + "/" + resourceName;
   var src  = "upload://uploadFile";
-  var status = repository.save(src,dest);
+
+  var source, destination = null;
+  try {
+    source = resolver.resolveURI(src);
+    destination = resolver.resolveURI(dest);
+    SourceUtil.copy(source, destination);
+  }
+  finally {
+    if (source != null) {
+      resolver.release(source);
+    }
+    if (destination != null) {
+      resolver.release(destination);
+    }
+  }
 
   cocoon.redirectTo("viewcontent.do?path=" + parentPath);
 }
@@ -112,7 +134,16 @@ function deletesource() {
   
   var baseUri = "slide://" + principal + "@" + namespace + "/";
   var location = baseUri + parentPath + "/" + resourceName;
-  var status = repository.remove(location);
+  var source = null;
+  try {
+    source = resolver.resolveURI(location);
+    source["delete"].call(source);
+  }
+  finally {
+    if (source != null) {
+      resolver.release(source);
+    }
+  }
 
   cocoon.redirectTo("viewcontent.do?path=" + parentPath);
 }
@@ -209,18 +240,20 @@ function viewpermissions() {
   var roles = AdminHelper.listGroups(nat,principal,"/roles");
   var users = AdminHelper.listUsers(nat,principal);
   var privileges = AdminHelper.listPrivileges(nat,principal);
-  cocoon.sendPage("screens/permissions.html",{source:sourceDTO, roles:roles, users:users, privileges:privileges});
+  var permissions = AdminHelper.listPermissions(nat,principal,path);
+  
+  cocoon.sendPage("screens/permissions.html",{source:sourceDTO, roles:roles, users:users, privileges:privileges, permissions:permissions});
 }
 
 function removePermission() {
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var subject      = cocoon.request.getParameter("subject");
-  var privilege    = cocoon.request.getParameter("privilege");
+  var action    = cocoon.request.getParameter("action");
 
   login();
   
-  AdminHelper.removePermission(nat,principal,resourcePath,subject,privilege);
-  cocoon.redirectTo("permissions/" + resourcePath);
+  AdminHelper.removePermission(nat, principal, resourcePath, subject, action);
+  cocoon.redirectTo("viewpermissions.do?path=" + resourcePath);
 }
 
 function addPermission() {
@@ -233,7 +266,7 @@ function addPermission() {
   login();
   
   AdminHelper.addPermission(nat,principal,resourcePath,subject,action,inheritable,negative);
-  cocoon.redirectTo("permissions/" + resourcePath);
+  cocoon.redirectTo("viewpermissions.do?path=" + resourcePath);
 }
 
 // ---------------------------------------------- lock management
@@ -258,7 +291,8 @@ function viewlocks() {
   var roles = AdminHelper.listGroups(nat,principal,"/roles");
   var users = AdminHelper.listUsers(nat,principal);
   var privileges = AdminHelper.listPrivileges(nat,principal);
-  cocoon.sendPage("screens/locks.html",{source:sourceDTO, roles:roles, users:users, privileges:privileges});
+  var locks = AdminHelper.listLocks(nat, principal, path);
+  cocoon.sendPage("screens/locks.html",{source:sourceDTO, roles:roles, users:users, privileges:privileges, locks:locks});
 }
 
 function removelock() {
@@ -277,14 +311,14 @@ function addlock() {
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var subject      = cocoon.request.getParameter("subject");
   var type         = cocoon.request.getParameter("type");
-  var exclusive    = cocoon.request.getParameter("exclusive");
   var expiration   = cocoon.request.getParameter("expiration");
+  var exclusive    = cocoon.request.getParameter("exclusive");
   var inheritable  = cocoon.request.getParameter("inheritable");
 
   login();
-  
-  AdminHelper.addLock(nat,principal,resourcePath,subject,type,expiration,exclusive,inheritable);
-  
+
+  AdminHelper.addLock(nat, principal, resourcePath, subject, type, expiration, exclusive, inheritable);
+
   cocoon.redirectTo("viewlocks.do?path=" + resourcePath);
 }
 
@@ -306,14 +340,14 @@ function adduser() {
   login();
   
   AdminHelper.addUser(nat,principal,username,password);
-  cocoon.redirectTo("users");
+  cocoon.redirectTo("viewusers.do");
 }
 
 function addrole () {
   var rolename = cocoon.request.getParameter("rolename");
   
   AdminHelper.addRole(nat,principal,rolename);
-  cocoon.redirectTo("users");
+  cocoon.redirectTo("viewusers.do");
 }
 
 function addgroup () {
@@ -322,7 +356,7 @@ function addgroup () {
   login();
   
   AdminHelper.addGroup(nat,principal,groupname);
-  cocoon.redirectTo("users");
+  cocoon.redirectTo("viewusers.do");
 }
 
 function removeobject() {
@@ -331,7 +365,7 @@ function removeobject() {
   login();
   
   AdminHelper.removeObject(nat,principal,objecturi);
-  cocoon.redirectTo("users");
+  cocoon.redirectTo("viewusers.do");
 }
 
 function addmember() {
@@ -339,9 +373,8 @@ function addmember() {
   var subjecturi = cocoon.request.getParameter("subjecturi");
 
   login();
-  
   AdminHelper.addMember(nat,principal,objecturi,subjecturi);
-  cocoon.redirectTo("users");
+  cocoon.redirectTo("viewusers.do");
 }
 
 function removemember() {
@@ -351,14 +384,14 @@ function removemember() {
   login();
   
   AdminHelper.removeMember(nat,principal,objecturi,subjecturi);
-  cocoon.redirectTo("users");
+  cocoon.redirectTo("viewusers.do");
 }
 
 function changepwd() {
-  var username = cocoon.request.getParameter("username");
+  var useruri = cocoon.request.getParameter("useruri");
   var password = cocoon.request.getParameter("password");
   
-  AdminHelper.changePassword(nat, principal, username, password);
-  cocoon.redirectTo("users");
+  AdminHelper.changePassword(nat, principal, useruri, password);
+  cocoon.redirectTo("viewusers.do");
 }
 
