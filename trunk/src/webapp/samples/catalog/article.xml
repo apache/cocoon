@@ -40,7 +40,7 @@
     <imageobject>
      <imagedata srccredit="Powered by Apache Cocoon"
                 fileref="images/cocoon.gif"
-                width="300" depth="45" format="GIF"/>
+                width="300" depth="49" format="GIF"/>
     </imageobject>
    </mediaobject>
  </section>
