@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.211 2004/05/03 16:22:29 unico Exp $
+    | CVS $Id: jars.xml,v 1.212 2004/05/07 01:50:19 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -316,7 +316,7 @@
       donated to the Apache Software Foundation by Jonathan Locke.
     </description>
     <used-by>sitemap matchers</used-by>
-    <lib>core/jakarta-regexp-1.3.jar</lib>
+    <lib>endorsed/jakarta-regexp-1.3.jar</lib>
     <homepage>http://jakarta.apache.org/regexp/</homepage>
   </file>
 
@@ -1116,7 +1116,7 @@
       possibility to analyze, create, and manipulate (binary) Java class files.
     </description>
     <used-by>XSLTC, javaflow</used-by>
-    <lib>core/jakarta-bcel-20040329.jar</lib>
+    <lib>endorsed/jakarta-bcel-20040329.jar</lib>
     <homepage>http://jakarta.apache.org/bcel/</homepage>
   </file>
 </jars>
