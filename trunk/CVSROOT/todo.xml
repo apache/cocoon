@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.45 2000-11-10 14:32:20 greenrd Exp $
+  $Id: todo.xml,v 1.46 2000-11-11 13:46:39 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -96,6 +96,9 @@
   </action>
   <action context="code" assigned-to="RDG">
    Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Fix redundant XSP namespace declarations output quirk.
   </action>
   <action context="docs">
    Make authors appear on all HTML docs (where appropriate).
