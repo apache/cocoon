@@ -5,6 +5,7 @@
 
   <message key="datatype.conversion-failed">Not a valid {0}.</message>
   <message key="datatype.long">integer number</message>
+  <message key="datatype.date">date</message>
 
   <message key="validation.string.exact-length">Should be exactly {0} characters.</message>
   <message key="validation.string.range-length">Should contain from {0} to {1} characters.</message>
