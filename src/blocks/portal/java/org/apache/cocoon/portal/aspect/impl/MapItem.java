@@ -1,7 +1,7 @@
 /*
 
  ============================================================================
-                   The Apache Software License, Version 1.1
+				   The Apache Software License, Version 1.1
  ============================================================================
 
  Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
@@ -10,26 +10,26 @@
  tion, are permitted provided that the following conditions are met:
 
  1. Redistributions of  source code must  retain the above copyright  notice,
-    this list of conditions and the following disclaimer.
+	this list of conditions and the following disclaimer.
 
  2. Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.
+	this list of conditions and the following disclaimer in the documentation
+	and/or other materials provided with the distribution.
 
  3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:  "This product includes  software
-    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
-    Alternately, this  acknowledgment may  appear in the software itself,  if
-    and wherever such third-party acknowledgments normally appear.
+	include  the following  acknowledgment:  "This product includes  software
+	developed  by the  Apache Software Foundation  (http://www.apache.org/)."
+	Alternately, this  acknowledgment may  appear in the software itself,  if
+	and wherever such third-party acknowledgments normally appear.
 
  4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
-    used to  endorse or promote  products derived from  this software without
-    prior written permission. For written permission, please contact
-    apache@apache.org.
+	used to  endorse or promote  products derived from  this software without
+	prior written permission. For written permission, please contact
+	apache@apache.org.
 
  5. Products  derived from this software may not  be called "Apache", nor may
-    "Apache" appear  in their name,  without prior written permission  of the
-    Apache Software Foundation.
+	"Apache" appear  in their name,  without prior written permission  of the
+	Apache Software Foundation.
 
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -48,44 +48,24 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout;
+package org.apache.cocoon.portal.aspect.impl;
 
 
 /**
+ * Used by the AspectDataFieldHandler for Castor.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: Item.java,v 1.3 2003/05/22 15:19:43 cziegeler Exp $
+ * @version CVS $Id: MapItem.java,v 1.1 2003/05/22 15:19:47 cziegeler Exp $
  */
-public class Item extends AbstractParameters {
-	
-	private Layout layout;
+public class MapItem
+extends org.exolab.castor.mapping.MapItem {
 
-    private CompositeLayout parentLayout;
-    
-	/**
-	 * Returns the layout.
-	 * @return Layout
-	 */
-	public final Layout getLayout() {
-		return layout;
+	public MapItem() {
+		super();
 	}
 
-	/**
-	 * Sets the layout.
-	 * @param layout The layout to set
-	 */
-	public final void setLayout(Layout layout) {
-		this.layout = layout;
-		layout.setParent(this);
+	public MapItem(Object key, Object value) {
+		super(key, value);
 	}
-    
-    public final CompositeLayout getParent() {
-        return this.parentLayout;
-    }
-
-    public final void setParent(CompositeLayout layout) {
-        this.parentLayout = layout;
-    }
 }

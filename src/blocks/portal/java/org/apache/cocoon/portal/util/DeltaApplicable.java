@@ -55,7 +55,7 @@ package org.apache.cocoon.portal.util;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: DeltaApplicable.java,v 1.1 2003/05/19 09:14:11 cziegeler Exp $
+ * @version CVS $Id: DeltaApplicable.java,v 1.2 2003/05/22 15:19:44 cziegeler Exp $
  */
 public interface DeltaApplicable {
 	/**
@@ -66,4 +66,9 @@ public interface DeltaApplicable {
 	 * @throws ClassCastException If the object is not of the expected type.
 	 */
 	public boolean applyDelta(Object object);
+	
+	/**
+	 * Checks if a delta has been applied.
+	 */
+	public boolean deltaApplied();
 }

@@ -72,7 +72,7 @@ import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.portal.util.DeltaApplicable;
+import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -85,7 +85,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.6 2003/05/22 12:32:48 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.7 2003/05/22 15:19:42 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -96,6 +96,8 @@ public class SimpleProfileManager
     private Mapping layoutMapping;
 
     private Map layoutStati = new HashMap(100);
+    
+    private Map attributes = new HashMap();
     
     /**
      * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
@@ -124,75 +126,79 @@ public class SimpleProfileManager
                 }
             }
             
-            String portalPrefix = "/"+service.getPortalName();
+            String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
 
-			// TODO Change to KeyManager usage
-			UserHandler handler = RequestState.getState().getHandler();
-			HashMap map = new HashMap();
-			map.put("portalname", service.getPortalName());
-			map.put("user", handler.getUserId());
-			map.put("role", handler.getContext().getContextInfo().get("role"));
+			Layout layout = null;
+			Object[] objects = (Object[])service.getAttribute(portalPrefix+"/Layout");
+			if (objects != null)
+				layout = (Layout)objects[0];
+				
+			if (layout == null) {
+				HashMap map = new HashMap();
+				map.put("portalname", service.getPortalName());
+				
+				// TODO Change to KeyManager usage
+				UserHandler handler = RequestState.getState().getHandler();
+				HashMap keyMap = new HashMap();
+				keyMap.put("user", handler.getUserId());
+				keyMap.put("role", handler.getContext().getContextInfo().get("role"));
+				keyMap.put("config", RequestState.getState().getApplicationConfiguration().getConfiguration("portal"));
+	
+				// load coplet base data
+				map.put("profile", "copletbasedata");
+				map.put("objectmap", null);
+				Object[] result = this.getProfile(keyMap, map, portalPrefix+"/CopletBaseData", null);
+				if (result[0] == null) {
+					throw new SourceNotFoundException("Could not find coplet base data profile.");
+				}
+				CopletBaseDataManager copletBaseDataManager = (CopletBaseDataManager)result[0];
+				boolean lastLoaded = ((Boolean)result[1]).booleanValue();
+	
+				// load coplet data
+				map.put("profile", "copletdata");
+				map.put("objectmap", copletBaseDataManager.getCopletBaseData());
+				result = this.getDeltaProfile(keyMap, map, portalPrefix+"/CopletData", service, lastLoaded);
+				if (result[0] == null) {
+					throw new SourceNotFoundException("Could not find coplet data profile.");
+				}
+				CopletDataManager copletDataManager = (CopletDataManager)result[0];
+				lastLoaded = ((Boolean)result[1]).booleanValue();
+				// updating
+				Iterator i = copletDataManager.getCopletData().values().iterator();
+				while ( i.hasNext()) {
+					CopletData cd = (CopletData)i.next();
+					copletFactory.prepare(cd);
+				}
+	
+				// load coplet instance data
+				map.put("profile", "copletinstancedata");
+				map.put("objectmap", copletDataManager.getCopletData());
+				result = this.getOrCreateProfile(keyMap, map, portalPrefix+"/CopletInstanceData", service);
+				CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)result[0];
+				boolean loaded = ((Boolean)result[1]).booleanValue();
+				if (lastLoaded && !loaded) {
+					copletInstanceDataManager.update(copletDataManager);
+				}
+				lastLoaded = loaded;
+				// updating
+				i = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+				while ( i.hasNext()) {
+					CopletInstanceData cid = (CopletInstanceData)i.next();
+					copletFactory.prepare(cid);
+				}
+	
+				// load layout
+				map.put("profile", "layout");
+				map.put("objectmap", ((CopletInstanceDataManager)result[0]).getCopletInstanceData());
+				result = this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service);
+				layout = (Layout)result[0];
+				loaded = ((Boolean)result[1]).booleanValue();
+				if (lastLoaded && !loaded) {
+					updateLayout(layout, copletInstanceDataManager);
+				}
+	            factory.prepareLayout( layout );
+			}
 
-			// load coplet base data
-			map.put("profile", "copletbasedata");
-			map.put("objectmap", null);
-			Object[] result = this.getProfile(map, portalPrefix+"/CopletBaseData", service);
-			if (result[0] == null) {
-				throw new SourceNotFoundException("Could not find coplet base data profile.");
-			}
-			CopletBaseDataManager copletBaseDataManager = (CopletBaseDataManager)result[0];
-			boolean lastLoaded = ((Boolean)result[1]).booleanValue();
-
-			// load coplet data
-			map.put("profile", "copletdata");
-			map.put("objectmap", copletBaseDataManager.getCopletBaseData());
-			result = this.getDeltaProfile(map, portalPrefix+"/CopletData", service);
-			if (result[0] == null) {
-				throw new SourceNotFoundException("Could not find coplet data profile.");
-			}
-			CopletDataManager copletDataManager = (CopletDataManager)result[0];
-			boolean loaded = ((Boolean)result[1]).booleanValue();
-			if (lastLoaded && !loaded) {
-				copletDataManager.update(copletBaseDataManager);
-			}
-			lastLoaded = loaded;
-            // updating
-            Iterator i = copletDataManager.getCopletData().values().iterator();
-            while ( i.hasNext()) {
-                CopletData cd = (CopletData)i.next();
-                copletFactory.prepare(cd);
-            }
-
-			// load coplet instance data
-			map.put("profile", "copletinstancedata");
-			map.put("objectmap", copletDataManager.getCopletData());
-			result = this.getOrCreateProfile(map, portalPrefix+"/CopletInstanceData", service);
-			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)result[0];
-			loaded = ((Boolean)result[1]).booleanValue();
-			if (lastLoaded && !loaded) {
-				copletInstanceDataManager.update(copletDataManager);
-			}
-			lastLoaded = loaded;
-            // updating
-            i = copletInstanceDataManager.getCopletInstanceData().values().iterator();
-            while ( i.hasNext()) {
-                CopletInstanceData cid = (CopletInstanceData)i.next();
-                copletFactory.prepare(cid);
-            }
-
-			// load layout
-			map.put("profile", "layout");
-			map.put("objectmap", ((CopletInstanceDataManager)result[0]).getCopletInstanceData());
-			result = this.getOrCreateProfile(map, portalPrefix+"/Layout", service);
-			Layout layout = (Layout)result[0];
-			loaded = ((Boolean)result[1]).booleanValue();
-			if (lastLoaded && !loaded) {
-				resolveParents(layout, null, copletInstanceDataManager);
-			} else {
-				resolveParents(layout, null, null);
-			}
-            factory.prepareLayout( layout );
-             
             return layout;
         } catch (Exception ce) {
             // TODO
@@ -209,57 +215,52 @@ public class SimpleProfileManager
      * @return result[0] is the profile, result[1] is a Boolean, 
      * which signals whether the profile has been loaded or reused.
      */
-    private Object[] getDeltaProfile(Object key, String location, PortalService service) 
+    private Object[] getDeltaProfile(Object key, Map map, String location, PortalService service, boolean forcedLoad) 
     throws Exception {
     	Object[] result;
     	
-		// TODO Change key access to KeyManager usage
-		Map map = (Map)key;
-		
+		// TODO Change to KeyManager usage
+		Map keyMap = (Map)key;
+
 		// check validities
-		map.remove("type");
-		Object[] globalValidity = this.getValidity(map, location+"-global", service);
+		map.put("type", "global");
+		Object[] globalValidity = this.getValidity(key, map, location, null);
 		map.put("type", "role");
-		Object[] roleValidity = this.getValidity(map, location+"-role-"+map.get("role"), service);
+		Object[] roleValidity = this.getValidity(key, map, location+"-role-"+keyMap.get("role"), null);
 		map.put("type", "user");
-		Object[] userValidity = this.getValidity(map, location+"-user-"+map.get("user"), service);
+		Object[] userValidity = this.getValidity(key, map, location+"-user", service);
 		boolean isValid
 			= ((Boolean)globalValidity[0]).booleanValue()
 			  &&((Boolean)roleValidity[0]).booleanValue()
 			  &&((Boolean)userValidity[0]).booleanValue();
 			  
-		if (isValid) {
-			/* The objects of the global profile have been modified by deltas
-			   during the last load and therefore represent the current profile. 
-			   So reuse them. */
-			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName()+location+"-global");
-
+		if (isValid && !forcedLoad) {
+			Object[] objects = (Object[]) this.attributes.get(location);
 			result = new Object[] {objects[0], Boolean.FALSE};
 		} else {
 			// load global profile
-			map.remove("type");
-			/* It must be loaded and cannot be reused since the objects are modified by deltas
-			   so they do NOT represent the global profile any more. */
-			DeltaApplicable object = (DeltaApplicable)this.loadProfile(map, location+"-global", (SourceValidity)globalValidity[1], service);
+			map.put("type", "global");
+			Object global = this.getProfile(key, map, location, globalValidity, null, forcedLoad)[0];
+			DeltaApplicableReferencesAdjustable object = (DeltaApplicableReferencesAdjustable)this.loadProfile(key, map, location, (SourceValidity)globalValidity[1], service);
 			result = new Object[] {object, Boolean.TRUE};
 		
 			// load role delta
 			map.put("type", "role");
-			result = this.getProfile(map, location+"-role-"+map.get("role"), roleValidity, service);
+			result = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), roleValidity, null, forcedLoad);
 			if (((Boolean)result[1]).booleanValue())
 				object.applyDelta(result[0]); 		
 
 			// load user delta
 			map.put("type", "user");
-			result = this.getProfile(map, location+"-user-"+map.get("user"), userValidity, service);
+			result = this.getProfile(key, map, location+"-user", userValidity, service, forcedLoad);
 			if (((Boolean)result[1]).booleanValue())
 				object.applyDelta(result[0]);
+				
+			// change references to objects where no delta has been applied
+			object.adjustReferences(global);
 			
 			result = new Object[] {object, Boolean.TRUE}; 		
 		}
-
-		// clean up for reuse
-		map.remove("type");
 
     	return result;
     }
@@ -269,26 +270,26 @@ public class SimpleProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getOrCreateProfile(Object key, String location, PortalService service) 
+	private Object[] getOrCreateProfile(Object key, Map map, String location, PortalService service) 
 	throws Exception {
 		Object[] result;
     	
-		// TODO Change key access to KeyManager usage
-		Map map = (Map)key;
-		
+		// TODO Change to KeyManager usage
+		Map keyMap = (Map)key;
+
 		// load user profile
 		map.put("type", "user");
-		result = this.getProfile(key, location+"-user-"+map.get("user"), service);
+		result = this.getProfile(key, map, location, service);
 
 		if (result[0] == null) {
 			// load role profile
 			map.put("type", "role");
-			result = this.getProfile(key, location+"-role-"+map.get("role"), service);
+			result = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), null);
 
 			if (result[0] == null) {
 				// load global profile
-				map.remove("type");
-				result = this.getProfile(key, location+"-global", service);
+				map.put("type", "global");
+				result = this.getProfile(key, map, location, null);
 
 				if (result[0] == null) {
 					throw new SourceNotFoundException("Could not find global or role profile to create user profile.");
@@ -298,30 +299,26 @@ public class SimpleProfileManager
 			// save profile as user profile
 			MapSourceAdapter adapter = null;
 			try {
-				// TODO could one perhaps simply copy the file to increase performance??
 				adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 				map.put("type", "user");
 				
                 // FIXME - disabled saving for testing
-                // adapter.saveProfile(key, result[0]);
+                // adapter.saveProfile(key, map, result[0]);
 
 				// set validity for created user profile
-				SourceValidity newValidity = adapter.getValidity(key);
+				SourceValidity newValidity = adapter.getValidity(key, map);
 				if (newValidity != null) {
 					Object[] objects = new Object[] { result[0], newValidity };
-					service.setAttribute(SimpleProfileManager.class.getName()+location+"-user-"+map.get("user"), objects);
+					this.setAttribute(location, objects, service);
 				} else {
                     Object[] objects = new Object[] { result[0], null };
-                    service.setAttribute(SimpleProfileManager.class.getName()+location+"-user-"+map.get("user"), objects);
+                    this.setAttribute(location, objects, service);
 				}
 			} finally {
 				this.manager.release(adapter);
 			}
 		}
 		
-		// clean up for reuse
-		map.remove("type");
-
 		return result;
 	}
 
@@ -330,19 +327,19 @@ public class SimpleProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getProfile(Object key, String location, PortalService service) 
+	private Object[] getProfile(Object key, Map map, String location, PortalService service) 
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
 			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
-			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName() + location);
+			Object[] objects = (Object[]) this.getAttribute(location, service);
 			
 			// check whether still valid
 			SourceValidity sourceValidity = null;
 			if (objects != null)
 				sourceValidity = (SourceValidity)objects[1];
-			Object[] validity = this.getValidity(key, location, sourceValidity, adapter);
+			Object[] validity = this.getValidity(key, map, location, sourceValidity, adapter);
 			if (((Boolean)validity[0]).booleanValue()) {
 				if (objects == null) {
 					return new Object[]{null, Boolean.FALSE};
@@ -353,10 +350,10 @@ public class SimpleProfileManager
 			
 			// load profile
 			SourceValidity newValidity = (SourceValidity)validity[1];
-			Object object = adapter.loadProfile(key);
+			Object object = adapter.loadProfile(key, map);
 			if (newValidity != null) {
 				objects = new Object[] { object, newValidity };
-				service.setAttribute(SimpleProfileManager.class.getName() + location, objects);
+				this.setAttribute(location, objects, service);
 			}
 
 			return new Object[]{object, Boolean.TRUE};
@@ -370,51 +367,59 @@ public class SimpleProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getProfile(Object key, String location, Object[] validity, PortalService service) 
+	private Object[] getProfile(Object key, Map map, String location, Object[] validity, PortalService service, boolean forcedLoad) 
 	throws Exception {
-		MapSourceAdapter adapter = null;
-		try {
-			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
+		if (forcedLoad) {
+			try {
+				return new Object[] {this.loadProfile(key, map, location, (SourceValidity)validity[1], service), Boolean.TRUE};
+			} catch (SourceNotFoundException e) {
+				return new Object[] {null, Boolean.FALSE};
+			}
+		} else {
+			MapSourceAdapter adapter = null;
+			try {
+				adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
-			// check whether still valid
-			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName() + location);
-			if (((Boolean)validity[0]).booleanValue()) {
-				if (objects == null) {
-					return new Object[]{null, Boolean.FALSE};
-				} else {
-					return new Object[]{objects[0], Boolean.FALSE};
+				// check whether still valid
+				Object[] objects = (Object[]) this.getAttribute(location, service);
+				if (((Boolean)validity[0]).booleanValue()) {
+					if (objects == null) {
+						return new Object[]{null, Boolean.FALSE};
+					} else {
+						return new Object[]{objects[0], Boolean.FALSE};
+					}
 				}
-			}
 
-			// load profile
-			SourceValidity newValidity = (SourceValidity)validity[1];
-			Object object = adapter.loadProfile(key);
-			if (newValidity != null) {
-				objects = new Object[] { object, newValidity };
-				service.setAttribute(SimpleProfileManager.class.getName() + location, objects);
-			}
+				// load profile
+				SourceValidity newValidity = (SourceValidity)validity[1];
+				Object object = adapter.loadProfile(key, map);
+				if (newValidity != null) {
+					objects = new Object[] { object, newValidity };
+					this.setAttribute(location, objects, service);
+				}
 
-			return new Object[]{object, Boolean.TRUE};
-		} finally {
-			this.manager.release(adapter);
+				return new Object[]{object, Boolean.TRUE};
+			} finally {
+				this.manager.release(adapter);
+			}
 		}
 	}
 
 	/**
 	 * Loads a profile and reuses the specified validity for storing if it is not null.
 	 */
-	private Object loadProfile(Object key, String location, SourceValidity newValidity, PortalService service) 
+	private Object loadProfile(Object key, Map map, String location, SourceValidity newValidity, PortalService service) 
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
 			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
 			if (newValidity == null)
-				newValidity = adapter.getValidity(key);
-			Object object = adapter.loadProfile(key);
+				newValidity = adapter.getValidity(key, map);
+			Object object = adapter.loadProfile(key, map);
 			if (newValidity != null) {
 				Object[] objects = new Object[] { object, newValidity };
-				service.setAttribute(SimpleProfileManager.class.getName() + location, objects);
+				this.setAttribute(location, objects, service);
 			}
 
 			return object;
@@ -428,18 +433,18 @@ public class SimpleProfileManager
 	 * @return result[0] is a Boolean, which signals whether it is valid, 
 	 * result[1] may contain a newly created validity or be null if it could be reused.
 	 */
-	private Object[] getValidity(Object key, String location, PortalService service)
+	private Object[] getValidity(Object key, Map map, String location, PortalService service)
 	throws Exception { 
 		MapSourceAdapter adapter = null;
 		try {
 			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
-			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName() + location);
+			Object[] objects = (Object[]) this.getAttribute(location, service);
 			SourceValidity sourceValidity = null;
 			if (objects != null)
 				sourceValidity = (SourceValidity)objects[1];
 			
-			return this.getValidity(key, location, sourceValidity, adapter);
+			return this.getValidity(key, map, location, sourceValidity, adapter);
 		} finally {
 			this.manager.release(adapter);
 		}
@@ -450,7 +455,7 @@ public class SimpleProfileManager
 	 * @return result[0] is a Boolean, which signals whether it is valid, 
 	 * result[1] may contain a newly created validity or be null if it could be reused.
 	 */
-	private Object[] getValidity(Object key, String location, SourceValidity sourceValidity, MapSourceAdapter adapter) 
+	private Object[] getValidity(Object key, Map map, String location, SourceValidity sourceValidity, MapSourceAdapter adapter) 
 	throws Exception {
 		int valid = SourceValidity.INVALID;
 
@@ -460,7 +465,7 @@ public class SimpleProfileManager
 				return new Object[]{Boolean.TRUE, null};
 		}
 
-		SourceValidity newValidity = adapter.getValidity(key);
+		SourceValidity newValidity = adapter.getValidity(key, map);
 		
 		// source does not exist so it is valid
 		if (newValidity == null)
@@ -474,53 +479,38 @@ public class SimpleProfileManager
 		return new Object[]{Boolean.FALSE, newValidity};
 	}
 	
+	/**
+	 * If service is null the value is stored in this.attributes otherwise it is stored via the service.
+	 */
+	private void setAttribute(String key, Object value, PortalService service) {
+		if (service == null) {
+			this.attributes.put(key, value);
+		} else {
+			service.setAttribute(key, value);
+		}
+	}
+	
+	/**
+	 * If service is null the value is requested from this.attributes otherwise it is stored via the service.
+	 */
+	private Object getAttribute(String key, PortalService service) {
+		if (service == null) {
+			return this.attributes.get(key);
+		} else {
+			return service.getAttribute(key);
+		}
+	}
+
     public CopletInstanceData getCopletInstanceData(String copletID) {
         PortalService service = null;
         String attribute = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
-			// TODO Change to KeyManager usage
-			UserHandler handler = RequestState.getState().getHandler();
-			attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData-user-"+handler.getUserId();
+			attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)((Object[])this.attributes.get(attribute))[0];
 
-/* 			TODO Must be changed for dynamic coplet creation.           
- 
- 			if (null == coplets) {
-                coplets = new HashMap();
-                service.setAttribute(attribute, coplets);
-            }*/
-			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)((Object[])service.getAttribute(attribute))[0];
-
-            CopletInstanceData cid = copletInstanceDataManager.getCopletInstanceData(copletID);
-            if (null == cid) {
-/* 				TODO Must be changed for dynamic coplet creation. 
-
-                CopletBaseData base = new CopletBaseData();
-                base.setName("URICoplet");
-                base.setCopletAdapterName("uri");
-                base.setDefaultRendererName("window");
-                cid = new CopletInstanceData();
-                CopletData cd = new CopletData();
-                cd.setName(copletID);
-                cid.setCopletData(cd);
-                cid.setCopletId(copletID); // TODO generate unique copletID
-                cid.getCopletData().setCopletBaseData(base);
-                cid.getCopletData().setAttribute("uri", copletID);
-                cid.getCopletData().setTitle(copletID);
-                coplets.put(key, cid);
-
-                Marshaller marshaller;
-                try {
-                    marshaller = new Marshaller(new PrintWriter(System.out));
-                    marshaller.setSuppressXSIType(true);
-                    marshaller.setMapping(layoutMapping);
-                    marshaller.marshal(cid);
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                }*/
-            }
-            return cid;
+            return copletInstanceDataManager.getCopletInstanceData(copletID);
         } catch (ComponentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -542,41 +532,21 @@ public class SimpleProfileManager
         }
     }
 
-    private void resolveParents(final Layout layout, final Item item, CopletInstanceDataManager manager)
+    private void updateLayout(final Layout layout, final CopletInstanceDataManager manager)
     throws ProcessingException {
-        String id = layout.getId();
-        if ( id == null ) {
-            throw new ProcessingException("Layout has no id " + layout.getName());
-        }
-
         if (layout instanceof CompositeLayout) {
-
-            final CompositeLayout compositeLayout = (CompositeLayout) layout;
-
+            final CompositeLayout compositeLayout = (CompositeLayout)layout;
             for (int j = 0; j < compositeLayout.getSize(); j++) {
                 final Item layoutItem = (Item) compositeLayout.getItem(j);
-                layoutItem.setParent(compositeLayout);
-                this.resolveParents(layoutItem.getLayout(), layoutItem, manager);
+                this.updateLayout(layoutItem.getLayout(), manager);
             }
-        }
-        if (layout instanceof CopletLayout) {
-			CopletLayout copletLayout = (CopletLayout)layout;
-
+        } else if (layout instanceof CopletLayout) {
+			final CopletLayout copletLayout = (CopletLayout)layout;
 			if (manager != null) {
 				String copletId = copletLayout.getCopletInstanceData().getId();
 				copletLayout.setCopletInstanceData(manager.getCopletInstanceData(copletId)); 
 			}
-
-            // FIXME - move this simple test at a better place
-            if ( copletLayout.getCopletInstanceData() == null ) {
-                throw new ProcessingException("Layout " + copletLayout.getId() + " has no coplet instance data.");
-            } else {
-                if ( copletLayout.getCopletInstanceData().getCopletData() == null ) {
-                    throw new ProcessingException("CopletInstanceData " + copletLayout.getCopletInstanceData().getId() + " has no coplet data.");
-                }
-            }
         }
-        layout.setParent(item);
     }
 
 }

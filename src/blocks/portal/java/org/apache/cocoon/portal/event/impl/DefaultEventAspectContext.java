@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -48,81 +48,103 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.event.impl;
+
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.event.EventConverter;
+import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.aspect.EventAspect;
+import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Parameter.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: DefaultEventAspectContext.java,v 1.1 2003/05/22 15:19:43 cziegeler Exp $
  */
-public final class Parameter {
+public final class DefaultEventAspectContext 
+    implements EventAspectContext {
+
+    private EventAspectChain chain;
     
-    private String name;
-    private String value;
+    private Iterator iterator;
+    private Iterator configIterator;
+    private Parameters config;
     
-    
-    public Parameter() {
+    private Publisher publisher;
+    private Map objectModel;
+    private EventConverter converter;
+
+    public DefaultEventAspectContext(EventAspectChain chain) {
+        this.chain = chain;
+        this.iterator = chain.getIterator();
+        this.configIterator = chain.getConfigIterator();
     }
     
-    public Parameter(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#invokeNext(org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 */
+	public void invokeNext(PortalService service) {
+		if (iterator.hasNext()) {
+            this.config = (Parameters) this.configIterator.next();
+            final EventAspect aspect = (EventAspect) iterator.next();
+            aspect.process( this, service );
+		}
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#getConfiguration()
+	 */
+	public Parameters getAspectParameters() {
+		return this.config;
+	}
 
     /**
-     * @return String
+     * Get the encoder
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return String
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the name.
-     * @param name The name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Sets the value.
-     * @param value The value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
+    public EventConverter getEventConverter(){
+        return this.converter;
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * Get the publisher
      */
-    public String toString() {
-        return name + " = " + value;
+    public Publisher getEventPublisher(){
+        return this.publisher;
+    }
+    
+    /**
+     * Get the object model
+     */
+    public Map getObjectModel() {
+        return this.objectModel;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof String)
-            return name.equals(obj);
-        if (obj instanceof Parameter)
-            return name.equals(((Parameter) obj).getName());
-        return false;
-    }
+	/**
+	 * @param converter
+	 */
+	public void setEventConverter(EventConverter converter) {
+		this.converter = converter;
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-        return name.hashCode();
-    }
+	/**
+	 * @param map
+	 */
+	public void setObjectModel(Map map) {
+		objectModel = map;
+	}
+
+	/**
+	 * @param publisher
+	 */
+	public void setEventPublisher(Publisher publisher) {
+		this.publisher = publisher;
+	}
+
 }

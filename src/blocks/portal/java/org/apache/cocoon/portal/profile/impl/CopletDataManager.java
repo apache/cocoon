@@ -55,22 +55,27 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.util.DeltaApplicable;
+import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
 
 /**
  * Holds instances of CopletData.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletDataManager.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
+ * @version CVS $Id: CopletDataManager.java,v 1.3 2003/05/22 15:19:42 cziegeler Exp $
  */
 public class CopletDataManager 
-implements DeltaApplicable {
+implements DeltaApplicableReferencesAdjustable {
 
 	/**
 	 * The coplet data instances.
 	 */
 	private Map copletData = new HashMap();
+	
+	/**
+	 * Signals whether a delta has been applied.
+	 */
+	private boolean deltaApplied = false;
 	
 	/**
 	 * Gets all coplet data.
@@ -100,6 +105,8 @@ implements DeltaApplicable {
 	public boolean applyDelta(Object object) {
 		CopletDataManager manager = (CopletDataManager)object;
 		
+		this.deltaApplied = true;
+
 		Iterator iterator = manager.getCopletData().values().iterator();
 		CopletData data, delta;
 		while (iterator.hasNext()) {
@@ -116,14 +123,30 @@ implements DeltaApplicable {
 	}
 	
 	/**
-	 * Updates the references to the coplet base data to the ones stored in the manager.
+	 * Checks if a delta has been applied.
 	 */
-	public void update(CopletBaseDataManager manager) {
+	public boolean deltaApplied() {
+		return this.deltaApplied;
+	}
+
+	/**
+	 * Updates the references to contained DeltaApplicable objects  
+	 * if no delta has been applied to them.
+	 * @throws ClassCastException If the object is not of the expected type.
+	 */
+	public void adjustReferences(Object object) {
+		CopletDataManager manager = (CopletDataManager)object;
+		
 		Iterator iterator = this.copletData.values().iterator();
-		CopletData data;
+		CopletData data, other;
 		while (iterator.hasNext()) {
 			data = (CopletData)iterator.next();
-			data.setCopletBaseData(manager.getCopletBaseData(data.getCopletBaseData().getId()));
+			if (!data.deltaApplied()) {
+				other = manager.getCopletData(data.getId());
+				if (other != null) {
+					this.putCopletData(other);
+				}
+			}
 		}
 	}
 }

@@ -56,7 +56,6 @@ import java.util.Map;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.Parameter;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
@@ -68,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeContentAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: CompositeContentAspect.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
  */
 public class CompositeContentAspect extends AbstractCompositeAspect {
 
@@ -89,9 +88,10 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 
         AttributesImpl attributes = new AttributesImpl();
         Map parameter = layout.getParameters();
-        for (Iterator iter = parameter.values().iterator(); iter.hasNext();) {
-            Parameter param = (Parameter) iter.next();
-            attributes.addCDATAAttribute(param.getName(), param.getValue());
+        Map.Entry entry;
+        for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
+        	entry = (Map.Entry) iter.next();
+            attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
         }
         XMLUtils.startElement(handler, this.getTagName(context), attributes);
         super.toSAX(context, layout, service, handler);
@@ -114,10 +114,11 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
         } else {
             AttributesImpl attributes = new AttributesImpl();
 
-            for (Iterator iter = parameters.values().iterator(); iter.hasNext();) {
-                Parameter param = (Parameter) iter.next();
-                attributes.addCDATAAttribute(param.getName(), param.getValue());
-            }
+			Map.Entry entry;
+			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
+				entry = (Map.Entry) iter.next();
+				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+			}
             XMLUtils.startElement(handler, ITEM_STRING, attributes);
         }
         processLayout(layout, service, handler);

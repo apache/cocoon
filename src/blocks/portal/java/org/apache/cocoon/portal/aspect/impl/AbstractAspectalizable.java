@@ -50,9 +50,8 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
@@ -63,14 +62,14 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspectalizable.java,v 1.4 2003/05/22 06:54:52 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizable.java,v 1.5 2003/05/22 15:19:48 cziegeler Exp $
  */
 public abstract class AbstractAspectalizable 
     implements Aspectalizable {
 
     transient protected AspectDataHandler aspectDataHandler;
     
-    transient protected List persistentDatas;
+    transient protected Map persistentDatas;
     
     /**
      * Is this aspect supported
@@ -91,8 +90,12 @@ public abstract class AbstractAspectalizable
         return this.aspectDataHandler.getAspectDatas(this);
     }
     
-    public Map getPersistentAspectDatas(){
-        return this.aspectDataHandler.getPersistentAspectDatas(this);
+    public Map getPersistentAspectData(){
+    	if (this.aspectDataHandler == null) {
+	    	return this.persistentDatas;
+    	} else {
+			return this.aspectDataHandler.getPersistentAspectDatas(this);
+    	}
     }
 
     /**
@@ -101,20 +104,21 @@ public abstract class AbstractAspectalizable
     public void setAspectDataHandler(AspectDataHandler handler) {
         this.aspectDataHandler = handler;
         if ( this.persistentDatas != null ) {
-            Iterator iter = this.persistentDatas.iterator();
+            Iterator iter = this.persistentDatas.entrySet().iterator();
+            Map.Entry entry;
             while (iter.hasNext()) {
-                Object[] o = (Object[])iter.next();
-                handler.setAspectData(this, (String)o[0], o[1]);
+                entry = (Map.Entry)iter.next();
+                handler.setAspectData(this, (String)entry.getKey(), entry.getValue());
             }
             this.persistentDatas = null;
         }
     }
 
-    public void addPersistenAspectData(String aspectName, Object data) {
+    public void addPersistentAspectData(String aspectName, Object data) {
         if ( this.persistentDatas == null ) {
-            this.persistentDatas = new ArrayList();
+            this.persistentDatas = new HashMap();
         }
-        this.persistentDatas.add(new Object[] {aspectName, data});
+        this.persistentDatas.put(aspectName, data);
     }
 
 }

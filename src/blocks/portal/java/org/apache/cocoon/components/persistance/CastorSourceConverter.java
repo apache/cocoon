@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.components.persistance;
 
+import java.io.BufferedWriter;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,7 +69,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.exolab.castor.mapping.Mapping;
@@ -84,7 +83,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.2 2003/05/19 09:14:11 cziegeler Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.3 2003/05/22 15:19:48 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
@@ -96,9 +95,8 @@ public class CastorSourceConverter
     private ComponentManager manager;
     private Map mappings = new HashMap();
 
-    public Object getObject(Source source, String name) throws ConverterException {
+    public Object getObject(InputStream stream, String name) throws ConverterException {
         try {
-			InputStream stream = source.getInputStream();
             Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(name));
             Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
@@ -110,10 +108,9 @@ public class CastorSourceConverter
         }
     }
 
-	public void storeObject(ModifiableSource source, String name, Object object) throws ConverterException {
+	public void storeObject(Writer writer, String name, Object object) throws ConverterException {
 		try {
-			Writer writer = new OutputStreamWriter(source.getOutputStream());
-			Marshaller marshaller = new Marshaller(writer);
+			Marshaller marshaller = new Marshaller(new BufferedWriter(writer));
 			Mapping mapping = new Mapping();
 			marshaller.setMapping((Mapping)this.mappings.get(name));
 			marshaller.marshal(object);

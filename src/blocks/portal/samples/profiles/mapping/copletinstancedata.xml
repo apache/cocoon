@@ -3,6 +3,9 @@
 	<description>Coplet instance data mapping file</description>
 
 	<class name="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+        <field name="persistentAspectDatas" type="org.apache.cocoon.portal.aspect.impl.MapItem" collection="map" handler="org.apache.cocoon.portal.aspect.impl.AspectDataFieldHandler">
+            <bind-xml name="aspect"/>
+        </field>
     </class>
 
 	<class name="org.apache.cocoon.portal.factory.impl.AbstractProducible"
@@ -24,7 +27,7 @@
 	</class>
 
 	<class name="org.apache.cocoon.portal.coplet.CopletInstanceData"
-	    extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
+		   extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
 		<map-to xml="coplet-instance-data" />
 
 		<field name="status" type="java.lang.Integer">
@@ -32,6 +35,16 @@
 		</field>
 
 		<field name="copletData" type="java.lang.String" handler="org.apache.cocoon.portal.profile.impl.CopletDataReferenceFieldHandler"/>
+	</class>
+
+	<class name="org.apache.cocoon.portal.aspect.impl.MapItem">
+		<field name="key" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+
+		<field name="value">
+			<bind-xml name="value"/>
+		</field>
 	</class>
 </mapping>
 

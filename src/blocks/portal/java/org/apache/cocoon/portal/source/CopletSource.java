@@ -67,27 +67,31 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * This is the source implementation of the coplet source
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: CopletSource.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
  */
-public final class CopletSource 
+public class CopletSource 
     implements Source, XMLizable, Composable {
 
-    private ComponentManager componentManager;
+    protected ComponentManager manager;
     
-    private String copletControllerName;
-    private CopletInstanceData copletInstanceData;
+    protected String uri;
+    protected String copletControllerName;
+    protected CopletInstanceData copletInstanceData;
     
     /** The used protocol */
-    private String scheme = "coplet";
+    protected String scheme;
     
-    public CopletSource(String copletControllerName,
+    public CopletSource(String location, String protocol,
                          CopletInstanceData coplet) {
-         this.copletInstanceData = coplet;
-         this.copletControllerName = copletControllerName;
+        this.uri = location;
+        this.scheme = (protocol == null ? "coplet" : protocol);
+        this.copletInstanceData = coplet;
+        this.copletControllerName = this.copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName();
     }
     
 	/**
@@ -101,8 +105,7 @@ public final class CopletSource
 	 * @see org.apache.excalibur.source.Source#getURI()
 	 */
 	public String getURI() {
-        // FIXME
-		return "hallo";
+		return this.uri;
 	}
 
 	/**
@@ -147,7 +150,7 @@ public final class CopletSource
         ComponentSelector copletAdapterSelector = null;
         CopletAdapter copletAdapter = null;
         try {
-            copletAdapterSelector = (ComponentSelector)this.componentManager.lookup(CopletAdapter.ROLE+"Selector");
+            copletAdapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             copletAdapter = (CopletAdapter)copletAdapterSelector.select(this.copletControllerName);
             
             copletAdapter.toSAX(this.copletInstanceData, handler);
@@ -157,7 +160,7 @@ public final class CopletSource
             if ( null != copletAdapter ) {
                  copletAdapterSelector.release( copletAdapter );
             }
-            this.componentManager.release(copletAdapterSelector);
+            this.manager.release(copletAdapterSelector);
         }
             
 	}
@@ -167,7 +170,7 @@ public final class CopletSource
 	 */
 	public void compose(ComponentManager componentManager)
 		throws ComponentException {
-        this.componentManager = componentManager;
+        this.manager = componentManager;
 	}
 
     /**
@@ -181,7 +184,7 @@ public final class CopletSource
      * @see org.apache.excalibur.source.Source#getScheme()
      */
     public String getScheme() {
-        return scheme;
+        return this.scheme;
     }
 
 }

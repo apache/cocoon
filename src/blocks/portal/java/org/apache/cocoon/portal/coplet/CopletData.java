@@ -63,7 +63,7 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.5 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.6 2003/05/22 15:19:45 cziegeler Exp $
  */
 public class CopletData 
 extends AbstractProducible
@@ -76,6 +76,11 @@ implements DeltaApplicable {
     protected CopletBaseData copletBaseData;
 
     protected Map attributes = new HashMap();
+
+	/**
+	 * Signals whether a delta has been applied.
+	 */
+	private boolean deltaApplied = false;
 
     /**
      * Constructor
@@ -162,6 +167,8 @@ implements DeltaApplicable {
 	public boolean applyDelta(Object object) {
 		CopletData data = (CopletData)object;
 		
+		this.deltaApplied = true;
+		
 		Boolean maxpageable = data.maxpageable;
 		if (maxpageable != null)
 			this.maxpageable = maxpageable;
@@ -202,5 +209,12 @@ implements DeltaApplicable {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Checks if a delta has been applied.
+	 */
+	public boolean deltaApplied() {
+		return this.deltaApplied;
 	}
 }

@@ -56,11 +56,17 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * This is the "portlet" implementation.
+ * A coplet adapter is the interface between the portal engine and
+ * the implementation of a coplet.
+ * Usually there is only one instance of an adapter (= singleton). 
+ * Whenever an instance of this coplet is rendered, the
+ * adapter is invoked to render the coplet.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletAdapter.java,v 1.1 2003/05/07 06:22:29 cziegeler Exp $
+ * @version CVS $Id: CopletAdapter.java,v 1.2 2003/05/22 15:19:43 cziegeler Exp $
  */
 public interface CopletAdapter 
     extends Component {

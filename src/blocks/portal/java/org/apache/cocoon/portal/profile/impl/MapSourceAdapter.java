@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
@@ -63,10 +66,12 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.persistance.CastorSourceConverter;
 import org.apache.cocoon.portal.profile.ProfileLS;
-import org.apache.excalibur.source.ModifiableSource;
+import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -74,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: MapSourceAdapter.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: MapSourceAdapter.java,v 1.2 2003/05/22 15:19:42 cziegeler Exp $
  */
 public class MapSourceAdapter
     extends AbstractLogEnabled
@@ -86,85 +91,49 @@ public class MapSourceAdapter
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileLS#loadProfile(java.lang.Object)
      */
-    public Object loadProfile(Object key) throws Exception {
-        Map mapKey = (Map) key;
-		String profile = (String)mapKey.get("profile");
-
-        // TODO
-        //String sourceURI = "context://samples/portal/profiles/layout/" + paramKey.getParameter("portalname") + ".xml";
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("profiles/");
-		buffer.append(profile);
-		buffer.append("/");
-		buffer.append(mapKey.get("portalname"));
-		Object type = mapKey.get("type");
-		if (type != null) {
-			buffer.append("-");
-			buffer.append(type);
-			if (type.equals("role")) {
-				buffer.append("-");
-				buffer.append(mapKey.get("role"));
-			} else if (type.equals("user")) {
-				buffer.append("-");
-				buffer.append(mapKey.get("user"));
-			}
-		}
-		buffer.append(".xml");
-        
-		String sourceURI = buffer.toString();
-        SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-        Source source = null;
-        CastorSourceConverter converter = null;
-        try {
-            source = resolver.resolveURI(sourceURI);
-            converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
-
-			ReferenceFieldHandler.setObjectMap((Map)mapKey.get("objectmap"));
-            return converter.getObject(source, profile);
-        } finally {
-            resolver.release(source);
-            manager.release(converter);
-            manager.release(resolver);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileLS#saveProfile(java.lang.Object, java.lang.Object)
-     */
-    public void saveProfile(Object key, Object profile) throws Exception {
+    public Object loadProfile(Object key, Map map) throws Exception {
 		Map mapKey = (Map) key;
-		String profileName = (String)mapKey.get("profile");
-
-		// TODO
-		//String sourceURI = "context://samples/portal/profiles/layout/" + paramKey.getParameter("portalname") + ".xml";
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("profiles/");
-		buffer.append(profileName);
-		buffer.append("/");
-		buffer.append(mapKey.get("portalname"));
-		Object type = mapKey.get("type");
-		if (type != null) {
-			buffer.append("-");
-			buffer.append(type);
-			if (type.equals("role")) {
-				buffer.append("-");
-				buffer.append(mapKey.get("role"));
-			} else if (type.equals("user")) {
-				buffer.append("-");
-				buffer.append(mapKey.get("user"));
-			}
+
+		String profile = (String)map.get("profile");
+
+		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
+		Object type = map.get("type");
+		String uri = null;
+		if (type == null) {
+			uri = config.getChild(profile+"-load").getAttribute("uri");
+		} else if (type.equals("global")) {
+			uri = config.getChild(profile+"-global-load").getAttribute("uri");
+		} else if (type.equals("role")) {
+			uri = config.getChild(profile+"-role-load").getAttribute("uri");
+		} else if (type.equals("user")) {
+			uri = config.getChild(profile+"-user-load").getAttribute("uri");
 		}
-		buffer.append(".xml");
+		buffer.append(uri);
+
+		if (uri.indexOf("?") == -1) {
+			buffer.append("?portal=");
+		} else {
+			buffer.append("&portal=");
+		}
+		buffer.append(map.get("portalname"));
+
+		buffer.append("&role=");
+		buffer.append(mapKey.get("role"));
         
+		buffer.append("&user=");
+		buffer.append(mapKey.get("user"));
+
 		String sourceURI = buffer.toString();
 		SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-		ModifiableSource source = null;
+		Source source = null;
 		CastorSourceConverter converter = null;
 		try {
-			source = (ModifiableSource)resolver.resolveURI(sourceURI);
+			source = resolver.resolveURI(sourceURI);
 			converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
 
-			converter.storeObject(source, profileName, profile);
+			ReferenceFieldHandler.setObjectMap((Map)map.get("objectmap"));
+			return converter.getObject(source.getInputStream(), profile);
 		} finally {
 			resolver.release(source);
 			manager.release(converter);
@@ -173,47 +142,119 @@ public class MapSourceAdapter
     }
 
     /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileLS#saveProfile(java.lang.Object, java.lang.Object)
+     */
+    public void saveProfile(Object key, Map map, Object profile) throws Exception {
+		Map mapKey = (Map) key;
+		StringBuffer buffer = new StringBuffer();
+
+		String profileName = (String)map.get("profile");
+
+		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
+		Object type = map.get("type");
+		String uri = null;
+		if (type == null) {
+			uri = config.getChild(profileName+"-save").getAttribute("uri");
+		} else if (type.equals("global")) {
+			uri = config.getChild(profileName+"-global-save").getAttribute("uri");
+		} else if (type.equals("role")) {
+			uri = config.getChild(profileName+"-role-save").getAttribute("uri");
+		} else if (type.equals("user")) {
+			uri = config.getChild(profileName+"-user-save").getAttribute("uri");
+		}
+		buffer.append(uri);
+
+		if (uri.indexOf("?") == -1) {
+			buffer.append("?portal=");
+		} else {
+			buffer.append("&portal=");
+		}
+		buffer.append(map.get("portalname"));
+
+		buffer.append("&role=");
+		buffer.append(mapKey.get("role"));
+        
+		buffer.append("&user=");
+		buffer.append(mapKey.get("user"));
+
+		SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+		Source source = null;
+		CastorSourceConverter converter = null;
+		SAXParser parser = null;
+		try {
+			StringWriter writer = new StringWriter();
+			
+			converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
+			converter.storeObject(writer, profileName, profile);
+
+			buffer.append("&content=");
+			buffer.append(writer.toString());
+
+			source = resolver.resolveURI(buffer.toString());
+			parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
+			Element element = DOMUtil.getDocumentFragment(parser, new InputStreamReader(source.getInputStream())).getOwnerDocument().getDocumentElement();
+			if (!DOMUtil.getValueOf(element, "descendant::sourceResult/execution").trim().equals("success")) {
+				throw new IOException("Could not save profile: "+DOMUtil.getValueOf(element, "descendant::sourceResult/message"));
+			}
+		} finally {
+			resolver.release(source);
+			manager.release((Component)parser);
+			manager.release(converter);
+			manager.release(resolver);
+		}
+    }
+
+    /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileLS#getValidity(java.lang.Object)
      */
-    public SourceValidity getValidity(Object key) {
-        SourceResolver resolver = null;
-        Source source = null;
-        try {
-            Map mapKey = (Map) key;
-            // TODO
-//            String sourceURI =
-//                "context://samples/portal/profiles/layout/" + paramKey.getParameter("portalname") + ".xml";
+    public SourceValidity getValidity(Object key, Map map) {
+		SourceResolver resolver = null;
+		Source source = null;
+		try {
+			Map mapKey = (Map) key;
 			StringBuffer buffer = new StringBuffer();
-			buffer.append("profiles/");
-			buffer.append(mapKey.get("profile"));
-			buffer.append("/");
-			buffer.append(mapKey.get("portalname"));
-			Object type = mapKey.get("type");
-			if (type != null) {
-				buffer.append("-");
-				buffer.append(type);
-				if (type.equals("role")) {
-					buffer.append("-");
-					buffer.append(mapKey.get("role"));
-				} else if (type.equals("user")) {
-					buffer.append("-");
-					buffer.append(mapKey.get("user"));
-				}
+
+			String profile = (String)map.get("profile");
+
+			Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
+			Object type = map.get("type");
+			String uri = null;
+			if (type == null) {
+				uri = config.getChild(profile+"-load").getAttribute("uri");
+			} else if (type.equals("global")) {
+				uri = config.getChild(profile+"-global-load").getAttribute("uri");
+			} else if (type.equals("role")) {
+				uri = config.getChild(profile+"-role-load").getAttribute("uri");
+			} else if (type.equals("user")) {
+				uri = config.getChild(profile+"-user-load").getAttribute("uri");
 			}
-			buffer.append(".xml");
+			buffer.append(uri);
+
+			if (uri.indexOf("?") == -1) {
+				buffer.append("?portal=");
+			} else {
+				buffer.append("&portal=");
+			}
+			buffer.append(map.get("portalname"));
+
+			buffer.append("&role=");
+			buffer.append(mapKey.get("role"));
         
+			buffer.append("&user=");
+			buffer.append(mapKey.get("user"));
+
 			String sourceURI = buffer.toString();
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(sourceURI);
-            return source.getValidity();
-        } catch (Exception e) {
-            getLogger().warn(e.getMessage(), e);
-            return null;
-        } finally {
-            if (source != null)
-                resolver.release(source);
-            manager.release(resolver);
-        }
+			resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+			source = resolver.resolveURI(sourceURI);
+			return source.getValidity();
+		} catch (Exception e) {
+			getLogger().warn(e.getMessage(), e);
+			return null;
+		} finally {
+			if (source != null)
+				resolver.release(source);
+			manager.release(resolver);
+		}
     }
 
     /* (non-Javadoc)

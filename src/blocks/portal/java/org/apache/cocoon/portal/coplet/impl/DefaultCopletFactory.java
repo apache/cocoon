@@ -74,13 +74,14 @@ import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 
 /**
  * This factory is for creating and managing coplet objects
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.1 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.2 2003/05/22 15:19:48 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -137,8 +138,9 @@ public class DefaultCopletFactory
     }
 
     
-    public CopletInstanceData newInstance(String name)
+    public CopletInstanceData newInstance(CopletData copletData)
     throws ProcessingException {
+        String name = copletData.getName();
         Object[] o = (Object[]) this.coplets.get( name );
             
         if ( o == null ) {
@@ -153,7 +155,24 @@ public class DefaultCopletFactory
         instance.initialize( name, id );
         instance.setDescription( copletDescription );
         instance.setAspectDataHandler((AspectDataHandler)o[2]);
-
+        instance.setCopletData(copletData);
+        
+        // now lookup the adapter
+        final String adapterName = copletData.getCopletBaseData().getCopletAdapterName();
+        CopletAdapter adapter = null;
+        ComponentSelector adapterSelector = null;
+        try {
+            adapterSelector = (ComponentSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
+            adapter = (CopletAdapter)adapterSelector.select( adapterName );
+            adapter.init( instance );
+        } catch (ComponentException ce) {
+            throw new ProcessingException("Unable to lookup coplet adapter selector or adaptor.", ce);
+        } finally {
+            if ( adapterSelector != null) {
+                adapterSelector.release( adapter );
+            }
+            this.manager.release( adapterSelector );
+        }
         return instance;
     }
     

@@ -59,7 +59,6 @@ import org.apache.cocoon.portal.event.impl.LayoutAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
-import org.apache.cocoon.portal.layout.impl.Parameter;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
@@ -71,7 +70,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.4 2003/05/19 14:10:13 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.5 2003/05/22 15:19:38 cziegeler Exp $
  */
 public class TabContentAspect extends CompositeContentAspect {
 
@@ -86,10 +85,11 @@ public class TabContentAspect extends CompositeContentAspect {
         if (layout instanceof CompositeLayout) {
             AttributesImpl attributes = new AttributesImpl();
             Map parameter = layout.getParameters();
-            for (Iterator iter = parameter.values().iterator(); iter.hasNext();) {
-                Parameter param = (Parameter) iter.next();
-                attributes.addCDATAAttribute(param.getName(), param.getValue());
-            }
+			Map.Entry entry;
+			for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
+				entry = (Map.Entry) iter.next();
+				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+			}
             XMLUtils.startElement(handler, this.getTagName(context), attributes);
 
             PortalService portalService = null;

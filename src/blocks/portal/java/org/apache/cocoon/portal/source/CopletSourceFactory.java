@@ -66,24 +66,25 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 
 /**
+ * The source factory for the coplet sources
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: CopletSourceFactory.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
     implements SourceFactory, Composable, ThreadSafe {
 
-    private ComponentManager componentManager;
+    protected ComponentManager manager;
     
     /**
      * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
      */
     public void compose(ComponentManager componentManager)
         throws ComponentException {
-        this.componentManager = componentManager;
+        this.manager = componentManager;
     }
 
 	/**
@@ -91,26 +92,30 @@ public class CopletSourceFactory
 	 */
 	public Source getSource(String location, Map parameters)
 		throws MalformedURLException, IOException {
-            
+        
+        String uri = location;
+        String protocol = null;
+        
         // remove the protocol
         int position = location.indexOf(':') + 1;
         if (position != 0) {
             location = location.substring(position+2);
+            protocol = location.substring(0, position);
         }
         ProfileManager profileManager = null;
         CopletInstanceData coplet = null;
         try {
-            profileManager = (ProfileManager)this.componentManager.lookup(ProfileManager.ROLE);
+            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
             coplet = profileManager.getCopletInstanceData(location);
             CopletSource copletSource =
-                new CopletSource(coplet.getCopletData().getCopletBaseData().getCopletAdapterName(),
+                new CopletSource(uri, protocol,
                                  coplet);
-            copletSource.compose(this.componentManager);
+            copletSource.compose(this.manager);
             return copletSource;
         } catch (ComponentException ce) {
             throw new SourceException("Unable to lookup profile manager.", ce);
         } finally {
-            this.componentManager.release(profileManager);
+            this.manager.release(profileManager);
         }
 	}
 
