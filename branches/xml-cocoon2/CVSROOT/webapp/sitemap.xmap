@@ -13,6 +13,7 @@
    <map:generator  name="request"     src="org.apache.cocoon.generation.RequestGenerator"/>
    <map:generator  name="status"      src="org.apache.cocoon.generation.StatusGenerator"/>
    <map:generator  name="extractor"   src="org.apache.cocoon.generation.FragmentExtractorGenerator"/>
+   <map:generator  name="script"      src="org.apache.cocoon.generation.ScriptGenerator"/>
   </map:generators>
 
   <map:transformers default="xslt">
@@ -226,6 +227,12 @@
    <map:match pattern="svg">
     <map:generate src="docs/samples/svg/henryV.svg"/>
     <map:serialize type="svg2png"/>
+   </map:match>
+
+   <map:match pattern="scripts/*">
+    <map:generate type="script" src="docs/samples/scripts/{1}"/>
+    <map:transform src="stylesheets/page/simple-page2html.xsl"/>
+    <map:serialize type="html"/>
    </map:match>
 
    <map:match pattern="slides/slides">
