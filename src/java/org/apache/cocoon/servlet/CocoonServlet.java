@@ -119,7 +119,7 @@ import java.util.jar.Attributes;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.2 2003/03/16 14:25:31 stefano Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.3 2003/03/16 16:38:29 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1162,40 +1162,40 @@ public class CocoonServlet extends HttpServlet {
                 res.reset();
             }
 
-			String type = Notifying.FATAL_NOTIFICATION;
-			HashMap extraDescriptions = null;
-			
-			if (errorStatus == HttpServletResponse.SC_NOT_FOUND) {
-				type = "resource-not-found";
-				// Do not show the exception stacktrace for such common errors.
-				e = null;
-			} else {
-				extraDescriptions = new HashMap(2);
-				extraDescriptions.put(Notifying.EXTRA_REQUESTURI, req.getRequestURI());
-				if (uri != null) {
-					 extraDescriptions.put("Request URI", uri);
-				}
+            String type = Notifying.FATAL_NOTIFICATION;
+            HashMap extraDescriptions = null;
+            
+            if (errorStatus == HttpServletResponse.SC_NOT_FOUND) {
+                type = "resource-not-found";
+                // Do not show the exception stacktrace for such common errors.
+                e = null;
+            } else {
+                extraDescriptions = new HashMap(2);
+                extraDescriptions.put(Notifying.EXTRA_REQUESTURI, req.getRequestURI());
+                if (uri != null) {
+                     extraDescriptions.put("Request URI", uri);
+                }
 
-				// Do not show exception stack trace when log level is WARN or above. Show only message.
-				if (!log.isInfoEnabled()) {
-					Throwable t = DefaultNotifyingBuilder.getRootCause(e);
-					if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
-					e = null;
-				}
-			}
+                // Do not show exception stack trace when log level is WARN or above. Show only message.
+                if (!log.isInfoEnabled()) {
+                    Throwable t = DefaultNotifyingBuilder.getRootCause(e);
+                    if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
+                    e = null;
+                }
+            }
 
-			Notifying n = new DefaultNotifyingBuilder().build(this,
-															   e,
-															   type,
-															   title,
-															   "Cocoon Servlet",
-															   message,
-															   description,
-															   extraDescriptions);
-			
-			res.setContentType("text/html");
-			res.setStatus(errorStatus);
-			Notifier.notify(n, res.getOutputStream(), "text/html");
+            Notifying n = new DefaultNotifyingBuilder().build(this,
+                                                              e,
+                                                              type,
+                                                              title,
+                                                              "Cocoon Servlet",
+                                                              message,
+                                                              description,
+                                                              extraDescriptions);
+
+            res.setContentType("text/html");
+            res.setStatus(errorStatus);
+            Notifier.notify(n, res.getOutputStream(), "text/html");
         } else {
             res.sendError(errorStatus, title);
             res.flushBuffer();
