@@ -36,6 +36,7 @@ FIXME:
 
 CHANGE HISTORY:
   19991129 Initial version. (SM)
+  19991225 Added actions element for better structure (SM)
     
 COPYRIGHT:
   Copyright (c) 1999 The Apache Software Foundation.
@@ -68,18 +69,21 @@ COPYRIGHT:
 <!-- Document Type Definition -->
 <!-- =============================================================== -->
 
-<!ELEMENT todo (devs, action*)>
+<!ELEMENT todo (devs, actions*)>
 <!ATTLIST todo %common.att; 
                %title.att;>
 
     <!ELEMENT devs (person+)>
     <!ATTLIST devs %common.att;>
 
-    <!ELEMENT action (%content.mix;)*>
-    <!ATTLIST action %common.att;
-                     assigned-to  IDREF           #IMPLIED
-                     context      (%contexts;)    #REQUIRED
+    <!ELEMENT actions (action+)>
+    <!ATTLIST actions %common.att;
                      priority     (%priorities;)  #IMPLIED>
+
+        <!ELEMENT action (%content.mix;)*>
+        <!ATTLIST action %common.att;
+                         assigned-to  IDREF           #IMPLIED
+                         context      (%contexts;)    #REQUIRED>
     
 <!-- =============================================================== -->
 <!-- End of DTD -->
