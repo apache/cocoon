@@ -70,7 +70,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.2 2003/05/11 01:49:54 vgritsenko Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.3 2003/08/04 03:19:22 joerg Exp $
  */
 
 public class PreparableMatchNode extends SimpleSelectorProcessingNode implements ParameterizableProcessingNode, Composable {
@@ -117,7 +117,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode implements
 
         } catch(PatternException pe) {
             String msg = "Invalid pattern '" + this.pattern + "' for matcher at " + this.getLocation();
-            throw new ComponentException(msg, pe);
+            throw new ComponentException(null, msg, pe);
 
         } finally {
             if (this.threadSafeMatcher == null) {

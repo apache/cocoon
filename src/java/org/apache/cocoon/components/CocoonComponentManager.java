@@ -85,7 +85,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.15 2003/07/11 14:17:44 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.16 2003/08/04 03:19:22 joerg Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -529,7 +529,7 @@ implements SourceResolver
     {
         super.initialize();
         if (parentAwareComponents == null) {
-            throw new ComponentException("CocoonComponentManager already initialized");
+            throw new ComponentException(null, "CocoonComponentManager already initialized");
         }
         // Set parents for parentAware components
         Iterator iter = parentAwareComponents.iterator();

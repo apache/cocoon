@@ -67,7 +67,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.2 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.3 2003/08/04 03:19:22 joerg Exp $
  */
 
 public class ExtendedComponentSelector 
@@ -335,7 +335,7 @@ public class ExtendedComponentSelector
     public void setParentLocator(ComponentLocator locator)
     throws ComponentException {
         if (this.parentSelector != null) {
-            throw new ComponentException("Parent selector is already set");
+            throw new ComponentException(null, "Parent selector is already set");
         }
         this.parentLocator = locator;
         this.parentSelector = (ComponentSelector) locator.lookup();
