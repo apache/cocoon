@@ -27,14 +27,9 @@ public class FileSavingEnvironment extends AbstractEnvironment {
     
     public FileSavingEnvironment(String uri, File context, Map links, OutputStream stream)
     throws MalformedURLException {
-        // FIXME (SM) the "LINK_TRANSLATING_VIEW" cannot work since this is NOT
-        // something a resource view can do.
-        // So for now, there is no link translation taking place bacause the
-        // sitemap doesn't know "where" to translate the links.
-        // I'm still researching on this... for now, no translation takes place.
-        super(uri, Cocoon.LINK_TRANSLATING_VIEW, context);
+        super(uri, null, context);
         this.stream = stream;
-        this.objectModel.put(Cocoon.LINK_TRANSLATED_NAME, links);
+        this.objectModel.put(Cocoon.LINK_OBJECT, links);
     }
 
     /**

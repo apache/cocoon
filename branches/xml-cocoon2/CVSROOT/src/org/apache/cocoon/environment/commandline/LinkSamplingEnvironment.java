@@ -31,12 +31,12 @@ import org.apache.cocoon.environment.AbstractEnvironment;
 
 public class LinkSamplingEnvironment extends AbstractEnvironment {
 
-    private ByteArrayOutputStream stream;
+    private boolean skip = false;
+    private ByteArrayOutputStream stream = new ByteArrayOutputStream();
     
     public LinkSamplingEnvironment(String uri, File context) 
     throws MalformedURLException, IOException {
         super(uri, Cocoon.LINK_VIEW, context);
-        this.stream = new ByteArrayOutputStream();
     }
 
     /** 
@@ -44,8 +44,7 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
      */ 
     public void setContentType(String contentType) {
         if (!Cocoon.LINK_CONTENT_TYPE.equals(contentType)) {
-            // fixme (SM) this static method sucks!!
-            Main.warning("The link MIMEtype doesn't match. A probable error occurred into the pipeline");
+            this.skip = true;
         }
     }
  
@@ -67,21 +66,13 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
      * Indicates if other links are present.
      */ 
     public Collection getLinks() throws IOException {
-
-        // FIXME (SM) I'm sure there is a much faster and less memory consuming
-        // way of doing this, but I'm lazy and I don't care at this point.
-        // Anyway the parsing is very easy:
-        // + http://host/to-be-processed
-        // - http://host/not-to-be-processed
-        // with +/- at char(0), space at char(1), url starting at char(2)
-         
         ArrayList list = new ArrayList();
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(stream.toByteArray())));
-        while (true) {
-            String line = buffer.readLine();
-            if (line == null) break;
-            if (line.charAt(0) == '+') {
-                list.add(line.substring(2));
+        if (!skip) {
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(stream.toByteArray())));
+            while (true) {
+                String line = buffer.readLine();
+                if (line == null) break;
+                list.add(line);
             }
         }
         return list;
