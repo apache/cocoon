@@ -48,54 +48,35 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.components;
+package org.apache.cocoon.webapps.authentication;
 
-import java.io.IOException;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.excalibur.source.SourceParameters;
-import org.w3c.dom.DocumentFragment;
 
 
 
 /**
- * This is the basis authentication component.
+ * This is the media manager.
+ * It provides simple support for developing multi-channel applications
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Manager.java,v 1.3 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: MediaManager.java,v 1.1 2003/04/21 19:26:15 cziegeler Exp $
 */
-public interface Manager {
+public interface MediaManager {
 
     /** The Avalon Role */
-    public static final String ROLE = Manager.class.getName();
+    public static final String ROLE = MediaManager.class.getName();
 
     /**
-     * Is the current user authenticated for the given handler?
+     * Test if the media of the current request is the given value
      */
-    boolean isAuthenticated(String handlerName)
-    throws ProcessingException;
+    boolean testMedia(String value);
 
     /**
-     * Is the current user authenticated for the given handler?
+     * Get all media type names
      */
-    boolean checkAuthentication(Redirector redirector,
-                                 String     handlerName,
-                                 String     applicationName)
-    throws ProcessingException, IOException;
+    String[] getMediaTypes();
 
     /**
-     * Authenticate
-     * If the authentication is successful, <code>null</code> is returned.
-     * If not an element "failed" is return. If handler specific error
-     * information is available this is also returned.
+     * Return the current media type
      */
-    DocumentFragment authenticate(String              handlerName,
-                                  String              applicationName,
-                                  SourceParameters    parameters)
-    throws ProcessingException;
-
-    void logout(String handlerName,
-                 int mode)
-    throws ProcessingException;
+    String getMediaType();
 }

@@ -50,52 +50,36 @@
 */
 package org.apache.cocoon.webapps.authentication.components;
 
-import java.io.IOException;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.excalibur.source.SourceParameters;
-import org.w3c.dom.DocumentFragment;
-
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * This is the basis authentication component.
+ * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Manager.java,v 1.3 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: UserStatus.java,v 1.1 2003/04/21 19:26:14 cziegeler Exp $
 */
-public interface Manager {
+public final class UserStatus
+implements java.io.Serializable {
 
-    /** The Avalon Role */
-    public static final String ROLE = Manager.class.getName();
+    /** The handlers */
+    private Map handlers = new HashMap(7);
 
-    /**
-     * Is the current user authenticated for the given handler?
+   /**
+     * Create a new handler object.
      */
-    boolean isAuthenticated(String handlerName)
-    throws ProcessingException;
+    public UserStatus() {
+    }
 
-    /**
-     * Is the current user authenticated for the given handler?
-     */
-    boolean checkAuthentication(Redirector redirector,
-                                 String     handlerName,
-                                 String     applicationName)
-    throws ProcessingException, IOException;
+    public void addHandler(UserHandler value) {
+        this.handlers.put(value.getHandlerName(), value);
+    }
 
-    /**
-     * Authenticate
-     * If the authentication is successful, <code>null</code> is returned.
-     * If not an element "failed" is return. If handler specific error
-     * information is available this is also returned.
-     */
-    DocumentFragment authenticate(String              handlerName,
-                                  String              applicationName,
-                                  SourceParameters    parameters)
-    throws ProcessingException;
-
-    void logout(String handlerName,
-                 int mode)
-    throws ProcessingException;
+    public void removeHandler(String name) {
+        this.handlers.remove( name );
+    }
+    
+    public UserHandler getUserHandler(String name) {
+        return (UserHandler) this.handlers.get( name );
+    }
 }
