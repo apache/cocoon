@@ -47,7 +47,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * </tbody></table>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SelectMetaInputModule.java,v 1.2 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: SelectMetaInputModule.java,v 1.3 2004/04/28 18:15:58 haul Exp $
  */
 public class SelectMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -56,6 +56,12 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
     private ModuleHolder otherwise = null;
     private String parameter = null;
 
+    public SelectMetaInputModule() {
+    	super();
+        this.defaultInput = null; // not needed
+    }
+    
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -237,6 +243,8 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
 
         if (this.initialized) return;
 
+        super.lazy_initialize();
+        
         if (this.expression != null) {
             this.expression.input = this.obtainModule(this.expression.name);
         }
@@ -249,7 +257,6 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
                 moduleHolder.input = this.obtainModule(moduleHolder.name);
             }
         }
-        this.initialized = true;
     }
 
 }
