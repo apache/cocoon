@@ -10,6 +10,7 @@ cocoon.sampledata
 .DS_Store
 *.ipr
 *.iws
+*.iml
 mount-table.xml
 db
 tomcat
