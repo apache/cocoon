@@ -59,7 +59,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.avalon.excalibur.logger.LoggerLoggerManager;
+import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -80,7 +80,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.7 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.8 2003/11/06 15:44:26 unico Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
@@ -105,11 +105,13 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             }
             config = new DefaultConfiguration("", "");
         }
-
+        
         final CocoonComponentManager manager = new CocoonComponentManager(this.parentManager);
-
+        
         manager.enableLogging(getLogger());
-        manager.setLoggerManager(new LoggerLoggerManager( getLogger()));
+        
+        final LoggerManager loggerManager = (LoggerManager) this.parentManager.lookup(LoggerManager.ROLE);
+        manager.setLoggerManager(loggerManager);
 
         if (null != this.context ) {
             manager.contextualize(this.context);
