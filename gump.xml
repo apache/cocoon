@@ -342,7 +342,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="hsqldb-block.jar"/>
+    <jar name="blocks/hsqldb-block.jar"/>
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
