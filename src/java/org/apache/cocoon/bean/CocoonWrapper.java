@@ -96,7 +96,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.6 2003/09/09 19:03:44 joerg Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.7 2003/09/19 09:09:43 upayavira Exp $
  */
 public class CocoonWrapper {
 
@@ -342,6 +342,10 @@ public class CocoonWrapper {
         this.logger = logger;
     }
 
+    public String getLoggerName() {
+        return logger;
+    }
+    
     /**
      * Set context directory
      * @param contextDir context directory
