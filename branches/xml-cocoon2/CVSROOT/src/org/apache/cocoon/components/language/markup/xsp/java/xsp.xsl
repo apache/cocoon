@@ -40,7 +40,7 @@
     import org.apache.avalon.*;
     import org.apache.avalon.utils.*;
     import org.apache.cocoon.*;
-    import org.apache.cocoon.generators.*;
+    import org.apache.cocoon.generation.*;
     import org.apache.cocoon.components.parser.*;
 
     import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;

@@ -3,12 +3,17 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:map="http://apache.org/cocoon/sitemap/1.0" 
+  xmlns:java="http://xml.apache.org/xslt/java"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
 
   <xsl:output method="text"/>
 
   <xsl:variable name="prefix">map</xsl:variable>
+  <xsl:variable name="matcher-factory-loader" select="java:org.apache.cocoon.sitemap.XSLTMatcherFactoryLoader.new()"/>
+<!--
+  <xsl:variable name="selector-factory-loader" select="java:org.apache.cocoon.sitemap.XSLTSelectorFactoryLoader.new()"/>
+-->
 
   <xsl:template match="/">
     <code xml:space="preserve">
@@ -29,18 +34,20 @@
     import org.apache.avalon.utils.Parameters; 
     import org.apache.cocoon.Request;
     import org.apache.cocoon.Response;
-    import org.apache.cocoon.choosers.Chooser;
-    import org.apache.cocoon.filters.Filter;
-    import org.apache.cocoon.generators.Generator;
-    import org.apache.cocoon.matchers.Matcher;
-    import org.apache.cocoon.serializers.Serializer;
+    import org.apache.cocoon.selection.Selector;
+    import org.apache.cocoon.transformation.Transformer;
+    import org.apache.cocoon.generation.Generator;
+    import org.apache.cocoon.matching.Matcher;
+    import org.apache.cocoon.serialization.Serializer;
     import org.apache.cocoon.sitemap.AbstractSitemapProcessor;
     import org.apache.cocoon.sitemap.ResourcePipeline;
+
+    import org.xml.sax.helpers.AttributesImpl;
 
 /**
  *
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-11 03:09:41 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-11 23:46:36 $
  */
 public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcessor {
     
@@ -64,18 +71,48 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
     </xsl:for-each>
     
     /** The matchers */
-    <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher">
+    <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher[@src]">
       private Matcher matcher_<xsl:value-of select="translate(./@type, '- ', '__')"/> = null;
     </xsl:for-each>
       
-    /** The choosers */  
-    <xsl:for-each select="/map:sitemap/map:components/map:choosers/map:chooser">
-      private Chooser chooser_<xsl:value-of select="translate(./@type, '- ', '__')"/> = null;
+    /** The selectors */  
+    <xsl:for-each select="/map:sitemap/map:components/map:selctors/map:selector[@src]">
+      private Selector selector_<xsl:value-of select="translate(./@type, '- ', '__')"/> = null;
     </xsl:for-each>
       
     /** The sub sitemaps */  
     <xsl:for-each select="/map:sitemap/map:pipelines//map:mount">  
       SitemapProcessor sitemap_<xsl:value-of select="translate(@src, ':@./-{}#', '_____')"/> = null;
+    </xsl:for-each>
+
+    /** The generated matchers */
+    <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher[@factory]">
+      <xsl:variable name="factory" select="@factory"/>
+      <xsl:variable name="type" select="@type"/>
+      <xsl:variable name="default"><xsl:if test="$type = ../@default">true</xsl:if></xsl:variable>
+      <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:match[@type=$type or (not(@type) and $default!='')]">
+        <xsl:variable name="matcher-name1" select="translate(@pattern,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
+        <xsl:variable name="matcher-name" select='translate($matcher-name1,"&#39;","")'/>
+        private Map _matcher_<xsl:value-of select="$matcher-name"/> (Request request) {
+          <xsl:value-of select="java:getSource($matcher-factory-loader, string($factory), string(@pattern))"/>;
+        }
+      </xsl:for-each>
+    </xsl:for-each>
+
+    /** The generated selectors */
+    <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector[@factory]">
+      <xsl:variable name="factory" select="@factory"/>
+      <xsl:variable name="type" select="@type"/>
+      <xsl:variable name="default"><xsl:if test="$type = ../@default">true</xsl:if></xsl:variable>
+      <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:when[../map:selector/@type=$type or (not(../map:selector/@type) and $default!='')]">
+        <xsl:variable name="selector-name1" select="translate(@pattern,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
+        <xsl:variable name="selector-name" select='translate($selector-name1,"&#39;","")'/>
+        private boolean _selector_<xsl:value-of select="$selector-name"/> (Request request) {
+<!--
+          <xsl:value-of select="java:getSource($selector-factory-loader, string($factory), string(@test))"/>;
+-->
+        }
+      </xsl:for-each>
     </xsl:for-each>
 
     /**
@@ -118,12 +155,12 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
           select="/map:sitemap/map:components/map:matchers/map:matcher"/>
     </xsl:call-template>
     
-    /* Configure choosers */
+    /* Configure selectors */
     <xsl:call-template name="config-components">
-      <xsl:with-param name="name">chooser</xsl:with-param>
-      <xsl:with-param name="interface">Chooser</xsl:with-param>
+      <xsl:with-param name="name">selector</xsl:with-param>
+      <xsl:with-param name="interface">Selector</xsl:with-param>
       <xsl:with-param name="components" 
-          select="/map:sitemap/map:components/map:choosers/map:chooser"/>
+          select="/map:sitemap/map:components/map:selectors/map:selector"/>
     </xsl:call-template>
 
     /* Configure mounted sitemaps */
@@ -195,11 +232,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
     }
   </xsl:template> <!-- match="map:match" -->
 
-  <xsl:template match="map:choose">
-    <xsl:variable name="chooser-type">
+  <xsl:template match="map:select">
+    <xsl:variable name="selector-type">
       <xsl:call-template name="get-parameter">
         <xsl:with-param name="parname">type</xsl:with-param>
-        <xsl:with-param name="default"><xsl:value-of select="/map:sitemap/map:components/map:choosers/@default"/></xsl:with-param>
+        <xsl:with-param name="default"><xsl:value-of select="/map:sitemap/map:components/map:selectors/@default"/></xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
     <xsl:for-each select="./map:when">
@@ -209,7 +246,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
           <xsl:with-param name="required">true</xsl:with-param>
         </xsl:call-template>
       </xsl:variable>
-      if (chooser_<xsl:value-of select="translate($chooser-type, '- ', '__')"/>.choose ("<xsl:value-of select="$test-value"/>", request)) {
+      if (selector_<xsl:value-of select="translate($selector-type, '- ', '__')"/>.select ("<xsl:value-of select="$test-value"/>", request)) {
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -219,7 +256,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:apply-templates/>
       }
     </xsl:for-each>
-  </xsl:template> <!-- match="/map:sitemap/map:choose" -->
+  </xsl:template> <!-- match="/map:sitemap/map:select" -->
 
   <xsl:template match="map:generate">
     <xsl:call-template name="setup-component">

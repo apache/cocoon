@@ -26,7 +26,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.SAXConfigurationBuilder;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.serializers.Serializer;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.9 $ $Date: 2000-07-11 03:09:35 $
+ * @version CVS $Revision: 1.4.2.10 $ $Date: 2000-07-11 23:46:34 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -142,8 +142,8 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
             throw new ConfigurationException("Invalid configuration file",conf);
         if (!conf.getAttribute("version").equals("2.0"))
             throw new ConfigurationException("Invalid version",conf);
-        // Set generators, filters and serializers
-        String buf[]={"generator","filter","serializer"};
+        // Set generators, transformers and serializers
+        String buf[]={"generator","transformer","serializer"};
         for (int x=0; x<buf.length; x++) {
             Enumeration e=conf.getConfigurations(buf[x]);
             while (e.hasMoreElements()) {
@@ -261,6 +261,7 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
                 programGenerator.load(file, markupLanguage, programmingLanguage);
             System.out.println ("C2 generateSitemap: generator obtained");
             processor.setComponentManager(this);
+            processor.setConfiguration(null);
             System.out.println ("C2 generateSitemap: generator called");
         } catch (Exception e) {
             e.printStackTrace();

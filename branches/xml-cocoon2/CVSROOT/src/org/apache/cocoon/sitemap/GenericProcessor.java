@@ -22,9 +22,9 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
-import org.apache.cocoon.filters.Filter;
-import org.apache.cocoon.generators.Generator;
-import org.apache.cocoon.serializers.Serializer;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.patterns.PatternException;
 import org.apache.cocoon.sitemap.patterns.PatternMatcher;
 import org.apache.cocoon.sitemap.patterns.PatternTranslator;
@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-07-11 03:10:03 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-07-11 23:46:53 $
  */
 public class GenericProcessor
 implements Composer, Configurable, Processor, LinkResolver {
@@ -52,10 +52,10 @@ implements Composer, Configurable, Processor, LinkResolver {
     private String generator=null;
     /** The generator parameters */
     private Parameters generatorParam=null;
-    /** The filter roles vector */
-    private Vector filters=new Vector();
-    /** The filter parameters vector */
-    private Vector filtersParam=new Vector();
+    /** The transformer roles vector */
+    private Vector transformers=new Vector();
+    /** The transformer parameters vector */
+    private Vector transformersParam=new Vector();
     /** The serializer role */
     private String serializer=null;
     /** The serializer role */
@@ -111,12 +111,12 @@ implements Composer, Configurable, Processor, LinkResolver {
             throw new ConfigurationException("Serializer not specified",conf);
         this.serializer="serializer:"+c.getAttribute("name");
         this.serializerParam=Parameters.fromConfiguration(c);
-        // Set up the filters vetctor
-        Enumeration e=conf.getConfigurations("filter");
+        // Set up the transformers vetctor
+        Enumeration e=conf.getConfigurations("transformer");
         while (e.hasMoreElements()) {
             Configuration f=(Configuration)e.nextElement();
-            this.filters.addElement("filter:"+f.getAttribute("name"));
-            this.filtersParam.addElement(Parameters.fromConfiguration(f));
+            this.transformers.addElement("transformer:"+f.getAttribute("name"));
+            this.transformersParam.addElement(Parameters.fromConfiguration(f));
         }
     }
 
@@ -141,10 +141,10 @@ implements Composer, Configurable, Processor, LinkResolver {
         String partname=this.partition.name;
 
         XMLConsumer current=s;
-        for (int x=(this.filters.size()-1); x>=0; x--) {
-            String k=(String)this.filters.elementAt(x);
-            Filter f=(Filter)this.manager.getComponent(k);
-            f.setup(req,res,src,(Parameters)this.filtersParam.elementAt(x));
+        for (int x=(this.transformers.size()-1); x>=0; x--) {
+            String k=(String)this.transformers.elementAt(x);
+            Transformer f=(Transformer)this.manager.getComponent(k);
+            f.setup(req,res,src,(Parameters)this.transformersParam.elementAt(x));
             f.setConsumer(current);
             current=f;
         }

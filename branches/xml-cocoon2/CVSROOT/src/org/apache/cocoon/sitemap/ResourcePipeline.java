@@ -16,9 +16,9 @@ import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
-import org.apache.cocoon.generators.Generator;
-import org.apache.cocoon.filters.Filter;
-import org.apache.cocoon.serializers.Serializer;
+import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLProducer;
 
 import org.xml.sax.SAXException;
@@ -26,15 +26,15 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:10:04 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 23:46:54 $
  */
 public class ResourcePipeline {
     private Generator generator = null;
     private Parameters generatorParam = null;
     private String generatorSource = null;
-    private Vector filters = new Vector();
-    private Vector filterParams = new Vector();
-    private Vector filterSources = new Vector();
+    private Vector transformers = new Vector();
+    private Vector transformerParams = new Vector();
+    private Vector transformerSources = new Vector();
     private Serializer serializer = null;
     private Parameters serializerParam = null;
     private String serializerSource = null;
@@ -54,10 +54,10 @@ public class ResourcePipeline {
         this.serializerParam = param;
     }
 
-    public void addFilter (Filter filter, String source, Parameters param) {
-        this.filters.add (filter);
-        this.filterSources.add (source);
-        this.filterParams.add (param);
+    public void addTransformer (Transformer transformer, String source, Parameters param) {
+        this.transformers.add (transformer);
+        this.transformerSources.add (source);
+        this.transformerParams.add (param);
     }
 
     public boolean startPipeline (Request req, Response res, OutputStream out)
@@ -71,16 +71,16 @@ public class ResourcePipeline {
         }
 
         generator.setup (req, res, generatorSource, generatorParam);
-        Filter filter = null;
+        Transformer transformer = null;
         XMLProducer producer = generator;
-        int i = filters.size();
+        int i = transformers.size();
 
         for (int j=0; j < i; j++) {
-            filter = (Filter) filters.elementAt (j);
-            filter.setup (req, res, (String)filterSources.elementAt (j),
-                           (Parameters)filterParams.elementAt (j));
-            producer.setConsumer (filter);
-            producer = filter;
+            transformer = (Transformer) transformers.elementAt (j);
+            transformer.setup (req, res, (String)transformerSources.elementAt (j),
+                           (Parameters)transformerParams.elementAt (j));
+            producer.setConsumer (transformer);
+            producer = transformer;
         }
 
         serializer.setup (req, res, serializerSource, generatorParam);

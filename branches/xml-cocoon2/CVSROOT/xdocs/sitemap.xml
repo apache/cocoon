@@ -352,6 +352,122 @@
      </p>
     </s3>
    </s2>
+
+   <s2 title="The &lt;map:resources&gt;">
+    <p>
+     The <code>&lt;resource&gt;</code> element is used as a placeholder for pipelines
+     that are used several times inside the document. This element
+     is redundant and its functionality is not directly related
+     to the sitemap, but could be cloned by the use of internal
+     XInclude, for example
+    </p>
+   
+    <p>
+     <code>&lt;xinclude:include href="#xpointer(resource[@name='Access refused'])"/&gt;</code> 
+    </p>
+   
+    <p>
+     but given the usability constraints and very specific operation
+     it is much easier to include such an element instead of forcing
+     the use of xinclude/xpointer.
+    </p>
+    <source>
+     <![CDATA[
+      <map:resources">
+      </map:components">
+     ]]>
+    </source>
+ -->
+ <map:resources>
+  
+  <map:resource name="Access refused">
+   <map:generator src="./error-pages/restricted.xml"/>
+   <map:filter src="./stylesheets/general-browser.xsl"/>
+   <map:serializer status-code="401"/>
+  </map:resource>
+    
+ </map:resources>
+
+    <s3 title="Common Attributes of Components">
+     <p>
+      All components have some common attributes. The list below will show and explain them:
+     </p>
+
+     <dl>
+      <dt>type</dt>
+      <dd>The type attribute gives the component a reference which can be used to point to them in the pipeline section.</dd>
+      <dt>src</dt>
+      <dd>Specifies where Cocoon finds the class representing this component. Note that the content of 
+       the src attribute must be specified as an URI. 
+      </dd>
+     </dl>
+
+     <p>
+      The following protocols can be specified for all URI aware attributes:
+     </p>
+     <ul>
+      <li>file:</li>
+      <li>class:</li>
+      <li>jar:</li>
+      <li>http:</li>
+     </ul>
+    </s3>
+
+    <s3 title="Component Parameters">
+     <p>
+      All components will be configured with parameters specified from their child elements at component instantiation time. 
+      The name of the parameters is dependant of the component. The following example shows how to specify a
+      <code>&lt;compile-stylesheet&gt;</code> parameters to a component:
+     </p>
+  
+     <source>
+      <![CDATA[
+       <map:components>
+        <map:filter type="xslt" src="class:///org.apache.cocoon.filter.XSLTFilter">
+         <compile-stylesheets value="true"/>  <!-- This is a parameter to the filter component -->
+        </map:filter>
+       </map:components>
+      ]]>
+     </source>
+ 
+     <note>
+      The syntax <br/> <br/>
+       <strong><code>&lt;xxx map:value="yyy"&gt;</code></strong> <br/> <br/>
+      is completely equivalent to <br/> <br/>
+       <strong><code>&lt;xxx&gt;yyy&lt;/xxx&gt;</code></strong> <br/> <br/>
+       throughout the entire sitemap.. the "value" attribute is a reserved one.
+     </note>
+  
+     <p>
+      There is no given set of predefined parameters.
+     </p>
+    </s3>
+
+    <s3 title="Generators">
+     <p>
+      Generators generate XML content as SAX events and initialize the 
+      pipeline processing. 
+     </p>
+
+     <source>
+      <![CDATA[
+       <map:generators default="parser">
+        <map:generator type="parser" src="class:///org.apache.cocoon.generator.FileGenerator"/>
+        <map:generator type="dir"    src="file:///home/mystuff/java/MyDirGenerator.class"/>
+        <map:generator type="xsp"    src="class:///org.apache.cocoon.generators.XSPGenerator">
+         ...
+        </map:generator>
+       </map:generators>
+      ]]>
+     </source>
+
+     <p>
+      The <code>default</code> attribute on <code>&lt;map:generators&gt;</code> specifies the type 
+      of generator to use if none is specified in a pipeline.
+     </p>
+   
+    </s3>
+   </s2>
   </s1>
 
   <s1 title="Interface specifications">
