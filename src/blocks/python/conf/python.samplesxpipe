@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<samplesxpipe xpath="/sitemap/pipelines/pipeline[@id='optional']"
+       unless="match[@pattern='xsp-py/*']">
+    <!-- XSP pages written in Python -->
+    <map:match pattern="xsp-py/*">
+      <map:generate type="serverpages" src="docs/samples/xsp-py/{1}.xsp">
+        <map:parameter name="programming-language" value="python"/>
+      </map:generate>
+      <map:transform src="stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="view-source" value="docs/samples/xsp-py/{1}.xsp"/>
+      </map:transform>
+      <map:serialize/>
+    </map:match>
+</samplesxpipe>

@@ -1,0 +1,19 @@
+<project default="main" basedir=".">
+
+      <target name="main" depends="prepare-database-connection"/>
+      
+      <target name="prepare-database-connection" depends="prepare-database-connection-pw,prepare-database-connection-no-pw">
+        <filter token="db_driver" value="${webapp.samples.database.driver}"/>
+        <filter token="db_url" value="${webapp.samples.database.url}"/>
+        <filter token="db_user" value="${webapp.samples.database.user}"/>
+      </target>
+
+      <target name="prepare-database-connection-pw" if="webapp.samples.database.password">
+        <filter token="db_password" value="{string('${webapp.samples.database.password}')}"/>
+      </target>
+
+      <target name="prepare-database-connection-no-pw" unless="webapp.samples.database.password">
+        <filter token="db_password" value=""/>
+      </target>
+
+</project>

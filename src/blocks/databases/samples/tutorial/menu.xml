@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE menu [
+<!ELEMENT menu (item|group)*>
+<!ELEMENT group (item)*>
+<!ATTLIST group link  CDATA #REQUIRED
+                title CDATA #REQUIRED>
+<!ELEMENT item EMPTY>
+<!ATTLIST item link  CDATA #REQUIRED
+               title CDATA #REQUIRED>
+]>
+
+<menu>
+  <item link="../../" title="Welcome"/>
+  <item link="../" title="Samples"/>
+  <group link="home.html" title="Tutorial">
+    <item link="search-dept.html" title="Find department"/>
+    <item link="search-empl.html" title="Find employee"/>
+    <item link="create-dept.html" title="Create department"/>
+    <item link="create-empl.html" title="Create employee"/>
+  </group>
+</menu>

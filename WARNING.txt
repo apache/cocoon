@@ -1,0 +1,27 @@
+*****************************  W A R N I N G  **********************************
+
+  Some user accessible points in this software package should be considered
+  "alpha". This means that the developer team is not investing _any_ effort
+  to provide backward compatibility between alpha releases for these parts.
+  This software will continue to be released as "alpha" until its code, 
+  schemas, and APIs are considered stable.
+  
+  Until then, there will be no warranty that newer versions will maintain backward
+  compatibility for such parts, even in the most simple cases. Of course 
+  Cocoon will be compatible to latest release, 2.0.x release. However, once 
+  "beta" status is reached, backward incompatible changes will be made only 
+  when absolutely necessary to reach "final" status.
+  
+  The Cocoon development team understands the importance of reliable
+  software as well protecting user investments through the creation of
+  a solid development platform that doesn't change. On the other hand, 
+  the Cocoon project is a pioneer in many fields. Most of the technologies 
+  it uses are at a "working draft" phase only. Thus, reliability cannot be 
+  guaranteed before the software achieves its "final" status.
+  
+  Until then, no effort will be provided to guarantee backward compatibility
+  for any parts considered alpha.
+  
+  You have been warned.
+
+*****************************  W A R N I N G  **********************************

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Mailing Lists</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+
+ <body>
+  <s1 title="Important Notice">
+
+   <p><strong>IMPORTANT: Before posting a question or problem to any mailing list,
+    </strong>please first look at the following resources:</p>
+   <ol>
+    <li><link href="faq/index.html">FAQs</link></li>
+    <li><link href="link/index.html">Cocoon Links</link></li>
+    <li><link href="mail-archives.html">Mailing list archives</link> - 
+     a veritable goldmine of Cocoon-specific information - if you know where to look!</li>
+   </ol>
+
+   <p><strong>IMPORTANT:</strong> Careful postings please.
+    These are high-volume lists, so we all needs ways to help us all
+    work smarter.
+    See tips for <link href="contrib.html#tips">Contributing</link>
+   </p>
+  </s1>
+
+  <s1 title="Tips (keeping focus helps your points come across!)">
+
+   <p>We use the mail list both as a media to transmit our thoughts and as a
+virtual location to hang around and feel part of something.
+   </p><p>
+In order for the second to happen, you just have to subscribe. That's
+it, nothing fancy.
+   </p><p>
+But in order for the first to happen (transmit your thoughts) it's an
+entirely different matter.
+   </p><p>
+Here are a few things that help a lot:
+   </p><p>
+ 1) reduce noise, increase signal: your email client will quote the
+message you are replying to automatically, but it's *your*
+responsibility to remove those parts that aren't part of the signal of
+your email. Sure, you might let this operation to the reader, but you
+must understand that the reader is not supposed to do this. Or, at
+least, it should be *you* to make the reader confortable.
+   </p><p>
+ 2) be respectful, be aware of community dynamics: sending HTML in the
+mail more than *doubles* the message size and interferes with text-based
+mail clients. You want your point to come across, so make sure that
+everybody can get to that point with the *easiest* possible effort, or,
+otherwise, your signal might be wasted in the noise and the time you
+think you are saving, you are, in fact, loosing it completely.
+   </p><p>
+ 3) promote your signal: people on mail lists are used to read tons of
+email a day. Without a good 'promotion' of your points, they might get
+missed in the noise. (note: 'noise' is a subjective notion, what is
+signal for you might be noise for others, it's up to you to make your
+signal stand up). Things that help in this respect:
+   </p><p>
+    a) a simple yet effective email title. Geeks are ultimately curious
+animals, tickle their curiosity!
+   </p><p>
+    b) be elegant and visually effective. Sure, you have to use ASCII,
+but there is a lot that you can convey with ASCII
+   </p><source><![CDATA[
+          +---------------------------------+
+          | I'm sure nobody will miss this! |
+          +---------------------------------+
+   ]]></source><p>         
+    c) structure your text. Whenever possible, use *strong* or
+_underline_ or /italic/ or use bullet lists and so on. Consider textual
+RFC, that's how you should write your emails. Sure, it takes a little
+more time, but I guarantee you that it saves a lot of it later on.
+   </p><p>
+    d) keep paragraphs short! you can go on and on forever, I'm sure you
+do, but keep your point focused, so that the signal/noise ratio is
+increased.
+   </p><p>
+ 4) be respectful of other's opinion: your email will be stored forever,
+archived in several locations around the world, indexed by Google,
+locked in magnetic tapes into the NSA caves and so on. Just keep this in
+mind before you hit "send", this will keep your ego honest :)
+   </p><p>
+ 5) admit your incapacity/ignorance/mistakes: there is nothing more
+appreciated in a community that someone that can stand up and apologize
+for something. Remember: if you don't make mistakes, you can't learn.
+And if you don't admit you made it, nobody knows you are learning :)
+   </p><p>
+Keep all these things in mind and you'll be impressed by how much fun
+and knowledge you can get out of all this open development thing.
+   </p>
+  </s1>
+  
+  <s1 title="Cocoon Users">
+   <p><link href="mailto:cocoon-users-subscribe@xml.apache.org">Subscribe</link>
+      <link href="mailto:cocoon-users-unsubscribe@xml.apache.org">Unsubscribe</link>
+   </p>
+
+   <p>The general Cocoon list, for problems, bug reports, asking for advice on how
+    best to implement a site, comparisons with other XML frameworks, etc.
+    But don't forget to look in the FAQ first, please!</p>
+
+   <p><strong>This is not an appropriate list for general XSL and XML questions.</strong> 
+    Instead look at the various resources listed at the
+    <link href="link/index.html">Cocoon Links</link> pages,
+     or try the
+    <link href="http://www.mulberrytech.com/xsl/">Mulberrytech XSL list</link>.</p>
+
+   <p><strong>This is also not an appropriate list for general Java questions.</strong>
+    Instead try <link href="news:comp.lang.java.help">news:comp.lang.java.help</link>
+    or <link href="http://hotdispatch.com/">http://hotdispatch.com/</link>, for
+    example.</p>
+
+   <p><strong>IMPORTANT:</strong> If you are posting about a problem you are having
+    (as most people do), it will aid in finding a speedy resolution if you provide
+    full configuration details (especially the <strong>Cocoon version number</strong>,
+    but also your operating system, JDK version, and servlet engine), and full details
+    of any errors encountered (including full error messages and stack traces).</p>
+
+   <p>Please also have some consideration for the other users on the list - this is a
+    busy list and we do not appreciate getting the exact same message posted impatiently
+    several times a day/week! Doing so is only likely to make your question answered more
+    slowly, or not at all, not faster.</p>
+
+   <note>This list is moderated, so the first time you post, there will be a
+    delay before your post is reviewed and accepted. This is to prevent spam.</note>
+  </s1>
+
+  <s1 title="Cocoon Dev">
+   <p><link href="mailto:cocoon-dev-subscribe@xml.apache.org">Subscribe</link>
+      <link href="mailto:cocoon-dev-unsubscribe@xml.apache.org">Unsubscribe</link>
+   </p>
+
+   <p>This list is for developers <strong>working on</strong> or wanting to work on
+    Cocoon itself (not developers merely working <strong>with</strong> Cocoon),
+    for code patches to Cocoon to be posted (please use <code>diff -u</code> format),
+    and for general Cocoon questions.</p>
+
+   <p>Note this is <strong>NOT</strong> for general Cocoon questions like "Why
+    isn't Cocoon working on my machine?" - 
+    please ask those sorts of questions on cocoon-users (after reading the
+    FAQ first, of course).</p>
+
+   <note>This list is moderated, so the first time you post, there will be a
+    delay before your post is reviewed and accepted. This is to prevent spam.</note>
+  </s1>
+
+  <s1 title="Cocoon Docs">
+   <p><link href="mailto:cocoon-docs-subscribe@xml.apache.org">Subscribe</link>
+      <link href="mailto:cocoon-docs-unsubscribe@xml.apache.org">Unsubscribe</link>
+   </p>
+
+   <p>This list is for everyone (users and developers) to assist with building
+    the Cocoon documentation.
+   </p>
+
+   <p>
+    Please be careful to limit cross-posting between the Cocoon lists. You can
+    assume that all developers are also subscribed to cocoon-docs.
+    Any docs-related thread on -users or -dev should be moved to -docs (do not
+    Cc the original list, but send a short reply to indicate that the thread
+    has moved).
+   </p>
+
+   <note>This list is moderated, so the first time you post, there will be a
+    delay before your post is reviewed and accepted. This is to prevent spam.</note>
+  </s1>
+
+  <s1 title="Cocoon Cvs">
+   <p><link href="mailto:cocoon-cvs-subscribe@xml.apache.org">Subscribe</link>
+      <link href="mailto:cocoon-cvs-unsubscribe@xml.apache.org">Unsubscribe</link>
+   </p>
+
+   <p>This <strong>read-only</strong> list sends out notification messages detailing
+    any change made to the CVS repository where all the source code and libraries
+    are stored for development purposes. The average user probably doesn't need to
+    subscribe to this list.</p>
+
+   <note>You should never post to this list at all. Only the
+    CVS server should post to it.</note>
+
+  </s1>
+
+  <s1 title="XSP Dev">
+   <p><link href="mailto:xsp-dev-subscribe@xml.apache.org">Subscribe</link>
+     <link href="mailto:xsp-dev-unsubscribe@xml.apache.org">Unsubscribe</link>
+   </p>
+
+   <p>This list began life on November 2000, and was created to discuss the
+    standardisation and implementation of the dynamic content language XSP,
+    which is used not only in Cocoon but in other software such as AxKit.
+    You are recommended to have a strong working knowledge of XSP before joining
+    this list.</p>
+
+   <p>Note this is <strong>NOT</strong> for general XSP questions like
+    "Why doesn't my XSP page work?" - please ask those sorts of questions on
+    the relevant list for your XSP software (e.g. cocoon-users if you're using
+    Cocoon) - after checking the FAQ first of course!
+   </p>
+  </s1>
+
+  <s1 title="Related Mailing Lists">
+
+   <p>(See also <link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">
+    ODP XML links</link> for related websites.)</p>
+   <ul>
+    <li><link href="http://www.mulberrytech.com/xsl/">Mulberrytech XSL list</link> -
+      more appropriate than Cocoon Users for general XSL questions.</li>
+    <li><link href="http://xml.apache.org/mail.html">XML Apache Projects</link> -
+      list of mailing lists for all the projects on xml.apache.org.</li>
+    <li>Some servlet engines have their own mailing lists for servlet-engine
+     configuration questions, such as
+     <link href="mailto:tomcat-user-subscribe@jakarta.apache.org">tomcat-user</link> (note it is "user"
+     and not "users").</li>
+   </ul>
+  </s1>
+ </body>
+</document>

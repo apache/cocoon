@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- $Id: sunrise-newrole.xml,v 1.1 2003/03/09 00:05:27 pier Exp $ 
+
+ Description: Add a new role
+
+-->
+
+<addrole xmlns:source="http://apache.org/cocoon/source/1.0"
+         xmlns:session="http://cocoon.apache.org/session/1.0">
+	<source:insert>
+    		<source:source>resources/sunrise-roles.xml</source:source>
+    		<source:path>roles</source:path>
+    		<source:fragment><role><session:getxml context="request" path="/parameter/role"/></role></source:fragment>
+	</source:insert>
+</addrole>

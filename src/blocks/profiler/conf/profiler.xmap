@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<xmap xpath="/sitemap/components/generators" unless="generator[@name='profiler']">
+    <map:generator label="content,data" logger="sitemap.generator.profiler" name="profiler" src="org.apache.cocoon.generation.ProfilerGenerator"/>
+</xmap>

@@ -1,0 +1,1050 @@
+
+               +----------------------------------------+
+               |     Cocoon Purity Problems List        |
+               +----------------------------------------+
+               
+
+Cut&Paste
+---------
+
+The following is the run of the PMC cut & paste analysis tool set at default 75
+tile size ran.
+
+Run: 20030227
+
+
+=============================================================
+A 9 line (76 tokens) duplication:
+Starting at line 142 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\acting\FormValidatorAction.java
+Starting at line 126 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\acting\SessionValidatorAction.java
+        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+        if (this.settings.containsKey("reloadable")) {
+            reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
+        }
+
+        // read local settings
+        try {
+            Configuration conf = this.getConfiguration (
+                    parameters.getParameter ("descriptor", (String) this.settings.get("descriptor")), resolver,
+            parameters.getParameterAsBoolean("reloadable", reloadable));
+=============================================================
+A 7 line (78 tokens) duplication:
+Starting at line 127 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\output\SessionAttributeOutputModule.java
+Starting at line 126 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\output\RequestAttributeOutputModule.java
+    public void rollback( Configuration modeConf, Map objectModel, Exception e ) {
+        if (this.settings.get("isolation-level","0").equals("1")) {
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("rolling back");
+            this.rollback(objectModel, TRANS_PREFIX);
+        } else {
+
+            if (getLogger().isDebugEnabled())
+=============================================================
+A 34 line (79 tokens) duplication:
+Starting at line 381 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\flow\javascript\JavaScriptInterpreter.java
+Starting at line 531 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\flow\javascript\JavaScriptInterpreter.java
+      while (value instanceof Wrapper) {
+	  value = ((Wrapper)value).unwrap();
+      }
+      if (value instanceof Exception) {
+	  Exception e = (Exception)value;
+	  e.printStackTrace();
+	  throw e;
+      } else if (value instanceof Error) {
+	  throw (Error)value;
+      }
+      throw ex;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw ex;
+    }
+    finally {
+      exitContext(thrScope);
+    }
+  }
+
+  /**
+   * Reloads any modified script files.
+   *
+   * <p>It checks to see if any of the files already read in (those
+   * present in the <code>scripts</code> hash map) have been
+   * modified.
+   *
+   * <p>It also checks to see if any script files have been registered
+   * with the interpreter since the last call to
+   * <code>checkForModifiedScripts</code>. These files are stored in
+   * the temporary array <code>needResolve</code>. If any such files
+   * are found, they are read in.
+   *
+   * @param environment an <code>Environment</code> value
+   */
+=============================================================
+A 8 line (79 tokens) duplication:
+Starting at line 155 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\DigestMetaModule.java
+Starting at line 252 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\DigestMetaModule.java
+        int encode = ((Integer) encodingNames.get(this.defaultEncode)).intValue();
+        if (modeConf!=null) {
+            inputName   = modeConf.getChild("input-module").getAttribute("name",null);
+            if (inputName != null) {
+                inputConfig = modeConf.getChild("input-module");
+            }
+            // read necessary parameters
+            algorithm = modeConf.getAttribute("algorithm", algorithm);
+            provider  = modeConf.getAttribute("provider", provider);
+=============================================================
+A 21 line (82 tokens) duplication:
+Starting at line 176 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\JXPathMetaModule.java
+Starting at line 153 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\AbstractJXPathModule.java
+                        getLogger().debug("adding Class "+clazzName+" to functions");
+                    lib.addFunctions(new ClassFunctions(clazz, prefix));
+                } catch (ClassNotFoundException cnf) {
+                    if (getLogger().isWarnEnabled())
+                        getLogger().warn("Class not found: "+clazzName);
+                }
+            } else {
+                if (getLogger().isWarnEnabled())
+                    getLogger().warn("Class name or prefix null: "+clazzName+" / "+prefix);
+            }
+        }
+    }
+
+
+    /**
+     * Register all extension packages listed in the configuration
+     * through <code>&lt;package name="fully.qualified.package"
+     * prefix="prefix"/&gt;</code> in the given FunctionLibrary.
+     *
+     * @param lib a <code>FunctionLibrary</code> value
+     * @param conf a <code>Configuration</code> value
+     */
+=============================================================
+A 15 line (86 tokens) duplication:
+Starting at line 78 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\selection\RequestAttributeSelector.java
+Starting at line 77 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\selection\SessionAttributeSelector.java
+  implements Configurable, ThreadSafe, Selector {
+
+    protected String defaultName;
+
+    public void configure(Configuration config) throws ConfigurationException {
+        this.defaultName = config.getChild("attribute-name").getValue(null);
+    }
+
+    public boolean select(String expression, Map objectModel, Parameters parameters) {
+        String name = parameters.getParameter("attribute-name", this.defaultName);
+
+        if (name == null) {
+            getLogger().warn("No attribute name given -- failing.");
+            return false;
+        }
+
+=============================================================
+A 16 line (86 tokens) duplication:
+Starting at line 100 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\treeprocessor\sitemap\TransformNode.java
+Starting at line 106 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\treeprocessor\sitemap\GenerateNode.java
+                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel)
+        );
+
+        // Check view
+        if (this.views != null) {
+	   
+            //inform the pipeline that we have a branch point
+            context.getProcessingPipeline().informBranchPoint();
+	    
+            String cocoonView = env.getView();
+            if (cocoonView != null) {
+
+                // Get view node
+                ProcessingNode viewNode = (ProcessingNode)this.views.get(cocoonView);
+
+                if (viewNode != null) {
+                    if (getLogger().isInfoEnabled()) {
+=============================================================
+A 6 line (89 tokens) duplication:
+Starting at line 456 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\transformation\SourceWritingTransformer.java
+Starting at line 495 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\transformation\SourceWritingTransformer.java
+                tag = (String)this.stack.pop();
+                if (tag.equals("PATH") == true) {
+                    path = (String)this.stack.pop();
+                } else if (tag.equals("FILE") == true) {
+                    fileName = (String)this.stack.pop();
+                } else if (tag.equals("FRAGMENT") == true) {
+                    fragment = (DocumentFragment)this.stack.pop();
+=============================================================
+A 95 line (96 tokens) duplication:
+Starting at line 117 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\generation\LinkStatusGenerator.java
+Starting at line 92 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\crawler\SimpleCocoonCrawlerImpl.java
+    public final static String LINK_CONTENT_TYPE_CONFIG = "link-content-type";
+
+    /**
+     * Default value of <code>link-content-type</code> configuration value.
+     * <p>
+     *   Its value is <code>application/x-cocoon-links</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final String LINK_CONTENT_TYPE_DEFAULT = "application/x-cocoon-links";
+
+    /**
+     * Config element name specifying query-string appendend for requesting links
+     * of an URL.
+     * <p>
+     *  Its value is <code>link-view-query</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final static String LINK_VIEW_QUERY_CONFIG = "link-view-query";
+    /**
+     * Default value of <code>link-view-query</code> configuration value.
+     * <p>
+     *   Its value is <code>?cocoon-view=links</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final static String LINK_VIEW_QUERY_DEFAULT = "cocoon-view=links";
+
+    /**
+     * Config element name specifying excluding regular expression pattern.
+     * <p>
+     *  Its value is <code>exclude</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final static String EXCLUDE_CONFIG = "exclude";
+
+    /**
+     * Config element name specifying including regular expression pattern.
+     * <p>
+     *  Its value is <code>include</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final static String INCLUDE_CONFIG = "include";
+
+    /**
+     * Config element name specifying http header value for user-Agent.
+     * <p>
+     *  Its value is <code>user-agent</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final static String USER_AGENT_CONFIG = "user-agent";
+    /**
+     * Default value of <code>user-agent</code> configuration value.
+     *
+     * @see org.apache.cocoon.Constants#COMPLETE_NAME
+     * @since
+     */
+    public final static String USER_AGENT_DEFAULT = Constants.COMPLETE_NAME;
+
+    /**
+     * Config element name specifying http header value for accept.
+     * <p>
+     *  Its value is <code>accept</code>.
+     * </p>
+     *
+     * @since
+     */
+    public final static String ACCEPT_CONFIG = "accept";
+    /**
+     * Default value of <code>accept</code> configuration value.
+     * <p>
+     *   Its value is <code>* / *</code>
+     * </p>
+     *
+     * @since
+     */
+    public final static String ACCEPT_DEFAULT = "*/*";
+
+    private String linkViewQuery = LINK_VIEW_QUERY_DEFAULT;
+    private String linkContentType = LINK_CONTENT_TYPE_DEFAULT;
+    private HashSet excludeCrawlingURL;
+    private HashSet includeCrawlingURL;
+    private String userAgent = USER_AGENT_DEFAULT;
+    private String accept = ACCEPT_DEFAULT;
+
+    private HashSet crawled;
+=============================================================
+A 19 line (100 tokens) duplication:
+Starting at line 81 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\matching\RegexpSessionAttributeMatcher.java
+Starting at line 82 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\matching\WildcardSessionAttributeMatcher.java
+            getLogger().debug("Default attribute-name is = '" + this.defaultParam + "'");
+        }
+    }
+
+    protected String getMatchString(Map objectModel, Parameters parameters) {
+
+        String paramName = parameters.getParameter("attribute-name", this.defaultParam);
+        if (paramName == null) {
+            getLogger().warn("No attribute name given. FAILING");
+            return null;
+        }
+
+        Object result = ObjectModelHelper.getRequest(objectModel).getSession().getAttribute(paramName);
+        if (result == null) {
+            getLogger().debug("Session attribute '" + paramName + "' not set.");
+            return null;
+        }
+
+        return result.toString();
+    }
+=============================================================
+A 10 line (100 tokens) duplication:
+Starting at line 164 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\DigestMetaModule.java
+Starting at line 261 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\DigestMetaModule.java
+            salt  = modeConf.getAttribute("salt", salt);
+            encode = ((Integer) encodingNames.get(modeConf.getAttribute("encode", this.defaultEncode))).intValue();
+
+            // preferred
+            algorithm = modeConf.getChild("algorithm").getValue(algorithm);
+            provider  = modeConf.getChild("provider").getValue(provider);
+            salt  = modeConf.getChild("salt").getValue(salt);
+            encode = ((Integer) encodingNames.get(modeConf.getChild("encode").getValue(this.defaultEncode))).intValue();
+        }
+
+
+=============================================================
+A 12 line (101 tokens) duplication:
+Starting at line 353 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\transformation\SourceWritingTransformer.java
+Starting at line 373 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\transformation\SourceWritingTransformer.java
+            if (attr.getValue(CREATE_ATTRIBUTE) != null
+                && attr.getValue(CREATE_ATTRIBUTE).equals("false")) {
+                this.stack.push("false");
+            } else {
+                this.stack.push("true");
+            }
+            if (attr.getValue(OVERWRITE_ATTRIBUTE) != null
+                && attr.getValue(OVERWRITE_ATTRIBUTE).equals("false")) {
+                this.stack.push("false");
+            } else {
+                this.stack.push("true");
+            }
+            this.stack.push(attr.getValue(SERIALIZER_ATTRIBUTE));
+=============================================================
+A 21 line (113 tokens) duplication:
+Starting at line 231 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\JXPathMetaModule.java
+Starting at line 208 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\AbstractJXPathModule.java
+                getLogger().debug("adding local Classes and Packages to functions");
+            localLib = new FunctionLibrary();
+            localLib.addFunctions(this.library);
+            getPackages(localLib, conf);
+            getFunctions(localLib, conf);
+        } else {
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("no local Classes or Packages");
+            localLib = this.library;
+        }
+        
+        context.setFunctions(localLib);
+    }
+
+
+    public Object getAttribute(String name, Configuration modeConf,
+                               Map objectModel)
+        throws ConfigurationException {
+
+        Object contextObj = getContextObject(modeConf, objectModel);
+        if (contextObj == null) return null;
+        if (modeConf != null) {
+=============================================================
+A 23 line (115 tokens) duplication:
+Starting at line 101 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\RequestParameterModule.java
+Starting at line 101 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\RequestAttributeModule.java
+Starting at line 101 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\SessionAttributeModule.java
+Starting at line 100 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\HeaderAttributeModule.java
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        String wildcard = name;
+        if ( modeConf != null ) {
+            wildcard = modeConf.getAttribute( "parameter", wildcard );
+            // preferred
+            wildcard = modeConf.getChild("parameter").getValue(wildcard);
+        }
+        int wildcardIndex = wildcard.indexOf( "*" );
+        if ( wildcardIndex != -1 ) {
+            // "*" contained in parameter name => combine all
+            // parameters' values that match prefix, suffix
+
+            // split the parameter's name so that the "*" could be
+            // determined by looking at the parameters' names that
+            // start with the prefix and end with the suffix
+            //
+            String prefix = wildcard.substring( 0, wildcardIndex );
+            String suffix;
+            if ( wildcard.length() >= wildcardIndex + 1 ) {
+                suffix = wildcard.substring( wildcardIndex + 1 );
+            } else {
+                suffix = "";
+            }
+            List values = new LinkedList();
+=============================================================
+A 14 line (121 tokens) duplication:
+Starting at line 255 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\generation\StatusGenerator.java
+Starting at line 291 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\generation\StatusGenerator.java
+                    ch.startElement(namespace, "line", "line", atts);
+                    ch.characters(line.toCharArray(), 0, line.length());
+                    ch.endElement(namespace, "line", "line");
+                }
+            }
+
+            if (size == 0) {
+                ch.startElement(namespace, "line", "line", atts);
+                String value = "[empty]";
+                ch.characters(value.toCharArray(), 0, value.length());
+                ch.endElement(namespace, "line", "line");
+            }
+            ch.endElement(namespace, "value", "value");
+
+            addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
+=============================================================
+A 20 line (125 tokens) duplication:
+Starting at line 131 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\ProcessingException.java
+Starting at line 149 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\CascadingIOException.java
+            TransformerException transformerException = (TransformerException) t;
+            SourceLocator sourceLocator = transformerException.getLocator();
+            
+            if( null != sourceLocator ) {
+                sb.append( String.valueOf(sourceLocator.getSystemId()));
+                sb.append( ":" );
+                sb.append( String.valueOf(sourceLocator.getLineNumber()));
+                sb.append( ":" );
+                sb.append( String.valueOf(sourceLocator.getColumnNumber()));
+                sb.append( ":" );
+            }
+        }
+        return sb.toString();
+    }
+    
+    public void printStackTrace() {
+        super.printStackTrace();
+        if(getCause()!=null)
+            getCause().printStackTrace();
+    }
+    
+=============================================================
+A 21 line (127 tokens) duplication:
+Starting at line 174 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\output\SessionAttributeOutputModule.java
+Starting at line 173 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\output\RequestAttributeOutputModule.java
+    public void commit( Configuration modeConf, Map objectModel ) {
+        if (this.settings.get("isolation-level","0").equals("1")) {
+
+            Logger logger = getLogger();
+            if (logger.isDebugEnabled())
+                logger.debug("prepare commit");
+
+            Map aMap = this.prepareCommit(objectModel, TRANS_PREFIX);
+            if (aMap == null) {
+                return;
+            }
+            
+            Iterator iter = aMap.keySet().iterator();
+            if (!iter.hasNext()){
+                return;
+            }
+            
+            String prefix = (String) this.settings.get("key-prefix", PREFIX );
+            if (prefix != "") {
+                prefix = prefix+":";
+            } else {
+                prefix = null;
+=============================================================
+A 21 line (133 tokens) duplication:
+Starting at line 279 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\JXPathMetaModule.java
+Starting at line 253 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\AbstractJXPathModule.java
+            java.beans.PropertyDescriptor[] properties = info.getPropertyDescriptors();
+            java.util.List names = new java.util.LinkedList();
+            for (int i = 0; i < properties.length; i++) {
+                names.add(properties[i].getName());
+            }
+            return names.listIterator();
+        } catch (Exception e) {
+            throw new ConfigurationException(
+                "Error retrieving attribute names for class: "
+                + contextObj.getClass(),
+                e
+            );
+        }
+
+    }
+
+    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
+        throws ConfigurationException {
+
+        Object contextObj = getContextObject(modeConf, objectModel);
+        if (contextObj == null) return null;
+        if (modeConf != null) {
+=============================================================
+A 37 line (142 tokens) duplication:
+Starting at line 280 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\xpath\XPathUtil.java
+Starting at line 944 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\xml\dom\DOMUtil.java
+                    while (i < l) {
+                        if (xpath.charAt(i) == '/') {
+                            result[components] = xpath.substring(start, i);
+                            start = i+1;
+                            components++;
+                        }
+                        i++;
+                    }
+                    result[components] = xpath.substring(start);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Use a path to select the first occurence of a node. The namespace
+     * of a node is ignored!
+     * @param contextNode The node starting the search.
+     * @param path        The path to search the node. The
+     *                    contextNode is searched for a child named path[0],
+     *                    this node is searched for a child named path[1]...
+     * @param create      If a child with the corresponding name is not found
+     *                    and create is set, this node will be created.
+    */
+    public static Node getFirstNodeFromPath(Node contextNode,
+                                            final String[] path,
+                                            final boolean  create) {
+        if (contextNode == null || path == null || path.length == 0)
+            return contextNode;
+        // first test if the node exists
+        Node item = getFirstNodeFromPath(contextNode, path, 0);
+        if (item == null && create == true) {
+            int i = 0;
+            NodeList childs;
+            boolean found;
+            int m, l;
+            while (contextNode != null && i < path.length) {
+=============================================================
+A 21 line (158 tokens) duplication:
+Starting at line 156 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\xscript\XScriptManagerImpl.java
+Starting at line 270 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\xscript\XScriptManagerImpl.java
+                             int scope)
+            throws IllegalArgumentException
+    {
+        XScriptObject o;
+        XScriptVariableScope s = null;
+
+        if (scope == XScriptManager.GLOBAL_SCOPE) {
+            s = (XScriptVariableScope) ObjectModelHelper.getContext(objectModel).getAttribute(CONTEXT);
+        } else if (scope == XScriptManager.SESSION_SCOPE) {
+            Request request = ObjectModelHelper.getRequest(objectModel);
+            s = (XScriptVariableScope) request.getSession().getAttribute(CONTEXT);
+        } else if (scope == XScriptManager.REQUEST_SCOPE) {
+            Request request = ObjectModelHelper.getRequest(objectModel);
+            s = (XScriptVariableScope) request.getAttribute(CONTEXT);
+        } else if (scope == XScriptManager.PAGE_SCOPE) {
+            s = pageScope;
+        } else if (scope == XScriptManager.ALL_SCOPES) {
+            Request request = ObjectModelHelper.getRequest(objectModel);
+
+            // Lookup in the request scope first.
+            s = (XScriptVariableScope) request.getAttribute(CONTEXT);
+            if (s != null) {
+=============================================================
+A 33 line (178 tokens) duplication:
+Starting at line 200 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\JXPathMetaModule.java
+Starting at line 177 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\AbstractJXPathModule.java
+        Configuration[] children = conf.getChildren("package");
+        int i = children.length;
+        while (i-- >0) {
+            String packageName = children[i].getAttribute("name",null);
+            String prefix = children[i].getAttribute("prefix",null);
+            if (packageName != null && prefix != null) {
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("adding Package "+packageName+" to functions");
+                lib.addFunctions(new PackageFunctions(packageName, prefix));
+            } else {
+                if (getLogger().isWarnEnabled())
+                    getLogger().warn("Package name or prefix null: "+packageName+" / "+prefix);
+            }
+        }
+    }
+
+
+    /**
+     * Actually add global functions and packages as well as those
+     * listed in the configuration object.
+     *
+     * @param context a <code>JXPathContext</code> value
+     * @param conf a <code>Configuration</code> value holding local
+     * packages and functions.
+     */
+    protected void setupExtensions(JXPathContext context, Configuration conf) {
+        
+        FunctionLibrary localLib = null;
+
+        if (conf != null) {
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("adding local Classes and Packages to functions");
+            localLib = new FunctionLibrary();
+            localLib.addFunctions(this.library);
+=============================================================
+A 21 line (180 tokens) duplication:
+Starting at line 181 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\SimpleMappingMetaModule.java
+Starting at line 242 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\SimpleMappingMetaModule.java
+            mapping = new Mapping(modeConf);
+            prefix = modeConf.getChild("prefix").getValue(null);
+            suffix = modeConf.getChild("suffix").getValue(null);
+            rmPrefix = modeConf.getChild("rm-prefix").getValue(null);
+            rmSuffix = modeConf.getChild("rm-suffix").getValue(null);
+        }
+        
+        // remove rm-prefix and rm-suffix
+        if (rmPrefix != null && name.startsWith(rmPrefix)) {
+            name = name.substring(rmPrefix.length());
+        }
+        if (rmSuffix != null && name.endsWith(rmSuffix)) {
+            name = name.substring(0,name.length() - rmSuffix.length());
+        }
+        // map
+        String param = mapping.mapTo(name);
+        // add prefix and suffix
+        if (prefix != null) param = prefix + param;
+        if (suffix != null) param = param + suffix;
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("mapping ['"+name+"'] to ['"+param+"']");
+
+=============================================================
+A 46 line (223 tokens) duplication:
+Starting at line 318 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\xpath\XPathUtil.java
+Starting at line 982 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\xml\dom\DOMUtil.java
+                childs = contextNode.getChildNodes();
+                found = false;
+                if (childs != null) {
+                    m = 0;
+                    l = childs.getLength();
+                    while (found == false && m < l) {
+                        item = childs.item(m);
+                        if (item.getNodeType() == Document.ELEMENT_NODE
+                            && item.getLocalName().equals(path[i]) == true) {
+                            found = true;
+                            contextNode = item;
+                        }
+                        m++;
+                    }
+                }
+                if (found == false) {
+                    Element e = contextNode.getOwnerDocument().createElementNS(null, path[i]);
+                    contextNode.appendChild(e);
+                    contextNode = e;
+                }
+                i++;
+            }
+            item = contextNode;
+        }
+        return item;
+    }
+
+    /**
+     * Private helper method for getFirstNodeFromPath()
+     */
+    private static Node getFirstNodeFromPath(final Node contextNode,
+                                             final String[] path,
+                                             final int      startIndex) {
+        int i = 0;
+        NodeList childs;
+        boolean found;
+        int l;
+        Node item = null;
+
+        childs = contextNode.getChildNodes();
+        found = false;
+        if (childs != null) {
+            i = 0;
+            l = childs.getLength();
+            while (found == false && i < l) {
+                item = childs.item(i);
+                if (item.getNodeType() == Document.ELEMENT_NODE
+=============================================================
+A 28 line (250 tokens) duplication:
+Starting at line 167 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\xpath\XPathUtil.java
+Starting at line 741 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\xml\dom\DOMUtil.java
+                        java.util.List attrValuePairs = new java.util.ArrayList(4);
+                        boolean noError = true;
+
+                        String attr;
+                        String value;
+                        // scan for attributes
+                        java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(XPathExp, "= ");
+                        while (tokenizer.hasMoreTokens() == true) {
+                            attr = tokenizer.nextToken();
+                            if (attr.startsWith("@") == true) {
+                                if (tokenizer.hasMoreTokens() == true) {
+                                    value = tokenizer.nextToken();
+                                    if (value.startsWith("'") && value.endsWith("'")) value = value.substring(1, value.length()-1);
+                                    if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);
+                                    attrValuePairs.add(attr.substring(1));
+                                    attrValuePairs.add(value);
+                                } else {
+                                    noError = false;
+                                }
+                            } else if (attr.trim().equals("and") == false) {
+                                noError = false;
+                            }
+                        }
+                        if (noError == true) {
+                            for(int l=0;l<attrValuePairs.size();l=l+2) {
+                                ((Element)newNode).setAttributeNS(null, (String)attrValuePairs.get(l),
+                                                                (String)attrValuePairs.get(l+1));
+                            }
+                        }
+=============================================================
+A 53 line (291 tokens) duplication:
+Starting at line 146 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\matching\modular\CachingRegexpMatcher.java
+Starting at line 146 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\matching\modular\CachingWildcardMatcher.java
+                                      +(this.inputSelector!=null&&this.inputSelector.hasComponent(this.defaultInput)?"known":"unknown"));
+            }
+        } catch (Exception e) {
+            if (getLogger().isWarnEnabled()) 
+                getLogger().warn("A problem occurred setting up '" + this.defaultInput + "': " + e.getMessage());
+        }
+    }
+
+
+
+    public void dispose() {
+
+        if (!this.initialized) 
+            if (getLogger().isErrorEnabled()) 
+                getLogger().error("Uninitialized Component! FAILING");
+        else 
+            if (this.inputSelector != null) {
+                if (this.input != null)
+                    this.inputSelector.release(this.input);
+                this.manager.release(this.inputSelector);
+            }
+    }
+
+
+
+    protected String getMatchString(Map objectModel, Parameters parameters) {
+
+        String paramName = parameters.getParameter("parameter-name", this.defaultParam);
+        String inputName = parameters.getParameter("input-module", this.defaultInput);
+
+        if (!this.initialized) {
+            if (getLogger().isErrorEnabled()) 
+                getLogger().error("Uninitialized Component! FAILING");
+            return null;
+        }
+        if (paramName == null) {
+            if (getLogger().isWarnEnabled()) 
+                getLogger().warn("No parameter name given. Trying to Continue");
+        }
+        if (inputName == null) {
+            if (getLogger().isWarnEnabled()) 
+                getLogger().warn("No input module given. FAILING");
+            return null;
+        }
+
+        Object result = null;
+
+        if (this.input != null && inputName.equals(this.defaultInput)) {
+            // input module is thread safe
+            // thus we still have a reference to it
+            try {
+                if (this.input != null) {
+                    result = this.input.getAttribute(paramName, this.inputConf, objectModel);
+                }
+=============================================================
+A 59 line (308 tokens) duplication:
+Starting at line 103 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\ProcessingException.java
+Starting at line 121 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\CascadingIOException.java
+            s.append( extraInfo(t) );
+            s.append(t.toString());
+        }
+        return s.toString();
+    }
+    
+    /**
+     * Examine Throwable and try to figure out location information.
+     * <p>
+     *   At the moment only SAXParseException, and TransformerException
+     *   are considered.
+     * </p>
+     *
+     * @return String containing location information of the format
+     *  <code>{file-name}:{line}:{column}:</code>, if no location info is 
+     *  available return empty string
+     */
+    private String extraInfo( Throwable t ) {
+        StringBuffer sb = new StringBuffer();
+        if (t instanceof SAXParseException) {
+            SAXParseException spe = (SAXParseException)t;
+            sb.append( String.valueOf(spe.getSystemId()));
+            sb.append( ":" );
+            sb.append( String.valueOf(spe.getLineNumber()));
+            sb.append( ":" );
+            sb.append( String.valueOf(spe.getColumnNumber()));
+            sb.append( ":" );
+        } else if (t instanceof TransformerException) {
+            TransformerException transformerException = (TransformerException) t;
+            SourceLocator sourceLocator = transformerException.getLocator();
+            
+            if( null != sourceLocator ) {
+                sb.append( String.valueOf(sourceLocator.getSystemId()));
+                sb.append( ":" );
+                sb.append( String.valueOf(sourceLocator.getLineNumber()));
+                sb.append( ":" );
+                sb.append( String.valueOf(sourceLocator.getColumnNumber()));
+                sb.append( ":" );
+            }
+        }
+        return sb.toString();
+    }
+    
+    public void printStackTrace() {
+        super.printStackTrace();
+        if(getCause()!=null)
+            getCause().printStackTrace();
+    }
+    
+    public void printStackTrace( PrintStream s ) {
+        super.printStackTrace(s);
+        if(getCause()!=null)
+            getCause().printStackTrace(s);
+    }
+    
+    public void printStackTrace( PrintWriter s ) {
+        super.printStackTrace(s);
+        if(getCause()!=null)
+            getCause().printStackTrace(s);
+    }
+=============================================================
+A 85 line (448 tokens) duplication:
+Starting at line 167 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\JXPathMetaModule.java
+Starting at line 144 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\components\modules\input\AbstractJXPathModule.java
+        Configuration[] children = conf.getChildren("function");
+        int i = children.length;
+        while (i-- >0) {
+            String clazzName = children[i].getAttribute("name",null);
+            String prefix = children[i].getAttribute("prefix",null);
+            if (clazzName != null && prefix != null) {
+                try {
+                    Class clazz = Class.forName(clazzName);
+                    if (getLogger().isDebugEnabled())
+                        getLogger().debug("adding Class "+clazzName+" to functions");
+                    lib.addFunctions(new ClassFunctions(clazz, prefix));
+                } catch (ClassNotFoundException cnf) {
+                    if (getLogger().isWarnEnabled())
+                        getLogger().warn("Class not found: "+clazzName);
+                }
+            } else {
+                if (getLogger().isWarnEnabled())
+                    getLogger().warn("Class name or prefix null: "+clazzName+" / "+prefix);
+            }
+        }
+    }
+
+
+    /**
+     * Register all extension packages listed in the configuration
+     * through <code>&lt;package name="fully.qualified.package"
+     * prefix="prefix"/&gt;</code> in the given FunctionLibrary.
+     *
+     * @param lib a <code>FunctionLibrary</code> value
+     * @param conf a <code>Configuration</code> value
+     */
+    protected void getPackages(FunctionLibrary lib, Configuration conf)  {
+
+        Configuration[] children = conf.getChildren("package");
+        int i = children.length;
+        while (i-- >0) {
+            String packageName = children[i].getAttribute("name",null);
+            String prefix = children[i].getAttribute("prefix",null);
+            if (packageName != null && prefix != null) {
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("adding Package "+packageName+" to functions");
+                lib.addFunctions(new PackageFunctions(packageName, prefix));
+            } else {
+                if (getLogger().isWarnEnabled())
+                    getLogger().warn("Package name or prefix null: "+packageName+" / "+prefix);
+            }
+        }
+    }
+
+
+    /**
+     * Actually add global functions and packages as well as those
+     * listed in the configuration object.
+     *
+     * @param context a <code>JXPathContext</code> value
+     * @param conf a <code>Configuration</code> value holding local
+     * packages and functions.
+     */
+    protected void setupExtensions(JXPathContext context, Configuration conf) {
+        
+        FunctionLibrary localLib = null;
+
+        if (conf != null) {
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("adding local Classes and Packages to functions");
+            localLib = new FunctionLibrary();
+            localLib.addFunctions(this.library);
+            getPackages(localLib, conf);
+            getFunctions(localLib, conf);
+        } else {
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("no local Classes or Packages");
+            localLib = this.library;
+        }
+        
+        context.setFunctions(localLib);
+    }
+
+
+    public Object getAttribute(String name, Configuration modeConf,
+                               Map objectModel)
+        throws ConfigurationException {
+
+        Object contextObj = getContextObject(modeConf, objectModel);
+        if (contextObj == null) return null;
+        if (modeConf != null) {
+=============================================================
+A 138 line (758 tokens) duplication:
+Starting at line 100 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\matching\modular\CachingRegexpMatcher.java
+Starting at line 100 in C:\Code\cocoon-2.1.x\src\java\org\apache\cocoon\matching\modular\CachingWildcardMatcher.java
+    private boolean initialized = false;
+    private InputModule input = null;
+    private ComponentSelector inputSelector = null;
+
+    /**
+     * Set the current <code>ComponentManager</code> instance used by this
+     * <code>Composable</code>.
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+
+        this.manager=manager;
+    }
+
+
+
+    public void configure(Configuration config) throws ConfigurationException {
+
+        this.defaultParam = config.getChild("parameter-name").getValue(null);
+        this.inputConf = config.getChild("input-module");
+        this.defaultInput = this.inputConf.getAttribute("name",this.defaultInput);
+    }
+
+
+
+    public void initialize() {
+
+        try {
+            // obtain input module
+            this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+            if (this.defaultInput != null && 
+                this.inputSelector != null && 
+                this.inputSelector.hasComponent(this.defaultInput)
+                ){
+                this.input = (InputModule) this.inputSelector.select(this.defaultInput);
+                if (!(this.input instanceof ThreadSafe && this.inputSelector instanceof ThreadSafe) ) {
+                    this.inputSelector.release(this.input);
+                    this.manager.release(this.inputSelector);
+                    this.input = null;
+                    this.inputSelector = null;
+                }
+                this.initialized = true;
+            } else {
+                if (getLogger().isErrorEnabled())
+                    getLogger().error("A problem occurred setting up '" + this.defaultInput 
+                                      + "': Selector is "+(this.inputSelector!=null?"not ":"")
+                                      +"null, Component is "
+                                      +(this.inputSelector!=null&&this.inputSelector.hasComponent(this.defaultInput)?"known":"unknown"));
+            }
+        } catch (Exception e) {
+            if (getLogger().isWarnEnabled()) 
+                getLogger().warn("A problem occurred setting up '" + this.defaultInput + "': " + e.getMessage());
+        }
+    }
+
+
+
+    public void dispose() {
+
+        if (!this.initialized) 
+            if (getLogger().isErrorEnabled()) 
+                getLogger().error("Uninitialized Component! FAILING");
+        else 
+            if (this.inputSelector != null) {
+                if (this.input != null)
+                    this.inputSelector.release(this.input);
+                this.manager.release(this.inputSelector);
+            }
+    }
+
+
+
+    protected String getMatchString(Map objectModel, Parameters parameters) {
+
+        String paramName = parameters.getParameter("parameter-name", this.defaultParam);
+        String inputName = parameters.getParameter("input-module", this.defaultInput);
+
+        if (!this.initialized) {
+            if (getLogger().isErrorEnabled()) 
+                getLogger().error("Uninitialized Component! FAILING");
+            return null;
+        }
+        if (paramName == null) {
+            if (getLogger().isWarnEnabled()) 
+                getLogger().warn("No parameter name given. Trying to Continue");
+        }
+        if (inputName == null) {
+            if (getLogger().isWarnEnabled()) 
+                getLogger().warn("No input module given. FAILING");
+            return null;
+        }
+
+        Object result = null;
+
+        if (this.input != null && inputName.equals(this.defaultInput)) {
+            // input module is thread safe
+            // thus we still have a reference to it
+            try {
+                if (this.input != null) {
+                    result = this.input.getAttribute(paramName, this.inputConf, objectModel);
+                }
+            } catch (Exception e) {
+                if (getLogger().isWarnEnabled()) 
+                    getLogger().warn("A problem occurred acquiring Parameter '" + paramName 
+                                      + "' from '" + inputName + "': " + e.getMessage());
+            }
+        } else {
+            // input was not thread safe
+            // so acquire it again
+            ComponentSelector iputSelector = null;
+            InputModule iput = null;
+            try {
+                // obtain input module
+                iputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                if (inputName != null && iputSelector != null && iputSelector.hasComponent(inputName)){
+                    iput = (InputModule) iputSelector.select(inputName);
+                }
+                if (iput != null) {
+                    result = iput.getAttribute(paramName, this.inputConf, objectModel);
+                }
+            } catch (Exception e) {
+                if (getLogger().isWarnEnabled()) 
+                    getLogger().warn("A problem occurred acquiring Parameter '" + paramName 
+                                     + "' from '" + inputName + "': " + e.getMessage());
+            } finally {
+                // release components
+                if (iputSelector != null) {
+                    if (iput != null)
+                        iputSelector.release(iput);
+                    this.manager.release(iputSelector);
+                }
+            }
+        }
+
+        if (result instanceof String) {
+            return (String) result;
+        } else {
+            return result.toString();
+        }
+    }

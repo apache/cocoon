@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.1 2003/03/09 00:10:29 pier Exp $ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Castor">
+    <sample name="CastorTransformer" href="castor/">
+      Show the usage of the Castor Transformer.
+    </sample>
+  </group>
+
+<!--  <group name="Charts">
+    <sample name="Wings Transformer" href="charts/">
+      Show the usage of the Krysalis Wings Chart Generator.
+    </sample>
+  </group>-->
+
+  <group name="Slash Edit">
+    <sample name="Source Writing Transformer" href="editor/">
+      Show the usage of the Source Writing Transformer by 
+      an Online editor Form.
+    </sample>
+  </group>
+
+  <group name="Paginator">
+    <sample name="List Pagination" href="paginator/list(1)">
+      Show the usage of the Paginator Transformer to paginate document based on items count limit.
+    </sample>
+    <sample name="Text Pagination" href="paginator/text(1)">
+      Show the usage of the Paginator Transformer to paginate document based on characters count limit.
+    </sample>
+  </group>
+  
+  <group name="SOAP Server">
+    <sample name="SOAP Server" href="soap-server/">
+      Axis based SOAP server.
+    </sample>
+  </group>
+  
+  <group name="SiteBuilder">
+    <sample name="SiteBuilder" href="sitebuilder/">
+      ???
+    </sample>
+  </group>
+
+  <group name="ImageReader">
+    <sample name="Image" href="imagereader/image-0">
+      Image of original size
+    </sample>
+    <sample name="Image 250x250" href="imagereader/image-250">
+      Image scaled up to the size 250 x 250
+    </sample>
+    <sample name="Image 50x50" href="imagereader/image-50">
+      Image scaled down to the size 50 x 50
+    </sample>
+  </group>
+  
+  <group name="Taglib">
+    <sample name="Taglib" href="taglib/TagLibTest.xhtml">
+      Show the usage of the Taglib
+    </sample>
+  </group>
+
+</samples>

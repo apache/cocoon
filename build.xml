@@ -1,0 +1,1028 @@
+<!-- ===========================================================================
+
+                       * =========================== *
+                       |  Apache Cocoon Build System |
+                       * =========================== *
+
+       CVS: $Id: build.xml,v 1.1 2003/03/09 00:01:33 pier Exp $:
+
+============================================================================ -->
+
+<project default="webapp" basedir="." name="Apache Cocoon">
+
+<!-- Initialization Targets ================================================ -->
+
+  <target name="init">
+
+    <echo>----------------------------- WARNING!!! -------------------------------</echo>
+    <echo>The build system is undergoing major redesign. Parts of the system might</echo>
+    <echo>not work as expected. We apologize for the inconvenience but we are     </echo>
+    <echo>working to make things easier for you. Thank you for your patience.     </echo>
+    <echo>------------------------------------------------------------------------</echo>
+    
+    <!-- Set the timestamps -->
+    <tstamp/>
+
+    <!-- Get the (constant) cocoon properties -->
+    <property file="src/java/org/apache/cocoon/cocoon.properties"/>
+
+    <!-- Detecting the current jvm -->
+    <condition property="target.vm" value="1.4">
+      <equals arg1="1.4" arg2="${ant.java.version}"/>
+    </condition>
+    <condition property="target.vm" value="1.2">
+      <not>
+        <equals arg1="1.4" arg2="${ant.java.version}"/>
+      </not>
+    </condition>
+
+    <!-- The location of tools.jar, relative to the JAVA_HOME home. -->
+    <property name="tools.jar" value="${java.home}/../lib/tools.jar"/>
+    <available file="${tools.jar}" property="tools.jar.present"/>
+
+    <!-- Allow users a chance to override without editing the main file -->
+    <property file="${user.home}/cocoon.build.properties"/>
+    <property file="local.build.properties"/>
+
+    <!-- Get the build properties from an external file -->
+    <property file="build.properties"/>
+
+    <!-- Allow users a chance to override without editing the main file -->
+    <property file="${user.home}/cocoon.blocks.properties"/>
+    <property file="local.blocks.properties"/>
+
+    <!-- Get the block properties from an external file -->
+    <property file="blocks.properties"/>
+
+    <filter token="Name"                value="${fullname}"/>
+    <filter token="name"                value="${fullname}"/>
+    <filter token="year"                value="${year}"/>
+    <filter token="version"             value="${version}"/>
+    <filter token="date"                value="${TODAY}"/>
+    <filter token="released.version"    value="${released.version}"/>
+
+    <!-- Set classpath -->
+    <path id="classpath">
+      <fileset dir="${lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.endorsed}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.core}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.core}/jvm${target.vm}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.optional}">
+        <include name="*.jar"/>
+      </fileset>
+      <path location="${build.mocks}"/>
+      <path location="${build.dest}"/>
+    </path>
+
+    <!-- Set classpath for building ant tasks -->
+    <path id="tasks.classpath">
+      <path refid="classpath"/>
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <path location="${tools.tasks.dest}"/>
+    </path>
+
+    <!-- Set classpath for scratchpad -->
+    <path id="scratchpad.classpath">
+      <path refid="classpath"/>
+      <fileset dir="./src/scratchpad/lib">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <!-- Build and prepare the loader =================== -->
+
+    <!-- compile the loader -->
+    <mkdir dir="${tools.loader.dest}"/>
+    <javac srcdir="${tools.loader.src}"
+           destdir="${tools.loader.dest}"
+           debug="off"
+           optimize="on"
+           deprecation="on"
+           target="1.2"
+           nowarn="on"
+           compiler="${compiler}"/>
+           
+    <!-- Build and prepare the cocoon-specific ant tasks =================== -->
+
+    <!-- compile the ant tasks -->
+    <mkdir dir="${tools.tasks.dest}"/>
+    <javac srcdir="${tools.tasks.src}"
+           destdir="${tools.tasks.dest}"
+           debug="off"
+           optimize="on"
+           deprecation="on"
+           target="1.2"
+           nowarn="on"
+           compiler="${compiler}"
+           classpathref="tasks.classpath"/>
+
+    <!-- A task to patch xml files -->
+    <taskdef name="xpatch" classname="XConfToolTask" classpath="${tools.tasks.dest}"/>
+
+    <!-- Jing is used in various targets for XML validation with RELAX NG -->
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"
+             classpathref="classpath"/>
+
+  </target>
+
+<!-- Preparation Targets =================================================== -->
+
+  <!-- Prepare the build directory -->
+  <target name="prepare" depends="init">
+    <echo>+-------------------------------------------------------------------------------+</echo>
+    <echo>                        ${fullname} ${version} [${year}]</echo>
+    <echo>+-------------------------------------------------------------------------------+</echo>
+    <echo> Building with ${ant.version}</echo>
+    <echo> using build file ${ant.file}</echo>
+    <echo> Compiling with debug ${compiler.debug}, optimize ${compiler.optimize}, deprecation ${compiler.deprecation}</echo>
+    <echo>+-----------------------------| W A R N I N G |---------------------------------+</echo>
+    <echo>               This build is targeted for use with JVM ${target.vm}</echo>
+    <echo>          Using this build on a virtual machine other than the one</echo>
+    <echo>             it is targeted for may result in runtime errors.</echo>
+    <echo>+-------------------------------------------------------------------------------+</echo>
+
+    <mkdir dir="${build}"/>
+  </target>
+
+  <!-- Prepare the build directories -->
+  <target name="prepare-core" depends="prepare">
+    <mkdir dir="${build.dest}"/>
+    <mkdir dir="${build.mocks}"/>
+  </target>
+
+<!-- Compilation Targets =================================================== -->
+
+  <!-- compiles everything -->
+  <target name="compile" depends="compile-core, compile-scratchpad, compile-deprecated"/>
+
+  <!-- compiles the core -->
+  <target name="compile-core" depends="validate-core-config,prepare-core">
+
+    <!-- copy those files that need to be in the classpath -->
+    <copy todir="${build.dest}">
+      <fileset dir="${java}">
+        <include name="**/*.xsl"/>
+        <include name="**/*.roles"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.js"/>
+      </fileset>
+    </copy>
+
+    <!-- compile mock classes -->
+    <javac srcdir="${mocks}"
+           destdir="${build.mocks}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+
+    <!-- compile core source files -->
+    <javac destdir="${build.dest}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath">
+         <src>
+          <!-- [FIXME] THE DEPENDENCY ON DEPRECATED SHOULD GO AWAY!!!! -->
+          <path location="${deprecated.src}"/> 
+          <path location="${java}"/>
+         </src>
+    </javac>
+  </target>
+
+  <!-- compiles the scratchpad -->
+  <target name="compile-scratchpad" depends="prepare" unless="exclude.scratchpad">
+    <mkdir dir="${build.scratchpad.src}"/>
+    <mkdir dir="${build.scratchpad.dest}"/>
+   
+    <available classpathref="classpath"
+               property="activation.present"
+               classname="javax.activation.DataSource"/>
+                   
+    <copy todir="${build.scratchpad.src}" filtering="on">
+      <fileset dir="${scratchpad.src}">
+        <exclude name="**/components/axis/**" unless="activation.present"/>
+        <exclude name="**/reading/AxisRPCReader.java" unless="activation.present"/>
+        <exclude name="**/webservices/**" unless="activation.present"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.scratchpad.dest}">
+      <fileset dir="${build.scratchpad.src}">
+        <include name="**/*.xsl"/>
+        <include name="**/*.wsdd"/>
+        <include name="**/*.roles"/>
+      </fileset>
+    </copy>
+
+    <javac srcdir="${build.scratchpad.src}"
+           destdir="${build.scratchpad.dest}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           compiler="${compiler}"
+           classpathref="scratchpad.classpath"/>
+  </target>
+
+  <!-- compiles deprecated code -->
+  <target name="compile-deprecated" depends="prepare" unless="exclude.deprecated">
+    <mkdir dir="${build.deprecated}"/>
+
+    <xpatch configuration="${build.dest}/org/apache/cocoon/cocoon.roles" 
+            directory="${deprecated.conf}" 
+            extension="xroles"/>
+            
+    <javac srcdir="${deprecated.src}"
+           destdir="${build.deprecated}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+  </target>
+
+<!-- Package Targets ======================================================= -->
+
+  <!-- packages everything -->
+  <target name="package" depends="package-core, package-scratchpad, package-deprecated"/>
+
+  <!-- package the core -->
+  <target name="package-core" depends="compile, blocks">
+    <!-- We need the dependency on compile and blocks, because
+         currently the deprecated package and the blocks add
+         roles to the single cocoon.roles configuration and
+         we need to add the most recent version in the jar.
+         This will be fixed sometime and then we depend only
+         on compile-core. -->
+    <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf">
+      <fileset dir="${build.dest}"/>
+    </jar>
+  </target>
+
+  <!-- package the scratchpad -->
+  <target name="package-scratchpad" depends="compile-scratchpad" unless="exclude.scratchpad">
+    <jar jarfile="${build}/${name}-scratchpad.jar">
+      <fileset dir="${build.scratchpad}"/>
+    </jar>
+  </target>
+
+  <!-- package deprecated code -->
+  <target name="package-deprecated" depends="compile-deprecated" unless="exclude.deprecated">
+    <jar jarfile="${build}/${name}-deprecated.jar">
+      <fileset dir="${build.deprecated}"/>
+    </jar>
+  </target>
+
+<!-- Block Targets ========================================================= -->
+
+  <!-- compiles blocks -->
+  <target name="blocks" depends="compile">
+    <mkdir dir="${build.blocks}"/>
+
+    <xslt in="${gump.descriptor}"
+          out="${build.temp}/blocks-build.xml"
+          processor="trax"
+          style="${tools}/src/blocks-build.xsl"/>
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="compile"/>
+  </target>
+
+<!-- Documentation Targets ================================================= -->
+
+  <target name="prepare-docs" depends="blocks">
+
+    <!-- Set classpath for documentation -->
+    <path id="documentation.classpath">
+      <path refid="classpath"/>
+      <fileset dir="${build.blocks}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${blocks}">
+        <include name="*/lib/*.jar"/>
+      </fileset>
+      <path location="${tools.jar}"/>
+      <path location="${build.context}/WEB-INF/classes"/>
+    </path>
+
+    <mkdir dir="${build.context}"/>
+    <mkdir dir="${build.context}/images"/>
+
+    <!-- make filtered copy of XML docs -->
+    <copy todir="${build.context}" filtering="on">
+      <fileset dir="${context}">
+        <exclude name="images/**"/>
+      </fileset>
+    </copy>
+
+    <!-- Add changes and todo -->
+    <copy file="changes.xml" tofile="${build.context}/xdocs/changes.xml" filtering="on"/>
+    <copy file="todo.xml"    tofile="${build.context}/xdocs/todo.xml" filtering="on"/>
+
+    <replace file="${build.context}/xdocs/changes.xml"
+             token="src/documentation/xdocs/dtd/" value="dtd/"/>
+    <replace file="${build.context}/xdocs/todo.xml"
+             token="src/documentation/xdocs/dtd/" value="dtd/"/>
+
+    <!-- Copy images -->
+    <copy todir="${build.context}/images" filtering="off">
+      <fileset dir="${context}/images"/>
+    </copy>
+
+    <!-- Copy entity catalog and entities -->
+    <copy todir="${build.context}/WEB-INF/entities" filtering="on">
+      <fileset dir="${webapp}/WEB-INF/entities"/>
+    </copy>
+    <copy todir="${build.context}/WEB-INF/classes" filtering="on">
+      <fileset dir="${webapp}/WEB-INF/classes"/>
+    </copy>
+    <copy todir="${build.context}" filtering="on" file="${webapp}/WEB-INF/logkit.xconf"/>
+  </target>
+
+  <!-- Set a variable if the generated docs are already up-to-date. -->
+  <target name="docs_check" depends="prepare-docs">
+    <uptodate property="docs.notrequired" targetfile="${build.docs}/index.html" >
+      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="${build}" includes="jars.xml"/>
+      <srcfiles dir="${context}/xdocs" includes="**/*.xml"/>
+    </uptodate>
+  </target>
+
+  <!-- If generated docs are already up-to-date, print a message saying so. -->
+  <target name="docs_done" depends="docs_check" if="docs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding docs, as they are up-to-date:"/>
+    <echo message="  ${build.docs}/index.html is more recent than"/>
+    <echo message="  todo.xml, changes.xml, ${context}/xdocs/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- Create docs -->
+  <target name="docs" depends="prepare-docs, validate-xdocs, docs_done" unless="docs.notrequired" description="Builds the documentation">
+    <mkdir dir="${build.docs}"/>
+
+    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
+      <arg value="-c."/>
+      <arg value="-d../docs"/>
+      <arg value="-w../temp/docs"/>
+      <arg value="-b../brokenlinks.txt"/>
+      <arg value="-k./logkit.xconf"/>
+      <arg value="-u${build.docs.loglevel}"/>
+      <arg value="-V"/>
+      <arg value="index.html"/>
+      <classpath>
+        <path refid="documentation.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <!-- Prepares the printer-docs -->
+  <target name="prepare-printer-docs" depends="prepare-docs">
+    <mkdir dir="${build.context.printer}"/>
+
+    <!-- copy prepared docs -->
+    <copy todir="${build.context.printer}" filtering="off">
+      <fileset dir="${build.context}"/>
+    </copy>
+
+    <!-- copy printer skin -->
+    <copy todir="${build.context.printer}/stylesheets" filtering="off" overwrite="yes">
+      <fileset dir="${build.context}/stylesheets/printer_skin"/>
+    </copy>
+  </target>
+
+  <!-- Set a variable if the generated printer docs are already up-to-date. -->
+  <target name="printer-docs_check" depends="init">
+    <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
+      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="${docs}" includes="**/*.xml"/>
+    </uptodate>
+  </target>
+
+  <!-- If generated printer docs are already up-to-date, print a message saying so. -->
+  <target name="printer-docs_done" depends="printer-docs_check" if="printer-docs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding printer docs, as they are up-to-date:"/>
+    <echo message="  ${build.docs.printer}/index.html is more recent than"/>
+    <echo message="  todo.xml, changes.xml, ${docs}/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- Create printer friendly docs -->
+  <target name="printer-docs" depends="prepare-printer-docs, validate-xdocs, printer-docs_done" description="Builds printer-friendly documentation">
+    <mkdir dir="${build.docs.printer}"/>
+
+    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context.printer}" failonerror="true" maxmemory="128m">
+      <arg value="-c."/>
+      <arg value="-d../printer-docs"/>
+      <arg value="-w../temp/printer"/>
+      <arg value="-b../brokenlinks.txt"/>
+      <arg value="-k./logkit.xconf"/>
+      <arg value="-u${build.docs.printer.loglevel}"/>
+      <arg value="-V"/>
+      <arg value="index.html"/>
+      <classpath>
+        <path refid="documentation.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+<!-- Javadoc/IDLDoc Targets ================================================ -->
+
+  <!-- Create IDL API documentation -->
+  <target name="idldocs" depends="prepare-core" description="Builds the IDL API documentation for non-java language bindings">
+    <mkdir dir="${build.idldocs}"/>
+    <java classname="org.openorb.compiler.doc.IdlDoc">
+      <arg value="-I${idl}"/>
+      <arg value="-outdir:${build.idldocs}"/>
+      <arg value="-all"/>
+      <arg value="-html"/>
+      <arg value="${idl}/main.idl"/>
+    </java>
+  </target>
+
+  <!-- Set a variable if javadocs are already up-to-date. -->
+  <target name="javadocs_check">
+    <mkdir dir="${build.javadocs}"/>
+    <uptodate property="javadocs.notrequired" targetfile="${build.javadocs}/packages.html" >
+      <srcfiles dir= "${java}" includes="**/*.java,**/package.html"/>
+      <srcfiles dir= "${deprecated.src}" includes="**/*.java,**/package.html"/>
+    </uptodate>
+  </target>
+
+  <!-- If javadocs are already up-to-date, print a message saying so. -->
+  <target name="javadocs_done" depends="javadocs_check" if="javadocs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding Javadocs, as they are up-to-date:"/>
+    <echo message="  ${build.javadocs}/packages.html is more recent than"/>
+    <echo message="  ${java}/**/*.java"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- Creates Javadocs -->
+  <target name="javadocs" depends="prepare-core, javadocs_done" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
+
+    <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
+      <equals arg1="1.4" arg2="${ant.java.version}"/>
+    </condition>
+    <condition property="javadoc.additionalparam" value="">
+      <not><equals arg1="1.4" arg2="${ant.java.version}"/></not>
+    </condition>
+
+    <javadoc destdir="${build.javadocs}"
+             author="true"
+             version="true"
+             use="true"
+             noindex="false"
+             splitindex="true"
+             windowtitle="${Name} API ${version} [${TODAY}]"
+             doctitle="${Name} API ${version}"
+             bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
+             stylesheetfile="${resources.styles}/javadoc.css"
+             useexternalfile="yes"
+             additionalparam="${javadoc.additionalparam}">
+
+      <link offline="true" href="http://avalon.apache.org/api"                  packagelistloc="${resources}/javadoc/avalon"/>
+      <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"  packagelistloc="${resources}/javadoc/xerces"/>
+      <link offline="true" href="http://xml.apache.org/xalan-j/apidocs"         packagelistloc="${resources}/javadoc/xalan"/>
+      <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api"       packagelistloc="${resources}/javadoc/j2se"/>
+      <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources}/javadoc/j2ee"/>
+
+      <packageset dir="${java}">
+        <include name="**"/>
+      </packageset>
+      <packageset dir="${deprecated.src}">
+        <include name="**"/>
+      </packageset>
+      <classpath refid="classpath"/>
+    </javadoc>
+
+  </target>
+
+<!-- Samples Targets ======================================================= -->
+
+  <target name="samples" depends="prepare" unless="exclude.webapp.samples">
+    <mkdir dir="${build.samples}"/>
+
+    <javac srcdir="${samples}"
+       destdir="${build.samples}"
+       debug="${compiler.debug}"
+       optimize="${compiler.optimize}"
+       deprecation="${compiler.deprecation}"
+       target="${target.vm}"
+       compiler="${compiler}"
+       classpathref="classpath"/>
+
+    <!-- copy sample files -->
+    <copy todir="${build.webapp.samples}" filtering="on">
+      <fileset dir="${webapp.samples}">
+       <exclude name="samples.xwelcome"/>
+       <exclude name="old_sitemap.xmap"/>
+       <exclude name="**/*.jpg"/>
+       <exclude name="**/*.gif"/>
+       <exclude name="**/*.png"/>
+       <exclude name="i18n/**"/> <!-- filtering breaks UTF-8 files -->
+      </fileset>
+    </copy>
+
+    <copy todir="${build.webapp.samples}" filtering="off">
+      <fileset dir="${webapp.samples}">
+       <include name="**/*.jpg"/>
+       <include name="**/*.gif"/>
+       <include name="**/*.png"/>
+       <include name="i18n/**"/>
+      </fileset>
+    </copy>
+
+    <!-- copy sample classes -->
+    <copy todir="${build.webapp.classes}" filtering="off">
+      <fileset dir="${build.samples}"/>
+    </copy>
+
+    <!-- patch the welcome page to tell we have samples to show -->
+    <xpatch directory="${webapp.samples}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>
+
+  </target>
+  
+  <target name="block-samples" depends="prepare" unless="exclude.webapp.samples">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="samples"/>
+  </target>
+  
+<!-- Webapp targets ==================================================== -->
+
+  <target name="prepare-webapp" depends="blocks, package">
+    <mkdir dir="${build.webapp}"/>
+
+    <copy file="${webapp}/welcome.xml" tofile="${build.webapp}/welcome.xml" filtering="on"/>
+    <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
+    <copy file="${resources.logos}/cocoon-button-powered-158.gif" tofile="${build.webapp}/resources/images/powered.gif"/>
+    <copy file="${resources.logos}/cocoon.ico" tofile="${build.webapp}/resources/images/cocoon.ico"/>
+    <copy file="${resources.styles}/cocoon.css" tofile="${build.webapp}/resources/styles/cocoon.css"/>
+
+    <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
+
+    <copy todir="${build.webapp}/WEB-INF" filtering="on">
+      <fileset dir="${webapp}/WEB-INF">
+        <include name="entities/**"/>
+        <include name="classes/**"/>
+        <include name="*.x*"/>
+      </fileset>
+    </copy>
+
+    <copy file="${build}/${name}.jar" tofile="${build.webapp.lib}/${name}-${version}.jar"/>
+
+    <copy todir="${build.webapp.lib}">
+      <fileset dir="${lib}/endorsed">
+        <include name="*.jar"/>
+        <exclude name="servlet*.jar"/>
+      </fileset>
+      <fileset dir="${lib.core}">
+        <include name="*.jar"/>
+        <exclude name="servlet*.jar"/>
+      </fileset>
+      <fileset dir="${lib.core}/jvm${target.vm}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.optional}">
+        <include name="*.jar"/>
+        <exclude name="servlet*.jar"/>
+      </fileset>
+      <fileset dir="${lib.local}">
+        <include name="*.jar"/>
+        <exclude name="servlet*.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.webapp.lib}">
+      <fileset dir="${build.blocks}">
+        <include name="*-block.jar"/>
+      </fileset>
+      <mapper type="glob" from="*-block.jar" to="cocoon-*-block.jar"/>
+    </copy>
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="lib"/>
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="patch"/>
+  </target>
+
+  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="exclude.webapp.samples">
+  </target>
+
+  <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="exclude.deprecated">
+    <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
+    <xpatch directory="${deprecated.conf}" extension="xconf" configuration="${build.webapp}/WEB-INF/cocoon.xconf"/>
+  </target>
+  
+  <target name="prepare-webapp-docs" depends="init" unless="exclude.webapp.documentation">
+    <copy todir="${build.webapp}/documentation">
+      <fileset dir="${src}/documentation"/>
+    </copy>
+  </target>
+  
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-deprecated,validate-config"/>
+
+  <target name="war" depends="webapp">
+    <!-- A task to create manifest for webapp. -->
+    <taskdef name="manifest" classname="ManifestToolTask" classpath="${tools.tasks.dest}"/>
+    <!-- Create WAR manifest -->
+    <manifest directory="${build.webapp.lib}" manifest="${build.webapp}/WEB-INF/Manifest.mf"/>
+    <!-- Package WAR file -->
+    <jar jarfile="${build.war}"  manifest="${build.webapp}/WEB-INF/Manifest.mf">
+      <fileset dir="${build.webapp}"/>
+    </jar>
+  </target>
+
+<!-- Validation targets ==================================================== -->
+
+  <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
+  <target name="check-jars" depends="init">
+    <path id="all.jars">
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+
+    <property name="all.jars" refid="all.jars"/>
+    <copy file="${lib}/jars.xml.tmpl" tofile="${build.temp}/current-jars.xml" filtering="yes" overwrite="yes">
+      <filterset>
+        <filter token="JARS" value="${all.jars}"/>
+      </filterset>
+    </copy>
+
+    <!-- split the path in 'jar' XML elements -->
+    <replace file="${build.temp}/current-jars.xml" token="${path.separator}" value="&lt;/jar&gt;&#xA; &lt;jar&gt;"/>
+    <!-- relativize file names by removing the current directory -->
+    <replace file="${build.temp}/current-jars.xml" token="${user}${file.separator}lib${file.separator}" value=""/>
+    <!-- and incase that fails, remove the base directory -->
+    <replace file="${build.temp}/current-jars.xml" token="${basedir}${file.separator}lib${file.separator}" value=""/>
+
+    <!-- replace platform-dependent path separator by '/' -->
+    <replace file="${build.temp}/current-jars.xml" token="${file.separator}" value="/"/>
+
+    <xslt in="${lib}/jars.xml" out="${build.temp}/jars.xml"
+           processor="trax"
+           style="${tools}/src/check-jars.xsl">
+      <param name="current-files" expression="../../${build.temp}/current-jars.xml"/>
+    </xslt>
+  </target>
+
+  <!-- Validate some important default core configuration files. Process the
+       default config files here, then do them again later in validate-config
+       after the blocks have been processed and fragments added.
+  -->
+  <target name="validate-core-config" depends="prepare"
+          description="Validation of default core configuration files using RELAX NG"
+          if="validate.config">
+    <echo message="Conducting validation of default core configuration files."/>
+    <echo message="(You can turn validation off if you must - comment out the validate.config property in build.properties)"/>
+    <jing rngfile="./src/webapp/WEB-INF/entities/any.rng">
+      <fileset dir="./src/webapp/WEB-INF" includes="cocoon.xconf"/>
+    </jing>
+    <jing rngfile="./src/webapp/WEB-INF/entities/roles-v01.rng">
+      <fileset dir="./src/java/org/apache/cocoon" includes="cocoon.roles"/>
+    </jing>
+<!-- FIXME: recent sitemap changes have broken validation
+    <jing rngfile="${build.webapp}/WEB-INF/entities/sitemap-v06.rng">
+      <fileset dir="./src/webapp" includes="sitemap.xmap"/>
+    </jing>
+-->
+  </target>
+
+  <!-- Validate some important final configuration files. At this stage
+       the fragments from blocks have been added to the default core config.
+  -->
+  <target name="validate-config" if="validate.config">
+    <echo message="Conducting validation of final configuration files."/>
+    <echo message="(You can turn validation off if you must - comment out the validate.config property in build.properties)"/>
+    <jing rngfile="${build.webapp}/WEB-INF/entities/any.rng">
+      <fileset dir="${build.webapp}/WEB-INF" includes="cocoon.xconf"/>
+    </jing>
+<!-- FIXME: precept.xroles has a new un-defined attribute "default-hint"
+     which is breaking validation.
+    <jing rngfile="${build.webapp}/WEB-INF/entities/roles-v01.rng">
+      <fileset dir="${build}/classes/org/apache/cocoon"
+               includes="cocoon.roles"/>
+    </jing>
+-->
+<!-- FIXME: recent sitemap changes have broken validation
+    <jing rngfile="${build.webapp}/WEB-INF/entities/sitemap-v06.rng">
+      <fileset dir="${build.webapp}" includes="sitemap.xmap"/>
+    </jing>
+-->
+  </target>
+
+  <!-- Validation of xdocs  -->
+  <!-- This only does documentation/xdocs/**.xml and does not attempt to do
+       webapps, blocks, java, etc. because most of their xdocs do not bother
+       to declare a ruleset. -->
+  <target name="validate-xdocs"
+          description="Validation of all core XML documentation"
+          depends="prepare-docs"
+          if="validate.xdocs">
+    <echo message="Conducting validation of core XML documentation."/>
+    <echo message="(You can turn validation off if you must - comment out the validate.xdocs property in build.properties)"/>
+
+    <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/book-v01.rng">
+      <fileset dir="${build.context}" includes="**/book.xml"/>
+    </jing>
+
+    <echo message="Validating all xdocs/**/*.xml instances using DTDs ..."/>
+    <xmlvalidate failonerror="true" lenient="no" warn="yes">
+      <!-- FIXME: we can use xmlcatalog with Ant-1.6 -->
+      <fileset dir="${build.context}/xdocs" includes="**/*.xml"
+               excludes="drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml"/>
+    </xmlvalidate>
+
+    <echo message="Validating the documentation sitemap.xmap using RELAX NG ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/sitemap-v06.rng">
+      <fileset dir="${build.context}" includes="sitemap.xmap"/>
+    </jing>
+
+    <echo message="Validating all documentation stylesheets using RELAX NG ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
+      <fileset dir="${build.context}/stylesheets" includes="**/*.xsl"/>
+    </jing>
+  </target>
+
+<!-- Test targets =========================================================== -->
+
+  <!-- Runs all tests -->
+  <target name="test" depends="junit.tests, anteater.tests" description="Runs all tests"/>
+
+  <!-- Runs JUnit tests -->
+  <target name="junit.tests" depends="compile" description="Runs the unit tests">
+    <mkdir dir="${build.test}"/>
+
+    <!-- Copy test files to build test dir -->
+    <copy todir="${build.test}" filtering="on">
+      <fileset dir="${test}"/>
+    </copy>
+
+    <!-- Compile tests -->
+    <javac srcdir="${build.test}"
+            destdir="${build.test}"
+            debug="${compiler.debug}"
+            optimize="${compiler.optimize}"
+            deprecation="${compiler.deprecation}"
+            target="${target.vm}"
+            fork="true">
+      <classpath refid="classpath"/>
+      <classpath refid="scratchpad.classpath"/>
+      <classpath>
+        <pathelement path="${build.dest}" />
+        <pathelement path="${build.scratchpad.dest}" />
+      </classpath>
+    </javac>
+    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+      <classpath>
+        <pathelement location="${build.test}" />
+        <pathelement location="${build.dest}" />
+        <pathelement location="${build.scratchpad.dest}" />
+        <pathelement path="${java.class.path}" />
+      </classpath>
+      <classpath refid="classpath"/>
+      <classpath refid="scratchpad.classpath"/>
+      <formatter type="plain" usefile="no" />
+      <batchtest>
+        <fileset dir="${build.test}">
+          <include name="**/*TestCase.class"/>
+          <include name="**/*Test.class" />
+          <exclude name="**/AllTest.class" />
+          <exclude name="**/*$$*Test.class" />
+          <exclude name="**/Abstract*.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Anteater tests  -->
+  <target name="anteater.tests" description="Runs the functional tests">
+    <property name="host" value="localhost"/>
+    <property name="port" value="8080"/>
+    <property name="base" value="cocoon"/>
+
+    <exec executable="anteater">
+      <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </exec>
+  </target>
+
+<!-- IDE targets =========================================================== -->
+
+  <!-- Generate the Emacs JDE project file -->
+  <target name="emacs-project" depends="init" description="Generate the Emacs project files">
+    <path id="jar.files">
+      <fileset dir="${build.webapp}/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.context}/WEB-INF/classes"/>
+    </path>
+    <property name="jar.files" refid="jar.files"/>
+    <copy file="${resources}/dev/emacs/prj.el.in" tofile="prj.el" filtering="yes">
+      <filterset>
+        <filter token="jar.files" value="${jar.files}"/>
+        <filter token="src" value="${java}"/>
+        <filter token="build.webapp" value="${build.webapp}"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Build the Eclipse projects files -->
+  <target name="eclipse-project" depends="init" description="Generate the Eclipse project files">
+
+    <!-- prepare the various paths that will form the project -->
+    <path id="srcs">
+      <!-- main source dir -->
+      <pathelement path="${src}/java"/>
+      <!-- deprecated source dir -->
+      <pathelement path="${src}/deprecated/java"/>
+      <!-- scratchpad source dir -->
+      <pathelement path="${src}/scratchpad/src"/>
+      <!-- blocks source dirs -->
+      <dirset dir="${blocks}">
+        <include name="*/java"/>
+      </dirset>
+    </path>
+
+    <path id="mockss">
+      <!-- main mocks dir -->
+      <pathelement path="${mocks}"/>
+      <!-- scratchpad mocks dir -->
+      <pathelement path="${src}/scratchpad/mocks"/>
+      <!-- blocks mocks dirs -->
+      <dirset dir="${blocks}">
+        <include name="*/mocks"/>
+      </dirset>
+    </path>
+
+    <path id="libs">
+      <!-- main libs -->
+      <fileset dir="${lib}">
+        <include name="core/*.jar"/>
+        <include name="core/jvm${target.vm}/*.jar"/>
+        <include name="optional/*.jar"/>
+        <include name="local/*.jar"/>
+        <include name="endorsed/*.jar"/>
+      </fileset>
+      <!-- scratchpad libs -->
+      <fileset dir="${scratchpad}/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <!-- tools libs -->
+      <fileset dir="${tools}/lib">
+        <include name="*.jar"/>
+        <!-- exclude xerces, xalan, xmlapis -->
+        <exclude name="x*.jar"/>
+      </fileset>
+      <!-- blocks lib -->
+      <fileset dir="${blocks}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+
+    <!-- convert paths to properties -->
+    <property name="srcs" refid="srcs"/>
+    <property name="mockss" refid="mockss"/>
+    <property name="libs" refid="libs"/>
+
+    <!-- expand properties in the template file -->
+    <copy file="${resources}/dev/eclipse/classpath-tmpl.xml"
+          tofile="${build.temp}/classpath-temp.xml"
+          filtering="yes"
+          overwrite="yes">
+      <filterset>
+        <filter token="SRC_DIRS" value="${srcs}"/>
+        <filter token="LIBS" value="${libs}"/>
+        <filter token="MOCKS_DIRS" value="${mockss}"/>
+      </filterset>
+    </copy>
+
+    <!-- split the path in 'item' XML elements -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${path.separator}" value="&lt;/item&gt;&#xA; &lt;item&gt;"/>
+    <!-- relativize file names by removing the current directory -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${user}${file.separator}" value=""/>
+    <!-- and in case that fails, remove the base directory -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${basedir}${file.separator}" value=""/>
+
+    <!-- replace platform-dependent path separator by '/' -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${file.separator}" value="/"/>
+
+    <!-- now build the .classpath file -->
+    <xslt in="${build.temp}/classpath-temp.xml" out="${basedir}/.classpath"
+          processor="trax"
+          style="${resources}/dev/eclipse/make-classpath.xsl"/>
+
+    <!-- copy the project file (expand version) -->
+    <copy file="${resources}/dev/eclipse/project"
+          tofile="${basedir}/.project"
+          overwrite="yes">
+      <filterset>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+  </target>
+
+<!-- Admin targets ========================================================= -->
+
+  <!-- Creates the web site  -->
+  <target name="site" depends="docs, javadocs">
+    <mkdir dir="${site}"/>
+    <copy todir="${site}" filtering="off">
+      <fileset dir="${build.docs}"/>
+    </copy>
+    <copy todir="${site}/apidocs" filtering="off">
+      <fileset dir="${build.javadocs}"/>
+    </copy>
+  </target>
+
+  <!-- Create the announcements -->
+  <target name="announcement" depends="prepare-docs">
+    <copy file="announcement.xml" tofile="${build.context}\xdocs\announcement.xml" filtering="on"/>
+    <xslt basedir="${build.context}\xdocs"
+           destdir="${build}"
+           style="${build.context}\stylesheets\announcement2txt.xsl"
+           includes="announcement.xml"
+           extension=".txt"
+           force="true"/>
+  </target>
+
+<!-- Gump targets ========================================================== -->
+
+  <!-- Builds Core -->
+  <target name="gump-core" depends="package"/>
+
+  <!-- Builds Blocks -->
+  <target name="gump-blocks" depends="blocks"/>
+
+<!-- Clean Targets ========================================================= -->
+
+  <!-- Clean -->
+  <target name="clean" depends="clean-cocoon,clean-webapp" description="Cleans the cocoon build and the webapp"/>
+
+  <!-- Clean the cocoon build -->
+  <target name="clean-cocoon" depends="init" description="Cleans the cocoon build">
+    <!-- Delete the build directory -->
+    <delete dir="${build}"/>
+  </target>
+
+  <!-- Clean the webapp -->
+  <target name="clean-webapp" depends="init" description="Cleans the webapp">
+    <delete dir="${build.webapp}"/>
+  </target>
+
+  <!-- Clean the distribution -->
+  <target name="distclean" depends="clean" description="Cleans everything and brings back to original 'CVS checkout' state">
+    <delete dir="${build.root}"/>
+    <delete dir="${tools.tasks.dest}"/>
+    <delete dir="${tools.loader.dest}"/>
+    <delete file="${dist}/${Name}-${version}.tar.gz"/>
+    <delete file="${dist}/${Name}-${version}.tar"/>
+    <delete file="${dist}/${Name}-${version}.zip"/>
+    <delete file="${dist}/${Name}-${version}-src.tar.gz"/>
+    <delete file="${dist}/${Name}-${version}-src.tar"/>
+    <delete file="${dist}/${Name}-${version}-src.zip"/>
+    <delete file="${dist}/${Name}-${version}-bin.tar.gz"/>
+    <delete file="${dist}/${Name}-${version}-bin.tar"/>
+    <delete file="${dist}/${Name}-${version}-bin.zip"/>
+    <delete file="${dist}/${Name}-${version}-samples.tar.gz"/>
+    <delete file="${dist}/${Name}-${version}-samples.tar"/>
+    <delete file="${dist}/${Name}-${version}-samples.zip"/>
+    <delete dir="${dist.root}"/>
+  </target>
+
+</project>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<zoo xmlns:castor="http://castor.exolab.org/cocoontransfomer">
+	<castor:InsertBean name="Mouse"/> 
+	<castor:InsertBean name="Lion"/> 
+	<castor:InsertBean name="Hamster" mapping="castor-mappings/test-mapping_de.xml"/>
+	<castor:InsertBean name="Wale"/>
+	<castor:InsertBean name="Elefant" scope="session"/> 
+	<castor:InsertBean name="Elefant" scope="request"/> 
+</zoo>

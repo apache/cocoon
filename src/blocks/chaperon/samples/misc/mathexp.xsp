@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
+<html>
+ <head>
+  <title>Mathexp Example</title>
+ </head>
+ <body>
+
+  <h1>Mathexp Example</h1>
+
+  <p>
+   <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0"><xsp-request:get-parameter name="text" 
+    default="3*a-5*6/7 + ( b-c)*5- b"/></text>
+  </p>
+
+  <p>
+   <form action="mathexp.html" method="post">
+
+    <xsp:element name="input">
+     <xsp:attribute name="name">text</xsp:attribute>
+     <xsp:attribute name="type">text</xsp:attribute>
+     <xsp:attribute name="size">80</xsp:attribute>
+     <xsp:attribute name="maxlength">110</xsp:attribute>
+     <xsp:attribute name="value"><xsp-request:get-parameter name="text" 
+       default="3*a-5*6/7 + ( b-c)*5- b"/></xsp:attribute>
+    </xsp:element>
+   </form>
+  </p>
+
+ </body>
+</html>
+
+</xsp:page>

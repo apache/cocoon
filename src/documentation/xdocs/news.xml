@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>News about Cocoon</title>
+    <subtitle></subtitle>
+    <authors>
+      <person name="Diana Shannon" email="shannon@apache.org"/>
+    </authors>
+  </header>
+  <body>
+  <s1 title="Wiki Moving">
+    <p>The popular Cocoon Wiki has moved: <link href="http://wiki.cocoondev.org/">http://wiki.cocoondev.org/</link> is the new place to be.</p>
+  </s1>
+<s1 title="Cocoon GetTogether">
+ <p>Outerthought is organizing the <link href="http://outerthought.org/cocoon/gettogether/">Cocoon GetTogether</link> on 19 November 2002 (near Ghent in Belgium).</p>
+</s1>
+    <s1 title="Cocoon: Building XML Applications Published">
+  <p><strong>July 2002</strong> New Riders has just published <em>Cocoon: Building XML Applications</em> written by our very own Carsten Ziegeler, release coordinator for the Cocoon project, and Matthew Langham, leader of the open-source group at S&#38;N AG of Paderborn, Germany. You can download several <link href="http://www.newriders.com/books/product.asp?product_id={C3C05052-BE3B-4E06-A60A-13FB40AF58F6}" >free chapters</link> at the New Riders web site. Weighing in at over 500 pages, the book is a vital new resource for the Cocoon community. We congratulate and thank Carsten, Matthew, and New Riders for their excellent work!
+  </p>
+    </s1>
+    <s1 title="Cocoon Wikis">
+  <p>
+Cocoon has two promising and complementary wiki efforts underway. 
+  </p>
+    <ul>
+  <li>
+<link href="http://wiki.cocoondev.org/">Cocoon Wiki</link> focuses on content development for the Cocoon project. It is designed to facilitate document development and collaboration from all levels of Cocoon users. Documents include FAQs, snippets, how-tos, tutorials, RTs (random thoughts), dreams, surveys, and more. The preliminary focus of this the wiki is to serve as a documentation "breeding ground," where docs can "grow" until mature enough to become official cvs docs. However, it already represents a lively and valid document resource in its own right.
+  </li>
+  <li>
+<link href="http://www.anyware-tech.com/wikiland/">Wikiland</link> is an ongoing development effort to build a Cocoon-based wiki architecture. Wikiland features a Cocoon dictionary as the pretext to use, test and develop the wiki. The project is seeking Cocoon-oriented developers to further its development. For more information, see the <link href="http://rossel.free.fr/" >Wikiland home page.</link>
+  </li>
+</ul>
+</s1>
+  </body>
+</document>
