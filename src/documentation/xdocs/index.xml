@@ -16,9 +16,8 @@
       <strong>Security warning</strong>: A major security hole has been found in XMLForm and JXForm that
       can allow forged requests to execute arbitrary Java code on the server. This affects Cocoon 2.1 only
       (not the 2.0.x versions).
-      As of 2003-09-03, this hole has been fixed in the latest CVS and a new version will be
-      released very soon. In the meantime, if you use XMLForm or JXForms, we urge you to update
-      the following source files and rebuild your Cocoon distribution:
+      This hole has been fixed in the 2.1.1 release. If you use XMLForm or JXForms but don't want to move
+      to this new release, we urge you to update the following source files and rebuild your Cocoon distribution:
     </note>
       <ul>
        <li>XMLForm - in <code>src/blocks/xmlform/java/org/apache/cocoon/components/xmlform</code>:
