@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.6 2003/10/15 18:03:52 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.7 2003/10/19 14:34:40 cziegeler Exp $
  */
 public interface Environment {
 
@@ -130,12 +130,6 @@ public interface Environment {
      * Set the response status code
      */
     void setStatus(int statusCode);
-
-    /**
-     * Get the output stream where to write the generated resource.
-     * @deprecated Use {@link #getOutputStream(int)} instead.
-     */
-    OutputStream getOutputStream() throws IOException;
 
     /**
      * Get the output stream where to write the generated resource.

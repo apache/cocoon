@@ -53,7 +53,6 @@ package org.apache.cocoon.environment;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -74,7 +73,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.18 2003/10/19 14:02:47 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.19 2003/10/19 14:34:40 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -83,31 +82,32 @@ public abstract class AbstractEnvironment
     /** The current uri in progress */
     protected String uris;
 
-    /** The current prefix to strip off from the request uri */
+    /** The current prefix to strip off from the request uri  - TODO (CZ) Remove this*/
     protected StringBuffer prefix = new StringBuffer();
 
     /** The View requested */
-    protected String view = null;
+    protected String view;
 
     /** The Action requested */
-    protected String action = null;
+    protected String action;
 
-     /** The Context path */
-    protected String context = null;
+     /** The Context path  - TODO (CZ) Remove this*/
+    protected String context;
 
-    /** The context path stored temporarily between constructor and initComponents */
-    private String tempInitContext = null;
+    /** The context path stored temporarily between constructor and initComponents 
+     *    - TODO (CZ) Remove this*/
+    private String tempInitContext;
 
-    /** The root context path */
-    protected String rootContext = null;
+    /** The root context path  - TODO (CZ) Remove this*/
+    protected String rootContext;
 
     /** The servlet object model */
-    protected HashMap objectModel = null;
+    protected HashMap objectModel;
 
-    /** The real source resolver */
+    /** The real source resolver  - TODO (CZ) Remove this*/
     protected org.apache.excalibur.source.SourceResolver sourceResolver;
 
-    /** The service manager */
+    /** The service manager - TODO (CZ) Remove this */
     protected ServiceManager manager;
 
     /** The attributes */
@@ -119,10 +119,7 @@ public abstract class AbstractEnvironment
     /** The real output stream */
     protected OutputStream outputStream;
 
-    /** The AvalonToCocoonSourceWrapper (this is for the deprecated support) */
-    static protected Method avalonToCocoonSourceWrapper;
-
-    /** Do we have our components ? */
+    /** Do we have our components ?  - TODO (CZ) Remove this */
     protected boolean initializedComponents = false;
     
     /**
@@ -164,6 +161,7 @@ public abstract class AbstractEnvironment
 
     /**
      * Get the Root Context
+     * TODO (CZ) Remove this method
      */
     public String getRootContext() {
         if ( !this.initializedComponents) {
@@ -174,6 +172,7 @@ public abstract class AbstractEnvironment
 
     /**
      * Get the current Context
+     * TODO (CZ) Remove this method
      */
     public String getContext() {
         if ( !this.initializedComponents) {
@@ -184,6 +183,7 @@ public abstract class AbstractEnvironment
 
     /**
      * Get the prefix of the URI in progress
+     * TODO (CZ) Remove this method
      */
     public String getURIPrefix() {
         return this.prefix.toString();
@@ -191,6 +191,7 @@ public abstract class AbstractEnvironment
 
     /**
      * Set the prefix of the URI in progress
+     * TODO (CZ) Remove this method
      */
     protected void setURIPrefix(String prefix) {
         if (getLogger().isDebugEnabled()) {
@@ -201,6 +202,7 @@ public abstract class AbstractEnvironment
 
     /**
      * Set the context.
+     * TODO (CZ) Remove this method
      */
     protected void setContext(String context) {
         this.context = context;
@@ -209,6 +211,7 @@ public abstract class AbstractEnvironment
     /**
      * Set the context. This is similar to changeContext()
      * except that it is absolute.
+     * TODO (CZ) Remove this method
      */
     public void setContext(String prefix, String uri, String context) {
         this.setContext(context);
@@ -221,6 +224,7 @@ public abstract class AbstractEnvironment
 
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
+     * TODO (CZ) Remove this method
      */
     public void changeContext(String prefix, String newContext)
     throws IOException {
@@ -379,15 +383,6 @@ public abstract class AbstractEnvironment
 
     /**
      * Get the output stream where to write the generated resource.
-     * @deprecated Use {@link #getOutputStream(int)} instead.
-     */
-    public OutputStream getOutputStream() throws IOException {
-        // by default we use the complete buffering output stream
-        return this.getOutputStream(-1);
-    }
-
-    /**
-     * Get the output stream where to write the generated resource.
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
@@ -439,6 +434,7 @@ public abstract class AbstractEnvironment
     /**
      * Initialize the components for the environment
      * This gets the source resolver and the xmlizer component
+     * TODO (CZ) Remove this method
      */
     protected void initComponents() {
         this.initializedComponents = true;
@@ -478,6 +474,7 @@ public abstract class AbstractEnvironment
      * This can be used to cleanup the environment object
      */
     public void finishingProcessing() {
+        // TODO (CZ) Remove this
         if ( null != this.manager ) {
             this.manager.release( this.sourceResolver );
             this.manager = null;
