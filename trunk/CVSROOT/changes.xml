@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.22 2000-01-23 23:09:52 stefano Exp $
+  $Id: changes.xml,v 1.23 2000-01-24 21:35:28 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,12 @@
   </devs>
 
  <release version="1.6.1-dev" date="Not yet released">
+  <action dev="SM" type="fix" due-to="Timm, Sean" due-to-email="STimm@mailgo.com">
+    Fixed a nullpointerexception when removing the very last PI.
+  </action>
+  <action dev="SM" type="update">
+    Patched xml.apache.org skin for better source code and figures handling.
+  </action>
   <action dev="SM" type="fix" due-to="Manuel Schulte" due-to-email="manuel@alpha.sea-to-sky.netv">
     Fixed XML name which X stands for "eXtensible" not "eXtended".
   </action>
