@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: page2itext.xsl,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $ -->
+<!-- CVS $Id: page2itext.xsl,v 1.3 2003/10/22 11:42:05 joerg Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-  <xsl:param name="view-source"/>
 
   <xsl:template match="page">
    <itext>
