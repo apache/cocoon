@@ -103,8 +103,6 @@
     <aspect name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
     <aspect name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
     <aspect class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect" name="parameter"/>
-    <!-- This is the special basket renderer -->
-    <aspect class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect" name="basket"/>
  </component>
 
  <!-- Aspect Storage configuration -->
@@ -126,8 +124,5 @@
  <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" />
 
  <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" />
- <!-- This is the basket manager -->
- <component class="org.apache.cocoon.portal.coplets.basket.BasketManager" 
-            role="org.apache.cocoon.portal.coplets.basket.BasketManager"/>
 
 </xconf>
