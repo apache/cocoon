@@ -152,7 +152,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.6 2003/05/06 09:00:17 bruno Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.7 2003/10/24 12:50:08 vgritsenko Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -228,16 +228,16 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         if (!xsltProcessorRole.startsWith(XSLTProcessor.ROLE)) {
             xsltProcessorRole = XSLTProcessor.ROLE + '/' + xsltProcessorRole;
         }
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Use parameters is " + this.useParameters);
-            this.getLogger().debug("Use cookies is " + this.useCookies);
-            this.getLogger().debug("Use session info is " + this.useSessionInfo);
-            this.getLogger().debug("Use TrAX Processor " + xsltProcessorRole);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Use parameters is " + this.useParameters);
+            getLogger().debug("Use cookies is " + this.useCookies);
+            getLogger().debug("Use session info is " + this.useSessionInfo);
+            getLogger().debug("Use TrAX Processor " + xsltProcessorRole);
 
             if (traxFactory != null) {
-                this.getLogger().debug("Use TrAX Transformer Factory " + traxFactory);
+                getLogger().debug("Use TrAX Transformer Factory " + traxFactory);
             } else {
-                this.getLogger().debug("Use default TrAX Transformer Factory.");
+                getLogger().debug("Use default TrAX Transformer Factory.");
             }
         }
 
@@ -293,8 +293,8 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         _useCookies = par.getParameterAsBoolean("use-cookies", this.useCookies);
         _useSessionInfo = par.getParameterAsBoolean("use-session-info", this.useSessionInfo);
 
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Using stylesheet: '" + this.inputSource.getURI() + "' in " + this);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Using stylesheet: '" + this.inputSource.getURI() + "' in " + this);
         }
 
         /** Get a Transformer Handler */
@@ -315,7 +315,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      * @return The generated key hashes the src
      */
     public java.io.Serializable getKey() {
-        Map map = this.getLogicSheetParameters();
+        Map map = getLogicSheetParameters();
         if (map == null) {
             return this.inputSource.getURI();
         }
