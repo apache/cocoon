@@ -203,6 +203,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="26854">
+     A redirect is now possible, if it's called from flow. This also fixes bug #26571.
+   </action>
    <action dev="CZ" type="add" fixes-bug="30688" due-to="John Lianoglou" due-to-email="john@arachnedesign.net">
      Mail block: Add ability to specify mime-type for email body text parameter in the mail transformer.
    </action>

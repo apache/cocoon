@@ -60,7 +60,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.26 2004/05/05 06:36:58 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class TreeProcessor
@@ -383,7 +383,12 @@ public class TreeProcessor
         // Process the redirect
 // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
 //        context.reset();
-        return processor.process(newEnv, context);
+        // The following is a fix for bug #26854 and #26571
+        final boolean result = processor.process(newEnv, context);
+        if ( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() != null ) {
+            environment.redirect( false, ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() );
+        }
+        return result;
     }
     
     /**
