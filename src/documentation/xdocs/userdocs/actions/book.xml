@@ -21,6 +21,7 @@
   <menu label="Optional">
     <menu-item label="Sendmail Action" href="sendmail-action.html"/>
     <menu-item label="Session Action" href="session-action.html"/>
+    <menu-item label="Script Action" href="script-action.html"/>
   </menu>
 
 </book>
