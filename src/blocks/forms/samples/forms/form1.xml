@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.4 2004/04/17 17:51:45 bruno Exp $
+    | CVS $Id: form1.xml,v 1.5 2004/04/17 18:33:56 bruno Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
@@ -235,31 +235,31 @@
   
     <fd:repeater id="contacts">
       <fd:validation>
-      	<!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
-      		 A repeater cannot itself display a validation error, and therefore sets a validation
-      		 error on a field in the offenting row. -->
+        <!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
+           A repeater cannot itself display a validation error, and therefore sets a validation
+           error on a field in the offenting row. -->
         <fd:javascript>
           var list = new java.util.ArrayList();
           var success = true;
           // Iterate on all rows
-      	  for (var i = 0; i &lt; widget.size; i++) {
-      	    // Get the row
-      	    var row = widget.getRow(i);
-      	    // Compute a key combining the first and last name
-      	    var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
-      	    if (list.contains(key)) {
-      	      // already in the list
-      	      row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
-      	      success = false;
-      	      break; // no need to continue
-      	    }
-      	    // Add the current row's key to the list
-      	    list.add(key);
-      	  }
-      	  
-      	  // Must return true/false
-      	  return success;
-      	  
+          for (var i = 0; i &lt; widget.size; i++) {
+            // Get the row
+            var row = widget.getRow(i);
+            // Compute a key combining the first and last name
+            var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
+            if (list.contains(key)) {
+              // already in the list
+              row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
+              success = false;
+              break; // no need to continue
+            }
+            // Add the current row's key to the list
+            list.add(key);
+          }
+          
+          // Must return true/false
+          return success;
+          
         </fd:javascript>
       </fd:validation>
       <fd:widgets>
