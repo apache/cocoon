@@ -254,33 +254,27 @@ public class XMLResourceBundleFactory
             synchronized (this) {
                 bundle = selectCached(fileName);
                 if (bundle == null) {
+                    boolean localeAvailable = (locale != null && !locale.getLanguage().equals(""));
+                    index++;
                     XMLResourceBundle parentBundle = null;
-                    if (locale != null && !locale.getLanguage().equals("")) {
-                        if (++index == directories.length)
-                        {
-                            parentBundle = _select(directories, 0, name, getParentLocale(locale));
-                        }
-                        else
-                        {
-                            parentBundle = _select(directories, index, name, locale);
-                        }
-                    } else if (++index < directories.length) {
+                    if (localeAvailable && index == directories.length) {
+                        // all directories have been searched with this locale,
+                        // now start again with the first directory and the parent locale
+                        parentBundle = _select(directories, 0, name, getParentLocale(locale));
+                    } else if (index < directories.length) {
+                        // there are directories left to search for with this locale
                         parentBundle = _select(directories, index, name, locale);
                     }
-
                     if (!isNotFoundBundle(fileName)) {
                         bundle = _loadBundle(name, fileName, locale, parentBundle);
-
                         updateCache(fileName, bundle);
                     }
-
                     if (bundle == null) {
                         return parentBundle;
                     }
                 }
             }
         }
-
         return bundle;
     }
 
