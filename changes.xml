@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: changes.xml,v 1.13 2003/04/01 21:25:08 sylvain Exp $
+  CVS $Id: changes.xml,v 1.14 2003/04/06 04:02:16 crossley Exp $
 -->
 
 <changes title="History of Changes">
@@ -43,15 +43,16 @@
 
  <release version="@version@" date="@date@">
   <action dev="SW" type="add">
-    'handle-errors' sections in the sitemap not more have an implicit generator :
-    any generator can be used whearas it was before fixed and produced an XML representation
-    of the error.
+    'handle-errors' sections in the sitemap now do not have an implicit
+    generator: any generator can now be used, whereas previously it was
+    implied and produced an XML representation of the error).
     <br/>
-    To ensure backwards compatibility, 'handle-errors' sections having a 'type' attribute
-    keep the implicit-generator behaviour, but are now to be considered as deprecated.
+    To ensure backwards compatibility, 'handle-errors' sections can have a
+    'type' attribute to continue the implicit-generator behaviour, but are
+    now to be considered as deprecated.
     <br/>
-    A new ExceptionSelector is also available to drive the error-handling pipeline constuction
-    depending on the error type.
+    A new ExceptionSelector is also available to drive the error-handling
+    pipeline constuction depending on the error type.
   </action>
   <action dev="TC" type="update">
     EsqlConnection no longer implements java.sql.Connection.
