@@ -32,7 +32,7 @@ import org.apache.xml.serialize.OutputFormat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class SVGSerializer extends DOMBuilder implements Composer, Serializer, Configurable {
+public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable {
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler=null;
@@ -61,15 +61,6 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.config = conf;
-
-        try {
-            log.debug("Looking up " + Roles.PARSER);
-            // First, get a DOM parser for the DOM Builder to work with.
-            super.factory= (Parser) this.manager.lookup(Roles.PARSER);
-        } catch (Exception e) {
-            log.error("Could not find component", e);
-            throw new ConfigurationException("Could not find Parser", e);
-        }
 
         mimetype = this.config.getAttribute("mime-type");
         log.debug("SVGSerializer mime-type:" + mimetype);
@@ -132,28 +123,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             transcoder.addTranscodingHint(
                         TranscodingHints.KEY_XML_PARSER_CLASSNAME,
 		                "org.apache.xerces.parsers.SAXParser");
-
-            // TODO: FIXME(DIMS) - batik is flaky in accepting DOM and don't 
-            // support SAX yet. So we have to create a Byte Array as an input
-            // stream for them.
-            ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
-            BufferedOutputStream ostream = new BufferedOutputStream(bytestream);
-
-            OutputFormat outformat = new OutputFormat();
-            SerializerFactory serializerFactory = 
-                        SerializerFactory.getSerializerFactory(Method.XML);
-            org.apache.xml.serialize.Serializer serializer = 
-                        serializerFactory.makeSerializer(outformat);
-            serializer.setOutputByteStream(ostream);
-            serializer.asDOMSerializer().serialize(doc);
-
-            // Use the Byte Array as the InputSource for the transcoder.
-            InputSource inputSource = new InputSource(new ByteArrayInputStream
-                                                        (bytestream.toByteArray()));
-
-            // TODO: FIXME(DIMS) - Why do they need a SystemId?
-            inputSource.setSystemId("http://xml.apache.org");
-            transcoder.transcodeToStream(inputSource,this.output);
+            transcoder.transcodeToStream(doc,this.output);
 
             this.output.flush();
         } catch (Exception ex) {
