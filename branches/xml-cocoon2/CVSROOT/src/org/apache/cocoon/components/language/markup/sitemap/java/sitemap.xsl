@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2000-09-07 22:26:57 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2000-09-08 18:08:51 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -742,7 +742,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:param name="value"/>
     <xsl:param name="prefix"/>
     <xsl:param name="suffix"/>
-    <xsl:variable name="value1" select="translate($value,'/- *?@:{}()[].#^\\$|&#33;~\','_')"/>
+    <xsl:variable name="value1" select="translate($value,'/- *?@:{}()[].#^\\$|&#33;~\','______________________')"/>
     <xsl:value-of select="$prefix"/><xsl:value-of select='translate($value1,"&#39;","")'/><xsl:value-of select="$suffix"/>
   </xsl:template>
 
