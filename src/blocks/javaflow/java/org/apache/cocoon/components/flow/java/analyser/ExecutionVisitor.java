@@ -49,10 +49,10 @@ import org.apache.bcel.generic.*;
  * 
  * WARNING! These classes are a fork of the bcel verifier.
  *
- * @version $Id: ExecutionVisitor.java,v 1.1 2004/06/03 12:43:27 stephan Exp $
+ * @version $Id: ExecutionVisitor.java,v 1.2 2004/06/29 15:07:14 joerg Exp $
  * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
  * @see #visitDSTORE(DSTORE o)
- * @see InstConstraintVisitor
+ * @see org.apache.bcel.verifier.structurals.InstConstraintVisitor
  */
 public class ExecutionVisitor extends EmptyVisitor implements Visitor{
 

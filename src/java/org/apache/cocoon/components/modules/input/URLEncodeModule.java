@@ -16,13 +16,11 @@
 package org.apache.cocoon.components.modules.input;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.modules.input.AbstractInputModule;
 import org.apache.cocoon.util.NetUtils;
 
 /**

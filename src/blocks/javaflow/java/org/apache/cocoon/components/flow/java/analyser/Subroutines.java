@@ -60,7 +60,7 @@ import org.apache.bcel.verifier.exc.StructuralCodeConstraintException;
 	 * 
 	 * WARNING! These classes are a fork of the bcel verifier.
 	 *
-	 * @version $Id: Subroutines.java,v 1.3 2004/06/26 18:29:30 stephan Exp $
+	 * @version $Id: Subroutines.java,v 1.4 2004/06/29 15:07:14 joerg Exp $
 	 * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
 	 * @see #getTopLevel()
 	 */
@@ -357,7 +357,7 @@ public class Subroutines{
 
 	/**
 	 * Constructor.
-	 * @param il A MethodGen object representing method to
+	 * @param mg A MethodGen object representing method to
 	 * create the Subroutine objects of.
 	 */
 	public Subroutines(MethodGen mg){

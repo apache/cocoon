@@ -24,7 +24,7 @@ import org.apache.bcel.generic.InstructionHandle;
  * to information like control flow successors and
  * such.
  *
- * @version $Id: InstructionContext.java,v 1.1 2004/06/03 12:43:27 stephan Exp $
+ * @version $Id: InstructionContext.java,v 1.2 2004/06/29 15:07:14 joerg Exp $
  * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
  */
 public interface InstructionContext{
@@ -80,7 +80,7 @@ public interface InstructionContext{
 	 * therefore <B>it has to be calculated by execute(Frame, ArrayList)
 	 * first.</B>
 	 *
-	 * @see #execute(Frame, ArrayList, InstConstraintVisitor, ExecutionVisitor)
+	 * @see #execute(Frame, ArrayList, ExecutionVisitor)
 	 */
 	Frame getOutFrame(ArrayList executionPredecessors);
 	

@@ -17,7 +17,6 @@ package org.apache.cocoon.components.flow.java;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Hashtable;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Code;
@@ -110,8 +109,6 @@ public final class DecompilingVisitor extends org.apache.bcel.classfile.EmptyVis
 		for (int i = 0; i < names.length; i++)
 			out.println("    throws " + names[i].replace('.', '/'));
 	}
-
-	private Hashtable map;
 
 	public void visitCode(Code code) {
 		MethodGen mg = new MethodGen(_method, clazzname, cp);

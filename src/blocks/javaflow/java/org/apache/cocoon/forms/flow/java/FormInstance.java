@@ -50,14 +50,13 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez </a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: FormInstance.java,v 1.11 2004/06/23 10:53:41 stephan Exp $
+ * @version CVS $Id: FormInstance.java,v 1.12 2004/06/29 15:07:14 joerg Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
 	private Form form;
 	private Binding binding;
 	private Locale locale;
-	private boolean isValid;
 	private XMLAdapter xmlAdapter;
 
 	/**
@@ -172,7 +171,6 @@ public class FormInstance extends AbstractContinuable {
 		//var result = null;
 
 		boolean finished = false;
-		this.isValid = false;
 
 		do {
 			sendPageAndWait(uri, bizData);
@@ -182,14 +180,15 @@ public class FormInstance extends AbstractContinuable {
 			// Prematurely add the bizData as a request attribute so that event
 			// listeners can use it
 			// (the same is done by cocoon.sendPage())
-			FlowHelper.setContextObject(this.getObjectModel(), bizData);
+			FlowHelper.setContextObject(getObjectModel(), bizData);
 
 			finished = this.form.process(formContext);
 
-			// Additional flow-level validation
+			/* Additional flow-level validation
 			if (finished) {
 				this.isValid = this.form.isValid();
 			}
+            */
 
 			// FIXME: Theoretically, we should clone the form widget (this.form)
 			// to ensure it keeps its

@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -36,7 +37,7 @@ import org.apache.excalibur.source.SourceValidity;
  * 
  * @since 2.1.4
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SoftSourceCache.java,v 1.4 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id: SoftSourceCache.java,v 1.5 2004/06/29 15:07:14 joerg Exp $
  */
 public class SoftSourceCache implements SourceCache {
 
@@ -52,7 +53,7 @@ public class SoftSourceCache implements SourceCache {
 		if (this.objectCache == null)
 			this.objectCache =
 				Collections.synchronizedMap(
-					new ReferenceMap(ReferenceMap.SOFT, ReferenceMap.SOFT));
+					new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT));
 	}
 
 	/*

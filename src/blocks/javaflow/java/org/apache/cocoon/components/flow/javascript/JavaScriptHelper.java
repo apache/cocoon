@@ -63,7 +63,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptHelper.java,v 1.3 2004/06/28 08:28:38 stephan Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.4 2004/06/29 15:07:14 joerg Exp $
  */
 public class JavaScriptHelper extends AbstractContinuable
     implements ScriptHelper {
@@ -524,7 +524,6 @@ public class JavaScriptHelper extends AbstractContinuable
      *
      * @param funName a <code>String</code> value
      * @param params a <code>List</code> value
-     * @param redirector
      * @exception Exception if an error occurs
      */
     public void callFunction(String funName, List params) throws Exception {
