@@ -64,7 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.14 2004/03/17 12:09:51 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.15 2004/03/24 12:24:14 unico Exp $
  */
 public final class SourceUtil {
 
@@ -306,6 +306,31 @@ public final class SourceUtil {
         DOMBuilder builder = new DOMBuilder();
 
         toSAX(source, builder);
+
+        Document document = builder.getDocument();
+        if (document == null) {
+            throw new ProcessingException("Could not build DOM for '"+
+                                          source.getURI()+"'");
+        }
+
+        return document;
+    }
+    
+    /**
+     * Generates a DOM from the given source
+     * @param source The data
+     *
+     * @return Created DOM document.
+     *
+     * @throws IOException If a io exception occurs.
+     * @throws ProcessingException if no suitable converter is found
+     * @throws SAXException If a SAX exception occurs.
+     */
+    static public Document toDOM(ServiceManager manager, Source source)
+            throws SAXException, IOException, ProcessingException {
+        DOMBuilder builder = new DOMBuilder();
+
+        toSAX(manager, source, null, builder);
 
         Document document = builder.getDocument();
         if (document == null) {
