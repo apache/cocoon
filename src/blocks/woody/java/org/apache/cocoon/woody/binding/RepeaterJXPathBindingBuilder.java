@@ -86,7 +86,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.9 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.10 2004/01/13 01:40:46 vgritsenko Exp $
  */
 public class RepeaterJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -134,7 +134,10 @@ public class RepeaterJXPathBindingBuilder
                     BindingManager.NAMESPACE,
                     "on-bind");
 
-            if (childWrapElement == null) throw new BindingException("RepeaterBinding misses '<on-bind>' child definition. " + DomHelper.getLocation(bindingElm));
+            if (childWrapElement == null) {
+                throw new BindingException("RepeaterBinding misses '<on-bind>' child definition. " +
+                                           DomHelper.getLocation(bindingElm));
+            }
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(childWrapElement);
 
