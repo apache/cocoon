@@ -24,33 +24,43 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-10 05:04:53 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-10 13:13:16 $
  */
 public class TreeGenerator implements XMLConsumer {
-    /** The Namespaces table */
-    private Hashtable namespaces=null;
-    /** The Namespaces reversed table */
-    private Hashtable namespacesReverse=null;
-    /** The CDATA buffer */
-    private String cdata=null;
-    /** The document name (root tag element name) */
+    /** The document was not started */
+    private static final int S_AVAIL=0;
+    /** State between startDTD() and endDTD() */
+    private static final int S_DTD=1;
+    /** State between startDocument() and endDocument() */
+    private static final int S_DOC=2;
+    /** State between the first startElement() and the last endElement() */
+    private static final int S_BODY=3;
+    /** State between the first startElement() and the last endElement() */
+    private static final int S_CDATA=4;
+    /** The state names (used by Location to output better error messages */
+    private static final String stateName[]={
+        "Available", "DTD Processing", "Document", "Body", "CDATA Section"
+    };
+    
+    /** The current state */
+    private int state=S_AVAIL;
+    /** The locator */
+    private Locator locator=null;
+    /** The listener */
+    private Listener listener=null;
+    /** The document factory */
+    private DocumentFactory factory=null;
+    /** The namespaces URI-PREFIX table */
+    private Hashtable namespacesUriPrefix=null;
+    /** The namespaces PREFIX-URI reversed table */
+    private Hashtable namespacesPrefixUri=null;
+
+    /** The current document */
+    private Document document=null;
+    /** The current node */
+    private Node current=null;
+    /** The document name (tag name of the root element) */
     private String name=null;
-    /** The document public ID */
-    private String publicId=null;
-    /** The document system ID */
-    private String systemId=null;
-    /** The current Document Factory */
-    private DocumentFactory fac=null;
-    /** The current Document */
-    private Document doc=null;
-    /** The current Node */
-    private Node cur=null;
-    /** The current Locator */
-    private Locator loc=null;
-    /** The current DocumentListener */
-    private Listener lis=null;
-    /** The current DTD initialization status */
-    private boolean dtd=false;
 
     /**
      * Construct a new instance of this TreeGenerator.
@@ -80,29 +90,27 @@ public class TreeGenerator implements XMLConsumer {
         super();
         this.setDocumentFactory(fac);
         this.setListener(lis);
-        this.namespaces=new Hashtable();
-        this.namespacesReverse=new Hashtable();
     }
 
     /**
      * Set the DocumentFactory that will be used for building.
      */
     public void setDocumentFactory(DocumentFactory fac) {
-        this.fac=fac;
+        this.factory=fac;
     }
 
     /**
      * Return the DocumentFactory used for building.
      */
     public DocumentFactory getDocumentFactory() {
-        return(this.fac);
+        return(this.factory);
     }
 
     /**
      * Return the newly built Document.
      */
     public Document document() {
-        return(this.doc);
+        return(this.document);
     }
 
     /**
@@ -110,14 +118,14 @@ public class TreeGenerator implements XMLConsumer {
      * is successfully built.
      */
     public void setListener(Listener lis) {
-        this.lis=lis;
+        this.listener=lis;
     }
 
     /**
      * Get the current DocumentListener.
      */
     public Listener getListener() {
-        return(this.lis);
+        return(this.listener);
     }
 
     /**
@@ -126,7 +134,7 @@ public class TreeGenerator implements XMLConsumer {
      * @param loc The SAX Locator.
      */
     public void setDocumentLocator (Locator loc) {
-        this.loc=loc;
+        this.locator=loc;
     }
 
     /**
@@ -136,10 +144,16 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void startDocument ()
     throws SAXException {
-        if (this.fac==null)
-            throw new SAXException("Document factory not specified");
-        if (this.cur!=null)
-            throw new SAXException("Document already started "+getLocation());
+        if(state!=S_AVAIL) throw new SAXException("Invalid state"+location());
+        // Initialize the namespaces conversion tables
+        this.namespacesUriPrefix=new Hashtable();
+        this.namespacesPrefixUri=new Hashtable();
+        // Create a new Document empty document object
+        this.document=this.factory.newDocument();
+        // Set the current node
+        this.current=this.document;
+        // Do a state change
+        state=S_DOC;
     }
 
     /**
@@ -149,252 +163,15 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void endDocument ()
     throws SAXException {
-        if (this.cur!=this.doc)
-            throw new SAXException("Current node differs from document "+
-                                   getLocation());
-        this.cur=null;
-        if (this.lis!=null) this.lis.notify(this.doc);
-    }
-
-    /**
-     * Begin the scope of a prefix-URI Namespace mapping. 
-     *
-     * @param prefix The Namespace prefix being declared.
-     * @param uri The Namespace URI the prefix is mapped to.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void startPrefixMapping(String prefix, String uri)
-    throws SAXException {
-        this.namespaces.put(uri,prefix);
-        this.namespacesReverse.put(prefix,uri);
-    }
-
-    /**
-     * End the scope of a prefix-URI mapping. 
-     *
-     * @param prefix The Namespace prefix that was being mapped.
-     */
-    public void endPrefixMapping(String prefix)
-    throws SAXException {
-        String uri=(String)this.namespacesReverse.remove(prefix);
-        if (uri==null) 
-            throw new SAXException("Namespace \""+prefix+"\" never declared");
-        else this.namespaces.remove(uri);
-    }
-
-    /**
-     * Receive notification of the beginning of an element.
-     * <br>
-     * NOTE: (PF) 
-     *
-     * @parameter uri The Namespace URI, or the empty string if the element
-     *                has no Namespace URI or if Namespace processing is not
-     *                being performed.
-     * @parameter local The local name (without prefix), or the empty
-     *                  string if Namespace processing is not being
-     *                  performed.
-     * @parameter raw The raw XML 1.0 name (with prefix), or the empty
-     *                string if raw names are not available.
-     * @parameter atts The attributes attached to the element. If there are no
-     *                 attributes, it shall be an empty Attributes object.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void startElement (String uri, String local, String raw,
-                              Attributes atts)
-    throws SAXException {
-        // Check for CDATA
-        if(this.cdata!=null)
-            throw new SAXException("Invalid inside CDATA"+getLocation());
-
-        if (this.doc==null) {
-            this.doc=this.fac.newDocument(name);
-            this.cur=this.doc;
-        } else if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-
-        String name=this.getQualifiedName(uri,local,raw);
-        Element e=null;
-        if (uri.length()>0) e=this.doc.createElement(name);
-        else e=this.doc.createElementNS(uri,name);
-
-        for(int x=0;x<atts.getLength();x++) {
-            String auri=atts.getURI(x);
-            String alocal=atts.getLocalName(x);
-            String araw=atts.getRawName(x);
-            String avalue=atts.getValue(x);
-            String aname=this.getQualifiedName(auri,alocal,araw);
-            if (auri.length()>0) e.setAttribute(aname,avalue);
-            else e.setAttributeNS(auri,aname,avalue);
-        }
-        this.cur.appendChild(e);
-        this.cur=e;
-    }
-
-    /**
-     * Receive notification of the end of an element.
-     *
-     * @parameter uri The Namespace URI, or the empty string if the element
-     *                has no Namespace URI or if Namespace processing is not
-     *                being performed.
-     * @parameter local The local name (without prefix), or the empty
-     *                  string if Namespace processing is not being
-     *                  performed.
-     * @parameter raw The raw XML 1.0 name (with prefix), or the empty
-     *                string if raw names are not available.
-     * @parameter atts The attributes attached to the element. If there are no
-     *                 attributes, it shall be an empty Attributes object.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void endElement (String uri, String local, String raw)
-    throws SAXException {
-        // Check for CDATA
-        if(this.cdata!=null)
-            throw new SAXException("Invalid inside CDATA"+getLocation());
-
-        // Check if we have a current node.
-        if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-        // Check if the current node is an element
-        if (this.cur.getNodeType()!=Node.ELEMENT_NODE)
-            throw new SAXException("Current node is not an element "+
-                                   getLocation());
-        // Check if the current element has the same tag name of this event
-        Element e=(Element)this.cur;
-        String name=this.getQualifiedName(uri,local,raw);
-        String oldname=e.getTagName();
-        if (!oldname.equals(name))
-            throw new SAXException("Current element <"+oldname+
-                                   "> differs from current event </"+name+"> "+
-                                   getLocation());
-        this.cur=this.cur.getParentNode();
-        // If we have no parent element, throw an exception
-        if (this.cur==null)
-            throw new SAXException("No parent node "+getLocation());
-    }
-
-    /**
-     * Receive notification of character data.
-     *
-     * @param chars The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void characters (char chars[], int start, int len)
-    throws SAXException {
-        if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-
-        // Check for CDATA
-        if(this.cdata!=null) {
-            this.cdata=new String(this.cdata+new String(chars,start,len));
-        } else {
-            Text t=this.doc.createTextNode(new String(chars,start,len));
-            this.cur.appendChild(t);
-        }
-    }
-
-    /**
-     * Receive notification of ignorable whitespace data.
-     *
-     * @param chars The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void ignorableWhitespace (char chars[], int start, int len)
-    throws SAXException {
-        // Check for CDATA
-        if(this.cdata!=null)
-            throw new SAXException("Invalid inside CDATA"+getLocation());
-
-        if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-        Text t=this.doc.createTextNode(new String(chars,start,len));
-        this.cur.appendChild(t);
-    }
-
-    /**
-     * Receive notification of a processing instruction.
-     *
-     * @param tget The processing instruction target.
-     * @param data The processing instruction data.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void processingInstruction (String tgt, String data)
-    throws SAXException {
-        // Check for CDATA
-        if(this.cdata!=null)
-            throw new SAXException("Invalid inside CDATA"+getLocation());
-
-        if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-        ProcessingInstruction p=this.doc.createProcessingInstruction(tgt,data);
-        this.cur.appendChild(p);
-    }
-
-    /**
-     * Receive notification of a skipped entity. 
-     *
-     * @param name The name of the skipped entity. If it is a parameter entity,
-     *             the name will begin with '%'.
-     */
-    public void skippedEntity(java.lang.String name)
-    throws SAXException {
-        // Check for CDATA
-        if(this.cdata!=null)
-            throw new SAXException("Invalid inside CDATA"+getLocation());
-
-        if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-        EntityReference e=this.doc.createEntityReference(name);
-        this.cur.appendChild(e);
-    }
-
-    /**
-     * Report an XML comment anywhere in the document. 
-     *
-     * @param chars The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void comment(char[] ch, int start, int len) 
-    throws SAXException {
-        // Check for CDATA
-        if(this.cdata!=null)
-            throw new SAXException("Invalid inside CDATA"+getLocation());
-
-        if (this.cur==null)
-            throw new SAXException("No current node "+getLocation());
-        Comment c=this.doc.createComment(new String(ch,start,len));
-        this.cur.appendChild(c);
-    }
-
-    /**
-     * Report the start of a CDATA section. 
-     *
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void startCDATA() 
-    throws SAXException {
-        if(this.cdata!=null)
-            throw new SAXException("Nested CDATA in CDATA "+getLocation());
-        this.cdata="";
-    }
-
-    /**
-     * Report the end of a CDATA section. 
-     *
-     * @exception SAXException If this method was not called appropriately.
-     */
-    public void endCDATA() 
-    throws SAXException {
-        if(this.cdata==null)
-            throw new SAXException("CDATA ends without start "+getLocation());
-        CDATASection c=this.doc.createCDATASection(this.cdata);
-        this.cur.appendChild(c);
-        this.cdata=null;
+        if(state!=S_DOC) throw new SAXException("Invalid state"+location());
+        // Check if the current element is the document
+        if(this.document!=this.current)
+            throw new SAXException("Invalid current node"+location());
+        // Reset the current node and the document name
+        this.current=null;
+        this.name=null;
+        // Do a state change and reset the DTD flag
+        state=S_AVAIL;
     }
 
     /**
@@ -409,10 +186,26 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void startDTD(String name, String publicId, String systemId) 
     throws SAXException {
+        // This method can be called only at DOCUMENT level
+        if(state!=S_DOC) throw new SAXException("Invalid state"+location());
+        // Check wether this method was already invoked
+        if(this.name!=null)
+            throw new SAXException("Duplicate DTD definition"+location());
+        // Remember the specified document name
         this.name=name;
-        this.publicId=publicId;
-        this.systemId=systemId;
-        this.dtd=true;
+        // Recreate the document element
+        Document doc=this.factory.newDocument(name,publicId,systemId);
+        // Copy the old document root PIs
+        NodeList list=this.document.getChildNodes();
+        for (int x=0; x<list.getLength(); x++) {
+            if (list.item(x).getNodeType()!=Node.DOCUMENT_TYPE_NODE)
+                doc.appendChild(doc.importNode(list.item(x),true));
+        }
+        // Declare the new document as the new real document
+        this.document=doc;
+        this.current=this.document;
+        // Do a state change
+        state=S_DTD;
     }
 
     /**
@@ -425,20 +218,186 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void endDTD() 
     throws SAXException {
-        if (!this.dtd)
-            throw new SAXException("DTD Declaration never started");
+        // This method can be called only at DTD level
+        if(state!=S_DTD) throw new SAXException("Invalid state"+location());
+        // Do a state change
+        state=S_DOC;
     }
 
     /**
-     * Report the end of an entity. 
+     * Receive notification of the beginning of an element.
      *
-     * @param chars The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
+     * @parameter uri The Namespace URI, or the empty string if the element
+     *                has no Namespace URI or if Namespace processing is not
+     *                being performed.
+     * @parameter loc The local name (without prefix), or the empty
+     *                string if Namespace processing is not being
+     *                performed.
+     * @parameter raw The raw XML 1.0 name (with prefix), or the empty
+     *                string if raw names are not available.
+     * @parameter a The attributes attached to the element. If there are no
+     *              attributes, it shall be an empty Attributes object.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void endEntity(java.lang.String name) 
+    public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
+        String name=qualify(uri,loc,raw);
+        // Check if this is we are defining the document root element
+        if(state==S_DOC) {
+            // Check if the DTD was specified
+            if (this.name!=null) {
+                // Check that this root element is equal to the one specified
+                // in the DTD
+                if (!this.name.equals(name))
+                    throw new SAXException("The name specified in the DTD '"+
+                                          this.name+"' differs from the root "+
+                                          "element name '"+name+"'"+location());
+            // Recreate the document since no DTD was specified
+            } else {
+                // Recreate the document element
+                Document doc=this.factory.newDocument(name);
+                // Copy the old document root PIs
+                NodeList list=this.document.getChildNodes();
+                for (int x=0; x<list.getLength(); x++) {
+                    if (list.item(x).getNodeType()!=Node.DOCUMENT_TYPE_NODE)
+                        doc.appendChild(doc.importNode(list.item(x),true));
+                }
+                // Declare the new document as the new real document
+                this.document=doc;
+                this.current=this.document;
+            }
+            // Change the state before continuing
+            state=S_BODY;
+        }
+        // Now that we initialized the root element we can perform the standard
+        // element check
+        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+        // Create the Element node
+        Element e=this.document.createElementNS(uri,name);
+        // Process all attributes
+        for(int x=0;x<a.getLength();x++) {
+            String auri=a.getURI(x);
+            String alocal=a.getLocalName(x);
+            String araw=a.getRawName(x);
+            String avalue=a.getValue(x);
+            String aname=this.qualify(auri,alocal,araw);
+            // Set the attribute into the element
+            e.setAttributeNS(auri,aname,avalue);
+        }
+        // Append this element to the parent and declare it current
+        this.current.appendChild(e);
+        this.current=e;
+    }
+
+    /**
+     * Receive notification of the end of an element.
+     *
+     * @parameter uri The Namespace URI, or the empty string if the element
+     *                has no Namespace URI or if Namespace processing is not
+     *                being performed.
+     * @parameter local The local name (without prefix), or the empty
+     *                  string if Namespace processing is not being
+     *                  performed.
+     * @parameter raw The raw XML 1.0 name (with prefix), or the empty
+     *                string if raw names are not available.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void endElement (String uri, String local, String raw)
+    throws SAXException {
+        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+
+        // Check if the current node is an element
+        if (this.current.getNodeType()!=Node.ELEMENT_NODE)
+            throw new SAXException("Current node is not an element"+location());
+
+        // Check if the current element has the same tag name of this event
+        String name=this.qualify(uri,local,raw);
+        String oldname=((Element)this.current).getTagName();
+        if (!oldname.equals(name))
+            throw new SAXException("Element end tag name '"+name+"' differs "+
+                                   " from start tag name '"+oldname+"'"+
+                                   location());
+        // Restore the old node as current
+        this.current=this.current.getParentNode();
+        if (this.current==null) throw new SAXException("No parent"+location());
+        // Update the state if the current node is the document
+        if (this.current==this.document) state=S_DOC;
+    }
+
+    /**
+     * Begin the scope of a prefix-URI Namespace mapping. 
+     *
+     * @param pre The Namespace prefix being declared.
+     * @param uri The Namespace URI the prefix is mapped to.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void startPrefixMapping(String prefix, String uri)
+    throws SAXException {
+        // This method can only called at DOCUMENT or BODY levels
+        if((state<S_DOC)||(state>S_BODY))
+            throw new SAXException("Invalid state"+location());
+        // Insert this namespace in tables avoiding duplicates
+        if (this.namespacesUriPrefix.put(uri,prefix)!=null)
+            throw new SAXException("Namespace URI '"+uri+"' already declared "+
+                                   location());
+        if (this.namespacesPrefixUri.put(prefix,uri)!=null)
+            throw new SAXException("Namespace prefix '"+prefix+"' already "+
+                                   "declared "+location());
+    }
+
+    /**
+     * End the scope of a prefix-URI mapping. 
+     *
+     * @param prefix The Namespace prefix that was being mapped.
+     */
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+        // This method can only called at DOCUMENT or BODY levels
+        if((state<S_DOC)||(state>S_BODY))
+            throw new SAXException("Invalid state"+location());
+        // Check if the namespace we're asked to remove was declared
+        String uri=(String)this.namespacesPrefixUri.remove(prefix);
+        if (uri==null)
+            throw new SAXException("Namespace prefix '"+prefix+"' never "+
+                                   "declared "+location());
+        if (this.namespacesUriPrefix.remove(uri)==null)
+            throw new SAXException("Namespace URI '"+uri+"' never declared "+
+                                   location());
+    }
+
+    /**
+     * Report the start of a CDATA section. 
+     *
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void startCDATA() 
+    throws SAXException {
+        // This method can only called at BODY level
+        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+        CDATASection cdata=this.document.createCDATASection("");
+        // Set the CDATASection as the current element
+        this.current.appendChild(cdata);
+        this.current=cdata;
+        // Do a state change        
+        state=S_CDATA;
+    }
+
+    /**
+     * Report the end of a CDATA section. 
+     *
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void endCDATA() 
+    throws SAXException {
+        // This method can only called at BODY level
+        if(state!=S_CDATA) throw new SAXException("Invalid state"+location());
+        // Set the parent of the CDATASection as the current element
+        // We don't need to check the node type because in CDATA state the 
+        // current element can be ONLY a CDATASection node
+        this.current=this.current.getParentNode();
+        if (this.current==null) throw new SAXException("No parent"+location());
+        // Do a state change, and revert to the BODY state
+        state=S_BODY;
     }
 
     /**
@@ -451,27 +410,167 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void startEntity(java.lang.String name) 
     throws SAXException {
+        // This method can only called at BODY level
+        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+        // Update the current element with the entity reference node
+        EntityReference eref=this.document.createEntityReference(name);
+        this.current.appendChild(eref);
+        this.current=eref;
+    }
+
+    /**
+     * Report the end of an entity. 
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void endEntity(java.lang.String name) 
+    throws SAXException {
+        // This method can only called at BODY level
+        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+
+        // Check if the current node is an entity reference
+        if (this.current.getNodeType()!=Node.ENTITY_REFERENCE_NODE)
+            throw new SAXException("Current node is not an entity reference"+
+                                   location());
+        // Check if the current element has the same tag name of this event
+        String oldname=((EntityReference)this.current).getNodeName();
+        if (!oldname.equals(name))
+            throw new SAXException("Entity reference closing name '"+name+"' "+
+                                   "differs from start name '"+oldname+"'"+
+                                   location());
+        // Restore the old node as current
+        this.current=this.current.getParentNode();
+        if (this.current==null) throw new SAXException("No parent"+location());
+    }
+
+    /**
+     * Receive notification of character data.
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void characters (char chars[], int start, int len)
+    throws SAXException {
+        // This method can only called at BODY or CDATA levels
+        if(state<S_BODY) throw new SAXException("Invalid state "+location());
+        // Check if we are in the CDATA state
+        String data=new String(chars,start,len);        
+        if(state==S_CDATA) {
+            ((CDATASection)this.current).appendData(data);
+        } else {
+            Text text=this.document.createTextNode(data);
+            this.current.appendChild(text);
+        }
+    }
+
+    /**
+     * Receive notification of ignorable whitespace data.
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void ignorableWhitespace (char chars[], int start, int len)
+    throws SAXException {
+        // This is because some parsers may report ignorable whitespace outside
+        // the scope of the root element
+        if(state==S_DOC) return;
+        // This method can only called at BODY or CDATA levels
+        if(state<S_BODY) throw new SAXException("Invalid state"+location());
+        // Check if we are in the CDATA state
+        if(state==S_CDATA)
+            throw new SAXException("CDATA sections cannot contain ignorable "+
+                                   "whitespace"+location());
+        // Create and append a text node
+        Text text=this.document.createTextNode(new String(chars,start,len));
+        this.current.appendChild(text);
+    }
+
+    /**
+     * Receive notification of a processing instruction.
+     *
+     * @param target The processing instruction target.
+     * @param data The processing instruction data.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void processingInstruction (String target, String data)
+    throws SAXException {
+        // This is because Xerces reports processing instructions inside DTDs
+        if(state==S_DTD) return;
+        // This method can only called at DOCUMENT or BODY levels
+        if((state<S_DOC)||(state>S_BODY))
+            throw new SAXException("Invalid state"+location());
+        // Create and append a processing instruction node
+        ProcessingInstruction pi;
+        pi=this.document.createProcessingInstruction(target,data);
+        this.current.appendChild(pi);
+    }
+
+    /**
+     * Report an XML comment anywhere in the document. 
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void comment(char chars[], int start, int len) 
+    throws SAXException {
+        // This is because Xerces reports comments inside DTDs
+        if(state==S_DTD) return;
+        // This method can only called at DOCUMENT or BODY levels
+        if((state<S_DOC)||(state>S_BODY))
+            throw new SAXException("Invalid state"+location());
+        // Create and append a comment node
+        Comment com=this.document.createComment(new String(chars,start,len));
+        this.current.appendChild(com);
+    }
+
+    /**
+     * Receive notification of a skipped entity. 
+     *
+     * @param name The name of the skipped entity. If it is a parameter entity,
+     *             the name will begin with '%'.
+     */
+    public void skippedEntity(java.lang.String name)
+    throws SAXException {
+        // This method can only called at BODY level
+        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+        // Create and append a comment node
+        EntityReference eref=this.document.createEntityReference(name);
+        this.current.appendChild(eref);
     }
 
     /** Return the Namespace-Qualified name */
-    private String getQualifiedName(String uri, String local, String raw)
+    private String qualify(String uri, String local, String raw)
     throws SAXException {
         if (uri.length()>0) {
             if (raw.length()>0) return(raw);
-            String prefix=(String)this.namespaces.get(uri);
+            String prefix=(String)this.namespacesUriPrefix.get(uri);
             return(prefix+":"+local);
         } else if (raw.length()==0)
-            throw new SAXException("No namespace URI and no RAW name "+
-                                   this.getLocation());
+            throw new SAXException("No namespace URI or RAW name "+location());
         return(raw);
     }
 
     /** Create a location string */
-    private String getLocation() {
-        if (this.loc==null) return("(Unknown Location)");
-        else return new String("("+this.loc.getPublicId()+" line "+
-                               this.loc.getLineNumber()+" column "+
-                               this.loc.getColumnNumber()+")");
+    private String location() {
+        if (this.locator==null) return("");
+        String pub=this.locator.getPublicId();
+        String sys=this.locator.getSystemId();
+        pub=((pub==null) ? "" : ("Public ID=\""+pub+"\" "));
+        sys=((sys==null) ? "" : ("System ID=\""+sys+"\" "));
+        int l=this.locator.getLineNumber();
+        int c=this.locator.getColumnNumber();
+        String lin=((l<0) ? "" : ("line="+l+""));
+        String col=((c<0) ? "" : (" col="+c+""));
+        return new String(" ("+sys+pub+lin+col+" State: "+this.state+")");
     }
 
     /**

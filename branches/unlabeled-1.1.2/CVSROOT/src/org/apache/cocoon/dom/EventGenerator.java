@@ -32,7 +32,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-10 05:04:53 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-10 13:13:16 $
  * @since Cocoon 2.0
  */
 public class EventGenerator implements XMLProducer {
@@ -111,14 +111,17 @@ public class EventGenerator implements XMLProducer {
                 case Node.ENTITY_REFERENCE_NODE:
                     this.setEntityReference((EntityReference)n,h);
                     break;
-                case Node.ATTRIBUTE_NODE:
-                    throw new SAXException("Unexpected Attribute node");
+                case Node.ENTITY_NODE:
+                case Node.NOTATION_NODE:
+                    // Do nothing for ENTITY and NOTATION nodes
+                    break;
                 case Node.DOCUMENT_FRAGMENT_NODE:
                     throw new SAXException("Unexpected Document Fragment node");
-                case Node.ENTITY_NODE:
-                    throw new SAXException("Unexpected Entity node");
-                case Node.NOTATION_NODE:
-                    throw new SAXException("Unexpected Notation node");
+                case Node.ATTRIBUTE_NODE:
+                    throw new SAXException("Unexpected Attribute node");
+                default:
+                    throw new SAXException("Unknown node type "+n.getNodeType()+
+                                           " class "+n.getClass().getName());
             }
         } catch (ClassCastException e) {
             throw new SAXException("Error casting node to appropriate type");
@@ -150,6 +153,7 @@ public class EventGenerator implements XMLProducer {
     /** Process a Element node */
     private void setElement(Element n, XMLConsumer h)
     throws SAXException {
+        System.out.println("CLASS:"+n.getClass().getName());
         // Setup attributes
         AttributesImpl atts=new AttributesImpl();
         NamedNodeMap map=n.getAttributes();
@@ -171,6 +175,7 @@ public class EventGenerator implements XMLProducer {
             }
             atts.addAttribute(uri,loc,raw,"CDATA",val);
         }
+        System.out.println(n.getNamespaceURI());
         // Get and normalize values for the Element
         String uri=n.getNamespaceURI(); uri=(uri==null)?"":uri;
         String pre=n.getPrefix();       pre=(pre==null)?"":pre;
@@ -216,7 +221,7 @@ public class EventGenerator implements XMLProducer {
     private void setComment(Comment n, XMLConsumer h)
     throws SAXException {
         char data[]=n.getData().toCharArray();
-        h.characters(data,0,data.length);
+        h.comment(data,0,data.length);
     }
     
     /** Process a EntityReference node */
