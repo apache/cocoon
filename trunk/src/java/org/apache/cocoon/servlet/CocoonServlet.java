@@ -66,11 +66,12 @@ import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
- * @version CVS $Id: CocoonServlet.java,v 1.30 2004/03/13 15:06:04 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.31 2004/03/28 21:49:44 antonio Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -413,8 +414,7 @@ public class CocoonServlet extends HttpServlet {
 		this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
         value = conf.getInitParameter("show-time");
-        this.showTime = "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)
-            || (this.hiddenShowTime = "hide".equals(value));
+        this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
         if (value == null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("show-time was not set - defaulting to false");
@@ -1393,7 +1393,7 @@ public class CocoonServlet extends HttpServlet {
 			}
     		return defaultValue;
     	} else {
-    		return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
+    		return BooleanUtils.toBoolean(value);
     	}
     }
 

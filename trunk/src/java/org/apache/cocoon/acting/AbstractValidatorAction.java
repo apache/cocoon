@@ -33,6 +33,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
@@ -184,7 +185,7 @@ import org.apache.regexp.RESyntaxException;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.11 2004/03/28 21:01:21 antonio Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.12 2004/03/28 21:49:44 antonio Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -813,12 +814,13 @@ public abstract class AbstractValidatorAction
         /* check nullability */
         try {
             String tmp = cons.getAttribute("nullable");
-            return "yes".equals(tmp) || "true".equals(tmp);
+            return BooleanUtils.toBoolean(tmp);
         } catch (Exception e) {
             String tmp = "no";
-            if (conf != null)
+            if (conf != null) {
                 tmp = conf.getAttribute("nullable", "no");
-            return "yes".equals(tmp) || "true".equals(tmp);
+            }
+            return BooleanUtils.toBoolean(tmp);
         }
     }
 

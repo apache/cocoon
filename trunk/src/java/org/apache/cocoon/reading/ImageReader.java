@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.SAXException;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
@@ -71,7 +72,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *   </dl>
  *
  * @author <a href="mailto:dev@cocoon.apache.org">The Apache Cocoon Team</a>
- * @version CVS $Id: ImageReader.java,v 1.8 2004/03/11 18:46:25 joerg Exp $
+ * @version CVS $Id: ImageReader.java,v 1.9 2004/03/28 21:49:44 antonio Exp $
  *
  * @avalon.component
  * @avalon.service type=Reader
@@ -127,18 +128,14 @@ final public class ImageReader extends ResourceReader {
         }
 
         String grayscalePar = par.getParameter("grayscale", GRAYSCALE_DEFAULT);
-        if ("true".equalsIgnoreCase(grayscalePar) || "yes".equalsIgnoreCase(grayscalePar)){            
+        if (BooleanUtils.toBoolean(grayscalePar)){            
             grayscaleFilter = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         } else {
             grayscaleFilter = null;
         }   
 
         String enlargePar = par.getParameter("allow-enlarging", ENLARGE_DEFAULT);
-        if ("true".equalsIgnoreCase(enlargePar) || "yes".equalsIgnoreCase(enlargePar)){
-            enlarge = true;
-        } else {
-            enlarge = false;
-        }
+        enlarge = BooleanUtils.toBoolean(enlargePar);
     }
 
     /** 
