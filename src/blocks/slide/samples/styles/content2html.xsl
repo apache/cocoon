@@ -93,7 +93,7 @@
               </tr>
             </xsl:for-each>
             <tr>
-              <form action="{$base}/upload" method="post" enctype="multipart/form-data">
+              <form action="{$base}/uploadsource" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="parentPath" value="{$path}"/>
                 <td align="left"><input type="text" name="resourceName" size="15" maxlength="40"/></td>
                 <td align="left" colspan="3">
@@ -106,7 +106,7 @@
               </form>
             </tr>
             <tr>
-              <form action="{$base}/mkcol" method="post">
+              <form action="{$base}/makecollection" method="post">
                 <input type="hidden" name="parentPath" value="{$path}"/>
                 <td align="left" colspan="4">
                   <input type="text" name="collectionName" size="15" maxlength="40"/>

@@ -14,16 +14,144 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<locks xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-  <jx:forEach var="lock" items="${locks}">
-    <lock>
-      <id>${lock.getLockId()}</id>
-      <object>${lock.getObjectUri()}</object>
-      <type>${lock.getTypeUri()}</type>
-      <subject>${lock.getSubjectUri()}</subject>
-      <expiration>${lock.getExpirationDate()}</expiration>
-      <exclusive>${lock.isExclusive()}</exclusive>
-      <inheritable>${lock.isInheritable()}</inheritable>
-    </lock>
-  </jx:forEach>
-</locks>
+<document xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+          xmlns:xi="http://www.w3.org/2001/XInclude">
+  <header>
+    <title>Jakarta Slide example</title>
+    <tab title="users"       href="viewusers.do"/>
+    <tab title="content"     href="viewcontent.do?path=${source.path}"/>
+    <tab title="properties"  href="viewproperties.do?path=${source.path}"/>
+    <tab title="permissions" href="viewpermissions.do?path=${source.path}"/>
+    <tab title="locks"       href="viewlocks.do?path=${source.path}"/>
+    <tab title="logout"      href="logout.do"/>
+  </header>
+  <body>
+    <row> 
+      <column title="Navigation">
+        <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
+          <jx:forEach var="source" items="${source.children}">
+            <tr>
+              <td width="100%" align="left">
+                <a href="viewlocks.do?path=${source.path}">
+                  ${source.name}
+                </a>
+              </td>
+            </tr>
+          </jx:forEach>
+          <jx:if test="${source.parent}">
+            <tr>
+              <td width="100%" align="left">
+                <br/>
+                  <a href="viewlocks.do?path=${source.parent.path}">
+                    ..
+                  </a>
+              </td>
+            </tr>
+          </jx:if>
+        </table>
+      </column>
+      <column title="Locks">
+        <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
+          <tr>
+            <td align="left">
+              <b>Subject</b>
+            </td>
+            <td align="left">
+              <b>Type</b>
+            </td>
+            <td align="left">
+              <b>Expiration (mins)</b>
+            </td>
+            <td align="left">
+              <b>Inheritable</b>
+            </td>
+            <td align="left">
+              <b>Exclusive</b>
+            </td>
+            <td align="right"/>
+          </tr>
+          <jx:forEach var="lock" items="${source.locks}">
+            <tr bgcolor="#eeeeee">
+              <td align="left">
+                ${lock.subject}
+              </td>
+              <td align="left">
+                ${lock.type}
+              </td>
+              <td align="left">
+                ${lock.expiration}
+              </td>
+              <td align="left">
+                ${lock.inheritable}
+              </td>
+              <td align="left">
+                ${lock.exclusive}
+              </td>
+              <td align="right">
+                <form action="removelock.do" method="post">
+                  <input type="hidden" name="resourcePath" value="${source.path}"/>
+                  <input type="hidden" name="objectUri" value="${lock.object}"/>
+                  <input type="hidden" name="lockId" value="${lock.id}"/>
+                  <input type="submit" name="doRemoveLock" value="Delete"/>
+                </form>
+              </td>
+            </tr>
+          </jx:forEach>
+          <tr>
+            <form action="addlock.do" method="post">
+              <input type="hidden" name="resourcePath" value="${source.path}"/>
+              <td align="left">
+                <select name="subject">
+                  <option>self</option>
+                  <option>owner</option>
+                  <option>authenticated</option>
+                  <option>unauthenticated</option>
+                  <option>all</option>
+                  <jx:forEach var="role" items="${roles}">
+                    <option value="{$role.uri}">
+                      role: ${role.uri}
+                    </option>
+                  </jx:forEach>
+                  <jx:forEach var="user" items="${users}">
+                    <option value="{$user}">
+                      user: ${user}
+                    </option>
+                  </jx:forEach>
+                </select>
+              </td>
+              <td align="left">
+                <select name="type">
+                  <option>all</option>
+                  <option>default</option>
+                  <jx:forEach var="privilege" items="${privileges}">
+                    <option value="{$privilege}">
+                      ${privilege}
+                    </option>
+                  </jx:forEach>
+                </select>
+              </td>
+              <td align="left">
+                <input name="expiration" type="text" size="15" maxlength="40" value="1"/>
+              </td>
+              <td align="left">
+                <select name="inheritable">
+                  <option>false</option>
+                  <option>true</option>
+                </select>
+              </td>
+              <td align="left">
+                <select name="exclusive">
+                  <option>false</option>
+                  <option>true</option>
+                </select>
+              </td>
+              <td align="right">
+                <input type="submit" name="doAddLock" value="Add/Modify"/>
+              </td>
+            </form>
+          </tr>
+        </table>
+      </column>
+    </row>
+  </body>
+</document>  

@@ -226,13 +226,26 @@
                     </objectnode>
                 </objectnode>
                 <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/files">
+                    <permission action="all" subject="unauthenticated" inheritable="true"/>
                     <permission action="/actions/write" subject="/roles/user" inheritable="true"/>
                     <permission action="/actions/read-acl" subject="owner" inheritable="true"/>
                 </objectnode>
                 <!-- DeltaV: default history and workspace paths -->
-                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/history"/>
-                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/workspace"/>
-                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/workingresource"/>
+                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/history">
+                    <permission action="all" subject="unauthenticated" inheritable="true"/>
+                    <permission action="/actions/write" subject="/roles/user" inheritable="true"/>
+                    <permission action="/actions/read-acl" subject="owner" inheritable="true"/>
+                </objectnode>
+                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/workspace">
+                    <permission action="all" subject="unauthenticated" inheritable="true"/>
+                    <permission action="/actions/write" subject="/roles/user" inheritable="true"/>
+                    <permission action="/actions/read-acl" subject="owner" inheritable="true"/>
+                </objectnode>
+                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/workingresource">
+                    <permission action="all" subject="unauthenticated" inheritable="true"/>
+                    <permission action="/actions/write" subject="/roles/user" inheritable="true"/>
+                    <permission action="/actions/read-acl" subject="owner" inheritable="true"/>
+                </objectnode>
             </objectnode>
         </data>
     </namespace>
@@ -298,7 +311,7 @@
     <parameter name="workspacepath">/workspace</parameter>
     <parameter name="workingresourcepath">/workingresource</parameter>
     <parameter name="auto-version">checkout-checkin</parameter>
-    <parameter name="auto-version-control">false</parameter>
+    <parameter name="auto-version-control">true</parameter>
     <parameter name="versioncontrol-exclude"/>
     <parameter name="checkout-fork">forbidden</parameter>
     <parameter name="checkin-fork">forbidden</parameter>
