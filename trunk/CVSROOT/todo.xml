@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.69 2001-02-24 20:39:07 greenrd Exp $
+  $Id: todo.xml,v 1.70 2001-02-26 17:27:09 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -32,8 +32,16 @@
   <action context="code" assigned-to="RDG" bugid="39">
    Fix caching bug with Lynx.
   </action>
-  <action context="code" assigned-to="RDG" bugid="19">
-   Track down cause of multiple PDF problems.
+  <action context="docs" assigned-to="RDG" bugid="8">
+   Write a full guide to logicsheets, including: (1) What they are and how
+   they work - explaining why XSP results can't be assigned to XSLT variables;
+   (2) What all the supplied logicsheets do (long-term aim: document every tag
+   and every attribute); (3) How to write your own and use it; (4) How to
+   specify logicsheet execution order with the as-yet-undocumented 
+   &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
+  </action>
+  <action context="code" assigned-to="RDG">
+   Add XMLFragmentBase as described in docs.
   </action>
   <action context="docs" assigned-to="RDG" bugid="6">
    Fix dead links in docs.
@@ -75,14 +83,6 @@
   </action>
   <action context="code" assigned-to="RDG">
    Better HTTP support and conformance
-  </action>
-  <action context="docs" assigned-to="RDG" bugid="8">
-   Write a full guide to logicsheets, including: (1) What they are and how
-   they work - explaining why XSP results can't be assigned to XSLT variables;
-   (2) What all the supplied logicsheets do (long-term aim: document every tag
-   and every attribute); (3) How to write your own and use it; (4) How to
-   specify logicsheet execution order with the as-yet-undocumented 
-   &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
   </action>
   <action context="code" assigned-to="RDG" bugid="9">
    Fix stylesheet-chaining bug.
