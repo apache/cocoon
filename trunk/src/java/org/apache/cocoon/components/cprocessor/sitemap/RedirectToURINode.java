@@ -67,7 +67,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.4 2004/01/27 13:41:38 cziegeler Exp $
+ * @version CVS $Id: RedirectToURINode.java,v 1.5 2004/02/20 18:57:15 sylvain Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -105,7 +105,7 @@ public class RedirectToURINode extends AbstractProcessingNode implements Process
             getLogger().info("Redirecting to '" + resolvedURI + "' at " + getLocation());
         }
 
-        final Redirector redirector = EnvironmentHelper.getRedirector(env);
+        final Redirector redirector = context.getRedirector();
 
         if (m_global) {
             redirector.globalRedirect(m_createSession, resolvedURI);

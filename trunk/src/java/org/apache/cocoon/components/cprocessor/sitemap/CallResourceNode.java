@@ -65,12 +65,12 @@ import org.apache.cocoon.environment.Environment;
 /**
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: CallResourceNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: CallResourceNode.java,v 1.2 2004/02/20 18:57:15 sylvain Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=call-function
+ * @x-avalon.info name=call-resource
  */
 public class CallResourceNode extends AbstractProcessingNode implements Initializable {
 

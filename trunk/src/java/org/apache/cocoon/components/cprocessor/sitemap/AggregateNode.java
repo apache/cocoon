@@ -90,7 +90,12 @@ import org.apache.cocoon.util.StringUtils;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.3 2004/01/28 17:25:30 unico Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.4 2004/02/20 18:57:15 sylvain Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProcessingNode
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=aggregate-node
  */
 public class AggregateNode extends AbstractProcessingNode {
 

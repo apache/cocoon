@@ -75,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.5 2004/01/27 13:41:40 cziegeler Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.6 2004/02/20 18:57:15 sylvain Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -152,7 +152,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
     }
 
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        Redirector redirector = EnvironmentHelper.getRedirector(env);
+        Redirector redirector = context.getRedirector();
         
         List params = null;
 
@@ -166,7 +166,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
         // If the continuation id is not null, it takes precedence over
         // the function call, so we invoke it here.
         if (continuation != null && continuation.length() > 0) {
-            m_interpreter.handleContinuation(continuation, params, env);
+            m_interpreter.handleContinuation(continuation, params, redirector);
             if (!redirector.hasRedirected()) {
                 String msg = "<map:call continuation> did not send a response, at " + getLocation();
                 throw new ProcessingException(msg);
@@ -180,7 +180,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
         String name = m_functionName.resolve(context, env.getObjectModel());
 
         if (name != null && name.length() > 0) {
-            m_interpreter.callFunction(name, params, env);
+            m_interpreter.callFunction(name, params, redirector);
             if (!redirector.hasRedirected()) {
                 String msg = "<map:call function='" + name + "'> did not send a response, at " + getLocation();
                 throw new ProcessingException(msg);

@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components.cprocessor;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -77,12 +78,14 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
@@ -288,22 +291,14 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         
         // and now process
         EnvironmentHelper.enterProcessor(this, m_manager, environment);
+        
+        // Build a redirector
+        TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
+        setupLogger(redirector);
+        context.setRedirector(redirector);
         try {
-            if (rootNode.invoke(environment, context)) {
-                // Do we have a cocoon: redirect ?
-                String cocoonRedirect = (String) environment.getAttribute(COCOON_REDIRECT_ATTR);
-                if (cocoonRedirect != null) {
-                    // Remove the redirect indication
-                    environment.removeAttribute(COCOON_REDIRECT_ATTR);
-                    // and handle the redirect
-                    return handleCocoonRedirect(cocoonRedirect, environment, context);
-                } else {
-                    // "normal" success
-                    return true;
-                }
-            } else {
-                return false;
-            }
+            boolean success = rootNode.invoke(environment, context);
+            return success;
         } finally {
             EnvironmentHelper.leaveProcessor();
         }
@@ -447,7 +442,8 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         }
         
         // Process the redirect
-        context.reset();
+//      No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
+//             context.reset();
         return processor.process(newEnv, context);
     }
     
@@ -557,6 +553,29 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
     
+    private class TreeProcessorRedirector extends ForwardRedirector {
+        
+        private InvokeContext context;
+        public TreeProcessorRedirector(Environment env, InvokeContext context) {
+            super(env);
+            this.context = context;
+        }
+        
+        protected void cocoonRedirect(String uri) throws IOException, ProcessingException {
+            try {
+                TreeProcessor.this.handleCocoonRedirect(uri, this.env, this.context);
+            } catch(IOException ioe) {
+                throw ioe;
+            } catch(ProcessingException pe) {
+                throw pe;
+            } catch(RuntimeException re) {
+                throw re;
+            } catch(Exception ex) {
+                throw new ProcessingException(ex);
+            }
+        }
+    }
+
     /**
      * Local extension of EnvironmentWrapper to propagate otherwise blocked
      * methods to the actual environment.

@@ -64,6 +64,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
+import org.apache.cocoon.environment.Redirector;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -78,7 +79,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.7 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.8 2004/02/20 18:57:15 sylvain Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 
@@ -111,6 +112,9 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
     
     /** The last processor */
     protected Processor lastProcessor;
+    
+    /** The redirector */
+    protected Redirector redirector;
     
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
@@ -296,6 +300,24 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
         Object name = mapToName.get(map);
         mapToName.remove(map);
         nameToMap.remove(name);
+    }
+    
+    /**
+     * Set the redirector to be used by nodes that need it.
+     * 
+     * @param redirector the redirector
+     */
+    public void setRedirector(Redirector redirector) {
+        this.redirector = redirector;
+    }
+    
+    /**
+     * Get the redirector to be used by nodes that need it.
+     * 
+     * @return the redirector
+     */
+    public Redirector getRedirector() {
+        return this.redirector;
     }
     
     /**

@@ -81,18 +81,12 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.7 2004/02/20 09:40:15 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.8 2004/02/20 18:57:15 sylvain Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
 extends AbstractLogEnabled
 implements SourceResolver, Serviceable, Disposable {
-
-    /** The key used to store the current redirector 
-     * in the environment context 
-     * TODO: THIS WILL BE REMOVED SOON
-     * */
-    private static final String REDIRECTOR_KEY = "global:" + Redirector.class.getName();
 
     /** The key used to store the current environment context
      * in the object model */
@@ -382,7 +376,6 @@ implements SourceResolver, Serviceable, Disposable {
             }
         }
         // redirect
-        final Response response = ObjectModelHelper.getResponse(env.getObjectModel());
         env.redirect(newURL, global, permanent);
     }
 
@@ -406,6 +399,8 @@ implements SourceResolver, Serviceable, Disposable {
         }
         stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), manager, env));
         stack.setOffset(stack.size()-1);
+<<<<<<< EnvironmentHelper.java
+=======
         
         // TODO: THIS WILL BE REMOVED SOON
         EnvironmentContext ctx = (EnvironmentContext)env.getObjectModel().get(PROCESS_KEY);
@@ -413,6 +408,7 @@ implements SourceResolver, Serviceable, Disposable {
         ForwardRedirector redirector = new ForwardRedirector(env);
         redirector.enableLogging(processor.getEnvironmentHelper().getLogger());
         ctx.addAttribute(REDIRECTOR_KEY, redirector);
+>>>>>>> 1.7
 
     }
 
@@ -473,6 +469,8 @@ implements SourceResolver, Serviceable, Disposable {
     }
     
     /**
+<<<<<<< EnvironmentHelper.java
+=======
      * Return the Redirector
      * TODO: THIS WILL BE REMOVED SOON
      */
@@ -485,6 +483,7 @@ implements SourceResolver, Serviceable, Disposable {
     }
     
     /**
+>>>>>>> 1.7
      * Return the environment context
      * TODO: THIS WILL BE REMOVED SOON
      */
