@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.7 2003/12/15 20:32:26 tony Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.8 2003/12/29 16:24:44 reinhard Exp $ -->
 
 <samples>
 
@@ -57,5 +57,12 @@
   <group name="Othello">
     <sample name="Example" href="othello/">Template based static web site.</sample>
   </group>
+
+  <group name="Sources">
+    <sample name="Simple ZIP source example" href="sources/simple-zip.xml">Read file from ZIP archive</sample>
+    <sample name="OpenOffice - content.xml" href="sources/simple-swx.xml">
+        Use again the ZIP source getting a zipped file as OpenOffice files are ZIP archives
+    </sample>
+  </group>  
 
 </samples>

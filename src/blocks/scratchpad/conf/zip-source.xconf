@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='zip']">
+    
+    <!-- zip pseudo protocol -->
+    <component-instance class="org.apache.cocoon.components.source.impl.ZipSourceFactory" name="zip"/>
+    
+</xconf>
