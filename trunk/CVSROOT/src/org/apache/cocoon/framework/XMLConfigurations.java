@@ -1,4 +1,4 @@
-/*-- $Id: XMLConfigurations.java,v 1.1 2000-02-03 08:05:25 balld Exp $ --
+/*-- $Id: XMLConfigurations.java,v 1.2 2000-02-07 08:35:18 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -52,15 +52,17 @@ package org.apache.cocoon.framework;
 
 import java.util.*;
 import java.io.*;
+import java.text.StringCharacterIterator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * This class makes a Configurations object from an XML source.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.1 $ $Date: 2000-02-03 08:05:25 $
+ * @version $Revision: 1.2 $ $Date: 2000-02-07 08:35:18 $
  */
 
 public class XMLConfigurations extends Configurations {
@@ -69,9 +71,27 @@ public class XMLConfigurations extends Configurations {
 	Hashtable children = new Hashtable();
 	String my_prefix = null;
 
+	/**
+	 * Strictly for testing
+	 */
+	public static void main(String argv[]) throws Exception {
+		XMLConfigurations confs = new XMLConfigurations(argv[0]);
+		System.out.println(confs.toString());
+	}
+
+	/**
+	 * Creates a new empty Configurations
+	 */
 	public XMLConfigurations() {}
 
-    public XMLConfigurations(String file) throws Exception {
+	/**
+	 * Creates a new Configurations object from the specified file
+	 *
+	 * @param file the name of the file
+	 * @exception IOException if the file does not exist or is unreadable
+	 * @exception SAXException if the XML is not well formed
+	 */
+    public XMLConfigurations(String file) throws IOException,SAXException {
         InputStream input = new FileInputStream(file);
 		org.apache.xerces.parsers.DOMParser parser = 
 			new org.apache.xerces.parsers.DOMParser();
@@ -80,7 +100,26 @@ public class XMLConfigurations extends Configurations {
         input.close();
     }
 
+	/**
+	 * Builds a new Configurations object from the source node
+	 * 
+	 * @param confs the Configurations object to manipulate
+	 * @param source_node the node from which to read
+	 */
 	protected static void buildConfigurations(XMLConfigurations confs, Node source_node) {
+		buildConfigurations(confs, source_node, source_node.getNodeName());
+	}
+
+	/**
+	 * Builds a new Configurations object from the source node with the given
+	 * prefix
+	 *
+	 * @param confs the Configurations object to manipulate
+	 * @param source_node the node from which to read
+	 * @param prefix the prefix to use
+	 */
+	protected static void buildConfigurations(XMLConfigurations confs, Node source_node, String prefix) {
+		confs.my_prefix = prefix;
 		NodeList nodes = source_node.getChildNodes();
 		int length = nodes.getLength();
 		for (int i=0; i<length; i++) {
@@ -95,7 +134,7 @@ public class XMLConfigurations extends Configurations {
 					boolean has_grandchildren = false;
 					for (int j=0; j<child_nodes_length; j++) {
 						Node child_node = child_nodes.item(j);
-						switch(type) {
+						switch(child_node.getNodeType()) {
 							case Node.TEXT_NODE:
 								buffer.append(child_node.getNodeValue());
 								break;
@@ -105,11 +144,10 @@ public class XMLConfigurations extends Configurations {
 						}
 								
 					}
-					confs.values.put(name,buffer.toString());
+					confs.values.put(name,stripBoundingWhitespace(buffer.toString()));
 					if (has_grandchildren) {
 						XMLConfigurations child_confs = new XMLConfigurations();
-						child_confs.setBasename(confs.my_prefix+'.'+name);
-						buildConfigurations(child_confs,node);
+						buildConfigurations(child_confs,node,confs.my_prefix+'.'+name);
 						confs.children.put(name,child_confs);
 					}
 					break;
@@ -117,6 +155,12 @@ public class XMLConfigurations extends Configurations {
 		}
 	}
 
+	/**
+	 * Returns the value of the key, or null if the key has no value
+	 * 
+	 * @param key the key
+	 * @return the value
+	 */
 	public Object get(String key) {
 		int index = key.indexOf('.');
 		if (index < 0) {
@@ -131,6 +175,12 @@ public class XMLConfigurations extends Configurations {
 		}
 	}
 
+	/**
+	 * Associates the value with the key
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
     public void set(String key, Object value) {
 		int index = key.indexOf('.');
 		if (index < 0) {
@@ -146,11 +196,26 @@ public class XMLConfigurations extends Configurations {
 		}
     }
 
+	/**
+	 * Returns the value of the key, or the default if the key has no value
+	 *
+	 * @param key the key
+	 * @param def the default value
+	 * @return the value
+	 */
     public Object get(String key, Object def) {
         Object o = this.get(key);
         return (o == null) ? def : o;
     }
 
+	/**
+	 * Returns the value of the key, or tosses a RuntimeException if the
+	 * key has no value
+	 *
+	 * @param key the key
+	 * @return the value
+	 * @exception RuntimeException if the key has no value
+	 */
     public Object getNotNull(String key) {
         Object o = this.get(key);
         if (o == null) {
@@ -160,6 +225,12 @@ public class XMLConfigurations extends Configurations {
         }
     }
 
+	/**
+	 * Returns a Vector of values. FIXME better description
+	 *
+	 * @param key the key
+	 * @return the vector
+	 */
     public Vector getVector(String key) {
         Vector v = new Vector();
         for (int i = 0; ; i++) {
@@ -173,8 +244,11 @@ public class XMLConfigurations extends Configurations {
     }
 
     /**
-     * Create a subconfiguration starting from the base node.
-     */
+     * Create a Configurations child consisting of all values that begin
+	 * with the given key
+	 * @param key the key
+	 * @return the child Configurations object
+	 */
     public Configurations getConfigurations(String key) {
 		int index = key.indexOf('.');
         Configurations confs = null;
@@ -199,7 +273,55 @@ public class XMLConfigurations extends Configurations {
 		}
 	}
 
+	/**
+	 * Sets the prefix
+	 *
+	 * @param my_prefix the prefix
+	 */
     public void setBasename(String my_prefix) {
         this.my_prefix = my_prefix;
     }
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		Enumeration enum = values.keys();
+		String name;
+		while (enum.hasMoreElements()) {
+			name = (String)enum.nextElement();
+			sb.append(my_prefix+'.'+name+" = "+values.get(name)+'\n');
+		}
+		enum = children.elements();
+		while (enum.hasMoreElements()) {
+			XMLConfigurations confs = (XMLConfigurations)enum.nextElement();
+			sb.append(confs.toString());
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * A utility routine that strips the starting and ending whitespace
+	 * from the given string
+	 *
+	 * @param input the input string
+	 * @return the input string with no bounding whitespace
+	 */
+	protected static String stripBoundingWhitespace(String input) {
+		StringBuffer sb = new StringBuffer();
+		StringCharacterIterator iter = new StringCharacterIterator(input);
+		char c = iter.first();
+		while (c != iter.DONE && Character.isWhitespace(c)) {
+			c = iter.next();
+		}
+		int start_offset = iter.getIndex();
+		c = iter.last();
+		while (c != iter.DONE && Character.isWhitespace(c)) {
+			c = iter.previous();
+		}
+		int end_offset = iter.getIndex();
+		if (end_offset <= start_offset) {
+			return "";
+		}
+		return input.substring(start_offset,end_offset+1);
+	}
+
 }
