@@ -192,13 +192,12 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     public Object getValue() {
         return values;
     }
-    
+
     public void setValue(Object value) {
         if (value == null) {
             setValues(new Object[0]);
-        }
-        else if (value.getClass().isArray()) {
-            setValues(values);
+        } else if (value.getClass().isArray()) {
+            setValues((Object[])value);
         } else {
             throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + value.getClass().getName());
         }
@@ -212,7 +211,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         }
         this.values = values;
     }
-    
+
     /**
      * Set this field's selection list.
      * @param selectionList The new selection list.
@@ -226,20 +225,20 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         }
         this.selectionList = selectionList;
     }
-    
+
     /**
      * Read this field's selection list from an external source.
-     * All Cocoon-supported protocols can be used. 
-     * The format of the XML produced by the source should be the 
+     * All Cocoon-supported protocols can be used.
+     * The format of the XML produced by the source should be the
      * same as in case of inline specification of the selection list,
      * thus the root element should be a <code>wd:selection-list</code>
      * element.
-     * @param uri The URI of the source. 
+     * @param uri The URI of the source.
      */
     public void setSelectionList(String uri) {
         setSelectionList(this.fieldDefinition.buildSelectionList(uri));
     }
-    
+
     /**
      * Set this field's selection list using values from an in-memory
      * object. The <code>object</code> parameter should point to a collection
@@ -250,9 +249,9 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
      * of every <code>wd:item</code> in the list.
      * <p>Access to the values of the above mentioned properties is done
      * via <a href="http://jakarta.apache.org/commons/jxpath/users-guide.html">XPath</a> expressions.
-     * @param model The collection used as a model for the selection list. 
+     * @param model The collection used as a model for the selection list.
      * @param valuePath An XPath expression referring to the attribute used
-     * to populate the values of the list's items. 
+     * to populate the values of the list's items.
      * @param labelPath An XPath expression referring to the attribute used
      * to populate the labels of the list's items.
      */
