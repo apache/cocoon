@@ -13,7 +13,7 @@
     <s1 title="Introduction">
       <p>
         <em>XSP</em>
-         (<link href="http://xml.apache.org/cocoon/xsp.html">eXtensible Server Pages</link>)
+         (<link href="http://cocoon.apache.org/1.x/xsp.html">eXtensible Server Pages</link>)
         is Cocoon's technology for building web applications based on dynamic
         XML content.
       </p>
