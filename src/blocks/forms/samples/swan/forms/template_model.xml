@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+
+    <!--
+      CVS $Id$
+    -->
+
+    <!--
+    TODO:
+      Add features to "items-class" (e.g. move-up, move-down, add-before, add-after).
+    -->
+
+    <fd:new id="items-class"/>
+
+    <fd:class id="items-class">
+      <fd:widgets>
+        <fd:repeater id="items" initial-size="0">
+          <fd:label>Widget Templates</fd:label>
+          <fd:widgets>
+            <fd:new id="item-row-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addItem" action-command="add-row" repeater="items">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeItems" action-command="delete-rows" repeater="items" select="select">
+          <fd:label>Delete</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="select-class">
+      <fd:widgets>
+        <fd:booleanfield id="select"><fd:label>Select</fd:label></fd:booleanfield>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="view-selector-class">
+      <fd:widgets>
+        <fd:field id="view-selector">
+          <fd:label>View</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value="fold"><fd:label>Fold</fd:label></fd:item>
+            <fd:item value="view"><fd:label>View</fd:label></fd:item>
+            <fd:item value="edit"><fd:label>Edit</fd:label></fd:item>
+          </fd:selection-list>
+          <fd:on-value-changed>
+            <javascript>
+              var widget = event.getSourceWidget();
+              //var parent = widget.getParent();
+              //var union = parent.getChild("union");
+              //var type = parent.getChild("type-selector");
+              var union = widget.lookupWidget("../union");
+              var type = widget.lookupWidget("../type-selector");
+              if("edit".equals(event.getNewValue())) {
+                union.setProcessRequests(true);
+                type.setProcessRequests(true);
+              } else {
+                union.setProcessRequests(false);
+                type.setProcessRequests(false);
+              }
+            </javascript>
+          </fd:on-value-changed>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="type-selector-class">
+      <fd:widgets>
+        <fd:field id="type-selector">
+          <fd:label>Type</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value=""><fd:label>Nothing</fd:label></fd:item>
+            <fd:item value="case"><fd:label>Case</fd:label></fd:item>
+            <fd:item value="class"><fd:label>Class</fd:label></fd:item>
+            <fd:item value="form-template"><fd:label>Form Template</fd:label></fd:item>
+            <fd:item value="new"><fd:label>New</fd:label></fd:item>
+            <fd:item value="repeater-size"><fd:label>Repeater Size</fd:label></fd:item>
+            <fd:item value="repeater-widget"><fd:label>Repeater Widget</fd:label></fd:item>
+            <fd:item value="struct"><fd:label>Struct</fd:label></fd:item>
+            <fd:item value="submit"><fd:label>Submit</fd:label></fd:item>
+            <fd:item value="union"><fd:label>Union</fd:label></fd:item>
+            <fd:item value="widget"><fd:label>Widget</fd:label></fd:item>
+            <fd:item value="widget-label"><fd:label>Widget Label</fd:label></fd:item>
+            <fd:item value="default"><fd:label>Default</fd:label></fd:item>
+            <fd:item value="table"><fd:label>Table</fd:label></fd:item>
+            <fd:item value="tr"><fd:label>Table Row</fd:label></fd:item>
+            <fd:item value="td"><fd:label>Table Data</fd:label></fd:item>
+            <fd:item value="p"><fd:label>Paragraph</fd:label></fd:item>
+            <fd:item value="input"><fd:label>Input</fd:label></fd:item>
+            <fd:item value="content"><fd:label>Content</fd:label></fd:item>
+            <fd:item value="title"><fd:label>Title</fd:label></fd:item>
+            <fd:item value="page"><fd:label>Page</fd:label></fd:item>
+          </fd:selection-list>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="item-row-class">
+      <fd:widgets>
+        <fd:new id="select-class"/>
+        <fd:new id="view-selector-class"/>
+        <fd:new id="type-selector-class"/>
+        <fd:union id="union" default="" case="type-selector">
+          <fd:datatype base="string"/>
+          <fd:label>Type</fd:label>
+          <fd:widgets>
+
+            <fd:struct id="case">
+              <fd:label>Case</fd:label>
+              <fd:widgets>
+                <fd:new id="id-not-req-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="class">
+              <fd:label>Class</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="form-template">
+              <fd:label>Form Template</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="new">
+              <fd:label>New</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="repeater-size">
+              <fd:label>Repeater Size</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="repeater-widget">
+              <fd:label>Repeater Widget</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="struct">
+              <fd:label>Struct</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="union">
+              <fd:label>Union</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="widget">
+              <fd:label>Widget</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="widget-label">
+              <fd:label>Widget Label</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="default">
+              <fd:label>Default</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="table">
+              <fd:label>Table</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="tr">
+              <fd:label>Table Row</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="td">
+              <fd:label>Table Data</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="p">
+              <fd:label>Paragraph</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="input">
+              <fd:label>Input</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="content">
+              <fd:label>Content</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="title">
+              <fd:label>Title</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="page">
+              <fd:label>Page</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+          </fd:widgets>
+
+        </fd:union>
+      </fd:widgets>
+    </fd:class>
+ 
+    <fd:class id="id-not-req-class">
+      <fd:widgets>
+        <fd:field id="id">
+          <fd:label>Id</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="id-class">
+      <fd:widgets>
+        <fd:field id="id" required="true">
+          <fd:label>Id</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="label-class">
+      <fd:widgets>
+        <fd:field id="label">
+          <fd:label>Label</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="required-class">
+      <fd:widgets>
+        <fd:booleanfield id="required">
+          <fd:label>Required</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="initial-size-class">
+      <fd:widgets>
+        <fd:field id="initial-size">
+          <fd:label>Initial Size</fd:label>
+          <fd:datatype base="long"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+  </fd:widgets>
+</fd:form>
