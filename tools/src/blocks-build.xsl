@@ -641,7 +641,6 @@
       </if>
     </target>
     <target name="{@name}-prepare-anteater-tests" unless="internal.exclude.block.{$block-name}">
-
       <!-- Test if this block has Anteater tests -->
       <if>
         <available file="${{blocks}}/{$block-name}/test/anteater"/>
