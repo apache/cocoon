@@ -17,7 +17,7 @@
  * Runtime JavaScript library for Cocoon forms.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: forms-lib.js,v 1.2 2004/03/10 21:52:00 reinhard Exp $
+ * @version CVS $Id: forms-lib.js,v 1.3 2004/05/11 22:44:41 joerg Exp $
  */
 
 // Handlers that are to be called in the document's "onload" event
@@ -83,7 +83,7 @@ function forms_getForm(element) {
  * This is required for help popups inside <wi:group> tabs. The reason is that CSS positioning
  * properties ("left" and "top") on a block with a "position: absolute" are actually relative to
  * the nearest ancestor that has a position of "absolute", "relative" or "fixed".
- * See http://www.w3.org/TR/CSS21/visudet.html#containing-block-details §4
+ * See http://www.w3.org/TR/CSS21/visudet.html#containing-block-details ï¿½4
  */
 
 function forms_moveInBody(element) {
@@ -109,7 +109,7 @@ function forms_createPopupWindow(id) {
 }
 
 
-function forms_createOptionTransfer(id) {
+function forms_createOptionTransfer(id, submitOnChange) {
     var result = new OptionTransfer(id + ".unselected", id);
     result.setAutoSort(true);
     // add to onload handlers
@@ -120,6 +120,31 @@ function forms_createOptionTransfer(id) {
         sortSelect(this.left);
         sortSelect(this.right);
     }
+    result.submitOnChange = submitOnChange;
+    result.forms_transferLeft = function() {
+        this.transferLeft();
+        if (this.submitOnChange) {
+            forms_submitForm(document.getElementById(this.forms_id));
+        }
+    }
+    result.forms_transferRight = function() {
+        this.transferRight();
+        if (this.submitOnChange) {
+            forms_submitForm(document.getElementById(this.forms_id));
+        }
+    }
+    result.forms_transferAllLeft = function() {
+        this.transferAllLeft();
+        if (this.submitOnChange) {
+            forms_submitForm(document.getElementById(this.forms_id));
+        }
+    };
+    result.forms_transferAllRight = function() {
+        this.transferAllRight();
+        if (this.submitOnChange) {
+            forms_submitForm(document.getElementById(this.forms_id));
+        }
+    };
     forms_onloadHandlers.push(result);
     
     // add to onsubmit handlers

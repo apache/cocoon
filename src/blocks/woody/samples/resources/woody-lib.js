@@ -17,7 +17,7 @@
  * Runtime JavaScript library for Woody.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody-lib.js,v 1.6 2004/05/11 22:22:32 joerg Exp $
+ * @version CVS $Id: woody-lib.js,v 1.7 2004/05/11 22:44:41 joerg Exp $
  */
 
 // Handlers that are to be called in the document's "onload" event
@@ -109,7 +109,7 @@ function woody_createPopupWindow(id) {
 }
 
 
-function woody_createOptionTransfer(id) {
+function woody_createOptionTransfer(id, submitOnChange) {
     var result = new OptionTransfer(id + ".unselected", id);
     result.setAutoSort(true);
     // add to onload handlers
@@ -120,6 +120,31 @@ function woody_createOptionTransfer(id) {
         sortSelect(this.left);
         sortSelect(this.right);
     }
+    result.submitOnChange = submitOnChange;
+    result.woody_transferLeft = function() {
+        this.transferLeft();
+        if (this.submitOnChange) {
+            woody_submitForm(document.getElementById(this.woody_id));
+        }
+    }
+    result.woody_transferRight = function() {
+        this.transferRight();
+        if (this.submitOnChange) {
+            woody_submitForm(document.getElementById(this.woody_id));
+        }
+    }
+    result.woody_transferAllLeft = function() {
+        this.transferAllLeft();
+        if (this.submitOnChange) {
+            woody_submitForm(document.getElementById(this.woody_id));
+        }
+    };
+    result.woody_transferAllRight = function() {
+        this.transferAllRight();
+        if (this.submitOnChange) {
+            woody_submitForm(document.getElementById(this.woody_id));
+        }
+    };
     woody_onloadHandlers.push(result);
     
     // add to onsubmit handlers

@@ -103,7 +103,7 @@
           <td>
             <!-- select for the unselected values -->
             <select id="{@id}.unselected" name="{@id}.unselected" multiple="multiple"
-                    ondblclick="opt{generate-id()}.transferRight()">
+                    ondblclick="opt{generate-id()}.forms_transferRight()">
               <xsl:apply-templates select="." mode="styling"/>
               <xsl:for-each select="fi:selection-list/fi:item">
                 <xsl:variable name="value" select="@value"/>
@@ -119,19 +119,19 @@
             <!-- command buttons -->
             <!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&gt;" onclick="opt{generate-id()}.transferRight()"/>
+            <input type="button" value="&gt;" onclick="opt{generate-id()}.forms_transferRight()"/>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.transferAllRight()"/>
+            <input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.forms_transferAllRight()"/>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&lt;" onclick="opt{generate-id()}.transferLeft()"/>
+            <input type="button" value="&lt;" onclick="opt{generate-id()}.forms_transferLeft()"/>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:text>&#160;</xsl:text>
-            <input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.transferAllLeft()"/>
+            <input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.forms_transferAllLeft()"/>
             <xsl:text>&#160;</xsl:text>
             <br/>
             <xsl:apply-templates select="." mode="common"/>
@@ -139,7 +139,7 @@
           <td>
             <!-- select for the selected values -->
             <select id="{@id}" name="{@id}" multiple="multiple"
-                    ondblclick="opt{generate-id()}.transferLeft()" >
+                    ondblclick="opt{generate-id()}.forms_transferLeft()" >
               <xsl:apply-templates select="." mode="styling"/>
               <xsl:for-each select="fi:selection-list/fi:item">
                 <xsl:variable name="value" select="@value"/>
@@ -154,9 +154,11 @@
         </tr>
       </table>
       <script type="text/javascript">
-        var opt<xsl:value-of select="generate-id()"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>');
+        var opt<xsl:value-of select="generate-id()"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>', <xsl:value-of select="fi:styling/@submit-on-change = 'true'"/>);
       </script>
     </span>
   </xsl:template>
+
+  <xsl:template match="fi:multivaluefield/fi:styling[@list-type='double-listbox']/@submit-on-change" mode="styling"/>
 
 </xsl:stylesheet>
