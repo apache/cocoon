@@ -30,10 +30,27 @@ import org.apache.excalibur.source.SourceValidity;
  */
 public interface ProfileLS {
     
+    /** Component role */
     String ROLE = ProfileLS.class.getName();
+
+    /** This parameter is used during loading to resolve references */
+    String PARAMETER_OBJECTMAP = "objectmap";
+    /** This parameter is used to define the profiletype */
+    String PARAMETER_PROFILETYPE = "profiletype";
     
+    String PROFILETYPE_LAYOUT = "layout";
+    String PROFILETYPE_COPLETBASEDATA = "copletbasedata";
+    String PROFILETYPE_COPLETDATA = "copletdata";
+    String PROFILETYPE_COPLETINSTANCEDATA = "copletinstancedata";
+    
+    /**
+     * Load a profile
+     */
     Object loadProfile(Object key, Map parameters) throws Exception;  
     
+    /**
+     * Save a profile
+     */
     void saveProfile(Object key, Map parameters, Object profile) throws Exception;  
     
     SourceValidity getValidity(Object key, Map parameters);
