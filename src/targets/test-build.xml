@@ -21,7 +21,7 @@
   </target>
 
   <!-- Anteater tests  -->
-  <target name="anteater-tests" depends="block-anteater-tests">
+  <target name="anteater-tests" depends="compile-tests,block-anteater-tests">
     <property name="host" value="localhost"/>
     <property name="port" value="8888"/>
     <property name="base" value="/"/>
