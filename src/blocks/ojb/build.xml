@@ -21,7 +21,7 @@
 
   <path id="ojb.classpath">
     <pathelement path="${build.blocks.ojb.samples}"/>
-    <fileset dir="${block.dir}/lib">
+    <fileset dir="${basedir}/lib/optional">
       <include name="*.jar"/>
     </fileset>
     <fileset dir="${basedir}/lib/local">
