@@ -253,7 +253,9 @@ extends AbstractCopletTransformer {
         } else if ( "html-form".equals(format) ) {
             boolean addParametersAsHiddenFields = false;
             String parameters = null;
-            if ( newAttrs.getValue("enctype") != null )  {
+            final String enctype = newAttrs.getValue("enctype");
+            if ( enctype== null 
+                 || "application/x-www-form-urlencoded".equals(enctype) )  {
                 final int pos = uri.indexOf('?');
                 if ( pos != -1 ) {
                     parameters = uri.substring(pos+1);
