@@ -72,6 +72,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.http.HttpResponse;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
@@ -87,7 +88,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.16 2003/10/31 10:30:15 sylvain Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.17 2003/11/14 18:58:18 unico Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -216,6 +217,10 @@ public class FOM_Cocoon extends ScriptableObject {
         PipelinesNode.getRedirector(environment).redirect(false, uri);
     }
 
+    public void jsFunction_sendStatus(int sc) {
+        PipelinesNode.getRedirector(environment).sendStatus(sc);
+    }
+    
 /*
 
  NOTE (SM): These are the hooks to the future FOM Event Model that will be
@@ -585,6 +590,13 @@ public class FOM_Cocoon extends ScriptableObject {
         public void jsFunction_addHeader(String name, String value) {
             response.addHeader(name, value);
         }
+        
+        public void jsFunction_setStatus(int sc) {
+            if (response instanceof HttpResponse) {
+                ((HttpResponse) response).setStatus(sc);
+            }
+        }
+        
     }
 
     public static class FOM_Session extends ScriptableObject {
