@@ -13,7 +13,7 @@ Contents
 * What is it?
 * Where is it?
 * Requirements
-* Release Notes for Cocoon 1.8.1 and previous versions
+* Release Notes for Cocoon 1.8.2 and previous versions
 * Licensing and Legal Issues
 
 
@@ -63,6 +63,17 @@ Contents
 
   Look for the most updated documentation on the Cocoon web site under
   the Apache XML Project (http://xml.apache.org/cocoon/).
+
+
+  Release Notes for Cocoon 1.8.2
+  ------------------------------
+
+  This is a minor bugfix release. Among other things, Cocoon works on JDK1.1 again,
+  as it should, and the XInclude processor should work correctly at any stage in the
+  pipeline (previously it would do nothing if invoked after certain processors).
+
+  Also, in the last two versions, optional connectors for XT, JNDI etc. were left out by
+  mistake from the build. This has now been fixed.
 
 
   Release Notes for Cocoon 1.8.1
