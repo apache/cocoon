@@ -18,6 +18,7 @@
     <menu-item label="Tutorial" href="tutor.html"/>
     <menu-item label="Sitemap" href="sitemap.html"/>
     <menu-item label="Flowscript" href="api.html"/>
+    <menu-item label="Calling Java" href="java.html"/>
     <menu-item label="Views" href="views.html"/>
     <menu-item label="JXTemplate" href="jxtemplate.html"/>
     <menu-item label="JPath" href="jpath.html"/>

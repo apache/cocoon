@@ -56,6 +56,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,10 +83,14 @@ import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.continuations.Continuation;
+import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
+import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Interface with the JavaScript interpreter.
@@ -92,7 +98,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.13 2003/11/20 15:31:29 sylvain Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.14 2003/12/27 07:30:42 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable
@@ -127,6 +133,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     Global scope;
 
+    CompilingClassLoader classLoader;
+    Map javaSource = new HashMap();
+    String[] javaSourcePath;
 
     /**
      * List of <code>String</code> objects that represent files to be
@@ -182,6 +191,26 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         if ("enabled".equalsIgnoreCase(debugger)) {
             enableDebugger = true;
         }
+
+        if (reloadScripts) {
+            String classPath 
+                = config.getChild("classpath").getValue(null);
+            synchronized (javaSource) {
+                if (classPath == null) {
+                    javaSourcePath = new String[]{""};
+                } else {
+                    StringTokenizer izer = 
+                        new StringTokenizer(classPath, ";");
+                    int i = 0;
+                    javaSourcePath = new String[izer.countTokens()+ 1];
+                    javaSourcePath[javaSourcePath.length - 1] = "";
+                    while (izer.hasMoreTokens()) {
+                        javaSourcePath[i++] = izer.nextToken();
+                    }
+                }
+                updateSourcePath();
+            }
+        }
     }
 
     public void initialize()
@@ -214,6 +243,68 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
     }
 
+    private ClassLoader getClassLoader(boolean needsRefresh) 
+        throws Exception {
+        if (!reloadScripts) {
+            return Thread.currentThread().getContextClassLoader();
+        }
+        synchronized (javaSource) {
+            SourceResolver sourceResolver = (SourceResolver)
+                manager.lookup(SourceResolver.ROLE);
+            boolean reload = needsRefresh || classLoader == null;
+            if (needsRefresh && classLoader != null) {
+                reload = false;
+                Iterator iter = javaSource.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry e = (Map.Entry)iter.next();
+                    String uri = (String)e.getKey();
+                    SourceValidity validity = 
+                        (SourceValidity)e.getValue();
+                    int valid = validity.isValid();
+                    if (valid == SourceValidity.UNKNOWN) {
+                        Source newSrc = 
+                            sourceResolver.resolveURI(uri);
+                        valid = newSrc.getValidity().isValid(validity);
+                        sourceResolver.release(newSrc);
+                    }
+                    if (valid != SourceValidity.VALID) {
+                        reload = true;
+                        javaSource.clear();
+                        break;
+                    }
+                }
+            }
+            if (reload) {
+                classLoader = 
+                    new CompilingClassLoader(Thread.currentThread().getContextClassLoader(), 
+                                             sourceResolver);
+                classLoader.addSourceListener(new CompilingClassLoader.SourceListener() {
+                        public void sourceCompiled(Source src) {
+                            synchronized (javaSource) {
+                                javaSource.put(src.getURI(), 
+                                               src.getValidity());
+                            }
+                        }
+
+                        public void sourceCompilationError(Source src,
+                                                           String errMsg) {
+                            throw org.mozilla.javascript.Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                                                                                                 errMsg));
+                            
+                        }
+                    });
+                updateSourcePath();
+            }
+            return classLoader;
+        }
+    }
+
+    private void updateSourcePath() {
+        if (classLoader != null) {
+            classLoader.setSourcePath(javaSourcePath);
+        }
+    }
+
     /**
      * Returns the JavaScript scope, a Scriptable object, from the user
      * session instance. Each URI prefix, as returned by the {@link
@@ -223,17 +314,17 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @param environment an <code>Environment</code> value
      * @return a <code>Scriptable</code> value
      */
-    private Scriptable getSessionScope(Environment environment)
+    private ThreadScope getSessionScope(Environment environment)
         throws Exception {
         Map objectModel = environment.getObjectModel();
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Scriptable scope = null;
+        ThreadScope scope = null;
         Session session = request.getSession(false);
         if (session != null) {
             HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
             if (userScopes != null) {
                 String uriPrefix = environment.getURIPrefix();
-                scope = (Scriptable)userScopes.get(uriPrefix);
+                scope = (ThreadScope)userScopes.get(uriPrefix);
             }
         }
         if (scope == null) {
@@ -275,10 +366,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     public static class ThreadScope extends ScriptableObject {
 
+        ClassLoader classLoader;
         /* true if this scope has assigned any global vars */
         boolean useSession = false;
 
         public ThreadScope() {
+            final String[] names = { "importClass"};
+
+            try {
+                this.defineFunctionProperties(names, ThreadScope.class,
+                                              ScriptableObject.DONTENUM);
+            } catch (PropertyException e) {
+                throw new Error();  // should never happen
+            }
         }
 
         public String getClassName() {
@@ -298,9 +398,37 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         void reset() {
             useSession = false;
         }
+
+        // Override importClass to allow reloading of classes
+        public static void importClass(Context cx, Scriptable thisObj,
+                                       Object[] args, 
+                                       Function funObj) {
+            for (int i = 0; i < args.length; i++) {
+                Object cl = args[i];
+                if (!(cl instanceof NativeJavaClass)) {
+                    throw Context.reportRuntimeError("Not a Java class: " +
+                                                       Context.toString(cl));
+                }
+                String s = ((NativeJavaClass) cl).getClassObject().getName();
+                String n = s.substring(s.lastIndexOf('.')+1);
+                Object val = thisObj.get(n, thisObj);
+                thisObj.put(n, thisObj, cl);
+            }
+        }
+
+        public void setupPackages(ClassLoader cl) throws Exception {
+            if (classLoader != cl) {
+                classLoader = cl;
+                Scriptable newPackages = new NativeJavaPackage("", cl);
+                newPackages.setParentScope(this);
+                newPackages.setPrototype(ScriptableObject.getClassPrototype(this, "JavaPackage"));
+                super.put("Packages", this, newPackages);
+            }
+        }
+        
     }
 
-    private Scriptable createThreadScope() 
+    private ThreadScope createThreadScope() 
         throws Exception {
         org.mozilla.javascript.Context context = 
             org.mozilla.javascript.Context.getCurrentContext();
@@ -312,11 +440,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // parent scope to null. This means that any variables created
         // by assignments will be properties of "thrScope".
         thrScope.setParentScope(null);
-        
         // Put in the thread scope the Cocoon object, which gives access
         // to the interpreter object, and some Cocoon objects. See
         // FOM_Cocoon for more details.
-        Object args[] = {};
+        Object[] args = {};
         FOM_Cocoon cocoon = (FOM_Cocoon)
             context.newObject(thrScope, "FOM_Cocoon", args);
         cocoon.setParentScope(thrScope);
@@ -347,7 +474,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     private void setupContext(Environment environment,
                               org.mozilla.javascript.Context context,
-                              Scriptable thrScope)
+                              ThreadScope thrScope,
+                              CompilingClassLoader classLoader)
         throws Exception {
         // Try to retrieve the scope object from the session instance. If
         // no scope is found, we create a new one, but don't place it in
@@ -362,21 +490,25 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         FOM_Cocoon cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
         long lastExecTime = ((Long)thrScope.get(LAST_EXEC_TIME,
                                                 thrScope)).longValue();
+        boolean needsRefresh = false;
+        if (reloadScripts) {
+            long now = System.currentTimeMillis();
+            if (now >= lastTimeCheck + checkTime) {
+                needsRefresh = true;
+            }
+            lastTimeCheck = now;
+        }
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        cocoon.setup(this, environment, manager, serviceManager, avalonContext, getLogger());
+        thrScope.setupPackages(getClassLoader(needsRefresh));
+        cocoon.setup(this, environment, manager, 
+                     serviceManager, avalonContext, 
+                     getLogger());
+
         
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
             List execList = new ArrayList();
-            boolean needsRefresh = false;
-            if (reloadScripts) {
-                long now = System.currentTimeMillis();
-                if (now >= lastTimeCheck + checkTime) {
-                    needsRefresh = true;
-                }
-                lastTimeCheck = now;
-            }
             // If we've never executed scripts in this scope or
             // if reload-scripts is true and the check interval has expired
             // or if new scripts have been specified in the sitemap,
@@ -489,10 +621,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
         FOM_Cocoon cocoon = null;
-        Scriptable thrScope = getSessionScope(environment);
+        ThreadScope thrScope = getSessionScope(environment);
         synchronized (thrScope) {
             try {
-                setupContext(environment, context, thrScope);
+                setupContext(environment, context, thrScope, classLoader);
                 cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
                 
                 // Register the current scope for scripts indirectly called from this function
@@ -578,7 +710,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, environment, manager, serviceManager, avalonContext, getLogger());
+            cocoon.setup(this, environment, manager, 
+                         serviceManager, avalonContext, 
+                         getLogger());
             // Register the current scope for scripts indirectly called from this function
             cocoon.getRequest().setAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
 
