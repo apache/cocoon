@@ -95,7 +95,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.7 2003/12/19 09:01:43 reinhard Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.8 2004/02/28 04:23:56 antonio Exp $
  *
  * @since 2.1.1
  */
@@ -272,7 +272,8 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             final ThreadPool pool = createThreadPool(config.getChild("thread-pool"));
             DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool,
                                                                  new RAMJobStore());
-            m_scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
+            // m_scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
+            m_scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
         } catch (final SchedulerException se) {
             throw new ConfigurationException("cannot create a quartz scheduler", se);
         }
@@ -705,7 +706,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.7 2003/12/19 09:01:43 reinhard Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.8 2004/02/28 04:23:56 antonio Exp $
      */
     private static class ThreadPool
     extends AbstractLogEnabled

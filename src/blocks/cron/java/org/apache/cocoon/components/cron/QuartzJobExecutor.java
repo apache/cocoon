@@ -65,7 +65,7 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java,v 1.3 2003/09/04 16:04:10 giacomo Exp $
+ * @version CVS $Id: QuartzJobExecutor.java,v 1.4 2004/02/28 04:23:56 antonio Exp $
  *
  * @since 2.1.1
  */
@@ -122,7 +122,7 @@ implements Job {
                 ((ConfigurableCronJob)job).setup(params, objects);
             }
 
-            data.put(DATA_MAP_KEY_ISRUNNING, new Boolean(true));
+            data.put(DATA_MAP_KEY_ISRUNNING, Boolean.TRUE);
 
             if (job instanceof Job) {
                 ((Job)job).execute(context);
@@ -140,7 +140,7 @@ implements Job {
                 throw (JobExecutionException)t;
             }
         } finally {
-            data.put(DATA_MAP_KEY_ISRUNNING, new Boolean(false));
+            data.put(DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
 
             if (null != manager) {
                 manager.release(job);
