@@ -688,7 +688,7 @@
     <title>Jakarta Commons Jexl</title>
     <description>JSTL Expression Language</description>
     <used-by>JXTemplateGenerator</used-by>
-    <lib>core/commons-jexl-1.0-beta-1-20040113.jar</lib>
+    <lib>core/commons-jexl-1.0.jar</lib>
     <homepage>http://jakarta.apache.org/commons/jexl/</homepage>
   </file>
 
