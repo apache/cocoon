@@ -16,8 +16,6 @@
 package org.apache.cocoon.components.modules.input;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -28,7 +26,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleHelper.java,v 1.2 2004/04/30 23:07:55 joerg Exp $
+ * @version CVS $Id$
  */
 public class InputModuleHelper {
     
@@ -43,8 +41,6 @@ public class InputModuleHelper {
 
     
     private Map inputModules;
-    private ComponentManager componentManager;
-    private ComponentSelector componentInputSelector;
     private ServiceManager serviceManager;
     private ServiceSelector serviceInputSelector;
     
@@ -59,14 +55,8 @@ public class InputModuleHelper {
         InputModule module = (InputModule) this.inputModules.get(name);
         if ( module == null ) {
             try {
-                if ( this.componentManager != null ) {
-                    if (this.componentInputSelector.hasComponent(name)) {
-                        module = (InputModule) this.componentInputSelector.select(name);
-                    }                
-                } else {
-                    if (this.serviceInputSelector.isSelectable(name)) {
-                        module = (InputModule) this.serviceInputSelector.select(name);
-                    }                            
+                if (this.serviceInputSelector.isSelectable(name)) {
+                    module = (InputModule) this.serviceInputSelector.select(name);
                 }
             } catch (Exception e) {
                 throw new CascadingRuntimeException("Unable to lookup input module " + name, e);
@@ -129,25 +119,6 @@ public class InputModuleHelper {
     }
 
 
-
-    /**
-     * Initializes the instance for first use. Stores references to
-     * component manager and component selector in instance 
-     *
-     * @param manager a <code>ComponentManager</code> value
-     * @exception RuntimeException if an error occurs
-     * @deprecated Use the {@link #setup(ServiceManager)} method instead
-     */
-    public void setup(ComponentManager manager) throws RuntimeException {
-
-        this.inputModules = new HashMap();
-        this.componentManager = manager;
-        try {
-            this.componentInputSelector = (ComponentSelector) this.componentManager.lookup(INPUT_MODULE_SELECTOR); 
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not obtain selector for InputModule.",e);
-        }
-    }
 
     /**
      * Initializes the instance for first use. Stores references to
@@ -258,22 +229,6 @@ public class InputModuleHelper {
     public void releaseAll() throws RuntimeException {
 
         if ( this.inputModules != null ) {
-            // test for component manager
-            if ( this.componentManager != null ) {
-                try {
-                    Iterator iter = this.inputModules.keySet().iterator();
-                    while (iter.hasNext()) {
-                        this.componentInputSelector.release((InputModule) this.inputModules.get(iter.next()));
-                    }
-                    this.inputModules = null;
-                    this.componentManager.release(this.componentInputSelector);
-                    this.componentManager = null;
-                    this.inputModules = null;
-                } catch (Exception e) {
-                    throw new CascadingRuntimeException("Could not release InputModules.",e);
-                }
-                
-            }
             if ( this.serviceManager != null ) {
                 try {
                     Iterator iter = this.inputModules.keySet().iterator();

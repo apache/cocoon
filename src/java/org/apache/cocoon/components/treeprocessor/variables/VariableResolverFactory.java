@@ -15,9 +15,7 @@
  */
 package org.apache.cocoon.components.treeprocessor.variables;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.WrapperServiceManager;
 
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -95,16 +93,6 @@ public class VariableResolverFactory {
         }
 
         return buf.toString();
-    }
-
-    /**
-     * Get a resolver for a given expression. Chooses the most efficient implementation
-     * depending on <code>expression</code>.
-     *
-     * @deprecated use the version with <code>ServiceManager</service>
-     */
-    public static VariableResolver getResolver(String expression, ComponentManager manager) throws PatternException {
-        return getResolver(expression, new WrapperServiceManager(manager));
     }
 
     /**

@@ -35,6 +35,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
@@ -67,7 +68,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.9 2004/07/04 17:52:29 huber Exp $
+ * @version CVS $Id$
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -240,7 +241,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             action = (Action) selector.select(type);
             assertNotNull("Test lookup of action", action);
 
-            result = action.act(redirector, new SourceResolverAdapter(resolver, this.manager),
+            result = action.act(redirector, new SourceResolverAdapter(resolver, new WrapperServiceManager(manager)),
                                 objectmodel, source, parameters);
 
         } catch (ComponentException ce) {
@@ -288,7 +289,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             generator = (Generator) selector.select(type);
             assertNotNull("Test lookup of generator", generator);
 
-            generator.setup(new SourceResolverAdapter(resolver, this.manager),
+            generator.setup(new SourceResolverAdapter(resolver, new WrapperServiceManager(manager)),
                             objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -351,7 +352,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             transformer = (Transformer) selector.select(type);
             assertNotNull("Test lookup of transformer", transformer);
 
-            transformer.setup(new SourceResolverAdapter(resolver, this.manager),
+            transformer.setup(new SourceResolverAdapter(resolver, new WrapperServiceManager(manager)),
                                   objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();

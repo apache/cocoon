@@ -15,9 +15,8 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.ProcessingException;
 
@@ -29,7 +28,7 @@ import org.w3c.dom.DocumentFragment;
  * The <code>Session-fw</code> object helper
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.8 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id$
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
@@ -41,7 +40,7 @@ public class XSPSessionFwHelper {
      * @param context The Session context tha define where to search
      * @param path The parameter path
     **/
-    public static DocumentFragment getXML(ComponentManager cm, String context, String path) throws ProcessingException {
+    public static DocumentFragment getXML(ServiceManager cm, String context, String path) throws ProcessingException {
 
         SessionManager sessionManager = null;
         try {
@@ -50,11 +49,11 @@ public class XSPSessionFwHelper {
             // Get the fragment
             DocumentFragment df = sessionManager.getContextFragment(context, path);
             return df;
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Error during lookup of SessionManager component.", ce);
         } finally {
             // End releasing the sessionmanager
-		    cm.release((Component)sessionManager);
+		    cm.release(sessionManager);
 	    }
      }
     
@@ -65,7 +64,7 @@ public class XSPSessionFwHelper {
      * @param context The Session context tha define where to search
      * @param path The parameter path
      **/
-    public static String getXMLAsString(ComponentManager cm, String context, String path) throws ProcessingException {
+    public static String getXMLAsString(ServiceManager cm, String context, String path) throws ProcessingException {
         DocumentFragment df = getXML(cm, context, path);
         return df != null ? df.getFirstChild().getNodeValue() : "";
     }
