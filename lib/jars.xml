@@ -245,7 +245,7 @@
       Part of avalon for communicating with a remote server.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>optional/altrmi-common-0.9.2.jar</lib>
+    <lib>core/altrmi-common-0.9.2.jar</lib>
     <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
   </file>
 
@@ -255,7 +255,7 @@
       Part of avalon for communicating with a remote server.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>optional/altrmi-server-impl-0.9.2.jar</lib>
+    <lib>core/altrmi-server-impl-0.9.2.jar</lib>
     <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
   </file>
 
@@ -265,7 +265,7 @@
      Part of avalon for communicating with a remote server.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>optional/altrmi-server-interfaces-0.9.2.jar</lib>
+    <lib>core/altrmi-server-interfaces-0.9.2.jar</lib>
     <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
   </file>
 
@@ -275,7 +275,7 @@
      Part of avalon for communicating with a remote server.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>optional/altrmi-registry-0.9.2.jar</lib>
+    <lib>core/altrmi-registry-0.9.2.jar</lib>
     <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
   </file>
 
