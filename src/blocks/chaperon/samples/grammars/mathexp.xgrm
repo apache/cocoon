@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE grammar PUBLIC "-//Chaperon//DTD grammar 2.0//EN" "grammar-v20.dtd">
 
-<grammar>
+<grammar xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0">
  <production symbol="E">
   <nonterminal symbol="E"/><terminal symbol="plus"/><nonterminal symbol="T"/>
  </production>
