@@ -85,6 +85,7 @@ public class MapProfileLS
         boolean first = true;
         while ( iter.hasNext() ) {
             final Map.Entry entry = (Entry) iter.next();
+            final String append = entry.getValue().toString();
             if ( pars ) {
                 if ( first ) {
                     first = false;
@@ -99,12 +100,11 @@ public class MapProfileLS
                 buffer.append(entry.getKey().toString());
                 buffer.append('=');
             } else {
-                if ( !first) {
+                if ( !first && !"?".equals(append) ) {
                     buffer.append('/');
                 }
                 first = false;
             }
-            String append = entry.getValue().toString();
             if ( "?".equals(append) ) {
                 first = true;
                 pars = true;

@@ -115,6 +115,9 @@ public class GroupBasedProfileManager
     protected void prepareObject(Object object, PortalService service)
     throws ProcessingException {
         if ( object != null ) {
+            if ( object instanceof Map ) {
+                object = ((Map)object).values();
+            }
             if (object instanceof Layout) {
                 service.getComponentManager().getLayoutFactory().prepareLayout((Layout)object);
             } else if (object instanceof Collection) {
@@ -343,7 +346,7 @@ public class GroupBasedProfileManager
             final Map configs = new HashMap();
             if ( children != null ) {
                 for(int i=0; i < children.length; i++) {
-                    configs.put(children[i].getName(), children[i].getValue());
+                    configs.put(children[i].getName(), children[i].getAttribute("uri"));
                 }
             }
             info.setConfigurations(configs);
@@ -411,7 +414,7 @@ public class GroupBasedProfileManager
                     parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
                                    ProfileLS.PROFILETYPE_COPLETBASEDATA);        
 
-                    this.copletBaseDatas = ((CopletBaseDataManager)(Map)loader.loadProfile(key, parameters)).getCopletBaseData();
+                    this.copletBaseDatas = ((CopletBaseDataManager)loader.loadProfile(key, parameters)).getCopletBaseData();
                     this.prepareObject(this.copletBaseDatas, service);
                 }
             }
@@ -436,7 +439,7 @@ public class GroupBasedProfileManager
                     parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
                                    this.copletBaseDatas);
                     
-                    this.copletDatas = ((CopletDataManager)(Map)loader.loadProfile(key, parameters)).getCopletData();                    
+                    this.copletDatas = ((CopletDataManager)loader.loadProfile(key, parameters)).getCopletData();                    
                     this.prepareObject(this.copletDatas, service);
                 }
             }
