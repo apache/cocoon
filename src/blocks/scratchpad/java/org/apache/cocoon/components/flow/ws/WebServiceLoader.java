@@ -42,7 +42,7 @@ import org.apache.axis.utils.JavaUtils;
 import org.apache.axis.wsdl.toJava.Namespaces;
 import org.apache.axis.wsdl.toJava.Utils;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.flow.javascript.fom.CompilingClassLoader;
+// import org.apache.cocoon.components.flow.javascript.fom.CompilingClassLoader;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
@@ -58,8 +58,8 @@ public class WebServiceLoader extends AbstractLogEnabled implements
     protected Logger logger;
     protected Context context;
     protected ServiceManager serviceManager;
-    protected CompilingClassLoader classLoader;
-    protected MyClassRepository javaClassRepository = new MyClassRepository();
+    // protected CompilingClassLoader classLoader;
+    // protected MyClassRepository javaClassRepository = new MyClassRepository();
     protected String sourcePath;
 
     private Store endpointCache = null;
@@ -286,6 +286,11 @@ public class WebServiceLoader extends AbstractLogEnabled implements
     }
 
     private ClassLoader getClassLoader() throws Exception {
+        return null;
+    }
+    
+    /*
+    private ClassLoader getClassLoader() throws Exception {
         synchronized (this.javaClassRepository) {
             if (this.classLoader == null) {
                 this.classLoader = new CompilingClassLoader(Thread
@@ -388,5 +393,6 @@ public class WebServiceLoader extends AbstractLogEnabled implements
             return invalid.size() == 0;
         }
     }
+    */
 
 }
