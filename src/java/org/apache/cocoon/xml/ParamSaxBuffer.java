@@ -17,6 +17,8 @@ package org.apache.cocoon.xml;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.Writer;
 import java.io.IOException;
 
@@ -26,12 +28,15 @@ import org.xml.sax.SAXException;
 /**
  * Modification of the SAX buffer with parameterization capabilities.
  *
- * Any <code>{name}</code> expression inside of the character events can be
+ * <p>Any <code>{name}</code> expression inside of the character events can be
  * replaced by the content of another SaxBuffer if it is present in the map
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  *
+ * <p>Once all events have been pushed into this buffer, you need to call
+ * {@link #processParams()}.
+ *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.7 2004/07/06 22:38:28 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -49,45 +54,102 @@ public class ParamSaxBuffer extends SaxBuffer {
     }
 
     /**
-     * Parses text and extracts <code>{name}</code> parameters for later
+     * Parses text in character events and extracts <code>{name}</code> parameters for later
      * substitution.
-     *
-     * FIXME: This method throws exception when '{' and '}' are separated onto two character events
      */
-    public void characters(char ch[], int start, int length) throws SAXException {
-        final int end = start + length;
-        for (int i = start; i < end; i++) {
-            if (ch[i] == '{') {
-                // Send any collected characters so far
-                if (i > start) {
-                    addBit(new Characters(ch, start, i - start));
-                }
+    public void processParams() throws SAXException {
+        // what we do here is running over all sax bits and copying them over
+        // into a new list, and meanwhile processing all Character bits
 
-                // Find closing brace, and construct parameter name
-                StringBuffer name = new StringBuffer();
-                int j = i + 1;
-                for (; j < end; j++) {
-                    if (ch[j] == '}') {
+        int initialSize;
+        if (saxbits.size() <= 3)
+            initialSize = 6;
+        else
+            initialSize = (int)((double)saxbits.size() * 1.35d);
+
+        List newSaxBits = new ArrayList(initialSize);
+
+        int i = 0;
+        while (i < saxbits.size()) {
+            Object bit = saxbits.get(i);
+            if (bit instanceof Characters) {
+                char[] chars = ((Characters)bit).ch;
+
+                // check if there are more character events immediately following this one,
+                // if so merge all data into one big array
+                int consecutiveCharacterEventCount = 0;
+                int totalLength = chars.length;
+                for (int k = i + 1; k < saxbits.size(); k++) {
+                    Object otherbit = saxbits.get(k);
+                    if (otherbit instanceof Characters) {
+                        consecutiveCharacterEventCount++;
+                        totalLength += ((Characters)otherbit).ch.length;
+                    } else {
                         break;
                     }
-                    name.append(ch[j]);
                 }
-                if (j == end) {
-                    throw new SAXException("Unclosed '}'");
-                }
-                addBit(new Parameter(name.toString()));
 
-                // Continue processing
-                i = j;
-                start = j + 1;
-                continue;
+                if (consecutiveCharacterEventCount > 0) {
+                    char[] newchars = new char[totalLength];
+                    System.arraycopy(chars, 0, newchars, 0, chars.length);
+                    int newCharPos = chars.length;
+                    for (int k = 0; k < consecutiveCharacterEventCount; k++) {
+                        Object otherbit = saxbits.get(i + 1 + k);
+                        char[] otherchars = ((Characters)otherbit).ch;
+                        System.arraycopy(otherchars, 0, newchars, newCharPos, otherchars.length);
+                        newCharPos += otherchars.length;
+                    }
+                    chars = newchars;
+                    i += consecutiveCharacterEventCount + 1;
+                } else {
+                    i++;
+                }
+
+                // now process the actual {...}
+                int start = 0;
+                final int end = chars.length;
+                for (int r = 0; r < end; r++) {
+                    if (chars[r] == '{') {
+                        // Send any collected characters so far
+                        if (r > start) {
+                            newSaxBits.add(new Characters(chars, start, r - start));
+                        }
+
+                        // Find closing brace, and construct parameter name
+                        StringBuffer name = new StringBuffer();
+                        int j = r + 1;
+                        for (; j < end; j++) {
+                            if (chars[j] == '}') {
+                                break;
+                            }
+                            name.append(chars[j]);
+                        }
+                        if (j == end) {
+                            throw new SAXException("Unclosed '}'");
+                        }
+                        newSaxBits.add(new Parameter(name.toString()));
+
+                        // Continue processing
+                        r = j;
+                        start = j + 1;
+                        continue;
+                    }
+                }
+
+                // Send any tailing characters
+                if (start < end) {
+                    newSaxBits.add(new Characters(chars, start, end - start));
+                }
+            } else {
+                newSaxBits.add(bit);
+                i++;
             }
         }
+        this.saxbits = newSaxBits;
+    }
 
-        // Send any tailing characters
-        if (start < end) {
-            addBit(new Characters(ch, start, end - start));
-        }
+    public void characters(char ch[], int start, int length) throws SAXException {
+        addBit(new Characters(ch, start, length));
     }
 
     /**
