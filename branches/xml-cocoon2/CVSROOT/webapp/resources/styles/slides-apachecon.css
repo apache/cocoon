@@ -11,19 +11,26 @@
 }
 
 P {
+        font-family: Helvetica;
+        font-size: 16pt;
         padding: 10px 10px 10px 10px;
         margin: 10px 20px 10px 20px;
 }
 
 P.quote {
+        font-family: Helvetica;
+        font-size: 16pt;
         font-style: italic;
 }
 
 PRE {
-        padding: 10px 10px 10px 10px;
+        font-family: Monospace;
+        font-size: 14pt;
+        padding: 0px 0px 0px 50px;
 }
 
 H1 {
+        font-family: Helvetica;
         font-size: 34pt;
         line-height: 36pt;
         text-align: center;
@@ -31,6 +38,7 @@ H1 {
 }
 
 H3 {
+        font-family: Helvetica;
         font-size: 20pt;
         line-height: 24pt;
         text-align: center;
@@ -39,6 +47,7 @@ H3 {
 }
 
 UL {
+        font-family: Helvetica;
         font-size: 20pt;
         line-height: 35pt;
         margin: 30px 100px 30px 50px;

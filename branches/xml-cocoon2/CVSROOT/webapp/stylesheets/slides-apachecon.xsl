@@ -124,7 +124,7 @@
   </xsl:template>
 
   <xsl:template match="source">
-   <pre class="source">
+   <pre>
     <xsl:apply-templates/>
    </pre>
   </xsl:template>
