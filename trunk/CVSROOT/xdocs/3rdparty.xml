@@ -64,6 +64,14 @@
     <th>Contact</th>
    </tr>
    <tr>
+    <td><link href="http://ziel.sm.pl/">CDK</link></td>
+    <td>"Ready to go" Cocoon distribution</td>
+    <td>Tomcat and Cocoon 1 and 2, pre-configured and ready to run on Windows</td>
+    <td>Beta</td>
+    <td>Same as Cocoon</td>
+    <td><a href="mailto:kzielinski@supermedia.pl">kzielinski@supermedia.pl</a></td>
+   </tr>
+   <tr>
     <td><link href="http://www.geocities.com/SiliconValley/Monitor/7464/emacs/xslt-process/">
      XSLT-process</link></td>
     <td>Development Environment</td>
