@@ -21,19 +21,27 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * handlers and lexical handlers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:30 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-25 14:47:45 $
  */
-public class XMLConsumerBridge extends AbstractXMLConsumer {
+public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProducer {
 
-    private ContentHandler ch = null;
-    private LexicalHandler lh = null;
+    private XMLConsumer consumer;
+    private ContentHandler ch;
+    private LexicalHandler lh;
+
+    /**
+     * Set the <code>XMLConsumer</code> that will receive XML data.
+     */
+    public void setConsumer(XMLConsumer consumer) {
+        this.consumer = consumer;
+    }
     
     /**
      * Indicate the content handler this class bridges.
      *
      * @param handler The bridged content handler.
      */
-    public void setBridgedContentHandler(ContentHandler handler) {
+    public void setContentHandler(ContentHandler handler) {
         this.ch = handler;
     }
 
@@ -42,7 +50,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer {
      *
      * @param handler The bridged lexical handler.
      */
-    public void setBridgedLexicalHandler(LexicalHandler handler) {
+    public void setLexicalHandler(LexicalHandler handler) {
         this.lh = handler;
     }
     
