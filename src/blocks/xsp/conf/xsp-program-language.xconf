@@ -50,6 +50,21 @@
       <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Jikes"/-->
       <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Pizza"/-->
 
+      <!--+
+          | Specifies the java code source version used to compile the XSP code.
+          |
+          | Posible values:
+          | 1.3 = Java version 1.3 
+          | 1.4 = Java version 1.4
+          | 1.5 = Java version 1.5
+          | auto = The version of the JVM where cocoon is running. (Default value).
+          |
+          | NOTE: The parameter is optional to keep backward compatibility.
+          |       The parameter currently works only with Sun Javac compiler.
+          |       The eclipse compiler version 3.0.1 currently does not support java 1.5.
+          |       The pizza compiler does not support java 1.5.
+          +-->
+      <!-- <parameter name="compiler-compliance-level" value="auto"/> -->
     </java-language>
 
     <!-- Interpreted JavaScript language -->
