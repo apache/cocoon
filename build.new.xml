@@ -1,42 +1,61 @@
 <?xml version="1.0"?>
-<project default="webapp" basedir="." name="Apache Cocoon">
-<!-- ============================================================================
+<!DOCTYPE project [
+<!-- ===========================================================================
 
                        * =========================== *
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.new.xml,v 1.3 2003/03/22 16:46:38 stephan Exp $:
+       CVS $Id: build.new.xml,v 1.4 2003/03/22 17:02:18 stephan Exp $:
 
-================================================================================= -->
+============================================================================ -->
 
-  <property name="targets" value="${basedir}/src/targets"/>
+  <!-- ==================  Apache Cocoon targets  ======================== --> 
+  <!ENTITY init-targets     SYSTEM "./src/targets/init-build.xml"> 
+  <!ENTITY compile-targets  SYSTEM "./src/targets/compile-build.xml"> 
+  <!ENTITY validate-targets SYSTEM "./src/targets/validate-build.xml"> 
+  <!ENTITY samples-targets  SYSTEM "./src/targets/samples-build.xml"> 
+  <!ENTITY webapp-targets   SYSTEM "./src/targets/webapp-build.xml"> 
+  <!ENTITY ide-targets      SYSTEM "./src/targets/ide-build.xml"> 
+  <!ENTITY test-targets     SYSTEM "./src/targets/test-build.xml"> 
+  <!ENTITY docs-targets     SYSTEM "./src/targets/docs-build.xml"> 
+  <!-- =================================================================== -->
 
-  <!-- ======================  Cocoon targets =================================== -->
+  <!-- ==================  Apache Forrest targets  ======================= -->
+  <!ENTITY forrest-targets  SYSTEM "./src/targets/forrest-build.xml">
+  <!-- =================================================================== -->
 
-  <!-- ========================================================================== -->
-  <!-- Initialization targets  --> <import file="${targets}/init-build.xml"/>
-  <!-- ========================================================================== -->
-  <!-- Compile targets         --> <import file="${targets}/compile-build.xml"/>
-  <!-- ========================================================================== -->  
-  <!-- Validation targets      --> <import file="${targets}/validate-build.xml"/>
-	<!-- ========================================================================== -->
-	<!-- Samples targets         --> <import file="${targets}/samples-build.xml"/>
-  <!-- ========================================================================== -->
-  <!-- Web application targets --> <import file="${targets}/webapp-build.xml"/>
-  <!-- ========================================================================== -->
-  <!-- IDE targets             --> <import file="${targets}/ide-build.xml"/>
-  <!-- ========================================================================== -->
-  <!-- Testcases targets       --> <import file="${targets}/test-build.xml"/>
-  <!-- ========================================================================== -->
-  <!-- Documentation targets   --> <import file="${targets}/docs-build.xml"/>
-  <!-- ========================================================================== -->
+]>
+
+<project default="webapp" basedir="." name="Apache Cocoon">
+
+  <!-- ==================  Apache Cocoon targets  ======================== -->
+
+  <!-- =================================================================== -->
+  <!-- Initialization targets  -->  &init-targets;
+  <!-- =================================================================== -->
+  <!-- Compile targets         -->  &compile-targets;
+  <!-- =================================================================== -->  
+  <!-- Validation targets      -->  &validate-targets;
+  <!-- =================================================================== -->
+  <!-- Samples targets         -->  &samples-targets;
+  <!-- =================================================================== -->
+  <!-- Web application targets -->  &webapp-targets;
+  <!-- =================================================================== -->
+  <!-- IDE targets             -->  &ide-targets;
+  <!-- =================================================================== -->
+  <!-- Testcases targets       -->  &test-targets;
+  <!-- =================================================================== -->
+  <!-- Documentation targets   -->  &docs-targets;
+  <!-- =================================================================== -->
 
 
-  <!-- ======================  Forrest targets ================================== -->
 
-  <!-- ========================================================================== -->
-  <!-- Forrest targets         --> <import file="${targets}/forrest-build.xml"/>
-  <!-- ========================================================================== -->
+  <!-- ==================  Apache Forrest targets  ======================= -->
+
+  <!-- =================================================================== -->
+  <!-- Forrest targets         -->  &forrest-targets;
+  <!-- =================================================================== -->
 
 </project>
+

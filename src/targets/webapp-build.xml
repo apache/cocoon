@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Web application targets">
   <!-- Webapp targets ==================================================== -->
 
   <target name="prepare-webapp" depends="blocks, package">
@@ -139,4 +137,3 @@
     </jar>
   </target>
 
-</project>

@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Validation targets">
   <!-- Validation targets ==================================================== -->
 
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
@@ -71,4 +69,3 @@
     </jing>-->
   </target>
 
-</project>
