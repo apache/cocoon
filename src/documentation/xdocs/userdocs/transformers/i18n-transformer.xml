@@ -456,7 +456,7 @@ java org.apache.xalan.xslt.Process -IN simple_dict.xml -XSL merge.xsl \
             <s2 title="Contacts">
                 <p>
                     Feel free to contact for any comments and improvement ideas either directly <link href="mailto:kpiroumian@apache.org">Konstantin Piroumian</link> 
-                    or through the <link href="../../mail-lists.html">Cocoon Mail List</link>.
+                    or through the <link href="http://cocoon.apache.org/community/mail-lists.html">Cocoon Mail List</link>.
                 </p>
             </s2>
         </s1>

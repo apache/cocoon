@@ -49,7 +49,7 @@ Contributers should have:
 <li>The source code of the documents as a local working copy of the CVS
 repository. If you are working with the current CVS HEAD then you will
 have already done a <code>'cvs checkout cocoon-2.1'</code>
-(see <link href="../contrib.html#cvshowto">CVS Usage Precis</link>).
+(see <link href="http://cocoon.apache.org/community/contrib.html#cvshowto">CVS Usage Precis</link>).
 However, see below for other ways of obtaining source for diff comparison.
 </li>
 <li>The tools with which to prepare a patch. On UNIX the &quot;cvs&quot;
@@ -242,7 +242,7 @@ should only ever be used for minor text edits. Here are the steps ...
 </p>
 <ul>
 <li>save the relevant web page 
-(<link href="../contrib.html">contrib.html</link>)
+(<link href="http://cocoon.apache.org/community/contrib.html">contrib.html</link>)
 to your local disk: <code>./contrib.html.orig</code></li>
 <li>create a copy of the file: <code>./contrib.html</code></li>
 <li>make your modifications and  view the page with your browser</li>

@@ -10,7 +10,7 @@
   <answer>
     <p>
      This is described as a 
-     <link href="../contrib.html#cvshowto">CVS Usage Precis</link> on the
+     <link href="http://cocoon.apache.org/community/contrib.html#cvshowto">CVS Usage Precis</link> on the
      Contribution page. It also explains how to get branches other than the
      current HEAD branch.
     </p>

@@ -747,7 +747,7 @@ public class XindiceManager {
       <p>
         This how-to would not be possible without some ideas exchanged
         with Ivelin Ivanov in the
-        <link href="../mail-lists.html">Cocoon Users</link> list and
+        <link href="http://cocoon.apache.org/community/mail-lists.html">Cocoon Users</link> list and
         privately.
       </p>
     </s1>
@@ -758,7 +758,7 @@ public class XindiceManager {
         feedback to the author,
         <link href="mailto:josema|at|simbiosystems.com">Josema Alonso</link>
         or via the
-        <link href="../mail-lists.html">Cocoon Users</link> mail list.
+        <link href="http://cocoon.apache.org/community/mail-lists.html">Cocoon Users</link> mail list.
       </p>
     </s1>
     <s1 title="Revisions">
