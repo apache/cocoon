@@ -76,7 +76,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.57 $ $Date: 2000-10-30 23:02:43 $
+     * @version CVS $Revision: 1.1.2.58 $ $Date: 2000-10-31 17:40:44 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -460,14 +460,14 @@
       <!-- check if this selector is a factory ? -->
       <xsl:variable name="is-factory">
         <xsl:choose>
-          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]">
+          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]">
             <xsl:value-of select="false()"/>
           </xsl:when>
-          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]/@factory">
+          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]/@factory">
             <xsl:value-of select="true()"/>
           </xsl:when>
-          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]/@src">
-            <xsl:value-of select="java:isFactory($factory-loader, string(/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]/@src))"/>
+          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]/@src">
+            <xsl:value-of select="java:isFactory($factory-loader, string(/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]/@src))"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="false()"/>
