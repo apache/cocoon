@@ -64,7 +64,7 @@
         <table>
           <tr>
             <td class="copyright">
-              Copyright (c) 1999-2002 <a href="http://www.apache.org/">Apache Software Foundation</a>. All Rights Reserved.
+              Copyright (c) 1999-2004 <a href="http://www.apache.org/">Apache Software Foundation</a>. All Rights Reserved.
             </td>
           </tr>
         </table>
