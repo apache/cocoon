@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+  <header>
+	 <title>Offline Page Generation with Apache Ant</title>
+	 <version>0.9</version>
+	 <type>Technical document</type>
+	 <authors><person name="Upayavira" email="upayavira@apache.org"/>
+	 </authors>
+	 <abstract>This document explains how to use Cocoon to generate offline pages and sites with Apache Ant.</abstract>
+  </header>
+  <body>
+	 <s1 title="Overview">
+		<p>Apache Ant can be used to start Cocoon in its Offline mode. Whilst a specific 
+           Cocoon Ant task is planned, at present it can be invoked by starting the 
+           command line interface using a standard Java task.
+            </p>
+	 </s1>
+	 <s1 title="Sample Ant Task">
+       <p>A sample Ant task would be as follows:</p>
+       <source>
+<![CDATA[
+<java classname="org.apache.cocoon.Main" fork="true"
+dir="${build.context}"
+          failonerror="true" maxmemory="128m">
+      <arg value="-xcli.xconf"/>
+      <arg value="index.html"/>
+      <classpath>
+        <path refid="classpath"/>
+        <fileset dir="${build.dir}">
+          <include name="*.jar"/>
+        </fileset>
+        <pathelement location="${tools.jar}"/>
+        <pathelement location="${build.context}/WEB-INF/classes"/>
+      </classpath>
+    </java> 
+
+]]>    </source>
+       <p>This makes use of the Cocoon Command Line Interface's xconf configuration file. See
+          <link href="cli.html">command line</link> page for details about how to use this file.</p>
+     </s1>
+  </body>
+</document>
+
