@@ -12,6 +12,9 @@ public class InnerContinuable {
 	}
 	
 	public void doInnerClassTest2() {
+	    
+	    LinkerContinuable.init(null, null, false);
+	    
 		InnerClass ic = new InnerClass();
 		ic.sendResult2();
 	}
