@@ -71,7 +71,7 @@
   </target>
 
   <!-- Create docs -->
-  <target name="docs" depends="validate-jars, prepare-docs, validate-xdocs, docs_done, forrest, javadocs" unless="docs.notrequired" description="Builds the documentation">
+  <target name="docs" depends="validate-jars, prepare-docs, validate-xdocs, docs_done, javadocs, forrest" unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
 
