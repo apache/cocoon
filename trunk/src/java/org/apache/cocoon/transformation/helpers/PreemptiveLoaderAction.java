@@ -54,6 +54,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
@@ -61,7 +62,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This action starts the preemptive loader and runs forever.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.3 2003/10/15 20:09:51 cziegeler Exp $
+ *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.4 2003/10/15 20:16:44 cziegeler Exp $
  *  @since   2.1
  */
 public class PreemptiveLoaderAction 
