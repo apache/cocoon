@@ -15,15 +15,14 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Locale;
+
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.Datatype;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * An Output widget can be used to show a non-editable value to the user.
@@ -32,7 +31,7 @@ import java.util.Locale;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: Output.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     
@@ -74,12 +73,7 @@ public class Output extends AbstractWidget implements DataWidget {
         return OUTPUT_EL;
     }
 
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl outputAttrs = new AttributesImpl();
-        outputAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.INSTANCE_NS, OUTPUT_EL, Constants.INSTANCE_PREFIX_COLON + OUTPUT_EL, outputAttrs);
-
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // the value
         if (value != null) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
@@ -88,15 +82,6 @@ public class Output extends AbstractWidget implements DataWidget {
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
         }
-
-        // generate label, help, hint, etc.
-        definition.generateDisplayData(contentHandler);
-
-        contentHandler.endElement(Constants.INSTANCE_NS, OUTPUT_EL, Constants.INSTANCE_PREFIX_COLON + OUTPUT_EL);
-    }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
     }
 
     public Object getValue() {

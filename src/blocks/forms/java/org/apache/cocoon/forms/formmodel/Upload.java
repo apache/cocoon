@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version CVS $Id: Upload.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -145,17 +145,26 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     public String getXMLElementName() {
         return UPLOAD_EL;
     }
-    
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl fieldAttrs = new AttributesImpl();
-        fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        fieldAttrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
-        if (uploadDefinition.getMimeTypes() != null) {
-            fieldAttrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
-        }
-        contentHandler.startElement(Constants.INSTANCE_NS, UPLOAD_EL, Constants.INSTANCE_PREFIX_COLON + UPLOAD_EL, fieldAttrs);
 
+    
+    
+	/**
+	 * Adds attributes @required, @mime-types
+	 */
+	public AttributesImpl getXMLElementAttributes() {
+		// TODO Auto-generated method stub
+		System.out.println("getXMLElementAttributes");
+		
+		AttributesImpl attrs = super.getXMLElementAttributes();
+        attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        attrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
+        if (uploadDefinition.getMimeTypes() != null) {
+            attrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
+        }
+		return attrs;
+	}
+    
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         if (this.part != null) {
             String name = (String)this.part.getHeaders().get("filename");
             contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
@@ -169,14 +178,6 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
-
-        // the display data
-        this.uploadDefinition.generateDisplayData(contentHandler);
-
-        contentHandler.endElement(Constants.INSTANCE_NS, UPLOAD_EL, Constants.INSTANCE_PREFIX_COLON + UPLOAD_EL);
     }
 
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        this.uploadDefinition.generateLabel(contentHandler);
-    }
 }

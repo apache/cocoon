@@ -16,15 +16,9 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * An Action widget. An Action widget can cause an {@link ActionEvent} to be triggered
@@ -35,7 +29,7 @@ import java.util.Locale;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.5 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: Action.java,v 1.6 2004/04/22 14:26:48 mpo Exp $
  */
 public class Action extends AbstractWidget {
     private final ActionDefinition definition;
@@ -105,20 +99,6 @@ public class Action extends AbstractWidget {
     public String getXMLElementName() {        
         return ACTION_EL;
     }  
-
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl buttonAttrs = new AttributesImpl();
-        buttonAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.INSTANCE_NS, ACTION_EL, Constants.INSTANCE_PREFIX_COLON + ACTION_EL, buttonAttrs);
-        // generate label, help, hint, etc.
-        definition.generateDisplayData(contentHandler);
-        contentHandler.endElement(Constants.INSTANCE_NS, ACTION_EL, Constants.INSTANCE_PREFIX_COLON + ACTION_EL);
-    }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
-    }
     
     public void broadcastEvent(WidgetEvent event) {
         this.definition.fireActionEvent((ActionEvent)event);

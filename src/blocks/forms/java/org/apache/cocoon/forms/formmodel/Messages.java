@@ -34,7 +34,7 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: Messages.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();
@@ -84,12 +84,7 @@ public class Messages extends AbstractWidget {
         return MESSAGES_EL;
     }
     
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        contentHandler.startElement(Constants.INSTANCE_NS, MESSAGES_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGES_EL, XMLUtils.EMPTY_ATTRIBUTES);
-
-        definition.generateDisplayData(contentHandler);
-
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         Iterator messagesIt = messages.iterator();
         while (messagesIt.hasNext()) {
             XMLizable message = (XMLizable)messagesIt.next();
@@ -97,11 +92,6 @@ public class Messages extends AbstractWidget {
             message.toSAX(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, MESSAGE_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGE_EL);
         }
-
-        contentHandler.endElement(Constants.INSTANCE_NS, MESSAGES_EL, Constants.INSTANCE_PREFIX_COLON + MESSAGES_EL);
     }
 
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
-    }
 }

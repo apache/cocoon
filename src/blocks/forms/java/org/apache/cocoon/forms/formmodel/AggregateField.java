@@ -15,28 +15,22 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.formmodel.AggregateFieldDefinition.SplitMapping;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
-
 import org.outerj.expression.ExpressionException;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * An aggregated field allows to represent one value as multiple input fields, or several values
@@ -55,7 +49,7 @@ import java.util.Map;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
+ * @version CVS $Id: AggregateField.java,v 1.5 2004/04/22 14:26:48 mpo Exp $
  */
 public class AggregateField extends Field {
 
@@ -204,52 +198,17 @@ public class AggregateField extends Field {
         return super.validate(formContext);
     }
 
-
     private static final String AGGREGATEFIELD_EL = "aggregatefield";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
 
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl aggregatedFieldAttrs = new AttributesImpl();
-        aggregatedFieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(getAggregateFieldDefinition().isRequired()));
-        contentHandler.startElement(Constants.INSTANCE_NS, AGGREGATEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
-
-        if (enteredValue != null || value != null) {
-            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
-            String stringValue;
-            if (value != null) {
-                stringValue = getDatatype().convertToString(value, locale);
-            } else {
-                stringValue = enteredValue;
-            }
-            contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
-            contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
-        }
-
-        // validation message element: only present if the value is not valid
-        if (validationError != null) {
-            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
-            validationError.generateSaxFragment(contentHandler);
-            contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
-        }
-
-        // generate label, help, hint, etc.
-        getDefinition().generateDisplayData(contentHandler);
-
-        // generate selection list, if any
-        if (selectionList != null) {
-            selectionList.generateSaxFragment(contentHandler, locale);
-        } else if (getFieldDefinition().getSelectionList() != null) {
-            getFieldDefinition().getSelectionList().generateSaxFragment(contentHandler, locale);
-        }
-        contentHandler.endElement(Constants.INSTANCE_NS, AGGREGATEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + AGGREGATEFIELD_EL);
+    /**
+     * @return "aggregatefield"
+     */
+    public String getXMLElementName() {        
+        return AGGREGATEFIELD_EL;
     }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        getDefinition().generateLabel(contentHandler);
-    }
-
+      
     public Widget getWidget(String id) {
         return (Widget)fieldsById.get(id);
     }
