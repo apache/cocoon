@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.4 1999-12-01 11:27:48 stefano Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.5 1999-12-02 11:49:24 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-12-01 11:27:48 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-02 11:49:24 $
  */
 
 public class EngineWrapper extends Engine {
@@ -94,16 +94,16 @@ public class EngineWrapper extends Engine {
      */
     public class HttpServletRequestImpl implements HttpServletRequest {
         
-        private String pathTranslated = "/";
+        private String path = "/";
         private String document = null;
         
         public HttpServletRequestImpl(File path) {
             this(path, null);
         }
 
-        public HttpServletRequestImpl(File pathTranslated, String document) {
+        public HttpServletRequestImpl(File path, String document) {
             if (path != null) {
-                this.pathTranslated = pathTranslated.toString();
+                this.path = path.toString();
             }
             
             if (document != null) {
@@ -112,7 +112,7 @@ public class EngineWrapper extends Engine {
         }
 
         public String getPathTranslated() {
-            return this.pathTranslated;
+            return this.path;
         }
 
         // FIXME: this is a quick hack to make command line operation work
@@ -120,7 +120,7 @@ public class EngineWrapper extends Engine {
         public String getPathInfo() { return ""; }
 
         public String getParameter(String name) { 
-            if ((data != null) &&  (name.equalsIgnoreCase("producer"))) {
+            if ((document != null) &&  (name.equalsIgnoreCase("producer"))) {
                 return "org.apache.cocoon.producer.ProducerFromRequest";
             } else {
                 return null;
