@@ -4,17 +4,41 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.14 1999-12-23 01:26:53 stefano Exp $
+  $Id: changes.xml,v 1.15 2000-01-03 01:33:22 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
   <devs>
     <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
     <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
-    <person name="Ricardo Rocha" email="rrocha@plenix.org" id="RR"/>
+    <person name="Ricardo Rocha" email="rrocha@apache.org" id="RR"/>
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="SM" type="update">
+  	Added XSP sample pages.
+  </action>
+  <action dev="SM" type="update">
+  	Cleaned-up docs, in preparation for release.
+  </action>
+  <action dev="SM" type="update">
+  	Tuned Xerces attributes for speed.
+  </action>
+  <action dev="SM" type="add" due-to="James Birchfield" due-to-email="jmbirchfield@proteus-technologies.com">
+  	Added VRML formatter.
+  </action>
+  <action dev="SM" type="update">
+  	Updated XSP working draft to match implementation (the WD was slowly changed
+  	during development to match new emerging needs).
+  </action>
+  <action dev="RR" type="add">
+  	Added XSP primer in documentation.
+  </action>
+  <action dev="RR" type="add">
+  	Added implementation of the XSP technology. The Cocoon Project is thankful to 
+  	<link href="http://www.exoffice.com">Exoffice Technologies</link> that sponsored
+  	the creation of such implementation by hiring Ricardo and donated it to the project.
+  </action>
   <action dev="SM" type="add" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
   	Added examples on how to call the Cocoon engine from another servlet.
   </action>

@@ -233,6 +233,7 @@ of build files, give credits to the original authors. Thank you.
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${sbk.docs}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${sbk.docs}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${sbk.docs}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/xspprocessor.xml -out ${sbk.docs}/xspprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${sbk.docs}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${sbk.docs}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${sbk.docs}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
@@ -323,6 +324,7 @@ of build files, give credits to the original authors. Thank you.
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${site.dir}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${site.dir}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${site.dir}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/xspprocessor.xml -out ${site.dir}/xspprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${site.dir}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${site.dir}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${site.dir}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>

@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.10 1999-12-23 01:26:53 stefano Exp $
+  $Id: todo.xml,v 1.11 2000-01-03 01:33:22 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -15,30 +15,27 @@
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
 
- <action priority="high" assigned-to="SM" context="design">
-  Write SiteMap document.
- </action>
+ <actions priority="high">
+  <action context="code">
+   Implement "xsl:output" instead of "cocoon-format" PI and redesign
+   formatting subsystem. (follows sitemap)
+  </action>
+  <action context="code">
+   Pass request/session parameters to the XSLT processors for dynamic
+   stylesheet operation. (follows sitemap)
+  </action>
+  <action context="code">
+   Work on external entities inclusion (follows sitemap).
+  </action>
+ </actions>
  
- <action priority="high" context="code">
-  Implement "xsl:output" instead of "cocoon-format" PI and redesign
-  formatting subsystem. (follows sitemap)
- </action>
-
- <action priority="high" context="code">
-  Pass request/session parameters to the XSLT processors for dynamic
-  stylesheet operation. (follows sitemap)
- </action>
-
- <action priority="high" context="code">
-  Work on external entities inclusion (follows sitemap).
- </action>
-
- <action priority="medium" context="code">
-  Implement the error handler subsystem
- </action>
-
- <action priority="medium" assigned-to="PF" context="design">
-  Merge stylebook technology with Cocoon
- </action>
+ <actions priority="medium">
+  <action context="code">
+   Implement the error handler subsystem
+  </action>
+  <action assigned-to="PF" context="design">
+   Merge stylebook technology with Cocoon
+  </action>
+ </actions>
  
 </todo>
