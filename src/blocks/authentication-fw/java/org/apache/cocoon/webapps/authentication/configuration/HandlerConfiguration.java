@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.webapps.authentication.configuration;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -30,10 +31,11 @@ import org.apache.excalibur.source.SourceParameters;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HandlerConfiguration.java,v 1.6 2004/03/19 13:59:22 cziegeler Exp $
+ * @version CVS $Id$
 */
-public final class HandlerConfiguration
-implements java.io.Serializable {
+public final class HandlerConfiguration implements Serializable {
+
+    static final long serialVersionUID = 3398145971890504305L;
 
     /** The unique name of the handler */
     private final String name;

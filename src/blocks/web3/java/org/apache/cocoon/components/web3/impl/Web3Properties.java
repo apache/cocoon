@@ -27,9 +27,11 @@ import java.io.IOException;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3Properties.java,v 1.5 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class Web3Properties extends Properties {
+
+    static final long serialVersionUID = -2527971369954496362L;
 
     ArrayList orderedKeys = new ArrayList();
     

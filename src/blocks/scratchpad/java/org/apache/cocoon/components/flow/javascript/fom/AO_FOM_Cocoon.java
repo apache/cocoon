@@ -56,6 +56,8 @@ import org.mozilla.javascript.continuations.Continuation;
 
 public class AO_FOM_Cocoon extends ScriptableObject {
 
+    static final long serialVersionUID = 3891681874145031114L;
+
     private AO_FOM_JavaScriptInterpreter interpreter;
 
     private Redirector redirector;

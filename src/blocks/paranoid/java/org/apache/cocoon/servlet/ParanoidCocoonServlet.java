@@ -65,6 +65,8 @@ import javax.servlet.http.HttpServlet;
 
 public class ParanoidCocoonServlet extends HttpServlet {
 
+    static final long serialVersionUID = -9138341448067261865L;
+
     /**
      * The name of the actual servlet class.
      */
