@@ -1,4 +1,5 @@
 src/blocks/woody
+src/deprecated
 src/documentation/xdocs/tutorial
 src/java/org/apache/cocoon/components/ExtendedComponentSelector.java
 src/java/org/apache/cocoon/transformation/pagination/
