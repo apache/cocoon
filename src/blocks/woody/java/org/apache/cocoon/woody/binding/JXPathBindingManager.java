@@ -89,7 +89,7 @@ public class JXPathBindingManager implements BindingManager, LogEnabled, Service
     {
         //TODO make this configurable
 
-        this.bindingBuilders.put("field", new FieldJXPathBindingBuilder());
+        this.bindingBuilders.put("value", new ValueJXPathBindingBuilder());
         this.bindingBuilders.put(
             "context",
             new ContextJXPathBindingBuilder());
