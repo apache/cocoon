@@ -6,11 +6,11 @@ These are some basic tools to assist with the
 Keep the table synchronised with the java source
 ------------------------------------------------
 Occasionally do the following ...
-Find all java source files whose filename contains a component name ...
+Find all relevant java source files ...
  cd cocoon-2_1_X
  tools/review-sitemap-docs/correlate-table.sh
 Compare the output listings with last time you ran it ...
- diff component-java-files.txt component-java-files-20041201.txt
+ diff components-source.txt components-source-20041201.txt
 Also compare with a listing of the files from Cocoon trunk.
 Add new rows to the table with copy-and-paste.
 
