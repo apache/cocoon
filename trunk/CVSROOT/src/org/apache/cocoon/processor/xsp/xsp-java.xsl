@@ -201,7 +201,7 @@
   <xsl:template match="xsp:pi">
     <!-- Appending to xspCurrentNode doesn't work for Cocoon PIs,
          because Cocoon expects its PIs to be at the top level. -->
-    document.appendChild(
+    document.insertBefore(
        document.createProcessingInstruction(
          "<xsl:value-of select="@target"/>",
          <xsl:for-each select="xsp:text|xsp:expr">
@@ -216,7 +216,7 @@
           +
          </xsl:for-each>
          ""
-       )
+       ), document.getDocumentElement ()
      );
   </xsl:template>
 
