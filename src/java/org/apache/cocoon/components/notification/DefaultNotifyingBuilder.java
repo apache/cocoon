@@ -173,6 +173,7 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
      * Get root cause Throwable.
      */
     public static Throwable getRootCause (Throwable t) {
-        return ExceptionUtils.getRootCause(t);
+        Throwable rootCause = ExceptionUtils.getRootCause(t);
+        return rootCause != null ? rootCause : t;
     }
 }
