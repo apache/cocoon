@@ -73,6 +73,20 @@
             <parameter name="acl_inheritance_type">path</parameter>
             <!-- Nested roles: 0 means no nesting (default), 1 means one sublevel, etc. -->
             <parameter name="nested_roles_maxdepth">0</parameter>
+            
+            <!--
+            <content-interceptor class="org.apache.cocoon.components.slide.impl.JMSContentInterceptor">
+              <parameter name="java.naming.factory.initial">org.exolab.jms.jndi.InitialContextFactory</parameter>
+              <parameter name="java.naming.provider.url">rmi://localhost:1099/</parameter>
+              <parameter name="topic-factory">JmsTopicConnectionFactory</parameter>
+              <parameter name="topic">topic1</parameter>
+              <parameter name="ack-mode">dups</parameter>
+              <parameter name="persistent-delivery">false</parameter>
+              <parameter name="priority">4</parameter>
+              <parameter name="time-to-live">1000</parameter>
+            </content-interceptor>
+            -->
+            
         </configuration>
         <data>
             <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/">
