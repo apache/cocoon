@@ -137,6 +137,9 @@
         <layout name="tab" 
                 class="org.apache.cocoon.portal.layout.impl.TabLayout" 
                 renderer="tab">
+            <aspects>
+                <aspect name="tab" class="java.lang.Integer" persistence="session"/>
+            </aspects>
         </layout>
         <layout name="frame" 
                 class="org.apache.cocoon.portal.layout.impl.FrameLayout" 

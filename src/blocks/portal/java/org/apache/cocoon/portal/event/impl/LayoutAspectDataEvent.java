@@ -48,39 +48,52 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.aspect;
+package org.apache.cocoon.portal.event.impl;
 
-import org.apache.cocoon.portal.aspect.AspectStatus;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
+ * This events set the aspect data for a layout object
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabLayoutStatus.java,v 1.1 2003/05/08 13:38:10 cziegeler Exp $
+ * @version CVS $Id: LayoutAspectDataEvent.java,v 1.1 2003/05/19 14:10:12 cziegeler Exp $
  */
-public class TabLayoutStatus 
-implements AspectStatus {
+public final class LayoutAspectDataEvent
+    implements Event {
 
-    protected int selectedItem;
-
-    public TabLayoutStatus() {
-    }
+    private Layout target;
     
-    /**
-     * Returns the selectedTab.
-     * @return int
-     */
-    public int getSelectedItem() {
-        return selectedItem;
+    private String aspectName;
+    
+    private Object data;
+    
+    public LayoutAspectDataEvent(Layout target, String aspectName, Object data) {
+        this.target = target;
+        this.aspectName = aspectName;
+        this.data = data;
     }
 
     /**
-     * Sets the selectedTab.
-     * @param selectedTab The selectedTab to set
+     * @return
      */
-    public void setSelectedItem(int selectedTab) {
-        this.selectedItem = selectedTab;
+    public String getAspectName() {
+        return aspectName;
+    }
+
+    /**
+     * @return
+     */
+    public Object getData() {
+        return data;
+    }
+
+    /**
+     * @return
+     */
+    public Layout getTarget() {
+        return target;
     }
 
 }

@@ -48,24 +48,51 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.impl;
+package org.apache.cocoon.portal.event.subscriber.impl;
 
-import org.apache.cocoon.portal.event.LayoutEvent;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.Filter;
+import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.impl.LayoutAspectDataEvent;
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutEventImpl.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutAspectDataEventSubscriber.java,v 1.1 2003/05/19 14:10:12 cziegeler Exp $
  */
-public final class LayoutEventImpl 
-    extends AbstractActionEvent
-    implements LayoutEvent {
+public final class DefaultLayoutAspectDataEventSubscriber 
+    implements Subscriber {
 
-     // FIXME - remove this
-    public LayoutEventImpl(Object target, int action) {
-        super(target, action);
+    private ComponentManager manager;
+
+    public DefaultLayoutAspectDataEventSubscriber(ComponentManager manager) {
+        this.manager = manager;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+     */
+    public Class getEventType() {
+        return LayoutAspectDataEvent.class;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
+     */
+    public Filter getFilter() {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     */
+    public void inform(Event e) {
+        final LayoutAspectDataEvent event = (LayoutAspectDataEvent)e;
+        final Layout layout = event.getTarget();
+        layout.setAspectData(event.getAspectName(), event.getData());
     }
 
 }

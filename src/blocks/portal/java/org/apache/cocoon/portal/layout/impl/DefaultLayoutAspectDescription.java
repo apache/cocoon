@@ -50,6 +50,8 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
+import java.lang.reflect.Constructor;
+
 import org.apache.cocoon.portal.layout.LayoutAspectDescription;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -60,7 +62,7 @@ import org.apache.cocoon.util.ClassUtils;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultLayoutAspectDescription.java,v 1.1 2003/05/19 12:50:58 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutAspectDescription.java,v 1.2 2003/05/19 14:10:12 cziegeler Exp $
  */
 public class DefaultLayoutAspectDescription 
     implements LayoutAspectDescription {
@@ -119,7 +121,13 @@ public class DefaultLayoutAspectDescription
     public Object createNewInstance() {
         // TODO - cache class
         try {
-            return ClassUtils.loadClass(this.className).newInstance();
+            Class clazz = ClassUtils.loadClass(this.className);
+            if ( this.className.startsWith("java.lang.")) {
+                Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                return constructor.newInstance(new String[] {"0"});
+            } else {
+                return clazz.newInstance();
+            }
         } catch (Exception ignore) {
             return null;
         }
