@@ -50,23 +50,35 @@
 */
 package org.apache.cocoon.components;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-
 /**
- * Objects implementing this marker interface can get a configuration
- * from the map:pipelines section of the sitemap each time they
- * are looked up.
- *
+ * A {@link SitemapConfigurable} component gets the sitemap configuration
+ * using this object.
+ * 
  * @since 2.1
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurable.java,v 1.2 2003/03/19 12:47:34 cziegeler Exp $
+ * @version CVS $Id: SitemapConfigurationHolder.java,v 1.1 2003/03/19 12:47:34 cziegeler Exp $
  */
-public interface SitemapConfigurable {
+public interface SitemapConfigurationHolder {
 
     /**
-     * Set the <code>Configuration</code>.
+     * Get the  configuration for the current sitemap
+     * @return The configuration
      */
-    void setSitemapConfiguration(Configuration config)
-    throws ConfigurationException;
+    ChainedConfiguration getConfiguration();
+    
+    /**
+     * Get the prepared configuration for the current sitemap
+     * @return The configuration or null if no prepared is available
+     */
+    Object getPreparedConfiguration();
+    
+    /**
+     * Set the prepared configuration for the current sitemap.
+     * After it is set by a component, it can be get using
+     * {@link getPreparedConfiguration()}.
+     * 
+     * @param preparedConfig The prepared configuration
+     */
+    void setPreparedConfiguration(Object preparedConfig);
 }
