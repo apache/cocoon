@@ -48,19 +48,16 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-/*
- * Created on Sep 1, 2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 package org.apache.cocoon.components.cron;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
@@ -75,33 +72,22 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.quartz.CronTrigger;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SimpleTrigger;
-import org.quartz.Trigger;
-
+import org.quartz.*;
 import org.quartz.impl.DirectSchedulerFactory;
-
 import org.quartz.simpl.RAMJobStore;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 
 /**
  * This component can either schedule jobs or directly execute one.
  *
- * @author giacomo To change the template for this generated type comment go to Window&gt;Preferences&gt;Java&gt;Code
- *         Generation&gt;Code and Comments
+ * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
+ * @since 2.1.1
  */
 public class QuartzJobScheduler
     extends AbstractLogEnabled
     implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable {
+    
     /** ThreadPool policy RUN */
     private static final String POLICY_RUN = "RUN";
 
@@ -162,7 +148,7 @@ public class QuartzJobScheduler
      */
     public void addJob(final String name, final Object job, final String cronSpec, final boolean canRunConcurrently,
                        final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         final JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(DATA_MAP_OBJECT, job);
         addJob(name, jobDataMap, cronSpec, canRunConcurrently, params, objects);
@@ -173,7 +159,7 @@ public class QuartzJobScheduler
      */
     public void addJob(final String name, final String jobrole, final String cronSpec,
                        final boolean canRunConcurrently, final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         final JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(DATA_MAP_ROLE, jobrole);
         addJob(name, jobDataMap, cronSpec, canRunConcurrently, params, objects);
@@ -183,7 +169,7 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#addJob(java.lang.String, java.lang.Object, java.lang.String, boolean)
      */
     public void addJob(final String name, final Object job, final String cronSpec, final boolean canRunConcurrently)
-        throws CascadingException {
+    throws CascadingException {
         if (!(job instanceof CronJob) && !(job instanceof Runnable) && !(job instanceof Job)) {
             throw new CascadingException("Job object is neither an instance of " + CronJob.class.getName() + "," +
                                          Runnable.class.getName() + " nor " + Job.class.getName());
@@ -196,7 +182,7 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#addJob(java.lang.String, java.lang.String, java.lang.String, boolean)
      */
     public void addJob(final String name, final String jobrole, final String cronSpec, final boolean canRunConcurrently)
-        throws CascadingException {
+    throws CascadingException {
         addJob(name, jobrole, cronSpec, canRunConcurrently, null, null);
     }
 
@@ -204,7 +190,7 @@ public class QuartzJobScheduler
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(final Configuration config)
-        throws ConfigurationException {
+    throws ConfigurationException {
         final ThreadPool pool = createThreadPool(config.getChild("thread-pool"));
 
         try {
@@ -250,12 +236,15 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#fireTarget(java.lang.String)
      */
     public boolean fireJob(final String jobrole) {
+        Object job = null;
         try {
-            final Object job = m_manager.lookup(jobrole);
+            job = m_manager.lookup(jobrole);
 
             return fireJob(jobrole, job);
         } catch (final ServiceException se) {
             getLogger().error("cannot fire job " + jobrole, se);
+        } finally {
+            m_manager.release( job );
         }
 
         return false;
@@ -265,7 +254,7 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#fireJob(java.lang.Object, org.apache.avalon.framework.parameters.Parameters, java.util.Map)
      */
     public boolean fireJob(final Object job, final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         if (job instanceof ConfigurableCronJob) {
             ((ConfigurableCronJob)job).setup(params, objects);
         }
@@ -277,9 +266,10 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#fireJob(java.lang.String, org.apache.avalon.framework.parameters.Parameters, java.util.Map)
      */
     public boolean fireJob(final String jobrole, final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
+        Object job = null;
         try {
-            final Object job = m_manager.lookup(jobrole);
+            job = m_manager.lookup(jobrole);
 
             if (job instanceof ConfigurableCronJob) {
                 ((ConfigurableCronJob)job).setup(params, objects);
@@ -288,6 +278,8 @@ public class QuartzJobScheduler
             return fireJob(jobrole, job);
         } catch (final ServiceException se) {
             getLogger().error("cannot fire job " + jobrole, se);
+        } finally {
+            m_manager.release( job );
         }
 
         return false;
@@ -297,7 +289,7 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#fireJobAt(java.util.Date, java.lang.String, java.lang.Object)
      */
     public void fireJobAt(final Date date, final String name, final Object job)
-        throws CascadingException {
+    throws CascadingException {
         fireJobAt(date, name, job, null, null);
     }
 
@@ -305,7 +297,7 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#fireJobAt(java.util.Date, java.lang.String, java.lang.String)
      */
     public void fireJobAt(final Date date, final String name, final String jobrole)
-        throws CascadingException {
+    throws CascadingException {
         fireJobAt(date, name, jobrole, null, null);
     }
 
@@ -314,7 +306,7 @@ public class QuartzJobScheduler
      */
     public void fireJobAt(final Date date, final String name, final Object job, final Parameters params,
                           final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         final JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(DATA_MAP_OBJECT, job);
         addJob(name, jobDataMap, date, true, params, objects);
@@ -325,7 +317,7 @@ public class QuartzJobScheduler
      */
     public void fireJobAt(final Date date, final String name, final String jobrole, final Parameters params,
                           final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         final JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(DATA_MAP_ROLE, jobrole);
         addJob(name, jobDataMap, date, true, params, objects);
@@ -335,7 +327,7 @@ public class QuartzJobScheduler
      * @see org.apache.cocoon.components.cron.JobScheduler#removeJob(java.lang.String)
      */
     public void removeJob(final String name)
-        throws NoSuchElementException {
+    throws NoSuchElementException {
         try {
             m_scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP);
         } catch (final SchedulerException se) {
@@ -347,7 +339,7 @@ public class QuartzJobScheduler
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(final ServiceManager manager)
-        throws ServiceException {
+    throws ServiceException {
         m_manager = manager;
     }
 
@@ -355,7 +347,7 @@ public class QuartzJobScheduler
      * @see org.apache.avalon.framework.activity.Startable#start()
      */
     public void start()
-        throws Exception {
+    throws Exception {
         m_scheduler.start();
     }
 
@@ -363,7 +355,7 @@ public class QuartzJobScheduler
      * @see org.apache.avalon.framework.activity.Startable#stop()
      */
     public void stop()
-        throws Exception {
+    throws Exception {
         m_scheduler.pause();
     }
 
@@ -381,7 +373,7 @@ public class QuartzJobScheduler
      */
     private void addJob(final String name, final JobDataMap jobDataMap, final Date date,
                         final boolean canRunConcurrently, final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         final SimpleTrigger trigger = new SimpleTrigger(name, DEFAULT_QUARTZ_JOB_GROUP, date);
         addJob(name, jobDataMap, trigger, canRunConcurrently, params, objects);
     }
@@ -400,7 +392,7 @@ public class QuartzJobScheduler
      */
     private void addJob(final String name, final JobDataMap jobDataMap, final String cronSpec,
                         final boolean canRunConcurrently, final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         final CronTrigger cronJobEntry = new CronTrigger(name, DEFAULT_QUARTZ_JOB_GROUP);
 
         try {
@@ -426,7 +418,7 @@ public class QuartzJobScheduler
      */
     private void addJob(final String name, final JobDataMap jobDataMap, final Trigger trigger,
                         final boolean canRunConcurrently, final Parameters params, final Map objects)
-        throws CascadingException {
+    throws CascadingException {
         jobDataMap.put(DATA_MAP_NAME, name);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
         jobDataMap.put(DATA_MAP_MANAGER, m_manager);
@@ -553,7 +545,7 @@ public class QuartzJobScheduler
      * @throws ConfigurationException thrown in case of configuration failures
      */
     private void createTriggers(final Configuration[] tiggers)
-        throws ConfigurationException {
+    throws ConfigurationException {
         for (int i = 0; i < tiggers.length; i++) {
             String cron = tiggers[i].getChild("cron").getValue(null);
 
@@ -609,7 +601,7 @@ public class QuartzJobScheduler
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.1 2003/09/03 16:04:02 giacomo Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
      */
     private static class ThreadPool
         extends AbstractLogEnabled
