@@ -200,7 +200,7 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Updated antlr to 2.7.4, hsqldb to 1.7.2
+     Updated antlr to 2.7.4
    </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
      Javaflow: also support inherited methods
