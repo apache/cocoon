@@ -37,7 +37,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-17 20:04:23 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-21 17:34:33 $ $Author: stefano $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -454,7 +454,6 @@ class Query {
 			rs = st.executeQuery(query);
 			md = rs.getMetaData();
 		} catch (SQLException e) {
-			e.printStackTrace();
 			conn.close();
 			throw e;
 		}
