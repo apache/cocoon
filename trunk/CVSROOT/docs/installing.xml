@@ -259,7 +259,7 @@
     <em>[jar-name]</em> with the package file name).
    </p>
     
-   <source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
+<source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
    
    <p>
     Here is an example:
@@ -296,7 +296,7 @@ wrapper.classpath=/usr/local/java/lib/jndi.jar
     Cocoon to reside):
    </p>
    
-   <source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
+<source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
   
    <p>
     Note that you should not need to change anything from the template
@@ -398,21 +398,21 @@ AddHandler cocoon2 xml2</source>
     </p>
 
 <source><![CDATA[
- <servlet>
-  <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
-  <servlet-class>org.apache.cocoon.Cocoon</servlet-class>
-  <init-param>
-   <param-name>properties</param-name>
-   <param-value>
-     [path-to-cocoon.properties]/cocoon.properties
-   </param-value>
-  </init-param>
- </servlet>
- 
- <servlet-mapping>
-  <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
-  <url-pattern>*.xml</url-pattern>
- </servlet-mapping>
+<servlet>
+ <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
+ <servlet-class>org.apache.cocoon.Cocoon</servlet-class>
+ <init-param>
+  <param-name>properties</param-name>
+  <param-value>
+    [path-to-cocoon.properties]/cocoon.properties
+  </param-value>
+ </init-param>
+</servlet>
+
+<servlet-mapping>
+ <servlet-name>org.apache.cocoon.Cocoon</servlet-name>
+ <url-pattern>*.xml</url-pattern>
+</servlet-mapping>
 ]]></source>
 
     <p>
@@ -462,10 +462,8 @@ AddHandler cocoon2 xml2</source>
     Once you've done that, you should register Cocoon by adding these lines
     to your configuration files:
    </p>
-   <source>
-    weblogic.httpd.register.*.xml=\org.apache.cocoon.Cocoon
-    weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
-   </source>
+<source>weblogic.httpd.register.*.xml=\org.apache.cocoon.Cocoon
+weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties</source>
    <p>
     making sure that you replaced <em>[path-to-cocoon]</em> with the actual
     path in your system.
@@ -616,7 +614,7 @@ AddHandler cocoon2 xml2</source>
   </table>
   
   <note>
-   Eue to a bug in <link href="http://www.blackdown.org">Blackdown
+   Due to a bug in <link href="http://www.blackdown.org">Blackdown
    JDK 1.2pre2</link> for Linux, we suggest you to use green threads instead of the
    native ones which are much less stable, expecially highly concurrent operations
    like servlet engines and servlet execution.

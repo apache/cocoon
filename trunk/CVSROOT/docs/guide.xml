@@ -289,8 +289,7 @@ browser.5=netscape=Mozilla
      is not sent back to the client directly, but it gets loaded and executed
      as a document producer. This guarantees both performance improvement
      (since the producer are cached) as well as easier producer development,
-     following the common compiled server pages model. [this part is not yet
-     implemented]
+     following the common compiled server pages model.
    </dd>
   </dl>
  </s1>
@@ -413,7 +412,7 @@ browser.5=netscape=Mozilla
   storage system which is able to save stored objects in a persistent state that
   outlives the JVM execution. This is mainly used for pages that are very
   expensive to generate and last very long without changes, such as compiled
-  server pages. [this part is not yet implemented]</p>
+  server pages.</p>
   
   <p>The store system is responsible of handling the cached pages
   as well as the pre-parsed XML documents. This is mostly used by XSLT
