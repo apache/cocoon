@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.9 2004/04/21 21:10:05 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.10 2004/04/22 08:05:00 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -276,11 +276,19 @@ public abstract class AbstractWidget implements Widget {
      * Concrete subclasses should call super.getXMLElementAttributes and possibly
      * add additional attributes.
      * 
-     * @return the attributes for the main element for this widget's sax-fragment. 
+     * Note: the @id is not added for those widgets who's getId() returns <code>null</code> 
+     * (e.g. top-level container widgets like 'form').  The contract of returning a non-null
+     * {@link AttributesImpl} is however maintained.
+     * 
+     * @return the attributes for the main element for this widget's sax-fragment.
      */
     public AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = new AttributesImpl();
-        attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        // top-level widget-containers like forms will have their id set to ""
+        // for those the @id should not be included.
+        if (getId().length() == 0) {
+        	attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        }
         return attrs;
     }
 
@@ -306,7 +314,16 @@ public abstract class AbstractWidget implements Widget {
      * This will generate some standard XML consisting of a simple wrapper 
      * element (name provided by {@link #getXMLElementName()}) with attributes
      * (provided by {@link #getXMLElementAttributes()} around anything injected 
-     * in by {@link #generateItemSaxFragment(ContentHandler, Locale)}.
+     * in by both {@link #generateDisplayData(ContentHandler)} and
+     * {@link #generateItemSaxFragment(ContentHandler, Locale)}.
+     * 
+     * <pre>
+     * &lt;fi:{@link #getXMLElementName()} {@link #getXMLElementAttributes() &gt;
+     *   {@link #generateDisplayData(ContentHandler)}
+     * 
+     *   {@link #generateItemSaxFragment(ContentHandler, Locale)}
+     * &lt;/fi:{@link #getXMLElementName()} &gt; 
+     * </pre>
      * 
      * @param contentHandler to send the SAX events to
      * @param locale in which context potential content needs to be put.
@@ -314,12 +331,7 @@ public abstract class AbstractWidget implements Widget {
      */
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale)    
     throws SAXException {
-        //TODO: check why there is no call to getDefinition().generateDisplayData(contentHandler);  
-        // if we can add it, then the subclass AbstractContainerWidget could be pulled up here
-        // and potentially make this even final?
-
-        String element = this.getXMLElementName();
-        
+        String element = this.getXMLElementName();       
         AttributesImpl attrs = getXMLElementAttributes();
         contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
 
