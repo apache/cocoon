@@ -39,6 +39,43 @@
 </faq>
 
 <faq>
+ <question>I get the exception <em>Can't create store repository: //./repository.
+Make sure it's there or you have writing permissions.</em> How do I fix this?
+ </question>
+ <answer>
+  <p>Create a directory where the servlet engine process is owner and has 600 access mask.
+  Then change the following configuration to match the absolute path:</p>
+
+  <source>processor.xsp.repository = /absolute/path/to/repository</source>
+
+  <p>then restart your servlet engine.</p>
+
+  <note>The repository may contain sensible information you don't want untrusted
+  users to gain access to. This is why you should restrict both write and read
+  by all but the servlet engine process.</note>
+ </answer>
+</faq>
+
+<faq>
+ <question>what are the other jar files shipped with Cocoon for? do I need to include them into my classpath?</question>
+ <answer>
+  <p>They are for building Cocoon and creating its docs from XML but they are not used by Cocoon at runtime so, if you
+  don't plan to modify and recompile Cocoon or its documentation, you can safely ignore them.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>I get the exception <em>java.lang.AbstractMethodError: org/apache/jserv/JServContext.getContext</em>. What's wrong?</question>
+ <answer>
+  <p>You are probably using JServ with the wrong version of the Servlet Library. JServ supports Servlet API 2.0
+  and is not forward compatible with the newer version shipped with Cocoon. Cocoon is Servlet API 2.2 compatible and
+  requires the servlet_2.2.jar package to compile correctly, but works is back compatible with old servlet engines.</p>
+  <p>To fix the problem you must set the Servlet API 2.0 version in your classpath instead of the one shipped with
+  cocoon. Read the JServ installation instructions for more info on this.</p>
+ </answer>
+</faq>
+
+<faq>
  <question>Why the LDAP processor doesn't work?</question>
  <answer>
   <p>Make sure you have the <link href="http://java.sun.com/products/jndi/index.html">Sun JNDI API</link>

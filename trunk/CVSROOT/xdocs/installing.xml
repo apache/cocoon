@@ -101,6 +101,12 @@ wrapper.classpath=/usr/local/java/lib/fop.jar
     required package (as shown above).
    </note>
 
+   <note>
+    JServ is a Servlet 2.0 compliant servlet engine and will not work if you
+    place the Servlet_2.2.jar in its classpath. So ignore the servlet_2.2.jar
+    package that is shipped with Cocoon if you use Jserv.
+   </note>
+
    <p>
     At this point, you must set the Cocoon configurations. To do this, you
     must choose the servlet zone(s) where you want Cocoon to reside.
