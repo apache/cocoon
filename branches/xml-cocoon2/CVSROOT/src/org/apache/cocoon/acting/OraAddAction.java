@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 15:52:44 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 18:16:22 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -69,12 +69,13 @@ public class OraAddAction extends DatabaseAddAction {
             }
 
             PreparedStatement statement = conn.prepareStatement(query);
+            getLogger().info(query);
 
             Configuration[] keys = conf.getChild("table").getChild("keys").getChildren("key");
             Configuration[] values = conf.getChild("table").getChild("values").getChildren("value");
             currentIndex = 1;
 
-            for (int i = 0; i < keys.length; i++, currentIndex++) {
+            for (int i = 0; i < keys.length; i++) {
                 if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
                     String selectQuery = this.getSelectQuery(keys[i]);
 
@@ -88,6 +89,7 @@ public class OraAddAction extends DatabaseAddAction {
 
                     set.close();
                     set.getStatement().close();
+                    currentIndex++;
                 }
             }
 
@@ -104,6 +106,7 @@ public class OraAddAction extends DatabaseAddAction {
 
             if ("".equals(query) == false) {
                 PreparedStatement LOBstatement = conn.prepareStatement(query);
+                getLogger().info(query);
 
                 currentIndex = 1;
 
