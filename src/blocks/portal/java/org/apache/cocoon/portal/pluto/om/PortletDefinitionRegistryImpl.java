@@ -44,6 +44,8 @@ import org.apache.pluto.om.entity.PortletApplicationEntityList;
 import org.apache.pluto.om.entity.PortletApplicationEntityListCtrl;
 import org.apache.pluto.om.portlet.PortletApplicationDefinitionList;
 import org.apache.pluto.om.portlet.PortletDefinition;
+import org.apache.pluto.om.portlet.PortletDefinitionCtrl;
+import org.apache.pluto.om.ControllerObjectAccess;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
@@ -274,6 +276,7 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
                 if (this.contextName.equals(webModule)) {
                     ((PortletDefinitionImpl)portlet).setLocalPortlet(true);
                 }
+                ((PortletDefinitionImpl)portlet).setPortletClassLoader(Thread.currentThread().getContextClassLoader());
 
             }
         }
