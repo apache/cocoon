@@ -50,6 +50,14 @@
 */
 package org.apache.cocoon;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicConfigurator;
@@ -60,36 +68,23 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
 
 /**
  * Ant task for running Cocoon. Allows for the embedding of Cocoon into 
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonTask.java,v 1.1 2003/10/13 12:08:10 upayavira Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.2 2003/10/14 22:27:16 joerg Exp $
  */
 public class CocoonTask extends Task implements DynamicConfigurator {
 
     private CommandlineJava cmdl = new CommandlineJava();
     private boolean failOnError = false;
-    private Method method = null;
     private Throwable caught = null;
-    
-    private ArrayList uris = new ArrayList();
-    
+
     private String uriGroup = null;
     private Document xconf;
     private Element root;
