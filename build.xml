@@ -24,7 +24,7 @@
 
 ============================================================================ -->
 
-<project default="webapp" basedir="." name="Apache Cocoon">
+<project default="compile" basedir="." name="Apache Cocoon">
 
   <!-- ==================  Apache Cocoon targets  ======================== -->
 
@@ -34,50 +34,5 @@
   <!-- =================================================================== -->
   <!-- Compile targets         -->
   <import file="tools/targets/compile-build.xml" />
-  <!-- =================================================================== -->  
-  <!-- Validation targets      -->
-  <import file="tools/targets/validate-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Samples targets         -->
-  <import file="tools/targets/samples-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Web application targets -->
-  <import file="tools/targets/webapp-build.xml" />
-  <!-- =================================================================== -->
-  <!-- IDE targets             -->
-  <import file="tools/targets/ide-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Testcases targets       -->
-  <import file="tools/targets/test-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Documentation targets   -->
-  <import file="tools/targets/docs-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Distribution targets    -->
-  <import file="tools/targets/dist-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Administration targets  -->
-  <import file="tools/targets/admin-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Standalone-demo targets -->
-  <import file="tools/targets/standalone-demo-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Instrumentation targets -->
-  <import file="tools/targets/instrumentation-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Upgrade targets -->
-  <import file="tools/targets/upgrade-build.xml" />
-  <!-- =================================================================== -->  
-  <!-- Tools targets -->
-  <import file="tools/targets/tools-build.xml" />
-  <!-- =================================================================== -->    
-
-  <!-- ==================  Apache Forrest targets  ======================= -->
-
-  <!-- =================================================================== -->
-  <!-- Forrest targets         -->
-  <import file="tools/targets/forrest-build.xml" />
-  <!-- =================================================================== -->
-
 </project>
 

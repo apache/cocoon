@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.cocoon.kernel.composition.Component;
 import org.apache.cocoon.kernel.composition.Wire;
+import org.apache.cocoon.kernel.resolution.Resolver;
 
 /**
  * 
@@ -61,7 +62,7 @@ public class WirableConnection implements Component, Connection {
      *
      * @param wire the {@link Wire} instance associated with this instance.
      */
-    public void contextualize(Wire wire) {
+    public void contextualize(Wire wire, Resolver resolver) {
         this.wire = wire;
     }
 
