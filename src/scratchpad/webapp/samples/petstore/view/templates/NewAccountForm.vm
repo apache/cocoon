@@ -1,0 +1,30 @@
+#parse("view/templates/IncludeTop.vm")
+<form action="${continuation.id}.kont" styleId="workingAccountForm" method="post" >
+<hidden name="workingAccountForm" property="validate" value="newAccount"/>
+
+
+<TABLE cellpadding="10" cellspacing="0" align="center" border="1" bgcolor="#dddddd"><TR><TD>
+
+
+<FONT color="darkgreen"><H3>User Information</H3></FONT>
+<TABLE  border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
+<TR bgcolor="#FFFF88"><TD>
+User ID:</TD><TD><input name="workingAccountForm.account.username" value="$!account.username"/>
+</TD></TR><TR bgcolor="#FFFF88"><TD>
+Password:</TD><TD><input type="password" name="workingAccountForm.account.password" />
+</TD></TR><TR bgcolor="#FFFF88"><TD>
+Repeat password:</TD><TD> <input type="password" name="workingAccountForm.repeatedPassword"/>
+</TD></TR>
+</TABLE>
+
+#parse("view/templates/IncludeAccountFields.vm");
+
+</TD></TR></TABLE>
+
+<BR /><CENTER>
+<input border="0" type="image" src="images/button_submit.gif" />
+</CENTER>
+
+</form>
+
+#parse("view/templates/IncludeBottom.vm")

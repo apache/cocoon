@@ -1,0 +1,58 @@
+<FONT color="darkgreen"><H3>Account Information</H3></FONT>
+
+<TABLE bgcolor="#008800" border="0" cellpadding="3" cellspacing="1" >
+<TR bgcolor="FFFF88"><TD>
+First name:</TD><TD><input type="text" value="$!account.firstName"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Last name:</TD><TD><input type="text" value="$!account.lastName"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Email:</TD><TD><input type="text" size="40" name="workingAccountForm.email" value="$!account.email" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Phone:</TD><TD><input type="text" name="workingAccountForm.phone" value="$!account.phone" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Address 1:</TD><TD><input type="text" size="40" name="workingAccountForm.address1" value="$!account.address1" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Address 2:</TD><TD><input type="text" size="40" name="workingAccountForm.address2" value="$!account.address2" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+City: </TD><TD><input type="text" name="workingAccountForm.city" value="$!account.city"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+State:</TD><TD><input type="text" name="workingAccountForm.state" value="$!account.state"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Zip:</TD><TD><input type="text" name="workingAccountForm.zip" value="$!account.zip"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Country: </TD><TD><input type="text" size="15" name="workingAccountForm.country" value="$!account.country" />
+</TD></TR>
+</TABLE>
+
+
+<FONT color="darkgreen"><H3>Profile Information</H3></FONT>
+
+<TABLE bgcolor="#008800" border="0" cellpadding="3" cellspacing="1" >
+<TR bgcolor="FFFF88"><TD>
+Language Preference:</TD><TD>
+<select name="workingAccountForm.languagePreference">
+  <option value="English">English</option>
+  <option value="Japanese">Japanese</option>
+</select>
+</TD></TR><TR bgcolor="FFFF88"><TD>
+Favourite Category:</TD><TD>
+<select name="workingAccountForm.account.favouriteCategoryId">
+#foreach ($cat in $categoryList)
+  <option value="$cat.name">$cat.name</option>
+#end
+</select>
+</TD></TR><TR bgcolor="FFFF88"><TD colspan="2">
+<input type="checkbox" name="workingAccountForm.account.listOption"/> Enable MyList
+</TD></TR><TR bgcolor="FFFF88"><TD colspan="2">
+ <input type="checkbox" name="workingAccountForm.account.bannerOption"/> Enable MyBanner
+</TD></TR>
+</TABLE>
