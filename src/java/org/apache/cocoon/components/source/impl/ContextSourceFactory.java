@@ -45,7 +45,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.7 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.8 2004/06/16 14:29:31 vgritsenko Exp $
  */
 public class ContextSourceFactory
 extends AbstractLogEnabled
@@ -118,7 +118,7 @@ implements SourceFactory,
                 throw new MalformedURLException(message);
             }
         } catch (ServiceException se) {
-          	throw new SourceException("Unable to lookup source resolver.", se);
+            throw new SourceException("Unable to lookup source resolver.", se);
         } finally {
             this.manager.release( resolver );
         }

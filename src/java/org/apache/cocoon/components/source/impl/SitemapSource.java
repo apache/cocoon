@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.19 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.20 2004/06/16 14:29:31 vgritsenko Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -342,14 +342,14 @@ implements Source, XMLizable {
             if (this.redirectSource != null) {
                 SourceUtil.parse(this.manager, this.redirectSource, contentHandler);
             } else {
-	            XMLConsumer consumer;
-	            if (contentHandler instanceof XMLConsumer) {
-	                consumer = (XMLConsumer)contentHandler;
-	            } else if (contentHandler instanceof LexicalHandler) {
-	                consumer = new ContentHandlerWrapper(contentHandler, (LexicalHandler)contentHandler);
-	            } else {
-	                consumer = new ContentHandlerWrapper(contentHandler);
-	            }
+                XMLConsumer consumer;
+                if (contentHandler instanceof XMLConsumer) {
+                    consumer = (XMLConsumer)contentHandler;
+                } else if (contentHandler instanceof LexicalHandler) {
+                    consumer = new ContentHandlerWrapper(contentHandler, (LexicalHandler)contentHandler);
+                } else {
+                    consumer = new ContentHandlerWrapper(contentHandler);
+                }
                 // We have to add an environment changer
                 // for clean environment stack handling.
                 EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,

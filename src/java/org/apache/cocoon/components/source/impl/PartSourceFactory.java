@@ -32,19 +32,19 @@ import java.util.Map;
  */
 public class PartSourceFactory implements SourceFactory, Contextualizable
 {
-	Map objectModel;
+    Map objectModel;
     
     /*
-	 * Returns a new {@link PartSource} based on the uri.
-	 *
-	 * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
-	 */
+     * Returns a new {@link PartSource} based on the uri.
+     *
+     * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
+     */
     public Source getSource(String uri, Map parameters) throws IOException, MalformedURLException
     {
         return new PartSource(uri, this.objectModel);
     }
 
-	/**
+    /**
      * Do nothing, {@link PartSource}s don't need to be released.
      *
      * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
@@ -54,7 +54,7 @@ public class PartSourceFactory implements SourceFactory, Contextualizable
         // Nothing to do here
     }
 
-	/**
+    /**
      * Get the objectModel from the Context
      */
     public void contextualize(org.apache.avalon.framework.context.Context context)
