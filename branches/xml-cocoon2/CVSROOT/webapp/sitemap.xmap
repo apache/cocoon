@@ -11,7 +11,7 @@
    <map:generator  name="directory"   src="org.apache.cocoon.generation.DirectoryGenerator" label="content"/> 
    <map:generator  name="serverpages" src="org.apache.cocoon.generation.ServerPagesGenerator" label="content"/> 
    <map:generator  name="request"     src="org.apache.cocoon.generation.RequestGenerator"/> 
-   <map:generator  name="status"      src="org.apache.cocoon.generation.StatusGenerator"/>   
+   <map:generator  name="status"      src="org.apache.cocoon.generation.StatusGenerator"/>
   </map:generators> 
  
   <map:transformers default="xslt"> 
@@ -29,15 +29,15 @@
    
   <map:serializers default="html"> 
    <map:serializer name="links"                               src="org.apache.cocoon.serialization.LinkSerializer"/> 
-   <map:serializer name="xml"     mime-type="text/xml"        src="org.apache.cocoon.serialization.XMLSerializer"/> 
-   <map:serializer name="html"    mime-type="text/html"       src="org.apache.cocoon.serialization.HTMLSerializer"/> 
-   <map:serializer name="fo2pdf"  mime-type="application/pdf" src="org.apache.cocoon.serialization.FOPSerializer"/>
-   <map:serializer name="vrml"    mime-type="model/vrml"      src="org.apache.cocoon.serialization.TextSerializer"/>
-   <map:serializer name="wap"     mime-type="text/vnd.wap.wml" src="org.apache.cocoon.serialization.XMLSerializer">
+   <map:serializer name="xml"    mime-type="text/xml"         src="org.apache.cocoon.serialization.XMLSerializer"/> 
+   <map:serializer name="html"   mime-type="text/html"        src="org.apache.cocoon.serialization.HTMLSerializer"/> 
+   <map:serializer name="fo2pdf" mime-type="application/pdf"  src="org.apache.cocoon.serialization.FOPSerializer"/>
+   <map:serializer name="vrml"   mime-type="model/vrml"       src="org.apache.cocoon.serialization.TextSerializer"/>
+   <map:serializer name="wap"    mime-type="text/vnd.wap.wml" src="org.apache.cocoon.serialization.XMLSerializer">
     <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
     <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
    </map:serializer> 
-   <map:serializer name="svgxml"     mime-type="image/svg-xml"   src="org.apache.cocoon.serialization.XMLSerializer">
+   <map:serializer name="svgxml" mime-type="image/svg-xml"    src="org.apache.cocoon.serialization.XMLSerializer">
     <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
     <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
    </map:serializer> 
@@ -113,7 +113,6 @@
     <map:transform src="stylesheets/page/simple-page2vml.xsl"/> 
     <map:serialize type="xml"/> 
    </map:match>
-
 <!--
    <map:match pattern="hello.svg">
     <map:generate src="docs/samples/hello-page.xml"/> 
@@ -161,25 +160,25 @@
     <map:redirect-to resource="slides"/>
    </map:match>
 
-   <map:match pattern="slides/">
+   <!-- <map:match pattern="slides/">
     <map:redirect-to uri="slides/slides"/>
-   </map:match>
+   </map:match> -->
 
    <map:match pattern="slides/style"> 
     <map:read src="resources/styles/slides-apachecon.css" mime-type="text/css"/> 
    </map:match>
 
-   <map:match pattern="slides/*.gif">
-    <map:read src="docs/samples/slides/{1}.gif" mime-type="image/gif"/> 
+   <map:match pattern="slides/**.gif">
+    <map:read src="documents/slides/{1}.gif" mime-type="image/gif"/> 
    </map:match>
 
-   <map:match pattern="slides/*.jpg">
-    <map:read src="docs/samples/slides/{1}.jpg" mime-type="image/jpg"/> 
+   <map:match pattern="slides/**.jpg">
+    <map:read src="documents/slides/{1}.jpg" mime-type="image/jpg"/> 
    </map:match>
 
    <map:match pattern="xsp/*"> 
     <map:generate type="serverpages" src="docs/samples/xsp/{1}.xsp"/> 
-    <map:transform src="stylesheets/dynamic-page2html.xsl"/> 
+    <map:transform src="stylesheets/dynamic-page2html.xsl"/>
     <map:serialize/> 
    </map:match>
 
