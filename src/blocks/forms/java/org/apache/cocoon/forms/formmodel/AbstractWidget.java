@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.21 2004/05/11 12:55:53 vgritsenko Exp $
+ * @version $Id$
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -59,7 +59,15 @@ public abstract class AbstractWidget implements Widget {
      */
     private Map attributes;
  
-    
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization, such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize() {
+        // Do nothing.
+    }
+
     /**
      * Gets the id of this widget.
      */
@@ -135,11 +143,11 @@ public abstract class AbstractWidget implements Widget {
         return getId();
     }
 
-	public Widget lookupWidget(String path)	{
-        
-        if (path == null && path.equals(""))
+    public Widget lookupWidget(String path) {
+
+        if (path == null || path.equals(""))
             return this;
-        
+
         Widget relativeWidget;
         String relativePath = null;        
         int sepPosition = path.indexOf("" + Widget.PATH_SEPARATOR);

@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * @version $Id: AbstractContainerWidget.java,v 1.13 2004/07/07 01:39:54 vgritsenko Exp $
+ * @version $Id$
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
 
@@ -41,9 +41,21 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
         widgets = new WidgetList();
     }
 
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize() {
+        Iterator it = this.getChildren();
+        while(it.hasNext()) {
+          ((Widget)it.next()).initialize();
+        }
+    }
+
     public void addChild(Widget widget) {
-        widget.setParent(this);
         widgets.addWidget(widget);
+        widget.setParent(this);
     }
 
     public boolean hasChild(String id) {
