@@ -44,6 +44,7 @@ import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.caching.CompositeCacheValidity;
 import org.apache.cocoon.caching.ParametersCacheValidity;
 import org.apache.cocoon.util.HashUtil;
+import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 
@@ -60,7 +61,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.TransformerException;
 
 /**
  *
@@ -68,7 +68,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-17 18:18:55 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-20 14:48:30 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -81,7 +81,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
     private Browser browser = null;
 
     /** The trax TransformerFactory */
-    private SAXTransformerFactory tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+    private SAXTransformerFactory tfactory = null;
 
     /** The trax TransformerHandler */
     private TransformerHandler transformerHandler = null;
@@ -131,6 +131,10 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
         }
         if(templates == null)
         {
+            if(tfactory == null)  {
+                tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+                tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
+            }
             templates = tfactory.newTemplates(new SAXSource(new InputSource(systemID)));
             if (this.useStore == true)
             {
@@ -146,7 +150,9 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
                 }
             }
         }
-        return tfactory.newTransformerHandler(templates);
+        TransformerHandler handler = tfactory.newTransformerHandler(templates);
+        handler.getTransformer().setErrorListener(new TraxErrorHandler(getLogger()));
+        return handler;
     }
 
     /**

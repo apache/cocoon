@@ -38,6 +38,8 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import org.apache.avalon.AbstractLoggable;
 
+import org.apache.cocoon.util.TraxErrorHandler;
+
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
  * a "standard" XSLT stylesheet stored as <code>trax.Templates</code> object.
@@ -46,7 +48,7 @@ import org.apache.avalon.AbstractLoggable;
  * transformed into an equivalent XSLT stylesheet anyway... This class should probably be based on an interface...
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-12 21:12:36 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-20 14:48:26 $
  */
 public class Logicsheet extends AbstractLoggable {
     /** The trax TransformerFactory */
@@ -78,7 +80,7 @@ public class Logicsheet extends AbstractLoggable {
     public void setInputSource(InputSource inputSource) throws SAXException, IOException {
         try {
             tfactory = (SAXTransformerFactory)TransformerFactory.newInstance();
-            //templates = tfactory.newTemplates(new SAXSource(inputSource));
+            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
 
             // Create a Templates ContentHandler to handle parsing of the 
             // stylesheet.
@@ -114,7 +116,9 @@ public class Logicsheet extends AbstractLoggable {
      */
     public TransformerHandler getTransformerHandler() {
         try {
-            return tfactory.newTransformerHandler(templates);
+            TransformerHandler handler = tfactory.newTransformerHandler(templates);
+            handler.getTransformer().setErrorListener(new TraxErrorHandler(getLogger()));
+            return handler;
         } catch (TransformerConfigurationException e) {
             getLogger().error("Logicsheet.getTransformerHandler:TransformerConfigurationException", e);
         } catch (Exception e) {

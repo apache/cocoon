@@ -30,12 +30,14 @@ import javax.xml.transform.TransformerException;
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
 
+import org.apache.cocoon.util.TraxErrorHandler;
+
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-20 21:06:43 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 14:48:27 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
 
@@ -57,6 +59,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
     public LogicsheetCodeGenerator() {
 
         SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
+        factory.setErrorListener(new TraxErrorHandler(log));
         Properties format = new Properties();
 
         try {
@@ -64,6 +67,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
             // FIXME (SSA) change a home made content handler, that extract the PCDATA
             // from the last remaining element
             TransformerHandler handler = factory.newTransformerHandler();
+            handler.getTransformer().setErrorListener(new TraxErrorHandler(log));
 
             // Set the output properties
             format.put(OutputKeys.METHOD,"text");
