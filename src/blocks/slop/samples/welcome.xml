@@ -14,18 +14,27 @@
     </group>
 
     <group name="Email parsing using SLOP">
+        <sample name="email-example.txt" href="email-example.txt">
+            original source file
+        </sample>    
         <sample name="email-example.xml" href="rfc822/email-example.xml">
             XML result of parsing an RFC 822 message
         </sample>
     </group>
 
     <group name="Test catalog example">
+        <sample name="tc-example.txt" href="tc-example.txt">
+            original source file
+        </sample>    
         <sample name="tc-example.xml" href="tc/tc-example.xml">
             Example using Slop to describe interactive tests easily using ASCII files
         </sample>
     </group>
 
     <group name="Special characters">
+        <sample name="special.chars.txt" href="special-chars.txt">
+            original source file
+        </sample>     
         <sample name="special.chars.xml" href="test/special-chars.xml">
             Test Slop with special and accented characters
         </sample>
