@@ -156,7 +156,7 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.3 2003/07/09 21:36:53 joerg Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.4 2003/08/07 13:34:46 joerg Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Configurable, Initializable {
@@ -419,6 +419,7 @@ public class XMLDBTransformer extends AbstractTransformer
                         resource.setContent(document);
                         collection.storeResource(resource);
                         result = "success";
+                        key = resource.getId();
                     } catch (XMLDBException e) {
                         message = "Failed to create resource " + key + ": " + e.errorCode;
                         getLogger().debug(message, e);
