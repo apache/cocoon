@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-19 14:44:17 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-30 18:39:17 $
  */
 public abstract class AbstractSitemap implements Sitemap {
 
@@ -108,6 +108,8 @@ public abstract class AbstractSitemap implements Sitemap {
       */
     protected String substitute (List list, String expr)
     throws PatternException, NumberFormatException {
+        if (expr == null)
+            return null;
         StringBuffer result = new StringBuffer();
         String s = null;
         int j = 0;
