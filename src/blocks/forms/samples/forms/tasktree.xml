@@ -35,7 +35,7 @@
             <fd:new id="task-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addsub" repeater="tasks" action-command="add-row">
+        <fd:repeater-action id="addsub" repeater="tasks" command="add-row">
           <fd:label>Add subtasks</fd:label>
           <fd:hint>Creates a task subtree</fd:hint>
         </fd:repeater-action>
@@ -45,8 +45,8 @@
     <!-- a task -->
     <fd:class id="task-class">
       <fd:widgets>
-      <!-- FIXME: doesn't work if there's not an enclosing struct -->
-        <fd:struct id="task">
+      <!-- FIXME: doesn't work if there's not an enclosing group -->
+        <fd:group id="task">
           <fd:widgets>
             <fd:field id="title">
               <fd:datatype base="string"/>
@@ -59,16 +59,16 @@
             </fd:field>
             
             <!-- these actions will act on the "tasks" repeater in which this class is inlined -->
-            <fd:row-action id="add" action-command="add-after">
+            <fd:row-action id="add" command="add-after">
               <fd:label>+</fd:label>
             </fd:row-action>
-            <fd:row-action id="up" action-command="move-up">
+            <fd:row-action id="up" command="move-up">
               <fd:label>^</fd:label>
             </fd:row-action>
-            <fd:row-action id="down" action-command="move-down">
+            <fd:row-action id="down" command="move-down">
               <fd:label>v</fd:label>
             </fd:row-action>
-            <fd:row-action id="delete" action-command="delete">
+            <fd:row-action id="delete" command="delete">
               <fd:label>X</fd:label>
             </fd:row-action>
             
@@ -76,7 +76,7 @@
             <fd:new id="tasklist-class"/>
             
           </fd:widgets>
-        </fd:struct>
+        </fd:group>
       </fd:widgets>
     </fd:class>
 
@@ -88,7 +88,7 @@
     <!-- the top-level tasks -->
     <fd:new id="tasklist-class"/>
     
-    <fd:submit id="ok" action-command="foo">
+    <fd:submit id="ok">
       <fd:label>OK</fd:label>
     </fd:submit>
     

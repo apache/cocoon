@@ -23,24 +23,24 @@
     xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
     path="result">
   
-  <fb:struct id="page1" path=".">
+  <fb:group id="page1" path=".">
     <fb:value id="email" path="email"/>
     <fb:value id="fourchars" path="fourchars"/>
     <fb:value id="birthdate" path="birthdate">
         <fd:convertor datatype="date" type="formatting" style="short"/>
     </fb:value>
-  </fb:struct>
+  </fb:group>
   
-  <fb:struct id="page2" path=".">
+  <fb:group id="page2" path=".">
     <fb:value id="number1" path="number1"/>
     <fb:value id="number2" path="number2"/>
     <fb:value id="account" path="account"/>
     <fb:value id="cowheight" path="cowheight"/>
-  </fb:struct>
+  </fb:group>
   
-  <fb:struct id="page3" path=".">
+  <fb:group id="page3" path=".">
     <fb:value id="somebool" path="somebool"/>
     <fb:multi-value id="drinks" parent-path="drinks" row-path="drink"/>
-  </fb:struct>
+  </fb:group>
   
 </fb:context>

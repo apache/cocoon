@@ -66,6 +66,7 @@ public class AggregateFieldDefinition extends FieldDefinition {
 
 
     public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {
+        checkMutable();
         container.addWidgetDefinition(widgetDefinition);
     }
 
@@ -74,6 +75,7 @@ public class AggregateFieldDefinition extends FieldDefinition {
     }
 
     protected void setCombineExpression(Expression expression) {
+        checkMutable();
         combineExpr = expression;
     }
 
@@ -82,6 +84,7 @@ public class AggregateFieldDefinition extends FieldDefinition {
     }
 
     protected void setSplitPattern(Pattern pattern, String regexp) {
+        checkMutable();
         this.splitPattern = pattern;
         this.splitRegexp = regexp;
     }
@@ -99,10 +102,12 @@ public class AggregateFieldDefinition extends FieldDefinition {
     }
 
     protected void setSplitFailMessage(XMLizable splitFailMessage) {
+        checkMutable();
         this.splitFailMessage = splitFailMessage;
     }
 
     protected void addSplitMapping(int group, String fieldId) {
+        checkMutable();
         splitMappings.add(new SplitMapping(group, fieldId));
     }
 
@@ -112,6 +117,8 @@ public class AggregateFieldDefinition extends FieldDefinition {
 
     public Widget createInstance() {
         AggregateField aggregateField = new AggregateField(this);
+        // Set the initial selection list, if any
+        aggregateField.setSelectionList(getSelectionList());
 
         Iterator fieldDefinitionIt = container.getWidgetDefinitions().iterator();
         while (fieldDefinitionIt.hasNext()) {

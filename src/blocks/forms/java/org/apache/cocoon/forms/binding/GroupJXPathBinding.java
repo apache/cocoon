@@ -30,9 +30,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  * @version $Id$
  */
-public class GroupJXPathBinding extends ComposedJXPathBindingBase {
-
-    private final String xpath;
+public class GroupJXPathBinding extends ContextJXPathBinding {
 
     private final String widgetId;
 
@@ -43,9 +41,8 @@ public class GroupJXPathBinding extends ComposedJXPathBindingBase {
      * @param childBindings
      */
     public GroupJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
-        super(commonAtts, childBindings);
+        super(commonAtts, xpath, childBindings);
         this.widgetId = widgetId;
-        this.xpath = xpath;
     }
 
     /**
@@ -55,11 +52,7 @@ public class GroupJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Group groupWidget = (Group)selectWidget(frmModel, this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        super.doLoad(groupWidget, subContext);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading " + toString());
-        }
+        super.doLoad(groupWidget, jxpc);
     }
 
     /**
@@ -69,14 +62,10 @@ public class GroupJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Group groupWidget = (Group)selectWidget(frmModel, this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        super.doSave(groupWidget, subContext);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString());
-        }
+        super.doSave(groupWidget, jxpc);
     }
 
     public String toString() {
-        return "GroupJXPathBinding [widget=" + this.widgetId + ", xpath=" + this.xpath + "]";
+        return "GroupJXPathBinding [widget=" + this.widgetId + ", xpath=" + getXPath() + "]";
     }
 }

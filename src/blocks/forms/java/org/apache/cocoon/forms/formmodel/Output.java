@@ -51,7 +51,7 @@ public class Output extends AbstractWidget implements DataWidget {
         this.definition = definition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return definition;
     }
 

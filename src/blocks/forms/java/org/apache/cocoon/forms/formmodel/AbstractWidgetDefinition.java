@@ -42,6 +42,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     //TODO consider final on these
     private String location = null;
     private String id;
+    /** the definition is mutable when being built */
+    private boolean mutable = true;
     /** The initial map of attributes (can be null) */
     private Map attributes;
     private Map displayData;
@@ -60,11 +62,29 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         }
         return this.formDefinition;
     }
+    
+    /**
+     * Locks this definition so that it becomes immutable.
+     */
+    public void makeImmutable() {
+        this.mutable = false;
+    }
+    
+    /**
+     * Check that this definition is mutable, i.e. is in setup phase. If not, throw an exception.
+     */
+    protected void checkMutable() {
+        if (!this.mutable) {
+            throw new IllegalStateException("Attempt to modify an immutable WidgetDefinition");
+        }
+    }
 
     /**
      * Sets the parent of this definition
      */
     public void setParent(WidgetDefinition definition) {
+        //FIXME(SW) calling checkMutable() here is not possible as NewDefinition.resolve() does some weird
+        //reorganization of the definition tree
         this.parent = definition;
     }
 
@@ -81,10 +101,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     }
 
     public void setState(WidgetState state) {
+        checkMutable();
         this.state = state;
     }
 
     protected void setLocation(String location) {
+        checkMutable();
         this.location = location;
     }
 
@@ -97,10 +119,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     }
 
     protected void setId(String id) {
+        checkMutable();
         this.id = id;
     }
 
     protected void setAttributes(Map attributes) {
+        checkMutable();
         this.attributes = attributes;   
     }
     
@@ -113,10 +137,21 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     }
 
     protected void addCreateListener(CreateListener listener) {
+        checkMutable();
         this.createListener = WidgetEventMulticaster.add(this.createListener, listener);
+    }
+    
+    public void widgetCreated(Widget widget) {
+        if (this.createListener != null) {
+            widget.getForm().addWidgetEvent(new CreateEvent(widget));
+        }
     }
 
     public void fireCreateEvent(CreateEvent event) {
+        // Check that this widget was created by the current definition
+        if (event.getSourceWidget().getDefinition() != this) {
+            throw new IllegalArgumentException("Widget was not created by this definition");
+        }
         if (this.createListener != null) {
             this.createListener.widgetCreated(event);
         }
@@ -134,10 +169,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
      * @param displayData an association of {name, sax fragment}
      */
     public void setDisplayData(Map displayData) {
+        checkMutable();
         this.displayData = displayData;
     }
 
     public void addValidator(WidgetValidator validator) {
+        checkMutable();
         if (this.validators == null) {
             this.validators = new ArrayList();
         }

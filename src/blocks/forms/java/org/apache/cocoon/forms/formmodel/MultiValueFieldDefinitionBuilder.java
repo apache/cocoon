@@ -15,13 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.Datatype;
-import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
  * Builds {@link MultiValueFieldDefinition}s.
@@ -29,30 +24,14 @@ import org.apache.cocoon.forms.util.DomHelper;
  * @version $Id$
  */
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
+
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setCommonProperties(widgetElement, definition);
-        setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
-
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
-        if (datatypeElement == null) {
-            throw new Exception("A nested datatype element is required for the widget "
-                                + widgetElement.getTagName() + " with id \"" + definition.getId()
-                                + "\" at " + DomHelper.getLocation(widgetElement));
-        }
-
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
-        definition.setDatatype(datatype);
-
-        boolean hasSelectionList = buildSelectionList(widgetElement, definition);
-        if (!hasSelectionList)
-            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
-
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addValueChangedListener((ValueChangedListener)iter.next());
-        }
+        setupDefinition(widgetElement, definition);
+        if (definition.getSelectionList() == null)
+            throw new Exception("Error: multivaluefield always require a selectionlist at " +
+                    DomHelper.getLocation(widgetElement));
+        definition.makeImmutable();
         return definition;
     }
 }

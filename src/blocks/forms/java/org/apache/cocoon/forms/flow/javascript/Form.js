@@ -27,28 +27,31 @@ defineClass("org.apache.cocoon.forms.flow.javascript.ScriptableWidget");
 /**
  * Create a form, given the URI of its definition file
  */
-function Form(uri) {
+function Form(formDefinition) {
     var formMgr = null;
     var resolver = null;
     var src = null;
     var xmlAdapter = null;
     try {
         formMgr = cocoon.getComponent(Packages.org.apache.cocoon.forms.FormManager.ROLE);
-        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
-        src = resolver.resolveURI(uri);
-        this.form = formMgr.createForm(src);
-        this.binding = null;
-        this.eventHandler = null;
-        // FIXME : hack needed because FOM doesn't provide access to the context
-        this.avalonContext = formMgr.getAvalonContext();
-        // TODO : do we keep this ?
-        this.formWidget = new Widget(this.form);
-
+        if ((typeof formDefinition) == "string" || formDefinition instanceof String) {
+            resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
+            src = resolver.resolveURI(formDefinition);
+            this.form = formMgr.createForm(src);
+        } else {
+            this.form = formMgr.createForm(formDefinition)
+        }
     } finally {
         cocoon.releaseComponent(formMgr);
         if (src != null) resolver.release(src);
         cocoon.releaseComponent(resolver);
     }
+    this.binding = null;
+    this.eventHandler = null;
+    // FIXME : hack needed because FOM doesn't provide access to the context
+    this.avalonContext = formMgr.getAvalonContext();
+    // TODO : do we keep this ?
+    this.formWidget = new Widget(this.form);
 }
 
 Form.prototype.getModel = function() {
@@ -95,7 +98,7 @@ Form.prototype.lookupWidget = function(path) {
  * @parameter bizdata some business data for the view (like in cocoon.sendPageAndWait()).
  *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
  */
-Form.prototype.showForm = function(uri, bizData) {
+Form.prototype.showForm = function(uri, bizData, fun, ttl) {
 
     if (bizData == undefined) bizData = new Object();
     bizData[Packages.org.apache.cocoon.forms.transformation.FormsPipelineConfig.CFORMSKEY] = this.form;
@@ -110,39 +113,27 @@ Form.prototype.showForm = function(uri, bizData) {
     var finished = false;
     this.isValid = false;
 
-    // FIXME: Remove check for removed syntax later.
-    if (this.validator != undefined) {
-        throw "Forms do not support custom javascript validators anymore. Declare your validators in the form model file.";
-    }
-
-    do {
-        var k = cocoon.sendPageAndWait(uri, bizData);
-        if (result == null) result = k;
-
+    var comingBack = false;
+    var bookmark = cocoon.createWebContinuation(ttl);
+    
+    if (comingBack) {
+        // We come back to the bookmark: process the form
         var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
-
-        // Prematurely add the bizData as in the object model so that event listeners can use it
-        // (the same is done by cocoon.sendPage())
-        // FIXME : hack needed because FOM doesn't provide access to the object model
-        var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
-        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData);
-
         finished = this.form.process(formContext);
         if (finished) {
             this.isValid = this.form.isValid();
+            var widget = this.form.getSubmitWidget();
+            // Can be null on "normal" submit
+            this.submitId = widget == null ? null : widget.getId();
+            return bookmark;
         }
-
-        // FIXME: Theoretically, we should clone the form widget (this.form) to ensure it keeps its
-        // value with the continuation. We don't do it since there should me not much pratical consequences
-        // except a sudden change of repeaters whose size changed from a continuation to another.
-
-    } while(!finished);
-
-    var widget = this.form.getSubmitWidget();
-    // Can be null on "normal" submit
-    this.submitId = widget == null ? null : widget.getId();
-
-    return result;
+    }
+    comingBack = true;
+    cocoon.sendPage(uri, bizData, bookmark);
+    if (fun && fun instanceof Function) {
+        fun();
+    }
+    FOM_Cocoon.suicide();
 }
 
 Form.prototype.createBinding = function(bindingURI) {

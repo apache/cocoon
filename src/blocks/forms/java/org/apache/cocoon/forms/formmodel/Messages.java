@@ -48,7 +48,7 @@ public class Messages extends AbstractWidget {
         this.definition = definition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return this.definition;
     }
 

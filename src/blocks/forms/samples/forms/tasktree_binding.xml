@@ -31,7 +31,7 @@
   </fb:class>
   
   <fb:class id="task-class">
-    <fb:struct id="task" path=".">
+    <fb:group id="task" path=".">
       <fb:value id="title" path="title"/>
       <fb:value id="start" path="@start">
         <fd:convertor datatype="date" type="formatting" style="short"/>
@@ -40,7 +40,7 @@
         <fd:convertor datatype="date" type="formatting" style="short"/>
       </fb:value>
       <fb:new id="tasklist-class"/>
-    </fb:struct>
+    </fb:group>
   </fb:class>
   
   <fb:value id="name" path="name"/>

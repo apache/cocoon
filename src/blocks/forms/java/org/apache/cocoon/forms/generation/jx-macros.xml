@@ -100,9 +100,10 @@
 
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:if test="${cformsHelper.isVisible(widget)}">
-        <fi:group id="${widget.getRequestParameterName()}">
+        <!--FIXME(SW): revisit fi:group
+          fi:group id="${widget.getRequestParameterName()}"-->
           <jx:evalBody/>
-        </fi:group>
+        <!--/fi:group-->
       </jx:if>
     </jx:macro>
 

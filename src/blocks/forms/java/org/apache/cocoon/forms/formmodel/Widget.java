@@ -97,6 +97,13 @@ public interface Widget {
     public Form getForm();
 
     /**
+     * Get this widget's definition.
+     * 
+     * @return the widget's definition
+     */
+    public WidgetDefinition getDefinition();
+    
+    /**
      * Get the widget's own state. Note that this state is <em>not</em> the one actually considered
      * for handling requests and producing output. For these matters, the combined state is used.
      *
@@ -180,16 +187,26 @@ public interface Widget {
     public void generateLabel(ContentHandler contentHandler) throws SAXException;
 
     /**
-     * @return the value of the widget. For some widgets (notably ContainerWidgets)
-     * this may not make sense, those should then simply return null here.
+     * Get the value of a widget.
+     * <p>
+     * Not all widgets do have a value (notably {@link ContainerWidget}s,
+     * but this method is provided here as a convenience to ease writing and avoiding casts.
+     * 
+     * @return the value of the widget.
+     * @throws UnsupportedOperationException if this widget doesn't have a value.
      */
-    public Object getValue();
+    public Object getValue() throws UnsupportedOperationException;
 
     /**
-     * Sets the value of this widget to the given object. Some widgets may not support this
-     * method, those should throw an runtime exception if you try to set their value anyway.
+     * Sets the value of this widget.
+     * <p>
+     * Not all widgets do have a value (notably {@link ContainerWidget}s,
+     * but this method is provided here as a convenience to ease writing and avoiding casts.
+     * 
+     * @param value the new widget's value.
+     * @throws UnsupportedOperationException if this widget doesn't have a value.
      */
-    public void setValue(Object object);
+    public void setValue(Object value) throws UnsupportedOperationException;
 
     /**
      * @return whether this widget is required to be filled in. As with {@link #getValue()}, 

@@ -20,24 +20,33 @@ import java.util.Iterator;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.log.DeprecationLogger;
 import org.w3c.dom.Element;
 
 /**
  * Builds a <code>&lt;fd:repeater-action/&gt;</code>
  *
- * <p>Two actions are defined:
+ * <p>Three actions are defined:
  * <ul>
  * <li>
- *   <code>&lt;fd:repeater-action id="add" action-command="add-row"
+ *   <code>&lt;fd:repeater-action id="add" command="add-row"
  *   repeater="repeater-id"/&gt;</code>: when activated, adds a row to the
  *   sibling repeater named "repeater-id".
  * </li>
  * <li>
- *   <code>&lt;fd:repeater-action id="rm" action-command="delete-rows"
+ *   <code>&lt;fd:repeater-action id="rm" command="delete-rows"
  *   repeater="repeater-id" select="select-id"/&gt;</code>: removes the
  *   selected rows from the sibling repeater named "repeater-id". The
  *   selected rows are identified by the boolean field "select-id" present
  *   in each row.
+ * </li>
+ * <li>
+ *   <code>&lt;fd:repeater-action id="insert" command="insert-rows"
+ *   repeater="repeater-id" select="select-id"/&gt;</code>: inserts rows before
+ *   the selected rows from the sibling repeater named "repeater-id". The
+ *   selected rows are identified by the boolean field "select-id" present
+ *   in each row.
+ * </li>
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
@@ -45,13 +54,26 @@ import org.w3c.dom.Element;
  */
 public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
+        // Get the "command" attribute
+        String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
+        
+        // If unspecified, check the deprecated "action-command" deprecated attribute
+        if (actionCommand == null) {
+            actionCommand = DomHelper.getAttribute(widgetElement, "action-command", null);
+            if (actionCommand != null) {
+                DeprecationLogger.log("The 'action-command' attribute is deprecated and replaced by 'command', at " +
+                    DomHelper.getLocation(widgetElement));
+            }
+        }
+        if (actionCommand == null) {
+            throw new Exception("Missing attribute 'command' at " + DomHelper.getLocation(widgetElement));
+        }
+
+
         RepeaterActionDefinition definition = createDefinition(widgetElement, actionCommand);
-        setCommonProperties(widgetElement, definition);
+        super.setupDefinition(widgetElement, definition);
         setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
 
         definition.setActionCommand(actionCommand);
 
@@ -67,19 +89,23 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
             definition.addActionListener((ActionListener)iter.next());
         }
 
+        definition.makeImmutable();
         return definition;
     }
 
     protected RepeaterActionDefinition createDefinition(Element element, String actionCommand) throws Exception {
 
+        String repeater = DomHelper.getAttribute(element, "repeater");
         if ("delete-rows".equals(actionCommand)) {
-            String repeater = DomHelper.getAttribute(element, "repeater");
             String select = DomHelper.getAttribute(element, "select");
-            return new DeleteRowsActionDefinition(repeater, select);
+            return new RepeaterActionDefinition.DeleteRowsActionDefinition(repeater, select);
 
         } else if ("add-row".equals(actionCommand)) {
-            String repeater = DomHelper.getAttribute(element, "repeater");
-            return new AddRowActionDefinition(repeater);
+            return new RepeaterActionDefinition.AddRowActionDefinition(repeater);
+
+        } else if ("insert-rows".equals(actionCommand)) {
+            String select = DomHelper.getAttribute(element, "select");
+            return new RepeaterActionDefinition.InsertRowsActionDefinition(repeater, select);
 
         } else {
             throw new Exception("Unknown repeater action '" + actionCommand + "' at " + DomHelper.getLineLocation(element));

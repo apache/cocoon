@@ -40,7 +40,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
         this.definition = definition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return this.definition;
     }
 
@@ -125,8 +125,13 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     public void broadcastEvent(WidgetEvent event) {
-        this.definition.fireActionEvent((ActionEvent)event);
-        fireActionEvent((ActionEvent)event);
+        if (event instanceof ActionEvent) {
+            this.definition.fireActionEvent((ActionEvent)event);
+            fireActionEvent((ActionEvent)event);
+        } else {
+            // Other kinds of events
+            super.broadcastEvent(event);
+        }
     }
 
 }

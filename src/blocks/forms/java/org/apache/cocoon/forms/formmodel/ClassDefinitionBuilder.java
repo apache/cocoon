@@ -24,13 +24,13 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class ClassDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public final class ClassDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         ClassDefinition definition = new ClassDefinition();
-        setCommonProperties(element, definition);
+        
+        super.setupDefinition(element, definition);
         setDisplayData(element, definition);
-        setValidators(element, definition);
 
         Element widgetsElement = DomHelper.getChildElement(element, Constants.DEFINITION_NS, "widgets", true);
         // All child elements of the widgets element are widgets
@@ -41,6 +41,7 @@ public class ClassDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
             definition.addWidgetDefinition(widgetDefinition);
         }
 
+        definition.makeImmutable();
         return definition;
     }
 }

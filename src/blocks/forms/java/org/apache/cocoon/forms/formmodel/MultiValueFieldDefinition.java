@@ -22,7 +22,10 @@ package org.apache.cocoon.forms.formmodel;
  */
 public class MultiValueFieldDefinition extends FieldDefinition {
     public Widget createInstance() {
-        return new MultiValueField(this);
+        MultiValueField field =  new MultiValueField(this);
+        // Set the initial selection list, if any
+        field.setSelectionList(getSelectionList());
+        return field;
     }
     
 	public void setRequired(boolean required) {
