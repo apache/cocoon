@@ -47,7 +47,9 @@
 
 %right hardbreak "(\r(\n?) | \n) (\r(\n?) | \n)+";
 
-%token bulleteditem "\*+";
+%token bulleted1item "\*";
+%token bulleted2item "\*\*";
+%token bulleted3item "\*\*\*";
 
 %token numbered1item "#";
 %token numbered2item "##";
@@ -122,7 +124,7 @@ subsubparagraphs
   ;
 
 paragraph 
-  : bulletedlist
+  : bulletedlist1
   | numberedlist1
   | textsequence
   | line 
@@ -131,14 +133,37 @@ paragraph
   | table
   ;
 
-bulletedlist 
-  : bulletedlist bulletedlistitem 
-  | bulletedlistitem              
+bulletedlist1 
+  : bulletedlist1 bulletedlistitem1 
+  | bulletedlistitem1               
+  | bulletedlist1 bulletedlist2     
+  | bulletedlist2                   
   ;
 
-bulletedlistitem 
-  : bulleteditem textsequence
+bulletedlistitem1 
+  : bulleted1item textsequence
   ;
+
+bulletedlist2 
+  : bulletedlist2 bulletedlistitem2 
+  | bulletedlistitem2               
+  | bulletedlist2 bulletedlist3     
+  | bulletedlist3                   
+  ; 
+
+bulletedlistitem2 
+  : bulleted2item textsequence
+  ;
+
+bulletedlist3 
+  : bulletedlist3 bulletedlistitem3 
+  | bulletedlistitem3               
+  ; 
+
+bulletedlistitem3 
+  : bulleted3item textsequence
+  ;
+
 
 numberedlist1 
   : numberedlist1 numberedlistitem1 
@@ -174,6 +199,8 @@ numberedlistitem3
 table
   : tablehead softbreak tablerows
   | tablehead softbreak tablerows softbreak
+  | tablerows
+  | tablerows softbreak
   ;
 
 tablehead

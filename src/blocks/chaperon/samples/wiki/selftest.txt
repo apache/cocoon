@@ -1,13 +1,15 @@
-This wiki document is a self-describing test of the Cocoon Chaperon wiki grammar. Reading what follows 
-should tell you if the tests are successful.
+This wiki document is a self-describing test of the Cocoon Chaperon wiki grammar. Reading what follows should tell you if the tests are successful.
 
-The page http://wiki.cocoondev.org/Wiki.jsp?page=ChaperonTestPage should be kept in sync with this so as 
-to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax 
-used by the Cocoon wiki.
+The document in the Cocoon Samples is at: src/blocks/chaperon/samples/wikitest/selftest.txt
 
-The "content", "parser-output" and "xdoc" views can be used to check the various stages of parsing and conversion.
+The document in the Cocoon Wiki is at: http://wiki.cocoondev.org/Wiki.jsp?page=ChaperonTestPage
+
+Both documents should be synchronised, so as to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax used by the Cocoon wiki.
+
+In the Cocoon Samples, the "content", "parser-output" and "xdoc" views can be used to check the various stages of parsing and conversion.
 
 Lines like -- THIS TEXT -- are comments about this test, they must appear as is.
+----
 
 -- 0. CURRENT RESULTS --
 
@@ -19,8 +21,15 @@ Currently this test shows the following problems:
 * 0.1 This bullet list is invisible in the html output if there is no section title (3 bangs) before it
 * 1.1 Headings must be used in the usual order (big contains medium contains small), otherwise unpredictable results can occur due to the conversion from the linear wiki model to the nested xdocs model. 
 * 5.1 relative link points to wiki.cocoondev.org (but is it by design?)
+* 8.3 Spaces must surround in tables
+* Can't end a line with \ or two \s
+* Can't have empty table cells (pipe is parsed the same as two pipes)
+* Can't have a list item with no text
+* Can't have a line consisting of a single space
+* ;term:ex not supported
 
--- 1.HEADINGS --
+
+-- 1. HEADINGS --
 
 Test 1.1 headings in the usual order (from big to small): below you should see 3 headings, big, medium, small:
 
@@ -30,7 +39,7 @@ Test 1.1 headings in the usual order (from big to small): below you should see 3
 
 ! small heading #1
 
-Test 1.2 same headings with text in-between
+Test 1.2 same headings with text in between
 
 !!! big heading #2
 Text after big heading.
@@ -44,7 +53,7 @@ Text after small heading.
 !!! new big heading
 The above heading starts a new section in the xdocs version of this document.
 
--- 2.NUMBERED LISTS --
+-- 2. NUMBERED LISTS --
 
 Test 2.1 This should be followed by a list that counts from one to four:
 # one
@@ -52,7 +61,14 @@ Test 2.1 This should be followed by a list that counts from one to four:
 # three
 #four
 
--- 3.BULLET LISTS --
+Test 2.2 This should have indentation depths of 1, 2, 3, 2, 1
+# one
+## two
+### three
+## two
+# one
+
+-- 3. BULLET LISTS --
 
 Test 3.1 This should be followed by four bullet points:
 * Bullet one
@@ -61,19 +77,24 @@ Test 3.1 This should be followed by four bullet points:
 * Bullet four
 
 Test 3.2 This should be followed by two bullet points with one line of text in between:
-
 * Bullet one, JSPWiki ends bullet at newline so this is the end.
 and this is not part of bullet one.
 * But this is bullet two.
 
 Test 3.3 This should be followed by 4 bullet points with no text in between them:
-
 * Bullet 3.3.1, adding some ''italic'' should not break the bullet point in two
 * Bullet 3.3.2, adding some __bold__ should not break the bullet point in two
 * Bullet 3.3.3, adding some {{monospaced}} should not break the bullet point in two
 * Bullet 3.3.4, adding some ''italic'', __bold__, and {{monospaced}} should not break the bullet point in two
 
--- 4.TEXT ATTRIBUTES --
+Test 3.4 This should have indentation depths of 1, 2, 3, 2, 1
+* one
+** two
+*** three
+** two
+* one
+
+-- 4. TEXT ATTRIBUTES --
 
 Test 4.1 The words __bold__, ''italic'' and {{monospaced}} in this phrase should be displayed with the corresponding attributes.
 
@@ -90,17 +111,17 @@ Test 4.4 The block of text that follows should be shown in the source code style
 	}
 }}}
 
--- 5.LINKS --
+-- 5. LINKS --
 
-Test 5.1 Here a link to this same page: [wikitest.html]
+Test 5.1 Here is a link to this same page: [wikitest.html]
 
 Test 5.2 Link to cocoon.apache.org: [http://cocoon.apache.org]
 
-Test 5.3 A link to another wiki site [Text formating rules|rules].
+Test 5.3 A link to another wiki page [Text formating rules|rules].
 
--- 6.MISCELLANEOUS --
+-- 6. MISCELLANEOUS --
 
-Test 6.1 This paragraph should be followed by a horizontal ruler line.
+Test 6.1 This paragraph should be followed by a horizontal rule line.
 ----
 
 Test 6.2 There should be a line break between the words one and two that follow: 
@@ -112,3 +133,24 @@ ONE\\TWO.
 Test 7.1 In this paragraph all
 words should be
 followed by a single space.
+
+-- 8. TABLES --
+
+Test 8.1 Table with header
+
+|| Header 1 || Header 2
+| data | more data
+| foo | bar
+| abc | 123
+
+Test 8.2 Table without header
+
+| asdf | asdf | asdf
+| fdsa | qwer | 789
+| yuiop | zxcv | 00001
+
+Test 8.3 Table without spaces around pipe delimiters
+
+|asdf|asdf|asdf
+|fdsa|qwer|789
+|yuiop|zxcv|00001
