@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-scratchpad.xconf"/>
+
   <source-factories>    
     <!-- zip pseudo protocol -->
     <component-instance class="org.apache.cocoon.components.source.impl.ZipSourceFactory" name="zip"/>

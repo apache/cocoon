@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-scratchpad.xconf"/>
+
   <flow-interpreters>
 
     <!-- Intercepted, FOM-aware JavaScript Interpreter -->
