@@ -426,10 +426,10 @@
       | Store: generic store. The default implementation is an in-memory store
       | backed by the persistent store (see below). This forms a two-stage
       | cache composed of a fast in-memory MRU front-end and a persistent
-      | back-end storing less used objects.
+      | back-end which stores the less-used objects.
       |
       | Common configuration parameters:
-      | maxobjects: Indicates how many objects will be hold in the cache.
+      | maxobjects: Indicates how many objects will be held in the cache.
       |    When the number of maxobjects has been reached. The last object
       |    in the cache will be thrown out.
       +-->
@@ -453,7 +453,7 @@
       | DefaultStore configuration parameters:
       |  datafile: Name of the store file to use. Defaults to cocoon.dat
       |  indexfile: Name of the index file to use. Defaults to cocoon.idx
-      |  order: FIXME: put description here.
+      |  order: The page size of the B-Tree index, as an integer (default=301).
       +-->
   <persistent-store logger="core.store.persistent">
     <parameter name="use-cache-directory" value="true"/>
