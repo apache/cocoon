@@ -51,6 +51,7 @@ import org.apache.cocoon.util.log.CocoonLogFormatter;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
@@ -97,7 +98,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.32 2004/06/23 20:09:04 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.33 2004/07/11 23:02:54 antonio Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -611,7 +612,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         buildClassPath.append(File.pathSeparatorChar)
-                      .append(System.getProperty("java.class.path"));
+                      .append(SystemUtils.JAVA_CLASS_PATH);
 
         buildClassPath.append(File.pathSeparatorChar)
                       .append(getExtraClassPath());
@@ -710,7 +711,7 @@ public class CocoonServlet extends HttpServlet {
         String extraClassPath = this.getInitParameter("extra-classpath");
         if (extraClassPath != null) {
             StringBuffer sb = new StringBuffer();
-            StringTokenizer st = new StringTokenizer(extraClassPath, System.getProperty("path.separator"), false);
+            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
             int i = 0;
             while (st.hasMoreTokens()) {
                 String s = st.nextToken();

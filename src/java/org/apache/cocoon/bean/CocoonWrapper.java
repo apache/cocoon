@@ -50,6 +50,7 @@ import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
+import org.apache.commons.lang.SystemUtils;
 
 import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
@@ -62,7 +63,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.13 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.14 2004/07/11 23:02:54 antonio Exp $
  */
 public class CocoonWrapper {
 
@@ -184,7 +185,7 @@ public class CocoonWrapper {
             }
             if (conf == null) {
                 conf =  tryConfigurationFile(
-                        System.getProperty("user.dir")
+                        SystemUtils.USER_DIR
                             + File.separator
                             + Constants.DEFAULT_CONF_FILE);
             }
@@ -526,8 +527,7 @@ public class CocoonWrapper {
             }
         }
 
-        buildClassPath.append(File.pathSeparatorChar).append(
-            System.getProperty("java.class.path"));
+        buildClassPath.append(File.pathSeparatorChar).append(SystemUtils.JAVA_CLASS_PATH);
 
         // Extra class path is necessary for non-classloader-aware java compilers to compile XSPs
         //        buildClassPath.append(File.pathSeparatorChar)

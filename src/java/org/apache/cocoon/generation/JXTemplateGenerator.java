@@ -117,7 +117,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.52 2004/07/06 10:34:36 unico Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.53 2004/07/11 23:02:54 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -1555,8 +1555,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             this.locale = locale;
         }
 
-        String format(JexlContext jexl, JXPathContext jxp)
-            throws Exception {
+        String format(JexlContext jexl, JXPathContext jxp) throws Exception {
             // Determine formatting locale
             String var = getStringValue(this.var, jexl, jxp);
             Number input = getNumberValue(this.value, jexl, jxp);
@@ -1604,9 +1603,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             return formatted;
         }
 
-        private NumberFormat createFormatter(Locale loc,
-                                             String type)
-            throws Exception {
+        private NumberFormat createFormatter(Locale loc, String type) throws Exception {
             NumberFormat formatter = null;
             if ((type == null) || NUMBER.equalsIgnoreCase(type)) {
                 formatter = NumberFormat.getNumberInstance(loc);
@@ -1671,9 +1668,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
          * <1.4        EUR           \u20AC       \u20AC
          * >=1.4       EUR           \u20AC       Locale's currency symbol for Euro
          */
-        private void setCurrency(NumberFormat formatter,
-                                 String currencyCode,
-                                 String currencySymbol) throws Exception {
+        private void setCurrency(NumberFormat formatter, String currencyCode, String currencySymbol) throws Exception {
             String code = null;
             String symbol = null;
 

@@ -21,6 +21,7 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 import org.apache.cocoon.util.MIMEUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Test Cases for the MIMEUtils class.
@@ -28,12 +29,12 @@ import org.apache.cocoon.util.MIMEUtils;
  * Specifically, code for testing the parsing of mime.types files.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: MIMEUtilsTestCase.java,v 1.3 2004/03/05 13:03:04 bdelacretaz Exp $
+ * @version CVS $Id: MIMEUtilsTestCase.java,v 1.4 2004/07/11 23:02:54 antonio Exp $
  */
 public class MIMEUtilsTestCase extends TestCase
 {
 
-    final String NL = System.getProperty("line.separator");
+    final String NL = SystemUtils.LINE_SEPARATOR;
     Map mimeMap;
     Map extMap;
     final String M2E = "MIME to extension mappings";
@@ -107,7 +108,7 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void tstCommentsAndWhitespace() throws Exception {
-        String NL = System.getProperty("line.separator");
+        String NL = SystemUtils.LINE_SEPARATOR;
         String mime_types="## A commented line"+NL+
             "   "+NL+
             "# Another comment";
@@ -117,7 +118,7 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void tstMimeTypeWithoutExtension() throws Exception {
-        String NL = System.getProperty("line.separator");
+        String NL = SystemUtils.LINE_SEPARATOR;
         String mime_types=
             "text/plain  txt text"+NL+
             "application/octet-stream"+NL+NL;

@@ -27,13 +27,14 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.11 2004/07/11 13:59:12 cziegeler Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.12 2004/07/11 23:02:54 antonio Exp $
  */
 
 /*
@@ -272,7 +273,7 @@ public class CommandLineRequest implements Request {
     public String getRemoteAddr() { return "127.0.0.1"; }
     public String getRemoteHost() { return "localhost"; }
     public String getMethod() { return "get"; }
-    public String getRemoteUser() { return System.getProperty("user.name"); }
+    public String getRemoteUser() { return SystemUtils.USER_NAME; }
 
     public Cookie[] getCookies() { return null; }
     public Map getCookieMap() {

@@ -51,6 +51,7 @@ import org.apache.cocoon.util.log.CocoonLogFormatter;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
@@ -91,7 +92,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.9 2004/06/23 20:09:05 vgritsenko Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.10 2004/07/11 23:02:54 antonio Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -638,7 +639,7 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         buildClassPath.append(File.pathSeparatorChar)
-                      .append(System.getProperty("java.class.path"));
+                      .append(SystemUtils.JAVA_CLASS_PATH);
 
         buildClassPath.append(File.pathSeparatorChar)
                       .append(getExtraClassPath());
@@ -737,7 +738,7 @@ public class CocoonPortlet extends GenericPortlet {
         String extraClassPath = this.getInitParameter("extra-classpath");
         if (extraClassPath != null) {
             StringBuffer sb = new StringBuffer();
-            StringTokenizer st = new StringTokenizer(extraClassPath, System.getProperty("path.separator"), false);
+            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
             int i = 0;
             while (st.hasMoreTokens()) {
                 String s = st.nextToken();
