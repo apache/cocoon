@@ -15,6 +15,34 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.service.ServiceManager;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.container.CocoonServiceManager;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.treeprocessor.CategoryNode;
+import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
+import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.reading.Reader;
+import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.util.StringUtils;
+
+import org.apache.regexp.RE;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,28 +52,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.container.CocoonServiceManager;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.CategoryNode;
-import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
-import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
-import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.reading.Reader;
-import org.apache.cocoon.selection.Selector;
-import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.util.StringUtils;
-import org.apache.regexp.RE;
 
 /**
  * The tree builder for the sitemap language.
@@ -63,7 +69,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ServiceManager createServiceManager(Configuration tree) throws Exception {
+    protected ServiceManager createServiceManager(Context context, Configuration tree) throws Exception {
 
         // Get the map:component node
         // Don't check namespace here : this will be done by node builders
@@ -80,7 +86,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         // Go through the component lifecycle
         newManager.enableLogging(getLogger());
-        newManager.contextualize(this.context);
+        newManager.contextualize(context);
         newManager.configure(config);
         newManager.initialize();
 
@@ -109,6 +115,17 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         getProcessor().getComponentInfo().lock();
 
         return newManager;
+    }
+
+    protected Context createContext(Configuration tree) throws Exception {
+        // Create sub-context for this sitemap
+        DefaultContext newContext = new DefaultContext(super.createContext(tree));
+        Environment env = EnvironmentHelper.getCurrentEnvironment();
+        newContext.put(Constants.CONTEXT_ENV_URI, env.getURI());
+        newContext.put(Constants.CONTEXT_ENV_PREFIX, env.getURIPrefix());
+        // FIXME How to get rif of EnvironmentHelper?
+        newContext.put(Constants.CONTEXT_ENV_HELPER, getProcessor().getWrappingProcessor().getEnvironmentHelper());
+        return newContext;
     }
 
     /**
@@ -461,16 +478,14 @@ public class SitemapLanguage extends DefaultTreeBuilder {
                                        + "\npipeline-hints: (value) [implicit] true");
                     }
 
-                    params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.processorManager),
-                                VariableResolverFactory.getResolver("true", this.processorManager));
+                    params.put(resolve(nameValuePair[0]), resolve("true"));
                 } else {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("pipeline-hints: (name) " + nameValuePair[0]
                                           + "\npipeline-hints: (value) " + nameValuePair[1]);
                     }
 
-                    params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.processorManager),
-                                VariableResolverFactory.getResolver(nameValuePair[1], this.processorManager));
+                    params.put(resolve(nameValuePair[0]), resolve(nameValuePair[1]));
                 }
             } catch(PatternException pe) {
                 String msg = "Invalid pattern '" + hintParams + "' at " + statement.getLocation();

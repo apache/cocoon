@@ -24,7 +24,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.15 2004/06/11 21:37:04 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public final class Constants {
 
@@ -255,6 +255,19 @@ public final class Constants {
 
     /** Application <code>Context</code> Key for the current classpath */
     public static final String CONTEXT_CLASSPATH = "classpath";
+
+
+    /** Application <code>Context</code> key for the current environment URI */
+    public static final String CONTEXT_ENV_URI = "env-uri";
+
+    /** Application <code>Context</code> key for the current environment prefix */
+    public static final String CONTEXT_ENV_PREFIX = "env-prefix";
+
+    /** Application <code>Context</code> key for the current environment helper */
+    public static final String CONTEXT_ENV_HELPER = "env-helper";
+
+    /** Application <code>Context</code> key prefix for the current sitemap virtual components */
+    public static final String CONTEXT_VPC_PREFIX = "vpc-";
 
     /**
      * Application <code>Context</code> Key for the URL to the configuration file
