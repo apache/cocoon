@@ -30,8 +30,26 @@
       fail, set a validation error on the widget.</p>
 
       <p>Implementation-wise, a widget validator is an object implementing
-      the <code>WidgetValidator</code> interface. [insert javadoc link
-      once those are published]</p>
+      the <code>WidgetValidator</code> interface
+      (<link href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/forms/validation/WidgetValidator.html">javadoc</link>).</p>
+
+      <p>WidgetValidators can either be defined as part of the form definition
+      (inside the <code>fd:validation</code> element) or added to a widget
+      instance at runtime. The former is useful for validators that only act
+      on the data in the form. The latter is useful if the validation logic
+      needs access to other objects you have available in your controller.</p>
+
+      <p>The validation logic runs over the widget tree. For each widget first
+      the child widgets are validated and then the widget itself (recursively).
+      The validators on a widget are executed in the order in which they were
+      defined or added. First the ones defined in the form definition are executed, then
+      the ones added on the widget instance. The validation of a widget stops at the
+      first validator that fails (but continues to execute for the other widgets).</p>
+
+      <p>For widgets having a datatype and hence a convertor (field and multivaluefield),
+      the convertor could be considered to be the first validator, i.e. it is executed
+      before the other validators (because those operate on the converted value).
+      If the conversion fails a validation error is set on the widget.</p>
 
       <p>Validation errors can only be set on widgets implementing
       the interface <code>ValidationErrorAware</code>, which currently is not
@@ -41,7 +59,7 @@
       different rows of the repeater, and set validation errors on these
       fields (instead of on the repeater itself).</p>
 
-      <p>CForms supplies a number of widget validators, mostly for performing
+      <p>CForms supplies a number of default widget validators, mostly for performing
       checks on the value of field widgets. Additionally you can write your
       own ones in Java or in Javascript.</p>
     </s1>

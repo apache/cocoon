@@ -17,6 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
+  <!-- This document will be enhanced by information taken from the javadoc -->
   <header>
     <title>Directory Generator</title>
     <version>1.0</version>
@@ -31,12 +32,6 @@
   </header>
   <body>
     <s1 title="Directory Generator">
-      <p>Generates an XML directory listing.</p>
-      <ul>
-        <li>Name: directory</li>
-        <li>Class: org.apache.cocoon.generation.DirectoryGenerator</li>
-        <li>Cacheable: yes</li>
-      </ul>
       <p>The root node of the generated document will normally be a <code>directory</code> node. A
           directory node can contain zero or more <code>file</code> or <code>directory</code> nodes.
           A file node has no children. All generated elements have the namespace
@@ -47,7 +42,7 @@
         <li><code>name</code>: the name of the file or directory.</li>
         <li><code>lastModified</code>: the time the file was last modified, measured as the number
             of milliseconds since the epoch (as in <code>java.io.File.lastModified</code>).</li>
-        <li><code>date</code>: the time the file was last modified in human-readable form.</li>
+        <li><code>date</code> (optional): the time the file was last modified in human-readable form.</li>
         <li><code>size</code>: the file size (or 0 for directories).</li>
       </ul>
       <p>Additionally the node for the requested directory has the attributes:</p>
@@ -72,7 +67,7 @@
           generate command (as seen in the example above for the parameter <code>depth</code>):
       </p>
       <ul>
-        <li>depth: Sets how deep Directory Generator should delve into the directory structure. If
+        <li>depth: Sets how deep the generator should delve into the directory structure. If
             set to 1 (the default), only the starting directory's immediate contents will be
             returned.</li>
         <li>dateFormat: Sets the format for the date attribute of each node as described in

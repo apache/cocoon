@@ -39,35 +39,13 @@
         generator name must be declared as the default generator. Each generator may have additional
         configuration information specified in child elements.
       </p>
+      <p>On the left you see all generators that are available in Cocoon. The list is separated into
+        the core generators, belonging to the Cocoon core, and optional generators that are part of
+        specific blocks.
+      </p>        
       <p>For conceptual information on generators see the user's guide document
         <link href="../concepts/sitemap.html">The Sitemap</link>.
       </p>
-    </s1>
-    <s1 title="The Generators in Apache Cocoon">
-      <ul>
-        <li><link href="directory-generator.html">Directory Generator</link></li>
-        <li><link href="file-generator.html">File Generator</link> (The default generator)</li>
-        <li><link href="extractor-generator.html">Fragment Extractor Generator</link> (optional: Batik block)</li>
-        <li><link href="html-generator.html">HTML Generator</link> (optional: HTML block)</li>
-        <li><link href="imagedirectory-generator.html">Image Directory Generator</link></li>
-        <li><link href="jsp-generator.html">JSP Generator</link> (optional: JSP block)</li>
-        <li><link href="linkstatus-generator.html">LinkStatus Generator</link></li>
-        <li>MP3 Directory Generator (no documentation exists)</li>
-        <li><link href="error-generator.html">Notifying Generator</link></li>
-        <li><link href="php-generator.html">Php Generator</link> (optional: PHP block)</li>
-        <li><link href="profile-generator.html">Profile Generator</link> (optional: Profiler block)</li>
-        <li><link href="request-generator.html">Request Generator</link></li>
-        <li><link href="script-generator.html">Script Generator</link> (optional: BSF block)</li>
-        <li><link href="search-generator.html">Search Generator</link> (optional: Lucene block)</li>
-        <li><link href="serverpages-generator.html">Server Pages Generator</link></li>
-        <li><link href="status-generator.html">Status Generator</link></li>
-        <li><link href="stream-generator.html">Stream Generator</link></li>
-        <li><link href="velocity-generator.html">Velocity Generator</link> (optional: Velocity block)</li>
-        <li><link href="wsproxy-generator.html">Web Service Proxy Generator</link> (optional: Proxy block)</li>
-        <li><link href="xmldbcollection-generator.html">XML:DB Collection Generator</link> (optional: XMLDB block)</li>
-        <li><link href="xmldb-generator.html">XML:DB Generator</link> (optional: XMLDB block)</li>
-        <li><link href="xpathdirectory-generator.html">XPath Directory Generator</link></li>
-      </ul>
     </s1>
   </body>
 </document>

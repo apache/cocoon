@@ -17,6 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
+    <!-- This document will be enhanced by information taken from the javadoc -->
 	<header>
 		<title>File Generator</title>
 		<version>0.9</version>
@@ -31,11 +32,6 @@
 			<p>The file generator reads an xml document from the local file system or from any url.
 	               While url generator may appear to be a more suitable name, it's known as the file generator for historical reasons.</p>
       	      <p>The file generator is the default generator.</p>
-			<ul>
-				<li>Name : file</li>
-				<li>Class: org.apache.cocoon.generation.FileGenerator</li>
-				<li>Cacheable: yes - uses the last modification date of the xml document for validation.</li>
-			</ul>
 			<p>The location of the source xml document is specified in
                      the pipeline by the src attribute.</p>
 <source>
