@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.12 2004/05/11 09:30:24 mpo Exp $
+ * @version $Id$
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -658,6 +658,12 @@ public class ScriptableWidget extends ScriptableObject {
                 }
             }
         }
+    }
+    
+    public void jsFunction_removeSelectionList() {
+    	if (delegate instanceof SelectableWidget) {
+    		((SelectableWidget)delegate).removeSelectionList();
+    	}
     }
 
     static final Object[] WIDGET_CLASS_MAP = {
