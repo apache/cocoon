@@ -48,11 +48,6 @@
     </copy>
     <copy todir="${build.context}" filtering="on" file="${webapp}/WEB-INF/logkit.xconf"/>
 
-    <!-- copy dtds for validation -->
-    <mkdir dir="${build.context}/xdocs/dtd"/>
-    <copy todir="${build.context}/xdocs/dtd" filtering="on">
-      <fileset dir="${webapp}/WEB-INF/entities"/>
-    </copy>
   </target>
 
   <!-- Set a variable if the generated docs are already up-to-date. -->
