@@ -131,6 +131,8 @@ by the main ones.
 
     <property name="browser.skin" value="${skins.dir}/xml.apache.org/"/>
     <property name="printer.skin" value="${skins.dir}/printer/"/>
+    <property name="browser.projfile" value="docs-book.xml"/>
+    <property name="site.projfile" value="site-book.xml"/>
     <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
 
     <property name="build.root"     value="./build"/>
@@ -402,9 +404,6 @@ by the main ones.
     <!-- make filtered copy of XML docs -->
     <copy todir="${build.xdocs}" filtering="on">
       <fileset dir="${docs.dir}">
-        <exclude name="*.gif"/>
-        <exclude name="*.png"/>
-        <exclude name="*.jpg"/>
         <exclude name="**/*.gif"/>
         <exclude name="**/*.png"/>
         <exclude name="**/*.jpg"/>
@@ -412,13 +411,10 @@ by the main ones.
     </copy>
 
     <copy todir="${build.xdocs}" filtering="off">
-      <fileset dir="${docs.dir}/images">
-        <include name="*.gif"/>
-        <include name="*.png"/>
-        <include name="*.jpg"/>
-        <exclude name="**/*.gif"/>
-        <exclude name="**/*.png"/>
-        <exclude name="**/*.jpg"/>
+      <fileset dir="${docs.dir}">
+        <include name="**/*.gif"/>
+        <include name="**/*.png"/>
+        <include name="**/*.jpg"/>
       </fileset>
     </copy>
 
@@ -429,10 +425,34 @@ by the main ones.
     <replace file="${build.xdocs}/todo.xml"    token="./xdocs/dtd/" value="dtd/"/>
   </target>
 
+
+  <!-- =================================================================== -->
+  <!-- Set a variable if the generated docs are already up-to-date.        -->
+  <!-- =================================================================== -->
+  <target name="docs_check" depends="init">
+    <uptodate property="docs.notrequired" targetfile="${build.docs}/index.html" >
+      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="${docs.dir}" includes="*.xml" excludes="${site.projfile}"/>
+    </uptodate>
+  </target>
+ 
+  <!-- =================================================================== -->
+  <!-- If generated  docs is already up-to-date, print a message saying so. -->
+  <!-- =================================================================== -->
+  <target name="docs_done" if="docs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding docs, as they are up-to-date:"/>
+    <echo message="  ${build.docs}/index.html is more recent than"/>
+    <echo message="  todo.xml, changes.xml, ${docs.dir}/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
-  <target name="docs" depends="prepare-docs" description="Generates the documentation">
+  <target name="docs" depends="prepare-docs, docs_check, docs_done"
+      unless="docs.notrequired"
+      description="Generates the documentation">
     <mkdir dir="${build.docs}"/>
     <copy file="${build.xdocs}/docs-book.xml" tofile="${build.xdocs}/book.xml"/>
     <java classname="${doc.generator}" fork="yes">
@@ -442,11 +462,34 @@ by the main ones.
   </target>
 
   <!-- =================================================================== -->
+  <!-- Set a variable if the generated printer docs are already up-to-date. -->
+  <!-- =================================================================== -->
+  <target name="printer-docs_check" depends="init">
+    <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
+      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="${docs.dir}" includes="*.xml" excludes="${site.projfile}"/>
+    </uptodate>
+  </target>
+ 
+  <!-- =================================================================== -->
+  <!-- If generated printer docs is already up-to-date, print a message saying so. -->
+  <!-- =================================================================== -->
+  <target name="printer-docs_done" if="printer-docs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding printer docs, as they are up-to-date:"/>
+    <echo message="  ${build.docs.printer}/index.html is more recent than"/>
+    <echo message="  todo.xml, changes.xml, ${docs.dir}/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- =================================================================== -->
   <!-- Generate printer-friendly HTML docs                                 -->
   <!-- =================================================================== -->
-  <target name="printer-docs" depends="prepare-docs" description="Generates printer-friendly documentation">
+  <target name="printer-docs" depends="prepare-docs, printer-docs_check, printer-docs_done"
+      unless="printer-docs.notrequired"
+      description="Generates printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
-    <copy file="${build.xdocs}/docs-book.xml" tofile="${build.xdocs}/book.xml"/>
+    <copy file="${build.xdocs}/${browser.projfile}" tofile="${build.xdocs}/book.xml"/>
     <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${build.docs.printer} ${build.xdocs}/book.xml ${printer.skin}"/>
@@ -454,11 +497,34 @@ by the main ones.
   </target>
 
   <!-- =================================================================== -->
+  <!-- Set a variable if the generated site is already up-to-date.         -->
+  <!-- =================================================================== -->
+  <target name="site_check" depends="init">
+    <uptodate property="site.notrequired" targetfile="${site}/index.html" >
+      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="${docs.dir}" includes="*.xml" excludes="${browser.projfile}"/>
+    </uptodate>
+  </target>
+ 
+  <!-- =================================================================== -->
+  <!-- If generated site is already up-to-date, print a message saying so. -->
+  <!-- =================================================================== -->
+  <target name="site_done" if="site.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding site, as it is up-to-date:"/>
+    <echo message="  ${site}/index.html is more recent than"/>
+    <echo message="  todo.xml, changes.xml, ${docs.dir}/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- =================================================================== -->
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
-  <target name="site" depends="prepare-docs" description="Generates the web site (for site maintainers only)">
+  <target name="site" depends="prepare-docs, site_check, site_done"
+      unless="site.notrequired"
+      description="Generates the web site (for site maintainers only)">
     <mkdir dir="${site}"/>
-    <copy file="${build.xdocs}/site-book.xml" tofile="${build.xdocs}/book.xml"/>
+    <copy file="${build.xdocs}/${site.projfile}" tofile="${build.xdocs}/book.xml"/>
     <java classname="${doc.generator}" fork="yes">
       <classpath refid="classpath"/>
       <arg line="targetDirectory=${site} ${build.xdocs}/book.xml ${browser.skin}"/>
@@ -466,9 +532,31 @@ by the main ones.
   </target>
 
   <!-- =================================================================== -->
+  <!-- Set a variable if javadoc is already up-to-date.                    -->
+  <!-- =================================================================== -->
+  <target name="javadocs_check">
+    <uptodate property="javadocs.notrequired" targetfile="${build.javadocs}/packages.html" >
+      <srcfiles dir= "${build.src}" includes="**/*.java"/>
+    </uptodate>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- If javadoc is already up-to-date, print a message saying so.        -->
+  <!-- =================================================================== -->
+  <target name="javadocs_done" if="javadocs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding Javadocs, as they are up-to-date:"/>
+    <echo message="  ${build.javadocs}/packages.html is more recent than"/>
+    <echo message="  ${build.src}/**/*.java"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare-src" description="Generates the API documentation">
+  <target name="javadocs" depends="prepare-src, javadocs_check, javadocs_done"
+      unless="javadocs.notrequired"
+      description="Generates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="${packages}"
              sourcepath="${build.src}"
