@@ -33,7 +33,7 @@ import org.apache.commons.collections.list.CursorableLinkedList;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.10 2004/04/23 13:02:31 mpo Exp $
+ * @version CVS $Id: Form.java,v 1.11 2004/04/23 23:33:48 joerg Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -299,7 +299,6 @@ public class Form extends AbstractContainerWidget {
 
 
     private static final String FORM_EL = "form";
-    private static final String CHILDREN_EL = "children";
 
     /**
      * @return
