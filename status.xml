@@ -204,7 +204,13 @@
 
   <changes>
  <release version="@version@" date="@date@">
-    <action dev="NKB" type="add">
+   <action dev="DC" type="add" fixes-bug="30321" due-to="Colin Adams">
+     Selector for matching the request headers using a regular expression.
+     Simple content negotiation, e.g. serve XHTML if browser indicates it
+     accepts application/xhtml+xml and HTML otherwise; potentially do
+     automatic i18n according to the accept-language header.
+   </action>
+   <action dev="NKB" type="add">
      New @pass-through attribute for the sitemap mount node.
      If true, processing will resume in the base sitemap just after the mount node
      if the mounted sitemap has not already generated output (usually if no match 
