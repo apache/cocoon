@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.204 2004/04/13 01:34:08 antonio Exp $
+    | CVS $Id: jars.xml,v 1.205 2004/04/15 18:55:18 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -398,7 +398,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/groovy-1.0-beta-4.jar</lib>
+    <lib>bsf/lib/groovy-20040415.114632.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
