@@ -75,41 +75,41 @@ public class DocumentAdapter implements Document {
         GET_ROOT = JXPathContext.compile("/");
 
     private static NamedNodeMap EMPTY_NODE_MAP = new NamedNodeMap() {
-	    public Node getNamedItem(String name) {
-		return null;
-	    }
-	    public Node setNamedItem(Node arg) 
+            public Node getNamedItem(String name) {
+                return null;
+            }
+            public Node setNamedItem(Node arg) 
                             throws DOMException {
-		notSupported();
-		return null;
-	    }
-	    public Node removeNamedItem(String name) 
-		throws DOMException {
-		notSupported();
-		return null;
-	    }
-	    public Node item(int index) {
-		return null;
-	    }
-	    public int getLength() {
-		return 0;
-	    }
-	    public Node getNamedItemNS(String namespaceURI,
-				       String localName) {
-		return null;
-	    }
-	    public Node setNamedItemNS(Node arg) 
-		throws DOMException {
-		notSupported();
-		return null;
-	    }
-	    public Node removeNamedItemNS(String namespaceURI,
-					  String localName)
-		throws DOMException {
-		notSupported();
-		return null;
-	    }
-	};
+                notSupported();
+                return null;
+            }
+            public Node removeNamedItem(String name) 
+                throws DOMException {
+                notSupported();
+                return null;
+            }
+            public Node item(int index) {
+                return null;
+            }
+            public int getLength() {
+                return 0;
+            }
+            public Node getNamedItemNS(String namespaceURI,
+                                       String localName) {
+                return null;
+            }
+            public Node setNamedItemNS(Node arg) 
+                throws DOMException {
+                notSupported();
+                return null;
+            }
+            public Node removeNamedItemNS(String namespaceURI,
+                                          String localName)
+                throws DOMException {
+                notSupported();
+                return null;
+            }
+        };
 
     private static final NodeList EMPTY_NODE_LIST = new NodeList() {
             public int getLength() {
@@ -121,21 +121,21 @@ public class DocumentAdapter implements Document {
         };
 
     private static final JXPathContextFactory jxpathContextFactory = 
-	JXPathContextFactory.newInstance();
+        JXPathContextFactory.newInstance();
 
     private static void notSupported() throws DOMException {
         throw new UnsupportedOperationException("Not Supported");
     }
 
     private static JXPathContext newContext(Object obj) {
-	return jxpathContextFactory.newContext(null, obj);
+        return jxpathContextFactory.newContext(null, obj);
     }
 
     private ElementAdapter root;
 
     public DocumentAdapter(Object obj, String tagName) {
         root = new ElementAdapter(this, 
-				  GET_SELF.getPointer(newContext(obj), "."),
+                                  GET_SELF.getPointer(newContext(obj), "."),
                                   -1,
                                   tagName,
                                   obj);
@@ -177,14 +177,14 @@ public class DocumentAdapter implements Document {
             return expr.getPointer(getParentContext(), "???");
         }
 
-	Object getValue(CompiledExpression expr) {
+        Object getValue(CompiledExpression expr) {
             return expr.getValue(getContext());
         }
 
         abstract public String getNodeName();
 
         public String getNodeValue() {
-	    return "";
+            return "";
         }
 
         public void setNodeValue(String nodeValue)
@@ -230,26 +230,26 @@ public class DocumentAdapter implements Document {
                                  Node refChild)
             throws DOMException {
             notSupported();
-	    return null;
+            return null;
         }
 
         public Node replaceChild(Node newChild, 
                                  Node oldChild)
             throws DOMException {
             notSupported();
-	    return null;
+            return null;
         }
 
         public Node removeChild(Node oldChild)
             throws DOMException {
             notSupported();
-	    return null;
+            return null;
         }
 
         public Node appendChild(Node newChild)
             throws DOMException {
             notSupported();
-	    return null;
+            return null;
         }
 
         public boolean hasChildNodes() {
@@ -258,7 +258,7 @@ public class DocumentAdapter implements Document {
 
         public Node cloneNode(boolean deep) {
             notSupported();
-	    return null;
+            return null;
         }        
 
         public void normalize() {
@@ -274,7 +274,7 @@ public class DocumentAdapter implements Document {
         }
 
         public String getPrefix() {
-	    return null;
+            return null;
         }
 
         public void setPrefix(String prefix)
@@ -294,94 +294,94 @@ public class DocumentAdapter implements Document {
 
     public class TextAdapter extends NodeAdapter implements Text {
 
-	Object data;
-	String strValue;
+        Object data;
+        String strValue;
 
-	TextAdapter(Node parent, Pointer ptr, Object data) {
-	    super(parent, ptr);
-	    this.data = data;
-	}
+        TextAdapter(Node parent, Pointer ptr, Object data) {
+            super(parent, ptr);
+            this.data = data;
+        }
 
         public Object unwrap() {
             return data;
         }
 
-	public Node getParentNode() {
-	    return parent;
-	}
+        public Node getParentNode() {
+            return parent;
+        }
 
-	public short getNodeType() {
-	    return TEXT_NODE;
-	}
+        public short getNodeType() {
+            return TEXT_NODE;
+        }
 
-	public String getNodeName() {
-	    return "#text";
-	}
+        public String getNodeName() {
+            return "#text";
+        }
 
-	public String getNodeValue() {
-	    if (strValue == null) {
-		if (data instanceof Boolean) {
-		    if (((Boolean)data).booleanValue()) {
-			strValue = "true";
-		    } else {
-			strValue = ""; // in XPath false is the empty string
-		    }
-		} else {
-		    strValue = String.valueOf(data);
-		}
-	    }
-	    return strValue;
-	}
+        public String getNodeValue() {
+            if (strValue == null) {
+                if (data instanceof Boolean) {
+                    if (((Boolean)data).booleanValue()) {
+                        strValue = "true";
+                    } else {
+                        strValue = ""; // in XPath false is the empty string
+                    }
+                } else {
+                    strValue = String.valueOf(data);
+                }
+            }
+            return strValue;
+        }
 
-	public String getData()
-	    throws DOMException {
-	    return getNodeValue();
-	}
+        public String getData()
+            throws DOMException {
+            return getNodeValue();
+        }
 
-	public void setData(String data)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void setData(String data)
+            throws DOMException {
+            notSupported();
+        }
 
-	public int getLength() {
-	    return getData().length();
-	}
+        public int getLength() {
+            return getData().length();
+        }
 
-	public String substringData(int offset, 
-				    int count)
-	    throws DOMException {
-	    return getData().substring(0, count);
-	}
+        public String substringData(int offset, 
+                                    int count)
+            throws DOMException {
+            return getData().substring(0, count);
+        }
 
-	public void appendData(String arg)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void appendData(String arg)
+            throws DOMException {
+            notSupported();
+        }
 
-	public void insertData(int offset, 
-			       String arg)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void insertData(int offset, 
+                               String arg)
+            throws DOMException {
+            notSupported();
+        }
 
-	public void deleteData(int offset, 
-			       int count)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void deleteData(int offset, 
+                               int count)
+            throws DOMException {
+            notSupported();
+        }
 
-	public void replaceData(int offset, 
-				int count, 
-				String arg)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void replaceData(int offset, 
+                                int count, 
+                                String arg)
+            throws DOMException {
+            notSupported();
+        }
 
-	public Text splitText(int offset)
-	    throws DOMException {
-	    notSupported();
-	    return null;
-	}
+        public Text splitText(int offset)
+            throws DOMException {
+            notSupported();
+            return null;
+        }
 
     }
 
@@ -391,8 +391,8 @@ public class DocumentAdapter implements Document {
         String tagName;
         Object nodeValue;
         NodeList childNodes;
-	NamedNodeMap attributes;
-	Node firstChild, lastChild, nextSibling, prevSibling;
+        NamedNodeMap attributes;
+        Node firstChild, lastChild, nextSibling, prevSibling;
 
         public Object unwrap() {
             return nodeValue;
@@ -437,57 +437,56 @@ public class DocumentAdapter implements Document {
             return parent;
         }
 
-	public String getTagName() {
+        public String getTagName() {
             return tagName;
-	}
+        }
 
         public String getNodeName() {
-	    return getTagName();
+            return getTagName();
         }
 
         public String getLocalName() {
             return tagName;
         }
-	
-	public String getNodeValue() {
+        
+        public String getNodeValue() {
             if (ptr == null) {
                 return "";
             }
-	    return String.valueOf(nodeValue);
-	}
+            return String.valueOf(nodeValue);
+        }
 
         public boolean hasChildNodes() {
             return getChildNodes().getLength() > 0;
         }
 
-
         public NodeList getChildNodes() {
             if (childNodes == null) {
-		final Pointer parentPtr = ptr;
-		final List nodeList = new ArrayList();
+                final Pointer parentPtr = ptr;
+                final List nodeList = new ArrayList();
                 Iterator iter = GET_CHILD_NODES.iteratePointers(getContext());
                 for (int i = 0; iter.hasNext(); i++) {
-		    NodePointer p = (NodePointer)iter.next();
-		    Object nodeValue = p.getNode();
+                    NodePointer p = (NodePointer)iter.next();
+                    Object nodeValue = p.getNode();
                     if (nodeValue instanceof NodeAdapter) {
                         p = (NodePointer) ((NodeAdapter)nodeValue).ptr;
                         nodeValue = p.getNode();
                     } else if (nodeValue instanceof DocumentAdapter) {
                         nodeValue = ((DocumentAdapter)nodeValue).unwrap();
                     }
-		    if (nodeValue instanceof Node) {
-			nodeList.add(nodeValue);
-		    } else {
+                    if (nodeValue instanceof Node) {
+                        nodeList.add(nodeValue);
+                    } else {
                         QName q = p.getName();
-			nodeList.add(new ElementAdapter(this, p, i, 
+                        nodeList.add(new ElementAdapter(this, p, i, 
                                                         q.getName(),
                                                         nodeValue));
-		    }
-		}
+                    }
+                }
                 childNodes = new NodeList() {
                         public int getLength() {
                             return nodeList.size();
-                        }
+                       }
                         public Node item(int i) {
                             return (Node)nodeList.get(i);
                         }
@@ -497,28 +496,28 @@ public class DocumentAdapter implements Document {
         }
 
         public Node getFirstChild() {
-	    getChildNodes();
-	    if (childNodes.getLength() > 0) {
-		return (Node)childNodes.item(0);
-	    }
-	    return null;
+            getChildNodes();
+            if (childNodes.getLength() > 0) {
+                return (Node)childNodes.item(0);
+            }
+            return null;
         }
         
         public Node getLastChild() {
-	    getChildNodes();
-	    if (childNodes.getLength() > 0) {
-		return (Node)childNodes.item(childNodes.getLength()-1);
-	    }
-	    return null;
+            getChildNodes();
+            if (childNodes.getLength() > 0) {
+                return (Node)childNodes.item(childNodes.getLength()-1);
+            }
+            return null;
         }
         
         public Node getPreviousSibling() {
-	    if (prevSibling == null) {
+            if (prevSibling == null) {
                 if (parent instanceof ElementAdapter) {
                     prevSibling = ((ElementAdapter)parent).getPreviousSibling(myIndex);
                 }
-	    }
-	    return prevSibling;
+            }
+            return prevSibling;
         }
 
         Node getPreviousSibling(int index) {
@@ -530,12 +529,12 @@ public class DocumentAdapter implements Document {
         }
 
         public Node getNextSibling() {
-	    if (nextSibling == null) {
+            if (nextSibling == null) {
                 if (parent instanceof ElementAdapter) {
                     nextSibling = ((ElementAdapter)parent).getNextSibling(myIndex);
                 }
-	    }
-	    return nextSibling;
+            }
+            return nextSibling;
         }
 
         Node getNextSibling(int index) {
@@ -606,12 +605,12 @@ public class DocumentAdapter implements Document {
                         public Node setNamedItem(Node arg) 
                             throws DOMException {
                             notSupported();
-			    return null;
+                            return null;
                         }
                         public Node removeNamedItem(String name) 
                             throws DOMException {
                             notSupported();
-			    return null;
+                            return null;
                         }
                         public Node item(int index) {
                                 return (Node)attrList.get(index);
@@ -629,113 +628,113 @@ public class DocumentAdapter implements Document {
                         public Node setNamedItemNS(Node arg) 
                             throws DOMException {
                             notSupported();
-			    return null;
+                            return null;
                         }
                         public Node removeNamedItemNS(String namespaceURI,
                                                       String localName)
                             throws DOMException {
                             notSupported();
-			    return null;
+                            return null;
                         }
                     };
             }
-	    return attributes;
-	}
+            return attributes;
+        }
 
-	public String getAttribute(String name) {
-	    Attr a = getAttributeNode(name);
-	    if (a == null) return null;
-	    return a.getValue();
-	}
+        public String getAttribute(String name) {
+            Attr a = getAttributeNode(name);
+            if (a == null) return null;
+            return a.getValue();
+        }
 
-	public void setAttribute(String name, 
-				 String value)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void setAttribute(String name, 
+                                 String value)
+            throws DOMException {
+            notSupported();
+        }
 
-	public void removeAttribute(String name)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void removeAttribute(String name)
+            throws DOMException {
+            notSupported();
+        }
 
-	public Attr getAttributeNode(String name) {
-	    NamedNodeMap map = getAttributes();
-	    if (map == null) return null;
-	    return (Attr)map.getNamedItem(name);
-	}
+        public Attr getAttributeNode(String name) {
+            NamedNodeMap map = getAttributes();
+            if (map == null) return null;
+            return (Attr)map.getNamedItem(name);
+        }
 
-	public Attr setAttributeNode(Attr newAttr)
-	    throws DOMException {
-	    notSupported();
-	    return null;
-	}
+        public Attr setAttributeNode(Attr newAttr)
+            throws DOMException {
+            notSupported();
+            return null;
+        }
 
-	public Attr removeAttributeNode(Attr oldAttr)
-	    throws DOMException {
-	    notSupported();
-	    return null;
-	}
+        public Attr removeAttributeNode(Attr oldAttr)
+            throws DOMException {
+            notSupported();
+            return null;
+        }
 
-	public NodeList getElementsByTagName(String name) {
-	    return EMPTY_NODE_LIST;
-	}
+        public NodeList getElementsByTagName(String name) {
+            return EMPTY_NODE_LIST;
+        }
 
-	public String getAttributeNS(String namespaceURI, 
-				     String localName) {
-	    Attr a = getAttributeNodeNS(namespaceURI, localName);
-	    if (a == null) return null;
-	    return a.getValue();
-	}
+        public String getAttributeNS(String namespaceURI, 
+                                     String localName) {
+            Attr a = getAttributeNodeNS(namespaceURI, localName);
+            if (a == null) return null;
+            return a.getValue();
+        }
 
-	public void setAttributeNS(String namespaceURI, 
-				   String qualifiedName, 
-				   String value)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void setAttributeNS(String namespaceURI, 
+                                   String qualifiedName, 
+                                   String value)
+            throws DOMException {
+            notSupported();
+        }
 
-	public void removeAttributeNS(String namespaceURI, 
-				      String localName)
-	    throws DOMException {
-	    notSupported();
-	}
+        public void removeAttributeNS(String namespaceURI, 
+                                      String localName)
+            throws DOMException {
+            notSupported();
+        }
 
-	public Attr getAttributeNodeNS(String namespaceURI, 
-				       String localName) {
-	    NamedNodeMap map = getAttributes();
-	    if (map == null) return null;
-	    return (Attr)map.getNamedItemNS(namespaceURI, localName);
-	}
+        public Attr getAttributeNodeNS(String namespaceURI, 
+                                       String localName) {
+            NamedNodeMap map = getAttributes();
+            if (map == null) return null;
+            return (Attr)map.getNamedItemNS(namespaceURI, localName);
+        }
 
-	public Attr setAttributeNodeNS(Attr newAttr)
-	    throws DOMException {
-	    notSupported();
-	    return null;
-	}
+        public Attr setAttributeNodeNS(Attr newAttr)
+            throws DOMException {
+            notSupported();
+            return null;
+        }
 
-	public NodeList getElementsByTagNameNS(String namespaceURI, 
-					       String localName) {
-	    return EMPTY_NODE_LIST;
-	}
+        public NodeList getElementsByTagNameNS(String namespaceURI, 
+                                               String localName) {
+            return EMPTY_NODE_LIST;
+        }
 
-	public boolean hasAttribute(String name) {
-	    return getAttributeNode(name) != null;
-	}
+        public boolean hasAttribute(String name) {
+            return getAttributeNode(name) != null;
+        }
 
-	public boolean hasAttributeNS(String namespaceURI, 
-				      String localName) {
-	    return getAttributeNodeNS(namespaceURI, localName) != null;
-	}
+        public boolean hasAttributeNS(String namespaceURI, 
+                                      String localName) {
+            return getAttributeNodeNS(namespaceURI, localName) != null;
+        }
 
         public boolean hasAttributes() {
             return getAttributes().getLength() > 0;
         }
-	
+        
     }
 
     public DocumentType getDoctype() {
-	return null;
+        return null;
     }
 
     public DOMImplementation getImplementation() {
@@ -749,7 +748,7 @@ public class DocumentAdapter implements Document {
     public Element createElement(String tagName)
         throws DOMException {
         notSupported();
-	return null;
+        return null;
     }
 
     public DocumentFragment createDocumentFragment() {
@@ -871,35 +870,35 @@ public class DocumentAdapter implements Document {
                              Node refChild)
         throws DOMException {
         notSupported();
-	return null;
+        return null;
     }
 
     public Node replaceChild(Node newChild, 
                              Node oldChild)
         throws DOMException {
         notSupported();
-	return null;
+        return null;
     }
 
     public Node removeChild(Node oldChild)
         throws DOMException {
         notSupported();
-	return null;
+        return null;
     }
 
     public Node appendChild(Node newChild)
         throws DOMException {
         notSupported();
-	return null;
+        return null;
     }
 
     public boolean hasChildNodes() {
-        return false;
+        return root.hasChildNodes();
     }
 
     public Node cloneNode(boolean deep) {
         notSupported();
-	return null;
+        return null;
     }        
 
     public void normalize() {
@@ -916,7 +915,7 @@ public class DocumentAdapter implements Document {
     }
 
     public String getPrefix() {
-	return root.getPrefix();
+        return root.getPrefix();
     }
 
     public void setPrefix(String prefix)
