@@ -367,6 +367,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     
     private static final Locator NULL_LOCATOR = new LocatorImpl();
 
+    private XMLConsumer getConsumer()
+    {
+        return this.xmlConsumer;
+    }
+
     /**
      * Jexl Introspector that supports Rhino JavaScript objects
      * as well as Java Objects
@@ -2483,7 +2488,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
             public void endDocument() throws SAXException {
                 super.endDocument();
-                gen.execute(gen.xmlConsumer,
+                gen.execute(gen.getConsumer(),
                             gen.getJexlContext(),
                             gen.getJXPathContext(),
                             getStartEvent(), null);
