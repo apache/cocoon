@@ -105,20 +105,24 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.18 2004/01/15 13:31:08 unico Exp $
+ *  @version $Id: WebDAVSource.java,v 1.19 2004/01/16 17:54:12 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
 
 
-    private final String NAMESPACE = "http://apache.org/cocoon/webdav/1.0";
+    private static final String NAMESPACE = "http://apache.org/cocoon/webdav/1.0";
 
-    private final String PREFIX = "webdav";
+    private static final String PREFIX = "webdav";
 
-    private final String RESOURCE_NAME = "resource";
+    private static final String RESOURCE_NAME = "resource";
 
-    private final String COLLECTION_NAME = "collection";
+    private static final String COLLECTION_NAME = "collection";
 
+    static {
+        WebdavResource.setGetUseDisk(false);
+    }
+    
     private String systemId;
     
     private String location;
@@ -147,21 +151,17 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         
         this.systemId = "http://" + location;
         
-        //try {
-            HttpURL httpURL = new HttpURL(this.systemId);
-            httpURL.setUserInfo(principal, password);
-            
-            if (createNew)
-               this.resource = new WebdavResource(httpURL, 
-                   WebdavResource.NOACTION, 
-                   DepthSupport.DEPTH_1);
-            else 
-               this.resource = new WebdavResource(httpURL);
-            
-            WebdavResource.setGetUseDisk(false);
-        //} catch (IOException ioe) {
-        //    throw new IllegalStateException(ioe.getMessage());
-        //}
+        HttpURL httpURL = new HttpURL(this.systemId);
+        httpURL.setUserInfo(principal, password);
+        
+        if (createNew) {
+            this.resource = new WebdavResource(httpURL, 
+                WebdavResource.NOACTION, 
+                DepthSupport.DEPTH_1);
+        }
+        else {
+            this.resource = new WebdavResource(httpURL);
+        }
         
     }
 
@@ -333,6 +333,9 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * unknown
      */
     public long getContentLength() {
+        if (this.resource.isCollection()) {
+            return -1;
+        }
         return this.resource.getGetContentLength();
     }
 
