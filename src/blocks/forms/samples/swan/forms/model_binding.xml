@@ -208,8 +208,8 @@ Binding for example CForms form model GUI.
       <fb:load-form>
         widget.setValue(jxpathPointer.getNode().getFirstChild().getLocalName());
         if(!"edit".equals(widget.lookupWidget("../view-selector").getValue())) {
-          widget.setProcessRequests(false);
-          widget.lookupWidget("../union").setProcessRequests(false);
+          widget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
+          widget.lookupWidget("../union").setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
         }
       </fb:load-form>
     </fb:javascript>

@@ -20,12 +20,8 @@
     <title>Hello</title>
   </head>
   <body>
-    <h3>== Security Note ==</h3>
-    This is a work-in-progress with a nice sprinkling of bugs, including
-    an edit-any-file security hole, so the pipelines involved in this are
-    commented out.  To run this anyway (perhaps you would like to help fix
-    the bugs...) just uncomment the pipelines after the comment:
-    "TODO: Fix edit-any-file security hole!"
+    <h3>== Note ==</h3>
+    This is a work-in-progress with a nice sprinkling of bugs.
     <h3>== Profiling Data ==</h3>
     <a href="profile.html">profile.html</a><br/>
     <h3>== Edit xReports ==</h3>
@@ -46,7 +42,7 @@
     <b>Template:</b><br/>
     <a href="template.flow?file=form_model_gui_template_data.xml">form_model_gui_template_data.xml</a><br/>
     <a href="template.flow?file=sample_form_1_template.xml">sample_form_1_template.xml</a><br/>
-    <a href="template.flow?file=sample_form__template.xml">sample_form_2_template.xml</a><br/>
+    <a href="template.flow?file=sample_form_2_template.xml">sample_form_2_template.xml</a><br/>
   </body>
 </html>
 

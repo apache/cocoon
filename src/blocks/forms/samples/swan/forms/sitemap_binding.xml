@@ -16,7 +16,7 @@
 -->
 
 <!--
-Binding for example CForms form model GUI.
+Binding for example CForms sitemap editor GUI.
 
 @version CVS $Id: form_model_gui_binding.xml,v 1.3 2004/04/12 14:05:09 tim Exp $
 -->
@@ -206,9 +206,9 @@ Binding for example CForms form model GUI.
   <fb:class id="view-selector-class">
     <fb:javascript id="view-selector" path="." direction="load">
       <fb:load-form>
-        // View is selected by buttons.
-        widget.setProcessRequests(false);
         widget.setValue("view");
+        // View is selected by buttons.
+        widget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
       </fb:load-form>
     </fb:javascript>
   </fb:class>
@@ -241,8 +241,11 @@ Binding for example CForms form model GUI.
       <fb:new id="redirect-to-class"/>
       <fb:new id="parameter-class"/>
     </fb:union>
-    <!-- The view-selector initalization has to happen last, -->
-    <!-- so setProcessRequests() has widgets to work on.     -->
+    <!--
+    The view-selector binding must happen last,
+    so that all the widgets will exist that the 
+    view-selector's on-value-changed handler needs.
+    -->
     <fb:new id="view-selector-class"/>
   </fb:class>
 
