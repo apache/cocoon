@@ -58,6 +58,7 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
     private Connection con = null;
     private DataSourceComponent datasource = null;
     private boolean doCommit = false;
+    private boolean defaultCache = true;
 
     private ComponentManager manager;
 
@@ -76,6 +77,7 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.dsn = conf.getChild("use-connection").getValue();
+        this.defaultCache = conf.getChild("invalidate").getValue("never").equals("always");
     }
 
     /**
@@ -278,7 +280,11 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
         if (this.lastModified > 0) {
             return new TimeStampCacheValidity(this.lastModified);
         } else {
-            return new NOPCacheValidity();
+            if (this.defaultCache) {
+                return new NOPCacheValidity();
+            } else {
+                return null;
+            }
         }
     }
 
