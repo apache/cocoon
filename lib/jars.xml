@@ -464,7 +464,7 @@
      The Logging package is an ultra-thin bridge between different logging libraries.
     </description>
     <used-by>Jakarta Commons HttpClient, Chaperon</used-by>
-    <lib>optional/commons-logging-1.0.3.jar</lib>
+    <lib>optional/commons-logging-1.0.4.jar</lib>
     <homepage>http://jakarta.apache.org/commons/logging.html</homepage>
   </file>
 
