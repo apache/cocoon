@@ -113,13 +113,12 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.10 2004/01/30 17:16:01 joerg Exp $
+ * @version CVS $Id: ParserTransformer.java,v 1.11 2004/02/02 11:17:25 stephan Exp $
  */
 public class ParserTransformer extends ParserProcessor
         implements Transformer, LogEnabled, Serviceable, Parameterizable,
                    Recyclable, Disposable, CacheableProcessingComponent
 {
-  private XMLConsumer consumer = null;
   private String grammar = null;
   private Source grammarSource = null;
   private Logger logger = null;
@@ -173,9 +172,8 @@ public class ParserTransformer extends ParserProcessor
    */
   public void setConsumer(XMLConsumer consumer)
   {
-    this.consumer = consumer;
-
     setContentHandler(consumer);
+    setLexicalHandler(consumer);
   }
 
   /**

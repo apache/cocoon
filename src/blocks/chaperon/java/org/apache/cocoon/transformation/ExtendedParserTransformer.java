@@ -91,13 +91,12 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ExtendedParserTransformer.java,v 1.3 2004/01/30 17:16:01 joerg Exp $
+ * @version CVS $Id: ExtendedParserTransformer.java,v 1.4 2004/02/02 11:17:25 stephan Exp $
  */
 public class ExtendedParserTransformer extends ExtendedDirectParserProcessor
         implements Transformer, LogEnabled, Serviceable, Parameterizable,
                    Recyclable, Disposable, CacheableProcessingComponent
 {
-  private XMLConsumer consumer = null;
   private String grammar = null;
   private Source grammarSource = null;
   private Logger logger = null;
@@ -148,9 +147,8 @@ public class ExtendedParserTransformer extends ExtendedDirectParserProcessor
    */
   public void setConsumer(XMLConsumer consumer)
   {
-    this.consumer = consumer;
-
     setContentHandler(consumer);
+    setLexicalHandler(consumer);
   }
 
   /**
