@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.5 2003/12/11 15:36:04 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.6 2004/02/12 09:32:37 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -103,9 +103,9 @@ extends AbstractSAXTransformer {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            // determine coplet id
-            Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-            if ( context == null ) {
+            final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+            
+            if ( portalService.getPortalName() == null && context == null) {
                 // set portal name
                 try {
                     portalService.setPortalName(this.parameters.getParameter(PORTAL_NAME_PARAM));
@@ -115,6 +115,7 @@ extends AbstractSAXTransformer {
             }
             
             if ( copletId == null ) {
+                // determine coplet id
                 if (context != null) {
                     copletId = (String)context.get(Constants.COPLET_ID_KEY);
                 } else {
