@@ -26,6 +26,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -70,7 +71,7 @@ import java.util.Map;
  * not verified.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.6 2004/03/28 20:51:23 antonio Exp $
+ * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.7 2004/03/30 05:50:48 antonio Exp $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe
 {
@@ -100,10 +101,9 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
             boolean cs = true;
             String create_session = parameters.getParameter ("create-session",
                                  (String) this.settings.get("create-session"));
-            if (create_session != null &&
-                    ("no".equals (create_session.trim ()) || "false".equals (create_session.trim ()))) {
-                cs = false;
-            }
+            if (create_session != null) {
+                cs = BooleanUtils.toBoolean(create_session.trim());
+             }
 
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
@@ -186,63 +186,53 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
             for (int i = 0; i < columns.length; i++) {
                 String dbcol = columns[i].getAttribute("dbcol");
                 boolean nullable = false;
-
                 if (i > 0) {
                     queryBuffer.append (", ");
                 }
-
                 queryBuffer.append(dbcol);
 
                 String requestParameter = columns[i].getAttribute("request-param", null);
-                if (requestParameter != null && requestParameter.trim() != "") {
-
+                if (StringUtils.isNotBlank(requestParameter)) {
                     String nullstr = columns[i].getAttribute("nullable", null);
                     if (nullstr != null) {
-                        nullstr = nullstr.trim();
-                        nullable = BooleanUtils.toBoolean(nullstr);
+                        nullable = BooleanUtils.toBoolean(nullstr.trim());
                     }
-
                     String constraintValue = req.getParameter(requestParameter);
 
                     // if there is a request parameter name,
                     // but not the value, we exit immediately do
                     // that authorization fails authomatically
-                    if ((constraintValue == null || constraintValue.trim().equals("")) && !nullable) {
+                    if (StringUtils.isBlank(constraintValue) && !nullable) {
                         getLogger().debug("DBAUTH: request-param " + requestParameter + " does not exist");
                         return null;
                     }
-
                     if (constraints > 0) {
                         queryBufferEnd.append(" AND ");
                     }
-
                     queryBufferEnd.append(dbcol).append("= ?");
-                    constraintValues[constraints] = constraintValue;
-                    constraints++;
+                    constraintValues[constraints++] = constraintValue;
                 }
             }
 
             queryBuffer.append(" FROM ");
             queryBuffer.append(table.getAttribute("name"));
-            if (!queryBufferEnd.toString().trim().equals("")) {
-                queryBuffer.append(" WHERE ").append(queryBufferEnd.toString());
+            if (StringUtils.isNotBlank(queryBufferEnd.toString())) {
+                queryBuffer.append(" WHERE ").append(queryBufferEnd);
             }
 
             getLogger().debug("DBAUTH: query " + queryBuffer);
 
             PreparedStatement st = conn.prepareStatement(queryBuffer.toString());
 
-            for(int i=0;i<constraints;i++) {
+            for (int i = 0; i < constraints; i++) {
                 getLogger().debug("DBAUTH: parameter " + (i+1) + " = [" + String.valueOf(constraintValues[i]) + "]");
                 st.setObject(i+1,constraintValues[i]);
             }
-
             return st;
         }
         catch (Exception e) {
             getLogger().debug("DBAUTH: got exception: " + e);
         }
-
         return null;
     }
 
@@ -256,20 +246,12 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
             for (int i = 0; i < select.length; i ++) {
                 try {
                     session_param = select[i].getAttribute ("to-session");
-                    if (session_param != null &&
-                            !session_param.trim().equals ("")) {
+                    if (StringUtils.isNotBlank(session_param)) {
+                        Object o = null;
                         String s = rs.getString (i + 1);
                         /* propagate to session */
-                        try {
-                            type = select[i].getAttribute ("type");
-                        } catch (Exception e) {
-                            type = null;
-                        }
-                        if (type == null || "".equals (type.trim ())) {
-                            type = "string";
-                        }
-                        Object o = null;
-                        if ("string".equals (type)) {
+                            type = select[i].getAttribute("type", "");
+                        if (StringUtils.isBlank(type) || "string".equals (type)) {
                             o = s;
                         } else if ("long".equals (type)) {
                             Long l = Long.decode (s);
@@ -286,6 +268,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
                         map.put (session_param, o);
                     }
                 } catch (Exception e) {
+                    // Empty
                 }
             }
             return map;
@@ -295,4 +278,3 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
         return null;
     }
 }
-

@@ -41,7 +41,7 @@ import java.util.Map;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: DatabaseDeleteAction.java,v 1.2 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseDeleteAction.java,v 1.3 2004/03/30 05:50:48 antonio Exp $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction implements ThreadSafe {
     private static final Map deleteStatements = new HashMap();
@@ -87,7 +87,7 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction implement
             conn.commit();
             statement.close();
 
-            if(rows > 0){
+            if (rows > 0) {
                 request.setAttribute("rows", Integer.toString(rows));
                 return EMPTY_MAP;
             }
@@ -95,7 +95,6 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction implement
             if (conn != null) {
                 conn.rollback();
             }
-
             throw new ProcessingException("Could not delete record :position = " + currentIndex, e);
         } finally {
             if (conn != null) {
@@ -105,10 +104,10 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction implement
                     getLogger().warn("There was an error closing the datasource", sqe);
                 }
             }
-
-            if (datasource != null) this.dbselector.release(datasource);
+            if (datasource != null) {
+                this.dbselector.release(datasource);
+            }
         }
-
         return null;
     }
 
@@ -130,22 +129,12 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction implement
                 StringBuffer queryBuffer = new StringBuffer("DELETE FROM ");
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" WHERE ");
-
-                for (int i = 0; i < keys.length; i++) {
-                    if (i > 0) {
-                        queryBuffer.append(" AND ");
-                    }
-
-                    queryBuffer.append((keys[i]).getAttribute("dbcol"));
-                    queryBuffer.append(" = ?");
-                }
-
+                queryBuffer.append(buildList(keys, " AND "));
                 query = queryBuffer.toString();
 
                 DatabaseDeleteAction.deleteStatements.put(conf, query);
             }
         }
-
         return query;
     }
 }
