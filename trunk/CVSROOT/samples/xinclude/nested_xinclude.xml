@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="xinclude"?>
+<?cocoon-format type="text/xml"?>
+
+<outer-page 
+	xmlns:xinclude="http://www.w3.org/1999/XML/xinclude"
+>
+<include xinclude:parse="xml" xinclude:href="xinclude.xml"/>
+</outer-page>

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <?cocoon-process type="xinclude"?>
-<?cocoon-format type="text/xml"?>
+<!--<?cocoon-format type="text/xml"?>-->
 
 <page 
 	xmlns:xinclude="http://www.w3.org/1999/XML/xinclude"
 >
-<xinclude:include parse="xml" href="foo.xml#xpointer(//message)"/>
+<include xinclude:parse="xml" xinclude:href="foo.xml#xpointer(//message)"/>
 </page>
