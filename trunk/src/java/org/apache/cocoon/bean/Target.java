@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.5 2003/09/15 19:18:18 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.6 2003/09/18 12:11:50 upayavira Exp $
  */
 public class Target {
     // Defult type is append
@@ -186,7 +186,7 @@ public class Target {
      * stand out, within the file structure of the generated site, by, for
      * example, adding '.error' to the end of the filename.
      */
-    public void setExtension(String extension) {
+    public void setExtraExtension(String extension) {
         this.extension = extension;
         this.finalDestinationURI = null;
     }
@@ -230,6 +230,13 @@ public class Target {
         return NetUtils.getPath(this.getSourceURI());
     }
 
+    /**
+     * Gets the file extension for the source URI
+     */
+    public String getExtension() {
+        return NetUtils.getExtension(this.getSourceURI());
+    }
+    
     /** 
      * Gets the parent URI (the URI of the page that contained
      * a link to this URI). null is returned if this page was
@@ -325,6 +332,14 @@ public class Target {
         return NetUtils.relativize(path, actualSourceURI);
     }
 
+    /**
+     * 
+     * @return
+     */
+    public String getAuthlessDestURI() throws ProcessingException {
+        return NetUtils.removeAuthorisation(this.getDestinationURI());
+    }
+    
     /**
      * Gets the original URI used to create this Target.
      * This URI is completely unprocessed.
