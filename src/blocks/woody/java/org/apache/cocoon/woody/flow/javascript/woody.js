@@ -104,12 +104,16 @@ Form.prototype.getModel = function() {
     return this.formWidget;
 }
 
-Form.prototype.show = function(uri, validator) {
+Form.prototype.show = function(uri, validator, locale) {
     var lastWebCont = this.lastWebContinuation;
     // create a continuation, the invocation of which will resend
     // the page: this will be used to implement automated "back"
     // navigation
     var wk = this.start(lastWebCont);
+
+    if (locale == null)
+        locale = java.util.Locale.getDefault();
+
     while (true) {
         if (cocoon.request == null) {
             // this continuation has been invalidated
@@ -117,7 +121,7 @@ Form.prototype.show = function(uri, validator) {
             handleInvalidContinuation();
             Woody.suicide();
         }
-        var thisWebCont = this._show(uri, wk);
+        var thisWebCont = this._show(uri, locale, wk);
         // _show creates a continuation, the invocation of which
         // will return right here: it is used to implement 
         // automated "next" navigation
@@ -126,9 +130,9 @@ Form.prototype.show = function(uri, validator) {
             handleInvalidContinuation();
             suicide();
         }
+
         var formContext = 
-            new Packages.org.apache.cocoon.woody.FormContext(this.woody.request,
-                                                             java.util.Locale.US);
+            new Packages.org.apache.cocoon.woody.FormContext(this.woody.request, locale);
         var finished = this.form.process(formContext);
         var evt = formContext.getActionEvent();
         if (evt != null) {
@@ -145,10 +149,10 @@ Form.prototype.show = function(uri, validator) {
     }
 }
 
-Form.prototype._show = function(uri, lastWebCont, timeToLive) {
+Form.prototype._show = function(uri, locale, lastWebCont, timeToLive) {
     var k = new Continuation();
     var wk = this.woody.makeWebContinuation(k, lastWebCont, timeToLive);
-    var bizData = { "woody-form": this.form };
+    var bizData = { "woody-form": this.form, "locale" : locale };
     this.lastWebContinuation = wk;
     this.woody.forwardTo(uri, bizData, wk);
     Woody.suicide();
