@@ -2,7 +2,7 @@
 
 <!--
     Convert the slop parser output to a collection of slides
-    $Id: filter-slop-output.xsl,v 1.3 2003/10/11 22:37:11 stevenn Exp $
+    $Id: filter-slop-output.xsl,v 1.4 2003/10/11 22:55:27 stevenn Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -107,17 +107,19 @@
     <!-- extract paragraph and code blocks -->
     <xsl:template mode="paragraph" match="slop:empty-line">
         <xsl:choose>
-          <xsl:when test="following-sibling::*[1][not(self::slop:code)]">
+          <xsl:when test="following-sibling::*[1][self::slop:code]">
+		        <pre>
+		            <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
+		                <xsl:call-template name="code-grouper"/>
+		            </xsl:for-each>
+		        </pre>
+          </xsl:when>
+          <xsl:otherwise>
 		        <p>
 		            <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
 		                <xsl:call-template name="para-grouper"/>
 		            </xsl:for-each>
 		        </p>
-          </xsl:when>
-          <xsl:otherwise>
-		        <pre><xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
-		                <xsl:call-template name="code-grouper"/>
-		        </xsl:for-each></pre>
           </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
