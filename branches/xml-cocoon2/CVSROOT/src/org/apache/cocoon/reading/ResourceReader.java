@@ -28,7 +28,19 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:39:59 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-12 09:47:47 $
+ *
+ * The <code>ResourceReader</code> component is used to serve binary data
+ * in a sitemap pipeline.
+ *
+ * Parameters:
+ *   <dl>
+ *     <dt>&lt;expires&gt;</dt>
+ *       <dd>This parameter is optional. When specified it determines how long
+ *           in miliseconds the resources can be cached by any proxy between
+ *           Cocoon2 and the requesting browser.
+ *       </dd>
+ *   </dl>
  */
 public class ResourceReader extends AbstractReader {
 
@@ -77,6 +89,10 @@ public class ResourceReader extends AbstractReader {
         is.close();
         res.setContentLength(buffer.length);
         res.setDateHeader("Last-Modified", lastModified);
+        long expires = par.getParameterAsInteger("expires", -1);
+        if (expires > 0) {
+            res.setDateHeader("Expires", System.currentTimeMillis()+expires);
+        }
         res.setHeader("Accept-Ranges", "bytes");
         out.write ( buffer );
     }
