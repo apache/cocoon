@@ -56,7 +56,6 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -86,7 +85,7 @@ import org.xml.sax.InputSource;
  *  
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UpdateTarget.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: UpdateTarget.java,v 1.2 2003/09/24 22:34:52 cziegeler Exp $
  */
 public class UpdateTarget 
     extends AbstractLogEnabled
@@ -155,7 +154,7 @@ public class UpdateTarget
                     }
                     cachedResponse = (byte[])serializer.getSAXFragment();
                 } finally {
-                    this.manager.release((Component)parser);
+                    this.manager.release(parser);
                     this.manager.release(serializer);
                 }
                 

@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.4 2003/07/03 11:36:10 cziegeler Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.5 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class MailMessageSender {
 
@@ -110,7 +110,7 @@ public class MailMessageSender {
         private Object obj = null;
         private String type = null;
         private String name = null;
-        private boolean isURL = false;
+        protected boolean isURL = false;
 
         /**
          * Create a new attachment object encapsulating obj.

@@ -66,17 +66,17 @@ import java.util.ConcurrentModificationException;
  * A <code>org.apache.cocoon.environment.WriteableSource</code> for 'file:/' system IDs.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: FileSource.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
+ * @version CVS $Id: FileSource.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
  * @deprecated Use the new avalon source resolving instead
  */
 public class FileSource extends AbstractStreamWriteableSource
     implements org.apache.cocoon.environment.WriteableSource {
 
     /** The underlying file. */
-    private File file;
+    protected File file;
 
     /** The system ID for this source (lazily created by getSystemId()) */
-    private String systemId = null;
+    private String systemId;
 
     /** Is this an html file ? */
     private boolean isHTMLContent;

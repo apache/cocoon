@@ -112,7 +112,7 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSource.java,v 1.7 2003/08/04 03:06:30 joerg Exp $
+ * @version CVS $Id: SlideSource.java,v 1.8 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class SlideSource extends AbstractLogEnabled
   implements Contextualizable, Composable, Source, ModifiableSource,
@@ -120,22 +120,22 @@ public class SlideSource extends AbstractLogEnabled
              LockableSource, InspectableSource, VersionableSource {
 
     /** Component context */
-    private Context context;
+    protected Context context;
 
     /** Component manager */
     private ComponentManager manager;
 
     /** Namespace access token. */
-    private NamespaceAccessToken nat;
+    protected NamespaceAccessToken nat;
 
     /** Configuration of namespace */
-    private NamespaceConfig config;
+    protected NamespaceConfig config;
 
     /** Structure helper. */
-    private Structure structure;
+    protected Structure structure;
 
     /** Content helper. */
-    private Content content;
+    protected Content content;
 
     /** Security helper. */
     private Security security;
@@ -149,22 +149,22 @@ public class SlideSource extends AbstractLogEnabled
     private CredentialsToken credToken;
 
     /** Slide token. */
-    private SlideToken slideToken;
+    protected SlideToken slideToken;
 
     /** Pseudo scheme */
     private String scheme = "slide";
 
     /** The path of the source, which means the URI without the scheme */
-    private String path;
+    protected String path;
 
     /** Uniform resource ifdentifier */
     private String uri;
 
     /** Revision number */
-    private NodeRevisionNumber revisionNumber;
+    protected NodeRevisionNumber revisionNumber;
 
-    private NodeRevisionDescriptors revisionDescriptors = null;
-    private NodeRevisionDescriptor revisionDescriptor = null;
+    private NodeRevisionDescriptors revisionDescriptors;
+    protected NodeRevisionDescriptor revisionDescriptor;
 
     // private String branch;
 
@@ -1571,7 +1571,7 @@ public class SlideSource extends AbstractLogEnabled
 
             SourcePermission[] sourcepermissionArray = new SourcePermission[sourcepermissions.size()];
 
-            return (SourcePermission[]) sourcepermissions.toArray((Object[]) sourcepermissionArray);
+            return (SourcePermission[]) sourcepermissions.toArray(sourcepermissionArray);
 
         } catch (SlideException se) {
             throw new SourceException("Exception eccurs while retrieveing source permission",

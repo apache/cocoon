@@ -94,7 +94,7 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.4 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
   implements PrincipalProvider, Composable, Configurable, Initializable {
@@ -121,7 +121,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
     // private Lock lock;
 
     /** Macro helper. */
-    private Macro macro;
+    // private Macro macro;
 
     /** Slide token. */
     // private SlideToken slidetoken;
@@ -188,7 +188,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
             this.content = nat.getContentHelper();
             this.security = nat.getSecurityHelper();
             // this.lock = nat.getLockHelper();
-            this.macro = nat.getMacroHelper();
+            // this.macro = nat.getMacroHelper();
 
         } catch (ComponentException ce) {
             getLogger().error("Could not lookup for component.", ce);

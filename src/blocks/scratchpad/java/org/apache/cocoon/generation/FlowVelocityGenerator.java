@@ -59,7 +59,6 @@ import java.io.StringWriter;
 import java.util.*;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -83,9 +82,9 @@ import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
 import org.apache.velocity.util.introspection.Info;
@@ -175,7 +174,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class FlowVelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
@@ -400,7 +399,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
                     result = ScriptRuntime.call(cx, result, thisObj, 
                                                 newArgs, scope);
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -448,7 +447,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
                     }
                     Object result = ScriptableObject.getProperty(thisObj, name);
                     if (result == Undefined.instance || 
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -531,7 +530,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
                 try {
                     Object result = arr.get(index++, arr);
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -570,7 +569,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
                         ScriptableObject.getProperty(scope, 
                                                      ids[index++].toString());
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -771,7 +770,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
         // Set up a JavaScript introspector for the Cocoon flow layer
         this.tmplEngine.setProperty(org.apache.velocity.runtime.RuntimeConstants.UBERSPECT_CLASSNAME,
                                     JSIntrospector.class.getName());
-        this.tmplEngine.setProperty(Velocity.RUNTIME_LOG_LOGSYSTEM, this);
+        this.tmplEngine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, this);
 
         // First set up our default 'cocoon' resource loader
         this.tmplEngine.setProperty("cocoon.resource.loader.class",
@@ -831,7 +830,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
             buffer.append(',');
             buffer.append((String) it.next());
         }
-        tmplEngine.setProperty(Velocity.RESOURCE_LOADER, buffer.toString());
+        tmplEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, buffer.toString());
     }
 
     /**
@@ -1084,7 +1083,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
         } finally {
-            this.manager.release((Component) parser);
+            this.manager.release(parser);
         }
     }
 

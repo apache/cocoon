@@ -87,7 +87,7 @@ import org.xml.sax.SAXException;
  * Transformer which implements the dynamic Tag functionalty.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: TagTransformer.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
+ * @version CVS $Id: TagTransformer.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class TagTransformer
     extends AbstractXMLProducer
@@ -114,8 +114,6 @@ public class TagTransformer
     private SourceResolver resolver;
     /** The current objectModel of the environment */
     private Map objectModel;
-    /** The source attribute specified in the sitemap */
-    private String source;
     /** The parameters specified in the sitemap */
     private Parameters parameters;
     /** The Avalon ComponentManager */
@@ -337,7 +335,6 @@ public class TagTransformer
         skipLevel = 0;
         resolver = null;
         objectModel = null;
-        source = null;
         parameters = null;
         currentTag = null;
         currentConsumer = null;
@@ -399,7 +396,6 @@ public class TagTransformer
         throws IOException, SAXException {
         this.resolver = resolver;
         this.objectModel = objectModel;
-        this.source = source;
         this.parameters = parameters;
     }
 

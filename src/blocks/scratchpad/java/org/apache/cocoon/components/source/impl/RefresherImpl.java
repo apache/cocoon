@@ -91,7 +91,7 @@ import org.apache.excalibur.source.SourceResolver;
  * 
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RefresherImpl.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: RefresherImpl.java,v 1.2 2003/09/24 22:34:52 cziegeler Exp $
  */
 public class RefresherImpl 
     extends AbstractLogEnabled
@@ -149,7 +149,7 @@ public class RefresherImpl
                             final String name = cacheKey.getKey();
                             
                             this.scheduler.addPeriodicJob(name, this.schedulerTarget,
-                                                  (long)expires,
+                                                  expires,
                                                   true,
                                                   tc.parameters,
                                                   tc.map);
@@ -240,7 +240,7 @@ public class RefresherImpl
         final String name = cacheKey.getKey();
         try {
             this.scheduler.addPeriodicJob(name, this.schedulerTarget,
-                                  (long)expires,
+                                  expires,
                                   true,
                                   conf.parameters,
                                   conf.map);

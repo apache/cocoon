@@ -52,7 +52,6 @@ package org.apache.cocoon.generation;
 
 import java.io.StringReader;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -70,7 +69,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: RequestAttributeGenerator.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
+ * @version CVS $Id: RequestAttributeGenerator.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
  *
  * @cocoon:name                      req-attr
  * @cocoon:status                    scratchpad
@@ -148,7 +147,7 @@ public class RequestAttributeGenerator extends ServiceableGenerator {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in RequestAttributeGenerator.generate()", e);
         } finally {
-            this.manager.release((Component)parser);
+            this.manager.release(parser);
         }
     }
 
