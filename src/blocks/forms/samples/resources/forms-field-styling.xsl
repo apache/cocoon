@@ -320,6 +320,16 @@
     </input>
   </xsl:template>
 
+  <!--+ 
+      | fi:action, link-style 	 
+      +--> 	 
+  <xsl:template match="fi:action[fi:styling/@type = 'link']" priority="1"> 	 
+    <a title="{fi:hint}" href="#" onclick="forms_submitForm(this, '{@id}'); return false"> 	 
+      <xsl:apply-templates select="." mode="styling"/> 	 
+      <xsl:copy-of select="fi:label/node()"/> 	 
+    </a>
+  </xsl:template>
+
   <!--+
       | fi:continuation-id : produce a hidden "continuation-id" input
       +-->
