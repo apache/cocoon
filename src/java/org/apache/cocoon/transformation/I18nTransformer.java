@@ -50,6 +50,25 @@
 */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -60,13 +79,13 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.i18n.Bundle;
 import org.apache.cocoon.i18n.BundleFactory;
 import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.transformation.helpers.MirrorRecorder;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
@@ -75,10 +94,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.text.*;
-import java.util.*;
 
 /**
  * Internationalization transformer is used to transform i18n markup into text
@@ -234,7 +249,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.13 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.14 2003/11/13 13:56:32 vgritsenko Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -891,7 +906,7 @@ public class I18nTransformer extends AbstractTransformer
 
             debug("BundleFactory is obtained");
         } catch (ComponentException ce) {
-            this.getLogger().error("BundleFactory is not loaded", ce);
+            getLogger().error("BundleFactory is not loaded", ce);
         }
     }
 
@@ -1137,10 +1152,10 @@ public class I18nTransformer extends AbstractTransformer
         if (I18N_OLD_NAMESPACE_URI.equals(uri)) {
             if (!deprecationFound) {
                 deprecationFound = true;
-                this.getLogger().warn("The namespace '"
-                                      + I18N_OLD_NAMESPACE_URI
-                                      + "' for i18n is not supported any more, use: '"
-                                      + I18N_NAMESPACE_URI + "'");
+                getLogger().warn("The namespace '" +
+                                 I18N_OLD_NAMESPACE_URI +
+                                 "' for i18n is not supported any more, use: '" +
+                                 I18N_NAMESPACE_URI + "'");
             }
             debug("Starting deprecated i18n element: " + name);
             startI18NElement(name, attr);
@@ -2089,7 +2104,9 @@ public class I18nTransformer extends AbstractTransformer
 
     // Helper method to get the text value of the node.
     private static String getTextValue(Node node) {
-        if (node == null) return null;
+        if (node == null) {
+            return null;
+        } 
 
         NodeList list = node.getChildNodes();
         int listsize = list.getLength();
@@ -2108,22 +2125,28 @@ public class I18nTransformer extends AbstractTransformer
         return itemValue.toString();
     }
 
-    // Helper method to retrieve a message from the dictionary.
-    // A default value is returned if message is not found
+    /**
+     * Helper method to retrieve a message from the dictionary.
+     * A default value is returned if message is not found.
+     */ 
     private MirrorRecorder getMirrorRecorder(String key, MirrorRecorder defaultValue) {
         try {
             Bundle catalogue = defaultCatalogue;
             if (currentCatalogueId != null) {
                 CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(currentCatalogueId);
                 if (catalogueInfo == null) {
-                    if (getLogger().isDebugEnabled())
-                        debug("Catalogue not found: " + currentCatalogueId + ", could not translate key " + key);
+                    if (getLogger().isDebugEnabled()) {
+                        debug("Catalogue not found: " + currentCatalogueId +
+                              ", could not translate key " + key);
+                    }
                     return defaultValue;
                 }
                 try {
                     catalogue = catalogueInfo.getCatalogue();
                 } catch (Exception e) {
-                    getLogger().error("Error getting catalogue " + catalogueInfo.getName() + " from location " + catalogueInfo.getLocation() + " for locale " + locale + ", will not translate key " + key);
+                    getLogger().error("Error getting catalogue " + catalogueInfo.getName() +
+                                      " from location " + catalogueInfo.getLocation() +
+                                      " for locale " + locale + ", will not translate key " + key);
                     return defaultValue;
                 }
             }
@@ -2131,8 +2154,9 @@ public class I18nTransformer extends AbstractTransformer
                     (Node)catalogue.getObject(
                             I18N_CATALOGUE_PREFIX + "[@key='" + key + "']"));
 
-            if (value == null)
+            if (value == null) {
                 return defaultValue;
+            }
 
             return value;
 
