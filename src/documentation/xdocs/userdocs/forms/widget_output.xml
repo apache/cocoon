@@ -24,15 +24,28 @@
     </authors>
   </header>
   <body>
-    <s1 title="output widget">
+    <s1 title="Concept">
       <p>An fd:output widget is similar to a field widget, but its value
       is not editable. The value of an output widget must be set programmatically
       (or through binding). An output widget does not read its value from
       the request, so is most useful in the case where the form is stored
-      accross requests (e.g. as part of a flowscript or flow-apple). An
+      accross requests (automatically the case when using flowscript). An
       output widget does not perform any validation, it is always considered
       to be valid.</p>
 
+      <note>It is likely that we'll add a generalized 'readonly' capability
+      to all widgets. When we do that, fd:output will become obsolete and
+      can be replaced by a 'readonly' field wiget. In the meantime you can
+      safely use fd:output since this change won't have much impact.</note>
+
+      <p><strong>Possible alternative:</strong> On each widget you can
+      also store additional information
+      (i.e. arbitrary Java objects) in attributes. See the Java API
+      of the Widget interface, methods setAttribute and getAttribute.
+      You can then retrieve these attributes using the JXTemplate generator.</p>
+    </s1>
+
+    <s1 title="Configuration">
       <source><![CDATA[<fd:output id="...">
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>
@@ -42,13 +55,8 @@
   </fd:datatype>
 </fd:output>]]></source>
 
-      <p>Note: since the fd:output widget only serves as an equivalent of
-      fd:field, it has been suggested that it would be better to add a
-      "read-only" capability to all widgets.</p>
-
-      <p>Note: on each widget you can also store additional information
-      (i.e. arbitrary Java objects) in attributes. See the Java API
-      of the Widget interface, methods setAttribute and getAttribute.</p>
+      <p>See <link href="widget_field.html">field widget</link> for a description
+      of the configuration elements.</p>
     </s1>
   </body>
 </document>

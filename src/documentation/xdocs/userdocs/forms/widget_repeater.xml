@@ -24,16 +24,22 @@
     </authors>
   </header>
   <body>
-    <s1 title="repeater widget">
+    <s1 title="Concept">
       <p>An fd:repeater widget is a widget that repeats a number of other widgets.
       It can be used to create e.g. tables, repeating subforms, etc.</p>
+    </s1>
 
-      <p>Configuration example:</p>
-
+    <s1 title="Configuration">
       <source><![CDATA[<fd:repeater id="..." initial-size="...">
+  <fd:label>...</fd:label>
+  <fd:hint>...</fd:hint>
+  <fd:help>...</fd:help>
   <fd:widgets>
     [...]
   </fd:widgets>
+  <fd:validation>
+     [...]
+  </fd:validation>
 </fd:repeater>]]></source>
 
       <p>The <strong>fd:widgets</strong> element should contain a number of other widgets to repeat.
@@ -43,6 +49,9 @@
       <p>The optional <strong>initial-size</strong> attribute allows to specify how much rows should
       be initially present on the repeater. It mostly avoids to display a table
       with only table headers. Default value is zero.</p>
+
+      <p>For a description of the other elements, see the
+      <link href="widget_field.html">field widget</link>.</p>
 
       <p>Note: The Forms Template Transformer has specific support for specifying
       a template to use to render each of the rows of a repeater widget. See

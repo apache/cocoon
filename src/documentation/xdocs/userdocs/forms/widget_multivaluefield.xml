@@ -24,15 +24,28 @@
     </authors>
   </header>
   <body>
-    <s1 title="multivaluefield widget">
-      <p>The fd:multivaluefield is similar to the field widget but
-      can take multiple values. A multivaluefield should always have
-      a fd:datatype element combined with a fd:selection-list, since
-      the user will have to select values from this list. The
-      fd:multivaluefield could be rendered as a list of checkboxes
-      or as a listbox in which the user can select multiple items.</p>
+    <s1 title="Concept">
+      <p>The fd:multivaluefield is similar to the
+      <link href="widget_field.html">field widget</link> but
+      can take multiple values. Its purpose is to handle those (HTML) form
+      controls which submit their multiple values as multiple (HTTP) request parameters
+      with the same name. A multivaluefield should always have
+      an fd:datatype element combined with a fd:selection-list, since
+      the user will have to select values from this list.</p>
 
-      <p>Configuration example:</p>
+      <p>The fd:multivaluefield could be rendered as a list of checkboxes
+      or as a listbox in which the user can select multiple items.
+      The CForms stylesheets also include a styling option to render
+      them as a "double list", i.e. a list of available and selected
+      values.</p>
+
+      <p>The setValue and getValue methods of the multivaluefield take
+      respectively return arrays of objects (i.e. Object[]). The type
+      of the objects in these arrays should match the datatype declared
+      for the widget.</p>
+    </s1>
+
+    <s1 title="Configuration">
 
       <source><![CDATA[<fd:multivaluefield id="...">
   <fd:label>...</fd:label>
@@ -42,11 +55,14 @@
     [...]
   </fd:datatype>
   <fd:selection-list>
-    <fd:item value="...">
-      <fd:label>...</fd:label>
-    </fd:item>
     [...]
   </fd:selection-list>
+  <fd:validation>
+    [...]
+  </fd:validation>
+  <fd:on-value-changed>
+     [...]
+  </fd:on-value-changed>
 </fd:multivaluefield>]]></source>
 
       <p>Most of the elements and attributes have the same meaning
