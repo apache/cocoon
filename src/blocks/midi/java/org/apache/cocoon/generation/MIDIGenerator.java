@@ -110,7 +110,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
   {
     global_verbose =
       validateVerbosity(
-        parameters.getParameter("verbose", Boolean.toString(VERBOSE_DEFAULT)));
+        parameters.getParameter("verbose", String.valueOf(VERBOSE_DEFAULT)));
   }
 
   /**
@@ -153,7 +153,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
     }
     local_verbose =
       validateVerbosity(
-        parameters.getParameter("verbose", Boolean.toString(global_verbose)));
+        parameters.getParameter("verbose", String.valueOf(global_verbose)));
   }
 
   /**
