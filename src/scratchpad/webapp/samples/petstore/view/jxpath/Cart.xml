@@ -1,7 +1,12 @@
-<!-- Example of <import> -->
+<!-- 
+     Examples of <import> 
+     You can use embedded expressions in the import "uri" and you can
+     [optionally] select a context object for the imported template 
+-->
+
 <html xmlns:t="http://cocoon.apache.org/transformation/jxpath/1.0">
 <body>
-<t:import uri="view/jxpath/IncludeTop.xml"/>
+<t:import uri="{'view/jxpath/IncludeTop.xml'}" select="{.}"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr><td valign="top" width="20%" align="left">
 <table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
@@ -38,7 +43,7 @@
   <td align="center">
   <input type="text" size="3" name="{item/itemId}" value="{quantity}" />
   </td>
-  <td align="right">{ format-number(item/listPrice, '$#,##0.00') }"/></td>
+  <td align="right">{ format-number(item/listPrice, '$#,##0.00') }</td>
   <td><a href="removeItemFromCart.do?workingItemId={item/itemId}">
   <img border="0" src="images/button_remove.gif" /></a></td>
   </tr>
