@@ -30,7 +30,7 @@
     These are the components that handle the search. 
     
     Cocoon indexer write into an index.
-    Cocoon searcher reads form an index, returning matched hits.
+    Cocoon searcher reads from an index, returning matched hits.
     Cocoon crawler crawls all links starting from a given base URI.
     Lucene xml indexer build a lucene document from XML content.
    -->
