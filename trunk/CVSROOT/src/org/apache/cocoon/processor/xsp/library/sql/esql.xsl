@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.32 2000-11-13 03:56:14 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.33 2000-11-14 00:42:26 balld Exp $-->
 <!--
 
  ============================================================================
@@ -157,7 +157,7 @@
   <xsl:variable name="username"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:username"/></xsl:call-template></xsl:variable>
   <xsl:variable name="password"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:password"/></xsl:call-template></xsl:variable>
   <xsl:variable name="pool"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:pool"/></xsl:call-template></xsl:variable>
-  <xsl:variable name="autocommit"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:pool"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="autocommit"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:autocommit"/></xsl:call-template></xsl:variable>
   <xsp:logic>
     if (_esql_connection != null) {
       _esql_connections.push(_esql_connection);
@@ -221,12 +221,20 @@
 
 <xsl:template match="esql:connection//esql:execute-query">
   <xsl:variable name="query"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:query"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="maxrows"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:max-rows"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="skiprows"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:skip-rows"/></xsl:call-template></xsl:variable>
   <xsp:logic>
     if (_esql_query != null) {
       _esql_queries.push(_esql_query);
     }
     _esql_query = new EsqlQuery();
     _esql_query.query = String.valueOf(<xsl:copy-of select="$query"/>);
+    try {
+      _esql_query.max_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$maxrows"/>));
+    } catch (NumberFormatException e) {}
+    try {
+      _esql_query.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skiprows"/>));
+    } catch (NumberFormatException e) {}
     try {
       <xsl:choose>
         <!-- this is a prepared statement -->
