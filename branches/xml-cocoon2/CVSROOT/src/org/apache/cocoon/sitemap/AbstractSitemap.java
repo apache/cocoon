@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Component;
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-08 20:40:30 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-15 20:35:16 $
  */
 public abstract class AbstractSitemap implements Sitemap {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -108,7 +109,7 @@ public abstract class AbstractSitemap implements Sitemap {
 
      /**
       * Replaces occurences of xpath like expressions in an argument String
-      * with content from a List of Lists
+      * with content from a List of Maps
       */
     protected String substitute (List list, String expr)
     throws PatternException, NumberFormatException {
@@ -137,11 +138,10 @@ public abstract class AbstractSitemap implements Sitemap {
                 for (l = -1; (l = s.indexOf("../",l+1)) != -1; k--);
                 m = s.lastIndexOf('/');
                 if (m == -1) {
-                    n = Integer.parseInt(s) - 1;
+                    result.append((String)((Map)list.get(k)).get(s));
                 } else {
-                    n = Integer.parseInt(s.substring(m+1)) - 1;
+                    result.append((String)((Map)list.get(k)).get(s.substring(m+1)));
                 }
-                result.append((String)((List)list.get(k)).get(n));
             }
             if (ii < expr.length()) {
                 result.append(expr.substring(ii));

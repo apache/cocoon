@@ -7,6 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.matching;
 
+import org.apache.cocoon.CodeFactory;
+
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
@@ -24,10 +26,10 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-12-08 20:39:50 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-12-15 20:35:12 $
  */
 
-public class RegexpURIMatcherFactory implements MatcherFactory {
+public class RegexpURIMatcherFactory implements CodeFactory {
     protected Logger log = LogKit.getLoggerFor("cocoon");
 
     public String generateParameterSource (NodeIterator conf)
@@ -93,7 +95,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
-        sb.append("ArrayList list = new ArrayList ();")
+        sb.append("HashMap map = new HashMap ();")
           .append("String uri = ((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();")
           .append("if(uri.startsWith(\"/\")) uri = uri.substring(1);")
           .append("if(pattern.match(uri)) {");
@@ -103,10 +105,10 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
            */
           sb.append("int parenCount = pattern.getParenCount();")
             .append("for (int paren = 1; paren <= parenCount; paren++) {")
-            .append("list.add(pattern.getParen(paren));")
+            .append("map.put(Integer.toString(paren), pattern.getParen(paren));")
             .append("}");
 
-        sb.append("return list; } else { return null; }");
+        sb.append("return map; } else { return null; }");
         return sb.toString();
     }
 

@@ -7,7 +7,6 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-06 22:54:10 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-15 20:35:09 $
  */
 public class HelloAction extends ComposerAction {
 
@@ -40,7 +39,7 @@ public class HelloAction extends ComposerAction {
      * A simple Action that logs if the <code>Session</code> object
      * has been created
      */
-    public List act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
+    public Map act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
         HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
         if (req != null) {
             HttpSession session = req.getSession (false);

@@ -8,7 +8,7 @@
 
 package org.apache.cocoon.matching.helpers;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * This class is an utility class that perform wilcard-patterns matching and
@@ -18,7 +18,7 @@ import java.util.List;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-31 12:20:17 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-15 20:35:15 $
  */
 public class WildcardURIMatcher {
 
@@ -37,10 +37,10 @@ public class WildcardURIMatcher {
      * match a pattern agains a string and isolates wildcard replacement into a
      * <code>Stack</code>.
      */
-    public static boolean match (List list, String data,
+    public static boolean match (HashMap map, String data,
             int[] expr) throws NullPointerException {
-        if (list == null)
-            throw new NullPointerException ("No list provided");
+        if (map == null)
+            throw new NullPointerException ("No map provided");
         if (data == null)
             throw new NullPointerException ("No data provided");
         if (expr == null)
@@ -62,6 +62,8 @@ public class WildcardURIMatcher {
         int rsltpos = 0;
         int offset = -1;
 
+        // The matching count
+        int mcount = 0;
 
         // First check for MATCH_BEGIN
         boolean matchBegin = false;
@@ -104,12 +106,12 @@ public class WildcardURIMatcher {
             // Check for END's
             if (exprchr == MATCH_END) {
                 if (rsltpos > 0)
-                    list.add (new String(rslt, 0, rsltpos));
+                    map.put(Integer.toString(++mcount),new String(rslt, 0, rsltpos));
                 // Don't care about rest of input buffer
                 return (true);
             } else if (exprchr == MATCH_THEEND) {
                 if (rsltpos > 0)
-                    list.add (new String(rslt, 0, rsltpos));
+                    map.put (Integer.toString(++mcount),new String(rslt, 0, rsltpos));
                 // Check that we reach buffer's end
                 return (buffpos == buff.length);
             }
@@ -144,7 +146,7 @@ public class WildcardURIMatcher {
                 }
             }
 
-            list.add (new String (rslt, 0, rsltpos));
+            map.put(Integer.toString(++mcount),new String (rslt, 0, rsltpos));
             rsltpos = 0;
         }
     }

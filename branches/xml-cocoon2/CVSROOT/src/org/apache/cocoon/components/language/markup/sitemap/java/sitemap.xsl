@@ -46,6 +46,7 @@
     import java.util.List;
     import java.util.ArrayList;
     import java.util.Map;
+    import java.util.HashMap;
     import java.util.Stack;
 
     import javax.servlet.http.HttpServletRequest;
@@ -77,7 +78,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.71 $ $Date: 2000-12-15 01:02:41 $
+     * @version CVS $Revision: 1.1.2.72 $ $Date: 2000-12-15 20:35:11 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -105,7 +106,7 @@
           <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
           <xsl:variable name="default" select="$type = ../@default"/>
           <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
-          private List <xsl:value-of select="$type"/>Match (<xsl:value-of select="java:getParameterSource($factory-loader, string($src),$config)"/> pattern, Map objectModel) {
+          private Map <xsl:value-of select="$type"/>Match (<xsl:value-of select="java:getParameterSource($factory-loader, string($src),$config)"/> pattern, Map objectModel) {
             <xsl:value-of select="java:getMethodSource($factory-loader, string($src),$config)"/>
           }
           <!-- process all map:match elements with a type attribute refering to the current matcher factory iteration -->
@@ -232,16 +233,16 @@
         /**
          * This is the internal resource named "<xsl:value-of select="@name"/>"
          * @param pipeline A &lt;code&gt;ResourcePipeline&lt;/code&gt; holding the sitemap component collected so far
-         * @param listOfLists A &lt;code&gt;List&lt;/code&gt; holding replacement values for src attributes
+         * @param listOfMaps A &lt;code&gt;List&lt;/code&gt; of Maps holding replacement values for src attributes
          * @param environment The &lt;code&gt;Environment&lt;/code&gt; requesting a resource
          * @param cocoon_view The view of the resource requested
          * @return Wether the request has been processed or not
          * @exception Exception If an error occurs during request evaluation and production
          */
         private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline,
-            List listOfLists, Environment environment, String cocoon_view)
+            List listOfMaps, Environment environment, String cocoon_view)
         throws Exception {
-          List list = null;
+          Map map = null;
           Parameters param = null;
           <xsl:apply-templates select="./*"/>
           return false;
@@ -253,15 +254,15 @@
         /**
          * This is the method to produce the "<xsl:value-of select="@name"/>" view of the requested resource
          * @param pipeline A &lt;code&gt;ResourcePipeline&lt;/code&gt; holding the sitemap component collected so far
-         * @param listOfLists A &lt;code&gt;List&lt;/code&gt; holding replacement values for src attributes
+         * @param listOfMaps A &lt;code&gt;List&lt;/code&gt; of Maps holding replacement values for src attributes
          * @param environment The &lt;code&gt;Environment&lt;/code&gt; requesting a resource
          * @return Wether the request has been processed or not
          * @exception Exception If an error occurs during request evaluation and production
          */
         private boolean view_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline,
-            List listOfLists, Environment environment)
+            List listOfMaps, Environment environment)
         throws Exception {
-          List list = null;
+          Map map = null;
           Parameters param = null;
           <xsl:apply-templates select="./*"/>
           return false;
@@ -280,8 +281,8 @@
            delivered from matchers and selectors to replace occurences of
            XPath kind expressions in values of src attribute used with
            generate and transform elements */
-        List listOfLists = (List) new ArrayList();
-        List list;
+        List listOfMaps = (List) new ArrayList();
+        Map map;
         Parameters param;
         Map objectModel = environment.getObjectModel();
         String cocoon_view = environment.getView();
@@ -318,8 +319,8 @@
           private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Map objectModel, Exception e)
           throws Exception {
             ResourcePipeline pipeline = new ResourcePipeline (super.sitemapComponentManager);
-            List listOfLists = (List)(new ArrayList());
-            List list;
+            List listOfMaps = (List)(new ArrayList());
+            Map map;
             Parameters param;
             pipeline.setGenerator ("!generator:error-notifier!", e.getMessage(), emptyParam, e);
             <xsl:apply-templates select="./map:handle-errors/*"/>
@@ -392,12 +393,12 @@
     </xsl:variable>
 
     <!-- this is the actual code produced -->
-    if ((list = <xsl:value-of select="translate($matcher-type, '- ', '__')"/>Match(<xsl:value-of select="$matcher-name"/>_expr,
+    if ((map = <xsl:value-of select="translate($matcher-type, '- ', '__')"/>Match(<xsl:value-of select="$matcher-name"/>_expr,
           objectModel)) != null) {
       log.debug("Matched <xsl:value-of select="$matcher-name"/>");
-      listOfLists.add (list);
+      listOfMaps.add (map);
       <xsl:apply-templates/>
-      listOfLists.remove (list);
+      listOfMaps.remove (map);
     }
   </xsl:template> <!-- match="map:match" -->
 
@@ -530,15 +531,15 @@
     <!-- generate the invocation of the act method of the action component -->
     <xsl:choose>
       <xsl:when test="./*">
-        if ((list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
+        if ((map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
          log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>"); 
-          listOfLists.add (list);
+          listOfMaps.add (map);
           <xsl:apply-templates/>
-          listOfLists.remove(list);
+          listOfMaps.remove(map);
         }
       </xsl:when>
       <xsl:otherwise>
-        list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>);
+        map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:act" -->
@@ -617,18 +618,18 @@
     <!-- here we make sure the uri-prefix ends with a slash -->
     <xsl:choose>
       <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='/'">
-        if(true)return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+        if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:when>
       <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='}'">
-        String uri_prefix<xsl:value-of select="count(.)"/>=substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>");
+        String uri_prefix<xsl:value-of select="count(.)"/>=substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>");
         if (uri_prefix<xsl:value-of select="count(.)"/>.charAt(uri_prefix<xsl:value-of select="count(.)"/>.length()-1)=='/'){
-          if(true)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+          if(true)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
         } else {
-          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
         }
       </xsl:when>
       <xsl:otherwise>
-        if(true)return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
+        if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:mount" -->
@@ -639,13 +640,13 @@
 
       <!-- redirect to a internal resource definition -->
       <xsl:when test="@resource">
-        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment, cocoon_view);
+        if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfMaps, environment, cocoon_view);
       </xsl:when>
 
       <!-- redirect to a external resource definition. Let the environment do the redirect -->
       <xsl:when test="@uri">
         log.debug("Redirecting to '<xsl:value-of select="@uri"/>'");
-        environment.redirect (substitute(listOfLists, "<xsl:value-of select="@uri"/>"));
+        environment.redirect (substitute(listOfMaps, "<xsl:value-of select="@uri"/>"));
         if(true)return true;
       </xsl:when>
 
@@ -662,12 +663,12 @@
   <xsl:template match="map:label">
     <xsl:apply-templates/>
     if ("<xsl:value-of select="@name"/>".equals(cocoon_view))
-      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
   </xsl:template> <!-- match="map:label" -->
 
   <!-- collect parameter definitions -->
   <xsl:template match="map:pipeline//parameter">
-    param.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfLists, "<xsl:value-of select="@value"/>"));
+    param.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfMaps, "<xsl:value-of select="@value"/>"));
   </xsl:template>
 
   <!-- FIXME:(GP) is this still valid? -->
@@ -782,7 +783,7 @@
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='last']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
             log.debug("View <xsl:value-of select="@name"/>");
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
           }
         </xsl:for-each>
         // performing link translation
@@ -852,12 +853,12 @@
           <xsl:when test="$mime-type!=''">
             log.debug("Mime-type: <xsl:value-of select="$mime-type"/>");
             pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
-                substitute(listOfLists,"<xsl:value-of select="$component-source"/>"),
+                substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>");
           </xsl:when>
           <xsl:otherwise>
             pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
-                substitute(listOfLists,"<xsl:value-of select="$component-source"/>"),
+                substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>);
           </xsl:otherwise>
         </xsl:choose>
@@ -877,14 +878,14 @@
       <xsl:if test="$component-label">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-label=$component-label]">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
           }
         </xsl:for-each>
       </xsl:if>
       <xsl:if test="$prefix='generator'">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='first']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+            return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
           }
         </xsl:for-each>
       </xsl:if>

@@ -22,7 +22,7 @@ import org.apache.log.LogKit;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2000-12-08 20:39:51 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2000-12-15 20:35:13 $
  */
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -55,11 +55,11 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
      */
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
-        return "ArrayList list = new ArrayList();" +
+        return "HashMap map = new HashMap();" +
                "String uri = ((org.apache.cocoon.environment.http.HttpRequest) objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();" +
                "if (uri.startsWith(\"/\")) uri = uri.substring(1);" +
-               "if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, uri, pattern)) {" +
-               "return list;" +
+               "if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (map, uri, pattern)) {" +
+               "return map;" +
                "} else {" +
                "return null;}";
     }

@@ -7,7 +7,6 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.Component;
@@ -20,7 +19,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-11 15:14:33 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-15 20:35:08 $
  */
 public interface Action extends Component, ThreadSafe {
     /**
@@ -48,7 +47,7 @@ public interface Action extends Component, ThreadSafe {
      *                    be skipped.
      * @exception Exception Indicates something is totally wrong
      */
-    List act(EntityResolver resolver, Map objectModel, String source, Parameters par)
+    Map act(EntityResolver resolver, Map objectModel, String source, Parameters par)
     throws Exception;
 }
 

@@ -7,7 +7,6 @@
  *****************************************************************************/
 package org.apache.cocoon.matching;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.Component;
@@ -15,7 +14,7 @@ import org.apache.avalon.Component;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-11 16:06:51 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-15 20:35:12 $
  */
 public interface Matcher extends Component {
     /**
@@ -33,7 +32,7 @@ public interface Matcher extends Component {
      *                    contained in the pattern.
      *                    If the return value is null there was no match.
      */
-    List match (String pattern, Map objectModel);
+    Map match (String pattern, Map objectModel);
 }
 
 

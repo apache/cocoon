@@ -25,7 +25,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-08 20:39:48 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-15 20:35:12 $
  */
 
 public class RegexpTargetHostMatcherFactory implements MatcherFactory {
@@ -78,7 +78,7 @@ public class RegexpTargetHostMatcherFactory implements MatcherFactory {
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
-        sb.append("ArrayList list = new ArrayList ();")
+        sb.append("HashMap map = new HashMap ();")
           .append("String uri = ((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getHeader(\"Host\");")
           .append("if(uri.startsWith(\"/\")) uri = uri.substring(1);")
           .append("if(pattern.match(uri)) {");
@@ -88,9 +88,9 @@ public class RegexpTargetHostMatcherFactory implements MatcherFactory {
          */
         sb.append("int parenCount = pattern.getParenCount();")
           .append("for (int paren = 1; paren <= parenCount; paren++) {")
-          .append("list.add(pattern.getParen(paren));")
+          .append("map.put(Integer.toString(paren), pattern.getParen(paren));")
           .append("}");
-        sb.append("return list; } else { return null; }");
+        sb.append("return map; } else { return null; }");
         return sb.toString();
     }
 
