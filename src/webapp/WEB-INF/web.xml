@@ -103,7 +103,7 @@
     -->
     <init-param>
       <param-name>allow-reload</param-name>
-      <param-value>yes</param-value>
+      <param-value>no</param-value>
     </init-param>
 
     <!--
