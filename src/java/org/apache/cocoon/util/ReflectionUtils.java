@@ -31,7 +31,7 @@ public final class ReflectionUtils {
 	    
     public interface Indexer {
         void put(final Map pMap, final String pKey, final Object pObject);
-    };
+    }
 	    
     private static DefaultIndexer defaultIndexer = new DefaultIndexer();
     private static DefaultMatcher defaultMatcher = new DefaultMatcher();
@@ -51,7 +51,7 @@ public final class ReflectionUtils {
             System.out.println("reflecting " + name);
             pMap.put(name, pObject);
         }
-    };
+    }
 	    
     public static Map discoverFields(
             final Class pClazz,
