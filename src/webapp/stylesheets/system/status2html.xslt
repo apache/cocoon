@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- 
-  CVS $Id: status2html.xslt,v 1.4 2003/03/30 12:48:32 ghoward Exp $
+  CVS $Id: status2html.xslt,v 1.5 2003/04/28 08:38:32 stephan Exp $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -35,7 +35,7 @@
     <li>
       <span class="description"><xsl:value-of select="@status:name"/><xsl:text>: </xsl:text></span>    
       <xsl:choose>
-        <xsl:when test="contains(@status:name,'memory')">	
+        <xsl:when test="contains(@status:name,'free') or contains(@status:name,'total')">
           <xsl:call-template name="suffix">
             <xsl:with-param name="bytes" select="number(.)"/>
           </xsl:call-template>
