@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+<p>Some links can't be followed. In the following example, the first match doesn't know if it should generate from 'aap/noot/mies.xml', 'wim/zus.xml', '*.xml' or '**.xml'. 
+In a lot of cases it works fine though.
+
+<pre class="example" id="hidden">
+    &lt;map:match pattern="**.html"&gt;
+        &lt;map:generate src="cocoon:/{1}.xml"/&gt;
+        &lt;map:transform src="transforms/xml2html.xsl"/&gt;
+        &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+    
+    &lt;map:match pattern="aap/noot/mies.xml"&gt;
+        ...
+    &lt;/map:match&gt;
+    
+    &lt;map:match pattern="wim/zus.xml"&gt;
+        ...
+    &lt;/map:match&gt;
+
+    &lt;map:match pattern="*.xml"&gt;
+        ...
+    &lt;/map:match&gt;
+    &lt;map:match pattern="**.xml"&gt;
+        ...
+    &lt;/map:match&gt;
+</pre>    
+</p>
+
+</body>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:dir="http://apache.org/cocoon/directory/2.0">
+
+<xsl:template match="/">
+    <html>
+        <head>
+            <title></title>
+        </head>
+        <body>
+            <ul>
+                <xsl:apply-templates select=".//dir"/>
+            </ul>
+        </body>
+    </html>
+</xsl:template>
+
+<xsl:template match="dir">
+    <li>
+        <a href="{.}"><xsl:value-of select="."/></a>
+    </li>
+</xsl:template>
+
+
+</xsl:stylesheet>
