@@ -18,6 +18,7 @@ package org.apache.butterfly.servlet;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -112,7 +113,9 @@ public class ButterflyServlet extends HttpServlet {
         GroovyClassLoader loader = new GroovyClassLoader(parent);
         try {
             Class pipelineClass = loader.parseClass(getClass().getResourceAsStream("Pipeline.groovy"));
-            Class sitemapClass = loader.parseClass(getClass().getResourceAsStream("sitemap.groovy"));
+            // Parse the main sitemap
+            FileInputStream fis = new FileInputStream(this.servletContext.getResource("sitemap.groovy").getFile());
+            Class sitemapClass = loader.parseClass(fis);
             GroovyObject sitemap = (GroovyObject) sitemapClass.newInstance();
             sitemap.setProperty("beanFactory", this.applicationContext);
             Object[] args = { uri };
