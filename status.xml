@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.264 2004/03/08 21:21:19 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.265 2004/03/08 23:32:50 joerg Exp $:-->
 
 <status>
  <developers>
@@ -211,6 +211,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="add" fixes-bug="27020" due-to="Peter Horsfield" due-to-email="peter@xml.grumpykitty.biz">
+     Added grayscaling and color transformation to the ImageReader.
+   </action>
    <action dev="JH" type="fix" fixes-bug="26851" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
      LinkStatusGenerator now handles also links with a specified charset.
    </action>

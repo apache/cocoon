@@ -16,7 +16,7 @@
 -->
 
 <!--
-  CVS $Id: sitemap.xmap,v 1.3 2004/03/06 02:26:15 antonio Exp $
+  CVS $Id: sitemap.xmap,v 1.4 2004/03/08 23:32:50 joerg Exp $
   
   Image Reader Sample
 -->
@@ -43,10 +43,36 @@
         <map:serialize/>
       </map:match>
  
-      <map:match pattern="image-*">
+      <map:match pattern="image">
+        <map:read src="logo.jpg"/>
+      </map:match>
+
+      <map:match pattern="image-size-*">
         <map:read type="image" src="logo.jpg">
           <map:parameter name="width" value="{1}"/>
           <map:parameter name="height" value="{1}"/>
+        </map:read>
+      </map:match>
+
+      <map:match pattern="image-grayscale">
+        <map:read type="image" src="logo.jpg">
+          <map:parameter name="grayscale" value="true"/>
+        </map:read>
+      </map:match>
+
+      <map:match pattern="image-color-scale-*-*-*">
+        <map:read type="image" src="logo.jpg">
+          <map:parameter name="scaleRed" value="{1}"/>
+          <map:parameter name="scaleGreen" value="{2}"/>
+          <map:parameter name="scaleBlue" value="{3}"/>
+        </map:read>
+      </map:match>
+
+      <map:match pattern="image-color-offset-*-*-*">
+        <map:read type="image" src="logo.jpg">
+          <map:parameter name="offsetRed" value="{1}"/>
+          <map:parameter name="offsetGreen" value="{2}"/>
+          <map:parameter name="offsetBlue" value="{3}"/>
         </map:read>
       </map:match>
     </map:pipeline>
