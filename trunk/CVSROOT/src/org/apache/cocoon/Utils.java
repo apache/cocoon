@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.3 1999-11-09 02:29:19 dirkx Exp $ -- 
+/*-- $Id: Utils.java,v 1.4 2000-01-15 11:19:17 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,13 +54,14 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.w3c.dom.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:29:19 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-15 11:19:17 $
  */
 
 public final class Utils {
@@ -208,5 +209,41 @@ public final class Utils {
             url.append(req.getQueryString());
         }
         return url.toString();
+    }
+
+    /**
+     * XXX: This is a dirty hack. The worst piece of code I ever wrote
+     * and it clearly shows how Cocoon must change to support the Servlet API
+     * 2.2 which has _much_ better mapping support thru the use of "getResource()"
+     * but then, all the file system abstraction should be URL based.
+     *
+     * So, for now, leave the dirty code even if totally deprecated and work
+     * out a better solution in the future.
+     */
+    public static String getBasename(HttpServletRequest request, Object context) {
+        try {
+            // detect if the engine supports at least Servlet API 2.2
+            request.getContextPath();
+            URL resource = ((ServletContext) context).getResource(request.getServletPath());
+            if (resource.getProtocol().equals("file")) {
+                return resource.getFile();
+            } else {
+                throw new RuntimeException("Cannot handle remote resources.");
+            }
+        } catch (NoSuchMethodError e) {
+            // if there is no such method we must be in Servlet API 2.1
+            if (request.getPathInfo() != null) {
+                // this must be Apache JServ
+                return request.getPathTranslated().replace('\\','/');
+            } else {
+                // otherwise use the deprecated method on all other servlet engines.
+                return request.getRealPath(request.getRequestURI());
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Malformed request URL.");
+        } catch (NullPointerException e) {
+            // if there is no context set, we must be called from the command line
+            return request.getPathTranslated().replace('\\','/');
+        }
     }
 }
