@@ -34,7 +34,7 @@
             functionality of Cocoon will be an important feature for Cocoon's
             viability as a broadly used application framework. Though the
             documentation on 
-            <link href="../userdocs/developer/extending.html">"Extending Cocoon"</link>
+            <link href="../developing/extending.html">"Extending Cocoon"</link>
             (at least at this writing) seems to have a hard time imagining
             applications for custom generators outside of the bizarre, I
             imagine several scenarios which could call for it:</p>
@@ -49,7 +49,7 @@
                optimization in custom generators that just do not seem
                reasonable to expect out of the auto-generated code that XSPs
                produce. The current 
-               <link href="../userdocs/config/performancetips.html">Performance Tips</link>
+               <link href="../performancetips.html">Performance Tips</link>
                documentation seems to lead in this direction.</li>
 
                <li>Customized control over the caching behaviour if not
@@ -93,10 +93,10 @@
               <li>Read 
               <link href="../userdocs/concepts/index.html">Cocoon Concepts</link>
                , as well as 
-               <link href="../userdocs/developer/extending.html">Extending Cocoon</link>
+               <link href="../developing/extending.html">Extending Cocoon</link>
 
                , and the broad overview of 
-               <link href="../userdocs/developer/avalon/preface.html">Avalon</link>
+               <link href="../developing/avalon.html">Avalon</link>
 
                , the framework upon which Cocoon is built.</li>
 

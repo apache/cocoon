@@ -97,7 +97,7 @@
      
    </ul>
      <p>More information about caching can be found 
-       <link href="caching.html">in the Caching documentation</link>.
+       <link href="userdocs/concepts/caching.html">in the Caching documentation</link>.
        Especially have a look at the information about the expires configuration.
      </p>
  </s1>

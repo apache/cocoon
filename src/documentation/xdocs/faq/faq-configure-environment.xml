@@ -181,7 +181,7 @@ Another user adds: In my experience, session support is lost when you use mod_re
      The "file:" type of source instructs Cocoon to search the sub-sitemap
      under the specified directory (which happens to be "c:\foo", since this
      is a Windows system). See explanation of
-     <link href="../userdocs/user/sitemap/sitemap.html#file-url">file: URLs</link>
+     <link href="../userdocs/concepts/sitemap.html#file-url">file: URLs</link>
    </p>
    <p>
      Now, you just need to copy everything which was under the
@@ -267,7 +267,7 @@ $> $TOMCAT_HOME/bin/startup.sh -f server.xml
 
    <p>
      Another solution is to use PJA library. Read 'Linux/Headless/Batik'
-     section in the <link href="../userdocs/installation/index.html">Cocoon installation guide</link>.
+     section in the <link href="../installing/index.html">Cocoon installation guide</link>.
    </p>
   </answer>
 </faq>

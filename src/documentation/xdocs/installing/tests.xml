@@ -32,7 +32,7 @@
 
   <ul>
    <li>
-    <link href="../../catalog-test.html">Testing: Catalog Entity Resolver</link>
+    <link href="../catalog-test.html">Testing: Catalog Entity Resolver</link>
     which conducts some additional tests for resolving external entities.
    </li>
   </ul>

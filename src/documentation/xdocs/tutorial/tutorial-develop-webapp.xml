@@ -29,7 +29,7 @@
      The areas addressed are Logic, Content, Style, and Management.  There
      are different mechanisms for each.</p>
   <p>In order to learn how to use Cocoon, first make sure that you
-     <link href="../userdocs/installation/index.html">install</link> it properly, then investigate
+     <link href="../installing/index.html">install</link> it properly, then investigate
      the many <link href="../overview.html#samples">samples</link>.
      The following screenshots come from the
      &quot;<code>tutorial</code>&quot; that is provided with Cocoon.

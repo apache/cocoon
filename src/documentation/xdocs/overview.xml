@@ -18,7 +18,7 @@
 		<p>Cocoon also gives you the possibility to apply logic to your XML files
 		  (so that the XML pipeline can be dynamic).</p> 
 
-    <p>The <link href="userdocs/intro.html">User documentation</link>
+    <p>The <link href="userdocs/index.html">User documentation</link>
      and especially <link href="userdocs/concepts/index.html">Concepts</link>
      will help to understand Cocoon.
     </p>

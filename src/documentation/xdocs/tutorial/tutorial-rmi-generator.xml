@@ -366,7 +366,7 @@ This gives us a list of variables that we can use throughout our own generator.
 			</s3>
 			
 			<s3 title="Interface(s)">
-				<p>Following the somewhat little pointers on develop-part of the Cocoon-website <link href="../userdocs/developer/extending.html">Extending Apache Cocoon van The Apache XML Project</link>), we find that the only interface that should be implemented is the Generator interface in the <strong>org.apache.cocoon.generation</strong> package, so we will try to give an overview as complete as possible for now.
+				<p>Following the somewhat little pointers on develop-part of the Cocoon-website <link href="../developing/extending.html">Extending Apache Cocoon van The Apache XML Project</link>), we find that the only interface that should be implemented is the Generator interface in the <strong>org.apache.cocoon.generation</strong> package, so we will try to give an overview as complete as possible for now.
 				</p>
 				
 				<s4 title="Generator">

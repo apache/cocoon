@@ -17,7 +17,7 @@ generally simple boolean expression regarding some part of the environment (requ
 In the sitemap file, each selector has a unique name which is mapped to a java class. One selector name must be declared as the default selector. Each selector may have additional configuration information specified in child elements.
   </p>
   <p>
- For more conceptual information about selectors see <link href="../userdocs/user/advanced/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>. For detailed descriptions about all of the available Cocoon selectors, see the user's guide document <link href="../userdocs/components/selectors/selectors.html">Matchers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
+ For more conceptual information about selectors see <link href="../userdocs/concepts/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>. For detailed descriptions about all of the available Cocoon selectors, see the user's guide document <link href="../userdocs/selectors/selectors.html">Matchers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
   </p>
 </answer>
 
@@ -30,7 +30,7 @@ In the sitemap file, each selector has a unique name which is mapped to a java c
 
  <answer>
   <p>
-Both matchers and selectors can be used to determine the flow, order, and components involved in request processing. Their differences include the complexity of the decisions they can make about processing as well as the values they return to the sitemap. For a more detailed discussion of their similarities and differences, see <link href="../userdocs/user/advanced/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>.
+Both matchers and selectors can be used to determine the flow, order, and components involved in request processing. Their differences include the complexity of the decisions they can make about processing as well as the values they return to the sitemap. For a more detailed discussion of their similarities and differences, see <link href="../userdocs/concepts/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>.
   </p>
 
 </answer>

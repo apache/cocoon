@@ -15,7 +15,7 @@
 In the sitemap file, each generator has a unique name which is mapped to a java class. One generator name must be declared as the default generator. Each generator may have additional configuration information specified in child elements.
   </p>
   <p>
-For conceptual information on generators see the user's guide document <link href="../userdocs/user/sitemap/preface.html">The Sitemap</link>. For detailed descriptions about all of the available Cocoon generators, see the user's guide document <link href="../userdocs/user/sitemap/sitemap.html">Generators in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
+For conceptual information on generators see the user's guide document <link href="../userdocs/concepts/sitemap.html">The Sitemap</link>. For detailed descriptions about all of the available Cocoon generators, see the user's guide document <link href="../userdocs/concepts/sitemap.html">Generators in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
   </p>
 </answer>
 </faq>

@@ -16,7 +16,7 @@ A transformer is the central point in a sitemap pipeline. Within a pipeline matc
 In the sitemap file, each transformer has a unique name which is mapped to a java class. One transformer name must be declared as the default transformer. Each transformer may have additional configuration information specified in child elements.
   </p>
   <p>
- For more conceptual information about transformers see <link href="../userdocs/user/sitemap/preface.html">the sitemap</link>. For detailed descriptions about all of the available Cocoon transformers, see the user's guide document <link href="../userdocs/components/transformers/transformers.html">Transformers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
+ For more conceptual information about transformers see <link href="../userdocs/concepts/sitemap.html">the sitemap</link>. For detailed descriptions about all of the available Cocoon transformers, see the user's guide document <link href="../userdocs/transformers/transformers.html">Transformers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
   </p>
 </answer>
 
@@ -54,7 +54,7 @@ CIncludeTransformer differences
   </ul>
   
   <p>
-Consult the user documentation for more information about the <link href="../userdocs/components/transformers/xinclude-transformer.html">XIncludeTransformer</link> and <link href="../userdocs/components/transformers/cinclude-transformer.html">CIncludeTransformer</link>. Please note that an IncludeTransformer, with support for both cinclude and xinclude as well as a configurable namespace, is planned for a future release.
+Consult the user documentation for more information about the <link href="../userdocs/transformers/xinclude-transformer.html">XIncludeTransformer</link> and <link href="../userdocs/transformers/cinclude-transformer.html">CIncludeTransformer</link>. Please note that an IncludeTransformer, with support for both cinclude and xinclude as well as a configurable namespace, is planned for a future release.
   </p>
 </answer>
 

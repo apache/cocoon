@@ -17,12 +17,14 @@
   <menu label="Documentation">
     <menu-item label="Introduction" href="introduction.html"/>
     <menu-item label="Tracks" href="tracks/index.html"/>
-    <menu-item label="Installing" href="userdocs/installation/index.html"/>
+    <menu-item label="Installing" href="installing/index.html"/>
     <menu-item label="Overview" href="overview.html"/>
-    <menu-item label="Manual" href="userdocs/intro.html"/>
+    <menu-item label="User Guide" href="userdocs/index.html"/>
+    <menu-item label="Dev Guide" href="developing/index.html"/>
     <menu-item label="Tutorials" href="tutorial/index.html"/>
     <menu-item label="FAQs" href="faq/index.html"/>
     <menu-item label="How-Tos" href="howto/index.html"/>
+    <menu-item label="Performance" href="performancetips.html"/>
     <menu-item label="Snippets" href="snippet/index.html"/>
     <external label="Wiki Docs" href="http://wiki.cocoondev.org/"/>
   </menu>
