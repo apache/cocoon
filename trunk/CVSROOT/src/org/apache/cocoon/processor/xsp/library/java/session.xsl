@@ -291,7 +291,7 @@
 
   <xsl:template match="session:invalidate">
     <xsp:logic>
-      session.invalidate()
+      session.invalidate();
     </xsp:logic>
   </xsl:template>
 
