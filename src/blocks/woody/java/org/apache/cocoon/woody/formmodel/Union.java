@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * CVS $Id: Union.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: Union.java,v 1.2 2004/01/23 13:56:46 vgritsenko Exp $
  * @author Timothy Larson
  */
 public class Union extends AbstractContainerWidget {
@@ -79,7 +79,7 @@ public class Union extends AbstractContainerWidget {
 
     // TODO: This whole union mess is too dependent on undefined sequences of execution.
     // These need to be ordered into a contract of sequences.
- 
+
     public void setParent(Widget widget) {
         super.setParent(widget);
         resolve();
@@ -102,7 +102,7 @@ public class Union extends AbstractContainerWidget {
     }
 
     public Object getValue() {
-        return ((Field)caseWidget).getValue();
+        return caseWidget.getValue();
     }
 
     public void readFromRequest(FormContext formContext) {
