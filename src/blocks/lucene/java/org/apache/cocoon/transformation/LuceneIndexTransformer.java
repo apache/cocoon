@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.5 2003/07/20 03:33:42 crossley Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.6 2003/08/04 03:12:16 joerg Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
@@ -277,12 +277,9 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
                 analyzerClassname =
                     atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
-                if (analyzerClassname == null)
-                    analyzerClassname = this.analyzerClassname;
 
                 String sMergeFactor =
                     atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
-                mergeFactor = this.mergeFactor;
                 if (sMergeFactor != null)
                     mergeFactor = Integer.parseInt(sMergeFactor);
 
@@ -447,14 +444,13 @@ public class LuceneIndexTransformer extends AbstractTransformer
         File indexDirectory = new File(workDir, directoryName);
         // If the index directory doesn't exist, then always create it.
         boolean indexExists = IndexReader.indexExists(indexDirectory);
-        if (! IndexReader.indexExists(indexDirectory)) 
+        if (!indexExists) {
             createIndex = true;
+        }
         
         // Get the index directory, creating it if necessary
-        Directory directory = LuceneCocoonHelper.getDirectory(
-            indexDirectory, 
-            createIndex
-        );
+        Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory,
+                                                              createIndex);
         Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(analyzerClassname);
         this.writer = new IndexWriter(directory, analyzer, createIndex);
         this.writer.mergeFactor = mergeFactor; 
@@ -462,9 +458,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
     
     private IndexReader openReader() throws IOException {
         Directory directory = LuceneCocoonHelper.getDirectory(
-            new File(workDir, directoryName), 
-            createIndex
-        );
+                                            new File(workDir, directoryName),
+                                            createIndex);
         IndexReader reader = IndexReader.open(directory);
         return reader;
     }    
