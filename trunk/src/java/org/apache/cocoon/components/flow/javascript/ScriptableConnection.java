@@ -123,7 +123,6 @@ public class ScriptableConnection extends ScriptableObject {
                     return fun.has(index, start);
                 }
 
-
                 public void put(String name, Scriptable start, Object value) {
                     fun.put(name, start, value);
                 }
@@ -208,23 +207,33 @@ public class ScriptableConnection extends ScriptableObject {
 
     public Object jsFunction_query(String sql, 
                                    int startRow, 
-                                   int maxRows) throws Exception {
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-        if (maxRows == 0) {
-            maxRows = -1;
+                                   int maxRows) 
+        throws JavaScriptException {
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (maxRows == 0) {
+                maxRows = -1;
+            }
+            ScriptableResult s = new ScriptableResult(this, rs, 
+                                                      startRow, maxRows);
+            s.setParentScope(getTopLevelScope(this));
+            s.setPrototype(getClassPrototype(this, s.getClassName()));
+            return s;
+        } catch (Exception e) {
+            throw new JavaScriptException(e);
         }
-        ScriptableResult s = new ScriptableResult(this, rs, 
-                                                  startRow, maxRows);
-        s.setParentScope(getTopLevelScope(this));
-        s.setPrototype(getClassPrototype(this, s.getClassName()));
-        return s;
     }
 
-    public int jsFunction_update(String sql) throws Exception {
-        Statement stmt = connection.createStatement();
-        stmt.execute(sql);
-        return stmt.getUpdateCount();
+    public int jsFunction_update(String sql) 
+        throws JavaScriptException {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute(sql);
+            return stmt.getUpdateCount();
+        } catch (Exception e) {
+            throw new JavaScriptException(e);
+        }
     }
 
     public Object get(String name, Scriptable start) {
