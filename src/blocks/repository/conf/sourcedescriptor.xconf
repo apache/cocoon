@@ -16,10 +16,9 @@
 -->
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceDescriptor']">
 
-  <component 
-    role="org.apache.cocoon.components.source.SourceDescriptor" 
-    class="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
-    logger="core.source.sourcedescriptor">
+  <component role="org.apache.cocoon.components.source.SourceDescriptor" 
+             class="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
+             logger="core.source.sourcedescriptor">
     
     <sourceinspector class="org.apache.cocoon.components.source.impl.XPathSourceInspector">
       <parameter name="namespace" value="http://xml.apache.org/cocoon/xdoc/1.0"/>
@@ -31,13 +30,13 @@
     <sourceinspector class="org.apache.cocoon.components.source.impl.JPEGSourceInspector"/>
     <sourceinspector class="org.apache.cocoon.components.source.impl.GIFSourceInspector"/>
     
+    <!-- You need to have databases block included to use this feature
     <sourcedescriptor class="org.apache.cocoon.components.source.impl.SimpleJdbcSourceDescriptor">
-      <!-- define your custom source properties here: -->
       <property name="author" namespace="meta" />
-      <property name="keyword" namespace="meta" /> 
-      <!-- uses the personnel datasource from the database block for now -->
+      <property name="keyword" namespace="meta" />
       <datasource>personnel</datasource>
     </sourcedescriptor>
+    -->
     
   </component>
  
