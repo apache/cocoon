@@ -20,7 +20,7 @@ import org.apache.cocoon.xml.xlink.XLinkConsumerBridge;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:27:29 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-25 14:58:16 $
  */
 
 public class XLinkSerializer extends XLinkConsumerBridge implements Serializer {
@@ -44,17 +44,23 @@ public class XLinkSerializer extends XLinkConsumerBridge implements Serializer {
     
     // XLinkHandler implementation
     
-    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate) 
+    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw) 
     throws SAXException {
-        if (Cocoon.LINK_CRAWLING_ROLE.equals(role)) {
-            this.out.println(href);
-        }
+        encode(href, role, out);
     }
     
-    public void startLocator(String href, String role, String title, String label)
+    public void startLocator(String href, String role, String title, String label, String uri, String name, String raw)
     throws SAXException {
-        if (Cocoon.LINK_CRAWLING_ROLE.equals(role)) {
-            this.out.println(href);
+        encode(href, role, out);
+    }
+    
+    private void encode(String href, String role, PrintStream out) {
+        if ((role == null) || role.equals(Cocoon.LINK_CRAWLING_ROLE)) {
+            out.print('+');
+        } else {
+            out.print('-');
         }
+        out.print(" ");
+        out.println(href);
     }
 }

@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-15 16:11:38 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-25 14:57:23 $
  *
  */
 public class FOPSerializer extends XMLConsumerBridge implements Serializer, MessageListener {
@@ -65,7 +65,7 @@ public class FOPSerializer extends XMLConsumerBridge implements Serializer, Mess
      */
     public void setOutputStream(OutputStream out) {
         this.driver.setWriter(new PrintWriter(out));
-        this.setBridgedContentHandler(this.driver.getContentHandler());
+        this.setContentHandler(this.driver.getContentHandler());
      }
  
     /** 

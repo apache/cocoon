@@ -19,7 +19,7 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-23 22:43:37 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-25 14:58:11 $
  */
 
 public class HTMLSerializer extends AbstractSerializer {
@@ -33,7 +33,7 @@ public class HTMLSerializer extends AbstractSerializer {
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
-            this.setBridgedContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
+            this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
         } catch (Exception e) {
             throw new RuntimeException(e.toString());
         }
