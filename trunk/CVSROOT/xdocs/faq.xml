@@ -6,7 +6,7 @@
 
 <faqsection title="Installation, Configuration and Upgrading">
 
- <faq id="nococoonxml">
+ <faq id="faq-nococoonxml">
   <question>I tried to access Cocoon.xml but it doesn't seem to exist.
    Where is it?</question>
   <answer>
@@ -20,7 +20,7 @@
   </answer>
  </faq>
 
- <faq id="noactionhandler">
+ <faq id="faq-noactionhandler">
   <question>I just get the XML files returned unprocessed.
    Why is my web server not redirecting requests to Cocoon?</question>
   <answer>
@@ -37,7 +37,7 @@
   </answer>
  </faq>
 
- <faq id="npe">
+ <faq id="faq-npe">
   <question>I get the message "Publishing engine could not be initialized"
    and a NullPointerException when upgrading from an older version - what's wrong?
   </question>
@@ -56,7 +56,7 @@
   </answer>
  </faq>
 
- <faq id="jservmisconfig">
+ <faq id="faq-jservmisconfig">
   <question>I get the exception <em>java.lang.AbstractMethodError:
    org/apache/jserv/JServContext.getContext</em>. What's wrong?</question>
   <answer>
@@ -71,7 +71,7 @@
   </answer>
  </faq>
 
- <faq id="resourcenotfound">
+ <faq id="faq-resourcenotfound">
   <question>Why doesn't it work when I put <em>cocoon.jar</em>
    in my servlet context or servlet zone instead of my classpath?</question>
   <answer>
@@ -97,7 +97,7 @@
   </answer>
  </faq>
 
- <faq id="mac">
+ <faq id="faq-mac">
   <question>Why doesn't Cocoon work on my Mac?</question>
   <answer>
    <p>There is a long filename bug in some MRJs. Cocoon should work fine
@@ -105,7 +105,7 @@
   </answer>
  </faq>
 
- <faq id="noant">
+ <faq id="faq-noant">
   <question>When I compile Cocoon on my system, I get a bunch of errors.
    What's wrong?</question>
   <answer>
@@ -131,12 +131,12 @@
 </faqsection>
 
 <faqsection title="Getting Started Developing with Cocoon">
- <faq id="samples">
+ <faq id="faq-samples">
   <question>Where can I find some Cocoon samples?</question>
   <answer><p>In the samples directory of the Cocoon distribution.</p></answer>
  </faq>
 
- <faq id="goodbooks">
+ <faq id="faq-goodbooks">
   <question>Are there any good books that could help me?</question>
   <answer>
    <p>
@@ -162,7 +162,7 @@
 
 <faqsection title="XSP Pages">
 
- <faq id="xspinsertxml">
+ <faq id="faq-xspinsertxml">
   <question>Why does Cocoon escape my XML with &amp;lt; and &amp;gt; when I try to
    insert an XML string in an XSP page?</question>
   <answer>
@@ -188,7 +188,7 @@
     <li>It is thus better to generate DOM objects directly. This is outside the scope
      of this documentation (except insofar as it documents the specification of 
      <code>&lt;xsp:expr&gt;</code>) - see the DOM link above, and also the question on
-     <jump href="#faq-goodbooks">"good books"</jump>. You can also generate
+     <jump anchor="faq-goodbooks">"good books"</jump>. You can also generate
      <code>org.apache.cocoon.framework.XObject</code>s, and return both DOM and SAX,
      thus making your code (hopefully) more forward-compatible with Cocoon 2, which will be
      SAX-based. (Actually using SAX is not strictly necessary, since DOM can always be 
@@ -201,7 +201,7 @@
   </answer>
  </faq>
 
- <faq id="nocompile">
+ <faq id="faq-nocompile">
   <question>I keep changing my XSP pages to try and fix a bug, and it never seems
    to recompile. What gives?</question>
   <answer>
@@ -230,7 +230,7 @@
   </answer>
  </faq>
 
- <faq id="logicsheet">
+ <faq id="faq-logicsheet">
   <question>
    How can I avoid restarting the servlet engine every time I change a logicsheet?
    How can I specify the order of logicsheet transformation by XSL?
@@ -251,7 +251,7 @@
   </answer>
  </faq>
 
- <faq id="normalize">
+ <faq id="faq-normalize">
   <question>I get a <em>java.lang.NoSuchMethodError</em> when running XSP.
    What's wrong?</question>
   <answer>
@@ -285,7 +285,7 @@
   </answer>
  </faq>
 
- <faq id="nojsp">
+ <faq id="faq-nojsp">
   <question>I put xerces.jar before another xml jar but now JSP has stopped working.
    How can I get both XSP and JSP to work?
   </question>
@@ -297,7 +297,7 @@
   </answer>
  </faq>
 
- <faq id="onetimeinit">
+ <faq id="faq-onetimeinit">
   <question>
    How can I tell Cocoon to only execute a piece of code once, when a page is first
    requested?
@@ -318,7 +318,7 @@
   </answer>
  </faq>
 
- <faq id="noclasspath">
+ <faq id="faq-noclasspath">
   <question>I used xsp:include to import my classes, but it comes up
    with <em>'Package "mypackage" not found in import'</em> Why?</question>
   <answer>
@@ -343,7 +343,7 @@
   </answer>
  </faq>
 
- <faq id="nojavac">
+ <faq id="faq-nojavac">
   <question>I get the exception
    <em>java.lang.NoClassDefFoundError: sun/tools/javac/Main</em></question>
   <answer>
@@ -356,7 +356,7 @@
   </answer>
  </faq>
 
- <faq id="norepository">
+ <faq id="faq-norepository">
   <question>I get the exception <em>Can't create store repository: ./repository.
    Make sure it's there or you have writing permissions.</em> How do I fix this?
   </question>
@@ -381,21 +381,21 @@
   </answer>
  </faq>
 
- <faq id="xspencoding">
+ <faq id="faq-xspencoding">
   <question>
    When I use XSP and non-English characters, they just come out as question marks
    - how can I make the characters appear?
   </question>
   <answer>
    <p>There is an encoding line for XSP in <code>cocoon.properties</code>. Uncomment it
-    and change it to the encoding you use. See also <jump href="#faq-encoding">
+    and change it to the encoding you use. See also <jump anchor="faq-encoding">
     these two questions</jump>.</p>
   </answer>
  </faq>
 </faqsection>
 
 <faqsection title="Database Access">
- <faq id="dbdoesnothing">
+ <faq id="faq-dbdoesnothing">
   <question>My database page throws a NullPointerException, 
    or just outputs the driver, username, etc. as if
    Cocoon hadn't processed it at all</question>
@@ -409,7 +409,7 @@
   </answer>
  </faq>
 
- <faq id="illegalcharacter">
+ <faq id="faq-illegalcharacter">
   <question>When I use the SQL/EQSL taglib or the SQL procesor, I get an exception
     <em>DOM-002: Illegal Character</em> - what does this mean?</question>
   <answer>
@@ -430,7 +430,7 @@
 </faqsection>
 
 <faqsection title="Output Formatting and Internationalization">
- <faq id="entities">
+ <faq id="faq-entities">
   <question>
    Why doesn't Cocoon recognise HTML entities like &amp;nbsp; ?
   </question>
@@ -445,19 +445,19 @@
   </answer>
  </faq>
 
- <faq id="xspencoding2">
+ <faq id="faq-xspencoding2">
   <question>
    When I use XSP and non-English characters, they just come out as question marks
    - how can I make the characters appear correctly?
   </question>
   <answer>
    <p>There is an encoding line for XSP in <code>cocoon.properties</code>. Uncomment it
-    and change it to the encoding you use. See also <jump href="#faq-encoding">
+    and change it to the encoding you use. See also <jump anchor="faq-encoding">
     these two questions</jump>.</p>
   </answer>
  </faq>
 
- <faq id="encoding">
+ <faq id="faq-encoding">
   <question>When I try to use non-English characters, they appear in the browser
    as question marks. How do I specify the encoding for my page?</question>
   <answer>
@@ -465,7 +465,7 @@
   </answer>
  </faq>
 
- <faq id="xsloutput">
+ <faq id="faq-xsloutput">
   <question>Why doesn't <code>xsl:output</code> work?</question>
   <answer>
    <p>The Cocoon project doesn't implement the <code>xsl:output</code> feature for XSLT
@@ -491,7 +491,7 @@
   </answer>
  </faq>
 
- <faq id="disableescaping">
+ <faq id="faq-disableescaping">
   <question>Why doesn't <code>disable-output-escaping="yes"</code> work?</question>
   <answer>
    <p>This is similar to the above - we believe this is bad programming practice.
@@ -505,7 +505,7 @@
   </answer>
  </faq>
 
- <faq id="javascript">
+ <faq id="faq-javascript">
   <question>How can I get Cocoon to stop mangling my Javascript/JScript/ECMAScript?
   </question>
   <answer>
@@ -523,7 +523,7 @@
   </answer>
  </faq>
 
- <faq id="linebreaking">
+ <faq id="faq-linebreaking">
   <question>How can I stop Cocoon putting line breaks in the HTML output?</question>
   <answer>
    <p>In your <code>cocoon.properties</code> file you will see a line like this:</p>
@@ -538,7 +538,7 @@
   </answer>
  </faq>
 
- <faq id="fopimages">
+ <faq id="faq-fopimages">
   <question>How do I get images to appear using FOP (PDF formatter)?</question>
   <answer>
    <p>At the time of writing, image support in FOP is far from perfect. It depends
@@ -559,7 +559,7 @@
   </answer>
  </faq>
 
- <faq id="voxml">
+ <faq id="faq-voxml">
  <question>What is VoxML and how do I browse VML?</question>
   <answer>
    <p>VoxML is a voice markup language, designed to allow direct integration
@@ -570,7 +570,7 @@
   </answer>
  </faq>
 
- <faq id="iepdfbug">
+ <faq id="faq-iepdfbug">
 
   <question>Why is Internet Explorer not showing PDF or VRML samples?</question>
   <answer>
@@ -607,7 +607,7 @@
   </answer>
  </faq>
 
- <faq id="ieopensave">
+ <faq id="faq-ieopensave">
   <question>Why is Internet Explorer bringing up an Open/Save dialog when I view PDF pages?</question>
   <answer>
    <p>This is a workaround for a bug in Internet Explorer (see previous question). We think you'll agree
@@ -615,7 +615,7 @@
   </answer>
  </faq>
 
- <faq id="fakeuseragent">
+ <faq id="faq-fakeuseragent">
   <question>Is there a way to fake the requesting
    UserAgent from my browser? That would make testing easier.</question>
   <answer>
@@ -629,7 +629,7 @@
 </faqsection>
 
 <faqsection title="LDAP">
- <faq id="noldap">
+ <faq id="faq-noldap">
   <question>Why doesn't LDAP work?</question>
   <answer>
 
@@ -654,7 +654,7 @@
   </answer>
  </faq>
 
- <faq id="ccexception">
+ <faq id="faq-ccexception">
   <question>Why aren't LDAP tags processed?</question>
   <answer>
    <p>In versions of Cocoon prior to 1.8.1-dev, the LDAP processor had a bug
@@ -668,7 +668,7 @@
 </faqsection>
 
 <faqsection title="WAP">
- <faq id="wap">
+ <faq id="faq-wap">
   <question>What is WAP and how do I browse WML?</question>
   <answer>
    <p>WAP stands for Wireless Application Protocol and WML stands for Wireless
@@ -680,7 +680,7 @@
   </answer>
  </faq>
 
- <faq id="waperror">
+ <faq id="faq-waperror">
   <question>Why doesn't my WAP page work?</question>
   <answer>
    <p>First you need to ensure that Cocoon is recognising your WAP browser as
@@ -691,14 +691,14 @@
     found).</p>
 
    <p>Once you have got the sample working, if your page still isn't working,
-    access it from a normal browser like IE, <jump href="#faq-fakeuseragent">
+    access it from a normal browser like IE, <jump anchor="faq-fakeuseragent">
     faking the user agent string</jump> to see what is going on.</p>
   </answer>
  </faq>
 </faqsection>
 
 <faqsection title="DCP">
- <faq id="dcpecmascript">
+ <faq id="faq-dcpecmascript">
   <question>Why doesn't DCP work with EcmaScript any more?
    Where do I find the class <code>FESI/jslib/JSObject</code>?</question>
   <answer>
@@ -715,7 +715,7 @@
 </faqsection>
 
 <faqsection title="Performance">
- <faq id="profiling">
+ <faq id="faq-profiling">
   <question>Is there an easy way to see which parts of the Cocoon pipeline
    are consuming the most CPU time?</question>
   <answer>
@@ -758,7 +758,7 @@
   </answer>
  </faq>
 
- <faq id="timeout">
+ <faq id="faq-timeout">
   <question>Rendering my pages takes very long and an
    internal server error is shown - what's wrong?</question>
   <answer>
@@ -775,7 +775,7 @@
 </faqsection>
 
 <faqsection title="The Design of Cocoon">
- <faq id="pidesign">
+ <faq id="faq-pidesign">
   <question>
     I think that using Processing Instructions to &quot;chain&quot;
     document layers somehow violates the context separation since I would like
@@ -800,7 +800,7 @@
   </answer>
  </faq>
 
- <faq id="backporting">
+ <faq id="faq-backporting">
   <question>I see that Cocoon 1.x has started to incorporate features
    planned for Cocoon 2.x - why?</question>
   <answer>
@@ -826,7 +826,7 @@
 
 <faqsection title="Site Architecture Issues">
 
- <faq id="stylesheetreq">
+ <faq id="faq-stylesheetreq">
   <question>Is is possible to specify the stylesheet to be used by means
    of a request parameter?</question>
   <answer>
@@ -892,7 +892,7 @@
   </answer>
  </faq>
 
- <faq id="servletchaining">
+ <faq id="faq-servletchaining">
   <question>
    How do I call a servlet or CGI script, or include output
    from another server? Or, how do I call Cocoon from another servlet?
@@ -968,7 +968,7 @@
 
 <faqsection title="General">
 
- <faq id="outofmemory">
+ <faq id="faq-outofmemory">
   <question>Why do I sometimes get OutOfMemoryErrors? How can I prevent this?
   </question>
   <answer>
@@ -984,7 +984,7 @@
   </answer>
  </faq>
 
- <faq id="ejbs">
+ <faq id="faq-ejbs">
   <question>How can EJBs be used with Cocoon</question>
   <answer>
    <p><em>(Thanks for Sebastien Sahuc for this answer.)</em> 
@@ -997,7 +997,7 @@
   </answer>
  </faq>
 
- <faq id="cocoon2">
+ <faq id="faq-cocoon2">
   <question>When can we expect to see the first proper release of Cocoon 2?</question>
   <answer>
    <p>First quarter 2001 - but this is an open source project so, even more so than
@@ -1006,7 +1006,7 @@
   </answer>
  </faq>
 
- <faq id="cocoon2-more">
+ <faq id="faq-cocoon2-more">
   <question>How can I find out more about Cocoon 2?</question>
   <answer>
    <p>Download the latest pre-release from CVS. Instructions for this are on the
@@ -1014,7 +1014,7 @@
   </answer>
  </faq>
 
- <faq id="cvs-firewall">
+ <faq id="faq-cvs-firewall">
   <question>
    I cannot access CVS because I am behind a firewall. How can I download the latest
    in-development sources?
@@ -1029,7 +1029,7 @@
   </answer>
  </faq>
 
- <faq id="stylesheetchain">
+ <faq id="faq-stylesheetchain">
   <question>How do I chain stylesheets?</question>
   <answer>
    <p>See the next question. Note that both stylesheet chaining and stylesheet
@@ -1041,7 +1041,7 @@
   </answer>
  </faq>
 
- <faq id="lostpis">
+ <faq id="faq-lostpis">
   <question>My processing instructions are ignored or disappear - what's wrong?</question>
   <answer>
 
@@ -1068,7 +1068,7 @@
   </answer>
  </faq>
 
- <faq id="doctranslations">
+ <faq id="faq-doctranslations">
   <question>Are there documentation translations to other languages?</question>
   <answer>
    <p>Given the problems we already have with documentation (which is never big and good enough),
@@ -1088,7 +1088,7 @@
   </answer>
  </faq>
 
- <faq id="oldbooks">
+ <faq id="faq-oldbooks">
   <question>The XSL book I read says the correct way of indicating the XSL stylesheet is by
    using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
    using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?
@@ -1105,7 +1105,7 @@
   </answer>
  </faq>
 
- <faq id="whyname">
+ <faq id="faq-whyname">
   <question>Why the name &quot;Cocoon&quot;?</question>
   <answer>
    <p>(Cocoon's creator Stefano Mazzocchi answers): It's a pretty stupid reason and a funny
@@ -1124,7 +1124,7 @@
 
 <faqsection title="Further Information">
 
- <faq id="xsllists">
+ <faq id="faq-xsllists">
   <question>Are there any mailing lists devoted to XSL?</question>
   <answer>
    <p>Yes. Try the
@@ -1134,7 +1134,7 @@
   </answer>
  </faq>
 
- <faq id="articles">
+ <faq id="faq-articles">
   <question>Are there any articles explaining Cocoon technologies, apart from
    the Cocoon documentation itself?</question>
   <answer>
@@ -1148,13 +1148,13 @@
   </answer>
  </faq>
 
- <faq id="xmllinks">
+ <faq id="faq-xmllinks">
   <question>Where do I get more information on XSL and XML?</question>
   <answer>
    <p>
      The <link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">
      Open Directory XML listings</link>.
-     See also <jump href="#faq-goodbooks">Good Books</jump> in this FAQ.
+     See also <jump anchor="faq-goodbooks">Good Books</jump> in this FAQ.
    </p>
   </answer>
  </faq>

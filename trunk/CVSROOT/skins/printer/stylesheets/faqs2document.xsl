@@ -48,12 +48,12 @@
   <xsl:template match="faq" mode="index">
 
     <!-- How can we modularise this to avoid copy-and-paste? (RDG) -->
-    <xsl:variable name="fragid">faq-<xsl:choose>
+    <xsl:variable name="fragid"><xsl:choose>
         <xsl:when test="@id">
           <xsl:value-of select="@id"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="position()"/>
+          faq-<xsl:value-of select="position()"/>
         </xsl:otherwise>
       </xsl:choose></xsl:variable>
 
@@ -66,12 +66,12 @@
 
   <xsl:template match="faq">
     <!-- How can we modularise this to avoid copy-and-paste? (RDG) -->
-    <xsl:variable name="fragid">faq-<xsl:choose>
+    <xsl:variable name="fragid"><xsl:choose>
         <xsl:when test="@id">
           <xsl:value-of select="@id"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="position()"/>
+          faq-<xsl:value-of select="position()"/>
         </xsl:otherwise>
       </xsl:choose></xsl:variable>
 

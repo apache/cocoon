@@ -51,6 +51,8 @@ CHANGE HISTORY:
   20000126 Allowed "anchor" in all levels. (SM)
   20000404 Removed the "role" attribute from common-xxx.att. (SM)
   20000815 Allowed "code" inside "strong" and "em". (SM)
+  20010112 Fixed anchor attribute undeclared bug for jump element. (RDG)
+  20010112 Allowed "jump" inside "strong". (RDG)
 
 COPYRIGHT:
   Copyright (c) 1999-2000 The Apache Software Foundation.
@@ -249,7 +251,7 @@ COPYRIGHT:
     <!ATTLIST code %common.att;>
 
     <!-- Strong (typically bold) -->
-    <!ELEMENT strong (%text;|code)*>
+    <!ELEMENT strong (%text;|code|jump)*>
     <!ATTLIST strong %common.att;>
 
     <!-- Emphasis (typically italic) -->
@@ -290,6 +292,7 @@ COPYRIGHT:
     <!-- Hard window replacing link (equivalent of <a ... target="_top">) -->
     <!ELEMENT jump (%link-content.mix;)*>
     <!ATTLIST jump %common.att;
+     anchor IDREF #REQUIRED
                    %xlink-simple.att;
                    %xlink-user-new.att;>
 
