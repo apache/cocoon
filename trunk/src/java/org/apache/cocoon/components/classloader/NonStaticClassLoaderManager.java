@@ -64,9 +64,14 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:proyal@apache.org">Peter Royal</a>
- * @version CVS $Id: NonStaticClassLoaderManager.java,v 1.1 2003/03/09 00:08:48 pier Exp $
+ * @version CVS $Id: NonStaticClassLoaderManager.java,v 1.2 2003/12/29 13:27:36 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ClassLoaderManager
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=non-static-classloader
  */
-public class NonStaticClassLoaderManager implements ClassLoaderManager, ThreadSafe
+public class NonStaticClassLoaderManager implements ClassLoaderManager
 {
     /**
      * The single class loader instance

@@ -63,9 +63,15 @@ import java.util.Vector;
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ClassLoaderManagerImpl.java,v 1.1 2003/03/09 00:08:48 pier Exp $
+ * @version CVS $Id: ClassLoaderManagerImpl.java,v 1.2 2003/12/29 13:27:37 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ClassLoaderManager
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=classloader
  */
-public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
+public class ClassLoaderManagerImpl implements ClassLoaderManager {
+  
   /**
    * The single class loader instance
    */

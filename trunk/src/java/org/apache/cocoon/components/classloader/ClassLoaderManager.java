@@ -62,9 +62,9 @@ import java.io.IOException;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ClassLoaderManager.java,v 1.1 2003/03/09 00:08:47 pier Exp $
+ * @version CVS $Id: ClassLoaderManager.java,v 1.2 2003/12/29 13:27:36 unico Exp $
  */
-public interface ClassLoaderManager extends Component {
+public interface ClassLoaderManager {
 
     String ROLE = ClassLoaderManager.class.getName();
 
