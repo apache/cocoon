@@ -801,7 +801,7 @@ public abstract class AbstractCachingProcessingPipeline
      * Otherwise return <code>null</code>
      */
     public SourceValidity getValidityForEventPipeline() {
-        if (this.cachedResponse != null && this.completeResponseIsCached) {
+        if (this.cachedResponse != null) {
             final AggregatedValidity validity = new AggregatedValidity();
             for (int i=0; i < this.toCacheSourceValidities.length; i++) {
                 validity.add(this.toCacheSourceValidities[i]);
