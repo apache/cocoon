@@ -25,7 +25,7 @@ cocoon.load("flow/QueryFavourites.js");
 // display the User's Search History
 function showHistory() {
 	var history = new QueryHistory(cocoon.parameters["history"]);
-	cocoon.sendPage(cocoon.parameters["screen"], {queries: history.list()});
+	cocoon.sendPage(cocoon.parameters["screen"], {history: history.list()});
 }
 
 // erase the User's Search History
