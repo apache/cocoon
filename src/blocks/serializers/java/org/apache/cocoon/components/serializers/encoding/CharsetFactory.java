@@ -32,7 +32,7 @@ import java.util.zip.ZipFile;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: CharsetFactory.java,v 1.3 2004/04/30 22:57:22 joerg Exp $
+ * @version CVS $Id$
  */
 public final class CharsetFactory {
 
@@ -122,9 +122,9 @@ public final class CharsetFactory {
             mtch = mtch.substring(2, mtch.lastIndexOf('/') + 1) + "cs_";
     
             ZipFile zip = new ZipFile(file);
-            Enumeration enum = zip.entries();
-            while (enum.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry)enum.nextElement();
+            Enumeration enumeration = zip.entries();
+            while (enumeration.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry)enumeration.nextElement();
                 String name = entry.getName();
                 if ((! name.startsWith(mtch)) ||
                     (! name.endsWith(".class"))) continue;

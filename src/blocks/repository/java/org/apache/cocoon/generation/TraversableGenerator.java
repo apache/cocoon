@@ -101,7 +101,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.14 2004/04/19 19:36:43 ugo Exp $
+ * @version CVS $Id$
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -326,9 +326,9 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
                 this.resolver.release(src);
             }
             if (ancestors != null) {
-                Enumeration enum = ancestors.elements();
-                while (enum.hasMoreElements()) {
-                    resolver.release((Source) enum.nextElement());
+                Enumeration enumeration = ancestors.elements();
+                while (enumeration.hasMoreElements()) {
+                    resolver.release((Source) enumeration.nextElement());
                 }
             }
         }
