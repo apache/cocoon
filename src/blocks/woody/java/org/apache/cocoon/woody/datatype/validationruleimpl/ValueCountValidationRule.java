@@ -51,7 +51,6 @@
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
@@ -143,7 +142,7 @@ public class ValueCountValidationRule extends AbstractValidationRule {
         return null;
     }
 
-    public boolean supportsType(Datatype datatype) {
-        return datatype.isArrayType();
+    public boolean supportsType(Class clazz, boolean arrayType) {
+        return arrayType;
     }
 }

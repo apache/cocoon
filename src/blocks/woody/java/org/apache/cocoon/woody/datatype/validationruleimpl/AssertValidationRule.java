@@ -51,7 +51,6 @@
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.ExpressionException;
@@ -87,7 +86,7 @@ public class AssertValidationRule extends AbstractValidationRule {
             return hasFailMessage() ? getFailMessage() : new ValidationError("Assertion validation rule failed.");
     }
 
-    public boolean supportsType(Datatype datatype) {
+    public boolean supportsType(Class clazz, boolean arrayType) {
         return true;
     }
 }

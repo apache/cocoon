@@ -67,9 +67,10 @@ public interface ValidationRule {
     public ValidationError validate(Object value, ExpressionContext expressionContext);
 
     /**
-     * Returns true if this ValidationRule supports the given Datatype.
-     * Implementations will want to check both {@link Datatype#getTypeClass} and
-     * {@link Datatype#isArrayType}.
+     * Returns true if this ValidationRule supports validating objects of the same class
+     * as the one specified. If the flag 'arrayType' is true, this method will return true
+     * if this validation rule can validate arrays of these objects (i.e. the object passed
+     * to the validate method will then be an array).
      */
-    public boolean supportsType(Datatype datatype);
+    public boolean supportsType(Class clazz, boolean arrayType);
 }
