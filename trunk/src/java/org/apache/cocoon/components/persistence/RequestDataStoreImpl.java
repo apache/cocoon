@@ -53,12 +53,10 @@ package org.apache.cocoon.components.persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
@@ -67,12 +65,17 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStoreImpl.java,v 1.2 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: RequestDataStoreImpl.java,v 1.3 2003/10/27 01:45:34 ghoward Exp $
  * @since 2.1.1
+ * 
+ * @avalon.component
+ * @avalon.service type="RequestDataStore"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="request-data-store"
  */
 public class RequestDataStoreImpl
     extends AbstractLogEnabled
-    implements Component, ThreadSafe, RequestDataStore, Contextualizable {
+    implements RequestDataStore, Contextualizable {
         
     protected Context context;
 
