@@ -17,8 +17,8 @@ import org.xml.sax.InputSource;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 08:34:38 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-12 00:33:00 $
  */
-public interface ParserFactory extends Configurable {
+public interface Parser extends Configurable {
     public XMLProducer getXMLProducer(InputSource src);
 }

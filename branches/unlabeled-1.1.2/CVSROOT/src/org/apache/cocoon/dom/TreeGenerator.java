@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-10 13:13:16 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-12 00:32:58 $
  */
 public class TreeGenerator implements XMLConsumer {
     /** The document was not started */
@@ -172,6 +172,8 @@ public class TreeGenerator implements XMLConsumer {
         this.name=null;
         // Do a state change and reset the DTD flag
         state=S_AVAIL;
+        // Notify the listener
+        if (this.listener!=null) this.listener.notify(this.document);
     }
 
     /**

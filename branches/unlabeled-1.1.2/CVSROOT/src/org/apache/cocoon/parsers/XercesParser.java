@@ -30,10 +30,9 @@ import org.w3c.dom.DocumentType;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-10 13:13:51 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-12 00:33:00 $
  */
-public class XercesFactory
-implements ParserFactory, DocumentFactory, ErrorHandler {
+public class XercesParser implements Parser, DocumentFactory, ErrorHandler {
     /** Indicates wether to do validation or not */
     private boolean val=false;
     /** Indicates wether to do automatic validation or not */
@@ -46,9 +45,9 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
     private boolean failOnWarning=true;
 
     /**
-     * Create a new XercesFactory.
+     * Create a new XercesParser.
      */
-    public XercesFactory() {
+    public XercesParser() {
         super();
     }
 
@@ -56,7 +55,8 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
      * Return a new Parser instance.
      */
     public XMLProducer getXMLProducer(InputSource in) {
-        Parser p=new Parser();
+        Producer p=new Producer();
+        p.parser=new SAXParser();
         p.errorHandler=this;
         p.validationFlag=this.val;
         p.dynamicValidationFlag=this.dynval;
@@ -91,7 +91,7 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
     }
 
     /**
-     * Configure this XercesFactory.
+     * Configure this XercesParser.
      * <br>
      * Valid configuration parameters are:
      * <ul>
@@ -166,7 +166,7 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
     /**
      * The Apache Xerces parser implementation required by Cocoon.
      */
-    public static class Parser implements XMLProducer {
+    private static class Producer implements XMLProducer {
         /** The current SAXParser instance */
         private SAXParser parser=null;
         /** The current SAXParser instance */
@@ -177,11 +177,6 @@ implements ParserFactory, DocumentFactory, ErrorHandler {
         private boolean dynamicValidationFlag=false;
         /** The current InputSource */
         private InputSource inputSource=null;
-
-        /** Construct the parser */
-        public Parser() {
-            this.parser=new SAXParser();
-        }
 
         /**
          * Parse a uri notifying SAX events to a given XMLConsumer.

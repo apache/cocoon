@@ -18,7 +18,7 @@ import org.apache.cocoon.sax.XMLSource;
 import org.apache.cocoon.framework.AbstractComponent;
 import org.apache.cocoon.framework.Configurations;
 import org.apache.cocoon.framework.ConfigurationException;
-import org.apache.cocoon.parsers.ParserFactory;
+import org.apache.cocoon.parsers.Parser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -29,12 +29,12 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-11 13:14:43 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-02-12 00:33:00 $
  * @since Cocoon 2.0
  */
 public class FileProducer extends AbstractComponent implements Producer {
-    /** The current parserFactory instance */
-    private ParserFactory parserFactory=null;
+    /** The current Parser instance */
+    private Parser parser=null;
 
     /**
      * Return an <code>XMLSource</code> instance producing XML data from a
@@ -44,7 +44,11 @@ public class FileProducer extends AbstractComponent implements Producer {
      * @param res The cocoon <code>Response</code>.
      */
     public XMLSource getXMLSource(Request req, Response res) {
-        return(Source.create(this.parserFactory,req.getPathTranslated()));
+        Source s=new Source();
+        String source=req.getPathTranslated();
+        s.producer=parser.getXMLProducer(new InputSource(source));
+        s.file=new File(source);
+        return(s);
     }
 
     /**
@@ -57,7 +61,7 @@ public class FileProducer extends AbstractComponent implements Producer {
         if (cocoon==null)
             throw new ConfigurationException("Cannot access current 'Cocoon'"+
                                              "instance",this.getClass());
-        this.parserFactory=cocoon.getParserFactory();
+        this.parser=cocoon.getParser();
     }
     
     /** The XMLSource implementation for this producer */
@@ -66,14 +70,6 @@ public class FileProducer extends AbstractComponent implements Producer {
         private XMLProducer producer=null;
         /** The source file */
         private File file=null;
-
-        /** Create this Source object */
-        private static Source create(ParserFactory parser, String source) {
-            Source s=new Source();
-            s.producer=parser.getXMLProducer(new InputSource(source));
-            s.file=new File(source);
-            return(s);
-        }
 
         /**
          * Produce XML data.

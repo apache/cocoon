@@ -15,7 +15,7 @@ import org.apache.cocoon.framework.Configurable;
 import org.apache.cocoon.framework.Configurations;
 import org.apache.cocoon.framework.ConfigurationException;
 import org.apache.cocoon.framework.Modificable;
-import org.apache.cocoon.parsers.ParserFactory;
+import org.apache.cocoon.parsers.Parser;
 import org.apache.cocoon.dom.DocumentFactory;
 import org.apache.cocoon.dom.TreeGenerator;
 import org.apache.cocoon.producers.Producer;
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.11.2.2 $ $Date: 2000-02-11 13:14:41 $
+ * @version CVS $Revision: 1.11.2.3 $ $Date: 2000-02-12 00:32:58 $
  * @since Cocoon 2.0
  */
 public class Cocoon implements Configurable, Modificable {
@@ -60,8 +60,8 @@ public class Cocoon implements Configurable, Modificable {
     private Configurations configurations=null;
     /** The current DocumentFactory */
     private DocumentFactory documentFactory=null;
-    /** The current ParserFactory */
-    private ParserFactory parserFactory=null;
+    /** The current Parser */
+    private Parser parser=null;
     /** The ProducerFactory table */
     private Hashtable producers=null;
     /** The FilterFactory table */
@@ -99,12 +99,12 @@ public class Cocoon implements Configurable, Modificable {
      *       XML configuration file <i>(default=no default)</i>.
      *   <li><b>rootPath</b> <i>(string)</i> The root path for Cocoon operation
      *       <i>(default=directory or configurationFile)</i>.
-     *   <li><b>defaultParserFactory</b> <i>(string)</i> The full class name
-     *       of the default ParserFactory.
-     *      <i>(default=org.apache.cocoon.parsers.XercesFactory)</i>.
+     *   <li><b>defaultParser</b> <i>(string)</i> The full class name
+     *       of the default Parser.
+     *      <i>(default=org.apache.cocoon.parsers.XercesParser)</i>.
      *   <li><b>defaultDocumentFactory</b> <i>(string)</i> The full class name
      *       of the default DocumentFactory.
-     *      <i>(default=org.apache.cocoon.parsers.XercesFactory)</i>.
+     *      <i>(default=org.apache.cocoon.parsers.XercesParser)</i>.
      * </ul>
      * Those and all other specified parameters are merged with those specified
      * at root level in the configuration file and passed to all factories.
@@ -131,9 +131,9 @@ public class Cocoon implements Configurable, Modificable {
             conf.setParameter("rootPath",this.configurationFile.getParent());
 
         //////////////////////////////////////////////////////////////////////
-        // Check if the defaultParserFactory parameter was specified
+        // Check if the defaultParser parameter was specified
         String d=conf.getParameter("defaultDocumentFactory",
-                                   "org.apache.cocoon.parsers.XercesFactory");
+                                   "org.apache.cocoon.parsers.XercesParser");
         try {
             this.documentFactory=(DocumentFactory)this.getClassInstance(d);
         } catch (ClassCastException e) {
@@ -142,21 +142,21 @@ public class Cocoon implements Configurable, Modificable {
         }
 
         //////////////////////////////////////////////////////////////////////
-        // Check if the defaultParserFactory property was specified
-        String p=conf.getParameter("defaultParserFactory",
-                                   "org.apache.cocoon.parsers.XercesFactory");
+        // Check if the defaultParser property was specified
+        String p=conf.getParameter("defaultParser",
+                                   "org.apache.cocoon.parsers.XercesParser");
         try {
-            this.parserFactory=(ParserFactory)this.getClassInstance(p);
+            this.parser=(Parser)this.getClassInstance(p);
         } catch (ClassCastException e) {
             throw this.newException("Class '"+p+"' doesn't implement "+
-                                    "'org.apache.cocoon.parser.ParserFactory'");
+                                    "'org.apache.cocoon.parser.Parser'");
         }
 
         //////////////////////////////////////////////////////////////////////
         // Load configuration file
         TreeGenerator tg=new TreeGenerator(this.documentFactory);
         try {
-            this.parserFactory.getXMLProducer(new InputSource(c)).produce(tg);
+            this.parser.getXMLProducer(new InputSource(c)).produce(tg);
         } catch (IOException e) {
             throw this.newException("IOException catched parsing '"+c+"'", e);
         } catch (SAXException e) {
@@ -201,10 +201,10 @@ public class Cocoon implements Configurable, Modificable {
     }
 
     /**
-     * Get the configured ParserFactory.
+     * Get the configured Parser.
      */
-    public ParserFactory getParserFactory() {
-        return(this.parserFactory);
+    public Parser getParser() {
+        return(this.parser);
     }
 
     /**
@@ -332,11 +332,11 @@ public class Cocoon implements Configurable, Modificable {
 
             ///////////////////////////////////////////////////////////////////
             // Check if we were specified to instantiate a parser factory
-            } else if (type.equals("parserFactory")) try {
-                this.parserFactory=(ParserFactory)instance;
+            } else if (type.equals("parser")) try {
+                this.parser=(Parser)instance;
             } catch (ClassCastException ex) {
                 throw this.newException("Factory '"+f+"' does not implement "+
-                                  "'org.apache.cocoon.parsers.ParserFactory'");
+                                  "'org.apache.cocoon.parsers.Parser'");
 
             ///////////////////////////////////////////////////////////////////
             // Check if we were specified to instantiate a document factory
