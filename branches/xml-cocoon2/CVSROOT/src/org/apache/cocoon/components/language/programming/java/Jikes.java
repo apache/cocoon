@@ -25,7 +25,7 @@ import org.apache.log.Logger;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.12 $ $Date: 2001-04-25 21:02:02 $
+ * @version $Revision: 1.1.2.13 $ $Date: 2001-04-27 14:46:56 $
  * @since 2.0
  */
 
@@ -198,10 +198,27 @@ public class Jikes extends AbstractJavaCompiler {
     private CompilerError parseError(String error) {
         StringTokenizer tokens = new StringTokenizer(error, ":");
         String file = tokens.nextToken();
-        int startline = Integer.parseInt(tokens.nextToken());
-        int startcolumn = Integer.parseInt(tokens.nextToken());
-        int endline = Integer.parseInt(tokens.nextToken());
-        int endcolumn = Integer.parseInt(tokens.nextToken());
+        String sl = tokens.nextToken();
+        String sc = tokens.nextToken();
+        String el = tokens.nextToken();
+        String ec = tokens.nextToken();
+        int startline = 0;
+        int startcolumn = 0;
+        int endline = 0;
+        int endcolumn = 0;
+
+        try {
+            startline = Integer.parseInt(sl);
+            startcolumn = Integer.parseInt(sc);
+            endline = Integer.parseInt(el);
+            endcolumn = Integer.parseInt(ec);
+        } catch (Exception e) {
+            getLogger().debug("Start Line: " + sl, e);
+            getLogger().debug("Start Column: " + sc, e);
+            getLogger().debug("End Line: " + el, e);
+            getLogger().debug("End Column: " + ec, e);
+        }
+
         String type = tokens.nextToken().trim().toLowerCase();
         String message = tokens.nextToken().trim();
 
