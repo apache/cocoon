@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.130 2003/12/02 19:53:32 joerg Exp $
+    | CVS $Id: jars.xml,v 1.131 2003/12/02 21:36:05 unico Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -655,7 +655,7 @@
     <title>Slide kernel</title>
     <description>The Jakarta Slide kernel API.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-kernel-20031201.jar</lib>
+    <lib>slide/lib/slide-kernel-20031202-patched.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -663,7 +663,7 @@
     <title>Slide roles</title>
     <description>The Jakarta Slide roles implementation.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-roles-20031201.jar</lib>
+    <lib>slide/lib/slide-roles-20031202.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -671,7 +671,7 @@
     <title>Slide stores</title>
     <description>The Jakarta Slide stores implementation.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-stores-20031201.jar</lib>
+    <lib>slide/lib/slide-stores-20031202.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -679,7 +679,7 @@
     <title>Slide WebDAV Servlet</title>
     <description>The Jakarta Slide WebDAV servlet.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-webdavservlet-20031201.jar</lib>
+    <lib>slide/lib/slide-webdavservlet-20031202.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
