@@ -93,7 +93,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.9 2003/10/10 12:06:22 bruno Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.10 2003/10/31 13:09:10 joerg Exp $
  */
 public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -317,26 +317,23 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                getLogger().warn(stringWriter.toString());
             }
 
+            DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,
+                                                      this.lexicalHandler);
+            this.contentHandler.startDocument();
 
             if(xpath != null) {
-                DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
-
-                contentHandler.startDocument();
                 NodeList nl = processor.selectNodeList(doc, xpath);
                 int length = nl.getLength();
-                for(int i=0;i<length;i++) {
+                for(int i=0; i < length; i++) {
                     domStreamer.stream(nl.item(i));
                 }
-                contentHandler.endDocument();
             } else {
-                DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
                 // If the HTML document contained a <?xml ... declaration, tidy would have recognized
                 // this as a processing instruction (with a 'null' target), giving problems further
                 // on in the pipeline. Therefore we only serialize the document element.
-                this.contentHandler.startDocument();
-                streamer.stream(doc.getDocumentElement());
-                this.contentHandler.endDocument();
+                domStreamer.stream(doc.getDocumentElement());
             }
+            this.contentHandler.endDocument();
         } catch (IOException e){
             throw new ResourceNotFoundException("Could not get resource "
                 + this.inputSource.getURI(), e);
