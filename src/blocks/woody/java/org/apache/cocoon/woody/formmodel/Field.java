@@ -130,6 +130,14 @@ public class Field extends AbstractWidget {
         return validationError == null;
     }
 
+    /**
+     * Returns the validation error, if any. There will always be a validation error in case the
+     * {@link #validate} method returned false.
+     */
+    public ValidationError getValidationError() {
+        return validationError;
+    }
+
     public boolean isRequired() {
         return definition.isRequired();
     }
