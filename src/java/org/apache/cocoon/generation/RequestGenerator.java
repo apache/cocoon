@@ -65,10 +65,9 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ServletGenerator;
 import org.apache.cocoon.transformation.helpers.NOPRecorder;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -93,9 +92,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.5 2003/09/23 20:39:09 joerg Exp $
  */
-public class RequestGenerator extends ServletGenerator implements Parameterizable {
+public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 
     /** The URI of the namespace of this generator. */
     private String PREFIX = "h";
@@ -131,37 +130,36 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
     throws SAXException {
         Request request = ObjectModelHelper.getRequest(objectModel);
         this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping(PREFIX,URI);
         AttributesImpl attr = new AttributesImpl();
 
-        this.attribute(attr,"target", request.getRequestURI());
-        this.attribute(attr,"source", (this.source != null ? this.source : ""));
+        this.attribute(attr, "target", request.getRequestURI());
+        this.attribute(attr, "source", (this.source != null ? this.source : ""));
         this.start("request", attr);
 
         this.start("requestHeaders", attr);
         Enumeration headers = request.getHeaderNames();
         while (headers.hasMoreElements()) {
             String header = (String) headers.nextElement();
-            this.attribute(attr,"name",header);
-            this.start("header",attr);
+            this.attribute(attr, "name", header);
+            this.start("header", attr);
             this.data(request.getHeader(header));
             this.end("header");
         }
         this.end("requestHeaders");
 
-        this.start("requestParameters",attr);
-        Enumeration parameters=request.getParameterNames();
+        this.start("requestParameters", attr);
+        Enumeration parameters = request.getParameterNames();
         while (parameters.hasMoreElements()) {
-            String parameter = (String) parameters.nextElement();
-            this.attribute(attr,"name",parameter);
-            this.start("parameter",attr);
+            String parameter = (String)parameters.nextElement();
+            this.attribute(attr, "name", parameter);
+            this.start("parameter", attr);
             String values[] = request.getParameterValues(parameter);
             if (values != null) {
                 for (int x = 0; x < values.length; x++) {
                     this.start("value",attr);
                     if (form_encoding != null) {
                         try {
-                            this.data(values[x],container_encoding,form_encoding);
+                            this.data(values[x], container_encoding, form_encoding);
                         } catch (UnsupportedEncodingException uee) {
                             throw new CascadingRuntimeException("The suggested encoding is not supported.", uee);
                         }
@@ -182,15 +180,15 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
         this.end("requestParameters");
 
         if (generate_attributes) {
-            this.start("requestAttributes",attr);
+            this.start("requestAttributes", attr);
             Enumeration attributes = request.getAttributeNames();
             while (attributes.hasMoreElements()) {
-                String attribute=(String)attributes.nextElement();
-                this.attribute(attr,"name",attribute);
-                this.start("attribute",attr);
-                Object value=request.getAttribute(attribute);
-                if (value!=null) {
-                    this.start("value",attr);
+                String attribute = (String)attributes.nextElement();
+                this.attribute(attr, "name", attribute);
+                this.start("attribute", attr);
+                Object value = request.getAttribute(attribute);
+                if (value != null) {
+                    this.start("value", attr);
                     XMLUtils.valueOf(this.contentHandler, value);
                     this.end("value");
                 }
@@ -199,11 +197,11 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
             this.end("requestAttributes");
         }
 
-        this.start("configurationParameters",attr);
-        String[] confparams=super.parameters.getNames();
+        this.start("configurationParameters", attr);
+        String[] confparams = super.parameters.getNames();
         for (int i = 0; i < confparams.length; i++) {
             this.attribute(attr, "name", confparams[i]);
-            this.start("parameter",attr);
+            this.start("parameter", attr);
             this.data(super.parameters.getParameter(confparams[i], ""));
             this.end("parameter");
         }
@@ -211,28 +209,27 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
 
         this.end("request");
 
-        this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
     }
 
     private void attribute(AttributesImpl attr, String name, String value) {
-        attr.addAttribute("",name,name,"CDATA",value);
+        attr.addAttribute("", name, name, "CDATA", value);
     }
 
     private void start(String name, AttributesImpl attr)
     throws SAXException {
-        super.contentHandler.startElement(URI,name,PREFIX + ":" + name,attr);
+        super.contentHandler.startElement(URI, name, PREFIX + ":" + name, attr);
         attr.clear();
     }
 
     private void end(String name)
     throws SAXException {
-        super.contentHandler.endElement(URI,name,PREFIX + ":" + name);
+        super.contentHandler.endElement(URI, name, PREFIX + ":" + name);
     }
 
     private void data(String data)
     throws SAXException {
-        super.contentHandler.characters(data.toCharArray(),0,data.length());
+        super.contentHandler.characters(data.toCharArray(), 0, data.length());
     }
     
     private void data(String data, String container_encoding, String form_encoding) 
@@ -252,7 +249,7 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
         } catch (Exception e) {
             throw e;
         } finally {
-            if (parser != null) manager.release( (Component)parser);
+            if (parser != null) manager.release((Component)parser);
         }
     }
     
@@ -265,7 +262,7 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
         
         public void startPrefixMapping(String prefix, String uri)
          throws SAXException {
-             this.c.startPrefixMapping(prefix,uri);
+             this.c.startPrefixMapping(prefix, uri);
          }
         
          public void endPrefixMapping(String prefix)
@@ -275,17 +272,17 @@ public class RequestGenerator extends ServletGenerator implements Parameterizabl
         
          public void startElement(String namespace, String name, String raw, Attributes attr)
          throws SAXException {
-             this.c.startElement(namespace,name,raw,attr);
+             this.c.startElement(namespace, name, raw, attr);
          }
         
          public void endElement(String namespace, String name, String raw)
          throws SAXException {
-             this.c.endElement(namespace,name,raw);
+             this.c.endElement(namespace, name, raw);
          }
         
          public void characters(char ary[], int start, int length)
          throws SAXException {
-             this.c.characters(ary,start,length);
+             this.c.characters(ary, start, length);
          }
     }
 
