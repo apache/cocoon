@@ -127,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.4 2003/10/10 17:48:10 gcasper Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.1 2003/10/23 07:55:49 gcasper Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
