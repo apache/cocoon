@@ -16,7 +16,7 @@
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
   <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
-  <person name="Bruno Dumon" email="bruno@apache.org" id="bruno"/>
+  <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
   <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
@@ -199,6 +199,18 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BRD" type="fix" fixes-bug="17763">
+    DTD comment events are now dropped after parsing by default.
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="13186">
+    When an exception occured in a pipeline containing an XSL, the contents of
+    the pipeline was appended to the error page. Now this only happens anymore
+    when the incremental-processing of Xalan is enabled (which is unavoidable
+    for now).
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="13186">
+    Disabled incremental-processing of Xalan by default.
+  </action>
   <action dev="BD" type="add">
     standalone-demo build target added
   </action>
