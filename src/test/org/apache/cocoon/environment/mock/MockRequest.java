@@ -151,6 +151,10 @@ public class MockRequest implements Request {
         }
     }
 
+    public void addParameter(String name, String value) {
+        parameters.put(name, value);
+    }
+
     public String getProtocol() {
         return protocol;
     }
@@ -257,8 +261,16 @@ public class MockRequest implements Request {
         return contextPath;
     }
 
+    public void setContextPath(String path) {
+        contextPath = path;
+    }
+
     public String getQueryString() {
         return queryString;
+    }
+
+    public void setQueryString(String string) {
+        queryString = string;
     }
 
     public String getRemoteUser() {
@@ -279,6 +291,10 @@ public class MockRequest implements Request {
 
     public String getRequestURI() {
         return requestURI;
+    }
+
+    public void setRequestURI(String uri) {
+        requestURI = uri;;
     }
 
     public String getSitemapURI() {
