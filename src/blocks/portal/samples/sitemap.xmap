@@ -11,7 +11,16 @@
     <map:transformer name="rss" src="org.apache.cocoon.portal.transformation.RSSTransformer" logger="sitemap.transformer.rss" />
   </map:transformers>
   <map:readers default="resource"/>
-  <map:serializers default="html"/>
+  <map:serializers default="html">
+    <map:serializer name="html-include"
+                    logger="sitemap.serializer.html" 
+                    mime-type="text/html"  
+                    pool-grow="4" pool-max="32" pool-min="4" 
+                    src="org.apache.cocoon.portal.serialization.IncludingHTMLSerializer">
+      <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
+      <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
+    </map:serializer>
+  </map:serializers>
   <map:matchers default="wildcard"/>
   <map:selectors default="browser"/>
   <map:actions>  
@@ -161,7 +170,8 @@
 <!--
             <map:transform type="htmlroot" />
 -->          
-            <map:serialize type="html"/> 
+            <!-- If you don't need JSR-168 support, you can use the html serializer instead -->
+            <map:serialize type="html-include"/> 
         </map:act>
     </map:match>
         

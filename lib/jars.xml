@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.154 2004/01/22 03:37:25 vgritsenko Exp $
+    | CVS $Id: jars.xml,v 1.155 2004/01/22 14:01:21 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -1028,6 +1028,28 @@
     </description>
     <used-by>Scratchpad (JSR-168 Portlet Environment)</used-by>
     <lib>scratchpad/lib/portlet-api-20031202.jar</lib>
+    <homepage>http://jakarta.apache.org/pluto/</homepage>
+  </file>
+  <file>
+    <title>JSR-168 Portlet Spec</title>
+    <description>
+      JSR-168 Portlet Specification. This implentation developed by the
+      Jakarta Pluto project is an open source implementation from the
+      original spec.
+    </description>
+    <used-by>Portal</used-by>
+    <lib>portal/lib/portlet-api-20040121.jar</lib>
+    <homepage>http://jakarta.apache.org/pluto/</homepage>
+  </file>
+  <file>
+    <title>JSR-168 Container Implementation</title>
+    <description>
+      JSR-168 Portlet Specification. This implentation developed by the
+      Jakarta Pluto project is an open source implementation from the
+      original spec.
+    </description>
+    <used-by>Portal</used-by>
+    <lib>portal/lib/pluto-20040121.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
   </file>
 </jars>

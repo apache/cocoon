@@ -95,7 +95,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/live.weblog-rss?feed=http://radio.weblogs.com/0107211/rss.xml</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/live.weblog-rss?feed=http://www.osoco.net/weblogs/rael/index.xml</value>
       </attribute>
       <attribute>
       	<name>buffer</name>
@@ -217,5 +217,33 @@
         <name>mandatory</name>
         <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
       </aspect>
+   </coplet-data>
+
+   <!--
+     +  JSR-168 portlets from the Pluto testsuite
+   -->
+   <coplet-data id="Portlet1" name="standard">
+      <title>Portlet-Test 1</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+      	<name>portlet</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">testsuite.TestPortlet1</value>
+      </attribute>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Portlet2" name="standard">
+      <title>Portlet-Test 2</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+      	<name>portlet</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">testsuite.TestPortlet2</value>
+      </attribute>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
    </coplet-data>
 </coplets>
