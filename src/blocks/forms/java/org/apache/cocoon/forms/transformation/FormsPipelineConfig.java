@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.cocoon.forms.transformation;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -99,11 +100,25 @@ public class FormsPipelineConfig {
         Object flowContext = FlowHelper.getContextObject(objectModel);
         WebContinuation wk = FlowHelper.getWebContinuation(objectModel);
         JXPathContext jxpc = JXPathContext.newContext(flowContext);
-        Variables vars = jxpc.getVariables();
-        vars.declareVariable("continuation", wk);
+        // We manually create a cocoon object here to provide the same way
+        // of accessing things as in the jxtg
+        // as soon as we have our unified om, we should use that
         Request request = ObjectModelHelper.getRequest(objectModel);
-        vars.declareVariable("request", request);
         Session session = request.getSession(false);
+        final Map cocoonOM = new HashMap();
+        cocoonOM.put("continuation", wk);
+        cocoonOM.put("request", request);
+        if ( session != null ) {
+            cocoonOM.put("session", session);
+        }
+        cocoonOM.put("parameters", parameters);
+        
+        Variables vars = jxpc.getVariables();
+        vars.declareVariable("cocoon", cocoonOM);
+        // These four are deprecated!
+        // FIXME - We should add a warning if they are used
+        vars.declareVariable("continuation", wk);
+        vars.declareVariable("request", request);
         vars.declareVariable("session", session);
         vars.declareVariable("parameters", parameters);
         

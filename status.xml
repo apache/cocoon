@@ -202,6 +202,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix">
+    CForms: template generator and transformer now use the same object model as the JXTG: access
+            to objects have to use the "cocoon" object, like "cocoon/continuation/id".
+   </action>
    <action dev="RP" type="add">
      hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
    </action>     

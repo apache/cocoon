@@ -21,7 +21,7 @@
     <para>
     For this example to work, you must enable uploads in your web.xml file.
     </para>
-    <ft:form-template action="#{$continuation/id}.continue" method="POST" enctype="multipart/form-data">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" enctype="multipart/form-data">
       <fi:group>
         <fi:styling layout="columns"/>
         <fi:items>

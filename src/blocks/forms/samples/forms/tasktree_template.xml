@@ -65,7 +65,7 @@
     
   </style>
   <content>
-    <ft:form-template action="#{$continuation/id}.continue" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
     
       <ft:class id="task-class">
         <div class="section">

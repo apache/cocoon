@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1364,6 +1364,7 @@ public class CocoonServlet extends HttpServlet {
         forceProperty();
 
         try {
+            this.exception = null;
             URL configFile = (URL) this.appContext.get(Constants.CONTEXT_CONFIG_URL);
             if (getLogger().isInfoEnabled()) {
                 getLogger().info("Reloading from: " + configFile.toExternalForm());

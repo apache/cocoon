@@ -381,7 +381,7 @@
      
      <map:match pattern="binding.form">
        <map:generate type="form">
-         <map:parameter name="form-action" value="#\{$continuation/id}.continue" />
+         <map:parameter name="form-action" value="#\{$cocoon/continuation/id}.continue" />
        </map:generate>
        <!--TODO: fix xsl for use with forms-generator -->
        <map:transform src="resources/forms-samples-styling.xsl" />

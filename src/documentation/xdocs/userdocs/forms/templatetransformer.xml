@@ -100,10 +100,10 @@
         embed dynamic data in the action attribute. One of the most common uses
         is to embed the continuation id (if you're using flowscript), for example:</p>
 
-        <source><![CDATA[<ft:form-template action="#{$continuation/id}.continue" ...]]></source>
+        <source><![CDATA[<ft:form-template action="#{$cocoon/continuation/id}.continue" ...]]></source>
 
-        <p>The following objects are available in the JXPath context: continuation,
-        requests, session and parameters. The context of the JXPath expression is
+        <p>The following objects are available in the JXPath context via the cocoon object: 
+        continuation, requests, session and parameters. The context of the JXPath expression is
         the map passed on from the flowscript (if any).</p>
 
         <p>The <strong>location</strong> attribute, if present, is used to retrieve
