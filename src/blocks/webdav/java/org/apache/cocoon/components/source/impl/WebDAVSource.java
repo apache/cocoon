@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.30 2004/06/29 16:10:55 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.31 2004/06/30 08:39:04 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource, MoveableSource {
@@ -756,6 +756,12 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
                 int status = this.resource.getStatusCode();
                 if (status == 409) {
                     // parent does not exist, create it and try again
+                    ((ModifiableTraversableSource) getParent()).makeCollection();
+                    makeCollection();
+                }
+                else if (status == 404) {
+                    // apparently mod_dav_svn wrongly returns 404
+                    // on MKCOL when parent does not exist
                     ((ModifiableTraversableSource) getParent()).makeCollection();
                     makeCollection();
                 }
