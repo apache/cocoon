@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.219 2001-03-08 11:13:55 greenrd Exp $ 
+  $Id: changes.xml,v 1.220 2001-03-08 11:55:21 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -734,6 +734,13 @@
  </release>
 
  <release version="1.7.2" date="March 31 2000">
+  <action dev="RDG" type="update">
+   Changes prior to 1.7.2 are no longer listed in the docs - a fuller list may be found in changes.xml
+   in the Cocoon distribution.
+  </action>
+ </release>
+
+<!--
   <action dev="SM" type="fix">
    Changed log setting.
   </action>
@@ -1405,5 +1412,5 @@
   Initial version.
  </action>
 </release>
-
+-->
 </changes>
