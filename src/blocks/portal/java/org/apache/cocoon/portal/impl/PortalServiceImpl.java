@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.2 2003/05/08 11:54:00 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -86,10 +86,6 @@ public class PortalServiceImpl
                 RequestLifecycleComponent, 
                 PortalService, 
                 Recyclable {
-
-    // FIXME - Make ServletRLC out of this
-    
-    private static final String REQUEST_XFRAME_PARAMETER_NAME = "xframe";
 
     protected Map objectModel;
     protected Map temporaryAttributes = new HashMap();

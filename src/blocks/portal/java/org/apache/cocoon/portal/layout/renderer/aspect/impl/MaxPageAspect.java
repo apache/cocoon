@@ -50,10 +50,7 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import java.util.Iterator;
-
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.aspect.CompositeLayoutStatus;
 import org.apache.cocoon.portal.layout.impl.CompositeLayout;
@@ -67,7 +64,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: MaxPageAspect.java,v 1.2 2003/05/08 13:38:11 cziegeler Exp $
+ * @version CVS $Id: MaxPageAspect.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
  */
 public class MaxPageAspect 
     extends AbstractAspect {
@@ -82,56 +79,15 @@ public class MaxPageAspect
     throws SAXException {
         if (layout instanceof CompositeLayout) {
 
-            CompositeLayout compositeLayout = (CompositeLayout) layout;
-            Layout maxPageLayout = this.getMaxpageLayout( compositeLayout );
-
-            if (maxPageLayout != null) {
-                for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
-                    Item item = (Item) iter.next();
-                    Layout itemLayout = item.getLayout();
-                    if (itemLayout.isStatic() || itemLayout == maxPageLayout) {
-                        // FIXME MaxPage
-                        //processItem(item, handler, service);
-                        continue;
-                    }
-                    if (itemLayout instanceof CompositeLayout) {
-                        Layout maxLayout = this.getMaxpageLayout( (CompositeLayout)itemLayout);
-                        if (maxLayout == null) {
-                            continue;
-                        }
-                        // FIXME MaxPage
-                        //processItem(item, maxLayout, handler, service);
-                    }
-                }
-            } else {
-                context.invokeNext( layout, service, handler );
+            CompositeLayoutStatus status = (CompositeLayoutStatus)this.getStatus( CompositeLayoutStatus.class, ProfileManager.REQUEST_STATUS, layout.getId());
+            if ( status != null && status.getMaxpageLayout() != null) {
+                // TODO - implement this
             }
+            context.invokeNext( layout, service, handler );
         } else {
             throw new SAXException("Expecting composite layout, received: " + layout);
         }
     }
 
-    /**
-     * @return Layout
-     */
-    public Layout getMaxpageLayout(CompositeLayout layout) {
-        CompositeLayoutStatus status = (CompositeLayoutStatus)this.getStatus( null, ProfileManager.REQUEST_STATUS, layout.getId());
-        Layout maxpageLayout = (status == null ? null : status.getMaxpageLayout());
-        
-        if (maxpageLayout != null)
-            return maxpageLayout;
-        for (Iterator iter = layout.getItems().iterator(); iter.hasNext();) {
-            Item item = (Item) iter.next();
-            Layout current = item.getLayout();
-            if (current.isStatic() == false && current instanceof CompositeLayout) {
-                maxpageLayout = this.getMaxpageLayout((CompositeLayout)current );
-                if (maxpageLayout != null) {
-                    return maxpageLayout;
-                }
-            }
-        }
-        return null;
-    
-	}
 
 }

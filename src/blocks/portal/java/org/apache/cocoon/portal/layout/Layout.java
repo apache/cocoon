@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
  */
 public interface Layout 
     extends Parameters, Aspectalizable {
@@ -75,6 +75,14 @@ public interface Layout
      */
     String getId();
 
+    /**
+     * Get the name of the layout.
+     * This is the corresponding name of the configured layout
+     * in the {@link LayoutFactory}. 
+     * @return String the configured layout name
+     */    
+    String getName();
+    
     Item getParent();
 
     void setParent(Item item);
