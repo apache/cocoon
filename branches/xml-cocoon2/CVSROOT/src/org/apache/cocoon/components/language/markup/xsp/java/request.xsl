@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-13 14:00:15 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-16 16:13:27 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -207,6 +207,25 @@
     <xsp:logic>
       request.removeAttribute(<xsl:value-of select="$name"/>);
     </xsp:logic>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-requested-url">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+        <xsl:when test="$as = 'string'">
+          <xsp:expr>new StringBuffer((request.isSecure()) ? "https://" : "http://").append(request.getServerName()).append(":").append(request.getServerPort()).append("/").append(request.getRequestURI()).toString()</xsp:expr>
+        </xsl:when>
+        <xsl:when test="$as = 'xml'">
+          <xsp-request:requested-url>
+            <xsp:expr>new StringBuffer((request.isSecure()) ? "https://" : "http://").append(request.getServerName()).append(":").append(request.getServerPort()).append("/").append(request.getRequestURI()).toString()</xsp:expr>
+          </xsp-request:requested-url>
+        </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="value-for-as">
