@@ -27,6 +27,29 @@
  </header>
 
  <body>
+  <s1 title="Known Issues for 2.1.5">
+   <p>
+     This is a list of known issues for Cocoon 2.1.5.
+   </p>
+   <s2 title="Logging Configuration">
+     <p>
+      Cocoon 2.1.5 uses a newer version of the Avalon Excalibur logging package
+      than version 2.1.4. Unfortunately this logging package has an imcompatibility
+      to the version used in Cocoon 2.1.4.
+     </p>
+     <p>
+      If you update your application from 2.1.4 to 2.1.5 make sure that you have
+      a log definition for the empty category in your logkit.xconf. Add the following
+      lines to your category definition:
+     </p>
+     <source><![CDATA[
+    <category name="" log-level="@loglevel@">
+      <log-target id-ref="core"/>
+      <log-target id-ref="error"/>
+    </category>
+     ]]></source>
+   </s2>
+  </s1>
   <s1 title="Updating Cocoon">
    <p>
     Please take your time to read this document completely before trying to upgrade from
