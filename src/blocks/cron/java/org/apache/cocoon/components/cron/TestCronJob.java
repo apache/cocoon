@@ -15,16 +15,20 @@
  */
 package org.apache.cocoon.components.cron;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 
 /**
@@ -32,12 +36,12 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: TestCronJob.java,v 1.5 2004/03/05 13:01:49 bdelacretaz Exp $
+ * @version CVS $Id: TestCronJob.java,v 1.6 2004/03/11 15:38:31 sylvain Exp $
  *
  * @since 2.1.1
  */
-public class TestCronJob extends AbstractPipelineCallingCronJob
-    implements CronJob, Configurable, ConfigurableCronJob {
+public class TestCronJob extends ServiceableCronJob
+    implements CronJob, Configurable, ConfigurableCronJob, Serviceable {
     
     /** Parameter key for the message */
     public static final String PARAMETER_MESSAGE = "TestCronJob.Parameter.Message";
@@ -56,6 +60,9 @@ public class TestCronJob extends AbstractPipelineCallingCronJob
     
     /** The pipeline to be called */
     private String pipeline = null;
+    
+    /** The service manager */
+    private ServiceManager manager;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
@@ -66,44 +73,48 @@ public class TestCronJob extends AbstractPipelineCallingCronJob
         m_sleep = config.getChild("sleep").getValueAsInteger(11000);
         pipeline = config.getChild("pipeline").getValue("samples/hello-world/hello.xhtml");
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.components.cron.CronJob#execute(java.lang.String)
-     */
+    
+    public void service(ServiceManager manager) {
+    	this.manager = manager;
+    }
+    
     public void execute(String name) {
-        getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + m_msg +
-                         "' and sleep timeout of " + m_sleep + "ms");
-        
-        InputStream is = null;
-        try {
-            is = process(pipeline);
-        } catch (Exception e) {
-            getLogger().error("error in execution of TestCronJob", e);
-        } 
-        StringBuffer sb = new StringBuffer();
-        try {        
-            InputStreamReader reader = new InputStreamReader(is);
-            sb = new StringBuffer();
-            char[] b = new char[8192];
-            int n;
+		getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + m_msg +
+						 "' and sleep timeout of " + m_sleep + "ms");
+		
+		try {
+			SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+			Source src = resolver.resolveURI("cocoon://" + pipeline);
+			InputStream is = src.getInputStream();
+			
+			InputStreamReader reader = new InputStreamReader(is);
+			StringBuffer sb = new StringBuffer();
+			char[] b = new char[8192];
+			int n;
 
-            while((n = reader.read(b)) > 0) {
-                sb.append(b, 0, n); 
-            } 
-        } catch( IOException ioe ) {
-            getLogger().error("error trying to read the InputStream returned by the Pipeline processor");
-        }
-        getLogger().info("Cronjob " + name + " called pipeline " + pipeline + 
-            " and received following content:\n" + sb.toString() );
+			while((n = reader.read(b)) > 0) {
+				sb.append(b, 0, n); 
+			}
+			
+			reader.close();
+			resolver.release(src);
+			manager.release(resolver);
+			
+			getLogger().info("Cronjob " + name + " called pipeline " + pipeline + 
+				" and received following content:\n" + sb.toString() );
        
-        try {
-            Thread.sleep(m_sleep);
-        } catch (final InterruptedException ie) {
-            //getLogger().error("CronJob " + name + " interrupted", ie);
-        }
+			try {
+				Thread.sleep(m_sleep);
+			} catch (final InterruptedException ie) {
+				//getLogger().error("CronJob " + name + " interrupted", ie);
+			}
 
-        getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
-                         "' and sleep timeout of " + m_sleep + "ms");
+			getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
+							 "' and sleep timeout of " + m_sleep + "ms");
+			
+		} catch(Exception e) {
+		    throw new CascadingRuntimeException("CronJob " + name + " raised an exception", e);
+		}
     }
 
     /* (non-Javadoc)
@@ -116,8 +127,5 @@ public class TestCronJob extends AbstractPipelineCallingCronJob
             pipeline = params.getParameter(PARAMETER_PIPELINE, pipeline );
             
         }
-    }
-
-
-    
+    }    
 }
