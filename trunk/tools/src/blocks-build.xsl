@@ -133,11 +133,17 @@
    <xsl:template match="project">
       <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')" />
 
+      <target name="{@name}-excluded" if="exclude.block.{$block-name}">
+           <echo message="-----------------------------------------------"/>
+           <echo message="ATTENTION: {$block-name} is excluded from the build."/>
+           <echo message="-----------------------------------------------"/>
+      </target>
+      
       <target name="{@name}" unless="unless.exclude.block.{$block-name}"/>
       
       <target name="{@name}-compile" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-compile</xsl:for-each></xsl:attribute>
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/>,<xsl:value-of select="@name"/>-excluded<xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-compile</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <!-- Test if this block has special build -->
