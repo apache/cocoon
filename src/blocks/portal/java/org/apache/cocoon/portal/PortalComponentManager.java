@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal;
 
 import org.apache.cocoon.portal.coplet.CopletFactory;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -32,7 +33,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortalComponentManager.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id: PortalComponentManager.java,v 1.3 2004/06/21 11:09:45 cziegeler Exp $
  */
 public interface PortalComponentManager {
 
@@ -60,4 +61,9 @@ public interface PortalComponentManager {
      * Get the layout factory
      */
     LayoutFactory getLayoutFactory();
+    
+    /**
+     * Get the event manager
+     */
+    EventManager getEventManager();
 }

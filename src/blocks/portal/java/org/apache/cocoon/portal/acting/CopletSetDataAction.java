@@ -20,19 +20,22 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.commons.jxpath.JXPathContext;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
 
 /**
  * Using this action, you can set values in a coplet
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CopletSetDataAction.java,v 1.3 2004/03/15 18:18:19 cziegeler Exp $
+ * @version CVS $Id: CopletSetDataAction.java,v 1.4 2004/06/21 11:09:45 cziegeler Exp $
  */
 public class CopletSetDataAction 
 extends ServiceableAction {
@@ -46,7 +49,7 @@ extends ServiceableAction {
         try {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-
+            
             // determine coplet id
             String copletId = null;            
             Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
@@ -63,18 +66,21 @@ extends ServiceableAction {
                 throw new ConfigurationException("copletId must be passed in the object model either directly (e.g. by using ObjectModelAction) or within the parent context.");
             }
         
-            JXPathContext jxpathContext = JXPathContext.newContext(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId));
             // now traverse parameters:
             // parameter name is path
             // parameter value is value
             // if the value is null or empty, the value is not set!
             final String[] names = parameters.getNames();
             if ( names != null ) {
+                final Publisher publisher = portalService.getComponentManager().getEventManager().getPublisher();
                 for(int i=0; i<names.length; i++) {
                     final String path = names[i];
                     final String value = parameters.getParameter(path, null );
                     if ( value != null && value.trim().length() > 0 ) {
-                        jxpathContext.setValue(path, value);
+                        final Event event = new CopletJXPathEvent(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId),
+                                path,
+                                value);
+                        publisher.publish(event);
                     }
                 }
             }
@@ -82,7 +88,7 @@ extends ServiceableAction {
             return EMPTY_MAP;
         
         } catch (ServiceException e) {
-            throw new ConfigurationException("ComponentException ", e);
+            throw new ProcessingException("Unable to lookup component.", e);
         } finally {
             this.manager.release(portalService);
         }
