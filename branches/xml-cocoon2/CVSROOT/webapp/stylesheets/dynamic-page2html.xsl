@@ -71,9 +71,9 @@
     </ul>
   </xsl:template>
   
-  <xsl:template match="*|@*" priority="-1">
+  <xsl:template match="*|@*|text()|processing-instruction()" priority="-1">
    <xsl:copy>
-    <xsl:apply-templates select="*|@*"/>
+    <xsl:apply-templates select="*|@*|text()|processing-instruction()"/>
    </xsl:copy>
   </xsl:template>
 
