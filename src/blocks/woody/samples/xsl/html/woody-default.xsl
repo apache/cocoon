@@ -84,6 +84,10 @@
     <a href="#" style="color:red; font-weight: bold" onclick="alert('{normalize-space($message)}')">&#160;!&#160;</a>
   </xsl:template>
 
+  <xsl:template match="wi:output">
+    <xsl:copy-of select="wi:value/node()"/>
+  </xsl:template>
+
   <xsl:template match="wi:booleanfield">
     <input type="checkbox" value="true" name="{@id}">
       <xsl:if test="wi:value/text() = 'true'">
