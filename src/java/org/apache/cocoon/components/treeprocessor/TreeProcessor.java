@@ -31,12 +31,16 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.sitemap.impl.DefaultExecutor;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
@@ -85,8 +89,14 @@ public class TreeProcessor extends AbstractLogEnabled
     /** The environment helper */
     private EnvironmentHelper environmentHelper;
 
-    /** The actual processor (package-private as needs to be accessed by ConcreteTreeProcessor) */
-    ConcreteTreeProcessor concreteProcessor;
+    /** The actual sitemap executor */
+    private SitemapExecutor sitemapExecutor;
+
+    /** Indicates whether this is our component or not */
+    private boolean releaseSitemapExecutor;
+
+    /** The actual processor */
+    protected ConcreteTreeProcessor concreteProcessor;
 
     /** The tree builder configuration */
     private Configuration treeBuilderConfiguration;
@@ -125,6 +135,7 @@ public class TreeProcessor extends AbstractLogEnabled
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
         ContainerUtil.service(this.environmentHelper, this.parentServiceManager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
+        this.sitemapExecutor = parent.sitemapExecutor;
     }
 
     /**
@@ -163,7 +174,19 @@ public class TreeProcessor extends AbstractLogEnabled
                     (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         }
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
-        ContainerUtil.service(this.environmentHelper, parentServiceManager);
+        ContainerUtil.service(this.environmentHelper, this.parentServiceManager);
+
+        // Create sitemap executor
+        if (this.parent == null) {
+            try {
+                this.sitemapExecutor = (SitemapExecutor) this.parentServiceManager.lookup(SitemapExecutor.ROLE);
+                this.releaseSitemapExecutor = true;
+            } catch (ServiceException e) {
+                this.sitemapExecutor = new DefaultExecutor();
+            }
+        } else {
+            this.sitemapExecutor = this.parent.sitemapExecutor;
+        }
     }
 
     /**
@@ -293,7 +316,6 @@ public class TreeProcessor extends AbstractLogEnabled
      * @throws ConfigurationException if a suitable role could not be found
      */
     private TreeBuilder getTreeBuilder(Configuration sitemapProgram) throws ConfigurationException {
-
         String ns = sitemapProgram.getNamespace();
 
         RE re = new RE("http://apache.org/cocoon/sitemap/(\\d\\.\\d)");
@@ -365,8 +387,7 @@ public class TreeProcessor extends AbstractLogEnabled
             Configuration sitemapProgram = handler.getConfiguration();
             newLastModified = this.source.getLastModified();
 
-            newProcessor = new ConcreteTreeProcessor(this);
-            setupLogger(newProcessor);
+            newProcessor = createConcreteTreeProcessor();
 
             // Get the treebuilder that can handle this version of the sitemap.
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
@@ -399,6 +420,16 @@ public class TreeProcessor extends AbstractLogEnabled
         }
     }
 
+    private ConcreteTreeProcessor createConcreteTreeProcessor() {
+        ProcessorComponentInfo componentInfo = this.parent == null?
+                null : this.parent.concreteProcessor.getComponentInfo();
+        ConcreteTreeProcessor processor = new ConcreteTreeProcessor(this,
+                                                                    this.sitemapExecutor,
+                                                                    componentInfo);
+        setupLogger(processor);
+        return processor;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -407,6 +438,11 @@ public class TreeProcessor extends AbstractLogEnabled
         // are none when a TreeProcessor is disposed.
         ContainerUtil.dispose(this.concreteProcessor);
         this.concreteProcessor = null;
+
+        if (this.releaseSitemapExecutor) {
+            this.parentServiceManager.release(this.sitemapExecutor);
+            this.sitemapExecutor = null;
+        }
 
         if (this.parentServiceManager != null) {
             if (this.source != null) {
