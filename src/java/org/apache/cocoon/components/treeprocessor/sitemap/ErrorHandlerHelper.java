@@ -112,7 +112,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
         this.handledErrorsLogger.error(ex.getMessage(), ex);
 
         try {
-            prepare(env, context, ex);
+            prepare(env, ex);
 
             // Create error context
             InvokeContext errorContext = new InvokeContext(context.isBuildingPipelineOnly());
@@ -138,7 +138,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
         throw ex;
     }
 
-    private void prepare(Environment env, InvokeContext context, Exception ex)
+    private void prepare(Environment env, Exception ex)
     throws IOException, ComponentException {
         Map objectModel = env.getObjectModel();
         if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
