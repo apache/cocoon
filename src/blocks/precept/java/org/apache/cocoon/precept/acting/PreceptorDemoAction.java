@@ -51,22 +51,20 @@
 
 package org.apache.cocoon.precept.acting;
 
-import org.apache.cocoon.environment.*;
+import java.util.Collection;
+import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 
-
-import java.util.*;
-
-
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.precept.Instance;
-
-import org.apache.cocoon.precept.acting.AbstractPreceptorAction;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 25, 2002
- * @version CVS $Id: PreceptorDemoAction.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
+ * @version CVS $Id: PreceptorDemoAction.java,v 1.3 2003/11/20 16:24:14 joerg Exp $
  */
 public class PreceptorDemoAction extends AbstractPreceptorAction {
 

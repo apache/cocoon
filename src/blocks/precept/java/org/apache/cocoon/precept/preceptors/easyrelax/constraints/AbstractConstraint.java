@@ -50,16 +50,15 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax.constraints;
 
-import org.apache.cocoon.precept.Constraint;
-
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
-import org.apache.avalon.framework.component.Component;
+import org.apache.cocoon.precept.Constraint;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 21, 2002
- * @version CVS $Id: AbstractConstraint.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: AbstractConstraint.java,v 1.3 2003/11/20 16:26:37 joerg Exp $
  */
 public abstract class AbstractConstraint extends AbstractLogEnabled implements Constraint, Component {
     protected String id = null;

@@ -50,17 +50,19 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
-import org.apache.cocoon.precept.Preceptor;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.cocoon.precept.Constraint;
-
-
-import java.util.*;
+import org.apache.cocoon.precept.Preceptor;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 22, 2002
- * @version CVS $Id: ElementPreceptorNode.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: ElementPreceptorNode.java,v 1.3 2003/11/20 16:26:37 joerg Exp $
  */
 public class ElementPreceptorNode extends AbstractPreceptorNode {
 
