@@ -89,7 +89,7 @@
       When defining subcategory manually, it is required to specify log
       targets, because they are not inherited in this case.
     -->
-    <category name="core" log-level="DEBUG">
+    <category name="core" log-level="ERROR">
       <!-- Startup component manager logger -->
       <category name="startup" log-level="ERROR">
         <log-target id-ref="core"/>
@@ -136,7 +136,7 @@
       <log-target id-ref="error"/>
     </category>
 
-    <category name="sitemap" log-level="DEBUG">
+    <category name="sitemap" log-level="ERROR">
       <log-target id-ref="sitemap"/>
       <log-target id-ref="error"/>
     </category>
