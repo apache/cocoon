@@ -54,6 +54,17 @@
            compiler="${compiler}"
            classpathref="classpath"/>
 
+    <!-- compile kernel source files -->
+    <javac srcdir="src/kernel"
+           destdir="${build.dest}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+
     <!-- compile core source files -->
     <javac srcdir="${java}"
            destdir="${build.dest}"

@@ -18,12 +18,9 @@
  * ========================================================================== */
 package org.apache.cocoon.kernel.identification;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
@@ -34,7 +31,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class BlockDescriptor extends AbstractDescriptor {
 
@@ -96,7 +93,7 @@ public class BlockDescriptor extends AbstractDescriptor {
      *         {@link BlockDescriptor} doesn't specify any class.
      */
     public String providedClass() {
-        return(String)this.provision;
+        return this.provision;
     }
 
     /**
@@ -107,7 +104,7 @@ public class BlockDescriptor extends AbstractDescriptor {
      *         {@link BlockDescriptor} doesn't specify any composer.
      */
     public String providedComposer() {
-        return(String)this.composer;
+        return this.composer;
     }
 
     /* ====================================================================== */

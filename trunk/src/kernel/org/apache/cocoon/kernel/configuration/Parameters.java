@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class Parameters extends HashMap implements Map {
 
@@ -62,7 +62,6 @@ public class Parameters extends HashMap implements Map {
     public Parameters(Configuration configuration)
     throws ConfigurationException {
         super();
-        String v = "value";
         Iterator iterator = configuration.children("parameter");
         while (iterator.hasNext()) try {
             Configuration c = (Configuration)iterator.next();

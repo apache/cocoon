@@ -42,7 +42,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class ConfigurationSerializer {
 
@@ -100,7 +100,6 @@ public class ConfigurationSerializer {
     public static void serialize(Configuration configuration, ContentHandler h)
     throws SAXException, ConfigurationException {
         h.startDocument();
-        String namespace = configuration.namespace();
         element(configuration, h, 0, null);
         h.endDocument();
     }
