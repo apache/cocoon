@@ -16,18 +16,23 @@
 
 package org.apache.cocoon.acting;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.SitemapComponentTestCase;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.mock.MockRequest;
 
 /**
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: RequestParamActionTestCase.java,v 1.5 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class RequestParamActionTestCase extends SitemapComponentTestCase {
+public class RequestParamActionTestCase extends TestCase {
+    private Map objectModel = new HashMap();
 
     public RequestParamActionTestCase(String name) {
         super(name);
@@ -35,15 +40,18 @@ public class RequestParamActionTestCase extends SitemapComponentTestCase {
 
     public void testRequestAction() throws Exception {
 
-        getRequest().setRequestURI("test.xml?abc=def&ghi=jkl");
-        getRequest().setQueryString("abc=def&ghi=jkl");
-        getRequest().setContextPath("servlet");
-        getRequest().addParameter("abc", "def");
+        MockRequest request = new MockRequest();
+        request.setRequestURI("test.xml?abc=def&ghi=jkl");
+        request.setQueryString("abc=def&ghi=jkl");
+        request.setContextPath("servlet");
+        request.addParameter("abc", "def");
+        objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
 
         Parameters parameters = new Parameters();
         parameters.setParameter("parameters", "true");
 
-        Map result = act("request", null, parameters);
+        RequestParamAction action = new RequestParamAction();
+        Map result = action.act(null, null, objectModel, null, parameters); 
 
         assertNotNull("Test if resource exists", result);
         assertEquals("Test for parameter", "test.xml?abc=def&ghi=jkl", result.get("requestURI"));
