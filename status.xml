@@ -199,9 +199,6 @@
 
   <changes>
  <release version="@version@" date="@date@">
-   <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
-     Javaflow: also support inherited methods
-   </action>
    <action dev="RP" type="update" due-to="Igor Bukanov" fixes-bug="31649" due-to-email="igor@fastmail.fm">
      Use official Rhino implementation which supports continuations since 1.6. For the most
      flowscripts there shouldn't be any issues, though there are differences that may lead
@@ -383,6 +380,12 @@
    </action>
    <action dev="AG" type="update">
      Updated antlr to 2.7.4, db-ojb to 1.0.1
+   </action>
+   <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
+     Javaflow block: Support inherited methods
+   </action>
+   <action dev="TC" type="add">
+     Javaflow block: Add parameter support
    </action>
    <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
      Scratchpad block: BetwixtTransformer: removed deprecation warning with
