@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: index.xml,v 1.1 2004/02/06 10:35:36 bdelacretaz Exp $ -->
+<!-- CVS $Id: index.xml,v 1.2 2004/02/06 11:42:07 bdelacretaz Exp $ -->
 
 <page>
     <title>Test pages</title>
     <content>
-        <para>The pages found in and under this directory are meant for automated anteater tests.</para>
+        <para>
+            Stuff found in and under this directory is meant for automated anteater tests.
+        </para>
+        <para>
+            To create a new test set, create a new subdirectory here and add an <em>explain-test.xml</em>
+            document into it.
+        </para>
+        <para>
+            <b>Available tests</b>:
+            <insert-directories/>
+        </para>
     </content>
 </page>
