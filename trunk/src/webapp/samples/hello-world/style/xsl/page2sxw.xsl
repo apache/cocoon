@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <!--+
-    | This stylesheets transforms hello world XML page to document to ZIP serializer.
-    | After the serializer, result is OpenOffice Writer document (sxw).
+    | This stylesheets transforms hello world XML page to ZIP serializer's format.
+    | After the serializer, result is an OpenOffice Writer document (sxw).
     |
     | @author <a href="mailto:vgritsenko@apache.org>Vadim Gritsenko</a>
-    | @version CVS $Id: page2sxw.xsl,v 1.1 2003/05/08 05:05:22 vgritsenko Exp $
+    | @version CVS $Id: page2sxw.xsl,v 1.2 2003/05/08 20:42:26 vgritsenko Exp $
     +-->
 
 <xsl:stylesheet version="1.0"
@@ -67,7 +67,7 @@
           <office:meta>
             <meta:generator>OpenOffice.org 1.0.3 (Win32)</meta:generator>
             <dc:title><xsl:value-of select="title"/></dc:title>
-            <dc:subject>Cocoon Sample Document</dc:subject>
+            <dc:subject>Cocoon Hello World Sample Document</dc:subject>
             <meta:creation-date>2003-05-07T22:59:08</meta:creation-date>
             <dc:date>2003-05-07T23:01:22</dc:date>
             <dc:language>en-US</dc:language>
