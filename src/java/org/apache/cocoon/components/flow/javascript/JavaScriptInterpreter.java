@@ -59,8 +59,10 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
+import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -90,7 +92,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.18 2003/05/07 04:36:33 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.19 2003/05/08 00:05:04 vgritsenko Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -98,7 +100,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
 
     /**
      * LAST_EXEC_TIME
-     * A long value is stored under this key in each top level JavaScript 
+     * A long value is stored under this key in each top level JavaScript
      * thread scope object. When you enter a context any scripts whose
      * modification time is later than this value will be recompiled and reexecuted,
      * and this value will be updated to the current time.
@@ -151,7 +153,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         }
 
         public Script getScript(Context context, Scriptable scope,
-                                             boolean refresh) 
+                                             boolean refresh)
             throws Exception {
             if (refresh) {
                 source.refresh();
@@ -182,15 +184,15 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             final org.mozilla.javascript.tools.debugger.Main db
                 = new org.mozilla.javascript.tools.debugger.Main("Cocoon Flow Debugger");
             db.pack();
-            java.awt.Dimension size = 
+            java.awt.Dimension size =
                 java.awt.Toolkit.getDefaultToolkit().getScreenSize();
             size.width *= 0.75;
             size.height *= 0.75;
             db.setSize(size);
-            db.setExitAction(new Runnable() { 
-                    public void run() { 
-                        db.setVisible(false); 
-                    } 
+            db.setExitAction(new Runnable() {
+                    public void run() {
+                        db.setVisible(false);
+                    }
                 });
             db.setOptimizationLevel(OPTIMIZATION_LEVEL);
             db.setVisible(true);
@@ -322,7 +324,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
-        
+
         String uriPrefix = environment.getURIPrefix();
         userScopes.put(uriPrefix, scope);
     }
@@ -440,13 +442,13 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 }
                 needResolve.clear();
             }
-            thrScope.put(LAST_EXEC_TIME, thrScope, 
+            thrScope.put(LAST_EXEC_TIME, thrScope,
                          new Long(System.currentTimeMillis()));
             // Compile all the scripts first. That way you can set breakpoints
             // in the debugger before they execute.
             for (int i = 0, size = execList.size(); i < size; i++) {
                 String sourceURI = (String)execList.get(i);
-                ScriptSourceEntry entry = 
+                ScriptSourceEntry entry =
                     (ScriptSourceEntry)compiledScripts.get(sourceURI);
                 if (entry == null) {
                     Source src = environment.resolveURI(sourceURI);
@@ -459,13 +461,13 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             // Execute the scripts if necessary
             for (int i = 0, size = execList.size(); i < size; i++) {
                 String sourceURI = (String)execList.get(i);
-                ScriptSourceEntry entry = 
+                ScriptSourceEntry entry =
                     (ScriptSourceEntry)compiledScripts.get(sourceURI);
                 long lastMod = entry.getSource().getLastModified();
                 Script script = entry.getScript(context, this.scope, false);
                 if (lastExecTime == 0 || lastMod > lastExecTime) {
                     script.exec(context, thrScope);
-                } 
+                }
             }
         }
         return thrScope;
@@ -479,7 +481,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
     protected void exitContext(Scriptable thrScope)
     {
         // thrScope may be null if an exception occurred compiling a script
-        if (thrScope != null) { 
+        if (thrScope != null) {
             JSCocoon cocoon = (JSCocoon)thrScope.get("cocoon", thrScope);
             cocoon.invalidateContext();
         }
@@ -495,21 +497,21 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      * @return compiled script
      */
 
-    public Script compileScript(Context cx, 
-                                Environment environment, 
+    public Script compileScript(Context cx,
+                                Environment environment,
                                 String fileName) throws Exception {
         Source src = environment.resolveURI(fileName);
         if (src == null) {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
         synchronized (compiledScripts) {
-            ScriptSourceEntry entry = 
+            ScriptSourceEntry entry =
                 (ScriptSourceEntry)compiledScripts.get(src.getURI());
             Script compiledScript = null;
             if (entry == null) {
                 compiledScripts.put(src.getURI(),
                                     entry = new ScriptSourceEntry(src));
-            } 
+            }
             compiledScript = entry.getScript(cx, this.scope, false);
             return compiledScript;
         }
@@ -523,11 +525,11 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         }
         Reader reader = new BufferedReader(new InputStreamReader(is));
         Script compiledScript = cx.compileReader(scope, reader,
-                                                 src.getURI(), 
+                                                 src.getURI(),
                                                  1, null);
         return compiledScript;
     }
-    
+
     /**
      * Calls a JavaScript function, passing <code>params</code> as its
      * arguments. In addition to this, it makes available the parameters
@@ -581,13 +583,17 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         } catch (JavaScriptException ex) {
             EvaluatorException ee =
                 Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-
                                                                         ex.getMessage()));
-            throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
+            Throwable unwrapped = unwrap(ex);
+            if (unwrapped instanceof ProcessingException) {
+                throw (ProcessingException)unwrapped;
+            }
+
+            throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
         } catch (EcmaError ee) {
             String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
             if (ee.getSourceName() != null) {
-                Context.reportRuntimeError(msg, 
+                Context.reportRuntimeError(msg,
                                            ee.getSourceName(),
                                            ee.getLineNumber(),
                                            ee.getLineSource(),
@@ -608,10 +614,12 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         WebContinuation wk = continuationsMgr.lookupWebContinuation(id);
 
         if (wk == null) {
-            List p = new ArrayList();
-            p.add(new Interpreter.Argument("kontId", id));
-            callFunction("handleInvalidContinuation", p, environment);
-            return;
+
+            /*
+             * Throw an InvalidContinuationException to be handled inside the
+             * <map:handle-errors> sitemap element.
+             */
+            throw new InvalidContinuationException("The continuation ID " + id + " is invalid.");
         }
 
         Context context = Context.enter();
@@ -633,9 +641,10 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         // We can now resume the processing from the state saved by the
         // continuation object. Setup the JavaScript Context object.
         Object handleContFunction = kScope.get("handleContinuation", kScope);
-        if (handleContFunction == Scriptable.NOT_FOUND)
+        if (handleContFunction == Scriptable.NOT_FOUND) {
             throw new RuntimeException("Cannot find 'handleContinuation' "
                                        + "(system.js not loaded?)");
+        }
 
         Object args[] = { jswk };
 
@@ -654,14 +663,19 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         try {
             ((Function)handleContFunction).call(context, kScope, kScope, args);
         } catch (JavaScriptException ex) {
-            EvaluatorException ee = 
+            EvaluatorException ee =
                 Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
                                                                         ex.getMessage()));
-            throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
+            Throwable unwrapped = unwrap(ex);
+            if (unwrapped instanceof ProcessingException) {
+                throw (ProcessingException)unwrapped;
+            }
+
+            throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
         } catch (EcmaError ee) {
             String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
             if (ee.getSourceName() != null) {
-                Context.reportRuntimeError(msg, 
+                Context.reportRuntimeError(msg,
                                            ee.getSourceName(),
                                            ee.getLineNumber(),
                                            ee.getLineSource(),
@@ -674,7 +688,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             Context.exit();
         }
     }
-    
+
     private Throwable unwrap(JavaScriptException e) {
         Object value = e.getValue();
         while (value instanceof Wrapper) {
@@ -692,10 +706,10 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         throws Exception {
         Map objectModel = environment.getObjectModel();
         // Make the live-connect objects available to the view layer
-        JavaScriptFlow.setPackages(objectModel, 
+        JavaScriptFlow.setPackages(objectModel,
                                    (Scriptable)ScriptableObject.getProperty(scope,
                                                                             "Packages"));
-        JavaScriptFlow.setJavaPackage(objectModel, 
+        JavaScriptFlow.setJavaPackage(objectModel,
                                       (Scriptable)ScriptableObject.getProperty(scope,
                                                                    "java"));
         super.forwardTo(uri, bizData, continuation, environment);

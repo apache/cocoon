@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.11 2003/03/30 12:48:32 ghoward Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.12 2003/05/08 00:05:05 vgritsenko Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -26,7 +26,6 @@
 <!-- =========================== Views =================================== -->
 
  <map:views>
- 
   <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
@@ -39,13 +38,11 @@
   <map:view name="links" from-position="last">
    <map:serialize type="links"/>
   </map:view>
-  
  </map:views>
 
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
-
   <map:pipeline>
 
    <map:match pattern="">
@@ -155,15 +152,14 @@
     <map:generate src="error-giving-page.xml"/>
     <map:serialize/>
    </map:match>
-  
+
    <!-- ======================== Automount =============================== -->
-   
+
    <map:match pattern="*/**">
      <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
    </map:match>
-  
+
   </map:pipeline>
-  
  </map:pipelines>
 
 </map:sitemap>

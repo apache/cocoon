@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.13 2003/05/06 07:10:50 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.14 2003/05/08 00:05:04 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -199,10 +199,11 @@
        +-->
    <map:selector logger="sitemap.selector.exception" name="exception" src="org.apache.cocoon.selection.ExceptionSelector">
      <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
+     <exception name="invalid-continuation" class="org.apache.cocoon.components.flow.InvalidContinuationException"/>
      <!-- The statement below tells the selector to unroll as much exceptions as possible -->
      <exception class="java.lang.Throwable" unroll="true"/>
    </map:selector>
-  
+
 
    <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
     <!-- Define now which request parameter to use; or do it later,
@@ -399,7 +400,9 @@
           | and sending the output down the pipeline to be processed by the
           | next stage.
           +-->
-      <map:transform src="welcome.xslt"/>
+      <map:transform src="welcome.xslt">
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       
       <!--+
           | The serializer concludes the SAX events journey into the pipeline
@@ -496,7 +499,7 @@
     <map:match pattern="*/**">
       <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
     </map:match>
-    
+
     <!--+
         | At the very end of a pipeline, you can catch the errors triggered
         | by the pipeline execution. The error handler is an internal sitemap
@@ -511,25 +514,33 @@
         +-->
     <map:handle-errors>
       <map:select type="exception">
-      
+
         <map:when test="not-found">
           <map:generate src="not-found.xml"/>
-          <map:transform src="welcome.xslt"/>
+          <map:transform src="welcome.xslt">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+          </map:transform>
         </map:when>
-        
+
+        <map:when test="invalid-continuation">
+          <map:generate src="not-found.xml"/>
+          <map:transform src="welcome.xslt">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+          </map:transform>
+        </map:when>
+
         <map:otherwise>
           <map:generate type="notifying"/>
           <map:transform src="stylesheets/system/error2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
-	      </map:transform>
+          </map:transform>
         </map:otherwise>
       </map:select>
-      
-      <map:serialize/>
-      
-    </map:handle-errors>
-  </map:pipeline>
 
+      <map:serialize/>
+    </map:handle-errors>
+
+  </map:pipeline>
  </map:pipelines>
 
 </map:sitemap>

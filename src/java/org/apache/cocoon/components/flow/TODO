@@ -16,6 +16,7 @@ WISH LIST:
 
 - [ADVANCED] implement leaky bucket algorithm or similar to protect
 the server from creating too many continuations.
+  -- Try o.a.cocoon.util.MRUBucketMap
 
 - [ADVANCED] define a boolean parameter, to be set in either
 cocoon.xconf or web.xml, that specifies that session affinity is to be

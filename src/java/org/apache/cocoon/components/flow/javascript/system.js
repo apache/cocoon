@@ -1,5 +1,5 @@
 //
-// CVS $Id: system.js,v 1.5 2003/04/04 23:08:13 stefano Exp $
+// CVS $Id: system.js,v 1.6 2003/05/08 00:05:04 vgritsenko Exp $
 //
 // JavaScript definitions
 //
@@ -60,7 +60,8 @@ function handleContinuation(kont)
 // identified by 'id'
 function handleInvalidContinuation(id)
 {
-  sendPage("invalidContinuation", {"ident" : id});
+  // Throw an exception which can be handled in sitemap's handle-error section
+  throw new Packages.org.apache.cocoon.components.flow.InvalidContinuationException("Continuation ID + " + id + " is invalid");
 }
 
 // Redirect Support
@@ -126,5 +127,4 @@ function outputRollback(type)
     cocoon.outputModuleRollback(type);
   }
 }
-
 
