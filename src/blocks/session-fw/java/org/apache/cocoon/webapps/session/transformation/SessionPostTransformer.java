@@ -60,6 +60,7 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.xml.XMLUtils;
@@ -81,7 +82,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * implementation of the SessionTransformer would be very unperformant.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPostTransformer.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: SessionPostTransformer.java,v 1.3 2003/05/16 07:19:43 cziegeler Exp $
 */
 public class SessionPostTransformer
 extends SessionPreTransformer {
@@ -378,7 +379,7 @@ extends SessionPreTransformer {
                 try {
                     Source resource = this.resolver.resolveURI(source);
                     SAXConfigurationHandler saxBuilder = new SAXConfigurationHandler();
-                    resolver.toSAX(resource, saxBuilder);
+                    SourceUtil.parse(this.manager, resource, saxBuilder);
 
                     conf = saxBuilder.getConfiguration();
                     session = this.getSessionManager().getSession(true);
