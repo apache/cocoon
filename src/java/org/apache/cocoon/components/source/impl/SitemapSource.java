@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.22 2004/06/25 15:36:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -209,7 +209,7 @@ implements Source, XMLizable {
         } finally {
             // Unhide wrapped environment output stream
             this.environment.setOutputStream(null);
-            reset();
+            this.needsRefresh = true;
         }
     }
 
@@ -235,9 +235,6 @@ implements Source, XMLizable {
      *  <code>null</code> is returned.
      */
     public SourceValidity getValidity() {
-        if (this.needsRefresh) {
-            this.refresh();
-        }
         if (this.redirectSource != null) {
             return this.redirectValidity;
         }
@@ -327,8 +324,7 @@ implements Source, XMLizable {
      * Stream content to the content handler
      */
     public void toSAX(ContentHandler contentHandler)
-    throws SAXException
-    {
+    throws SAXException {
         if (this.needsRefresh) {
             this.refresh();
         }
@@ -366,7 +362,7 @@ implements Source, XMLizable {
             throw new SAXException("Exception during processing of "
                                           + this.systemId, e);
         } finally {
-            reset();
+            this.needsRefresh = true;
         }
     }
 
