@@ -71,6 +71,10 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.generation.Generator;
 import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.ExpressionFactory;
@@ -105,6 +109,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
+
 /**
  * Jexl Transformer.
  *
@@ -117,7 +122,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.4 2003/04/06 17:14:57 coliver Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.5 2003/04/12 23:35:29 coliver Exp $
  */
 
 public class JexlTransformer
@@ -443,15 +448,18 @@ public class JexlTransformer
     // web contination
     private WebContinuation kont;
 
-    JexlContext jexlContext;
-    Stack jxpathContextStack;
+    private JexlContext jexlContext;
+    private Stack jxpathContextStack;
 
-    Iterator foreachIter;
-    boolean foreachXPath;
-    String foreachVar;
-    int foreachBegin;
-    int foreachEnd;
-    int foreachStep;
+    private Iterator foreachIter;
+    private boolean foreachXPath;
+    private String foreachVar;
+    private int foreachBegin;
+    private int foreachEnd;
+    private int foreachStep;
+
+    // XPath variables
+    private MyVariables variables;
 
     //
     // Contains a stack of Boolean values:
@@ -475,12 +483,12 @@ public class JexlTransformer
     // Each time we enter an <if> we push the test condition on this stack and
     // pop it when we reach </if>, where it is checked to see if ignoreEventsCount
     // should be updated
-    Stack ifStack;
+    private Stack ifStack;
 
     // Run as a generator for debugging: to get line numbers in error messages
 
     private Source inputSource;
-    Locator locator = null;
+    private Locator locator = null;
 
     public void setDocumentLocator(Locator loc) {
         this.locator = loc;
@@ -542,20 +550,23 @@ public class JexlTransformer
                 throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
         }
+        // Fix me: when we decide the proper way to pass bean-dict and kont
         Object bean = ((Environment)resolver).getAttribute("bean-dict");
         kont = (WebContinuation)((Environment)resolver).getAttribute("kont");
         chooseStack = new Stack();
         ifStack = new Stack();
         jxpathContextStack = new Stack();
         jexlContext = JexlHelper.createContext();
-        setContexts(bean);
-        getJexlContext().getVars().put("this", bean);
-        getJexlContext().getVars().put("continuation", kont);
+        setContexts(bean, kont,
+                    ObjectModelHelper.getRequest(objectModel),
+                    ObjectModelHelper.getResponse(objectModel),
+                    ObjectModelHelper.getContext(objectModel),
+                    parameters);
     }
     
     /**
-     * Evaluate a Jexl expr contained in ${} but don't do substitution:
-     * just return its value
+     * Evaluate a single Jexl expr (contained in ${}) or XPath expression
+     * (contained in {}) but don't do substitution: just return its value
      */
     
     private Object eval(String inStr) throws SAXException {
@@ -633,6 +644,7 @@ public class JexlTransformer
                         str = String.valueOf(getValue(str, xpath, false));
                         out.write(str);
                         inExpr = false;
+                        xpath = false;
                     } else if (c == '\\') {
                         ch = in.read();
                         if (ch == -1) {
@@ -675,8 +687,7 @@ public class JexlTransformer
                 }
             }
         } catch (IOException e) {
-            throw new CascadingRuntimeException(e.getMessage(),
-                                                e);
+            throw new CascadingRuntimeException(e.getMessage(), e);
         }
     }
 
@@ -699,6 +710,7 @@ public class JexlTransformer
         }
         super.startElement(uri, name, raw, attr);
     }
+
     /**
      * Entry method for all elements in our namespace
      *
@@ -791,29 +803,74 @@ public class JexlTransformer
     private JXPathContext getJXPathContext() {
         return (JXPathContext)jxpathContextStack.peek();
     }
+
+    static class MyVariables implements Variables {
+
+        static final String[] VARIABLES = new String[] {
+            "continuation",
+            "flowContext",
+            "request",
+            "response",
+            "context",
+            "session",
+            "parameters"
+        };
+
+        Object bean, kont, request, response,
+            session, context, parameters;
+
+        MyVariables(Object bean, WebContinuation kont,
+                    Request request, Response response,
+                    org.apache.cocoon.environment.Context context,
+                    Parameters parameters) {
+            this.bean = bean;
+            this.kont = kont;
+            this.request = request;
+            this.session = request.getSession(false);
+            this.response = response;
+            this.context = context;
+            this.parameters = parameters;
+        }
+
+        public boolean isDeclaredVariable(String varName) {
+            for (int i = 0; i < VARIABLES.length; i++) {
+                if (varName.equals(VARIABLES[i])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public Object getVariable(String varName) {
+            if (varName.equals("continuation")) {
+                return kont;
+            } else if (varName.equals("flowContext")) {
+                return bean;
+            } else if (varName.equals("request")) {
+                return request;
+            } else if (varName.equals("response")) {
+                return response;
+            } else if (varName.equals("session")) {
+                return session;
+            } else if (varName.equals("context")) {
+                return context;
+            } else if (varName.equals("parameters")) {
+                return parameters;
+            }
+            return null;
+        }
+        
+        public void declareVariable(String varName, Object value) {
+        }
+        
+        public void undeclareVariable(String varName) {
+        }
+    }
     
     private void pushJXPathContext(Object contextObject) {
         JXPathContext jxpathContext = 
             jxpathContextFactory.newContext(null, contextObject);
-        jxpathContext.setVariables(new Variables() {
-
-                public boolean isDeclaredVariable(String varName) {
-                    return varName.equals("continuation");
-                }
-
-                public Object getVariable(String varName) {
-                    if (varName.equals("continuation")) {
-                        return kont;
-                    }
-                    return null;
-                }
-
-                public void declareVariable(String varName, Object value) {
-                }
-
-                public void undeclareVariable(String varName) {
-                }
-            });
+        jxpathContext.setVariables(variables);
         jxpathContextStack.push(jxpathContext);
     }
 
@@ -821,8 +878,20 @@ public class JexlTransformer
         jxpathContextStack.pop();
     }
 
-
-    private void setContexts(Object contextObject) {
+    private void setContexts(Object contextObject,
+                             WebContinuation kont,
+                             Request request,
+                             Response response,
+                             org.apache.cocoon.environment.Context app,
+                             Parameters parameters) {
+        if (variables == null) {
+            variables = new MyVariables(contextObject,
+                                        kont,
+                                        request,
+                                        response,
+                                        app,
+                                        parameters);
+        }
         Map map;
         if (contextObject instanceof Map) {
             map = (Map)contextObject;
@@ -864,6 +933,12 @@ public class JexlTransformer
         }
         pushJXPathContext(contextObject);
         jexlContext.setVars(map);
+        map = jexlContext.getVars();
+        map.put("flowContext", contextObject);
+        map.put("request", request);
+        map.put("response", response);
+        map.put("context", app);
+        map.put("session", request.getSession(false));
     }
 
     /**
