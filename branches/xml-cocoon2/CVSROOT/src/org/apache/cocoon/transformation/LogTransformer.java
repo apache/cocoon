@@ -45,7 +45,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-19 14:44:34 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-06 14:19:43 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
@@ -78,7 +78,11 @@ public class LogTransformer extends AbstractTransformer {
                 append = false;
             }
             try {
-                logfile = new FileWriter(logfilename, append );
+                // Check for null, use System.out if logfile is not specified.
+                if(logfilename != null)
+                    logfile = new FileWriter(logfilename, append );
+                else 
+                    logfile = new FileWriter(java.io.FileDescriptor.out);
             } catch (IOException e) {
                 isValid = false;
                 throw e;
