@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.6 2000-10-31 02:43:20 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.7 2000-11-30 21:41:16 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -52,87 +52,87 @@
 -->
 
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xsp="http://apache.org/xsp"
-	xmlns:esql="http://apache.org/cocoon/SQL/v2"
-	xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xsp="http://apache.org/xsp"
+    xmlns:esql="http://apache.org/cocoon/SQL/v2"
+    xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
 <xspdoc:title>the esql logicsheet</xspdoc:title>
 
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
-	<xsl:choose>
-		<xsl:when test="$content/*">
-			<xsl:apply-templates select="$content/*"/>
-		</xsl:when>
-		<xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
-	</xsl:choose>
+    <xsl:choose>
+        <xsl:when test="$content/*">
+            <xsl:apply-templates select="$content/*"/>
+        </xsl:when>
+        <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="get-nested-string">
-  	<xsl:param name="content"/>
-	<xsl:choose>
-		<xsl:when test="$content/*">
-			""
-			<xsl:for-each select="$content/node()">
-				<xsl:choose>
-					<xsl:when test="name(.)">
-						<xsl:choose>
-							<xsl:when test="namespace-uri(.)='http://apache.org/xsp' and local-name(.)='text'">
-								+ "<xsl:value-of select="."/>"
-							</xsl:when>
-							<xsl:otherwise>
-								+ <xsl:apply-templates select="."/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:otherwise>
-						+ "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
-		</xsl:when>
-		<xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
-	</xsl:choose>
+    <xsl:param name="content"/>
+    <xsl:choose>
+        <xsl:when test="$content/*">
+            ""
+            <xsl:for-each select="$content/node()">
+                <xsl:choose>
+                    <xsl:when test="name(.)">
+                        <xsl:choose>
+                            <xsl:when test="namespace-uri(.)='http://apache.org/xsp' and local-name(.)='text'">
+                                + "<xsl:value-of select="."/>"
+                            </xsl:when>
+                            <xsl:otherwise>
+                                + <xsl:apply-templates select="."/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template match="xsp:page">
-	<xsp:page>
-		<xsl:apply-templates select="@*"/>
-		<xsp:structure>
-			<xsp:include>java.sql.DriverManager</xsp:include>
-			<xsp:include>java.sql.Connection</xsp:include>
-			<xsp:include>java.sql.Statement</xsp:include>
-			<xsp:include>java.sql.PreparedStatement</xsp:include>
-			<xsp:include>java.sql.ResultSet</xsp:include>
-			<xsp:include>java.sql.ResultSetMetaData</xsp:include>
-			<xsp:include>java.sql.SQLException</xsp:include>
-			<xsp:include>java.text.SimpleDateFormat</xsp:include>
-			<xsp:include>java.text.DecimalFormat</xsp:include>
-		</xsp:structure>
-		<xsp:logic>
+    <xsp:page>
+        <xsl:apply-templates select="@*"/>
+        <xsp:structure>
+            <xsp:include>java.sql.DriverManager</xsp:include>
+            <xsp:include>java.sql.Connection</xsp:include>
+            <xsp:include>java.sql.Statement</xsp:include>
+            <xsp:include>java.sql.PreparedStatement</xsp:include>
+            <xsp:include>java.sql.ResultSet</xsp:include>
+            <xsp:include>java.sql.ResultSetMetaData</xsp:include>
+            <xsp:include>java.sql.SQLException</xsp:include>
+            <xsp:include>java.text.SimpleDateFormat</xsp:include>
+            <xsp:include>java.text.DecimalFormat</xsp:include>
+        </xsp:structure>
+        <xsp:logic>
                  class EsqlSession {
                   Connection connection=null;
                   boolean close_connection = true;
-		  String query;
+          String query;
                   Statement statement;
-		  PreparedStatement prepared_statement;
+          PreparedStatement prepared_statement;
                   ResultSet resultset;
                   ResultSetMetaData resultset_metadata;
                   int count;
                   int max_rows;
                   int skip_rows;
                   boolean has_resultset;
-		  int update_count;
+          int update_count;
                  }
-		</xsp:logic>
-		<xsl:for-each select=".//esql:execute-query[not(@inner-method='no')]">
-		 <xsl:call-template name="generate-code">
-		  <xsl:with-param name="inner-method">yes</xsl:with-param>
-		 </xsl:call-template>
-		</xsl:for-each>
-		<xsl:apply-templates/>
-	</xsp:page>
+        </xsp:logic>
+        <xsl:for-each select=".//esql:execute-query[not(@inner-method='no')]">
+         <xsl:call-template name="generate-code">
+          <xsl:with-param name="inner-method">yes</xsl:with-param>
+         </xsl:call-template>
+        </xsl:for-each>
+        <xsl:apply-templates/>
+    </xsp:page>
 </xsl:template>
 
 <xsl:template match="xsp:page/*[not(namespace-uri(.)='http://www.apache.org/1999/XSP/Core')]">
@@ -171,193 +171,194 @@
 </xsl:template>
 
 <xsl:template name="generate-code">
-	<xsl:param name="inner-method"/>
-	<xsl:variable name="use-connection">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:use-connection"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="driver">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:driver"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="dburl">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:dburl"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="username">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:username"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="password">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:password"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="max-rows">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:max-rows"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="skip-rows">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:skip-rows"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="query">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:query"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="statement">
-		<xsl:call-template name="get-nested-string">
-			<xsl:with-param name="content" select="esql:statement"/>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsp:logic>
-	 <xsl:choose>
-	  <xsl:when test="$inner-method='yes'">
-	 void _esql_execute_query_<xsl:value-of select="generate-id(.)"/>(
-	 HttpServletRequest request,
-	 HttpServletResponse response,
-	 Document document,
-	 Node xspParentNode,
-	 Node xspCurrentNode,
-	 Stack xspNodeStack,
-	 HttpSession session,
-	 Stack _esql_sessions,
-	 EsqlSession _esql_session) throws Exception {
-	  </xsl:when>
-	  <xsl:when test="$inner-method='no'">
-	   {
+    <xsl:param name="inner-method"/>
+    <xsl:variable name="use-connection">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:use-connection"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="driver">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:driver"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="dburl">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:dburl"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="username">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:username"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="password">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:password"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="max-rows">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:max-rows"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="skip-rows">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:skip-rows"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="query">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:query"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="statement">
+        <xsl:call-template name="get-nested-string">
+            <xsl:with-param name="content" select="esql:statement"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsp:logic>
+     <xsl:choose>
+      <xsl:when test="$inner-method='yes'">
+     void _esql_execute_query_<xsl:value-of select="generate-id(.)"/>(
+     HttpServletRequest request,
+     HttpServletResponse response,
+     Document document,
+     Node xspParentNode,
+     Node xspCurrentNode,
+     Stack xspNodeStack,
+     HttpSession session,
+     Stack _esql_sessions,
+     EsqlSession _esql_session) throws Exception {
+      </xsl:when>
+      <xsl:when test="$inner-method='no'">
+       {
           </xsl:when>
-	 </xsl:choose>
-		if (_esql_session != null) {
-		 _esql_sessions.push(_esql_session);
-		}
-		_esql_session = new EsqlSession();
-		try {
-		 _esql_session.max_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$max-rows"/>));
-		} catch (Exception _esql_e) {
-		 _esql_session.max_rows = -1;
-		}
-		try {
-		 _esql_session.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skip-rows"/>));
-		} catch (Exception _esql_e) {
-		 _esql_session.skip_rows = 0;
-		}
-		try {
-		<xsl:choose>
-		 <xsl:when test="not(esql:use-connection or esql:dburl)">
+     </xsl:choose>
+        if (_esql_session != null) {
+         _esql_sessions.push(_esql_session);
+        }
+        _esql_session = new EsqlSession();
+        try {
+         _esql_session.max_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$max-rows"/>));
+        } catch (Exception _esql_e) {
+         _esql_session.max_rows = -1;
+        }
+        try {
+         _esql_session.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skip-rows"/>));
+        } catch (Exception _esql_e) {
+         _esql_session.skip_rows = 0;
+        }
+        try {
+        <xsl:choose>
+         <xsl:when test="not(esql:use-connection or esql:dburl)">
                   _esql_session.connection = ((EsqlSession)_esql_sessions.peek()).connection;
-		  _esql_session.close_connection = false;
-		 </xsl:when>
-		 <xsl:when test="esql:use-connection">
-		  <!-- FIXME - need to do avalon pooling here maybe? -->
-		 </xsl:when>
-		 <xsl:otherwise>
-		  Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
-		  <xsl:choose>
-		   <xsl:when test="esql:username">
-		    _esql_session.connection = DriverManager.getConnection(
-		     String.valueOf(<xsl:copy-of select="$dburl"/>),
-		     String.valueOf(<xsl:copy-of select="$username"/>),
-		     String.valueOf(<xsl:copy-of select="$password"/>)
-		    );
-		   </xsl:when>
-		   <xsl:otherwise>
-		    _esql_session.connection = DriverManager.getConnection(
-		     String.valueOf(<xsl:copy-of select="$dburl"/>)
-		    );
-		   </xsl:otherwise>
-		  </xsl:choose>
-		 </xsl:otherwise>
-	        </xsl:choose>
-	       <xsl:choose>
-	        <xsl:when test="esql:query">
-	         _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
-	         _esql_session.statement = _esql_session.connection.createStatement();
+          _esql_session.close_connection = false;
+         </xsl:when>
+         <xsl:when test="esql:use-connection">
+          <!-- FIXME - need to do avalon pooling here maybe? -->
+         </xsl:when>
+         <xsl:otherwise>
+          Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
+          <xsl:choose>
+           <xsl:when test="esql:username">
+            _esql_session.connection = DriverManager.getConnection(
+             String.valueOf(<xsl:copy-of select="$dburl"/>),
+             String.valueOf(<xsl:copy-of select="$username"/>),
+             String.valueOf(<xsl:copy-of select="$password"/>)
+            );
+           </xsl:when>
+           <xsl:otherwise>
+            _esql_session.connection = DriverManager.getConnection(
+             String.valueOf(<xsl:copy-of select="$dburl"/>)
+            );
+           </xsl:otherwise>
+          </xsl:choose>
+         </xsl:otherwise>
+            </xsl:choose>
+           <xsl:choose>
+            <xsl:when test="esql:query">
+             _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
+             _esql_session.statement = _esql_session.connection.createStatement();
                  _esql_session.has_resultset = _esql_session.statement.execute(_esql_session.query);
-		</xsl:when>
-		<xsl:when test="esql:statement">
-		 _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
-		 _esql_session.statement = _esql_session.prepared_statement;
-		 <xsl:for-each select=".//esql:parameter">
-		 <xsl:text>_esql_session.prepared_statement.</xsl:text>
-		  <xsl:choose>
-		   <xsl:when test="@type">
-		    <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,0,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,1))"/></xsl:variable>
+        </xsl:when>
+        <xsl:when test="esql:statement">
+         _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
+         _esql_session.statement = _esql_session.prepared_statement;
+         <xsl:for-each select=".//esql:parameter">
+         <xsl:text>_esql_session.prepared_statement.</xsl:text>
+          <xsl:choose>
+           <xsl:when test="@type">
+            <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,0,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,1))"/></xsl:variable>
                     <xsl:text>set</xsl:text><xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);<xsl:text>
-		    </xsl:text>
-		   </xsl:when>
-		   <xsl:otherwise>
-		  <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
-		  </xsl:text>
-		   </xsl:otherwise>
-		  </xsl:choose>
-		 </xsl:for-each>
-	         _esql_session.has_resultset = _esql_session.prepared_statement.execute();
-		</xsl:when>
-	       </xsl:choose>
+            </xsl:text>
+           </xsl:when>
+           <xsl:otherwise>
+          <xsl:text>setString(</xsl:text><xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));<xsl:text>
+          </xsl:text>
+           </xsl:otherwise>
+          </xsl:choose>
+         </xsl:for-each>
+             _esql_session.has_resultset = _esql_session.prepared_statement.execute();
+        </xsl:when>
+           </xsl:choose>
                if (_esql_session.has_resultset) {
                 _esql_session.resultset = _esql_session.statement.getResultSet();
-	        _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
+            _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
                 _esql_session.update_count = -1;
-	        _esql_session.count = 0;
-	        if (_esql_session.skip_rows &gt; 0) {
-	         while (_esql_session.resultset.next()) {
-		  _esql_session.count++;
-		  if (_esql_session.count == _esql_session.skip_rows) {
-	           break;
-		  }
-		 }
-	        }
-	        boolean _esql_results_<xsl:value-of select="generate-id(.)"/> = false;
-	        while (_esql_session.resultset.next()) {
-		 _esql_results_<xsl:value-of select="generate-id(.)"/> = true;
-	         <xsl:apply-templates select="esql:results/*"/>
-		 if (_esql_session.max_rows != -1 &amp;&amp; _esql_session.count - _esql_session.skip_rows == _esql_session.max_rows-1) {
-		  break;
-		 }
-		 _esql_session.count++;
-	        }
-	        _esql_session.resultset.close();
-	        if (!_esql_results_<xsl:value-of select="generate-id(.)"/>) {
+            _esql_session.count = 0;
+            if (_esql_session.skip_rows &gt; 0) {
+             while (_esql_session.resultset.next()) {
+          _esql_session.count++;
+          if (_esql_session.count == _esql_session.skip_rows) {
+               break;
+          }
+         }
+            }
+            boolean _esql_results_<xsl:value-of select="generate-id(.)"/> = false;
+            while (_esql_session.resultset.next()) {
+         _esql_results_<xsl:value-of select="generate-id(.)"/> = true;
+             <xsl:apply-templates select="esql:results/*"/>
+         if (_esql_session.max_rows != -1 &amp;&amp; _esql_session.count - _esql_session.skip_rows == _esql_session.max_rows-1) {
+          break;
+         }
+         _esql_session.count++;
+            }
+            _esql_session.resultset.close();
+            if (!_esql_results_<xsl:value-of select="generate-id(.)"/>) {
                  <xsl:apply-templates select="esql:no-results/*"/>
-	        }
+            }
                } else {
                 _esql_session.update_count = _esql_session.statement.getUpdateCount();
                 <xsl:apply-templates select="esql:count-results/*"/>
                }
-	       _esql_session.statement.close();
-	       } catch (Exception _esql_exception) {
-		<xsl:if test="esql:error-results//esql:get-stacktrace">
-		 StringWriter _esql_exception_writer = new StringWriter();
-		 _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
-		</xsl:if>
-		<xsl:apply-templates select="esql:error-results/*"/>
-	       } finally {
-	       if (_esql_session.close_connection) {
-	        if (_esql_session.connection != null) {
-		 try {
-		  _esql_session.connection.close();
-		 } catch (SQLException _esql_exception) {}
-		}
-	        <xsl:if test="esql:use-connection">
-		 <!-- FIXME - need to release avalon pooling here maybe -->
-	        </xsl:if>
-	       }
-	       if (_esql_sessions.empty()) {
-	        _esql_session = null;
-	       } else {
-	        _esql_session = (EsqlSession)_esql_sessions.pop();
-	       }
-	      }
-	     }
-	</xsp:logic>
+           _esql_session.statement.close();
+           } catch (Exception _esql_exception) {
+        <xsl:if test="esql:error-results//esql:get-stacktrace">
+         StringWriter _esql_exception_writer = new StringWriter();
+         log.error("esql XSP exception", _esql_exception)
+         _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
+        </xsl:if>
+        <xsl:apply-templates select="esql:error-results/*"/>
+           } finally {
+           if (_esql_session.close_connection) {
+            if (_esql_session.connection != null) {
+         try {
+          _esql_session.connection.close();
+         } catch (SQLException _esql_exception) {}
+        }
+            <xsl:if test="esql:use-connection">
+         <!-- FIXME - need to release avalon pooling here maybe -->
+            </xsl:if>
+           }
+           if (_esql_sessions.empty()) {
+            _esql_session = null;
+           } else {
+            _esql_session = (EsqlSession)_esql_sessions.pop();
+           }
+          }
+         }
+    </xsp:logic>
 </xsl:template>
 
 <xsl:template match="esql:statement//esql:parameter">"?"</xsl:template>

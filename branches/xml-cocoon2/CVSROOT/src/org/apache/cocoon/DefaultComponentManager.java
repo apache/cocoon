@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-17 19:59:13 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-30 21:40:32 $
  */
 public class DefaultComponentManager implements ComponentManager {
 
@@ -158,7 +158,8 @@ public class DefaultComponentManager implements ComponentManager {
      * @return and instance of the component.
      */
     private Component getThreadsafeComponent(Class componentClass)
-    throws ComponentNotAccessibleException {
+    throws ComponentNotAccessibleException,
+           ComponentNotFoundException {
         Component component = (Component)threadSafeInstances.get(componentClass);
 
         if ( component == null ) {
@@ -223,7 +224,9 @@ public class DefaultComponentManager implements ComponentManager {
     /** Configure a new component.
      * @param c the component to configure.
      */
-    private void setupComponent(Component c) throws ComponentNotAccessibleException {
+    private void setupComponent(Component c)
+    throws ComponentNotAccessibleException,
+           ComponentNotFoundException {
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(
@@ -264,7 +267,7 @@ public class DefaultComponentManager implements ComponentManager {
                     selector.addComponent(hint, ClassUtils.loadClass(className), current);
                 } catch (Exception e) {
                     log.error("The component instance for \"" + hint + "\" has an invalid class name.", e);
-                    throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.");
+                    throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);
                 }
             }
 

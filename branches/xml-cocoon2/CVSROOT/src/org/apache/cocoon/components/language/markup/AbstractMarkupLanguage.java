@@ -41,17 +41,24 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-11-08 20:35:02 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-30 21:40:54 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable
 {
+    /**
+     * The logger for AbstractMarkupLanguage
+     */
+    protected Logger log = LogKit.getLoggerFor("cocoon");
     /**
     * The supported language table
     */
@@ -127,7 +134,7 @@ public abstract class AbstractMarkupLanguage
 
                 Parameters lcp = Parameters.fromConfiguration(lc);
                 String logicsheetLocation =
-                	        lcp.getParameter("core-logicsheet",null);
+                            lcp.getParameter("core-logicsheet",null);
 
                 URL logicsheetURL = NetUtils.getURL(logicsheetLocation);
                 String logicsheetName = logicsheetURL.toExternalForm();
@@ -167,9 +174,8 @@ public abstract class AbstractMarkupLanguage
             this.languages.put(language.getName(), language);
             }
         } catch (Exception e) {
-            // FIXME (SSA) Better error handling
-            e.printStackTrace();
-            throw new ConfigurationException(e.getMessage());
+            log.error("Configuration Error: " + e.getMessage(), e);
+            throw new ConfigurationException("AbstractMarkupLanguage: " + e.getMessage(), e);
         }
     }
 
@@ -601,7 +607,7 @@ public abstract class AbstractMarkupLanguage
          */
         public void startElement (
             String namespaceURI, String localName,
-        	String qName, Attributes atts
+            String qName, Attributes atts
          ) throws SAXException {
             if(isRootElem) {
                 isRootElem=false;

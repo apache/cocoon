@@ -43,9 +43,6 @@ import org.apache.log.Priority;
 import org.apache.log.Category;
 import org.apache.log.output.FileOutputLogTarget;
 import org.apache.log.LogTarget;
-import org.apache.log.filter.AbstractFilterTarget;
-import org.apache.log.LogEntry;
-
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -54,7 +51,7 @@ import org.apache.log.LogEntry;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.32 $ $Date: 2000-11-29 16:55:19 $
+ * @version CVS $Revision: 1.1.4.33 $ $Date: 2000-11-30 21:42:08 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -83,10 +80,14 @@ public class CocoonServlet extends HttpServlet {
         this.context = conf.getServletContext();
 
         try {
-            String path = "file://" +
-                      this.context.getRealPath("/") +
+            String path = this.context.getRealPath("/") +
                           "/WEB-INF/logs/cocoon.log";
-            log = LogKit.createLogger("cocoon", path, "DEBUG");
+
+            Category cocoonCategory = LogKit.createCategory("cocoon", Priority.DEBUG);
+            log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
+                    new FileOutputLogTarget(path),
+                    new ServletLogTarget(this.context, Priority.ERROR)
+                });
         } catch (Exception e) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }

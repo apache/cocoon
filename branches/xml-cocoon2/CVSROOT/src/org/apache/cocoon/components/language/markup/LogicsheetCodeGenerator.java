@@ -27,14 +27,19 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.TransformerException;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-15 17:17:39 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-30 21:40:58 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
+
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     private Logicsheet corelogicsheet;
 
@@ -68,9 +73,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
         try {
             this.serializerContentHandler = this.serializer.asContentHandler();
         } catch (IOException ioe) {
-            // This should never happen, because we're not dealing with IO file,
-            // but rather with StringWriter
-            ioe.printStackTrace();
+            log.error("This should never happen, because we're not dealing with IO file, but rather with StringWriter", ioe);
         }
     }
 
@@ -101,7 +104,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
             this.currentParent = newParent;
             this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
         }
-    }   
+    }
 
     /**
     * Generate source code from the input document. Filename information is

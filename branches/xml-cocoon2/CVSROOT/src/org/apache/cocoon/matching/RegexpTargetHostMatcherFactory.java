@@ -22,7 +22,7 @@ import org.w3c.dom.traversal.NodeIterator;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-11-16 18:02:26 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-11-30 21:41:46 $
  */
 
 public class RegexpTargetHostMatcherFactory implements MatcherFactory {
@@ -65,7 +65,7 @@ public class RegexpTargetHostMatcherFactory implements MatcherFactory {
               .append("));");
             return sb.toString();
         } catch (RESyntaxException rse) {
-            throw new ConfigurationException (rse.getMessage());
+            throw new ConfigurationException (rse.getMessage(), rse);
         }
     }
 

@@ -19,7 +19,7 @@ import org.w3c.dom.traversal.NodeIterator;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-11-15 16:49:39 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2000-11-30 21:41:49 $
  */
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -82,7 +82,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
             return result.append (sourcePattern[j])
                          .append ("};\n").toString();
         } catch (NullPointerException pe) {
-            throw new ConfigurationException (pe.getMessage());
+            throw new ConfigurationException (pe.getMessage(), pe);
         }
     }
 

@@ -37,15 +37,18 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
 
-import org.apache.log.LogKit;
 import org.apache.log.Logger;
+import org.apache.log.LogKit;
 import org.apache.log.Priority;
+import org.apache.log.Category;
+import org.apache.log.output.FileOutputLogTarget;
+import org.apache.log.LogTarget;
 
 /**
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.14 $ $Date: 2000-11-14 15:08:26 $
+ * @version CVS $Revision: 1.1.4.15 $ $Date: 2000-11-30 21:40:34 $
  */
 
 public class Main {
@@ -62,31 +65,31 @@ public class Main {
 
     protected static final CLOptionDescriptor [] options = new CLOptionDescriptor [] {
         new CLOptionDescriptor("help",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                HELP_OPT,
                                "print this message and exit"),
         new CLOptionDescriptor("version",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                VERSION_OPT,
                                "print the version information and exit"),
         new CLOptionDescriptor("logUrl",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                LOG_URL_OPT,
-                               "use given file/URL for log"),
+                               "use given file for log"),
         new CLOptionDescriptor("logLevel",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                LOG_LEVEL_OPT,
                                "choose the minimum log level for logging (DEBUG, INFO, WARN, ERROR, FATAL_ERROR)"),
         new CLOptionDescriptor("contextDir",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                CONTEXT_DIR_OPT,
                                "use given dir as context"),
         new CLOptionDescriptor("destDir",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                DEST_DIR_OPT,
                                "use given dir as destination"),
         new CLOptionDescriptor("workDir",
-                               CLOptionDescriptor.ARGUEMENT_OPTIONAL,
+                               CLOptionDescriptor.ARGUMENT_OPTIONAL,
                                WORK_DIR_OPT,
                                "use given dir as working directory")
     };
@@ -99,10 +102,10 @@ public class Main {
         String workDir = Cocoon.DEFAULT_WORK_DIR;
         List targets = new ArrayList();
         CLArgsParser parser = new CLArgsParser(args, options);
-        String logUrl = "file://./logs/cocoon.log";
+        String logUrl = "logs/cocoon.log";
         String logLevel = "DEBUG";
 
-        List clOptions = parser.getArguements();
+        List clOptions = parser.getArguments();
         int size = clOptions.size();
 
         for (int i = 0; i < size; i++) {
@@ -110,7 +113,7 @@ public class Main {
 
             switch (option.getId()) {
                 case 0:
-                    targets.add(option.getArguement());
+                    targets.add(option.getArgument());
                     break;
 
                 case Main.HELP_OPT:
@@ -122,36 +125,36 @@ public class Main {
                     break;
 
                 case Main.DEST_DIR_OPT:
-                    destDir = option.getArguement();
+                    destDir = option.getArgument();
                     break;
 
                 case Main.WORK_DIR_OPT:
-                    workDir = option.getArguement();
+                    workDir = option.getArgument();
                     break;
 
                 case Main.CONTEXT_DIR_OPT:
-                    contextDir = option.getArguement();
+                    contextDir = option.getArgument();
                     break;
 
                 case Main.LOG_URL_OPT:
-                    logUrl = option.getArguement();
+                    logUrl = option.getArgument();
                     break;
 
                 case Main.LOG_LEVEL_OPT:
-                    logLevel = option.getArguement();
+                    logLevel = option.getArgument();
                     break;
             }
         }
 
         try {
             LogKit.setGlobalPriority(LogKit.getPriorityForName(logLevel));
+            Category cocoonCategory = LogKit.createCategory("cocoon", LogKit.getPriorityForName(logLevel));
 
-            log = LogKit.createLogger("cocoon", logUrl, logLevel);
+            log = LogKit.createLogger(cocoonCategory,new LogTarget[] {new FileOutputLogTarget(logUrl)});
         } catch (MalformedURLException mue) {
             String error = "Cannot write on the specified log file.  Please, make sure the path exists and you have write permissions.";
             LogKit.log(error, mue);
             System.out.println(error);
-            mue.printStackTrace(System.err);
             System.exit(1);
         }
 

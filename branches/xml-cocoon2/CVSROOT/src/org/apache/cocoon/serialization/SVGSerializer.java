@@ -71,18 +71,15 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
 
         // What image encoder do I use?
         String enc = this.config.getChild("encoder").getValue();
-        if (enc == null) {
-            throw new ConfigurationException("No Image Encoder specified.");
-        }
 
         try {
         log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
         ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
             this.encoder = (ImageEncoder) selector.select(enc);
         } catch (Exception e) {
-        log.error("Could not select " + Roles.IMAGE_ENCODER, e);
+            log.error("Could not select " + Roles.IMAGE_ENCODER, e);
             throw new ConfigurationException("The ImageEncoder '"
-                + enc + "' cannot be found. Check your component configuration in the sitemap"/*, conf*/);
+                + enc + "' cannot be found. Check your component configuration in the sitemap", e);
         }
 
         // Configure the encoder
@@ -100,7 +97,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             try {
                 this.backgroundColour = new Color(Integer.parseInt(bg, 16));
             } catch (NumberFormatException e) {
-                throw new ConfigurationException(bg + " is not a valid color."/*, conf*/);
+                throw new ConfigurationException(bg + " is not a valid color.", e);
             }
         }
     }

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.sitemap;
 
 import java.io.File;
@@ -27,14 +27,18 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-19 14:44:19 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-30 21:42:20 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     /** the configuration */
     private Configuration conf;
@@ -54,13 +58,13 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
     /** the managed sitemap */
     private Sitemap sitemap;
     private boolean check_reload = true;
- 
-    /** the regenerating thread */ 
+
+    /** the regenerating thread */
     private Thread regeneration;
     private boolean isRegenerationRunning = false;
     private Environment environment;
- 
-    /** the sitemaps base path */ 
+
+    /** the sitemaps base path */
     private String basePath;
 
     public void compose (ComponentManager manager) {
@@ -96,7 +100,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
     }
 
     protected boolean hasChanged () {
-        if (sitemap != null) {
+        if (available()) {
             if (check_reload) {
                 return sitemap.modifiedSince(this.sourceFile.lastModified());
             }
@@ -106,11 +110,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
     }
 
     protected boolean isRegenerating () {
-        return isRegenerationRunning; 
+        return isRegenerationRunning;
     }
 
     protected synchronized void regenerateAsynchronously (Environment environment)
-    throws Exception { 
+    throws Exception {
         if (!this.isRegenerationRunning) {
             isRegenerationRunning = true;
             regeneration = new Thread (this);
@@ -119,16 +123,18 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         }
     }
 
-    protected synchronized void regenerate (Environment environment) 
-    throws Exception { 
+    protected synchronized void regenerate (Environment environment)
+    throws Exception {
         regenerateAsynchronously(environment);
         if (regeneration != null)
             regeneration.join();
     }
 
-    public boolean process (Environment environment) 
+    public boolean process (Environment environment)
     throws Exception {
         throwEventualException();
+        if (sitemap == null)
+            log.fatalError("Sitemap is not set for the Handler!!!!");
         return sitemap.process(environment);
     }
 
@@ -162,8 +168,8 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
             this.isRegenerationRunning = false;
         }
     }
-    
+
     public void throwEventualException() throws Exception {
         if (this.exception != null) throw this.exception;
     }
-} 
+}

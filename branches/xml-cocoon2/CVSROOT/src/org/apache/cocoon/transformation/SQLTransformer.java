@@ -41,7 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-10 22:38:55 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-11-30 21:42:32 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -507,7 +507,7 @@ public class SQLTransformer extends AbstractTransformer {
                         md = rs.getMetaData();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Caught a SQLException", e);
                 conn.close();
                 throw e;
             }

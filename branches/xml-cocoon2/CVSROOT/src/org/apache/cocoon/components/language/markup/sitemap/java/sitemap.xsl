@@ -77,9 +77,11 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.62 $ $Date: 2000-11-15 19:29:34 $
+     * @version CVS $Revision: 1.1.2.63 $ $Date: 2000-11-30 21:41:07 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
+      static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
+
       static {
         dateCreated = <xsl:value-of select="@creation-date"/>L;
       }
@@ -198,8 +200,8 @@
         this.sitemapManager.configure(conf);
         try {
           <!-- configure all components -->
-          load_component ("!generator:error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", new DefaultConfiguration(""), null);
-          load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration(""), null);
+          load_component ("!generator:error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", new DefaultConfiguration("", LOCATION), null);
+          load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration("", LOCATION), null);
 
           <!-- Configure generators -->
       <xsl:call-template name="config-components">
@@ -252,7 +254,8 @@
 
         /* catch any exception thrown by a component during configuration */
         } catch (Exception e) {
-          throw new ConfigurationException (e.toString()/*, cconf*/);
+          log.error(e.getMessage(), e);
+          throw new ConfigurationException ("Sitemap: " + e.getMessage(), e);
         }
       }
 
@@ -327,13 +330,11 @@
                 try {
                   return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e);
                 } catch (Exception ex) {
-                  System.out.println (ex.toString());
-                  ex.printStackTrace(System.out);
+                  log.error("Sitemap", ex);
                 }
               </xsl:when>
               <xsl:otherwise>
-                System.out.println (e.toString());
-                e.printStackTrace(System.out);
+                log.error("Sitemap", ex);
               </xsl:otherwise>
             </xsl:choose>
           }
@@ -720,7 +721,7 @@
         select="(@factory and ($name = 'matcher' or $name = 'selector')) or (@src and ($name = 'matcher' or $name = 'selector') and java:isFactory($factory-loader, string(@src)))"/>
       <xsl:if test="$is-factory-component=false()">
       {
-        DefaultConfiguration cconf1 = new DefaultConfiguration("<xsl:value-of select="translate(@name, '- ', '__')"/>");
+        DefaultConfiguration cconf1 = new DefaultConfiguration("<xsl:value-of select="translate(@name, '- ', '__')"/>", LOCATION);
         <xsl:for-each select="attribute::*[name(.)!=$qname]">
           cconf1.addAttribute ("<xsl:value-of select="name(.)"/>",
                                 "<xsl:value-of select="."/>");
@@ -766,7 +767,7 @@
     <!-- process content -->
     <xsl:for-each select="$components">
       {
-         DefaultConfiguration cconf<xsl:value-of select="$level"/> = new DefaultConfiguration("<xsl:value-of select="name(.)"/>");
+         DefaultConfiguration cconf<xsl:value-of select="$level"/> = new DefaultConfiguration("<xsl:value-of select="name(.)"/>", LOCATION);
       <xsl:for-each select="attribute::*[name(.)!=$qname]">
         cconf<xsl:value-of select="$level"/>.addAttribute ("<xsl:value-of select="name(.)"/>", "<xsl:value-of select="."/>");
       </xsl:for-each>

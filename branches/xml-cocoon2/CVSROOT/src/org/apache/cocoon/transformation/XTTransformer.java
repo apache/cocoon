@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.transformation;
 
 import java.io.File;
@@ -65,19 +65,19 @@ import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This Transformer use the XT processor.
- * 
+ *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-10 22:38:55 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-30 21:42:33 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
 
     /** The store service instance */
     private Store store = null;
-    
+
     /** The XT Processor */
     private XTProcessor processor = null;
-    
+
     /**The DocumentHandler */
     private DocumentHandler docHandler = null;
 
@@ -87,15 +87,15 @@ implements Transformer, Composer {
      */
     public void compose(ComponentManager manager) {
         try {
-	    log.debug("Looking up " + Roles.STORE);
+        log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
-	} catch (Exception e) {
-	    log.error("Could not find component", e);
-	}
+    } catch (Exception e) {
+        log.error("Could not find component", e);
     }
-    
+    }
+
     /**
-     * Set the <code>EntityResolver</code>, the <code>Dictionary</code> with 
+     * Set the <code>EntityResolver</code>, the <code>Dictionary</code> with
      * the object model, the source and sitemap
      * <code>Parameters</code> used to process the request.
      */
@@ -109,26 +109,27 @@ implements Transformer, Composer {
         }
 
         // Check the stylesheet uri
-        String xsluri = src; 
+        String xsluri = src;
         if (xsluri == null) {
             throw new ProcessingException("Stylesheet URI can't be null");
         }
 
-        // Get the stylesheet from the Store if available, 
+        // Get the stylesheet from the Store if available,
         // otherwise load it and put it into the store for further request
         XTProcessor loaderprocessor = null;
-        
+
         if (store != null) {
             loaderprocessor = (XTProcessor) store.get(xsluri);
         }
-        
-        // If not in the store or if style sheet has changed, loads and stores it  
+
+        // If not in the store or if style sheet has changed, loads and stores it
         if (loaderprocessor == null || loaderprocessor.hasChanged()) {
             loaderprocessor= new XTProcessor();
             SAXParser saxParser = null;
             try {
                 saxParser = SAXParserFactory.newInstance().newSAXParser();
             } catch (ParserConfigurationException e) {
+                log.error("XTTransformer.setup", e);
                 new ProcessingException(e.getMessage());
             }
             loaderprocessor.setParser(saxParser.getParser());
@@ -136,11 +137,11 @@ implements Transformer, Composer {
             loaderprocessor.loadStylesheet(xslsrc);
             if (store != null) store.store(xsluri, loaderprocessor);
         }
-        
-        // Always clone the processor before using it, 
+
+        // Always clone the processor before using it,
         // Indeed 1 instance per thread is allowed
         this.processor = (XTProcessor) loaderprocessor.clone();
-        
+
         // Create the processor and set it as this documenthandler
         // FIXME (SS): set the correct SystemId to the XML inputSource
         this.docHandler = new DocHandler(processor.createBuilder("XTSystemID"));
@@ -179,75 +180,75 @@ implements Transformer, Composer {
      */
     public void setLexicalHandler(LexicalHandler lexical) {
     }
-    
+
     /**
-    * inner class DocumentHandler that delegates all SAX Events to the XT's builder. 
+    * inner class DocumentHandler that delegates all SAX Events to the XT's builder.
     */
     class DocHandler implements DocumentHandler, DTDHandler {
-        
+
         /**
         * The XT's DocumentHandler instance to which SAX events are forwarded
         */
         private XMLProcessorImpl.Builder builder = null;
-        
+
         /**
         * The Document Handler delivered.
         */
         public DocHandler(XMLProcessorImpl.Builder builder) {
-            this.builder = builder; 
+            this.builder = builder;
         }
-        
+
         public void setDocumentLocator (Locator locator) {
             builder.setDocumentLocator(locator);
         }
-        
+
         public void ignorableWhitespace (char[] ch, int start, int length) throws SAXException {
             builder.ignorableWhitespace (ch, start, length);
         }
-        
+
         public void processingInstruction (String target, String data) throws SAXException {
             builder.processingInstruction (target, data);
         }
-        
+
         public void startDocument () throws SAXException {
-            builder.startDocument();            
+            builder.startDocument();
         }
-        
+
         public void endDocument () throws SAXException {
             builder.endDocument();
-            
+
             try {
-                // We've finished with the source document. 
+                // We've finished with the source document.
                 // Start processing it by passing the builder
-                processor.process(builder.getRootNode());                
+                processor.process(builder.getRootNode());
             } catch (IOException ioe) {
                 throw new SAXException(ioe);
             }
-            
+
         }
-        
+
         public void startElement (String name, AttributeList atts) throws SAXException {
             builder.startElement (name, atts);
         }
-        
+
         public void endElement (String name) throws SAXException {
             builder.endElement (name);
         }
-        
+
         public void characters (char[] str, int index, int len) throws SAXException {
             builder.characters ( str, index, len);
         }
-        
+
         public void notationDecl (String name, String publicId, String systemId) throws SAXException {
             builder.notationDecl (name, publicId, systemId);
         }
-        
+
         public void unparsedEntityDecl (String name, String publicId, String systemId, String notationName) throws SAXException {
             builder.unparsedEntityDecl (name, publicId, systemId, notationName);
-        }                                                          
+        }
     }
 }
- 
+
  /**
   * The XT processor.
   */
@@ -271,11 +272,11 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
     */
     public void setParser(Parser sheetParser) {
         this.sheetParser = sheetParser;
-        sheetLoader = new XMLProcessorImpl(sheetParser);    
+        sheetLoader = new XMLProcessorImpl(sheetParser);
     }
-    
+
     /**
-    * set the DocumentHandler (Consumer) to which the XT Porcessor will 
+    * set the DocumentHandler (Consumer) to which the XT Porcessor will
     * fire the result SAX events.
     */
     public void setDocumentHandler(DocumentHandler handler) {
@@ -283,7 +284,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
     }
 
     /**
-    * set the ErrorHandler 
+    * set the ErrorHandler
     */
     public void setErrorHandler(ErrorHandler handler) {
         if (sheetParser != null)
@@ -302,7 +303,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
         URL url = new URL (sheetSource.getSystemId());
         this.xslFile = new File(url.getFile());
         lastModified = xslFile.lastModified();
-    
+
         // XT internal
         engine = new EngineImpl(sheetLoader, new ExtensionHandlerImpl());
         try {
@@ -327,9 +328,9 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
 
     /**
     * Applies the Style sheet to the source root node.
-    * the rootNode are taken from the builder retrieved with createBuilder() method, 
-    * and by calling on the builder object the method getRootNode() after the SAX events 
-    * have fed the builder.   
+    * the rootNode are taken from the builder retrieved with createBuilder() method,
+    * and by calling on the builder object the method getRootNode() after the SAX events
+    * have fed the builder.
     */
     public void process(Node root) throws SAXException, IOException {
         try {
@@ -337,7 +338,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
             sheet.process(root, sheetLoader, this, result);
         } catch (XSLException e) {
             handleXSLException(e);
-        } 
+        }
     }
 
     void handleXSLException(XSLException e) throws SAXException, IOException {
@@ -377,7 +378,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
             throw new Error("unexpected CloneNotSupportedException");
         }
     }
-    
+
     public Object getParameter(Name name) {
         String nameString = name.getNamespace();
         if (nameString == null)
@@ -395,17 +396,17 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
     public void setParameter(String name, Object obj) {
         params.put(name, obj);
     }
-  
+
     /**
     * implements interface <code>Modifiable</code>
     */
     public boolean modifiedSince(long date) {
         return(date < this.xslFile.lastModified());
     }
-  
+
     /**
-    * Checks if the style sheet file have changed since the construction 
-    * of <code>this</code> instance.  
+    * Checks if the style sheet file have changed since the construction
+    * of <code>this</code> instance.
     */
     public boolean hasChanged() {
         if (this.xslFile == null) {

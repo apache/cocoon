@@ -38,6 +38,9 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
  * a "standard" XSLT stylesheet stored as <code>trax.Templates</code> object.
@@ -48,9 +51,14 @@ import javax.xml.transform.sax.SAXTransformerFactory;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-10 12:32:01 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-30 21:40:56 $
  */
 public class Logicsheet {
+    /**
+     * The logger.
+     */
+    protected Logger log = LogKit.getLoggerFor("cocoon");
+
     /**
     * The trax TransformerFactory
     */
@@ -74,8 +82,8 @@ public class Logicsheet {
             tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
             templates = tfactory.newTemplates(new SAXSource(inputSource));
         } catch (TransformerConfigurationException e){
-            // FIXME (DIMS) - Need to handle exceptions gracefully.
-            e.printStackTrace();
+            log.error("Logicsheet.setInputSource", e);
+
         }
     }
 
@@ -89,8 +97,7 @@ public class Logicsheet {
         try {
             return tfactory.newTransformerHandler(templates);
         } catch (TransformerConfigurationException e){
-            // FIXME (DIMS) - Need to handle exceptions gracefully.
-            e.printStackTrace();
+            log.error("Logicsheet.getTransformerHandler", e);
         }
         return null;
     }

@@ -54,7 +54,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2000-11-29 22:35:41 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2000-11-30 21:42:34 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -66,7 +66,7 @@ implements Transformer, Composer, Poolable, Configurable {
     private SAXTransformerFactory tfactory = null;
 
     /** The trax TransformerHandler */
-	private TransformerHandler transformerHandler = null;
+    private TransformerHandler transformerHandler = null;
 
     /** Hash table for Templates */
     private static Hashtable templatesCache = new Hashtable();
@@ -80,7 +80,7 @@ implements Transformer, Composer, Poolable, Configurable {
         // Initialize a shared Transformer factory instance.
         if(tfactory == null)
             tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
-            
+
         // Only local files are checked for midification for compatibility reasons!
         // Using the entity resolver we get the filename of the current file:
         // The systemID if such a resource starts with file:/.
@@ -133,9 +133,11 @@ implements Transformer, Composer, Poolable, Configurable {
     public void configure(Configuration conf)
     throws ConfigurationException {
         if (conf != null) {
-            Configuration child = conf.getChild("use-cache");
-            if (child != null) {
+        try {
+                Configuration child = conf.getChild("use-cache");
                 this.useCache = child.getValueAsBoolean(true);
+        } catch (ConfigurationException ce) {
+                this.useCache = false;
             }
         }
     }
@@ -146,11 +148,11 @@ implements Transformer, Composer, Poolable, Configurable {
      */
     public void compose(ComponentManager manager) {
         try {
-	    log.debug("Looking up " + Roles.STORE);
+        log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
-	} catch (Exception e) {
-	    log.error("Could not find component", e);
-	}
+    } catch (Exception e) {
+        log.error("Could not find component", e);
+    }
     }
 
     /**
@@ -162,7 +164,7 @@ implements Transformer, Composer, Poolable, Configurable {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);        
+        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
 
         // Check the stylesheet uri
         String xsluri = src;
@@ -172,9 +174,10 @@ implements Transformer, Composer, Poolable, Configurable {
 
         /** Get a Transformer Handler */
         try {
-    	    transformerHandler = getTransformerHandler(resolver,xsluri);
+            transformerHandler = getTransformerHandler(resolver,xsluri);
         } catch (TransformerConfigurationException e){
-            throw new ProcessingException("Problem in getTransformer:" + e.toString());  
+        log.error("Problem in getTransformer:", e);
+            throw new ProcessingException("Problem in getTransformer:");
         }
 
         if (request != null) {

@@ -36,7 +36,7 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-29 12:18:01 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-30 21:41:39 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -107,7 +107,7 @@ public class ServerPagesGenerator
     URL url = new URL(systemId);
     if (!url.getProtocol().equals("file")) {
       throw new IOException("Not a file: " + url.toString());
-    } 
+    }
 
     File file = new File(url.getFile());
 
@@ -133,7 +133,12 @@ public class ServerPagesGenerator
 
     // Delegate XML production to loaded generator
     if (generator instanceof Composer) {
-      ((Composer) generator).compose(this.manager);
+        try {
+            ((Composer) generator).compose(this.manager);
+        } catch (Exception e) {
+            log.error("Could not compose generator", e);
+            throw new ProcessingException("Could not compose generator");
+        }
     }
 
     generator.setContentHandler(this);
@@ -148,30 +153,30 @@ public class ServerPagesGenerator
 
       switch (eventData.eventType) {
         case DOCUMENT:
-	  this.contentHandler.endDocument();
-	  break;
-	case ELEMENT:
-	  this.contentHandler.endElement(
-	    eventData.getNamespaceURI(),
-	    eventData.getLocalName(),
-	    eventData.getRawName()
-	  );
-	  break;
-	case PREFIX_MAPPING:
-	  this.contentHandler.endPrefixMapping(eventData.getPrefix());
-	  break;
-	case CDATA:
-	  this.lexicalHandler.endCDATA();
-	  break;
-	case DTD:
-	  this.lexicalHandler.endDTD();
-	  break;
-	case ENTITY:
-	  this.lexicalHandler.endEntity(eventData.getName());
-	  break;
+      this.contentHandler.endDocument();
+      break;
+    case ELEMENT:
+      this.contentHandler.endElement(
+        eventData.getNamespaceURI(),
+        eventData.getLocalName(),
+        eventData.getRawName()
+      );
+      break;
+    case PREFIX_MAPPING:
+      this.contentHandler.endPrefixMapping(eventData.getPrefix());
+      break;
+    case CDATA:
+      this.lexicalHandler.endCDATA();
+      break;
+    case DTD:
+      this.lexicalHandler.endDTD();
+      break;
+    case ENTITY:
+      this.lexicalHandler.endEntity(eventData.getName());
+      break;
       }
     }
-  }    
+  }
 
   /* Handlers */
 
@@ -300,7 +305,7 @@ public class ServerPagesGenerator
     this.lexicalHandler.startCDATA();
     this.eventStack.push(new EventData(CDATA));
   }
-  
+
   public void startDTD(String name, String publicId, String systemId)
     throws SAXException
   {
@@ -344,12 +349,12 @@ public class ServerPagesGenerator
           this.namespaceURI = data1;
           this.localName = data2;
           this.rawName = data3;
-	  break;
+      break;
         case DTD:
           this.name = data1;
           this.publicId = data2;
           this.systemId = data3;
-	  break;
+      break;
       }
     }
 
@@ -357,11 +362,11 @@ public class ServerPagesGenerator
       this.eventType = eventType;
       switch (this.eventType) {
         case PREFIX_MAPPING:
-	  this.prefix = data;
-	  break;
-	case ENTITY:
-	  this.name = data;
-	  break;
+      this.prefix = data;
+      break;
+    case ENTITY:
+      this.name = data;
+      break;
       }
     }
 

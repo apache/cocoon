@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.14 2000-10-26 21:08:06 balld Exp $
+  $Id: changes.xml,v 1.9.2.15 2000-11-30 21:40:15 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -21,6 +21,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="update">
+    Updated avalonapi to implement hierarchical logging, and added many more
+    log entries to get a handle on where the problems lay.
+  </action>
   <action dev="DB" type="add">
    added esql logicsheet to c2
   </action>

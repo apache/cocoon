@@ -5,13 +5,13 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.sitemap;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException; 
+import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.HashMap;
 
@@ -28,11 +28,11 @@ import org.xml.sax.SAXException;
 
 /**
  * This class manages all sub <code>Sitemap</code>s of a <code>Sitemap</code>
- * Invokation of sub sitemaps will be done by this instance as well 
+ * Invokation of sub sitemaps will be done by this instance as well
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:21 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-30 21:42:24 $
  */
 public class Manager implements Configurable, Composer {
 
@@ -60,14 +60,14 @@ public class Manager implements Configurable, Composer {
         this.manager = manager;
     }
 
-    public boolean invoke (Environment environment, String uri_prefix, 
-                           String source, boolean check_reload) 
+    public boolean invoke (Environment environment, String uri_prefix,
+                           String source, boolean check_reload)
     throws Exception {
         Handler sitemapHandler = (Handler) sitemaps.get(source);
-        
+
         if (sitemapHandler != null) {
             if (sitemapHandler.available()) {
-                if (check_reload 
+                if (check_reload
                  && sitemapHandler.hasChanged()
                  && !sitemapHandler.isRegenerating()) {
                     sitemapHandler.regenerateAsynchronously(environment);
@@ -78,12 +78,14 @@ public class Manager implements Configurable, Composer {
         } else {
             sitemapHandler = new Handler(parentSitemapComponentManager, source, check_reload);
             if (sitemapHandler instanceof Composer) sitemapHandler.compose(this.manager);
-            if (sitemapHandler instanceof Configurable) sitemapHandler.configure(this.conf); 
+            if (sitemapHandler instanceof Configurable) sitemapHandler.configure(this.conf);
             sitemaps.put(source, sitemapHandler);
-            sitemapHandler.regenerate(environment); 
+            sitemapHandler.regenerate(environment);
         }
-        
+
         environment.changeContext(uri_prefix, source);
+        if (! sitemapHandler.available())
+            throw new ProcessingException("The sitemap handler's sitemap is not available.");
         return sitemapHandler.process(environment);
     }
 

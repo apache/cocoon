@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-11-29 12:17:20 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-30 21:41:19 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -32,7 +32,7 @@
             <xsl:with-param name="content" select="log:name"/>
           </xsl:call-template>
         </xsl:when>
-	<xsl:otherwise>""</xsl:otherwise>
+    <xsl:otherwise>""</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
@@ -63,9 +63,10 @@
     <xsp:logic>
       if (log == null) {
           try {
-            log = LogKit.createLogger(<xsl:value-of select="$name"/>,
-                                      <xsl:value-of select="$url"/>,
-                                      <xsl:value-of select="$level"/>);
+            Category logCategory = LogKit.createCategory(<xsl:value-of select="$name"/>,
+                                         LogKit.getPriorityForName(<xsl:value-of select="$level"/>));
+
+            log = new Logger(logCategory, log);
           } catch (Exception e) {
             cocoonLogger.error("Could not create logger for \"" +
                                <xsl:value-of select="$name"/> + "\".", e);

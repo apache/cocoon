@@ -34,7 +34,7 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-26 21:48:01 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-30 21:40:30 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer, ThreadSafe {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -166,7 +166,8 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
      * @return and instance of the component.
      */
     private Component getThreadsafeComponent(Class componentClass)
-    throws ComponentNotAccessibleException {
+    throws ComponentNotAccessibleException,
+           ComponentNotFoundException {
         Component component = (Component)threadSafeInstances.get(componentClass);
 
         if ( component == null ) {
@@ -231,7 +232,9 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
     /** Configure a new component.
      * @param c the component to configure.
      */
-    private void setupComponent(Component c) throws ComponentNotAccessibleException {
+    private void setupComponent(Component c)
+    throws ComponentNotAccessibleException,
+           ComponentNotFoundException {
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(

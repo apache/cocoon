@@ -17,6 +17,7 @@
   <map:transformers default="xslt">
    <map:transformer     name="xslt"      src="org.apache.cocoon.transformation.XalanTransformer">
     <compile-stylesheets map:value="true"/>
+    <use-cache map:value="false"/>
    </map:transformer>
    <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/>
