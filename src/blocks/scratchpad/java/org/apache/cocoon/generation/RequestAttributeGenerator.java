@@ -34,20 +34,16 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: RequestAttributeGenerator.java,v 1.4 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id: RequestAttributeGenerator.java,v 1.5 2004/05/07 17:32:59 joerg Exp $
  *
- * @cocoon:name                      req-attr
- * @cocoon:status                    scratchpad
- * @cocoon:parameter                 name="attribute-name"
+ * @cocoon.sitemap.component.name       req-attr
+ * @cocoon.sitemap.component.label      content
+ * @cocoon.sitemap.component.logger     sitemap.generator.req-attr
+ * @cocoon.sitemap.component.parameter  attribute-name
  *   type="String"
- *   description="Specifies name of request attribute holding xml-data"
+ *   description="Specifies name of request attribute holding xml data. This xml data will be sent into the cocoon pipeline."
  *   required="no"
  *   default="org.apache.cocoon.xml-data"
- * @cocoon:http-request-attribute    name="org.apache.cocoon.xml-data"
- *   type="String xml-data"
- *   description="The xml-data of this request attribute is sent into the cocoon-pipeline."
- *   required="yes"
- *   default="none"
  */
 public class RequestAttributeGenerator extends ServiceableGenerator {
 

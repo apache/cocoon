@@ -80,14 +80,14 @@ import org.apache.excalibur.source.URIAbsolutizer;
  *  <td>Role of component used as cache.</td>
  *  <td>opt</td>
  *  <td>String</td>
- *  <td><code>{@link Cache.ROLE}</code></td>
+ *  <td><code>{@link Cache#ROLE}</code></td>
  * </tr>
  * <tr>
  *  <th>refresher-role (String)</th>
  *  <td>Role of component used for refreshing sources.</td>
  *  <td>opt</td>
  *  <td>String</td>
- *  <td><code>{@link org.apache.cocoon.components.source.impl.Refresher.ROLE}</code></td>
+ *  <td><code>{@link org.apache.cocoon.components.source.impl.Refresher#ROLE}</code></td>
  * </tr>
  * <tr>
  *  <th>async (boolean)</th>
@@ -105,7 +105,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * </tr>
  * </tbody></table>
  *  
- * @version CVS $Id: CachingSourceFactory.java,v 1.9 2004/04/25 20:00:35 haul Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.10 2004/05/07 17:32:59 joerg Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory extends AbstractLogEnabled
