@@ -44,6 +44,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
@@ -55,6 +56,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
@@ -75,6 +77,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            compiler="${compiler}"
            classpathref="classpath"/>
   </target>
@@ -105,6 +108,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            compiler="${compiler}"
            classpathref="test.classpath"/>
   </target>
@@ -122,6 +126,17 @@
          <exclude name="**/Manifest.mf"/>
       </fileset>
     </jar>
+    <!-- optionally add source files to the core jar -->
+    <if>
+      <istrue value="${include.sources-in-jars}"/>
+      <then>
+        <jar jarfile="${build}/${name}.jar" update="yes">
+          <fileset dir="${java}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </then>
+    </if>
   </target>
 
   <!-- package deprecated code -->
@@ -130,6 +145,17 @@
     <jar jarfile="${build}/${name}-deprecated.jar" index="true">
       <fileset dir="${build.deprecated}"/>
     </jar>
+    <!-- optionally add source files to the jar -->
+    <if>
+      <istrue value="${include.sources-in-jars}"/>
+      <then>
+        <jar jarfile="${build}/${name}-deprecated.jar" update="yes">
+          <fileset dir="${deprecated.src}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </then>
+    </if>
   </target>
 
   <!-- package testcase code -->
@@ -142,6 +168,17 @@
         <include name="org/apache/cocoon/xml/WhitespaceFilter*"/>
       </fileset>
     </jar>
+    <!-- optionally add source files to the jar -->
+    <if>
+      <istrue value="${include.sources-in-jars}"/>
+      <then>
+        <jar jarfile="${build}/${name}-testcase.jar" update="yes">
+          <fileset dir="${test}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </then>
+    </if>
   </target>
 
 <!-- === Block Targets =================================================== -->
