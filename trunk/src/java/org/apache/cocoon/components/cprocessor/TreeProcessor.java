@@ -77,17 +77,21 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.LocationAugmentationPipe;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 
 /**
@@ -359,12 +363,24 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
             final TransformerHandler transformHandler = xsltProcessor.getTransformerHandler(m_transform);
             
             final NamespacedSAXConfigurationHandler configHandler = new NamespacedSAXConfigurationHandler();
-            transformHandler.setResult(new SAXResult(configHandler));
+            ContentHandler handler = configHandler;
+            // TODO - remove the logging of the generated configuration before we go final
+            // if debug is turned on, output the whole generated configuration
+            DOMBuilder domBuilder = null;
+            if ( this.getLogger().isDebugEnabled() ) {
+                domBuilder = new DOMBuilder();
+                handler = new XMLTeePipe(new ContentHandlerWrapper(handler), domBuilder);
+            }
+            transformHandler.setResult(new SAXResult(handler));
             
             final LocationAugmentationPipe pipe = new LocationAugmentationPipe();
             pipe.setConsumer(XMLUtils.getConsumer(transformHandler));
             
             parser.parse(new InputSource(source.getInputStream()),pipe);
+            if ( domBuilder != null ) {
+                this.getLogger().debug("Configuration from sitemap: " + this.m_source.getURI());
+                this.getLogger().debug(XMLUtils.serializeNodeToXML(domBuilder.getDocument()));
+            }
             return configHandler.getConfiguration();
         }
         finally {
