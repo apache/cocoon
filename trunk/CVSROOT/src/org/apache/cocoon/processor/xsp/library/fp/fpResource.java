@@ -444,7 +444,7 @@ public class fpResource {
 		DOMParser parser = new DOMParser();
 		try {
 			//System.out.println("about to parse Document");
-			InputSource is = new InputSource(f.toString());
+			InputSource is = new InputSource("file:" + f.toString());
 			String enc = is.getEncoding();
 			if (enc != "") {
 				workEncoding = enc;
