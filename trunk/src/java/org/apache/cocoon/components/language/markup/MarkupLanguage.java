@@ -52,8 +52,7 @@ package org.apache.cocoon.components.language.markup;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.InputSource;
+import org.apache.excalibur.source.Source;
 
 /**
  * This interface defines a markup language whose SAX producer's instance are to
@@ -61,33 +60,34 @@ import org.xml.sax.InputSource;
  * document augmenting it with dynamic content
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: MarkupLanguage.java,v 1.1 2003/03/09 00:08:53 pier Exp $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id: MarkupLanguage.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public interface MarkupLanguage extends Component {
 
     String ROLE = MarkupLanguage.class.getName();
+
     /**
-    * Return the input document's encoding or <code>null</code> if it is the
-    * platform's default encoding.
-    * This method should be called after <code>generateCode<code> method.
-    *
-    * @return The input document's encoding
-    */
+     * Return the input document's encoding or <code>null</code> if it is the
+     * platform's default encoding.
+     * This method should be called after <code>generateCode<code> method.
+     *
+     * @return The input document's encoding
+     */
     String getEncoding();
 
     /**
-    * Generate source code from the input source for the target
-    * <code>ProgrammingLanguage</code>.
-    *
-    * @param input The input source document
-    * @param filename The input document's original filename
-    * @param programmingLanguage The target programming language
-    * @return The generated source code
-    * @exception Exception If an error occurs during code generation
-    */
-    String generateCode(
-        InputSource input, String filename,
-        ProgrammingLanguage programmingLanguage,
-        SourceResolver resolver
-    ) throws Exception;
+     * Generate source code from the input source for the target
+     * <code>ProgrammingLanguage</code>.
+     *
+     * @param source The source document
+     * @param filename The input document's original filename
+     * @param programmingLanguage The target programming language
+     * @return The generated source code
+     * @exception Exception If an error occurs during code generation
+     */
+    String generateCode(Source source,
+                        String filename,
+                        ProgrammingLanguage programmingLanguage)
+            throws Exception;
 }
