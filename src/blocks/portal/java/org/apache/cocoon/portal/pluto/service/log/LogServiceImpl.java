@@ -15,15 +15,15 @@
  */
 package org.apache.cocoon.portal.pluto.service.log;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.pluto.services.log.LogService;
+import org.apache.pluto.services.log.Logger;
 
 /**
  * Our own log service logging to an avalon logger
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LogServiceImpl.java,v 1.2 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: LogServiceImpl.java,v 1.3 2004/03/10 12:56:29 cziegeler Exp $
  */
 public class LogServiceImpl 
 implements LogService {
@@ -32,78 +32,20 @@ implements LogService {
     protected Logger logger;
     
     /** Constructor */
-    public LogServiceImpl(Logger logger) {
-        this.logger = logger;
+    public LogServiceImpl(org.apache.avalon.framework.logger.Logger logger) {
+        this.logger = new LoggerImpl(logger);
     }
 
     /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#debug(java.lang.String, java.lang.String, java.lang.Throwable)
+     * @see org.apache.pluto.services.log.LogService#getLogger(java.lang.Class)
      */
-    public void debug(String aComponent, String aMessage, Throwable aThrowable) {
-        this.logger.debug(aComponent + " : " + aMessage, aThrowable);
+    public org.apache.pluto.services.log.Logger getLogger(Class arg0) {
+        return this.logger;
     }
-
     /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#debug(java.lang.String, java.lang.String)
+     * @see org.apache.pluto.services.log.LogService#getLogger(java.lang.String)
      */
-    public void debug(String aComponent, String aMessage) {
-        this.logger.debug(aComponent + " : " + aMessage);
+    public org.apache.pluto.services.log.Logger getLogger(String arg0) {
+        return this.logger;
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#error(java.lang.String, java.lang.String, java.lang.Throwable)
-     */
-    public void error(String aComponent, String aMessage, Throwable aThrowable) {
-        this.logger.error(aComponent + " : " + aMessage, aThrowable);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#error(java.lang.String, java.lang.Throwable)
-     */
-    public void error(String aComponent, Throwable aThrowable) {
-        this.error(aComponent, aThrowable);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#info(java.lang.String, java.lang.String)
-     */
-    public void info(String aComponent, String aMessage) {
-        this.logger.info(aComponent + " : " + aMessage);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#isDebugEnabled(java.lang.String)
-     */
-    public boolean isDebugEnabled(String aComponent) {
-        return this.logger.isDebugEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#isErrorEnabled(java.lang.String)
-     */
-    public boolean isErrorEnabled(String aComponent) {
-        return this.logger.isErrorEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#isInfoEnabled(java.lang.String)
-     */
-    public boolean isInfoEnabled(String aComponent) {
-        return this.logger.isInfoEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#isWarnEnabled(java.lang.String)
-     */
-    public boolean isWarnEnabled(String aComponent) {
-        return this.logger.isWarnEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.log.LogService#warn(java.lang.String, java.lang.String)
-     */
-    public void warn(String aComponent, String aMessage) {
-        this.logger.warn(aComponent + " : " + aMessage);
-    }
-
 }
