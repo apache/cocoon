@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <page xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
-    <site signOn="${accountForm.signOn}" view="c">
+    <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="Main Menu" do="index.do" />
         <category name="${category.name}">
             <c:forEach var="prod" items="${productList}" >
