@@ -15,16 +15,21 @@ import org.apache.avalon.ConfigurationException;
 
 import org.w3c.dom.traversal.NodeIterator;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * This class generates source code which represents a specific pattern matcher
  * for request URIs
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-11-30 21:41:48 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-12-08 20:39:50 $
  */
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
+
     public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "RE";
@@ -80,6 +85,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
             sb.append("}");
             return sb.toString();
         } catch (RESyntaxException rse) {
+            log.debug("RegexpURIMatcherFactory", rse);
             throw new ConfigurationException (rse.getMessage(), rse);
         }
     }

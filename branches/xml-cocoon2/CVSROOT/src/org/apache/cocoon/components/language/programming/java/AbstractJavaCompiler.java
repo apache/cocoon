@@ -14,13 +14,21 @@ import org.apache.avalon.*;
 
 import org.apache.cocoon.components.language.programming.*;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.8 $ $Date: 2000-12-07 17:10:56 $
+ * @version $Revision: 1.1.2.9 $ $Date: 2000-12-08 20:39:14 $
  * @since 2.0
  */
 public abstract class AbstractJavaCompiler implements LanguageCompiler, Recyclable {
+  /**
+   * The logger
+   */
+  protected Logger log = LogKit.getLoggerFor("cocoon");
+
   /**
    * The source program filename
    */

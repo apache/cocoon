@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.7 2000-11-30 21:41:16 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.8 2000-12-08 20:39:11 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -242,11 +242,13 @@
         try {
          _esql_session.max_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$max-rows"/>));
         } catch (Exception _esql_e) {
+        cocoonLogger.warn("MaxRow exception", _esql_e);
          _esql_session.max_rows = -1;
         }
         try {
          _esql_session.skip_rows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skip-rows"/>));
         } catch (Exception _esql_e) {
+        cocoonLogger.warn("SkipRow exceptoin", _esql_e);
          _esql_session.skip_rows = 0;
         }
         try {
@@ -334,9 +336,9 @@
                }
            _esql_session.statement.close();
            } catch (Exception _esql_exception) {
+         cocoonLogger.error("esql XSP exception", _esql_exception);
         <xsl:if test="esql:error-results//esql:get-stacktrace">
          StringWriter _esql_exception_writer = new StringWriter();
-         log.error("esql XSP exception", _esql_exception)
          _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
         </xsl:if>
         <xsl:apply-templates select="esql:error-results/*"/>
@@ -345,7 +347,7 @@
             if (_esql_session.connection != null) {
          try {
           _esql_session.connection.close();
-         } catch (SQLException _esql_exception) {}
+         } catch (SQLException _esql_exception) {cocoonLogger.warn("Could not close DB connection", _esql_exception);}
         }
             <xsl:if test="esql:use-connection">
          <!-- FIXME - need to release avalon pooling here maybe -->

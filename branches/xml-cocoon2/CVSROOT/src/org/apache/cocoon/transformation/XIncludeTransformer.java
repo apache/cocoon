@@ -48,7 +48,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-14 21:52:05 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-08 20:40:43 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -91,6 +91,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             base_xmlbase_uri = new URL(source);
             log.debug("SOURCE URI: "+base_xmlbase_uri.toString());
         } catch (MalformedURLException e) {
+            log.debug("XincludeTransformer", e);
             throw new ProcessingException(e.getMessage());
         }
     }
@@ -106,6 +107,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             try {
                 startXMLBaseAttribute(uri,name,value);
             } catch (MalformedURLException e) {
+                log.debug("XincludeTransformer", e);
                 throw new SAXException(e);
             }
         }
@@ -115,8 +117,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             try {
                 processXIncludeElement(href, parse);
             } catch (MalformedURLException e) {
+                log.debug("XincludeTransformer", e);
                 throw new SAXException(e);
             } catch (IOException e) {
+                log.debug("XincludeTransformer", e);
                 throw new SAXException(e);
             }
             return;
@@ -140,7 +144,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             if (current_xmlbase_uri == null) {
                 current_xmlbase_uri = base_xmlbase_uri;
             }
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {log.debug("XincludeTransformer", e);}
         super.setDocumentLocator(locator);
     }
 
@@ -208,14 +212,14 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             }
         } else if (parse.equals("xml")) {
             log.debug("Parse type is XML");
-	        Parser parser = null;
-	        try {
-	            log.debug("Looking up " + Roles.PARSER);
+            Parser parser = null;
+            try {
+                log.debug("Looking up " + Roles.PARSER);
                 parser = (Parser)manager.lookup(Roles.PARSER);
-	        } catch (Exception e) {
-	            log.error("Could not find component", e);
-    		    return;
-	        }
+            } catch (Exception e) {
+                log.error("Could not find component", e);
+                return;
+            }
             InputSource input;
             if (object instanceof Reader) {
                 input = new InputSource((Reader)object);
@@ -240,8 +244,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                         streamer.stream(list.item(i));
                     }
                 } catch (TransformerException e){
-	                log.error("TransformerException", e);
-    		        return;
+                    log.error("TransformerException", e);
+                    return;
                 }
             } else {
                 XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);

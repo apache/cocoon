@@ -17,13 +17,20 @@ import java.io.IOException;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.ClassUtils;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-07 17:10:36 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:38:41 $
  */
 class RepositoryClassLoader extends ClassLoader {
+  /**
+   * The logger
+   */
+  protected Logger log = LogKit.getLoggerFor("cocoon");
   /**
    * The list of searchable directories
    */
@@ -101,6 +108,7 @@ class RepositoryClassLoader extends ClassLoader {
       try {
         c = findSystemClass(name);
       } catch (ClassNotFoundException e) {
+        log.warn("Could not load class", e);
         byte[] bits = this.loadClassData (name);
 
         if (bits == null) {
@@ -159,10 +167,11 @@ class RepositoryClassLoader extends ClassLoader {
 
       return buffer;
     } catch (IOException e) {
+      log.warn("RepositoryClassLoader.IOException", e);
         } finally {
           if (in != null) {
             try { in.close(); }
-            catch (IOException e) { }
+            catch (IOException e) { log.warn("Could not close stream", e); }
           }
         }
       }

@@ -18,11 +18,13 @@ import org.xml.sax.SAXException;
 
 import org.apache.cocoon.Cocoon;
 
+import org.apache.log.LogKit;
+
 /**
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 17:13:32 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:05 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -64,6 +66,6 @@ public class XSPResponseHelper extends XSPObjectHelper {
     try {
       response.sendRedirect(location);
     }
-    catch (IOException e) {}  
+    catch (IOException e) {LogKit.getLoggerFor("cocoon").warn("XSPResponseHelper.sendRedirect", e);}
   }
 }

@@ -12,6 +12,9 @@ import org.apache.avalon.ConfigurationException;
 
 import org.w3c.dom.traversal.NodeIterator;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * This class generates source code which represents a specific pattern matcher
  * for request URIs
@@ -19,10 +22,11 @@ import org.w3c.dom.traversal.NodeIterator;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2000-12-05 22:10:36 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2000-12-08 20:39:51 $
  */
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     /** The int representing '*' in the pattern <code>int []</code>. */
     protected static final int MATCH_FILE	= -1;
@@ -82,6 +86,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
             return result.append (sourcePattern[j])
                          .append ("};\n").toString();
         } catch (NullPointerException pe) {
+            log.error("WildcardURIMatcherFactory:NULL", pe);
             throw new ConfigurationException (pe.getMessage(), pe);
         }
     }

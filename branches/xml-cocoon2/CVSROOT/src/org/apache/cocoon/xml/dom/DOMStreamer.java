@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml.dom;
 
 import java.util.Vector;
@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:31 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-12-08 20:41:03 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 
@@ -83,18 +83,19 @@ public class DOMStreamer extends AbstractXMLProducer {
      */
     public void stream(Object object)
     throws SAXException {
-		try {
-        	processNode((Node)object);
-		} catch (ClassCastException e) {
-			throw new SAXException(e);
-		}
+        try {
+            processNode((Node)object);
+        } catch (ClassCastException e) {
+            log.error("DOMStreamer", e);
+            throw new SAXException(e);
+        }
     }
-    
+
     /** Process a generic node */
     private void processNode(Node n)
     throws SAXException {
         if (n==null) return;
-        try { 
+        try {
             switch (n.getNodeType()) {
                 case Node.DOCUMENT_NODE:
                     this.setDocument((Document)n);
@@ -133,6 +134,7 @@ public class DOMStreamer extends AbstractXMLProducer {
                                            " class "+n.getClass().getName());
             }
         } catch (ClassCastException e) {
+            log.error("Error casting node to appropriate type", e);
             throw new SAXException("Error casting node to appropriate type");
         }
     }
@@ -143,7 +145,7 @@ public class DOMStreamer extends AbstractXMLProducer {
         NodeList l=n.getChildNodes();
         for(int x=0;x<l.getLength();x++) processNode(l.item(x));
     }
-    
+
     /** Process a Document node */
     private void setDocument(Document n)
     throws SAXException {
@@ -151,7 +153,7 @@ public class DOMStreamer extends AbstractXMLProducer {
         this.processChildren(n);
         if (super.contentHandler!=null) super.contentHandler.endDocument();
     }
-    
+
     /** Process a DocumentType node */
     private void setDocumentType(DocumentType n)
     throws SAXException {
@@ -204,7 +206,7 @@ public class DOMStreamer extends AbstractXMLProducer {
             super.contentHandler.endPrefixMapping(prefix);
         }
     }
-    
+
     /** Process a Text node */
     private void setText(Text n)
     throws SAXException {
@@ -212,7 +214,7 @@ public class DOMStreamer extends AbstractXMLProducer {
         if (super.contentHandler!=null)
             super.contentHandler.characters(data,0,data.length);
     }
-    
+
     /** Process a CDATASection node */
     private void setCDATASection(CDATASection n)
     throws SAXException {
@@ -222,14 +224,14 @@ public class DOMStreamer extends AbstractXMLProducer {
             super.contentHandler.characters(data,0,data.length);
         if (super.lexicalHandler!=null) super.lexicalHandler.endCDATA();
     }
-    
+
     /** Process a ProcessingInstruction node */
     private void setProcessingInstruction(ProcessingInstruction n)
     throws SAXException {
         if (super.contentHandler==null) return;
         super.contentHandler.processingInstruction(n.getTarget(),n.getData());
     }
-    
+
     /** Process a Comment node */
     private void setComment(Comment n)
     throws SAXException {
@@ -237,7 +239,7 @@ public class DOMStreamer extends AbstractXMLProducer {
         char data[]=n.getData().toCharArray();
         super.lexicalHandler.comment(data,0,data.length);
     }
-    
+
     /** Process a EntityReference node */
     private void setEntityReference(EntityReference n)
     throws SAXException {

@@ -28,6 +28,8 @@ import org.apache.cocoon.components.language.markup.sitemap.*;
 
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -37,7 +39,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-30 20:20:01 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:38:54 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -152,6 +154,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
     *
     */
     protected class PreProcessFilter extends XMLFilterImpl {
+        protected Logger log = LogKit.getLoggerFor("cocoon");
 
         private String filename;
 
@@ -165,10 +168,10 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
             this.language = language;
         }
 
-	public void setParent(XMLReader reader) {
-	    reader.setContentHandler(this);
-	    super.setParent(reader);
-	}
+    public void setParent(XMLReader reader) {
+        reader.setContentHandler(this);
+        super.setParent(reader);
+    }
 
         public void startDocument() throws SAXException {
             super.startDocument();
@@ -183,7 +186,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         public void startElement (String namespaceURI, String localName,
-		    String qName, Attributes atts) throws SAXException {
+            String qName, Attributes atts) throws SAXException {
             if (isRootElem) {
                  isRootElem=false;
                 // Store path and file name
@@ -193,10 +196,10 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
                     this.filename.substring(0, pos).replace(File.separatorChar, '/');
                 // update the attributes
                 AttributesImpl newAtts = new AttributesImpl();
-		// FIXME (SSA) workaround a bug in SAX2 that goes in infinite loop
-		// when atts.getLength() == 0
-		if (atts.getLength()>0)
-		    newAtts.setAttributes(atts);
+        // FIXME (SSA) workaround a bug in SAX2 that goes in infinite loop
+        // when atts.getLength() == 0
+        if (atts.getLength()>0)
+            newAtts.setAttributes(atts);
 
                 newAtts.addAttribute("", "file-name", "file-name", "CDATA", name);
                 newAtts.addAttribute("", "file-path", "file-path", "CDATA", path);
@@ -223,6 +226,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
     *
     */
     protected  class SitemapTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
+        protected Logger log = LogKit.getLoggerFor("cocoon");
 
         private Object[] rootElement;
 
@@ -282,6 +286,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
                             this.logicsheetMarkupGenerator, href, this.resolver
                         );
                     } catch (IOException ioe) {
+                        log.warn("IOException in SitemapMarkupLanguage", ioe);
                         throw new SAXException (ioe);
                     }
                 }
@@ -325,6 +330,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
                                 this.resolver
                             );
                         } catch (IOException ioe) {
+                            log.warn("IOException in SitemapMarkupLanguage", ioe);
                             throw new SAXException (ioe);
                         }
                     } else {
@@ -389,7 +395,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
          * @see ContentHandler
          */
         public void endElement (String namespaceURI, String localName,
-        			      String qName) throws SAXException {
+                          String qName) throws SAXException {
             if (finished) {
                 // Forward the events
                 super.endElement(namespaceURI, localName, qName);

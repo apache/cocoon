@@ -100,6 +100,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             try {
                 this.backgroundColour = new Color(Integer.parseInt(bg, 16));
             } catch (NumberFormatException e) {
+                log.debug("Invalid color(SVGSerializer)", e);
                 throw new ConfigurationException(bg + " is not a valid color.", e);
             }
         }
@@ -172,6 +173,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             encoder.encode(img, this.output);
             this.output.flush();
         } catch (IOException ex) {
+            log.warn("SVGSerializer: IOException writing image", ex);
             throw new SAXException("IOException writing image ", ex);
         }
     }

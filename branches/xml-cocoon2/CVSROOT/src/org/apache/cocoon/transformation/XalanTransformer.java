@@ -54,7 +54,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2000-11-30 21:42:34 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2000-12-08 20:40:45 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -137,6 +137,7 @@ implements Transformer, Composer, Poolable, Configurable {
                 Configuration child = conf.getChild("use-cache");
                 this.useCache = child.getValueAsBoolean(true);
         } catch (ConfigurationException ce) {
+            log.debug("XalanTransformer", ce);
                 this.useCache = false;
             }
         }

@@ -16,13 +16,15 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
+import org.apache.log.LogKit;
+
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-02 11:07:32 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:40:54 $
  */
 public class IOUtils {
 
@@ -194,6 +196,7 @@ public class IOUtils {
     try {
       return file.getCanonicalPath();
     } catch (IOException e) {
+      LogKit.getLoggerFor("cocoon").debug("IOUtils.getFullFilename", e);
       return file.getAbsolutePath();
     }
   }

@@ -14,12 +14,17 @@ import org.apache.avalon.Parameters;
 
 import org.xml.sax.EntityResolver;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:44:07 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-08 20:39:58 $
  */
 public abstract class AbstractReader implements Reader {
+    /** The logger */
+    protected Logger log = LogKit.getLoggerFor("cocoon");
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
     /** The current <code>Map</code> of the object model. */
@@ -51,7 +56,7 @@ public abstract class AbstractReader implements Reader {
 
     /**
      * Get the mime-type of the output of this <code>Serializer</code>
-     * This default implementation returns null to indicate that the 
+     * This default implementation returns null to indicate that the
      * mime-type specified in the sitemap is to be used
      */
     public String getMimeType() {

@@ -50,7 +50,7 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-30 21:40:54 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-08 20:38:51 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable
@@ -174,7 +174,7 @@ public abstract class AbstractMarkupLanguage
             this.languages.put(language.getName(), language);
             }
         } catch (Exception e) {
-            log.error("Configuration Error: " + e.getMessage(), e);
+            log.warn("Configuration Error: " + e.getMessage(), e);
             throw new ConfigurationException("AbstractMarkupLanguage: " + e.getMessage(), e);
         }
     }
@@ -629,6 +629,7 @@ public abstract class AbstractMarkupLanguage
                         this.logicsheetMarkupGenerator, this.language.getLogicsheet(), resolver
                     );
                 } catch (IOException ioe) {
+                    log.warn("AbstractMarkupLanguage.startElement", ioe);
                     throw new SAXException (ioe);
                 }
                 // All stylesheet have been configured and correctly setup.

@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-29 16:55:14 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-08 20:39:38 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 
@@ -78,6 +78,7 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             try {
                 output.write(data.getBytes());
             } catch (IOException e) {
+                log.debug("PhpGenerator.write()", e);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -90,12 +91,14 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             try {
                 service(request, response, input);
             } catch (ServletException e) {
+                log.error("PhpGenerator.run()", e);
                 this.exception = e;
             }
 
             try {
                 output.close();
             } catch (IOException e) {
+                log.error("PhpGenerator.run():SHOULD NEVER HAPPEN", e);
                 // should never happen
             }
         }
@@ -135,10 +138,13 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             // clean up
             php.destroy();
         } catch (SAXException e) {
+            log.debug("PhpGenerator.generate()", e);
             throw e;
         } catch (IOException e) {
+            log.debug("PhpGenerator.generate()", e);
             throw e;
         } catch (Exception e) {
+            log.debug("PhpGenerator.generate()", e);
             throw new IOException(e.toString());
         }
     }

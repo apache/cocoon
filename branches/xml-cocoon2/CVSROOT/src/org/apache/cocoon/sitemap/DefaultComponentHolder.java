@@ -16,14 +16,18 @@ import org.apache.avalon.Configurable;
 
 import org.apache.cocoon.util.ClassUtils;
 
-/** 
- * This class holds a sitemap component which is not specially marked as having 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
+/**
+ * This class holds a sitemap component which is not specially marked as having
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:18 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:40:31 $
  */
 public class DefaultComponentHolder implements ComponentHolder {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     protected String className;
     protected Configuration configuration;
@@ -49,7 +53,7 @@ public class DefaultComponentHolder implements ComponentHolder {
         Component comp = (Component) ClassUtils.newInstance (this.className);
         if (comp instanceof Composer) {
             ((Composer) comp).compose (this.manager);
-        } 
+        }
         if (comp instanceof Configurable) {
             ((Configurable) comp).configure (this.configuration);
         }

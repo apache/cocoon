@@ -36,7 +36,7 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-30 21:41:39 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-08 20:39:39 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -128,6 +128,7 @@ public class ServerPagesGenerator
       generator = (Generator)
         programGenerator.load(file, markupLanguage, programmingLanguage, resolver);
     } catch (Exception e) {
+      log.warn("ServerPagesGenerator.generate()", e);
       throw new ProcessingException(e.getMessage());
     }
 

@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.6 $ $Date: 2000-11-24 14:40:42 $
+ * @version $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:17 $
  * @since 2.0
  */
 
@@ -58,6 +58,7 @@ public class Jikes extends AbstractJavaCompiler {
                     sleep(SLEEP_TIME);
                 }
             } catch (Exception e) {
+               log.warn("Jikes.run()", e);
             }
         }
     }
@@ -70,7 +71,7 @@ public class Jikes extends AbstractJavaCompiler {
      */
     protected String[] toStringArray(List arguments) {
       int i;
-    
+
       for (i = 0; i < arguments.size(); i++) {
         String arg = (String) arguments.get(i);
         if (arg.equals("-sourcepath")) {
@@ -80,16 +81,16 @@ public class Jikes extends AbstractJavaCompiler {
           break;
         }
       }
-      
+
       String[] args = new String[arguments.size() + 1];
       for (i = 0; i < arguments.size(); i++) {
         args[i] = (String) arguments.get(i);
-      } 
+      }
 
       args[i] = file;
 
       return args;
-    } 
+    }
 
     /**
      * Execute the compiler
@@ -130,6 +131,7 @@ public class Jikes extends AbstractJavaCompiler {
             this.errors = new ByteArrayInputStream(tmpErr.toByteArray());
 
         } catch (InterruptedException somethingHappened) {
+            log.debug("Jikes.compile():SomethingHappened", somethingHappened);
             return false;
         }
 
@@ -137,7 +139,7 @@ public class Jikes extends AbstractJavaCompiler {
         // Check if any error output as well
         // Return should be OK when both exitValue and
         // tmpErr.size() are 0 ?!
-        return ((exitValue == 0) && (tmpErr.size() == 0));    
+        return ((exitValue == 0) && (tmpErr.size() == 0));
     }
 
     /**

@@ -24,8 +24,8 @@ import java.util.Map;
 /**
  *
  * The <code>LogTransformer</code> is a class that can be plugged into a pipeline
- * to print the SAX events which passes thru this transformer in a readable form 
- * to a file. 
+ * to print the SAX events which passes thru this transformer in a readable form
+ * to a file.
  * <br>
  * The file will be specified in a parameter tag in the sitemap pipeline to the
  * transformer as follows:
@@ -38,14 +38,14 @@ import java.util.Map;
  * </code>
  * </p>
  *
- * Because the log file will be hardcoded into the sitemap this LOGTransformer will 
+ * Because the log file will be hardcoded into the sitemap this LOGTransformer will
  * not be thread save!!
  * <br>
  * This transformations main purpose is debugging.
- * 
+ *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-06 14:19:43 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-08 20:40:40 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
@@ -54,7 +54,7 @@ public class LogTransformer extends AbstractTransformer {
     private boolean canReset=true;
 
     private String lf = System.getProperty("line.separator", "\n");
-    
+
     /** true if filename is valid and writeable */
     private boolean isValid = true;
     /** filename for log file	*/
@@ -67,7 +67,7 @@ public class LogTransformer extends AbstractTransformer {
     /** BEGIN SitemapComponent methods **/
 
     public void setup(EntityResolver resolver, Map objectModel,
-                      String source, Parameters parameters) 
+                      String source, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
         if (logfile == null) {
             String appends = parameters.getParameter("append", null);
@@ -81,9 +81,10 @@ public class LogTransformer extends AbstractTransformer {
                 // Check for null, use System.out if logfile is not specified.
                 if(logfilename != null)
                     logfile = new FileWriter(logfilename, append );
-                else 
+                else
                     logfile = new FileWriter(java.io.FileDescriptor.out);
             } catch (IOException e) {
+                log.debug("LogTransformer", e);
                 isValid = false;
                 throw e;
             }
@@ -91,7 +92,7 @@ public class LogTransformer extends AbstractTransformer {
         Date date = new Date();
         StringBuffer logEntry = new StringBuffer();
         logEntry.append ( "---------------------------- [" );
-        logEntry.append ( date.toString() ); 
+        logEntry.append ( date.toString() );
         logEntry.append ( "] ----------------------------" );
         log("setup", logEntry.toString());
     }
@@ -290,10 +291,10 @@ public class LogTransformer extends AbstractTransformer {
      * Report to logfile.
      */
     private void log (String location, String description) {
-        if (isValid) {    
+        if (isValid) {
             StringBuffer logEntry = new StringBuffer();
             logEntry.append ( "[" );
-            logEntry.append ( location ); 
+            logEntry.append ( location );
             logEntry.append ( "] " );
             logEntry.append ( description );
             logEntry.append ( lf );
@@ -302,17 +303,17 @@ public class LogTransformer extends AbstractTransformer {
                     logfile.write( logEntry.toString(), 0, logEntry.length());
                     logfile.flush();
                 }
-                catch(IOException ioe) { }
+                catch(IOException ioe) { log.debug("LogTransformer.log", ioe); }
             }
         }
     }
-    
+
     /**
      *  Attempt to close the log file when the class is GC'd
      */
     public void destroy() {
         try {
             logfile.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {log.debug("LogTransformer.destroy()", e);}
     }
 }

@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-12-07 17:10:42 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-12-08 20:38:46 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable, ThreadSafe
@@ -96,7 +96,7 @@ public class ProgramGeneratorImpl
       log.debug("Lookup " + Roles.COCOON);
           this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
       } catch (Exception e) {
-          log.error("Could not lookup Component", e);
+          log.warn("Could not lookup Component", e);
       }
   }
 
@@ -179,7 +179,7 @@ public class ProgramGeneratorImpl
 
         // Instantiate program
         programInstance = programmingLanguage.instantiate(program);
-      } catch (LanguageException e) { }
+      } catch (LanguageException e) { log.warn("Language Exception", e); }
 
       /*
          FIXME: It's the program (not the instance) that must

@@ -18,15 +18,19 @@ import jstyle.JSBeautifier;
 
 import org.apache.cocoon.components.language.programming.*;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * This class implements <code>CodeFormatter</code> based on
  * Tal Davidson's (davidsont@bigfoot.com) <i>Jstyle</i> Java
  * beautifier. This implementation is very improvised...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:31 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:39:20 $
  */
 public class JstyleFormatter implements CodeFormatter {
+  protected Logger log = LogKit.getLoggerFor("cocon");
   /**
    * The default preferred line length. Should be parametrized!
    */
@@ -78,6 +82,7 @@ public class JstyleFormatter implements CodeFormatter {
 
       return this.getString(out, encoding);
     } catch (Exception e) {
+      log.debug("JstyleFormatter.format()", e);
       return code;
     }
   }

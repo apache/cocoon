@@ -108,6 +108,7 @@ public class FilesystemStore implements Store, ThreadSafe {
         IOUtils.serializeObject(file, value);
       }
     } catch (Exception e) { /* FAILURE */
+      log.warn("FilesystemStore.store()", e);
       throw new RuntimeException(e.getMessage());
     }
   }

@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.6 $ $Date: 2000-09-08 18:19:32 $
+ * @version $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:17 $
  * @since 2.0
  */
 
@@ -34,10 +34,12 @@ public class Javac extends AbstractJavaCompiler {
         Class.forName(MODERN_CLASS);
         modern = true;
     } catch (ClassNotFoundException e) {
+        log.warn("Javac()", e);
         try {
             Class.forName(CLASSIC_CLASS);
             modern = false;
         } catch (ClassNotFoundException ex) {
+            log.warn("No compiler found in your classpath. Make sure you added 'tools.jar'", ex);
             throw new RuntimeException("No compiler found in your classpath. Make sure you added 'tools.jar'");
         }
     }

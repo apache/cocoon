@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-26 21:48:04 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:39:59 $
  */
 public class ResourceReader extends AbstractReader {
 
@@ -64,9 +64,11 @@ public class ResourceReader extends AbstractReader {
                 lastModified = file.lastModified();
             }
         } catch (SAXException se) {
+            log.error("ResourceReader: error resolving source \"" + source + "\"", se);
             throw new IOException ("ResourceReader: error resolving source \""
                 +source+"\". "+se.toString());
         } catch (MalformedURLException mue) {
+            log.error("ResourceReader: malformed source \"" + source + "\"", mue);
             throw new IOException ("ResourceReader: malformed source \""
                 +src+"\". "+mue.toString());
         }

@@ -22,12 +22,12 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.ComponentPool;
 import org.apache.cocoon.Roles;
 
-/** 
- * This class holds a sitemap component which is not specially marked as having 
+/**
+ * This class holds a sitemap component which is not specially marked as having
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-19 14:44:22 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:40:32 $
  */
 public class PoolableComponentHolder extends DefaultComponentHolder implements ObjectFactory {
 
@@ -42,7 +42,7 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
 
     /** The <code>Pool</code> for this components */
     protected Pool pool;
-    
+
     /** Creates a DefaultComponentHolder
      * @param className The component class name
      * @param configuration The </CODE>Configuration</CODE> for the component
@@ -54,6 +54,7 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
         try {
             this.clazz = ClassUtils.loadClass (super.className);
         } catch (Exception e) {
+            log.debug("Class is null", e);
             this.clazz = null;
         }
         PoolController pc = (PoolController)super.manager.lookup (Roles.POOL_CONTROLLER);

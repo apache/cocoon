@@ -52,7 +52,7 @@ import org.apache.avalon.Poolable;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-29 12:18:05 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:40 $
  */
 public class StatusGenerator extends ComposerGenerator implements Poolable {
 
@@ -99,8 +99,10 @@ public class StatusGenerator extends ComposerGenerator implements Poolable {
         try {
             localHost = InetAddress.getLocalHost().getHostName();
         } catch ( UnknownHostException e ) {
+            log.debug("StatusGenerator:UnknownHost", e);
             localHost = "";
         } catch ( SecurityException e ) {
+            log.debug("StatusGenerator:Security", e);
             localHost = "";
         }
 

@@ -20,23 +20,24 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-08 21:08:06 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-08 20:40:10 $
  */
 
 public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
 
     private SerializerFactory factory;
-    
+
     public HTMLSerializer() {
         this.factory = SerializerFactory.getSerializerFactory(Method.HTML);
     }
-    
+
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
             this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
         } catch (Exception e) {
+            log.error("HTMLSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());
         }
-    }    
+    }
 }

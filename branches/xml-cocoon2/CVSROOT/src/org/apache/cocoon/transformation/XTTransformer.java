@@ -63,11 +63,14 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-06 19:21:03 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:40:44 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -185,6 +188,7 @@ implements Transformer, Composer {
     * inner class DocumentHandler that delegates all SAX Events to the XT's builder.
     */
     class DocHandler implements DocumentHandler, DTDHandler {
+        protected Logger log = LogKit.getLoggerFor("cocoon");
 
         /**
         * The XT's DocumentHandler instance to which SAX events are forwarded
@@ -222,6 +226,7 @@ implements Transformer, Composer {
                 // Start processing it by passing the builder
                 processor.process(builder.getRootNode());
             } catch (IOException ioe) {
+                log.error("XTTransformer", ioe);
                 throw new SAXException(ioe);
             }
 
@@ -255,6 +260,7 @@ implements Transformer, Composer {
 
 class XTProcessor implements Cloneable, ParameterSet, Modifiable {
 
+    protected Logger log = LogKit.getLoggerFor("cocoon");
     private XMLProcessorEx sheetLoader;
     private Parser sheetParser;
     private Sheet sheet;
@@ -342,6 +348,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
     }
 
     void handleXSLException(XSLException e) throws SAXException, IOException {
+        log.error("XTTransformer", e);
         String systemId = null;
         int lineNumber = -1;
         Node node = e.getNode();
@@ -375,6 +382,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
             cloned.params = (HashMap) cloned.params.clone();
             return cloned;
         } catch (CloneNotSupportedException e) {
+            log.error("unexpected CloneNotSupportedException", e);
             throw new Error("unexpected CloneNotSupportedException");
         }
     }

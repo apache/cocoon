@@ -41,7 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-11-30 21:42:32 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-08 20:40:42 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -149,6 +149,7 @@ public class SQLTransformer extends AbstractTransformer {
         try {
             query.execute();
         } catch (SQLException e) {
+            log.debug("SQLTransformer", e);
             throw new SAXException(e);
         }
         this.start(query.rowset_name, attr);
@@ -162,6 +163,7 @@ public class SQLTransformer extends AbstractTransformer {
                 this.end(query.row_name);
             }
         } catch (SQLException e) {
+            log.debug("SQLTransformer", e);
             throw new SAXException(e);
         }
         this.end(query.rowset_name);
@@ -273,6 +275,7 @@ public class SQLTransformer extends AbstractTransformer {
                     level = Integer.parseInt( attributes.getValue(my_uri,
                                               MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
                 } catch (Exception e) {
+		    log.debug("SQLTransformer", e);
                     throwIllegalStateException("Ancestor value elements must have a "+
                                                MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
                 }
@@ -463,7 +466,7 @@ public class SQLTransformer extends AbstractTransformer {
             String driver = properties.getProperty(transformer.MAGIC_DRIVER);
             try {
                 ClassUtils.newInstance(driver);
-            } catch (Exception e) {}
+            } catch (Exception e) {log.debug("SQLTransformer", e);}
             if (null != properties.getProperty(transformer.MAGIC_DOC_ELEMENT)) {
                 this.rowset_name = properties.getProperty(transformer.MAGIC_DOC_ELEMENT);
             }
@@ -486,6 +489,7 @@ public class SQLTransformer extends AbstractTransformer {
                     try {
                         sb.append(query.getColumnValue(av.name));
                     } catch (SQLException e) {
+                        log.debug("SQLTransformer", e);
                         close();
                         throw e;
                     }
@@ -517,6 +521,7 @@ public class SQLTransformer extends AbstractTransformer {
             try {
                 return transformer.getStringValue(rs.getObject(i));
             } catch (SQLException e) {
+                log.debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -526,6 +531,7 @@ public class SQLTransformer extends AbstractTransformer {
             try {
                 return transformer.getStringValue(rs.getObject(name));
             } catch (SQLException e) {
+                log.debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -543,6 +549,7 @@ public class SQLTransformer extends AbstractTransformer {
                 }
                 return true;
             } catch (SQLException e) {
+                log.debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -571,6 +578,7 @@ public class SQLTransformer extends AbstractTransformer {
                     try {
                         transformer.data(getColumnValue(i));
                     } catch (SQLException e) {
+                        log.debug("SQLTransformer", e);
                         close();
                         throw e;
                     }

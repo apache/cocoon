@@ -20,7 +20,7 @@ import org.apache.avalon.ConfigurationException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-30 21:42:00 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:40:08 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 
@@ -42,6 +42,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             Configuration encoding = conf.getChild("encoding");
             format.setEncoding(encoding.getValue());
         } catch (ConfigurationException ce) {
+            log.debug("No Encoding");
             // TODO: how to handle non-existant encoding?
         }
 
@@ -51,6 +52,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             Configuration dtPublic = conf.getChild("doctype-public");
             doctypePublic = dtPublic.getValue();
         } catch (ConfigurationException ce) {
+            log.debug("No Public Doctype");
             doctypePublic = null;
         }
 
@@ -58,6 +60,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             Configuration doctypeSystem = conf.getChild("doctype-system");
             format.setDoctype(doctypePublic, doctypeSystem.getValue());
         } catch (ConfigurationException ce) {
+            log.debug("No System Doctype");
             // TODO: how to handle non-existant doctype-system?
         }
 
@@ -66,6 +69,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             format.setIndenting(true);
             format.setIndent(indent.getValueAsInt());
         } catch (ConfigurationException ce) {
+            log.debug("No indent");
             // TODO: how to handle non-existant indent?
         }
 
@@ -73,6 +77,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             Configuration preserveSpace = conf.getChild("preserve-space");
             format.setPreserveSpace(preserveSpace.getValueAsBoolean());
         } catch (ConfigurationException ce) {
+          log.debug("No preserve-space");
           // TODO: how to handle non-existant preserve-space?
         }
 
@@ -80,6 +85,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             Configuration declaration = conf.getChild("xml-declaration");
             format.setOmitXMLDeclaration(!declaration.getValueAsBoolean());
         } catch (ConfigurationException ce) {
+          log.debug("No XML Declaration");
           // TODO: how to handle non-existant xml-declaration?
         }
 
@@ -87,6 +93,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             Configuration lineWidth = conf.getChild("line-width");
             format.setLineWidth(lineWidth.getValueAsInt());
         } catch (ConfigurationException ce) {
+          log.debug("No line-width");
           // TODO: how to handle non-existant line-width?
         }
     }

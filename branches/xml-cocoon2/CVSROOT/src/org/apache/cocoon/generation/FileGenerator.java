@@ -20,7 +20,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-04 13:10:47 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-08 20:39:34 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable {
 
@@ -36,13 +36,15 @@ public class FileGenerator extends ComposerGenerator implements Poolable {
             parser.setContentHandler(this.contentHandler);
             parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(super.resolver.resolveEntity(null,this.source));
-	} catch (IOException e) {
+    } catch (IOException e) {
+       log.error("FileGenerator.generate()", e);
        throw(e);
-	} catch (SAXException e) {
+    } catch (SAXException e) {
+       log.error("FileGenerator.generate()", e);
        throw(e);
-	} catch (Exception e){
-	   log.error("Could not get parser", e);
+    } catch (Exception e){
+       log.error("Could not get parser", e);
        throw new ProcessingException(e.getMessage());
     }
-    }    
+    }
 }

@@ -19,23 +19,24 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-27 16:15:46 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-08 20:40:12 $
  */
 
 public class TextSerializer extends AbstractTextSerializer {
 
     private SerializerFactory factory;
-    
+
     public TextSerializer() {
         this.factory = SerializerFactory.getSerializerFactory(Method.TEXT);
     }
-    
+
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
             this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
         } catch (Exception e) {
+            log.error("TextSerializer", e);
             throw new RuntimeException(e.toString());
         }
-    }    
+    }
 }

@@ -31,7 +31,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-07 17:10:58 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-08 20:39:16 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -118,6 +118,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       return
         this.classLoaderManager.loadClass(name.replace(File.separatorChar, '.'));
     } catch (Exception e) {
+      log.warn("Could not load class for program '" + name + "'", e);
       throw new LanguageException("Could not load class for program '" + name + "' due to a " + e.getClass().getName() + ": " + e.getMessage());
     }
   }
@@ -183,10 +184,13 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       }
 
     } catch (InstantiationException e) {
+      log.warn("Could not instantiate the compiler", e);
       throw new LanguageException("Could not instantiate the compiler: " + e.getMessage());
     } catch (IllegalAccessException e) {
+      log.warn("Could not access the compiler class", e);
       throw new LanguageException("Could not access the compiler class: " + e.getMessage());
     } catch (IOException e) {
+      log.warn("Error during compilation", e);
       throw new LanguageException("Error during compilation: " + e.getMessage());
     }
   }
@@ -202,6 +206,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
     try {
       return ((Class) program).newInstance();
     } catch (Exception e) {
+      log.warn("Could not instantiate program instance", e);
       throw new LanguageException("Could not instantiate program instance due to a " + e.getClass().getName() + ": " + e.getMessage());
     }
   }

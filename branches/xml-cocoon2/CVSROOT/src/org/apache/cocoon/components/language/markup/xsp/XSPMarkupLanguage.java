@@ -29,6 +29,8 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
 import org.apache.cocoon.Constants;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -39,7 +41,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-22 15:27:13 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:02 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -184,6 +186,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
     *
     */
     protected class PreProcessFilter extends XMLFilterImpl {
+        protected Logger log = LogKit.getLoggerFor("cocoon");
 
         private Stack stack;
 
@@ -228,7 +231,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
          * @see ContentHandler
          */
         public void startElement (String namespaceURI, String localName,
-        			      String qName, Attributes atts) throws SAXException {
+                          String qName, Attributes atts) throws SAXException {
              if (isRootElem) {
                  stack.push(new String[] { namespaceURI, localName, qName} );
                  isRootElem=false;
@@ -255,7 +258,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
          * @see ContentHandler
          */
         public void endElement (String namespaceURI, String localName,
-            			      String qName) throws SAXException {
+                              String qName) throws SAXException {
             stack.pop();
             super.endElement(namespaceURI, localName, qName);
         }
@@ -302,6 +305,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
     */
     protected  class XSPTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
 
+        protected Logger log = LogKit.getLoggerFor("cocoon");
 
         private List startPrefix;
 
@@ -349,6 +353,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
                             href, this.resolver
                         );
                     } catch (IOException ioe) {
+                        log.warn("XSPMarkupLanguage.processingInstruction", ioe);
                         throw new SAXException (ioe);
                     }
                 }
@@ -401,6 +406,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
                                 location, this.resolver
                             );
                         } catch (IOException ioe) {
+                            log.warn("XSPMarkupLanguage.startElement", ioe);
                             throw new SAXException (ioe);
                         }
                     } else {

@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-11-15 19:29:42 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-08 20:40:30 $
  */
 public abstract class AbstractSitemap implements Sitemap {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -148,6 +148,7 @@ public abstract class AbstractSitemap implements Sitemap {
             }
             return (result.toString());
         } catch (Exception e) {
+            log.error("AbstractSitemap:substitute()", e);
             throw new PatternException
                     ("error occurred during evaluation of expression \""
                      +expr+"\" at position "+(i+1)+"\n"

@@ -76,8 +76,8 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.68 $ $Date: 2000-12-07 13:53:35 $
+     * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
+     * @version CVS $Revision: 1.1.2.69 $ $Date: 2000-12-08 20:38:59 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -116,7 +116,7 @@
                 <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
               </xsl:call-template>
             </xsl:variable>
-            // The generated matcher for a pattern of "<xsl:value-of select="@pattern"/>" 
+            // The generated matcher for a pattern of "<xsl:value-of select="@pattern"/>"
             <xsl:value-of select="java:getClassSource($factory-loader,string($src),string($matcher-name),string(@pattern),$config)"/>
           </xsl:for-each>
         </xsl:if>
@@ -222,7 +222,7 @@
 
         /* catch any exception thrown by a component during configuration */
         } catch (Exception e) {
-          log.error(e.getMessage(), e);
+          log.warn(e.getMessage(), e);
           throw new ConfigurationException ("Sitemap: " + e.getMessage(), e);
         }
       }
@@ -293,12 +293,13 @@
           try {
             <xsl:apply-templates select="./*"/>
           } catch (Exception e) {
+            log.warn("Error, try to process the error page", e);
             <xsl:choose>
               <xsl:when test="(./map:handle-errors)">
                 try {
                   return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e);
                 } catch (Exception ex) {
-                  log.error("Sitemap Error Process", ex);
+                  log.warn("Sitemap Error Process", ex);
                 }
               </xsl:when>
               <xsl:otherwise>

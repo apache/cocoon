@@ -12,11 +12,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import org.xml.sax.SAXException;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * Base class for XSP's object model manipulation logicsheets
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-05 22:07:06 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-08 20:39:04 $
  */
 public class XSPObjectHelper {
   /**
