@@ -71,7 +71,7 @@
   </target>
 
   <!-- Create docs -->
-  <target name="docs" depends="validate-jars, prepare-docs, validate-xdocs, docs_done, forrest" unless="docs.notrequired" description="Builds the documentation">
+  <target name="docs" depends="validate-jars, prepare-docs, validate-xdocs, docs_done, forrest, javadocs" unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
 
@@ -153,6 +153,7 @@
   </target>
 
   <!-- Check if javadocs have to be generated -->
+  <!-- Obsolete:
   <target name="javadocs-check">
     <mkdir dir="${build.javadocs}"/>
     <condition property="javadocs.notrequired" value="true">
@@ -165,8 +166,9 @@
      </or>
     </condition>
   </target>
-
+  -->
   <!-- Creates Javadocs -->
+  <!-- Obsolete:
   <target name="javadocs" depends="prepare, javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
 
     <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
@@ -205,9 +207,12 @@
     </javadoc>
 
   </target>
-
-  <!-- build the javadocs of the blocks -->
-  <target name="blocks-javadocs" depends="javadocs,prepare-blocks">
+  -->
+  
+  <!-- Creates Javadocs -->
+  <target name="javadocs" 
+          depends="prepare-blocks"
+          description="Builds the API documentation (javadocs)">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
