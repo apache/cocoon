@@ -10,7 +10,7 @@
     z-index: 100;
     cursor: pointer;
 }
-      
+
 .woody-tab.woody-activeTab {
     z-index: 102;
     font-weight: bold;
@@ -43,4 +43,12 @@
     background-color:#FFFFC0; /* light yellow */
     width: 200px; /* otherwise IE does a weird layout */
     z-index:1000; /* must be higher than woody-tabContent */
+}
+
+.woody-doubleList select {
+    width: 150px;
+}
+
+.woody-doubleList input {
+    width: 40px;
 }
