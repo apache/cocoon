@@ -61,10 +61,10 @@ import org.apache.cocoon.environment.Response;
 
 /**
  * A set of constants and methods to access the content of the context
- * object. Some of the constants are defined in {@link Constants}.
+ * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.2 2003/05/23 12:14:04 cziegeler Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.3 2003/05/30 23:07:28 joerg Exp $
  */
 
 public final class ContextHelper {
