@@ -23,7 +23,7 @@
 	</s2>
 
 	<s2 title="II. Download and unzip Cocoon 2">
-		<p>Download and unzip a binary version of The latest distribution of Cocoon: <link href="http://cocoon.apache.org/dist/">http://cocoon.apache.org/dist/</link></p>
+		<p>Download and unzip a binary version of The latest distribution of Cocoon: <link href="http://cocoon.apache.org/mirror.cgi">http://cocoon.apache.org/mirror.cgi</link></p>
 		<p>(Feb 2002 this was <code>cocoon-2.0.1-bin.zip</code>)</p>
 
 	</s2>

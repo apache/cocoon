@@ -10,7 +10,7 @@
   </menu>
 
   <menu label="Installation">
-    <external  label="Download" href="http://cocoon.apache.org/dist/"/>
+    <external  label="Download" href="http://cocoon.apache.org/mirror.cgi"/>
     <menu-item label="Installing" href="index.html"/>
     <menu-item label="Updating" href="updating.html"/>
     <menu-item label="Jars" href="jars.html"/>

@@ -25,7 +25,7 @@
 
 			<s2 title="Where do I get it from?">
 				<p>Go to <fork href="http://cocoon.apache.org/">http://www.apache.org/cocoon/</fork> and download it from there.  The latest distribution for any operating system can be found in the 
-				<fork href="http://cocoon.apache.org/dist/">Cocoon distribution folder</fork>.  The distribution that you can download from there contains the Cocoon code, samples, documentation and the Java libraries that enable the Cocoon to work such as Xerces and Xalan.</p>
+				<fork href="http://cocoon.apache.org/mirror.cgi">Cocoon distribution folder</fork>.  The distribution that you can download from there contains the Cocoon code, samples, documentation and the Java libraries that enable the Cocoon to work such as Xerces and Xalan.</p>
 			</s2>
 
 			<s2 title="What assumptions have you made?">

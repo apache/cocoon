@@ -52,7 +52,7 @@
       <s2 title="Download a distribution">
        <p>
         You can simply download the latest official release from the
-        <link href="http://cocoon.apache.org/dist/">Cocoon distribution</link>
+        <link href="http://cocoon.apache.org/mirror.cgi">Cocoon distribution</link>
         directory.
        </p>
       </s2>

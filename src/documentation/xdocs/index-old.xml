@@ -45,7 +45,7 @@
   <s1 title="Where is it?">
    <p>
    If you want to download the latest release of Apache Cocoon just go to the 
-   <link href="http://xml.apache.org/dist/cocoon">download area.</link>
+   <link href="http://cocoon.apache.org/mirror.cgi">download area</link>.
    </p>
   <p>
    Apache Cocoon @released.version@ is the latest release of the XML publishing framework.
