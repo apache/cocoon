@@ -15,8 +15,12 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.cocoon.portal.layout.CompositeLayout;
+import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
@@ -90,13 +94,6 @@ public class UserProfile {
     }
     
     /**
-     * @param layouts The layouts to set.
-     */
-    public void setLayouts(Map layouts) {
-        this.layouts = layouts;
-    }
-    
-    /**
      * @return Returns the rootLayout.
      */
     public Layout getRootLayout() {
@@ -108,5 +105,24 @@ public class UserProfile {
      */
     public void setRootLayout(Layout rootLayout) {
         this.rootLayout = rootLayout;
+        this.layouts = new HashMap();
+        this.cacheLayouts(this.layouts, rootLayout);
     }
+    
+    protected void cacheLayouts(Map layoutMap, Layout layout) {
+        if ( layout != null ) {
+            if ( layout.getId() != null ) {
+                layoutMap.put( layout.getId(), layout );
+            }
+            if ( layout instanceof CompositeLayout ) {
+                final CompositeLayout cl = (CompositeLayout)layout;
+                final Iterator i = cl.getItems().iterator();
+                while ( i.hasNext() ) {
+                    final Item current = (Item)i.next();
+                    this.cacheLayouts( layoutMap, current.getLayout() );
+                }
+            }
+        }        
+    }
+    
 }
