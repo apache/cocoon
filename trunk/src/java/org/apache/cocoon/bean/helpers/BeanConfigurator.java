@@ -67,7 +67,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.1 2003/10/08 23:22:01 upayavira Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.2 2003/10/11 05:44:07 upayavira Exp $
  */
 public class BeanConfigurator {
 
@@ -85,6 +85,14 @@ public class BeanConfigurator {
     private static final String NODE_CONFIG_FILE = "config-file";
     private static final String NODE_URI_FILE = "uri-file";
     private static final String NODE_CHECKSUMS_URI = "checksums-uri";
+ 
+    // context-dir is needed by ant task
+    public static final String ATTR_CONTEXT_DIR = "context-dir";
+    private static final String ATTR_DEST_DIR = "dest-dir";
+    private static final String ATTR_WORK_DIR = "work-dir";
+    private static final String ATTR_CONFIG_FILE = "config-file";
+    private static final String ATTR_URI_FILE = "uri-file";
+    private static final String ATTR_CHECKSUMS_URI = "checksums-uri";
  
     private static final String NODE_BROKEN_LINKS = "broken-links";
     private static final String ATTR_BROKEN_LINK_REPORT_TYPE = "type";
@@ -117,7 +125,8 @@ public class BeanConfigurator {
     private static final String NODE_URIS = "uris";
     private static final String ATTR_NAME = "name";
     
-    public static String configure(Document xconf, CocoonBean cocoon, String destDir, String uriGroup, OutputStreamListener listener) {
+    public static String configure(Document xconf, CocoonBean cocoon, String destDir, String uriGroup, OutputStreamListener listener) 
+        throws IllegalArgumentException {
 
         Node root = xconf.getDocumentElement();
         if (!NODE_ROOT.equals(root.getNodeName())) {
@@ -136,10 +145,30 @@ public class BeanConfigurator {
         if (hasAttribute(root, ATTR_CONFIRM_EXTENSIONS)) {
             cocoon.setConfirmExtensions(getBooleanAttributeValue(root, ATTR_CONFIRM_EXTENSIONS));
         }
+        if (hasAttribute(root, ATTR_CONTEXT_DIR)) {
+            cocoon.setContextDir(getAttributeValue(root, ATTR_CONTEXT_DIR));
+        }
+        if (hasAttribute(root, ATTR_DEST_DIR)) {
+            destDir = getAttributeValue(root, ATTR_CONFIRM_EXTENSIONS);
+        }
+        if (hasAttribute(root, ATTR_WORK_DIR)) {
+            cocoon.setWorkDir(getAttributeValue(root, ATTR_WORK_DIR));
+        }
+        if (hasAttribute(root, ATTR_CONFIG_FILE)) {
+            cocoon.setWorkDir(getAttributeValue(root, ATTR_WORK_DIR));
+        }
+        if (hasAttribute(root, ATTR_URI_FILE)) {
+            cocoon.addTargets(processURIFile(getAttributeValue(root, ATTR_URI_FILE)), destDir);
+        }
+        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
+            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
+        }
+        
+
         if (destDir == null || destDir.length() == 0) {
             destDir = getNodeValue(root, NODE_DEST_DIR);
         }
-
+ 
         NodeList nodes = root.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
@@ -155,27 +184,43 @@ public class BeanConfigurator {
                     parseLoggingNode(cocoon, node);
 
                 } else if (nodeName.equals(NODE_CONTEXT_DIR)) {
-                    cocoon.setContextDir(getNodeValue(node));
+                    if (hasAttribute(root, ATTR_CONTEXT_DIR)) {
+                        throw new IllegalArgumentException("Cannot have "+NODE_CONTEXT_DIR+" as both element and attribute");
+                    } else {
+                        cocoon.setContextDir(getNodeValue(node));
+                    }
 
                 } else if (nodeName.equals(NODE_CONFIG_FILE)) {
-                    cocoon.setConfigFile(getNodeValue(node));
-
+                    if (hasAttribute(root, ATTR_CONFIG_FILE)) {
+                        throw new IllegalArgumentException("Cannot have "+NODE_CONFIG_FILE+" as both element and attribute");
+                    } else {
+                        cocoon.setConfigFile(getNodeValue(node));
+                    }
                 } else if (nodeName.equals(NODE_DEST_DIR)) {
                     // Ignore
 
                 } else if (nodeName.equals(NODE_WORK_DIR)) {
-                    cocoon.setWorkDir(getNodeValue(node));
-
+                    if (hasAttribute(root, ATTR_WORK_DIR)) {
+                        throw new IllegalArgumentException("Cannot have "+NODE_WORK_DIR+" as both element and attribute");
+                    } else {
+                        cocoon.setWorkDir(getNodeValue(node));
+                    }
                 } else if (nodeName.equals(NODE_CHECKSUMS_URI)) {
-                    cocoon.setChecksumURI(getNodeValue(node));
-                    
+                    if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
+                        throw new IllegalArgumentException("Cannot have "+NODE_CHECKSUMS_URI+" as both element and attribute");
+                    } else {
+                        cocoon.setChecksumURI(getNodeValue(node));
+                    }                
                 } else if (nodeName.equals(NODE_AGENT)) {
+                    //@TODO@ Move this to be attributes too
                     cocoon.setAgentOptions(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_ACCEPT)) {
+                    //@TODO@ Move this to be attributes too
                     cocoon.setAcceptOptions(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_DEFAULT_FILENAME)) {
+                    //@TODO@ Move this to be attributes too
                     cocoon.setDefaultFilename(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_INCLUDE)) {
@@ -196,8 +241,11 @@ public class BeanConfigurator {
                     parseURIsNode(cocoon, node, destDir, uriGroup);
 
                 } else if (nodeName.equals(NODE_URI_FILE)) {
-                    cocoon.addTargets(processURIFile(getNodeValue(node)), destDir);
-
+                    if (hasAttribute(root, ATTR_URI_FILE)) {
+                        throw new IllegalArgumentException("Cannot have "+NODE_URI_FILE+" as both element and attribute");
+                    } else {
+                        cocoon.addTargets(processURIFile(getNodeValue(node)), destDir);
+                    }
                 } else {
                     throw new IllegalArgumentException("Unknown element: <" + nodeName + ">");
                 }
@@ -332,13 +380,11 @@ public class BeanConfigurator {
         
     private static void parseURINode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
         NodeList nodes = node.getChildNodes();
-        if (nodes.getLength() != 0) {
-            throw new IllegalArgumentException("Unexpected children of <" + NODE_URI + "> node");
-        }
 
-        if (node.getAttributes().getLength() == 0) {
+        if (node.getAttributes().getLength() == 0 && nodes.getLength() != 0) {
             cocoon.addTarget(getNodeValue(node), destDir);
-        } else {
+        } else if (node.getAttributes().getLength() !=0 && nodes.getLength() ==0){
+
             String src = getAttributeValue(node, ATTR_URI_SOURCEURI);
 
             String type = null;
@@ -363,6 +409,10 @@ public class BeanConfigurator {
             } else {
                 cocoon.addTarget(src, destDir);
             }
+        } else if (node.getAttributes().getLength() !=0 && nodes.getLength() != 0) {
+            throw new IllegalArgumentException("Unexpected children of <" + NODE_URI + "> node");
+        } else {
+            throw new IllegalArgumentException("Not enough information for <"+ NODE_URI + "> node");
         }
     }
 
