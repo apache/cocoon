@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xsamples xpath="/samples" unless="group[@name='asciiart']">
+<xsamples xpath="/samples" unless="group[@name='ASCII Art']">
 
   <group name="ASCII Art">
     <sample name="ASCII Art" href="asciiart/">
