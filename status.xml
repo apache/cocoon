@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add">
+     Portal block: New Group Based Profile Manager.
+   </action>
    <action dev="VG" type="update">
      Cron block: Add support for persistent job stores, type "tx" and "cmt".
    </action>

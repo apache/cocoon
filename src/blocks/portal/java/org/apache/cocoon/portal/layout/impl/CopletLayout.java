@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
-import java.util.Map;
-
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.Layout;
@@ -48,7 +46,7 @@ public final class CopletLayout extends AbstractLayout {
     protected Object clone() throws CloneNotSupportedException {
         CopletLayout clone = (CopletLayout)super.clone();
         
-        this.copletInstanceData = null;
+        clone.copletInstanceData = null;
         
         return clone;
     }
@@ -56,16 +54,13 @@ public final class CopletLayout extends AbstractLayout {
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Layout#copy()
      */
-    public Layout copy(Map copletInstanceDatas) {
+    public Layout copy() {
         CopletLayout clone = (CopletLayout)super.copy();
-        if (copletInstanceDatas == null) {
-            clone.copletInstanceData = this.copletInstanceData;
-        } else {
-            if ( this.copletInstanceData != null ) {
-                clone.copletInstanceData = this.copletInstanceData.copy();
-            }
-            
+
+        if ( this.copletInstanceData != null ) {
+            clone.copletInstanceData = this.copletInstanceData.copy();
         }
+            
         return clone;
     }
 }
