@@ -23,7 +23,7 @@
       <body bgcolor="#ffffff">
         <table width="90%" cellspacing="0" cellpadding="5" align="center">
           <tr>
-            <td colspan="4">
+            <td colspan="3">
               <font size="+2">
                 <strong>
                   Directory Listing For <xsl:value-of select="@name"/>
@@ -32,14 +32,14 @@
             </td>
           </tr>
           <tr>
-            <td colspan="4">&#160;</td>
+            <td colspan="3">&#160;</td>
           </tr>
           <xsl:call-template name="collection-header" />
           <xsl:apply-templates>
             <xsl:with-param name="href" select="$adjustedRequestURI" />
           </xsl:apply-templates>
           <tr>
-            <td colspan="4" bgcolor="#cccccc">
+            <td colspan="3" bgcolor="#cccccc">
               <font size="-1"><xsl:value-of select="$footer" /></font>
             </td>
           </tr>
@@ -58,11 +58,6 @@
       <td align="right">
         <font size="+1">
           <strong>Size</strong>
-        </font>
-      </td>
-      <td align="right">
-        <font size="+1">
-          <strong>Created</strong>
         </font>
       </td>
       <td align="right">
@@ -87,12 +82,7 @@
       </td>
       <td align="right">
         <tt>
-          <xsl:value-of select="@created"/>
-        </tt>
-      </td>
-      <td align="right">
-        <tt>
-          <xsl:value-of select="@modified"/>
+          <xsl:value-of select="@date"/>
         </tt>
       </td>
     </tr>
@@ -108,13 +98,10 @@
         <tt><xsl:value-of select="@name"/></tt></a>
       </td>
       <td align="right">
-        <tt>&#160;</tt>
+        <tt><xsl:value-of select="@size"/></tt>
       </td>
       <td align="right">
-        <tt><xsl:value-of select="@created"/></tt>
-      </td>
-      <td align="right">
-        <tt><xsl:value-of select="@modified"/></tt>
+        <tt><xsl:value-of select="@date"/></tt>
       </td>
     </tr>
   </xsl:template>
