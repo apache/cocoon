@@ -33,7 +33,7 @@
     |        that you use the command line parameters to configure 
     |        the CLI.</note>
     |
-    | CVS: $Id: cli.xconf,v 1.8 2003/11/07 15:01:54 upayavira Exp $
+    | CVS: $Id: cli.xconf,v 1.9 2003/11/10 06:32:42 crossley Exp $
     +-->
     
 <cocoon verbose="true"  
@@ -200,8 +200,6 @@
        |  from the source page's URI. There are three ways that a generated
        |  file URI can be created: append, replace and insert.
        |
-       +----------------------------------------------------------------
-       |
        |  APPEND: append the generated page's URI to the end of the 
        |  source URI:
        |
@@ -211,8 +209,6 @@
        |  This means that 
        |   (1) the "documents/index.html" page is generated
        |   (2) the file will be written to "build/dest/documents/index.html"
-       |
-       +----------------------------------------------------------------
        |
        |  REPLACE: Completely ignore the generated page's URI - just 
        |  use the destination URI:
@@ -226,7 +222,6 @@
        |   (3) this works only for "single" pages - and not when links
        |       are followed
        |
-       +----------------------------------------------------------------
        |  INSERT: Insert generated page's URI into the destination 
        |  URI at the point marked with a * (example uses fictional 
        |  zip protocol)
