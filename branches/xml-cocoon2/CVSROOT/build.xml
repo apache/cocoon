@@ -123,6 +123,25 @@ NOTE: the "site" target is only useful for site mantainers.
     <filter token="date"    value="${TODAY}"/>
     <filter token="log"     value="true"/>
     <filter token="verbose" value="true"/>
+ 
+    <available property="php.present" 
+               classname="net.php.servlet" />
+
+    <available property="servlet.present" 
+               classname="javax.servlet.http.HttpServlet" />
+
+    <available property="svg.present" 
+               classname="org.csiro.svgv.display.SvgToAwtConverter" />
+
+    <available property="rhino.present" 
+               classname="org.mozilla.javascript.tools.jsc.Main" />
+
+    <available property="jstyle.present" 
+               classname="jstyle.JSFormatter" />
+
+    <available property="fop.present" 
+               classname="org.apache.fop.apps.Driver" />
+
   </target>
 
   <!-- =================================================================== -->
@@ -177,7 +196,14 @@ NOTE: the "site" target is only useful for site mantainers.
            destdir="${build.dest}"
            debug="${debug}"
            optimize="${optimize}"
-           deprecation="${deprecation}"/>
+           deprecation="${deprecation}">
+      <exclude name="**/CocoonServlet*.java" unless="servlet.present" />
+      <exclude name="**/SVGSerializer.java" unless="svg.present" />
+      <exclude name="**/Javascript*" unless="rhino.present" />
+      <exclude name="**/Jstyle*" unless="jstyle.present" />
+      <exclude name="**/FO2*" unless="fop.present" />
+      <exclude name="**/Php*" unless="php.present" />
+    </javac>
   </target>
 
   <!-- =================================================================== -->
