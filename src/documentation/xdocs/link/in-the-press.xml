@@ -6,6 +6,7 @@
   		<title>Articles about Cocoon: What they say about Cocoon</title>
   		<authors>
    			<person name="Luca Morandini" email="lmorandini@ieee.org"/>
+        <person name="Stephan Michels" email="stephan@apache.org"/>
   		</authors>
  	</header>
 
@@ -13,6 +14,27 @@
 
 		<s1 title="English articles">
 			<ul>
+        <li>
+          <link href="http://webservices.xml.com/pub/a/ws/2003/03/18/cocoon.html">
+            Creating SOAP Services with Cocoon
+          </link>
+          <br/>
+          An article about building webservices with Cocoon.
+        </li>
+        <li>
+          <link href="http://webservices.xml.com/pub/a/ws/2003/01/29/cocoon-xforms.html">
+            XML Forms, Web Services and Apache Cocoon
+          </link>
+          <br/>
+          Using XML Forms with Cocoon.
+        </li>
+        <li>
+          <link href="http://www.xml.com/pub/a/2003/01/22/cocoon-excel.html">
+            Excel Reports with Apache Cocoon and POI
+          </link>
+          <br/>
+          Creating Excel reports.
+        </li>
 				<li>
 					<link href="http://www.xml.com/pub/a/2002/02/13/cocoon2.html">
 						Introducing Cocoon 2.0
@@ -48,6 +70,23 @@
 					<br/>
 					Emphasis on the Java parts of Cocoon (XSP and Actions, basically)
 				</li>
+        <li>
+          <link href="http://www.xml.com/pub/a/2002/07/10/cocoon2.html">
+            Getting Started With Cocoon 2
+          </link>
+          <br/>
+          How to get started with Cocoon.
+        </li>
+
+
+        <li>
+          <link href="http://www.webreference.com/xml/column52/">
+            Generating Web content with Cocoon
+          </link>
+          <br/>
+          Basic article to dive into Cocon.
+        </li>
+
 				<li>
 					<link href="http://www.javaworld.com/javaworld/jw-02-2001/jw-0209-xmlj2ee_p.html">
 						Add XML to your J2EE applications, Eoin Lane, JavaWorld, February 2001
