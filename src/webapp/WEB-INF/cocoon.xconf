@@ -197,6 +197,9 @@
       <file src="http://slashdot.org/slashdot.rss"/>
     </component-instance>
 
+    <component-instance logger="core.modules.input" name="flow-attribute"     class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
+    <component-instance logger="core.modules.input" name="flow-continuation"  class="org.apache.cocoon.components.modules.input.FlowContinuationModule"/>
+
   </input-modules>
 
   <!--+
