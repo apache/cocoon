@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!--
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+-->
+<?xml-stylesheet href="document2html.xsl" type="text/xsl"?>
+
+<document>
+ <header>
+  <title>Image Encoders</title>
+  <authors>
+   <person name="Ross Burton" email="rossb@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+   <s1 title="Introduction">
+	  <p>Conceptually, an image encoder takes an image and an output stream, and converts the image into a graphics file which is sent through the stream.</p>
+		<p>A typical example of use is the Cocoon 2 SVG Serializer, which renders a SVG onto a <code>BufferedImage</code> object. Then an image encoder is called with this image and the <code>OutputStream</code> to the client, who then receives the image.</p>
+	 </s1>
+   <s1 title="Implementing an ImageEncoder">
+	  <p>The ImageEncoder interface is very simple as there are only two methods to implement: <code>getMimeType()</code> and <code>encode()</code>. The interface is also <ref>Avalon</ref>-aware as it extends the Avalon core interface <code>Component</code>.</p>
+	  <s2 title="String getMimeType()">
+		 <p>This function returns the MIME type of the image file type generated, for example "image/png". A null object is a valid return value. If an encoder returns null, the application must be able to use a MIME type specified elsewhere. For instance, Cocoon 2 has a <code>mime-type</code> attribute in the serializer declaration which is used as a backup value.</p>
+		</s2>
+	  <s2 title="void encode(BufferedImage img, OutputStream out) throws IOException">
+		 <p>This method perfoms the encoding of the image.</p>
+		</s2>
+	 </s1>
+   <s1 title="Configuration">
+	  <p>Potential users of this component may be wondering how to configure the encoder. While it is true that there is no configuration support in the interface, it is possible through the <ref>Avalon</ref> <code>Configurable</code> interface. Implement this interface and (in an <ref>Avalon</ref>-aware server) the component manager will call <code>setConfiguration(Configuration conf)</code> immediately after creating the encoder.</p>
+		<ul>
+		 <li>Migrate to <ref>Avalon</ref>. Minimal support of the <ref>Avalon</ref> concepts is fairly trivial.</li>
+		 <li>Replicate the behaviour of the Component Manager and create a <code>Configuration</code> object to pass to the image encoder.</li>
+		</ul>
+	 </s1>
+ </body>
+</document>
