@@ -84,15 +84,15 @@
   </annotation>
   <logkit>
     <factories>
-      <factory type="file" class="org.apache.avalon.excalibur.logger.factory.FileTargetFactory"/>
+      <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
     </factories>
     <targets>
-       <file id="root">
-        <filename>build/cocoon-resolver-test.log</filename>
+       <stream id="root">
+        <stream>System.out</stream>
         <format type="extended">
-          %7.7{priority} %5.5{time}   [%8.8{category}] (%{context}): %{message}\n%{throwable}
+          %7.7{priority} %5.5{time}   [%9.9{category}] (%{context}): %{message}\n%{throwable}
         </format>
-       </file>
+       </stream>
      </targets>
      <categories>
        <category name="test" log-level="DEBUG">
