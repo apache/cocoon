@@ -55,18 +55,16 @@ function Form(formDefinition) {
 }
 
 /**
- * Get a Widget from the form.
- * If <code>name</code> is undefined, the form widget itself is returned.
- * Otherwise, the form's child widget of name <code>name</code> is returned.
+ * Get the actual Form-Widget 
+ * (which for the v2 API means that it is still 
+ *  wrapped in a ScriptableWidget)
  */
 Form.prototype.getWidget = function(name) {
-    var result;
-    if (name == undefined) {
-        result = this.formWidget_;
-    } else {
-        result = this.formWidget_.getChild(name);
-    }
-    return result;
+    if (name != undefined) {
+    	throw "getWidget(id) has been deprecated.\n" +
+    	      "Consider using getChild(id) or lookupWidget(path) in stead."
+    } 
+    return this.formWidget_;
 }
 
 /**
@@ -76,10 +74,10 @@ Form.prototype.getWidget = function(name) {
  */
 Form.prototype.lookupWidget = function(path) {
     var result;
-    if (name == undefined) {
+    if (path == undefined) {
         result = this.formWidget_;
     } else {
-        result = this.formWidget_.lookupWidget(name);
+        result = this.formWidget_.lookupWidget(path);
     }
     return result;
 }
@@ -165,14 +163,14 @@ Form.prototype.createBinding = function(bindingURI) {
 
 Form.prototype.load = function(object) {
     if (this.binding_ == null) {
-        throw new Error("Binding not configured for this form.");
+        throw "Binding not configured for this form.";
     }
     this.binding_.loadFormFromModel(this.formWidget_.unwrap(), object);
 }
 
 Form.prototype.save = function(object) {
     if (this.binding_ == null) {
-        throw new Error("Binding not configured for this form.");
+        throw "Binding not configured for this form.";
     }
     this.binding_.saveFormToModel(this.formWidget_.unwrap(), object);
 }

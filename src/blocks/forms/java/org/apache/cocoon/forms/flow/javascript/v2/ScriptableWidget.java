@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.11 2004/05/08 12:51:29 bruno Exp $
+ * @version $Id: ScriptableWidget.java,v 1.12 2004/05/11 09:30:24 mpo Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -468,10 +468,6 @@ public class ScriptableWidget extends ScriptableObject {
     public String jsFunction_getRequestParameterName() {
         return delegate.getRequestParameterName();
     }
-
-//    public String jsFunction_getNamespace() {
-//        return delegate.getNamespace();
-//    }
 
     public Scriptable jsFunction_getParent() {
         if (delegate != null) {
