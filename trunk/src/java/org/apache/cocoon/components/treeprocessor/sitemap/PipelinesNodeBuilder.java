@@ -63,11 +63,11 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 /**
  * Builds a &lt;map:pipelines&gt;
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNodeBuilder.java,v 1.2 2003/04/11 13:14:51 cziegeler Exp $
+ * @version CVS $Id: PipelinesNodeBuilder.java,v 1.3 2003/07/10 13:17:00 cziegeler Exp $
  */
 
 public class PipelinesNodeBuilder extends ContainerNodeBuilder implements ThreadSafe {
