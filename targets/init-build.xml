@@ -14,12 +14,18 @@
     <property file="src/java/org/apache/cocoon/cocoon.properties"/>
 
     <!-- Detecting the current jvm -->
+    <condition property="target.vm" value="1.5">
+      <equals arg1="1.5" arg2="${ant.java.version}"/>
+    </condition>
     <condition property="target.vm" value="1.4">
       <equals arg1="1.4" arg2="${ant.java.version}"/>
     </condition>
     <condition property="target.vm" value="1.3">
       <not>
-        <equals arg1="1.4" arg2="${ant.java.version}"/>
+        <or>
+          <equals arg1="1.4" arg2="${ant.java.version}"/>
+          <equals arg1="1.5" arg2="${ant.java.version}"/>
+        </or>
       </not>
     </condition>
 
