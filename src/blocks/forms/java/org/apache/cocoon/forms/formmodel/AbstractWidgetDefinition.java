@@ -31,11 +31,13 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: AbstractWidgetDefinition.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
     protected WidgetDefinition parent;
+    
+    //TODO consider final on these
     private String location = null;
     private String id;
     private Map displayData;
@@ -133,14 +135,6 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         }   
     }
     
-    /**
-     * Validate a widget using the validators that were defined in its definition. If validation
-     * fails, the validator has set a validation error on the widget or one of its children.
-     * 
-     * @param widget the widget
-     * @param context the form context
-     * @return <code>true</code> if validation was successful.
-     */
     public boolean validate(Widget widget, FormContext context) {
         if (this.validators == null) {
             // No validators

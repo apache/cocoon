@@ -55,7 +55,7 @@ import java.util.Map;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id: AggregateField.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
  */
 public class AggregateField extends Field {
 
@@ -75,7 +75,7 @@ public class AggregateField extends Field {
     }
 
     public final AggregateFieldDefinition getAggregateFieldDefinition() {
-        return (AggregateFieldDefinition)super.definition;
+        return (AggregateFieldDefinition)getDefinition();
     }
 
     protected void addField(Field field) {
@@ -235,7 +235,7 @@ public class AggregateField extends Field {
         }
 
         // generate label, help, hint, etc.
-        definition.generateDisplayData(contentHandler);
+        getDefinition().generateDisplayData(contentHandler);
 
         // generate selection list, if any
         if (selectionList != null) {
@@ -247,7 +247,7 @@ public class AggregateField extends Field {
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
+        getDefinition().generateLabel(contentHandler);
     }
 
     public Widget getWidget(String id) {

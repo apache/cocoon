@@ -29,17 +29,22 @@ import org.xml.sax.SAXException;
  * with the desired case id.
  *
  * @author Timothy Larson
- * @version $Id: Union.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: Union.java,v 1.2 2004/04/09 16:43:21 mpo Exp $
  */
 public class Union extends AbstractContainerWidget {
     private static final String ELEMENT = "field";
     private Widget caseWidget;
+    
+    private final UnionDefinition definition;
 
     public Union(UnionDefinition definition) {
-        super(definition);
-        setLocation(definition.getLocation());
+        this.definition = definition;
         // TODO: Remove after moving logic to Field.
         //item.enteredValue = (String)definition.getDefaultValue();
+    }
+    
+    protected WidgetDefinition getDefinition() {
+        return definition;
     }
 
     // TODO: This whole union mess is too dependent on undefined sequences of execution.

@@ -32,10 +32,11 @@ import java.util.Locale;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: Output.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
-    private OutputDefinition definition;
+    
+    private final OutputDefinition definition;
     private Object value;
 
     public OutputDefinition getOutputDefinition() {
@@ -48,11 +49,10 @@ public class Output extends AbstractWidget implements DataWidget {
 
     protected Output(OutputDefinition definition) {
         this.definition = definition;
-        setLocation(definition.getLocation());
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return definition;
     }
 
     public void readFromRequest(FormContext formContext) {

@@ -34,22 +34,21 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: Messages.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();
-    private MessagesDefinition definition;
+    private final MessagesDefinition definition;
 
     private static final String MESSAGES_EL = "messages";
     private static final String MESSAGE_EL = "message";
 
     protected Messages(MessagesDefinition definition) {
         this.definition = definition;
-        setLocation(definition.getLocation());
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return this.definition;
     }
 
     public void readFromRequest(FormContext formContext) {

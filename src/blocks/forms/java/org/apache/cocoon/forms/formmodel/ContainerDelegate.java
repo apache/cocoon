@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * Helper class for the implementation of widgets containing other widgets.
  *
  * @author Timothy Larson
- * @version $Id: ContainerDelegate.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: ContainerDelegate.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
  */
 public class ContainerDelegate {
 //    private WidgetDefinition definition;
@@ -41,7 +41,8 @@ public class ContainerDelegate {
 
     private static final String WIDGETS_EL = "widgets";
 
-    public ContainerDelegate(WidgetDefinition definition) {
+//    public ContainerDelegate(WidgetDefinition definition) {
+    public ContainerDelegate() {
         widgets = new ArrayList();
         widgetsById = new HashMap();
 //        this.definition = definition;

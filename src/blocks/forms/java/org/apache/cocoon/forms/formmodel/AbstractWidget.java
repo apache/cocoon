@@ -34,43 +34,44 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.5 2004/04/02 09:50:35 stephan Exp $
+ * @version $Id: AbstractWidget.java,v 1.6 2004/04/09 16:43:21 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
-    private String location;
+//    private String location;
     private Widget parent;
     private Form form;
-    protected AbstractWidgetDefinition definition;
+    
+//    protected AbstractWidgetDefinition definition;
     
     private List validators;
     private Map attributes;
 
-    /**
-     * Sets the definition of this widget.
-     */
-    protected void setDefinition(AbstractWidgetDefinition definition) {
-        this.definition = definition;
-    }
-
+//    /**
+//     * Sets the definition of this widget.
+//     */
+//    protected void setDefinition(AbstractWidgetDefinition definition) {
+//        this.definition = definition;
+//    }
+    
     /**
      * Gets the id of this widget.
      */
     public String getId() {
-        return definition.getId();
+        return getDefinition().getId();
     }
 
-    /**
-     * Sets the source location of this widget.
-     */
-    protected void setLocation(String location) {
-        this.location = location;
-    }
+//    /**
+//     * Sets the source location of this widget.
+//     */
+//    protected void setLocation(String location) {
+//        this.definition.setLocation(location);
+//    }
 
-    /**
-     * Gets the source location of this widget.
-     */
+    
+    protected abstract WidgetDefinition getDefinition();
+    
     public String getLocation() {
-        return this.location;
+        return getDefinition().getLocation();
     }
 
     public Widget getParent() {
@@ -158,7 +159,7 @@ public abstract class AbstractWidget implements Widget {
     
     public boolean validate(FormContext context) {
         // Test validators from the widget definition
-        if (!this.definition.validate(this, context)) {
+        if (!getDefinition().validate(this, context)) {
             // Failed
             return false;
         } else {
@@ -182,8 +183,8 @@ public abstract class AbstractWidget implements Widget {
     }
     
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        if (definition != null) {
-            definition.generateDisplayData("label", contentHandler);
+        if (getDefinition() != null) {
+            getDefinition().generateDisplayData("label", contentHandler);
         }
     }
 
@@ -205,7 +206,7 @@ public abstract class AbstractWidget implements Widget {
             return this.attributes.get(name);
         } else{
             return null;
-				}
+        }
     }
 
     public void setAttribute(String name, Object value) {

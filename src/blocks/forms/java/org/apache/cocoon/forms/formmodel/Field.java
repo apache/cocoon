@@ -43,10 +43,12 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id: Field.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;
+    
+    private final FieldDefinition definition;
 
     protected String enteredValue;
     protected Object value;
@@ -61,16 +63,15 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
 
     public Field(FieldDefinition fieldDefinition) {
-        setDefinition(fieldDefinition);
-        setLocation(fieldDefinition.getLocation());
+        this.definition = fieldDefinition;
     }
 
     public final FieldDefinition getFieldDefinition() {
-        return (FieldDefinition)super.definition;
+        return this.definition;
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return this.definition;
     }
 
     public Object getOldValue() {

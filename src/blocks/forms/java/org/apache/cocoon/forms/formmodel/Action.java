@@ -35,20 +35,19 @@ import java.util.Locale;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
+ * @version $Id: Action.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
  */
 public class Action extends AbstractWidget {
-    protected ActionDefinition definition;
+    private final ActionDefinition definition;
 
     public Action(ActionDefinition definition) {
         this.definition = definition;
-        setLocation(definition.getLocation());
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return this.definition;
     }
-
+    
     public void readFromRequest(final FormContext formContext) {
         Form form = getForm();
         

@@ -39,22 +39,20 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.5 2004/03/15 21:50:08 joerg Exp $
+ * @version $Id: Repeater.java,v 1.6 2004/04/09 16:43:21 mpo Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
-    private RepeaterDefinition repeaterDefinition;
-    private List rows = new ArrayList();
+    private final RepeaterDefinition definition;
+    private final List rows = new ArrayList();
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
-        this.repeaterDefinition = repeaterDefinition;
-        super.setDefinition(repeaterDefinition);
-        setLocation(definition.getLocation());
+        this.definition = repeaterDefinition;
         // setup initial size
         removeRows();
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return definition;
     }
 
     public int getSize() {
@@ -148,7 +146,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         rows.clear();
         
         // and reset to initial size
-        for (int i = 0; i < this.repeaterDefinition.getInitialSize(); i++) {
+        for (int i = 0; i < this.definition.getInitialSize(); i++) {
             addRow();
         }
     }
@@ -251,7 +249,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
 
         // heading element -- currently contains the labels of each widget in the repeater
         contentHandler.startElement(Constants.INSTANCE_NS, HEADINGS_EL, Constants.INSTANCE_PREFIX_COLON + HEADINGS_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        Iterator widgetDefinitionIt = repeaterDefinition.getWidgetDefinitions().iterator();
+        Iterator widgetDefinitionIt = definition.getWidgetDefinitions().iterator();
         while (widgetDefinitionIt.hasNext()) {
             WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionIt.next();
             contentHandler.startElement(Constants.INSTANCE_NS, HEADING_EL, Constants.INSTANCE_PREFIX_COLON + HEADING_EL, XMLUtils.EMPTY_ATTRIBUTES);
@@ -277,7 +275,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
      * Generates the label of a certain widget in this repeater.
      */
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
-        WidgetDefinition widgetDefinition = repeaterDefinition.getWidgetDefinition(widgetId);
+        WidgetDefinition widgetDefinition = definition.getWidgetDefinition(widgetId);
         if (widgetDefinition == null)
             throw new SAXException("Repeater \"" + getFullyQualifiedId() + "\" at " + this.getLocation()
                                    + " contains no widget with id \"" + widgetId + "\".");
@@ -298,12 +296,15 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
     public class RepeaterRow extends AbstractContainerWidget {
 
         public RepeaterRow(AbstractWidgetDefinition definition) {
-            super(definition);
             ((ContainerDefinition)definition).createWidgets(this);
         }
 
-        public String getLocation() {
-            return Repeater.this.getLocation();
+//        public String getLocation() {
+//            return Repeater.this.getLocation();
+//        }
+//        
+        protected WidgetDefinition getDefinition() {
+            return Repeater.this.definition;
         }
 
         public String getId() {
