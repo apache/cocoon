@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.323 2004/05/11 12:57:44 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.324 2004/05/11 17:20:40 joerg Exp $:-->
 
 <status>
  <developers>
@@ -211,7 +211,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
-   <action dev="MPO" type="update" >
+   <action dev="JH" type="add" fixes-bug="28860" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
+     Extended CocoonServlet to allow any
+     <link href="http://avalon.apache.org/excalibur/api/org/apache/avalon/excalibur/logger/LoggerManager.html">org.apache.avalon.excalibur.logger.LoggerManager</link>
+     to be used.
+   </action>
+   <action dev="MPO" type="update">
      Deprectated getWidget from the Widget interface in cforms.
      People should consider using getChild(id) or lookupWidget(path) instead.
      On the level of the flowscript 'Form' API a semantical distinct getWidget()

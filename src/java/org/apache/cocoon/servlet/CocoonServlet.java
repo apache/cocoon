@@ -51,6 +51,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
@@ -96,7 +97,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.27 2004/05/04 14:11:16 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.28 2004/05/11 17:20:40 joerg Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -779,14 +780,15 @@ public class CocoonServlet extends HttpServlet {
         defaultHierarchy.setDefaultLogTarget(servTarget);
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
-                
+        final String loggerManagerClass =
+            this.getInitParameter("logger-class", LogKitLoggerManager.class.getName());
+
         // the log4j support requires currently that the log4j system is already configured elsewhere
-        final boolean isLog4JLogger = "log4j".equals(this.getInitParameter("logger-type", "logkit"));
-        
-        final LoggerManager logKitLoggerManager = (isLog4JLogger ? (LoggerManager)new Log4JLoggerManager()
-                                                                 : new LogKitLoggerManager(defaultHierarchy));
-        ContainerUtil.enableLogging(logKitLoggerManager, logger);
-        
+
+        final LoggerManager loggerManager =
+                newLoggerManager(loggerManagerClass, defaultHierarchy);
+        ContainerUtil.enableLogging(loggerManager, logger);
+
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
         if (this.servletContextPath == null) {
@@ -801,13 +803,13 @@ public class CocoonServlet extends HttpServlet {
         }
 
         try {
-            ContainerUtil.contextualize(logKitLoggerManager, subcontext);
-            this.loggerManager = logKitLoggerManager;
+            ContainerUtil.contextualize(loggerManager, subcontext);
+            this.loggerManager = loggerManager;
 
-            if ( !isLog4JLogger ) {
+            if (loggerManager instanceof Configurable) {
                 //Configure the logkit management
                 String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
-    
+
                 // test if this is a qualified url
                 InputStream is = null;
                 if ( logkitConfig.indexOf(':') == -1) {
@@ -819,13 +821,31 @@ public class CocoonServlet extends HttpServlet {
                 }
                 final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
                 final Configuration conf = builder.build(is);
-                ContainerUtil.configure(logKitLoggerManager, conf);
+                ContainerUtil.configure(loggerManager, conf);
             }
+            ContainerUtil.initialize(loggerManager);
+
         } catch (Exception e) {
             errorHandler.error("Could not set up Cocoon Logger, will use screen instead", e, null);
         }
 
         this.log = this.loggerManager.getLoggerForCategory(accesslogger);
+    }
+
+    private LoggerManager newLoggerManager(String loggerManagerClass, Hierarchy hierarchy) {
+        if (loggerManagerClass.equals(LogKitLoggerManager.class.getName())) {
+            return new LogKitLoggerManager(hierarchy);
+        } else if (loggerManagerClass.equals(Log4JLoggerManager.class.getName()) ||
+                   loggerManagerClass.equalsIgnoreCase("LOG4J")) {
+            return new Log4JLoggerManager();
+        } else {
+            try {
+                Class clazz = Class.forName(loggerManagerClass);
+                return (LoggerManager)clazz.newInstance();
+            } catch (Exception e) {
+                return new LogKitLoggerManager(hierarchy);
+            }
+        }
     }
 
     /**
