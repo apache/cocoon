@@ -30,8 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:temp-repeater&gt;
  * </pre>
  *
- * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.3 2004/04/12 14:05:08 tim Exp $
  */
 public class TempRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

@@ -25,8 +25,7 @@ import java.util.ListIterator;
  * {@link ClassDefinition}. The resolve step replaces this definition with
  * the definitions contained in the referenced {@link ClassDefinition}.
  *
- * @author Timothy Larson
- * @version $Id: NewDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: NewDefinition.java,v 1.2 2004/04/12 14:05:09 tim Exp $
  */
 public class NewDefinition extends AbstractWidgetDefinition {
     private boolean resolving;

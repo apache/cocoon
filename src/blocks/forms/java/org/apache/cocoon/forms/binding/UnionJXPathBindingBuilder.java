@@ -30,8 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:union&gt;
  * </code></pre>
  *
- * @author Timothy Larson
- * @version CVS $Id: UnionJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id: UnionJXPathBindingBuilder.java,v 1.3 2004/04/12 14:05:08 tim Exp $
  */
 public class UnionJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

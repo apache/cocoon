@@ -34,8 +34,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * @author Timothy Larson
- * @version $Id: EffectPipe.java,v 1.4 2004/04/09 16:36:00 mpo Exp $
+ * @version $Id: EffectPipe.java,v 1.5 2004/04/12 14:05:09 tim Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
