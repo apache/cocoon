@@ -2035,6 +2035,7 @@ public class JXTemplateGenerator extends ComposerGenerator {
         map.put("request", request);
         map.put("response", response);
         map.put("context", app);
+        map.put("parameters", parameters);
         Object session = request.getSession(false);
         if (session != null) {
             map.put("session", session);
