@@ -92,6 +92,8 @@
 
 package org.apache.cocoon.util;
 
+import java.util.Vector;
+
 /**
  * A factory for the creation of enumeration types (missing in Java).
  * The same operations are provided as for Ada, only representation
@@ -102,12 +104,12 @@ package org.apache.cocoon.util;
  * the derived class.
  *
  * @author Christoph Grein
- * @version CVS $Id: EnumerationFactory.java,v 1.4 2004/03/06 02:26:13 antonio Exp $
+ * @version CVS $Id$
  */
 public class EnumerationFactory {
 
-  private static java.util.Vector allObjects =  // must be here JDK 1.1.3
-    new java.util.Vector (0, 1);  // empty, increment by 1
+  private static Vector allObjects =  // must be here JDK 1.1.3
+    new Vector (0, 1);  // empty, increment by 1
 
   private int pos;
   private String image;
@@ -118,11 +120,12 @@ public class EnumerationFactory {
    * Be careful: No check is made that the image string is unique!
    * @param image
    */
-  public EnumerationFactory (String image) {
-    this.pos   = allObjects.size ();
+  public EnumerationFactory(String image) {
+    this.pos = allObjects.size ();
     this.image = image;
-    allObjects.addElement (this);
+    allObjects.addElement(this);
   }
+
   public EnumerationFactory () {
     this ("");
   }
@@ -135,16 +138,19 @@ public class EnumerationFactory {
    * Object op OtherObject.
    * @param enum the right operand
    */
-  public boolean lt (EnumerationFactory enum) {                   // "<"
+  public boolean lt(EnumerationFactory enum) {                   // "<"
     return this.getPos() < enum.getPos ();
   }
-  public boolean le (EnumerationFactory enum) {                   // "<="
+
+  public boolean le(EnumerationFactory enum) {                   // "<="
     return this.getPos() <= enum.getPos ();
   }
-  public boolean gt (EnumerationFactory enum) {                   // ">"
+
+  public boolean gt(EnumerationFactory enum) {                   // ">"
     return this.getPos() > enum.getPos ();
   }
-  public boolean ge (EnumerationFactory enum) {                   // ">="
+
+  public boolean ge(EnumerationFactory enum) {                   // ">="
     return this.getPos() >= enum.getPos ();
   }
 
@@ -153,47 +159,49 @@ public class EnumerationFactory {
   //--------------------------------------------------------------------------
   // Numeric representation:
 
-  public int getPos () {                                          // Ada'Pos
+  public int getPos() {                                          // Ada'Pos
     return pos;
   }
+
   /**
    * Access to the numeric representation.
    * @param value the numeric value
    */
-  public static EnumerationFactory getVal (int value) {           // Ada'Val
-    return (EnumerationFactory) allObjects.elementAt (value);
+  public static EnumerationFactory getVal(int value) {           // Ada'Val
+    return (EnumerationFactory)allObjects.elementAt (value);
   }
 
   //--------------------------------------------------------------------------
   // Iterator:
 
-  public static EnumerationFactory getFirst () {                  // Ada'First
-    return getVal (0);
+  public static EnumerationFactory getFirst() {                  // Ada'First
+    return getVal(0);
   }
-  public static EnumerationFactory getLast () {                   // Ada'Last
-    return getVal (allObjects.size () - 1);
+  public static EnumerationFactory getLast() {                   // Ada'Last
+    return getVal(allObjects.size() - 1);
   }
 
   public EnumerationFactory getNext () {                          // Ada'Succ
-    return getVal (this.getPos () + 1);
+    return getVal(this.getPos() + 1);
   }
   public EnumerationFactory getPrev () {                          // Ada'Pred
-    return getVal (this.getPos () - 1);
+    return getVal(this.getPos() - 1);
   }
 
   //--------------------------------------------------------------------------
   // String representation:
 
-  public String toString () {                                     // Ada'Image
+  public String toString() {                                     // Ada'Image
     return image;
   }
-  public static EnumerationFactory getObject (String image) {     // Ada'Value
+
+  public static EnumerationFactory getObject(String image) {     // Ada'Value
     EnumerationFactory found;
     // Linear search seems good enough because there presumably
     // will not be too many literals.
     for (int i = 0 ; i < allObjects.size () ; i++) {
       found = (EnumerationFactory) allObjects.elementAt (i);
-      if (found.toString () == image) {
+      if (found.toString().equals(image)) {
         return found;
       }
     }
