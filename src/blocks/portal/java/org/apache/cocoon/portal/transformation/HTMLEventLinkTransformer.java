@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Current we only support POSTing of forms.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.9 2004/04/02 00:05:50 joerg Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.10 2004/04/02 07:07:45 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -110,7 +110,8 @@ extends AbstractCopletTransformer {
 
     protected void createAnchorEvent(Attributes attributes)
     throws SAXException {
-        AttributesImpl newAttributes = new AttributesImpl();
+        AttributesImpl newAttributes = new AttributesImpl(attributes);
+        newAttributes.removeAttribute("href");
         String link = attributes.getValue("href");
 
         CopletInstanceData cid = this.getCopletInstanceData();
