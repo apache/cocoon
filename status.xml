@@ -201,6 +201,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="32199">
+     Portal: If a coplet has an error, the error-uri has been called twice. This is fixed now.
+   </action>
    <action dev="VG" type="remove">
      Flowscript: Deprecated support for passing sitemap parameters into flowscript
      function as positional arguments. Use cocoon.parameters instead. Support will
