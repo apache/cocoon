@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.6 2003/06/04 13:48:50 upayavira Exp $
+ * @version CVS $Id: Constants.java,v 1.7 2003/06/04 14:19:08 upayavira Exp $
  */
 public final class Constants {
 
@@ -275,6 +275,26 @@ public final class Constants {
      * a directory, e.g. http://localhost:8080/site/
      */
     public static final String INDEX_URI = "index";
+
+    /**
+     * The directory to use as context root.
+     */
+    public static final String DEFAULT_CONTEXT_DIR = "./webapp";
+
+    /**
+     * The diretory to use to use for the generated output.
+     */
+    public static final String DEFAULT_DEST_DIR = "./site";
+
+    /**
+     * The diretory to use for generated files.
+     */
+    public static final String DEFAULT_WORK_DIR = "./work";
+
+    /**
+     * How a default configuration file is named.
+     */
+    public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
     /** The namespace URI for the Error/Exception XML */
     public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/" + CONF_VERSION;
