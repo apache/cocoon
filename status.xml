@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.317 2004/05/08 10:57:16 crossley Exp $:-->
+<!-- CVS $Id: status.xml,v 1.318 2004/05/08 12:39:20 antonio Exp $:-->
 
 <status>
  <developers>
@@ -207,6 +207,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated Joost to 20040330
+   </action>
    <action dev="JH" type="add" fixes-bug="28424" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
      RequestListener hook added, that is called before and after a request is processed.
    </action>
