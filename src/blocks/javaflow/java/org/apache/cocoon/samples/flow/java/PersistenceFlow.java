@@ -19,7 +19,7 @@ import java.util.*;
 
 import javax.jdo.PersistenceManager;
 
-import org.apache.cocoon.components.flow.java.VarMap;
+import org.apache.cocoon.components.flow.java.*;
 import org.apache.cocoon.forms.binding.*;
 import org.apache.cocoon.forms.flow.java.AbstractFormFlow;
 import org.apache.cocoon.forms.formmodel.Form;
@@ -118,16 +118,28 @@ public class PersistenceFlow extends AbstractFormFlow {
         PersistenceBroker broker = getPersistenceBroker();
 
         // Query all objects
-        Set results = new HashSet();
+        ArrayList results = new ArrayList();
         QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
         for(Iterator i=broker.getCollectionByQuery(query).iterator(); i.hasNext();) {
             results.add(i.next());
         }
+        // Sort result
+        Collections.sort(results, new EmployeeComparator());
         // Send response to the user
         sendPage("page/employee-result", new VarMap().add("employee", results));
     }
 
     public PersistenceBroker getPersistenceBroker() {
         return ((PBFactory)getComponent(PBFactory.ROLE)).defaultPersistenceBroker();
+    }
+
+    public class EmployeeComparator implements Comparator, Continuable {
+        public int compare(Object o1, Object o2) {
+            return ((Employee)o1).getId()-((Employee)o2).getId();
+        }
+      
+        public boolean equals(Object obj) {
+            return true;
+        }
     }
 }

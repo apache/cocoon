@@ -19,10 +19,9 @@
  * Employee binding bean
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.1 $ $Date: 2004/03/29 17:47:22 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/03/30 11:10:53 $
 -->
 <fd:context xmlns:fd="http://apache.org/cocoon/forms/1.0#binding" path="/" >
-    <fd:value id="id" path="id"/>
     <fd:value id="name" path="name"/>
     <fd:value id="department_id" path="departmentId"/>
 </fd:context>

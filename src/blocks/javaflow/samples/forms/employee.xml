@@ -17,11 +17,6 @@
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
   <fd:widgets>
-    <fd:field id="id" required="true">
-      <fd:label>ID</fd:label>
-      <fd:datatype base="integer"/>
-    </fd:field>
-
     <fd:field id="name" required="true">
       <fd:label>Name</fd:label>
       <fd:datatype base="string">
