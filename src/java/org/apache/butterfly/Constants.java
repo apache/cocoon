@@ -29,7 +29,7 @@ import java.util.Properties;
 public final class Constants {
 
     /** Our properties are now here: */
-    private static final String PROPS_FILE = "org/apache/cocoon/cocoon.properties";
+    private static final String PROPS_FILE = "org/apache/butterfly/cocoon.properties";
 
     static final Properties properties;
 
