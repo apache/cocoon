@@ -17,7 +17,7 @@
 
 <!--+
     | Simple XMLDB browser
-    | CVS $Id: xmldb2samples.xsl,v 1.2 2004/03/06 02:26:11 antonio Exp $
+    | CVS $Id$
     +-->
 
 <xsl:stylesheet version="1.0"
@@ -86,7 +86,7 @@
         </note>
       </group>
       <group name="Resource Content">
-        <xsl:call-template name="head"/>
+<!--        <xsl:call-template name="head"/> -->
         <xsl:apply-templates/>
       </group>
       <group name="Query">
@@ -113,7 +113,7 @@
         </note>
       </group>
       <group name="Results">
-        <xsl:call-template name="head"/>
+<!--        <xsl:call-template name="head"/> -->
         <xsl:if test="@resources = 0">
           <note>Query produced no results</note>
         </xsl:if>
