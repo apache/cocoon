@@ -1,4 +1,4 @@
-// $Id: FormValidatorAction.java,v 1.1.2.8 2001-05-02 16:22:41 mman Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.9 2001-05-10 14:13:38 mman Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Collections;
@@ -49,7 +49,7 @@ import org.xml.sax.EntityResolver;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-05-02 16:22:41 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-05-10 14:13:38 $
  */
 public class FormValidatorAction extends AbstractValidatorAction
 {
@@ -102,7 +102,7 @@ public class FormValidatorAction extends AbstractValidatorAction
                 for (int i = 0; i < rparams.length; i ++) {
                     name = rparams[i].trim ();
                     result = validateParameter (name, null, desc,
-                            params, false);
+                            params, true);
                     if (result == null) {
                         getLogger().debug ("FORMVALIDATOR: "
                                 + "validation failed for parameter " + name);
@@ -159,7 +159,7 @@ public class FormValidatorAction extends AbstractValidatorAction
                 for (int i = 0; i < set.length; i ++) {
                     name = set[i].getAttribute ("name", null);
                     result = validateParameter (name, set[i], 
-                            desc, params, false);
+                            desc, params, true);
                     if (result == null) {
                         getLogger().debug ("FORMVALIDATOR: "
                                 + "validation failed for parameter " + name);
@@ -178,5 +178,5 @@ public class FormValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: FormValidatorAction.java,v 1.1.2.8 2001-05-02 16:22:41 mman Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.9 2001-05-10 14:13:38 mman Exp $
 // vim: set et ts=4 sw=4:
