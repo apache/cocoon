@@ -53,8 +53,8 @@
 <!-- written by Ricardo Rocha "ricardo@apache.org" -->
 
 
-<xsl:stylesheet 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
 >
 
@@ -105,7 +105,7 @@
         Stack xspNodeStack = new Stack();
 
 	// Make session object readily available
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
 
         <xsl:for-each select="/processing-instruction()[not(contains(.,'xsp'))]">
           document.appendChild(
@@ -130,9 +130,9 @@
     xspCurrentNode =
       document.createElement("<xsl:value-of select="@name"/>");
     xspParentNode.appendChild(xspCurrentNode);
-    
+
     <xsl:apply-templates/>
-    
+
     ((Element) xspCurrentNode).normalize();
     xspCurrentNode = (Node) xspNodeStack.pop();
   </xsl:template>
@@ -204,10 +204,10 @@
     xspCurrentNode =
       document.createElement("<xsl:value-of select="name(.)"/>");
     xspParentNode.appendChild(xspCurrentNode);
-    
+
     <xsl:apply-templates select="@*"/>
     <xsl:apply-templates/>
-    
+
     ((Element) xspCurrentNode).normalize();
     xspCurrentNode = (Node) xspNodeStack.pop();
   </xsl:template>
