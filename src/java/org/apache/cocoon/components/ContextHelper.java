@@ -64,7 +64,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.4 2003/06/01 15:55:35 vgritsenko Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.5 2004/02/24 09:54:56 cziegeler Exp $
  */
 
 public final class ContextHelper {
@@ -78,6 +78,9 @@ public final class ContextHelper {
     /** Application <code>Context</code> Key for the current response object */
     public static final String CONTEXT_RESPONSE_OBJECT = CONTEXT_OBJECT_MODEL + '.' + ObjectModelHelper.RESPONSE_OBJECT;
 
+    /** Application <code>Context</code> Key for the current sitemap service manager */
+    public static final String CONTEXT_SITEMAP_SERVICE_MANAGER = "sitemap-service-manager";
+    
     private ContextHelper() {
         // Forbid instantiation
     }
