@@ -52,10 +52,15 @@ import org.xml.sax.helpers.DefaultHandler;
  * </p>
  * <p>
  * &lt;map:match pattern="file"&gt;<br>
- *        &lt;map:generate src="file.xml"/&gt;<br>
- *         &lt;map:transform type="translate"<br>
- *                src"translations/file_trans.xml"&gt;<br>
- *        &lt;/map:transform&gt;<br>
+ *   &lt;map:generate src="file.xml"/&gt;<br>
+ *   &lt;map:transform type="translate"<br>
+ *                     src"translations/file_trans.xml"&gt;<br>
+ *     &lt;parameter name="default_lang" value="fi"/&gt;<br>
+ *     &lt;parameter name="available_lang_1" value="fi"/&gt;<br>
+ *     &lt;parameter name="available_lang_2" value="en"/&gt;<br>
+ *     &lt;parameter name="available_lang_3" value="sv"/&gt;<br>
+ *   &lt;/map:transform&gt;<br>
+ *   ...<br>
  * </p>
  * <p>
  * When user requests .../file?lang=fi<br>
