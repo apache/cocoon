@@ -50,9 +50,9 @@
       <!--
       <parameter name="async" value="true"/>
       <parameter name="cache-role" value="org.apache.cocoon.caching.Cache"/>
-      <parameter name="refresher-role" value="org.apache.cocoon.components.source.impl.Refresher/Delay"/>
       <parameter name="default-expires" value="-1"/>
       -->
+      <parameter name="refresher-role" value="org.apache.cocoon.components.source.impl.Refresher/Delay"/>
     </component-instance>
 
 </xconf>
