@@ -87,8 +87,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * The generator is a combination of a DirectoryGenerator and a generator
  * for retrieving SourceProperties, SourcePermission etc.
  *
+ * @deprecated  use TraversableSourceDescriptionGenerator instead
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.6 2003/09/05 07:31:46 cziegeler Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.7 2003/10/23 17:13:33 unico Exp $
  */
 public class SourceDescriptionGenerator extends ServiceableGenerator
   implements CacheableProcessingComponent, Recyclable {
