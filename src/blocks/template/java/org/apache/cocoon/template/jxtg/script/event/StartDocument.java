@@ -27,9 +27,10 @@ public class StartDocument extends Event {
         templateProperties = new HashMap();
     }
 
-    private SourceValidity compileTime;
-    EndDocument endDocument; // null if document fragment
-    Map templateProperties;
+    private SourceValidity sourceValidity;
+    private String uri;
+    private EndDocument endDocument; // null if document fragment
+    private Map templateProperties;
 
     public EndDocument getEndDocument() {
         return endDocument;
@@ -43,19 +44,34 @@ public class StartDocument extends Event {
         return templateProperties;
     }
 
+    public String getUri() {
+        return this.uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     /**
-     * @param compileTime
+     * @param sourceValidity
      *            The compileTime to set.
      */
-    public void setCompileTime(SourceValidity compileTime) {
-        this.compileTime = compileTime;
+    public void setSourceValidity(SourceValidity sourceValidity) {
+        this.sourceValidity = sourceValidity;
     }
 
     /**
      * @return Returns the compileTime.
      */
-    public SourceValidity getCompileTime() {
-        return compileTime;
+    public SourceValidity getSourceValidity() {
+        return sourceValidity;
     }
 
+    /**
+     * @param validity
+     * @return
+     */
+    public Object getTemplateProperty(String name) {
+        return getTemplateProperties().get(name);
+    }
 }

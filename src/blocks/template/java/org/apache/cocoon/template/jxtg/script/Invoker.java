@@ -20,10 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
@@ -35,7 +32,6 @@ import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.expression.Literal;
 import org.apache.cocoon.template.jxtg.expression.MyJexlContext;
 import org.apache.cocoon.template.jxtg.expression.Subst;
-import org.apache.cocoon.template.jxtg.script.Parser;
 import org.apache.cocoon.template.jxtg.script.event.*;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -43,7 +39,6 @@ import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.util.Introspector;
 import org.apache.commons.jexl.util.introspection.Info;
 import org.apache.commons.jxpath.CompiledExpression;
@@ -52,8 +47,6 @@ import org.apache.commons.jxpath.JXPathContextFactory;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.mozilla.javascript.NativeArray;
 import org.w3c.dom.Node;
@@ -65,8 +58,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class Invoker {
-    private static final JXPathContextFactory jxpathContextFactory =
-        JXPathContextFactory.newInstance();
+    private static final JXPathContextFactory jxpathContextFactory = JXPathContextFactory
+            .newInstance();
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     private static final Iterator EMPTY_ITER = new Iterator() {
@@ -97,9 +90,10 @@ public class Invoker {
         }
     };
 
-    public static void execute(final XMLConsumer consumer, ExecutionContext executionContext,
-                                StartElement macroCall, Event startEvent, Event endEvent)
-        throws SAXException {
+    public static void execute(final XMLConsumer consumer,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent, ScriptManager scriptManager)
+            throws SAXException {
 
         MyJexlContext jexlContext = executionContext.getJexlContext();
         JXPathContext jxpathContext = executionContext.getJXPathContext();
@@ -327,9 +321,10 @@ public class Invoker {
                         status.setCurrent(value);
                         status.setLast((i == end || !iter.hasNext()));
                     }
-                    execute(consumer,
-                            executionContext.getChildContext(localJexlContext, localJXPathContext),
-                            macroCall, startForEach.getNext(), startForEach.getEndInstruction());
+                    execute(consumer, executionContext.getChildContext(
+                            localJexlContext, localJXPathContext), macroCall,
+                            startForEach.getNext(), startForEach
+                                    .getEndInstruction(), scriptManager);
                     // Skip rows
                     skipCounter = step;
                     while (--skipCounter > 0 && iter.hasNext()) {
@@ -347,8 +342,8 @@ public class Invoker {
                 while (startWhen != null) {
                     Object val;
                     try {
-                        val = ValueHelper.getValue(startWhen.getTest(), jexlContext,
-                                jxpathContext, Boolean.TRUE);
+                        val = ValueHelper.getValue(startWhen.getTest(),
+                                jexlContext, jxpathContext, Boolean.TRUE);
                     } catch (Exception e) {
                         throw new SAXParseException(e.getMessage(), ev
                                 .getLocation(), e);
@@ -360,16 +355,17 @@ public class Invoker {
                         result = (val != null);
                     }
                     if (result) {
-                        execute(consumer, executionContext,
-                                macroCall, startWhen.getNext(), startWhen.getEndInstruction());
+                        execute(consumer, executionContext, macroCall,
+                                startWhen.getNext(), startWhen
+                                        .getEndInstruction(), scriptManager);
                         break;
                     }
                     startWhen = startWhen.getNextChoice();
                 }
                 if (startWhen == null && startChoose.getOtherwise() != null) {
-                    execute(consumer, executionContext, macroCall,
-                            startChoose.getOtherwise().getNext(),
-                            startChoose.getOtherwise().getEndInstruction());
+                    execute(consumer, executionContext, macroCall, startChoose
+                            .getOtherwise().getNext(), startChoose
+                            .getOtherwise().getEndInstruction(), scriptManager);
                 }
                 ev = startChoose.getEndInstruction().getNext();
                 continue;
@@ -392,7 +388,7 @@ public class Invoker {
                 }
                 if (value == null) {
                     NodeList nodeList = toDOMNodeList("set", startSet,
-                                                      executionContext, macroCall);
+                            executionContext, macroCall, scriptManager);
                     // JXPath doesn't handle NodeList, so convert it to an array
                     int len = nodeList.getLength();
                     Node[] nodeArr = new Node[len];
@@ -409,9 +405,8 @@ public class Invoker {
                 continue;
             } else if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement) ev;
-                StartDefine def =
-                    (StartDefine) executionContext.getDefinitions().get(startElement
-                        .getQname());
+                StartDefine def = (StartDefine) executionContext
+                        .getDefinitions().get(startElement.getQname());
                 if (def != null) {
                     Map attributeMap = new HashMap();
                     Iterator i = startElement.getAttributeEvents().iterator();
@@ -506,8 +501,9 @@ public class Invoker {
                             .newContext(null, jxpathContext.getContextBean());
                     localJXPathContext.setVariables(vars);
                     call(ev.getLocation(), startElement, consumer,
-                         executionContext.getChildContext(localJexlContext, localJXPathContext),
-                         def.getBody(), def.getEndInstruction());
+                            executionContext.getChildContext(localJexlContext,
+                                    localJXPathContext), def.getBody(), def
+                                    .getEndInstruction(), scriptManager);
                     ev = startElement.getEndElement().getNext();
                     continue;
                 }
@@ -595,7 +591,7 @@ public class Invoker {
                 StartComment startJXComment = (StartComment) ev;
                 // Parse the body of the comment
                 NodeList nodeList = toDOMNodeList("comment", startJXComment,
-                                                  executionContext, macroCall);
+                        executionContext, macroCall, scriptManager);
                 // JXPath doesn't handle NodeList, so convert it to an array
                 int len = nodeList.getLength();
                 final StringBuffer buf = new StringBuffer();
@@ -679,8 +675,8 @@ public class Invoker {
                                 "macro invocation required instead of: " + val);
                     }
                     StartElement call = (StartElement) val;
-                    execute(consumer, executionContext, call, call
-                            .getNext(), call.getEndElement());
+                    execute(consumer, executionContext, call, call.getNext(),
+                            call.getEndElement(), scriptManager);
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(), ev
                             .getLocation(), exc);
@@ -693,8 +689,9 @@ public class Invoker {
             } else if (ev instanceof StartEvalBody) {
                 StartEvalBody startEval = (StartEvalBody) ev;
                 try {
-                    execute(consumer, executionContext, null,
-                            macroCall.getNext(), macroCall.getEndElement());
+                    execute(consumer, executionContext, null, macroCall
+                            .getNext(), macroCall.getEndElement(),
+                            scriptManager);
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(), ev
                             .getLocation(), exc);
@@ -706,7 +703,8 @@ public class Invoker {
                 continue;
             } else if (ev instanceof StartDefine) {
                 StartDefine startDefine = (StartDefine) ev;
-                executionContext.getDefinitions().put(startDefine.getQname(), startDefine);
+                executionContext.getDefinitions().put(startDefine.getQname(),
+                        startDefine);
                 ev = startDefine.getEndInstruction().getNext();
                 continue;
             } else if (ev instanceof StartImport) {
@@ -743,57 +741,12 @@ public class Invoker {
                     }
                     uri = buf.toString();
                 }
-                Source input = null;
                 StartDocument doc;
-                ServiceManager manager = executionContext.getServiceManager();
-                SourceResolver resolver = null;
                 try {
-                    resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
-                    input = resolver.resolveURI(uri);
-                    SourceValidity validity = null;
-                    Map cache = executionContext.getCache();
-                    synchronized (cache) {
-                        doc = (StartDocument) cache.get(input.getURI());
-                        if (doc != null) {
-                            boolean recompile = false;
-                            if (doc.getCompileTime() == null) {
-                                recompile = true;
-                            } else {
-                                int valid = doc.getCompileTime().isValid();
-                                if (valid == SourceValidity.UNKNOWN) {
-                                    validity = input.getValidity();
-                                    valid = doc.getCompileTime().isValid(
-                                            validity);
-                                }
-                                if (valid != SourceValidity.VALID) {
-                                    recompile = true;
-                                }
-                            }
-                            if (recompile) {
-                                doc = null; // recompile
-                            }
-                        }
-                    }
-                    if (doc == null) {
-                        Parser parser = new Parser();
-                        // call getValidity before using the stream is faster if
-                        // the source is a SitemapSource
-                        if (validity == null) {
-                            validity = input.getValidity();
-                        }
-                        SourceUtil.parse(manager, input, parser);
-                        doc = parser.getStartEvent();
-                        doc.setCompileTime(validity);
-                        synchronized (cache) {
-                            cache.put(input.getURI(), doc);
-                        }
-                    }
-                } catch (Exception exc) {
+                    doc = scriptManager.resolveTemplate(uri);
+                } catch (ProcessingException exc) {
                     throw new SAXParseException(exc.getMessage(), ev
                             .getLocation(), exc);
-                } finally {
-                    resolver.release(input);
-                    manager.release(resolver);
                 }
                 JXPathContext selectJXPath = jxpathContext;
                 MyJexlContext selectJexl = jexlContext;
@@ -803,7 +756,8 @@ public class Invoker {
                                 .getSelect(), jexlContext, jxpathContext);
                         selectJXPath = jxpathContextFactory.newContext(null,
                                 obj);
-                        selectJXPath.setVariables(executionContext.getVariables());
+                        selectJXPath.setVariables(executionContext
+                                .getVariables());
                         selectJexl = new MyJexlContext(jexlContext);
                         JXTemplateGenerator.fillContext(obj, selectJexl);
                     } catch (Exception exc) {
@@ -815,9 +769,9 @@ public class Invoker {
                     }
                 }
                 try {
-                    execute(consumer,
-                            executionContext.getChildContext(selectJexl, selectJXPath),
-                            macroCall, doc.getNext(), doc.getEndDocument());
+                    execute(consumer, executionContext.getChildContext(
+                            selectJexl, selectJXPath), macroCall,
+                            doc.getNext(), doc.getEndDocument(), scriptManager);
                 } catch (Exception exc) {
                     throw new SAXParseException(
                             "Exception occurred in imported template " + uri
@@ -847,8 +801,7 @@ public class Invoker {
     }
 
     private static void characters(ExecutionContext executionContext,
-                                   TextEvent event, CharHandler handler)
-            throws SAXException {
+            TextEvent event, CharHandler handler) throws SAXException {
         Iterator iter = event.getSubstitutions().iterator();
         while (iter.hasNext()) {
             Object subst = iter.next();
@@ -858,9 +811,9 @@ public class Invoker {
             } else {
                 JXTExpression expr = (JXTExpression) subst;
                 try {
-                    Object val = ValueHelper.getValue(expr,
-                                                      executionContext.getJexlContext(),
-                                                      executionContext.getJXPathContext());
+                    Object val = ValueHelper.getValue(expr, executionContext
+                            .getJexlContext(), executionContext
+                            .getJXPathContext());
                     chars = val != null ? val.toString().toCharArray()
                             : ArrayUtils.EMPTY_CHAR_ARRAY;
                 } catch (Exception e) {
@@ -887,25 +840,28 @@ public class Invoker {
     }
 
     private static void call(Locator location, StartElement macroCall,
-                      final XMLConsumer consumer, ExecutionContext executionContext,
-                      Event startEvent, Event endEvent)
-        throws SAXException {
+            final XMLConsumer consumer, ExecutionContext executionContext,
+            Event startEvent, Event endEvent, ScriptManager scriptManager)
+            throws SAXException {
         try {
-            execute(consumer, executionContext, macroCall, startEvent, endEvent);
+            execute(consumer, executionContext, macroCall, startEvent,
+                    endEvent, scriptManager);
         } catch (SAXParseException exc) {
             throw new SAXParseException(macroCall.getLocalName() + ": "
                     + exc.getMessage(), location, exc);
         }
     }
 
-    private static NodeList toDOMNodeList(String elementName, StartInstruction si,
-            ExecutionContext executionContext, StartElement macroCall)
+    private static NodeList toDOMNodeList(String elementName,
+            StartInstruction si, ExecutionContext executionContext,
+            StartElement macroCall, ScriptManager scriptManager)
             throws SAXException {
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
-        builder.startElement(JXTemplateGenerator.NS, elementName, elementName, EMPTY_ATTRS);
-        execute(builder, executionContext, macroCall, si.getNext(),
-                si.getEndInstruction());
+        builder.startElement(JXTemplateGenerator.NS, elementName, elementName,
+                EMPTY_ATTRS);
+        execute(builder, executionContext, macroCall, si.getNext(), si
+                .getEndInstruction(), scriptManager);
         builder.endElement(JXTemplateGenerator.NS, elementName, elementName);
         builder.endDocument();
         Node node = builder.getDocument().getDocumentElement();
