@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutAspectDataHandler.java,v 1.1 2003/05/19 12:50:58 cziegeler Exp $
+ * @version CVS $Id: LayoutAspectDataHandler.java,v 1.2 2003/05/19 13:16:34 cziegeler Exp $
  */
 public class LayoutAspectDataHandler 
     implements AspectDataHandler {
@@ -126,6 +126,13 @@ public class LayoutAspectDataHandler
         }
         datas.put( aspectName, data );
         
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getDescription()
+     */
+    public Object getDescription() {
+        return this.description;
     }
 
 }
