@@ -13,10 +13,22 @@
         </note>
     </group>
 
+    <group name="Javateach - simple literate programming">
+        <sample name="SomeTest.html" href="javateach/org/nothing/SomeTest.html">
+            HTML page, mixing teaching comments with source code
+        </sample>
+        <sample name="SomeTest.java" href="javateach/org/nothing/SomeTest.java">
+            original source file
+        </sample>
+        <sample name="SomeTest.xml" href="javateach/org/nothing/SomeTest.xml">
+            SlopGenerator output
+        </sample>
+    </group>
+
     <group name="Email parsing using SLOP">
         <sample name="email-example.txt" href="email-example.txt">
             original source file
-        </sample>    
+        </sample>
         <sample name="email-example.xml" href="rfc822/email-example.xml">
             XML result of parsing an RFC 822 message
         </sample>
