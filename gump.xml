@@ -113,7 +113,7 @@
     ********************************************
   -->
 
-  <project name="cocoon-block-fop" status="stable">
+  <project name="cocoon-block-fop" status="stable" dir="src/blocks/fop">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -136,7 +136,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="fop-dev@xml.apache.org"/>
   </project>
 
-  <project name="cocoon-block-scratchpad" status="unstable">
+  <project name="cocoon-block-scratchpad" status="unstable" dir="src/blocks/scratchpad">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -178,7 +178,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-batik" status="stable">
+  <project name="cocoon-block-batik" status="stable" dir="src/blocks/batik">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -200,7 +200,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="batik-dev@xml.apache.org"/>
   </project>
 
-  <project name="cocoon-block-chaperon" status="stable">
+  <project name="cocoon-block-chaperon" status="stable" dir="src/blocks/chaperon">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -210,8 +210,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="chaperon"/>
-    <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="castor"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
 
     <library name="chaperon"/>
     <library name="castor"/>
@@ -226,7 +226,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-jfor" status="stable">
+  <project name="cocoon-block-jfor" status="stable" dir="src/blocks/jfor">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -247,7 +247,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-itext" status="stable">
+  <project name="cocoon-block-itext" status="stable" dir="src/blocks/itext">
     <package>org.apache.cocoon</package>
     <ant target="gump-block">
       <property name="block-name" value="itext"/>
@@ -267,7 +267,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-session-fw" status="stable">
+  <project name="cocoon-block-session-fw" status="stable" dir="src/blocks/session-fw">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -286,7 +286,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-authentication-fw" status="stable">
+  <project name="cocoon-block-authentication-fw" status="stable" dir="src/blocks/authentication-fw">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -305,7 +305,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-portal-fw" status="deprecated">
+  <project name="cocoon-block-portal-fw" status="deprecated" dir="src/blocks/portal-fw">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -325,7 +325,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-databases" status="stable">
+  <project name="cocoon-block-databases" status="stable" dir="src/blocks/databases">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -348,7 +348,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-hsqldb" status="stable">
+  <project name="cocoon-block-hsqldb" status="stable" dir="src/blocks/hsqldb">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -370,7 +370,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-poi" status="stable">
+  <project name="cocoon-block-poi" status="stable" dir="src/blocks/poi">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -392,7 +392,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="poi-dev@jakarta.apache.org"/>
   </project>
 
-  <project name="cocoon-block-naming" status="stable">
+  <project name="cocoon-block-naming" status="stable" dir="src/blocks/naming">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -413,7 +413,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-jsp" status="stable">
+  <project name="cocoon-block-jsp" status="stable" dir="src/blocks/jsp">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -432,7 +432,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-python" status="stable">
+  <project name="cocoon-block-python" status="stable" dir="src/blocks/python">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -452,7 +452,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-lucene" status="stable">
+  <project name="cocoon-block-lucene" status="stable" dir="src/blocks/lucene">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -475,7 +475,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-html" status="stable">
+  <project name="cocoon-block-html" status="stable" dir="src/blocks/html">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -498,7 +498,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-bsf" status="stable">
+  <project name="cocoon-block-bsf" status="stable" dir="src/blocks/bsf">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -522,7 +522,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-profiler" status="stable">
+  <project name="cocoon-block-profiler" status="stable" dir="src/blocks/profiler">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -540,7 +540,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-velocity" status="stable">
+  <project name="cocoon-block-velocity" status="stable" dir="src/blocks/velocity">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -561,7 +561,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-linkrewriter" status="stable">
+  <project name="cocoon-block-linkrewriter" status="stable" dir="src/blocks/linkrewriter">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -579,7 +579,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-web3" status="stable">
+  <project name="cocoon-block-web3" status="stable" dir="src/blocks/web3">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -600,7 +600,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-slide" status="unstable">
+  <project name="cocoon-block-slide" status="unstable" dir="src/blocks/slide">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -634,7 +634,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-proxy" status="unstable">
+  <project name="cocoon-block-proxy" status="unstable" dir="src/blocks/proxy">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -656,7 +656,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-xmldb" status="stable">
+  <project name="cocoon-block-xmldb" status="stable" dir="src/blocks/xmldb">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -682,7 +682,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-deli" status="unstable">
+  <project name="cocoon-block-deli" status="unstable" dir="src/blocks/deli">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -706,7 +706,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-asciiart" status="unstable">
+  <project name="cocoon-block-asciiart" status="unstable" dir="src/blocks/asciiart">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -726,7 +726,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-mail" status="unstable">
+  <project name="cocoon-block-mail" status="unstable" dir="src/blocks/mail">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -751,7 +751,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-axis" status="unstable">
+  <project name="cocoon-block-axis" status="unstable" dir="src/blocks/axis">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -776,7 +776,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-taglib" status="unstable">
+  <project name="cocoon-block-taglib" status="unstable" dir="src/blocks/taglib">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -794,7 +794,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-forms" status="unstable">
+  <project name="cocoon-block-forms" status="unstable" dir="src/blocks/forms">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -804,12 +804,12 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="xreporter-expression"/>
+    <depend project="jakarta-oro"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="nekohtml"/>
     <depend project="nekodtd"/>
     <depend project="daisy-util"/>
     <depend project="daisy-htmlcleaner"/>
-    <depend project="jakarta-oro"/>
-    <depend project="cocoon-block-xsp" type="samples"/>
 
     <library name="xreporter-expression"/>
     <library name="jakarta-oro"/>
@@ -828,7 +828,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-woody" status="deprecated">
+  <project name="cocoon-block-woody" status="deprecated" dir="src/blocks/woody">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -854,7 +854,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-qdox" status="unstable">
+  <project name="cocoon-block-qdox" status="unstable" dir="src/blocks/qdox">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -875,7 +875,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
     </project>
 
-  <project name="cocoon-block-portal" status="stable">
+  <project name="cocoon-block-portal" status="stable" dir="src/blocks/portal">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -887,6 +887,7 @@
     <depend project="cocoon-block-session-fw"/>
     <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-html"/>
+    <depend project="cocoon-block-cron"/>
     <depend project="jtidy"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
@@ -906,7 +907,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-petstore" status="unstable">
+  <project name="cocoon-block-petstore" status="unstable" dir="src/blocks/petstore">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -928,7 +929,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-stx" status="unstable">
+  <project name="cocoon-block-stx" status="unstable" dir="src/blocks/stx">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -951,7 +952,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-linotype" status="unstable">
+  <project name="cocoon-block-linotype" status="unstable" dir="src/blocks/linotype">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -969,7 +970,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-webdav" status="unstable">
+  <project name="cocoon-block-webdav" status="unstable" dir="src/blocks/webdav">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -994,7 +995,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-eventcache" status="unstable">
+  <project name="cocoon-block-eventcache" status="unstable" dir="src/blocks/eventcache">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1018,7 +1019,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-apples" status="unstable">
+  <project name="cocoon-block-apples" status="unstable" dir="src/blocks/apples">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1037,7 +1038,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-querybean" status="unstable">
+  <project name="cocoon-block-querybean" status="unstable" dir="src/blocks/querybean">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1059,7 +1060,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-slop" status="unstable">
+  <project name="cocoon-block-slop" status="unstable" dir="src/blocks/slop">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1077,7 +1078,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-midi" status="unstable">
+  <project name="cocoon-block-midi" status="unstable" dir="src/blocks/midi">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1095,7 +1096,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-cron" status="unstable">
+  <project name="cocoon-block-cron" status="unstable" dir="src/blocks/cron">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1118,7 +1119,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-ojb" status="unstable">
+  <project name="cocoon-block-ojb" status="unstable" dir="src/blocks/ojb">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1128,8 +1129,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases" type="samples"/>
-    <depend project="cocoon-block-hsqldb" type="samples"/>
     <depend project="cocoon-block-forms" type="samples"/>
+    <depend project="cocoon-block-hsqldb" type="samples"/>
     <depend project="db-ojb"/>
     <depend project="jdo"/>
     <depend project="antlr"/>
@@ -1150,7 +1151,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-jms" status="unstable">
+  <project name="cocoon-block-jms" status="unstable" dir="src/blocks/jms">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1175,7 +1176,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-repository" status="unstable">
+  <project name="cocoon-block-repository" status="unstable" dir="src/blocks/repository">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1197,7 +1198,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-paranoid" status="stable">
+  <project name="cocoon-block-paranoid" status="stable" dir="src/blocks/paranoid">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1216,7 +1217,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-xsp" status="stable">
+  <project name="cocoon-block-xsp" status="stable" dir="src/blocks/xsp">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1240,7 +1241,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-javaflow" status="unstable">
+  <project name="cocoon-block-javaflow" status="unstable" dir="src/blocks/javaflow">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1263,7 +1264,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-serializers" status="unstable">
+  <project name="cocoon-block-serializers" status="unstable" dir="src/blocks/serializers">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1283,7 +1284,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-tour" status="unstable">
+  <project name="cocoon-block-tour" status="unstable" dir="src/blocks/tour">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1305,7 +1306,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-faces" status="unstable">
+  <project name="cocoon-block-faces" status="unstable" dir="src/blocks/faces">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
@@ -1337,7 +1338,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-template" status="unstable">
+  <project name="cocoon-block-template" status="unstable" dir="src/blocks/template">
     <package>org.apache.cocoon</package>
     
     <ant target="gump-block">
