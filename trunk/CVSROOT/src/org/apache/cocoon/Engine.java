@@ -1,36 +1,36 @@
-/*-- $Id: Engine.java,v 1.6 1999-12-16 11:42:36 stefano Exp $ -- 
+/*-- $Id: Engine.java,v 1.7 1999-12-23 01:28:58 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
- 
+
     Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
- 
+
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
- 
+
  1. Redistributions of  source code must  retain the above copyright  notice,
     this list of conditions and the following disclaimer.
- 
+
  2. Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
- 
+
  3. The end-user documentation included with the redistribution, if any, must
     include  the following  acknowledgment:  "This product includes  software
     developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
- 
+
  4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
     endorse  or promote  products derived  from this  software without  prior
     written permission. For written permission, please contact
     apache@apache.org.
- 
+
  5. Products  derived from this software may not  be called "Apache", nor may
     "Apache" appear  in their name,  without prior written permission  of the
     Apache Software Foundation.
- 
+
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
@@ -41,12 +41,12 @@
  ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
- 
+
  */
 package org.apache.cocoon;
 
@@ -72,13 +72,15 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 1999-12-16 11:42:36 $
+ * @version $Revision: 1.7 $ $Date: 1999-12-23 01:28:58 $
  */
 
 public class Engine implements Defaults {
 
+    private static Engine instance = null;
+
     Configurations configurations;
-    
+
     boolean showStatus;
 
     ProducerFactory producers;
@@ -92,13 +94,14 @@ public class Engine implements Defaults {
     Transformer transformer;
     Cache cache;
     Store store;
-    
+
     ServletContext servletContext;
 
     /**
-     * This method initializes the engine.
+     * This method initializes the engine. It is private because Engine
+     * implements the Singleton pattern and you cannot construct it directly.
      */
-    public Engine(Configurations configurations, Object context) throws Exception {
+    private Engine(Configurations configurations, Object context) throws Exception {
 
         // Create the object manager which is both Factory and Director
         // and register it
@@ -115,57 +118,98 @@ public class Engine implements Defaults {
             throw new Exception("Engine can't work in given context.");
         }
 
-        // register the context        
+        // register the context
         manager.setRole("context", context);
 
         // Create the parser and register it
-        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP, 
+        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP,
             PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
         manager.setRole("parser", parser);
 
         // Create the transformer and register it
-        transformer = (Transformer) manager.create((String) configurations.get(TRANSFORMER_PROP, 
+        transformer = (Transformer) manager.create((String) configurations.get(TRANSFORMER_PROP,
             TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
         manager.setRole("transformer", transformer);
 
         // Create the store and register it
-        store = (Store) manager.create((String) configurations.get(STORE_PROP, 
+        store = (Store) manager.create((String) configurations.get(STORE_PROP,
             STORE_DEFAULT), configurations.getConfigurations(STORE_PROP));
         manager.setRole("store", store);
 
         // Create the cache and register it
-        cache = (Cache) manager.create((String) configurations.get(CACHE_PROP, 
+        cache = (Cache) manager.create((String) configurations.get(CACHE_PROP,
             CACHE_DEFAULT), configurations.getConfigurations(CACHE_PROP));
         manager.setRole("cache", cache);
 
         // Create the interpreter factory and register it
         interpreters = (InterpreterFactory) manager.create(
-            "org.apache.cocoon.interpreter.InterpreterFactory", 
+            "org.apache.cocoon.interpreter.InterpreterFactory",
             configurations.getConfigurations(INTERPRETER_PROP));
         manager.setRole("interpreters", interpreters);
 
         // Create the producer factory and register it
         producers = (ProducerFactory) manager.create(
-            "org.apache.cocoon.producer.ProducerFactory", 
+            "org.apache.cocoon.producer.ProducerFactory",
             configurations.getConfigurations(PRODUCER_PROP));
         manager.setRole("producers", producers);
 
         // Create the processor factory and register it
         processors = (ProcessorFactory) manager.create(
-            "org.apache.cocoon.processor.ProcessorFactory", 
+            "org.apache.cocoon.processor.ProcessorFactory",
             configurations.getConfigurations(PROCESSOR_PROP));
         manager.setRole("processors", processors);
 
         // Create the formatter factory and register it
         formatters = (FormatterFactory) manager.create(
-            "org.apache.cocoon.formatter.FormatterFactory", 
+            "org.apache.cocoon.formatter.FormatterFactory",
             configurations.getConfigurations(FORMATTER_PROP));
         manager.setRole("formatters", formatters);
 
         // Create the browser table and register it
         browsers = (Browsers) manager.create(
-            "org.apache.cocoon.Browsers", 
+            "org.apache.cocoon.Browsers",
             configurations.getConfigurations(BROWSERS_PROP));
+    }
+
+    /**
+     * This will return a new instance of the Engine class, and handle
+     *   pooling of instances.  In this implementation, one instance is
+     *   shared across the JVM.  This replaces using the constructor
+     *   directly, because now the Cocoon servlet can initialize the
+     *   Engine, and other servlets and classes can use the same engine,
+     *   in order to funnel requests through Cocoon.
+     *
+     * @param confs - Configuration file information
+     * @param context - Object to use for Servlet Context
+     * @return Engine - instance to operate on
+     * @throws Exception - when things go awry
+     */
+    public static Engine getInstance(Configurations confs, Object context) throws Exception {
+
+        if (instance == null) {
+            synchronized (Engine.class) {
+                if (instance == null) {
+                    instance = new Engine(confs, context);
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    /**
+     * This is the <code>getInstance()</code> version that should be used by
+     *   anything other than the Cocoon servlet itself.  This assumes that
+     *   the engine has been set up and is ready to be used.  If this is called
+     *   before the instance has been correctly created, it throws an
+     *   exception.
+     *
+     * @return Engine - instance to operate on
+     */
+    public static Engine getInstance() throws Exception {
+        if (instance != null) return instance;
+
+        throw new Exception("The Cocoon engine has not been initialized!");
     }
 
     /**
@@ -184,7 +228,7 @@ public class Engine implements Defaults {
         // get the request flags
         boolean CACHE = getFlag(request, "cache", true);
         boolean DEBUG = getFlag(request, "debug", false);
-        
+
         // get the request user agent
         String agent = request.getParameter("user-Agent");
         if (agent == null) agent = request.getHeader("user-Agent");
@@ -200,26 +244,26 @@ public class Engine implements Defaults {
             System.setOut(stream);
             System.setErr(stream);
         }
-        
+
         Page page = null;
-        
+
         // ask if the cache contains the page requested and if it's
         // a valid instance (no changeable points have changed)
         if (CACHE) page = cache.getPage(request);
 
-        // the page was not found in the cache or the cache was 
+        // the page was not found in the cache or the cache was
         // disabled, we need to process it
         if (page == null) {
-        	
+
             // create the Page wrapper
             page = new Page();
-            
+
             // get the document producer
             Producer producer = producers.getProducer(request);
-            
+
             // set the producer as a page changeable point
             page.setChangeable(producer);
-            
+
             // pass the produced stream to the parser
             Document document = producer.getDocument(request);
 
@@ -237,18 +281,18 @@ public class Engine implements Defaults {
                 document = processor.process(document, environment);
                 page.setChangeable(processor);
             }
-            
+
             // get the right formatter for the page
             Formatter formatter = formatters.getFormatter(document);
-            
+
             // FIXME: I know it sucks to encapsulate a nice stream into
             // a long String to push it into the cache. In the future,
             // we'll find a smarter way to do it.
-            
+
             // format the page
             StringWriter writer = new StringWriter();
             formatter.format(document, writer, environment);
-            
+
             // fill the page bean with content
             page.setContent(writer.toString());
             page.setContentType(formatter.getMIMEType());
@@ -267,25 +311,25 @@ public class Engine implements Defaults {
 
 			// send the page
             out.println(page.getContent());
-            
+
 	        // if verbose mode is on the the output type allows it
 	        // print some processing info as a comment
 	        if (VERBOSE && (page.isText())) {
 	            time = System.currentTimeMillis() - time;
-	            out.println("<!-- This page was served " 
-	                + (page.isCached() ? "from cache " : "") 
-	                + "in " + time + " milliseconds by " 
+	            out.println("<!-- This page was served "
+	                + (page.isCached() ? "from cache " : "")
+	                + "in " + time + " milliseconds by "
 	                + Cocoon.version() + " -->");
 	        }
-	        
+
 	        // send all content so that client doesn't wait while caching.
 	        out.flush();
         }
-        
+
         // cache the created page.
         cache.setPage(page, request);
     }
-    
+
     /**
      * Returns the value of the request flag
      */
@@ -293,7 +337,7 @@ public class Engine implements Defaults {
         String flag = request.getParameter(name);
         return (flag != null) ? flag.toLowerCase().equals("true") : normal;
     }
-    
+
     /**
      * Returns an hashtable of parameters used to report the internal status.
      */
