@@ -43,7 +43,7 @@ public abstract class AbstractCustomBinding implements Binding {
     /**
      * Binding service method called upon loading.
      * This will delegate to the overloaded version specific for this base-class.
-     * {@link #loadFormFromModel(Widget, JXPathContext)
+     * {@link #doLoad(Widget, JXPathContext)
      * 
      * @param frmModel
      * @param objModel
@@ -56,7 +56,7 @@ public abstract class AbstractCustomBinding implements Binding {
     /**
      * Binding service method called upon saving.
      * This will delegate to the overloaded version specific for this base-class.
-     * {@link #saveFormFromModel(Widget, JXPathContext)
+     * {@link #doSave(Widget, JXPathContext)
      * 
      * @param frmModel
      * @param objModel
