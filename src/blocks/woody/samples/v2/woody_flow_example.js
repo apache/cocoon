@@ -140,8 +140,15 @@ function showForm1() {
     // A MultiValue widget can be initialized using an array:
     //
     wid.drinks.value = ["Jupiler", "Coca Cola"];
+
     //
-    // showForm() sends the form to the browser and doesn't return
+    // You can set additional properties on any widget that will
+    // be accessible in the pipeline (e.g. with JXTemplateGenerator)
+    //
+    wid.buttonName = "Commit";
+
+    //
+    // showForm() repeatedly sends the form to the browser and doesn't return
     // until validation is complete.
     //
     form.showForm("form1-display-pipeline");
