@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  $Id: roadmap.xml,v 1.1 2004/05/27 12:34:41 cziegeler Exp $
+  $Id: roadmap.xml,v 1.2 2004/06/01 13:18:59 cziegeler Exp $
 -->
 
 <document>
@@ -69,9 +69,8 @@
      <li>Move source repository to Subversion.</li>
      <li>Virtual sitemap components.</li>
      <li>First finished version of CForms.</li>
-     <li>Deprecate XSP (and provide a viable alternative).</li>
+     <li>Deprecate (not remove!) XSP (and provide a viable alternative).</li>
      <li>Cleaning up the caching/store mess.</li>
-     <li>Remove deprecated blocks etc.</li>
      <li>Deprecate blocks that haven't been maintained in a long while 
         or don't serve any evident purpose. Web3, apples, python, php, 
         asciiart might be some candidates. We will decide this on a 
@@ -80,7 +79,7 @@
      <li>Differentiate between blocks that provide a service to other 
         blocks and blocks that contain just samples or small applications 
         built upon cocoon (petstore, tour, linotpye). Maybe "samples-only" 
-        blocks should be a separate download.</li>
+        blocks should be a separate download. Perhaps remove deprecated blocks etc.</li>
      <li>
        Review the implications and the implementation of pooling.
      </li>
@@ -91,12 +90,6 @@
        Review the logging framework. Log4j is the de-facto standard and 
        we have blocks that complain if Log4j is not properly configured, 
        so let's accept it and stop reinventing the wheel.
-     </li>
-     <li>
-       Drop that Excalibur datasource. Components that need a DS should get 
-       one provided by the container via JNDI. If we don't have a container 
-       (running via the CLI, for instance), let the environment provide one 
-       and bind it to a JNDI namespace.
      </li>
      <li>
        Write more tests (you knew this one was coming ;-) ).
