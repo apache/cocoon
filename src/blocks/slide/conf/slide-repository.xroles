@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.repository.Repository']">
+<xroles xpath="/role-list" unless="role[@shorthand='slide-repository']">
 
   <role name="org.apache.cocoon.components.slide.SlideRepository"
-    shorthand="repository"
+    shorthand="slide-repository"
     default-class="org.apache.cocoon.components.slide.impl.SlideRepositoryImpl"
   />
 

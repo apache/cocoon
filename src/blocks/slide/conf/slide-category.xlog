@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xlog xpath="/logkit/categories" unless="category[@name='slide']">
-    <category name="slide" log-level="ERROR">
+    <category name="slide" log-level="INFO">
       <log-target id-ref="slide"/>
       <log-target id-ref="error"/>
     </category>

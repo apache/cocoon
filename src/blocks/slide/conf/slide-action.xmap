@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <xmap xpath="/sitemap/components/actions" unless="action[@name='source']">
-
-   <map:action logger="sitemap.action.source" name="source" src="org.apache.cocoon.acting.SourceMultiAction"/>
-
-   <map:action logger="sitemap.action.principal" name="principal" src="org.apache.cocoon.acting.PrincipalMultiAction"/>
+   <map:action 
+     name="source" 
+     logger="sitemap.action.source" 
+     src="org.apache.cocoon.acting.SourceMultiAction"
+   />
+   <map:action 
+     name="principal" 
+     logger="sitemap.action.principal" 
+     src="org.apache.cocoon.acting.PrincipalMultiAction"
+   />
 </xmap>
