@@ -33,12 +33,12 @@ import java.util.Locale;
  *  <li>can hold a value (which can be any kind of object). See {@link #getValue()}.</li>
  *  <li>can read its value from a request object (and convert it from a string to its native type).
  *  See {@link #readFromRequest(FormContext)}.</li>
- *  <li>can validate itself. See {@link #validate(FormContext)}.</li>
+ *  <li>can validate itself. See {@link #validate()}.</li>
  *  <li>can generate an XML representation of itself.</li>
  * </ul>
  *
  * <p>When a request is submitted, first the {@link #readFromRequest(FormContext)} method of all widgets
- * will be called so that they can read their value(s). Next, the {@link #validate(FormContext)} method will
+ * will be called so that they can read their value(s). Next, the {@link #validate()} method will
  * be called. Doing this in two steps allows the validation to compare values between widgets.
  * See also the method {@link Form#process(FormContext)}.</p>
  *
@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.10 2004/04/28 16:34:12 bruno Exp $
+ * @version CVS $Id: Widget.java,v 1.11 2004/04/30 12:22:40 bruno Exp $
  */
 public interface Widget {
 
