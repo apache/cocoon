@@ -52,8 +52,8 @@ package org.apache.cocoon.webapps.authentication.components;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
-import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceParameters;
+import org.w3c.dom.Document;
 
 /**
  * Verify if a user can be authenticated.
@@ -62,17 +62,50 @@ import org.apache.excalibur.source.SourceParameters;
  * An authenticator must be implemented in a thread safe manner!
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.8 2003/07/12 18:39:49 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.9 2003/10/24 08:26:35 cziegeler Exp $
 */
 public interface Authenticator {
 
     /**
+     * This object describes the success or the failure of an attempt
+     * to authenticate a user.
+     * The boolean flag valid specifies a success (valid) or a failure
+     * (not valid).
+     * The document result contains in the case of a success the
+     * authentication xml that is store in the session.
+     * In the case of a failure, the result can contain information
+     * about the failure (or the document can be null).
+     * If in the case of a failure the result contains information,
+     * the xml must follow this format:
+     * <root>
+     *   <failed/>
+     *   if data is available data is included, otherwise:
+     *   <data>No information</data>
+     *   If exception message contains info, it is included into failed 
+     * </root>
+     * The root element is removed and the contained elements are stored
+     * into the temporary context.
+     */
+    public static class AuthenticationResult {
+        
+        public final boolean  valid;
+        public final Document result;
+
+        public AuthenticationResult(final boolean  valid,
+                                    final Document result) {
+            this.valid = valid;
+            this.result = result;
+        }
+
+    }
+
+    /**
      * Try to authenticate the user.
-     * @return A new {@link UserHandler} if authentication was successful,
-     *          otherwise null is returned.
+     * @return A AuthenticationResult that is either valid (authentication
+     *         successful) or invalid (authentication failed.
      * @throws ProcessingException Only if an error occurs
      */
-    public abstract UserHandler authenticate(HandlerConfiguration configuration,
-                                               SourceParameters parameters)
+    public AuthenticationResult authenticate(HandlerConfiguration configuration,
+                                             SourceParameters parameters)
     throws ProcessingException;
 }

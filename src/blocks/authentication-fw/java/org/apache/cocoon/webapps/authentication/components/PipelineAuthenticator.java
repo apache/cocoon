@@ -63,12 +63,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
-import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
-import org.apache.cocoon.webapps.authentication.user.UserHandler;
-import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.MediaManager;
-import org.apache.cocoon.webapps.session.SessionConstants;
-import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.Source;
@@ -76,7 +71,6 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -88,7 +82,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.5 2003/10/23 11:29:36 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.6 2003/10/24 08:26:35 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -160,13 +154,11 @@ public class PipelineAuthenticator
         return isValid;
     }
 
-    /**
-     * Try to authenticate the user.
-     * @return A new {@link UserHandler} if authentication was successful
-     * @throws ProcessingException
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.authentication.components.Authenticator#authenticate(org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration, org.apache.excalibur.source.SourceParameters)
      */
-    public UserHandler authenticate( HandlerConfiguration configuration,
-                                      SourceParameters      parameters)
+    public AuthenticationResult authenticate( HandlerConfiguration configuration,
+                                              SourceParameters      parameters)
     throws ProcessingException {
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("start authenticator using handler " + configuration.getName());
@@ -210,7 +202,7 @@ public class PipelineAuthenticator
 
         // test if authentication was successful
         boolean isValid = false;
-        UserHandler handler = null;
+        AuthenticationResult result = null;
         if (doc != null) {
             isValid = this.isValidAuthenticationFragment( doc );
 
@@ -219,9 +211,6 @@ public class PipelineAuthenticator
                     this.getLogger().info("Authenticator: User authenticated using handler '" + configuration.getName()+"'");
                 }
                 
-                AuthenticationContext authContext = new AuthenticationContext(this.context);
-                handler = new UserHandler(configuration, authContext);
-
                 MediaManager mediaManager = null;
                 String mediaType;
                 try {
@@ -232,7 +221,7 @@ public class PipelineAuthenticator
                 } finally {
                     this.manager.release( mediaManager );
                 }
-                synchronized(authContext) {
+                synchronized (configuration) {
                     // add special nodes to the authentication block:
                     // useragent, type and media
                     Element specialElement;
@@ -251,8 +240,7 @@ public class PipelineAuthenticator
                     specialElement.appendChild(specialValue);
                     authNode.appendChild(specialElement);
 
-                    // store the authentication data in the context
-                    authContext.init(doc);
+                    result = new AuthenticationResult(true, doc);
 
                 } // end sync
             }
@@ -267,19 +255,20 @@ public class PipelineAuthenticator
 
             if (doc != null) {
                 data = DOMUtil.getFirstNodeFromPath(doc, new String[] {"authentication","data"}, false);
-            } else {
-                doc = DOMUtil.createDocument();
             }
+            doc = DOMUtil.createDocument();
 
             // now create the following xml:
-            // <failed/>
-            // if data is available data is included, otherwise:
-            // <data>No information</data>
-            // If exception message contains info, it is included into failed
-            DocumentFragment authenticationFragment = doc.createDocumentFragment();
-
+            // <root>
+            //   <failed/>
+            //   if data is available data is included, otherwise:
+            //   <data>No information</data>
+            //   If exception message contains info, it is included into failed
+            // </root>
+            final Element root = doc.createElementNS(null, "root");
+            doc.appendChild(root);
             Element element = doc.createElementNS(null, "failed");
-            authenticationFragment.appendChild(element);
+            root.appendChild(element);
 
             if (exceptionMsg != null) {
                 Text text = doc.createTextNode(exceptionMsg);
@@ -288,31 +277,21 @@ public class PipelineAuthenticator
 
             if (data == null) {
                 element = doc.createElementNS(null, "data");
-                authenticationFragment.appendChild(element);
-                Text text = doc.createTextNode("No information");
+                root.appendChild(element);
+                Text text = doc.createTextNode("No information available");
                 element.appendChild(text);
             } else {
-                authenticationFragment.appendChild(doc.importNode(data, true));
+                root.appendChild(doc.importNode(data, true));
             }
             
-            // now set this information in the temporary context
-            ContextManager sessionManager = null;
-            try {
-                sessionManager = (ContextManager) this.manager.lookup( ContextManager.ROLE );
-                SessionContext temp = sessionManager.getContext( SessionConstants.TEMPORARY_CONTEXT );
-                temp.appendXML("/", authenticationFragment);
-            } catch ( ServiceException se ) {
-                throw new ProcessingException("Unable to lookup session manager.", se);
-            } finally {
-                this.manager.release( sessionManager );
-            }
+            result = new AuthenticationResult(false, doc);
         }
             
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("end authenticator");
         }
 
-        return handler;
+        return result;
     }
     
     
