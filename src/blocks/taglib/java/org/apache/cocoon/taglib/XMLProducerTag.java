@@ -20,8 +20,10 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: XMLProducerTag.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface XMLProducerTag extends Tag, XMLProducer {
+
+    // just a combination of the two interfaces
 
 }

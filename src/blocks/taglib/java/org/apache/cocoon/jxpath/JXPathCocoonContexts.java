@@ -17,10 +17,10 @@ package org.apache.cocoon.jxpath;
 
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -64,12 +64,13 @@ import org.apache.commons.jxpath.servlet.KeywordVariables;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @version CVS $Id$
  */
-public final class JXPathCocoonContexts implements Component, Contextualizable, Recyclable {
+public final class JXPathCocoonContexts implements Component, Contextualizable, ThreadSafe {
 
     public static final String ROLE = JXPathCocoonContexts.class.getName();
 
+    private static final String VARCONTEXT = Constants.JXPATH_CONTEXT + "/VAR";
+
     private static JXPathContextFactory factory;
-    private JXPathContext variableContext;
     private Context context;
 
     static {
@@ -84,10 +85,15 @@ public final class JXPathCocoonContexts implements Component, Contextualizable, 
     }
 
     public final JXPathContext getVariableContext() {
-        if (variableContext == null) {
-            variableContext = factory.newContext(getRequestContext(), null);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
+
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        JXPathContext context = (JXPathContext) request.getAttribute(VARCONTEXT);
+        if (context == null) {
+            context = factory.newContext(getRequestContext(), null);
+            request.setAttribute(VARCONTEXT, context);
         }
-        return variableContext;
+        return context;
     }
 
     /**
@@ -157,10 +163,4 @@ public final class JXPathCocoonContexts implements Component, Contextualizable, 
         return context;
     }
 
-    /*
-     * @see Recyclable#recycle()
-     */
-    public void recycle() {
-        this.variableContext = null;
-    }
 }

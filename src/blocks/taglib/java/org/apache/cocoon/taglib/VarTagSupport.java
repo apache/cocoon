@@ -29,7 +29,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * Add support for setting and getting variables
  * 
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: VarTagSupport.java,v 1.6 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class VarTagSupport extends TagSupport implements Serviceable {
     protected String var;
@@ -59,10 +59,10 @@ public abstract class VarTagSupport extends TagSupport implements Serviceable {
 
     protected final Object getVariable(String name) {
         JXPathContext context = getVariableContext();
-        if (name.charAt(0) == '$')
+        if (name.charAt(0) == '$') {
             return context.getValue(name);
-        else
-            return context.getVariables().getVariable(name);
+        }
+        return context.getVariables().getVariable(name);
         //getRequest().getAttribute(name);
     }
 

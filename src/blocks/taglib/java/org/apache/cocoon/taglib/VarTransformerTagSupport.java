@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: VarTransformerTagSupport.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class VarTransformerTagSupport extends VarTagSupport implements TransformerTag {
     protected XMLConsumer xmlConsumer;
@@ -39,12 +39,14 @@ public class VarTransformerTagSupport extends VarTagSupport implements Transform
      * @see ContentHandler#startDocument()
      */
     public void startDocument() throws SAXException {
+        // nothing to do here        
     }
 
     /*
      * @see ContentHandler#endDocument()
      */
     public void endDocument() throws SAXException {
+        // nothing to do here
     }
 
     /*

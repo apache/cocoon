@@ -69,10 +69,10 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
                 return null;
             }
 
-            if ((isInterface && klass.isInstance(tag)) || klass.isAssignableFrom(tag.getClass()))
+            if ((isInterface && klass.isInstance(tag)) || klass.isAssignableFrom(tag.getClass())) {
                 return tag;
-            else
-                from = tag;
+            }
+            from = tag;
         }
     }
 
