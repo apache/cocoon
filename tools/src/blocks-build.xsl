@@ -439,7 +439,7 @@
       </jar>
 
       <if>
-        <istrue value="${{build.archive-sources}}"/>
+        <istrue value="${{include.sources-in-jars}}"/>
         <then>
           <jar jarfile="${{build.blocks}}/{$block-name}-block.jar" update="true">
             <fileset dir="${{blocks}}/{$block-name}/java">

@@ -125,7 +125,7 @@
     </jar>
     <!-- optionally add source files to the core jar -->
     <if>
-      <istrue value="${build.archive-sources}"/>
+      <istrue value="${include.sources-in-jars}"/>
       <then>
         <jar jarfile="${build}/${name}.jar" update="yes">
           <fileset dir="${java}">
@@ -144,7 +144,7 @@
     </jar>
     <!-- optionally add source files to the jar -->
     <if>
-      <istrue value="${build.archive-sources}"/>
+      <istrue value="${include.sources-in-jars}"/>
       <then>
         <jar jarfile="${build}/${name}-deprecated.jar" update="yes">
           <fileset dir="${deprecated.src}">
@@ -167,7 +167,7 @@
     </jar>
     <!-- optionally add source files to the jar -->
     <if>
-      <istrue value="${build.archive-sources}"/>
+      <istrue value="${include.sources-in-jars}"/>
       <then>
         <jar jarfile="${build}/${name}-testcase.jar" update="yes">
           <fileset dir="${test}">
