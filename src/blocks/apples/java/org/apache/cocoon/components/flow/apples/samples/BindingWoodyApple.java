@@ -41,6 +41,7 @@ import org.apache.cocoon.forms.FormManager;
 import org.apache.cocoon.forms.binding.Binding;
 import org.apache.cocoon.forms.binding.BindingManager;
 import org.apache.cocoon.forms.formmodel.Form;
+import org.apache.cocoon.forms.transformation.FormPipelineConfig;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
@@ -194,7 +195,7 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
         if (this.wrapperContextMap == null) {
             if (this.form != null) {
                 this.wrapperContextMap = new HashMap();
-                this.wrapperContextMap.put("woody-form", this.form);
+                this.wrapperContextMap.put(FormPipelineConfig.COCOONFORM, this.form);
             }
         }
         return this.wrapperContextMap;
