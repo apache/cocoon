@@ -54,7 +54,7 @@
  * WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: auth.js,v 1.5 2003/09/21 12:01:17 upayavira Exp $
+ * @version CVS $Id: auth.js,v 1.6 2003/11/16 00:28:40 vgritsenko Exp $
 */
 
 function auth_checkAuthentication(handler, application) {
