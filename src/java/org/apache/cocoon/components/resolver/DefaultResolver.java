@@ -65,7 +65,7 @@ import org.apache.excalibur.xml.DefaultEntityResolver;
  * &lt;/entity-resolver&gt;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultResolver.java,v 1.4 2003/03/14 08:39:16 cziegeler Exp $
+ * @version CVS $Id: DefaultResolver.java,v 1.5 2003/03/14 13:10:53 cziegeler Exp $
  * @since 2.1
  */
 public class DefaultResolver
@@ -74,12 +74,19 @@ public class DefaultResolver
     /**
      * Parse a catalog
      */
-    protected void parseCatalog(String file) {
-        // relative uri
-        if (file.indexOf(":/") == -1 && !file.startsWith("/") ) {
-            file = "context://" + file;
+    protected void parseCatalog(String uri) {
+        // check for relative URIs
+        //   if the URI has ':/' then it's a URI
+        //   if the URI starts with '/ it's an absolute (UNIX) path
+        //   if the URI has a ':' at position 1, it's an absolute windows path
+        // otherwise we have a relative URI, that is resolved relative
+        // to the context
+        if (uri.indexOf(":/") == -1 
+            && !uri.startsWith("/") 
+            && !(uri.length() > 1 && uri.charAt(1) == ':')) {
+                uri = "context://" + uri;
         }
-        super.parseCatalog( file );
+        super.parseCatalog( uri );
     }
     
     /**
