@@ -25,7 +25,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-16 20:02:23 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-21 18:40:55 $
  */
 public class GeneratorSelector extends CocoonComponentSelector {
     private ClassLoaderManager classManager;
@@ -65,6 +65,6 @@ public class GeneratorSelector extends CocoonComponentSelector {
     }
 
     public void addGenerator(Object hint, Class generator) throws ComponentManagerException {
-        super.addComponent(hint, generator, new DefaultConfiguration("", "-"));
+        super.addComponent(hint, generator, new DefaultConfiguration("", "GeneratorSelector"));
     }
 }
