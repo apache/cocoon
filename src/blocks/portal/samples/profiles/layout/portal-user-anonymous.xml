@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <composite-layout name="row">
   <item>
     <composite-layout name="column">
       <item>
         <parameter name="width" value="60%"/>
-        <coplet-layout name="coplet">
+        <coplet-layout name="coplet" layout-renderer-name="borderless-window">
           <coplet-instance-data>Portal-Intro-1</coplet-instance-data>
         </coplet-layout>
       </item>
@@ -37,13 +37,13 @@
     <composite-layout name="column">
       <item>
         <parameter name="width" value="25%"/>
-        <coplet-layout name="coplet">
+        <coplet-layout name="coplet" layout-renderer-name="borderless-window">
           <coplet-instance-data>Portal-Left-1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <parameter name="width" value="75%"/>
-        <coplet-layout name="coplet">
+        <coplet-layout name="coplet" layout-renderer-name="borderless-window">
           <coplet-instance-data>Portal-Right-1</coplet-instance-data>
         </coplet-layout>
       </item>
@@ -51,7 +51,7 @@
   </item>
   <item>
     <parameter name="height" value="500"/>
-    <coplet-layout name="coplet">
+    <coplet-layout name="coplet" layout-renderer-name="borderless-window">
       <coplet-instance-data>Portal-Bottom-1</coplet-instance-data>
     </coplet-layout>
   </item>
