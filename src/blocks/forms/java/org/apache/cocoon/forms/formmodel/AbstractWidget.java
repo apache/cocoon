@@ -111,7 +111,7 @@ public abstract class AbstractWidget implements Widget {
      */
     // This method is final in order for other methods in this class to use this.parent
     public final Widget getParent() {
-        return parent;
+        return this.parent;
     }
 
     /** 
@@ -153,10 +153,10 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public WidgetState getCombinedState() {
-        if (parent == null) {
+        if (this.parent == null) {
             return this.state;
         } else {
-            return WidgetState.strictest(this.state, parent.getCombinedState());
+            return WidgetState.strictest(this.state, this.parent.getCombinedState());
         }
     }
 
