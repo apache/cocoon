@@ -69,8 +69,7 @@ function feedbackWizard(form) {
 
     form.setModel(bean);
 
-    form.sendView("userIdentity", 
-		  "view/userIdentity.xml",
+    form.sendView("view/userIdentity.xml",
 		  function(form) {
 	var bean = form.getModel();
 	print("I can also do validation in JavaScript");
@@ -82,8 +81,7 @@ function feedbackWizard(form) {
     });
     print("handling user identity");
 
-    form.sendView("deployment", 
-		  "view/deployment.xml", 
+    form.sendView("view/deployment.xml", 
 		  function(form) {
         var bean = form.getModel();
         print("I can also do validation in JavaScript");
@@ -93,10 +91,10 @@ function feedbackWizard(form) {
     });
     print("handling deployment");
 
-    form.sendView("system", "view/system.xml");
+    form.sendView("view/system.xml");
     print("handling system");
 
-    form.sendView("confirm", "view/confirm.xml");
+    form.sendView("view/confirm.xml");
     print("handling confirm");
 
     form.finish("view/end.xml");
