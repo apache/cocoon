@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.19 2003/12/08 10:23:48 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.20 2003/12/28 21:18:29 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -100,7 +100,6 @@ public abstract class AbstractProcessingPipeline
     protected Generator generator;
     protected Parameters generatorParam;
     protected String generatorSource;
-    protected ServiceSelector generatorSelector;
 
     // Transformer stuff
     protected ArrayList transformers = new ArrayList();
@@ -113,26 +112,22 @@ public abstract class AbstractProcessingPipeline
     protected Parameters serializerParam;
     protected String serializerSource;
     protected String serializerMimeType;
-    protected String sitemapSerializerMimeType;
-    protected OutputComponentSelector serializerSelector;
 
     // Reader stuff
     protected Reader reader;
     protected Parameters readerParam;
     protected String readerSource;
     protected String readerMimeType;
-    protected String sitemapReaderMimeType;
-    protected OutputComponentSelector readerSelector;
 
     /** This is the last component in the pipeline, either the serializer
      *  or a custom xmlconsumer for the cocoon: protocol etc.
      */
     protected XMLConsumer lastConsumer;
 
-    /** the component manager set with service() */
+    /** the service manager set with service() */
     protected ServiceManager manager;
 
-    /** the component manager set with service() and recompose() */
+    /** the service manager set with service() and recompose() */
     protected ServiceManager newManager;
 
     /** The configuration */
@@ -250,12 +245,7 @@ public abstract class AbstractProcessingPipeline
             throw new ProcessingException ("Reader already set. You cannot use a reader and a generator for one pipeline.");
         }
         try {
-            this.generatorSelector = (ServiceSelector) this.newManager.lookup(Generator.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of generator selector failed.", ce);
-        }
-        try {
-            this.generator = (Generator) this.generatorSelector.select(role);
+            this.generator = (Generator) newManager.lookup(role);
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of generator for role '"+role+"' failed.", ce);
         }
@@ -316,19 +306,14 @@ public abstract class AbstractProcessingPipeline
         }
 
         try {
-            this.serializerSelector = (OutputComponentSelector) this.newManager.lookup(Serializer.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of serializer selector failed.", ce);
-        }
-        try {
-            this.serializer = (Serializer)serializerSelector.select(role);
+            this.serializer = (Serializer) newManager.lookup(role);
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of serializer for role '"+role+"' failed.", ce);
         }
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
-        this.sitemapSerializerMimeType = serializerSelector.getMimeTypeForHint(role);
+//        this.sitemapSerializerMimeType = serializerSelector.getMimeTypeForHint(role);
         this.lastConsumer = this.serializer;
     }
 
@@ -346,19 +331,14 @@ public abstract class AbstractProcessingPipeline
         }
 
         try {
-            this.readerSelector = (OutputComponentSelector) this.newManager.lookup(Reader.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of reader selector failed.", ce);
-        }
-        try {
-            this.reader = (Reader)readerSelector.select(role);
+            this.reader = (Reader) newManager.lookup(role);
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of reader for role '"+role+"' failed.", ce);
         }
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
-        this.sitemapReaderMimeType = readerSelector.getMimeTypeForHint(role);
+        // this.sitemapReaderMimeType = readerSelector.getMimeTypeForHint(role);
     }
 
     /**
@@ -419,13 +399,11 @@ public abstract class AbstractProcessingPipeline
             } else if (serializerMimeType != null) {
                 // there was a mimeType specified in the sitemap pipeline
                 environment.setContentType (serializerMimeType);
-            } else if (this.sitemapSerializerMimeType != null) {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType (this.sitemapSerializerMimeType);
             } else {
                 // No mimeType available
                 String message = "Unable to determine MIME type for " +
-                    environment.getURIPrefix() + "/" + environment.getURI();
+                    environment.getURIPrefix() == null ? "" : environment.getURIPrefix()
+                    + "/" + environment.getURI();
                 throw new ProcessingException(message);
             }
         } catch (SAXException e) {
@@ -591,8 +569,6 @@ public abstract class AbstractProcessingPipeline
 
             if ( this.readerMimeType != null ) {
                 environment.setContentType(this.readerMimeType);                
-            } else if ( this.sitemapReaderMimeType != null ) {
-                environment.setContentType(this.sitemapReaderMimeType);                
             } else {
                 String mimeType = this.reader.getMimeType();
                 if ( mimeType != null ) {
@@ -655,19 +631,15 @@ public abstract class AbstractProcessingPipeline
 
     public void recycle() {
         // release reader.
-        if ( this.readerSelector != null) {
-            this.readerSelector.release(this.reader);
-            this.newManager.release( this.readerSelector );
-            this.readerSelector = null;
+        if ( this.reader != null) {
+            this.newManager.release( this.reader );
             this.reader = null;
             this.readerParam = null;
         }
 
         // Release generator.
-        if ( this.generatorSelector != null) {
-            this.generatorSelector.release( this.generator );
-            this.newManager.release( this.generatorSelector );
-            this.generatorSelector = null;
+        if ( this.generator != null) {
+            this.newManager.release( this.generator );
             this.generator = null;
             this.generatorParam = null;
         }
@@ -686,10 +658,8 @@ public abstract class AbstractProcessingPipeline
         this.transformerSources.clear();
 
         // release serializer
-        if ( this.serializerSelector != null ) {
-            this.serializerSelector.release(this.serializer);
-            this.newManager.release( this.serializerSelector );
-            this.serializerSelector = null;
+        if ( this.serializer != null ) {
+            this.newManager.release( this.serializer );
             this.serializerParam = null;
         }
         this.serializer = null;
