@@ -65,9 +65,6 @@ import net.sourceforge.chaperon.process.ParserProcessor;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
@@ -76,6 +73,9 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -110,17 +110,17 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.5 2003/09/24 21:54:48 cziegeler Exp $
+ * @version CVS $Id: ParserTransformer.java,v 1.6 2003/10/24 23:44:26 joerg Exp $
  */
 public class ParserTransformer extends ParserProcessorAdapter
-  implements Transformer, LogEnabled, Composable, Parameterizable,
+  implements Transformer, LogEnabled, Serviceable, Parameterizable,
              Recyclable, Disposable, CacheableProcessingComponent {
 
     private String grammar;
     private Source grammarSource;
 
     private Logger logger;
-    private ComponentManager manager;
+    private ServiceManager manager;
     private SourceResolver resolver;
 
     private ParserAutomaton automaton;
@@ -137,13 +137,13 @@ public class ParserTransformer extends ParserProcessorAdapter
     }
 
     /**
-     * Pass the ComponentManager to the composer. The Composable
-     * implementation should use the specified ComponentManager
-     * to acquire the components it needs for execution.
+     * Pass the ServiceManager to the Serviceable. The Serviceable
+     * implementation should use the specified ServiceManager
+     * to acquire the services it needs for execution.
      *
-     * @param manager The ComponentManager which this Composable uses.
+     * @param manager The ServiceManager which this Serviceable uses.
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 
@@ -255,9 +255,8 @@ public class ParserTransformer extends ParserProcessorAdapter
         } catch (SourceException se) {
             throw new ProcessingException("Error during resolving of '"+src+
                                           "'.", se);
-        } catch (ComponentException ce) {
-            throw new ProcessingException("Could not lookup for component",
-                                          ce);
+        } catch (ServiceException se) {
+            throw new ProcessingException("Could not lookup for component", se);
         } finally {
             if (store!=null) {
                 this.manager.release(store);
