@@ -50,8 +50,15 @@
 */
 package org.apache.cocoon.components.pipeline;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -62,6 +69,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -72,31 +80,19 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
 
 /**
  * This is the base for all implementations of a <code>ProcessingPipeline</code>.
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.9 2003/10/15 18:03:53 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.10 2003/10/19 16:12:54 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Recyclable, Disposable {
+  implements ProcessingPipeline, Parameterizable, Recyclable {
 
     // Generator stuff
     protected Generator generator;
@@ -155,11 +151,8 @@ public abstract class AbstractProcessingPipeline
     /** Output Buffer Size */
     protected int  outputBufferSize;
 
-    /** The source resolver */
-    protected SourceResolver resolver;
-    
-    /** The wrapper passed on the sitemap components */
-    protected org.apache.cocoon.environment.SourceResolver resolverWrapper;
+    /** The current Processor */
+    protected Processor processor;
     
     /**
      * Composable Interface
@@ -168,8 +161,6 @@ public abstract class AbstractProcessingPipeline
     throws ComponentException {
         this.manager = manager;
         this.newManager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-        this.resolverWrapper = new SourceResolverWrapper(this.resolver);
     }
 
     /**
@@ -392,7 +383,7 @@ public abstract class AbstractProcessingPipeline
         try {
             // setup the generator
             this.generator.setup(
-                this.resolverWrapper,
+                this.processor.getSourceResolver(),
                 environment.getObjectModel(),
                 generatorSource,
                 generatorParam
@@ -405,7 +396,7 @@ public abstract class AbstractProcessingPipeline
             while ( transformerItt.hasNext() ) {
                 Transformer trans = (Transformer)transformerItt.next();
                 trans.setup(
-                    this.resolverWrapper,
+                    this.processor.getSourceResolver(),
                     environment.getObjectModel(),
                     (String)transformerSourceItt.next(),
                     (Parameters)transformerParamItt.next()
@@ -511,6 +502,8 @@ public abstract class AbstractProcessingPipeline
      */
     protected void preparePipeline(Environment environment)
     throws ProcessingException {
+        // TODO (CZ) Get the processor set via IoC
+        this.processor = CocoonComponentManager.getCurrentProcessor();
         if ( !checkPipeline() ) {
             throw new ProcessingException("Attempted to process incomplete pipeline.");
         }
@@ -576,7 +569,7 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         try {
             String mimeType;
-            this.reader.setup(this.resolverWrapper,environment.getObjectModel(),readerSource,readerParam);
+            this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
             mimeType = this.reader.getMimeType();
             if ( mimeType != null ) {
                 environment.setContentType(mimeType);
@@ -680,6 +673,7 @@ public abstract class AbstractProcessingPipeline
         }
         this.serializer = null;
         this.parameters = null;
+        this.processor = null;
     }
 
     /**
@@ -784,50 +778,6 @@ public abstract class AbstractProcessingPipeline
      */
     public String getKeyForEventPipeline() {
         return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.resolver);
-            this.resolver = null;
-            this.manager = null;
-        }
-    }
-
-}
-
-final class SourceResolverWrapper
-implements org.apache.cocoon.environment.SourceResolver {
-    
-    protected SourceResolver resolver;
-    
-    public SourceResolverWrapper(SourceResolver resolver) {
-        this.resolver = resolver;
-    }
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceResolver#release(org.apache.excalibur.source.Source)
-     */
-    public void release(Source source) {
-        this.resolver.release(source);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
-     */
-    public Source resolveURI(String arg0, String arg1, Map arg2)
-    throws MalformedURLException, IOException {
-        return this.resolveURI(arg0, arg1, arg2);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
-     */
-    public Source resolveURI(String arg0)
-    throws MalformedURLException, IOException {
-        return this.resolver.resolveURI(arg0);
     }
 
 }
