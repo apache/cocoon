@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<xsamples xpath="/samples" unless="group[@name='jsp']">
+<xsamples xpath="/samples" unless="group[@name='JSP']">
 
-  <group name="jsp">
+  <group name="JSP">
     <sample name="Java Server Pages" href="jsp/">
       JSP usage with Cocoon
-   </sample>
+    </sample>
   </group>
 </xsamples>

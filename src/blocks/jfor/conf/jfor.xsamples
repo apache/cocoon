@@ -5,6 +5,6 @@
   <group name="jfor">
     <sample name="jfor RTF serializer" href="jfor/">
       Examples of RTF document generation.
-   </sample>
+    </sample>
   </group>
 </xsamples>
