@@ -47,15 +47,10 @@ import org.apache.regexp.RE;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-public class TreeProcessor
-    extends AbstractLogEnabled
-    implements ThreadSafe,
-               Processor,
-               Serviceable,
-               Configurable,
-               Contextualizable,
-               Disposable,
-               Initializable {
+public class TreeProcessor extends AbstractLogEnabled
+                           implements ThreadSafe, Processor, Serviceable,
+                                      Configurable, Contextualizable,
+                                      Disposable, Initializable {
 
     private static final String XCONF_URL =
         "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
@@ -80,7 +75,7 @@ public class TreeProcessor
 
     /** The file to process */
     protected String fileName;
-    
+
     /** Check for reload? */
     protected boolean checkReload;
 
@@ -115,7 +110,7 @@ public class TreeProcessor
         this.parent = parent;
 
         // Copy all that can be copied from the parent
-        this.enableLogging(parent.getLogger());
+        enableLogging(parent.getLogger());
         this.context = parent.context;
         this.source = sitemapSource;
         this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
@@ -124,7 +119,7 @@ public class TreeProcessor
 
         this.parentServiceManager = parent.concreteProcessor.getComponentInfo().getServiceManager();
 
-        this.resolver = (SourceResolver)this.parentServiceManager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.parentServiceManager.lookup(SourceResolver.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
@@ -142,7 +137,7 @@ public class TreeProcessor
                                               String  prefix)
     throws Exception {
         DelayedRefreshSourceWrapper delayedSource = new DelayedRefreshSourceWrapper(
-            this.resolver.resolveURI(src), this.lastModifiedDelay);
+                this.resolver.resolveURI(src), this.lastModifiedDelay);
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
@@ -158,16 +153,16 @@ public class TreeProcessor
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.parentServiceManager = manager;
-        this.resolver = (SourceResolver)this.parentServiceManager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.parentServiceManager.lookup(SourceResolver.ROLE);
     }
 
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null ) {
             this.environmentHelper = new EnvironmentHelper(
-                (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
+                    (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         }
-        ContainerUtil.enableLogging(this.environmentHelper,getLogger());
+        ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, parentServiceManager);
     }
 
@@ -197,19 +192,18 @@ public class TreeProcessor
 
         // Read the builtin languages definition file
         try {
-            Source source = this.resolver.resolveURI( xconfURL );
+            Source source = this.resolver.resolveURI(xconfURL);
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
                 SourceUtil.toSAX(this.parentServiceManager, source, null, handler);
                 this.treeBuilderConfiguration = handler.getConfiguration();
             } finally {
-                this.resolver.release( source );
+                this.resolver.release(source);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             String msg = "Error while reading " + xconfURL + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
         }
-
     }
 
     /**
@@ -223,10 +217,8 @@ public class TreeProcessor
      *         ConnectionResetException  If the connection was reset
      */
     public boolean process(Environment environment) throws Exception {
-
         // Get the concrete processor and delegate it the job
         setupConcreteProcessor(environment);
-
         return this.concreteProcessor.process(environment);
     }
 
@@ -240,7 +232,6 @@ public class TreeProcessor
     throws Exception {
         // Get the concrete processor and delegate it the job
         setupConcreteProcessor(environment);
-
         return this.concreteProcessor.buildPipeline(environment);
     }
 
@@ -249,7 +240,7 @@ public class TreeProcessor
      */
     public Processor getRootProcessor() {
         TreeProcessor result = this;
-        while(result.parent != null) {
+        while (result.parent != null) {
             result = result.parent;
         }
 
@@ -291,35 +282,34 @@ public class TreeProcessor
     public EnvironmentHelper getEnvironmentHelper() {
         return this.environmentHelper;
     }
-    
+
     /**
      * Get the tree builder role from the sitemap program (as a configuration object).
      * This method should report very any problem very clearly, as it is the entry point of any
      * Cocoon application.
-     * 
+     *
      * @param sitemapProgram the sitemap
      * @return the treebuilder role
      * @throws ConfigurationException if a suitable role could not be found
      */
     private TreeBuilder getTreeBuilder(Configuration sitemapProgram) throws ConfigurationException {
-        
+
         String ns = sitemapProgram.getNamespace();
-        
+
         RE re = new RE("http://apache.org/cocoon/sitemap/(\\d\\.\\d)");
-        
         if (!re.match(ns)) {
             throw new ConfigurationException("Unknown sitemap namespace (" + ns + ") at " +
                     this.source.getURI());
         }
-        
+
         String version = re.getParen(1);
         String result = TreeBuilder.ROLE + "/sitemap-" + version;
-        
+
         try {
             return (TreeBuilder)this.parentServiceManager.lookup(result);
         } catch(Exception ex) {
             throw new ConfigurationException("This version of Cocoon does not handle sitemap version " +
-                    version + " at " + this.source.getURI(), ex);
+                                             version + " at " + this.source.getURI(), ex);
         }
     }
 
@@ -329,7 +319,7 @@ public class TreeProcessor
     private void setupConcreteProcessor(Environment env) throws Exception {
         // first, check for sitemap changes
         if (this.concreteProcessor == null ||
-            (this.checkReload && this.source.getLastModified() != this.lastModified)) {
+                (this.checkReload && this.source.getLastModified() != this.lastModified)) {
             buildConcreteProcessor(env);
         }
     }
@@ -350,7 +340,7 @@ public class TreeProcessor
         long startTime = System.currentTimeMillis();
         long newLastModified;
         ConcreteTreeProcessor newProcessor;
-        
+
         // We have to do a call to enterProcessor() here as during building
         // of the tree, components (e.g. actions) are already instantiated
         // (ThreadSafe ones mostly).
@@ -358,9 +348,8 @@ public class TreeProcessor
         // current service manager they must get this one - which is currently
         // in the process of initialization.
         EnvironmentHelper.enterProcessor(this, this.parentServiceManager, env);
-        
+
         try {
-            
             // Load the sitemap file
             if (this.fileName == null) {
                 this.fileName = "sitemap.xmap";
@@ -369,29 +358,27 @@ public class TreeProcessor
                 this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
                                                               lastModifiedDelay);
             }
-            
+
             // Build a namespace-aware configuration object
             NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
-            SourceUtil.toSAX(this.source, handler );
+            SourceUtil.toSAX(this.source, handler);
             Configuration sitemapProgram = handler.getConfiguration();
             newLastModified = this.source.getLastModified();
-            
+
             newProcessor = new ConcreteTreeProcessor(this);
-            this.setupLogger(newProcessor);
-    
+            setupLogger(newProcessor);
+
             // Get the treebuilder that can handle this version of the sitemap.
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
-    
             try {
                 treeBuilder.setProcessor(newProcessor);
                 treeBuilder.setParentProcessorManager(this.parentServiceManager);
-    
+
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
                 newProcessor.setProcessorData(root, treeBuilder.getDisposableNodes());
-
             } finally {
-                this.parentServiceManager.release(treeBuilder);                
-            }                
+                this.parentServiceManager.release(treeBuilder);
+            }
         } finally {
             EnvironmentHelper.leaveProcessor();
         }
@@ -403,7 +390,6 @@ public class TreeProcessor
 
         // Switch to the new processor (ensure it's never temporarily null)
         ConcreteTreeProcessor oldProcessor = this.concreteProcessor;
-
         this.concreteProcessor = newProcessor;
         this.lastModified = newLastModified;
 
