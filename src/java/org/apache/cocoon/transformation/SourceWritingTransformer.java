@@ -54,10 +54,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -70,6 +72,7 @@ import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.xml.dom.DOMParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
@@ -255,10 +258,11 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.8 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.9 2003/12/18 14:29:03 cziegeler Exp $
  */
 public class SourceWritingTransformer
-    extends AbstractSAXTransformer {
+    extends AbstractSAXTransformer
+    implements Disposable {
 
     public static final String SWT_URI = "http://apache.org/cocoon/source/1.0";
     public static final String DEFAULT_SERIALIZER = "xml";
@@ -306,7 +310,9 @@ public class SourceWritingTransformer
     /** The configured serializer name */
     protected String configuredSerializerName;
 
-
+    /** The XPath processor */
+    protected XPathProcessor xpathProcessor;
+    
     /**
      * Constructor.
      * Sets the namespace.
@@ -648,12 +654,12 @@ public class SourceWritingTransformer
                 // import the fragment
                 Node importNode = resource.importNode(fragment, true);
                 // get the node
-                Node parent = DOMUtil.selectSingleNode(resource, path);
+                Node parent = DOMUtil.selectSingleNode(resource, path, this.xpathProcessor);
 
                 // replace?
                 if (replacePath != null) {
                     try {
-                        Node replaceNode = DOMUtil.getSingleNode(parent, replacePath);
+                        Node replaceNode = DOMUtil.getSingleNode(parent, replacePath, this.xpathProcessor);
                         // now get the parent of this node until it is the parent node for insertion
                         while (replaceNode != null && replaceNode.getParentNode().equals(parent) == false) {
                            replaceNode = replaceNode.getParentNode();
@@ -677,7 +683,7 @@ public class SourceWritingTransformer
                                 }
                                 message += ", replacing: " + replacePath;
                                 if (reinsertPath != null) {
-                                    Node insertAt = DOMUtil.getSingleNode(parent, reinsertPath);
+                                    Node insertAt = DOMUtil.getSingleNode(parent, reinsertPath, this.xpathProcessor);
                                     if (insertAt != null) {
                                         while (replaceNode.hasChildNodes()) {
                                             insertAt.appendChild(replaceNode.getFirstChild());
@@ -715,7 +721,7 @@ public class SourceWritingTransformer
 
                 } else {
                     // get the node
-                    Node parent = DOMUtil.selectSingleNode(resource, path);
+                    Node parent = DOMUtil.selectSingleNode(resource, path, this.xpathProcessor);
                     // add fragment
                     parent.appendChild(importNode);
                     message = "content appended to: " + path;
@@ -829,4 +835,24 @@ public class SourceWritingTransformer
             }
         sendEndElementEvent(RESULT_ELEMENT);
     }
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.xpathProcessor);
+            this.xpathProcessor = null;
+        }
+    }
+
 }

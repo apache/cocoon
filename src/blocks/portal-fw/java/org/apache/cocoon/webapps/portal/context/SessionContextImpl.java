@@ -62,6 +62,7 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -95,7 +96,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.5 2003/10/21 12:39:17 cziegeler Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.6 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -143,10 +144,15 @@ implements SessionContext {
     /** The current request */
     private Request request;
     
+    /** The XPath Processor */
+    private XPathProcessor xpathProcessor;
+    
     public SessionContextImpl(String  name,
                               Map     objectModel,
-                              PortalManager portal)
+                              PortalManager portal,
+                              XPathProcessor xpathProcessor)
     throws IOException, SAXException, ProcessingException {
+        this.xpathProcessor = xpathProcessor;
         this.setup(name, null, null);
 
         // try to get the resource connector info
@@ -269,7 +275,7 @@ implements SessionContext {
                 if (this.copletID != null && this.copletNumber != null) {
                     String statusPath = "customization/coplet[@id='"+copletID+"' and @number='"+copletNumber+"']";
                     try {
-                        Node node = DOMUtil.getSingleNode(this.statusProfile, statusPath);
+                        Node node = DOMUtil.getSingleNode(this.statusProfile, statusPath, this.xpathProcessor);
                         if (node != null) {
                             Element copletData = doc.createElementNS(null, "coplet-data");
                             NodeList childs = node.getChildNodes();
@@ -290,7 +296,7 @@ implements SessionContext {
         if (path.equals("layout") || path.startsWith("layout/") ) {
             try {
                 this.getLayoutDOM();
-                if (this.layoutDOM != null) list = DOMUtil.selectNodeList(this.layoutDOM, path);
+                if (this.layoutDOM != null) list = DOMUtil.selectNodeList(this.layoutDOM, path, this.xpathProcessor);
             } catch (javax.xml.transform.TransformerException localException) {
                 throw new ProcessingException("TransformerException: " + localException, localException);
             }
@@ -298,7 +304,7 @@ implements SessionContext {
 
         if (path.equals("configuration") || path.startsWith("configuration/") ) {
             try {
-                if (this.configurationDOM != null) list = DOMUtil.selectNodeList(this.configurationDOM, path);
+                if (this.configurationDOM != null) list = DOMUtil.selectNodeList(this.configurationDOM, path, this.xpathProcessor);
             } catch (javax.xml.transform.TransformerException localException) {
                 throw new ProcessingException("TransformerException: " + localException, localException);
             }
@@ -313,7 +319,7 @@ implements SessionContext {
                         statusPath = statusPath + path.substring(11);
                     }
                     try {
-                        list = DOMUtil.selectNodeList(this.statusProfile, statusPath);
+                        list = DOMUtil.selectNodeList(this.statusProfile, statusPath, this.xpathProcessor);
                     } catch (javax.xml.transform.TransformerException localException) {
                         throw new ProcessingException("TransformerException: " + localException, localException);
                     }
@@ -364,7 +370,7 @@ implements SessionContext {
                             statusPath = statusPath + path.substring(11);
                         }
 
-                        Node node = DOMUtil.selectSingleNode(this.statusProfile, statusPath);
+                        Node node = DOMUtil.selectSingleNode(this.statusProfile, statusPath, this.xpathProcessor);
                         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
                             // now we have to serialize the fragment to a string and insert this
                             Attr attr = (Attr)node;

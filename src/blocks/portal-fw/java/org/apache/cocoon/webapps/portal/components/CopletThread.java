@@ -75,6 +75,7 @@ import org.apache.cocoon.xml.dom.DOMUtil;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -84,7 +85,7 @@ import org.w3c.dom.NodeList;
  * This is the thread for loading one coplet in the background.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CopletThread.java,v 1.3 2003/06/18 12:36:45 cziegeler Exp $
+ * @version CVS $Id: CopletThread.java,v 1.4 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class CopletThread implements Runnable {
 
@@ -94,7 +95,8 @@ public final class CopletThread implements Runnable {
     private Object[]         loadedCoplet;
     private ComponentManager manager;
     private SourceResolver   resolver;
-
+    private XPathProcessor   processor;
+    
     /**
      * Initialise all instance variables.
      * The main information is the loadedCoplet array:
@@ -114,13 +116,15 @@ public final class CopletThread implements Runnable {
                      Response response,
                      Object[] loadedCoplet,
                      ComponentManager manager,
-                     SourceResolver resolver) {
+                     SourceResolver resolver,
+                     XPathProcessor processor) {
         this.copletID = copletID;
         this.objectModel = objectModel;
         this.logger = logger;
         this.loadedCoplet = loadedCoplet;
         this.manager = manager;
         this.resolver = resolver;
+        this.processor = processor;
     }
 
     /**
@@ -138,16 +142,16 @@ public final class CopletThread implements Runnable {
             String resource = null;
             boolean showCustomizePage = p.getParameterAsBoolean(PortalConstants.PARAMETER_CUSTOMIZE, false);
             if (showCustomizePage) {
-                final String value = DOMUtil.getValueOf(copletConf, "customization/@uri", null);
+                final String value = DOMUtil.getValueOf(copletConf, "customization/@uri", (String)null, this.processor);
                 if (value == null) {
                     this.logger.error("The coplet '"+this.copletID+"' is customizable but has no customization info.");
                 }
                 resource = value;
             }
             if (resource == null) {
-                resource = DOMUtil.getValueOf(copletConf, "resource/@uri");
+                resource = DOMUtil.getValueOf(copletConf, "resource/@uri", this.processor);
             }
-            boolean handlesSizable = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesSizable", false);
+            boolean handlesSizable = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesSizable", false, this.processor);
 
             if (!handlesSizable && !p.getParameter("size", "max").equals("max")) {
                 // do nothing here
@@ -159,7 +163,7 @@ public final class CopletThread implements Runnable {
 
                 XMLConsumer nextConsumer = compiler;
                 NodeList transformations = DOMUtil.selectNodeList(copletConf,
-                                                        "transformation/stylesheet");
+                                                        "transformation/stylesheet", this.processor);
                 Transformer xslT = null;
                 ArrayList transformers = new ArrayList();
                 ComponentSelector selector = null;
@@ -182,7 +186,7 @@ public final class CopletThread implements Runnable {
                         nextConsumer.startDocument();
                     }
                     boolean includeFragment = true;
-                    boolean handlesParameters = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesParameters", true);
+                    boolean handlesParameters = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesParameters", true, this.processor);
                     String size = p.getParameter("size", "max");
                     includeFragment = size.equals("max");
                     if (!includeFragment) {

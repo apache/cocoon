@@ -67,6 +67,7 @@ import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -146,7 +147,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getAuthType()
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: RequestSessionContext.java,v 1.4 2003/10/22 14:24:39 cziegeler Exp $
+ * @version CVS $Id: RequestSessionContext.java,v 1.5 2003/12/18 14:29:03 cziegeler Exp $
 */
 public final class RequestSessionContext
 implements SessionContext {
@@ -165,6 +166,9 @@ implements SessionContext {
     /** The content of this context */
     private Document  contextData;
 
+    /** The XPath Processor */
+    private XPathProcessor xpathProcessor;
+
     /**
      * Setup this context
      */
@@ -175,8 +179,9 @@ implements SessionContext {
     /**
      * Set the Request
      */
-    public void setup(Map objectModel, ServiceManager manager)
+    public void setup(Map objectModel, ServiceManager manager, XPathProcessor processor)
     throws ProcessingException {
+        this.xpathProcessor = processor;
         this.request = ObjectModelHelper.getRequest(objectModel);
 
         contextData = DOMUtil.createDocument();
@@ -483,7 +488,7 @@ implements SessionContext {
         NodeList list;
 
         try {
-            list = DOMUtil.selectNodeList(this.contextData, path);
+            list = DOMUtil.selectNodeList(this.contextData, path, this.xpathProcessor);
         } catch (javax.xml.transform.TransformerException localException) {
             throw new ProcessingException("Exception: " + localException, localException);
         }
@@ -581,7 +586,7 @@ implements SessionContext {
         Node node = null;
 
         try {
-            node = DOMUtil.getSingleNode(this.contextData, path);
+            node = DOMUtil.getSingleNode(this.contextData, path, this.xpathProcessor);
         } catch (javax.xml.transform.TransformerException localException) {
             throw new ProcessingException("Exception: " + localException, localException);
         }
@@ -597,7 +602,7 @@ implements SessionContext {
         NodeList list = null;
 
         try {
-            list = DOMUtil.selectNodeList(this.contextData, path);
+            list = DOMUtil.selectNodeList(this.contextData, path, this.xpathProcessor);
         } catch (javax.xml.transform.TransformerException localException) {
             throw new ProcessingException("Exception: " + localException, localException);
         }
@@ -640,7 +645,7 @@ implements SessionContext {
         NodeList list;
 
         try {
-            list = DOMUtil.selectNodeList(this.contextData, this.createPath(path));
+            list = DOMUtil.selectNodeList(this.contextData, this.createPath(path), this.xpathProcessor);
         } catch (javax.xml.transform.TransformerException local) {
             throw new ProcessingException("TransformerException: " + local, local);
         }
