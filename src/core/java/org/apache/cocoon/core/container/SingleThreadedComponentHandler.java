@@ -59,15 +59,7 @@ extends AbstractComponentHandler {
      * @param component Component to be be put/released back to the handler.
      */
     protected void doPut( final Object component ) {
-        try {
-            this.factory.decommission( component );
-        } catch( final Exception e ) {
-            if( this.logger.isWarnEnabled() )
-            {
-                this.logger.warn( "Error decommissioning component: "
-                    + this.factory.getCreatedClass().getName(), e );
-            }
-        }
+        this.decommission( component );
     }
 
 }

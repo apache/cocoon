@@ -19,7 +19,6 @@ package org.apache.cocoon.core.container;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
@@ -115,10 +114,10 @@ extends AbstractComponentHandler {
         synchronized( this.semaphore ) {
             // Remove objects in the ready list.
             for( Iterator iter = this.ready.iterator(); iter.hasNext(); ) {
-                Poolable poolable = (Poolable)iter.next();
+                Object poolable = (Object)iter.next();
                 iter.remove();
                 this.readySize--;
-                permanentlyRemovePoolable( poolable );
+                this.permanentlyRemovePoolable( poolable );
             }
 
             if( ( this.size > 0 ) && this.logger.isDebugEnabled() ) {
@@ -136,26 +135,7 @@ extends AbstractComponentHandler {
      */
     protected void permanentlyRemovePoolable( Object poolable ) {
         this.size--;
-        this.removePoolable( poolable );
-    }
-
-    /**
-     * Called when an object is being removed permanently from the pool.
-     * This is the method to override when you need to enforce destructional
-     * policies.
-     * <p>
-     * This method is only called by threads that have m_semaphore locked.
-     *
-     * @param poolable Poolable to be completely removed from the pool.
-     */
-    protected void removePoolable( Object poolable ) {
-        try {
-            this.factory.decommission( poolable );
-        } catch( Exception e ) {
-            if( this.logger.isDebugEnabled() ) {
-                this.logger.debug( "Error decommissioning object", e );
-            }
-        }
+        this.decommission( poolable );
     }
 
     /**
@@ -174,7 +154,7 @@ extends AbstractComponentHandler {
             // Look for a Poolable at the end of the m_ready list
             if( this.readySize > 0 ){
                 // A poolable is ready and waiting in the pool
-                poolable = (Poolable)this.ready.removeLast();
+                poolable = this.ready.removeLast();
                 this.readySize--;
             } else {
                 // Create a new poolable.  May throw an exception if the poolable can not be

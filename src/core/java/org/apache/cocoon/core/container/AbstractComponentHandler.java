@@ -236,4 +236,20 @@ public abstract class AbstractComponentHandler {
             this.logger.debug( "ThreadSafeComponentHandler initialized for: " + this.factory.getCreatedClass().getName() );
         }
     }
+    
+    /**
+     * Decommission a component
+     * @param component Object to be decommissioned
+     */
+    protected void decommission( final Object component ) {
+        try {
+            this.factory.decommission( component );
+        } catch( final Exception e ) {
+            if( this.logger.isWarnEnabled() ) {
+                this.logger.warn( "Error decommissioning component: "
+                    + this.factory.getCreatedClass().getName(), e );
+            }
+        }
+    }
+    
 }

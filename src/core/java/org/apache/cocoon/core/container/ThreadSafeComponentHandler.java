@@ -71,15 +71,9 @@ extends AbstractComponentHandler {
      * Dispose of the ComponentHandler and any associated Pools and Factories.
      */
     public void dispose() {
-        try {
-            this.factory.decommission( this.instance );
-            this.instance = null;
-        } catch( final Exception e ) {
-            if( this.logger.isWarnEnabled() ) {
-                this.logger.warn( "Error decommissioning component: " +
-                                  this.factory.getCreatedClass().getName(), e );
-            }
-        }
+        this.decommission( this.instance );
+        this.instance = null;
+
         super.dispose();
     }
 }

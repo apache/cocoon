@@ -51,8 +51,8 @@ implements ServiceSelector, Serviceable, Configurable {
     /** The role of this selector. Set in <code>configure()</code>. */
     protected String roleName;
 
-    /** The default hint */
-    protected String defaultHint;
+    /** The default key */
+    protected String defaultKey;
 
     /** Create the selector */
     public CocoonServiceSelector() {
@@ -64,36 +64,39 @@ implements ServiceSelector, Serviceable, Configurable {
      */
     public Object select( Object hint )
     throws ServiceException {
+        final String key;
+        if (hint == null) {
+            key = this.defaultKey;
+        } else {
+            key = hint.toString();
+        }
+
         if( !this.initialized ) {
             if( this.getLogger().isWarnEnabled() ) {
-                this.getLogger().warn( "Looking up component on an uninitialized ComponentLocator "
-                    + "with hint [" + hint + "]" );
+                this.getLogger().warn( "Selecting a component on an uninitialized service selector "
+                    + "with key [" + key + "]" );
             }
         }
 
         if( this.disposed ) {
             throw new IllegalStateException(
-                "You cannot select a Component from a disposed ServiceSelector" );
+                "You cannot select a component from a disposed service selector." );
         }
 
-        if (hint == null) {
-            hint = this.defaultHint;
-        }
-
-        AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( hint );
+        AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( key );
 
         // Retrieve the instance of the requested component
         if( null == handler ) {
             // Doesn't exist here : try in parent selector
             if ( this.parentSelector != null ) {
-                return this.parentSelector.select(hint);                
+                return this.parentSelector.select(key);                
             }
             final String message = this.roleName
-                + ": ServiceSelector could not find the component for hint [" + hint + "]";
+                + ": service selector could not find the component for key [" + key + "]";
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( message );
             }
-            throw new ServiceException( hint.toString(), message );
+            throw new ServiceException( key, message );
         }
 
         Object component = null;
@@ -105,25 +108,25 @@ implements ServiceSelector, Serviceable, Configurable {
             throw ce;
         } catch( final Exception e ) {
             final String message = this.roleName
-                + ": ServiceSelector could not access the Component for hint [" + hint + "]";
+                + ": service selector could not access the component for key [" + key + "]";
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( message, e );
             }
-            throw new ServiceException( hint.toString(), message, e );
+            throw new ServiceException( key, message, e );
         }
 
         if( null == component ) {
             // Doesn't exist here : try in parent selector
             if ( this.parentSelector != null ) {
-                component = this.parentSelector.select(hint);
+                component = this.parentSelector.select(key);
             } else {
                 final String message = this.roleName
-                    + ": ServiceSelector could not find the component for hint [" + hint + "]";
+                    + ": service selector could not find the component for key [" + key + "]";
                 if( this.getLogger().isDebugEnabled() ) {
                     this.getLogger().debug( message );
                 }
-                throw new ServiceException( hint.toString(), message );
+                throw new ServiceException( key, message );
             }
         }
 
@@ -136,24 +139,27 @@ implements ServiceSelector, Serviceable, Configurable {
      * @see org.apache.avalon.framework.service.ServiceSelector#isSelectable(java.lang.Object)
      */
     public boolean isSelectable( Object hint ) {
+        final String key;
+        if (hint == null) {
+            key = this.defaultKey;
+        } else {
+            key = hint.toString();
+        }
+
         if( !this.initialized ) return false;
         if( this.disposed ) return false;
-
-        if (hint == null) {
-            hint = this.defaultHint;
-        }
 
         boolean exists = false;
 
         try {
-            AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( hint );
+            AbstractComponentHandler handler = (AbstractComponentHandler)this.componentHandlers.get( key );
             exists = (handler != null);
         } catch( Throwable t ) {
             // We can safely ignore all exceptions
         }
 
         if ( !exists && this.parentSelector != null ) {
-            exists = this.parentSelector.isSelectable( hint );
+            exists = this.parentSelector.isSelectable( key );
         }
         return exists;
     }
@@ -218,8 +224,8 @@ implements ServiceSelector, Serviceable, Configurable {
     throws ConfigurationException {
         this.roleName = getRoleName(config);
 
-        // Get default hint
-        this.defaultHint = config.getAttribute(this.getDefaultHintAttributeName(), null);
+        // Get default key
+        this.defaultKey = config.getAttribute(this.getDefaultKeyAttributeName(), null);
 
         // Add components
         String compInstanceName = getComponentInstanceName();
@@ -260,7 +266,7 @@ implements ServiceSelector, Serviceable, Configurable {
                 throw new ConfigurationException(message);
             }
             
-            this.addComponent( className, hint, instance );
+            this.addComponent( className, hint.toString(), instance );
         }
     }
 
@@ -334,7 +340,7 @@ implements ServiceSelector, Serviceable, Configurable {
     }
 
     /** Add a new component to the manager.
-     * @param hint the hint name for the new component.
+     * @param hint the key for the new component.
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
@@ -342,9 +348,10 @@ implements ServiceSelector, Serviceable, Configurable {
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {
+        final String key = hint.toString();
         if( this.initialized ) {
-            throw new ServiceException( hint.toString(),
-                "Cannot add components to an initialized ServiceSelector", null );
+            throw new ServiceException( key,
+                "Cannot add components to an initialized service selector" );
         }
 
         try {
@@ -353,22 +360,22 @@ implements ServiceSelector, Serviceable, Configurable {
                                                                   this.serviceManager);
 
             handler.initialize();
-            this.componentHandlers.put( hint, handler );
+            this.componentHandlers.put( key, handler );
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug(
-                    "Adding " + component.getName() + " for hint [" + hint.toString() + "]" );
+                    "Adding " + component.getName() + " for key [" + key + "]" );
             }
         } catch (ServiceException se) {
             throw se;
         } catch( final Exception e ) {
             final String message =
-                "Could not set up Component for hint [ " + hint + "]";
+                "Could not set up component for key [ " + key + "]";
             if( this.getLogger().isErrorEnabled() ) {
                 this.getLogger().error( message, e );
             }
 
-            throw new ServiceException( hint.toString(), message, e );
+            throw new ServiceException(key, message, e );
         }
     }
 
@@ -397,14 +404,14 @@ implements ServiceSelector, Serviceable, Configurable {
     }
 
     /**
-     * Get the name of the attribute giving the default hint to use if
+     * Get the name of the attribute giving the default key to use if
      * none is given. The default here is "default", but this can be
      * overriden in subclasses. If this method returns <code>null</code>,
-     * no default hint can be specified.
+     * no default key can be specified.
      *
      * @return "<code>default</code>", but can be changed by subclasses
      */
-    protected String getDefaultHintAttributeName() {
+    protected String getDefaultKeyAttributeName() {
         return "default";
     }
     
@@ -422,28 +429,6 @@ implements ServiceSelector, Serviceable, Configurable {
         }
 
         return name;
-    }
-
-    /**
-     * Get the default hint, if any for this selector.
-     */
-    public String getDefaultHint() {
-        return this.defaultHint;
-    }
-
-    /**
-     * Does this selector declare a given hint? Check is performed on the components declared for this
-     * selector only, and <strong>not</strong> those potentially inherited from the parent selector.
-     * 
-     * @param hint the hint to check for
-     * @return <code>true</code> if this selector has the specified hint
-     */
-    protected boolean hasDeclaredComponent(Object hint) {
-        if (hint == null) {
-            hint = this.defaultHint;
-        }
-
-        return this.isSelectable(hint);
     }
 
     /**
