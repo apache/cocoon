@@ -59,14 +59,14 @@ import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.AggregatedValidity;
+import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
 /**
  * This implementation holds all mappings between Events and PipelineCacheKeys 
  * in two MultiHashMap to facilitate efficient lookup by either as Key.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.6 2003/10/02 04:21:17 ghoward Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.7 2003/10/28 13:39:36 unico Exp $
  */
 public class EventAwareCacheImpl 
         extends CacheImpl 
@@ -202,15 +202,15 @@ public class EventAwareCacheImpl
 	}
 
     private void examineValidity(SourceValidity val, Serializable key) {
-        if (val instanceof AggregatedValidity) {
-            handleAggregatedValidity((AggregatedValidity)val, key);
+        if (val instanceof AbstractAggregatedValidity) {
+            handleAggregatedValidity((AbstractAggregatedValidity)val, key);
         } else if (val instanceof EventValidity) {
             handleEventValidity((EventValidity)val, key);
         }
     }
 
     private void handleAggregatedValidity(
-                                    AggregatedValidity val,
+                                    AbstractAggregatedValidity val,
                                     Serializable key) {
         // AggregatedValidity must be investigated further.
          Iterator it = val.getValidities().iterator();

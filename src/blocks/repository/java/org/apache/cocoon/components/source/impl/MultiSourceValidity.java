@@ -57,18 +57,19 @@ import java.util.List;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
 /**
  * An aggregated validity for multiple sources.
  * 
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: MultiSourceValidity.java,v 1.1 2003/10/23 08:52:50 unico Exp $
+ * @version CVS $Id: MultiSourceValidity.java,v 1.2 2003/10/28 13:39:36 unico Exp $
  */
-public class MultiSourceValidity implements SourceValidity{
+public class MultiSourceValidity extends AbstractAggregatedValidity implements SourceValidity {
 
     private long expiry;
     private long delay;
-    private List data = new ArrayList();
+    private List uris = new ArrayList();
     private boolean isClosed = false;
     
     /** SourceResolver. Transient in order not to be serialized */
@@ -81,15 +82,15 @@ public class MultiSourceValidity implements SourceValidity{
     }
     
     public void addSource(Source src) {
-        if (this.data != null) {
+        if (this.uris != null) {
             SourceValidity validity = src.getValidity();
             if (validity == null) {
                 // one of the sources has no validity : this object will always be invalid
-                this.data = null;
+                this.uris = null;
             } else {
                 // Add the validity and URI to the list
-                this.data.add(validity);
-                this.data.add(src.getURI());
+                super.add(validity);
+                this.uris.add(src.getURI());
             }
         }
     }
@@ -105,7 +106,7 @@ public class MultiSourceValidity implements SourceValidity{
         }
         expiry = System.currentTimeMillis() + delay;
         
-        if (data == null || !isClosed) {
+        if (uris == null || !isClosed) {
             return -1;
         } else {
             return computeStatus(null);
@@ -113,7 +114,7 @@ public class MultiSourceValidity implements SourceValidity{
     }
 
     public int isValid(SourceValidity newValidity) {
-        if (data == null || !isClosed) {
+        if (uris == null || !isClosed) {
             return -1;
         }
         
@@ -126,8 +127,9 @@ public class MultiSourceValidity implements SourceValidity{
     }
     
     private int computeStatus(SourceResolver resolver) {
-        for (int i = 0; i < data.size(); i+=2) {
-            SourceValidity validity = (SourceValidity)data.get(i);
+        List validities = super.getValidities();
+        for (int i = 0; i < validities.size(); i++) {
+            SourceValidity validity = (SourceValidity) validities.get(i);
             switch(validity.isValid()) {
                 case -1:
                     // invalid : stop examining
@@ -142,7 +144,7 @@ public class MultiSourceValidity implements SourceValidity{
                         return 0;
                     }
                     try {
-                        Source newSrc = resolver.resolveURI((String)data.get(i+1));
+                        Source newSrc = resolver.resolveURI((String) uris.get(i));
                         int value = validity.isValid(newSrc.getValidity());
                         resolver.release(newSrc);
                         if (value != 1) {
