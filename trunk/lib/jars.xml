@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.117 2003/11/02 00:20:08 antonio Exp $
+    | CVS $Id: jars.xml,v 1.118 2003/11/19 23:54:35 crossley Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -372,16 +372,15 @@
     <homepage>http://pizzacompiler.sourceforge.net/</homepage>
   </file>
 
-
   <file>
     <title>XML Catalog Entity Resolver</title>
     <description>
       Maps URIs to other URIs using the mechanisms defined by
       OASIS Catalog or XML Catalog. Mainly used for DTDs and character
-      entity sets.
+      entity sets, but can be used for other resources too.
     </description>
     <used-by>Cocoon Role entity-resolver</used-by>
-    <lib>core/resolver-20030708.jar</lib>
+    <lib>core/xml-commons-resolver-1.1.jar</lib>
     <homepage>http://xml.apache.org/commons/</homepage>
   </file>
 
