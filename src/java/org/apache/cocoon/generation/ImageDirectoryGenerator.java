@@ -48,9 +48,9 @@ import org.xml.sax.SAXException;
  */
 final public class ImageDirectoryGenerator extends DirectoryGenerator {
 
-    protected static String IMAGE_WIDTH_ATTR_NAME = "width";
-    protected static String IMAGE_HEIGHT_ATTR_NAME = "height";
-    protected static String IMAGE_COMMENT_ATTR_NAME = "comment";
+    protected final static String IMAGE_WIDTH_ATTR_NAME = "width";
+    protected final static String IMAGE_HEIGHT_ATTR_NAME = "height";
+    protected final static String IMAGE_COMMENT_ATTR_NAME = "comment";
 
     /**
      * Extends the <code>setNodeAttributes</code> method from the

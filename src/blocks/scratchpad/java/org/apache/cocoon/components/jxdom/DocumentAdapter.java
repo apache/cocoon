@@ -46,7 +46,7 @@ import org.w3c.dom.Text;
 /**
  * DOM Wrapper for Java Beans and JavaScript objects utilizing Apache JXPath's Introspector.
  *
- * @version CVS $ID$
+ * @version CVS $Id$
  */
 
 public class DocumentAdapter implements Document {
@@ -58,7 +58,7 @@ public class DocumentAdapter implements Document {
     protected static final CompiledExpression 
         GET_CHILD_NODES = JXPathContext.compile("*");
 
-    protected static NamedNodeMap EMPTY_NODE_MAP = new NamedNodeMap() {
+    protected final static NamedNodeMap EMPTY_NODE_MAP = new NamedNodeMap() {
             public Node getNamedItem(String name) {
                 return null;
             }

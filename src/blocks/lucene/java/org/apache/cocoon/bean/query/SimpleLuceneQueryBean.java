@@ -49,21 +49,21 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery {
 	 * The DEFAULT_PAGE_SIZE of this bean.
 	 * ie. <code>20</code>
 	 */
-	public static Long DEFAULT_PAGE_SIZE = new Long (20);
+	public static final Long DEFAULT_PAGE_SIZE = new Long (20);
 
 	/**
 	 * The SCORE_FIELD of this bean.
 	 * This is the key of the Lucene Score as output by this Bean in each hit.
 	 * ie. <code>_lucene-score_</code>
 	 */
-	public static String SCORE_FIELD = "_lucene-score_";
+	public static final String SCORE_FIELD = "_lucene-score_";
 
 	/**
 	 * The INDEX_FIELD of this bean.
 	 * This is the key of the hit index as output by this Bean in each hit.
 	 * ie. <code>_lucene-index_</code>
 	 */
-	public static String INDEX_FIELD = "_lucene-index_";
+	public static final String INDEX_FIELD = "_lucene-index_";
 
 	/**
 	 * The date this Query was created.

@@ -71,7 +71,7 @@ public class ProxyTransformer
     /**
      * Parameter for specifying the envelope tag
      */
-    public static String ENVELOPE_TAG_PARAMETER = "envelope-tag";
+    public static final String ENVELOPE_TAG_PARAMETER = "envelope-tag";
 
     public static final String PORTALNAME = "cocoon-portal-portalname";
     public static final String COPLETID = "cocoon-portal-copletid";
@@ -90,7 +90,7 @@ public class ProxyTransformer
     /**
      * Parameter for specifying the java protocol handler (used for https)
      */
-    public static String PROTOCOL_HANDLER_PARAMETER = "protocol-handler";
+    public static final String PROTOCOL_HANDLER_PARAMETER = "protocol-handler";
 
     /**
      * The document base uri
