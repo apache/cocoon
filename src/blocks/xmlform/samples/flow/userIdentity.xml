@@ -8,7 +8,7 @@
     author: Simon Price <price@bristol.ac.uk>, September 2002
 
 -->
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
   <xf:form id="form-feedback" view="userIdentity" action="flow" method="GET">
     <xf:caption>Personal Information</xf:caption>
     <error>

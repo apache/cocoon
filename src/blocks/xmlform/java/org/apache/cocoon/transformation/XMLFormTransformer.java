@@ -83,13 +83,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * @version CVS $Id: XMLFormTransformer.java,v 1.5 2003/05/18 16:58:27 vgritsenko Exp $
+ * @version CVS $Id: XMLFormTransformer.java,v 1.6 2003/05/19 10:30:24 stephan Exp $
  */
 public class XMLFormTransformer extends AbstractSAXTransformer {
 
     // TODO: implements CacheableProcessingComponent {
 
-    public final static String NS = "http://xml.apache.org/cocoon/xmlform/2002";
+    public final static String NS = "http://apache.org/cocoon/xmlform/1.0";
     private final static String NS_PREFIX = "xf";
 
     public final static Attributes NOATTR = new AttributesImpl();

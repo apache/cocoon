@@ -7,7 +7,7 @@
   <body>
     <section>
       <title>Number A</title>
-      <xf:form id="calc" xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+      <xf:form id="calc" xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
         <p>
           Enter value of <strong>a</strong><br/>
           <xf:textbox ref="numberA"/>

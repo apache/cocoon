@@ -101,7 +101,7 @@ Create the XMLForm login xml file <strong>Login.xml</strong> and put the <code>&
 
 <source><![CDATA[
 <?xml version="1.0" ?>
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002"
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0"
           xmlns:i18n="http://apache.org/cocoon/i18n/2.0">
   <xf:form id="form-login" view="login" action="do-login" >
     <xf:caption>Login</xf:caption>
@@ -157,7 +157,7 @@ Create a simple XSLT stylesheet file to match the violation element in the XMLFo
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002"
+                xmlns:xf="http://apache.org/cocoon/xmlform/1.0"
                 xmlns:i18n="http://apache.org/cocoon/i18n/2.0">
 
   <xsl:template match="document">

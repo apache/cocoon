@@ -71,7 +71,7 @@ http://schemas.xmlsoap.org/wsdl/">
         ]]>
         Otherwise the response will look similar to:
         <![CDATA[
-        <document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+        <document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
           <error>
             <xf:violation ref="/lastName">Last name should be at least 4 characters.</xf:violation> 
           </error>
