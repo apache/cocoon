@@ -15,20 +15,17 @@
  */
 package org.apache.cocoon.components.flow.javascript.fom;
 
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
@@ -36,16 +33,15 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
-import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.http.HttpResponse;
 import org.apache.cocoon.util.ClassUtils;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
+import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -70,12 +66,12 @@ public class FOM_Cocoon extends ScriptableObject {
         FOM_JavaScriptInterpreter interpreter;
         Redirector redirector;
         Logger logger;
-        FOM_Request request;
-        FOM_Response response;
-        FOM_Session session;
-        FOM_Context context;
+        Scriptable request;
+        Scriptable response;
+        Scriptable session;
+        Scriptable context;
         Scriptable parameters;
-        FOM_Log log;
+        Scriptable log;
         WebContinuation lastContinuation;
         FOM_WebContinuation fwk;
         PageLocalScopeImpl currentPageLocal;
@@ -124,64 +120,55 @@ public class FOM_Cocoon extends ScriptableObject {
             }
         }
 
-        public FOM_Session getSession() {
+        public Scriptable getSession() {
             if (session != null) {
                 return session;
             }
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            session =
-                new FOM_Session(ObjectModelHelper.getRequest(objectModel).getSession(true));
-            session.setParentScope(getParentScope());
-            session.setPrototype(getClassPrototype(getParentScope(),
-                                                   "FOM_Session"));
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);            
+            session = org.mozilla.javascript.Context.toObject(
+                    ObjectModelHelper.getRequest(objectModel).getSession(true),
+                    getParentScope());
             return session;
         }
 
-        public FOM_Request getRequest() {
+        public Scriptable getRequest() {
             if (request != null) {
                 return request;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            request = new FOM_Request(ObjectModelHelper.getRequest(objectModel));
-            request.setParentScope(getParentScope());
-            request.setPrototype(getClassPrototype(getParentScope(),
-                                                   "FOM_Request"));
+            request = org.mozilla.javascript.Context.toObject(
+                    ObjectModelHelper.getRequest(objectModel),
+                    getParentScope());
             return request;
         }
 
-        public FOM_Context getContext() {
+        public Scriptable getContext() {
             if (context != null) {
                 return context;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            context =
-                new FOM_Context(ObjectModelHelper.getContext(objectModel));
-            context.setParentScope(getParentScope());
-            context.setPrototype(getClassPrototype(getParentScope(),
-                                                   "FOM_Context"));
+            context = org.mozilla.javascript.Context.toObject(
+                    ObjectModelHelper.getContext(objectModel),
+                    getParentScope());
             return context;
         }
 
-        public FOM_Response getResponse() {
+        public Scriptable getResponse() {
             if (response != null) {
                 return response;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            response =
-                new FOM_Response(ObjectModelHelper.getResponse(objectModel));
-            response.setParentScope(getParentScope());
-            response.setPrototype(getClassPrototype(getParentScope(),
-                                                    "FOM_Response"));
+            response = org.mozilla.javascript.Context.toObject(
+                    ObjectModelHelper.getResponse(objectModel),
+                    getParentScope());
             return response;
         }
 
-        public FOM_Log getLog() {
+        public Scriptable getLog() {
             if (log != null) {
                 return log;
             }
-            log = new FOM_Log(logger);
-            log.setParentScope(getParentScope());
-            log.setPrototype(getClassPrototype(getParentScope(), "FOM_Log"));
+            log = org.mozilla.javascript.Context.toObject(logger, getParentScope());
             return log;
         }
 
@@ -204,13 +191,14 @@ public class FOM_Cocoon extends ScriptableObject {
 
     // Called by FOM_JavaScriptInterpreter
     static void init(Scriptable scope) throws Exception {
+        //FIXME(SW) what is the exact purpose of defineClass() ??
         defineClass(scope, FOM_Cocoon.class);
-        defineClass(scope, FOM_Request.class);
-        defineClass(scope, FOM_Response.class);
-        defineClass(scope, FOM_Cookie.class);
-        defineClass(scope, FOM_Session.class);
-        defineClass(scope, FOM_Context.class);
-        defineClass(scope, FOM_Log.class);
+//        defineClass(scope, FOM_Request.class);
+//        defineClass(scope, FOM_Response.class);
+//        defineClass(scope, FOM_Cookie.class);
+//        defineClass(scope, FOM_Session.class);
+//        defineClass(scope, FOM_Context.class);
+//        defineClass(scope, FOM_Log.class);
         defineClass(scope, FOM_WebContinuation.class);
         defineClass(scope, PageLocalImpl.class);
     }
@@ -224,7 +212,16 @@ public class FOM_Cocoon extends ScriptableObject {
         if (pageLocal == null) {
             pageLocal = new PageLocalScopeHolder(getTopLevelScope(this));
         }
-        this.currentCall = new CallContext(currentCall, interp, redirector, manager,
+        
+        // The call context will use the current sitemap's service manager when looking up components
+        ServiceManager sitemapManager;
+        try {
+            sitemapManager = (ServiceManager)avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
+        } catch (ContextException e) {
+            throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
+        }
+
+        this.currentCall = new CallContext(currentCall, interp, redirector, sitemapManager,
                                            avalonContext,
                                            logger, lastContinuation);
     }
@@ -422,950 +419,128 @@ public class FOM_Cocoon extends ScriptableObject {
         LifecycleHelper.decommission(obj);
     }
 
-    public static class FOM_Request
-        extends ScriptableObject implements Request {
-
-        Request request;
-
-        public FOM_Request() {
-            // prototype ctor
+    /**
+     * Base JS wrapper for Cocoon's request/session/context objects.
+     * <p>
+     * FIXME(SW): The only thing added to the regular Java object is the fact that
+     * attributes can be accessed as properties. Do we want to keep this?
+     */
+    private static abstract class AttributeHolderJavaObject extends NativeJavaObject {
+        public AttributeHolderJavaObject(Scriptable scope, Object object, Class clazz) {
+            super(scope, object, clazz);
         }
-
-        public FOM_Request(Object request) {
-            this.request = (Request)unwrap(request);
+        
+        protected abstract Enumeration getAttributeNames();
+        protected abstract Object getAttribute(String name);
+        
+        public Object[] getIds() {
+            // Get class Ids
+            Object [] classIds = super.getIds();
+            
+            // and add attribute names
+            ArrayList idList = new ArrayList(Arrays.asList(classIds));
+            Enumeration iter = getAttributeNames();
+            while(iter.hasMoreElements()) {
+                idList.add(iter.nextElement());
+            }
+            return idList.toArray();
         }
-
-        public String getClassName() {
-            return "FOM_Request";
+        
+        public boolean has(String name, Scriptable start) {
+            return super.has(name, start) || getAttribute(name) != null;
         }
-
-        public Object jsFunction_get(String name) {
-            return request.get(name);
-        }
-
-        public Object jsFunction_getAttribute(String name) {
-            return request.getAttribute(name);
-        }
-
-        public String jsFunction_getRemoteUser() {
-            return request.getRemoteUser();
-        }
-
-
-        public void jsFunction_removeAttribute(String name) {
-            request.removeAttribute(name);
-        }
-
-        public void jsFunction_setAttribute(String name,
-                                            Object value) {
-            request.setAttribute(name, unwrap(value));
-        }
-
+        
         public Object get(String name, Scriptable start) {
             Object result = super.get(name, start);
-            if (result == NOT_FOUND && request != null) {
-                result = request.getParameter(name);
-                if (result == null) {
+            if (result == NOT_FOUND) {
+                result = getAttribute(name);
+                if (result != null) {
+                    result = wrap(start, result, null);
+                } else {
                     result = NOT_FOUND;
                 }
             }
             return result;
         }
-
-        public Object[] getIds() {
-            if (request != null) {
-                List list = new LinkedList();
-                Enumeration e = request.getAttributeNames();
-                while (e.hasMoreElements()) {
-                    list.add(e.nextElement());
-                }
-                Object[] result = new Object[list.size()];
-                list.toArray(result);
-                return result;
-            }
-            return super.getIds();
-        }
-
-        public String jsFunction_getCharacterEncoding() {
-            return request.getCharacterEncoding();
-        }
-
-        public void jsFunction_setCharacterEncoding(String value)
-            throws Exception {
-            request.setCharacterEncoding(value);
-        }
-
-        public int jsFunction_getContentLength() {
-            return request.getContentLength();
-        }
-
-        public String jsFunction_getContentType() {
-            return request.getContentType();
-        }
-
-        public String jsFunction_getParameter(String name) {
-            return request.getParameter(name);
-        }
-
-        public Object jsFunction_getParameterValues(String name) {
-            return request.getParameterValues(name);
-        }
-
-        public Object jsFunction_getParameterNames() {
-            return request.getParameterNames();
-        }
-
-        public String jsFunction_getAuthType() {
-            return request.getAuthType();
-        }
-
-        public String jsFunction_getProtocol() {
-            return request.getProtocol();
-        }
-
-        public String jsFunction_getServerName() {
-            return request.getServerName();
-        }
-
-        public String jsFunction_getRemoteAddr() {
-            return request.getRemoteAddr();
-        }
-
-        public String jsFunction_getRemoteHost() {
-            return request.getRemoteHost();
-        }
-
-        public int jsFunction_getServerPort() {
-            return request.getServerPort();
-        }
-
-        public String jsFunction_getScheme() {
-            return request.getScheme();
-        }
-
-        public String jsFunction_getMethod() {
-            return request.getMethod();
-        }
-
-        public boolean jsFunction_isSecure() {
-            return request.isSecure();
-        }
-
-        public Locale jsFunction_getLocale() {
-            return request.getLocale();
-        }
-
-        public Enumeration jsFunction_getLocales() {
-            return request.getLocales();
-        }
-
-        public FOM_Cookie[] jsFunction_getCookies() {
-            Cookie[] cookies = request.getCookies();
-            FOM_Cookie[] FOM_cookies = new FOM_Cookie[cookies!=null ? cookies.length : 0];
-            for (int i = 0 ; i < FOM_cookies.length ; ++i) {
-                FOM_Cookie FOM_cookie = new FOM_Cookie(cookies[i]);
-                FOM_cookie.setParentScope(getParentScope());
-                FOM_cookie.setPrototype(getClassPrototype(this, FOM_cookie.getClassName()));
-                FOM_cookies[i] = FOM_cookie;
-            }
-            return FOM_cookies;
-        }
-
-        public Scriptable jsGet_cookies() {
-            return org.mozilla.javascript.Context.getCurrentContext().newArray(getParentScope(), jsFunction_getCookies());
-        }
-
-        public FOM_Cookie jsFunction_getCookie(String name) {
-            Object     cookie  = request.getCookieMap().get(name);
-            FOM_Cookie fcookie = null;
-            if ( cookie!=null ) {
-                fcookie = new FOM_Cookie(cookie);
-                fcookie.setParentScope(getParentScope());
-                fcookie.setPrototype(getClassPrototype(this, fcookie.getClassName()));
-            }
-            return fcookie;
-        }
-
-        public String jsFunction_getHeader(String name) {
-            return request.getHeader(name);
-        }
-
-        // TODO: FOM_Header
-
-        public Enumeration jsFunction_getHeaders(String name) {
-            return request.getHeaders(name);
-        }
-
-        public Enumeration jsFunction_getHeaderNames() {
-            return request.getHeaderNames();
-        }
-
-        public Principal jsFunction_getUserPrincipal() {
-            return request.getUserPrincipal();
-        }
-
-        public boolean jsFunction_isUserInRole(String role) {
-            return request.isUserInRole(role);
-        }
-
-        // Request interface
-
-        public Object get(String name) {
-            return request.get(name);
-        }
-
-        public Object getAttribute(String name) {
-            return request.getAttribute(name);
-        }
-
-        public Enumeration getAttributeNames() {
-            return request.getAttributeNames();
-        }
-
-        public void setAttribute(String name, Object o) {
-            request.setAttribute(name, o);
-        }
-
-        public void removeAttribute(String name) {
-            request.removeAttribute(name);
-        }
-
-        public String getAuthType() {
-            return request.getAuthType();
-        }
-
-        public String getCharacterEncoding() {
-            return request.getCharacterEncoding();
-        }
-
-        public void setCharacterEncoding(String enc)
-            throws java.io.UnsupportedEncodingException {
-            request.setCharacterEncoding(enc);
-        }
-
-        public int getContentLength() {
-            return request.getContentLength();
-        }
-
-        public String getContentType() {
-            return request.getContentType();
-        }
-
-        public String getParameter(String name) {
-            return request.getParameter(name);
-        }
-
-        public Enumeration getParameterNames() {
-            return request.getParameterNames();
-        }
-
-        public String[] getParameterValues(String name) {
-            return request.getParameterValues(name);
-        }
-
-        public String getProtocol() {
-            return request.getProtocol();
-        }
-
-        public String getScheme() {
-            return request.getScheme();
-        }
-
-        public String getServerName() {
-            return request.getServerName();
-        }
-
-        public int getServerPort() {
-            return request.getServerPort();
-        }
-
-        public String getRemoteAddr() {
-            return request.getRemoteAddr();
-        }
-
-        public String getRemoteHost() {
-            return request.getRemoteHost();
-        }
-
-        public Locale getLocale() {
-            return request.getLocale();
-        }
-
-        public Enumeration getLocales() {
-            return request.getLocales();
-        }
-
-        public boolean isSecure() {
-            return request.isSecure();
-        }
-
-        public Cookie[] getCookies() {
-            return request.getCookies();
-        }
-
-        public Map getCookieMap() {
-            return request.getCookieMap();
-        }
-
-        public long getDateHeader(String name) {
-            return request.getDateHeader(name);
-        }
-
-        public String getHeader(String name) {
-            return request.getHeader(name);
-        }
-
-        public Enumeration getHeaders(String name) {
-            return request.getHeaders(name);
-        }
-
-        public Enumeration getHeaderNames() {
-            return request.getHeaderNames();
-        }
-
-        public String getMethod() {
-            return request.getMethod();
-        }
-
-        public String getPathInfo() {
-            return request.getPathInfo();
-        }
-
-        public String getPathTranslated() {
-            return request.getPathTranslated();
-        }
-
-        public String getContextPath() {
-            return request.getContextPath();
-        }
-
-        public String getQueryString() {
-            return request.getQueryString();
-        }
-
-        public String getRemoteUser() {
-            return request.getRemoteUser();
-        }
-
-        public Principal getUserPrincipal() {
-            return request.getUserPrincipal();
-        }
-
-        public boolean isUserInRole(String role) {
-            return request.isUserInRole(role);
-        }
-
-        public String getRequestedSessionId() {
-            return request.getRequestedSessionId();
-        }
-
-        public String getRequestURI() {
-            return request.getRequestURI();
-        }
-
-        public String getSitemapURI() {
-            return request.getSitemapURI();
-        }
-
-        public String getServletPath() {
-            return request.getServletPath();
-        }
-
-        public Session getSession(boolean create) {
-            return request.getSession(create);
-        }
-
-        public Session getSession() {
-            return request.getSession();
-        }
-
-        public boolean isRequestedSessionIdValid() {
-            return request.isRequestedSessionIdValid();
-        }
-
-        public boolean isRequestedSessionIdFromCookie() {
-            return request.isRequestedSessionIdFromCookie();
-        }
-
-        public boolean isRequestedSessionIdFromURL() {
-            return request.isRequestedSessionIdFromURL();
-        }
-
     }
 
-    public static class FOM_Cookie
-        extends ScriptableObject implements Cookie {
-
-        Cookie cookie;
-
-        public FOM_Cookie() {
-            // prototype ctor
+    /**
+     * JS wrapper for Cocoon's request object.
+     */
+    public static class FOM_Request extends AttributeHolderJavaObject {
+        private final Request request;
+        
+        public FOM_Request(Scriptable scope, Request request) {
+            super(scope, request, Request.class);
+            this.request = request;
         }
-
-        public FOM_Cookie(Object cookie) {
-            this.cookie = (Cookie)unwrap(cookie);
+        
+        protected Enumeration getAttributeNames() {
+            return this.request.getAttributeNames();
         }
-
-        public String getClassName() {
-            return "FOM_Cookie";
-        }
-
-        public String jsGet_name() {
-            return cookie.getName();
-        }
-
-        public int jsGet_version() {
-            return cookie.getVersion();
-        }
-
-        public void jsSet_version(int value) {
-            cookie.setVersion(value);
-        }
-
-        public String jsGet_value() {
-            return cookie.getValue();
-        }
-
-        public void jsSet_value(String value) {
-            cookie.setValue(value);
-        }
-
-        public void jsSet_comment(String purpose) {
-            cookie.setComment(purpose);
-        }
-
-        public String jsGet_comment() {
-            return cookie.getComment();
-        }
-
-        public void jsSet_domain(String pattern) {
-            cookie.setDomain(pattern);
-        }
-
-        public String jsGet_domain() {
-            return cookie.getDomain();
-        }
-
-        public void jsSet_maxAge(int value) {
-            cookie.setMaxAge(value);
-        }
-
-        public int jsGet_maxAge() {
-            return cookie.getMaxAge();
-        }
-
-        public void jsSet_path(String value) {
-            cookie.setPath(value);
-        }
-
-        public String jsGet_path() {
-            return cookie.getPath();
-        }
-
-        public void jsSet_secure(boolean value) {
-            cookie.setSecure(value);
-        }
-
-        public boolean jsGet_secure() {
-            return cookie.getSecure();
-        }
-
-        // Cookie interface
-
-        public void setComment(String purpose) {
-            cookie.setComment(purpose);
-        }
-
-        public String getComment() {
-            return cookie.getComment();
-        }
-
-        public void setDomain(String pattern) {
-            cookie.setDomain(pattern);
-        }
-
-        public String getDomain() {
-            return cookie.getDomain();
-        }
-
-        public void setMaxAge(int expiry) {
-            cookie.setMaxAge(expiry);
-        }
-
-        public int getMaxAge() {
-            return cookie.getMaxAge();
-        }
-
-        public void setPath(String uri) {
-            cookie.setPath(uri);
-        }
-
-        public String getPath() {
-            return cookie.getPath();
-        }
-
-        public void setSecure(boolean flag) {
-            cookie.setSecure(flag);
-        }
-
-        public boolean getSecure() {
-            return cookie.getSecure();
-        }
-
-        public String getName() {
-            return cookie.getName();
-        }
-
-        public void setValue(String newValue) {
-            cookie.setValue(newValue);
-        }
-
-        public String getValue() {
-            return cookie.getValue();
-        }
-
-        public int getVersion() {
-            return cookie.getVersion();
-        }
-
-        public void setVersion(int v) {
-            cookie.setVersion(v);
+        
+        protected Object getAttribute(String name) {
+            return this.request.getAttribute(name);
         }
     }
 
-    public static class FOM_Response
-        extends ScriptableObject implements Response {
-
-        Response response;
-
-        public FOM_Response() {
-            // prototype ctor
+    /**
+     * JS wrapper for Cocoon's session object.
+     */
+    public static class FOM_Session extends AttributeHolderJavaObject {
+        private final Session session;
+        
+        public FOM_Session(Scriptable scope, Session session) {
+            super(scope, session, Session.class);
+            this.session = session;
         }
-
-        public FOM_Response(Object response) {
-            this.response = (Response)unwrap(response);
+        
+        protected Enumeration getAttributeNames() {
+            return this.session.getAttributeNames();
         }
-
-        public String getClassName() {
-            return "FOM_Response";
-        }
-
-        public Object jsFunction_createCookie(String name, String value) {
-            FOM_Cookie result =
-                new FOM_Cookie(response.createCookie(name, value));
-            result.setParentScope(getParentScope());
-            result.setPrototype(getClassPrototype(this, result.getClassName()));
-            return result;
-        }
-
-        public void jsFunction_addCookie(Object cookie)
-            throws JavaScriptException {
-            if (!(cookie instanceof FOM_Cookie)) {
-                throw new JavaScriptException("expected a Cookie instead of " + cookie);
-            }
-            FOM_Cookie fom_cookie = (FOM_Cookie)cookie;
-            response.addCookie(fom_cookie.cookie);
-        }
-
-        public boolean jsFunction_containsHeader(String name) {
-            return response.containsHeader(name);
-        }
-
-        public void jsFunction_setHeader(String name, String value) {
-            response.setHeader(name, value);
-        }
-
-        public void jsFunction_addHeader(String name, String value) {
-            response.addHeader(name, value);
-        }
-
-        public void jsFunction_setStatus(int sc) {
-            if (response instanceof HttpResponse) {
-                ((HttpResponse) response).setStatus(sc);
-            }
-        }
-
-        // Response interface
-
-        public String getCharacterEncoding() {
-            return response.getCharacterEncoding();
-        }
-
-        public void setLocale(Locale loc) {
-            response.setLocale(loc);
-        }
-
-        public Locale getLocale() {
-            return response.getLocale();
-        }
-        public Cookie createCookie(String name, String value) {
-            return response.createCookie(name, value);
-        }
-
-        public void addCookie(Cookie cookie) {
-            response.addCookie(cookie);
-        }
-
-        public boolean containsHeader(String name) {
-            return response.containsHeader(name);
-        }
-
-        public String encodeURL(String url) {
-            return response.encodeURL(url);
-        }
-
-        public void setDateHeader(String name, long date) {
-            response.setDateHeader(name, date);
-        }
-
-        public void addDateHeader(String name, long date) {
-            response.addDateHeader(name, date);
-        }
-
-        public void setHeader(String name, String value) {
-            response.setHeader(name, value);
-        }
-
-        public void addHeader(String name, String value) {
-            response.addHeader(name, value);
-        }
-
-        public void setIntHeader(String name, int value) {
-            response.setIntHeader(name, value);
-        }
-
-        public void addIntHeader(String name, int value) {
-            response.addIntHeader(name, value);
+        
+        protected Object getAttribute(String name) {
+            return this.session.getAttribute(name);
         }
     }
 
-    public static class FOM_Session
-        extends ScriptableObject implements Session {
-
-        Session session;
-
-        public FOM_Session() {
-            // prototype ctor
+    /**
+     * JS wrapper for Cocoon's context object.
+     */
+    public static class FOM_Context extends AttributeHolderJavaObject {
+        private final org.apache.cocoon.environment.Context context;
+        
+        public FOM_Context(Scriptable scope, org.apache.cocoon.environment.Context context) {
+            super(scope, context, org.apache.cocoon.environment.Context.class);
+            this.context = context;
         }
-
-        public FOM_Session(Object session) {
-            this.session = (Session)unwrap(session);
+        
+        protected Enumeration getAttributeNames() {
+            return this.context.getAttributeNames();
         }
-
-        public String getClassName() {
-            return "FOM_Session";
-        }
-
-        public Object[] getIds() {
-            if (session != null) {
-                List list = new LinkedList();
-                Enumeration e = session.getAttributeNames();
-                while (e.hasMoreElements()) {
-                    list.add(e.nextElement());
-                }
-                Object[] result = new Object[list.size()];
-                list.toArray(result);
-                return result;
-            }
-            return super.getIds();
-        }
-
-        public Object get(String name, Scriptable start) {
-            Object result = super.get(name, start);
-            if (result == NOT_FOUND && session != null) {
-                result = session.getAttribute(name);
-                if (result == null) {
-                    result = NOT_FOUND;
-                }
-            }
-            return result;
-        }
-
-        public Object jsFunction_getAttribute(String name) {
-            return session.getAttribute(name);
-        }
-
-        public void jsFunction_setAttribute(String name, Object value) {
-            session.setAttribute(name, unwrap(value));
-        }
-
-        public void jsFunction_removeAttribute(String name) {
-            session.removeAttribute(name);
-        }
-
-        public Object jsFunction_getAttributeNames() {
-            return session.getAttributeNames();
-        }
-
-        public void jsFunction_invalidate() {
-            session.invalidate();
-        }
-
-        public boolean jsFunction_isNew() {
-            return session.isNew();
-        }
-
-        public String jsFunction_getId() {
-            return session.getId();
-        }
-
-        public long jsFunction_getCreationTime() {
-            return session.getCreationTime();
-        }
-
-        public long jsFunction_getLastAccessedTime() {
-            return session.getLastAccessedTime();
-        }
-
-        public void jsFunction_setMaxInactiveInterval(int interval) {
-            session.setMaxInactiveInterval(interval);
-        }
-
-        public int jsFunction_getMaxInactiveInterval() {
-            return session.getMaxInactiveInterval();
-        }
-
-
-        // Session interface
-
-        public long getCreationTime() {
-            return session.getCreationTime();
-        }
-
-        public String getId() {
-            return session.getId();
-        }
-
-        public long getLastAccessedTime() {
-            return session.getLastAccessedTime();
-        }
-
-        public void setMaxInactiveInterval(int interval) {
-            session.setMaxInactiveInterval(interval);
-        }
-
-        public int getMaxInactiveInterval() {
-            return session.getMaxInactiveInterval();
-        }
-
-        public Object getAttribute(String name) {
-            return session.getAttribute(name);
-        }
-
-        public Enumeration getAttributeNames() {
-            return session.getAttributeNames();
-        }
-
-        public void setAttribute(String name, Object value) {
-            session.setAttribute(name, value);
-        }
-
-        public void removeAttribute(String name) {
-            session.removeAttribute(name);
-        }
-
-        public void invalidate() {
-            session.invalidate();
-        }
-
-        public boolean isNew() {
-            return session.isNew();
+        
+        protected Object getAttribute(String name) {
+            return this.context.getAttribute(name);
         }
     }
 
-    public static class FOM_Context extends ScriptableObject
-        implements org.apache.cocoon.environment.Context {
-
-        org.apache.cocoon.environment.Context context;
-
-        public FOM_Context() {
-            // prototype ctor
-        }
-
-        public FOM_Context(Object context) {
-            this.context = (org.apache.cocoon.environment.Context)unwrap(context);
-        }
-
-        public String getClassName() {
-            return "FOM_Context";
-        }
-
-        public Object jsFunction_getAttribute(String name) {
-            return context.getAttribute(name);
-        }
-
-        public void jsFunction_setAttribute(String name, Object value) {
-            context.setAttribute(name, unwrap(value));
-        }
-
-        public void jsFunction_removeAttribute(String name) {
-            context.removeAttribute(name);
-        }
-
-        public Object jsFunction_getAttributeNames() {
-            return context.getAttributeNames();
-        }
-
-        public Object jsFunction_getInitParameter(String name) {
-            return context.getInitParameter(name);
-        }
-
-        public Object[] getIds() {
-            if (context != null) {
-                List list = new LinkedList();
-                Enumeration e = context.getAttributeNames();
-                while (e.hasMoreElements()) {
-                    list.add(e.nextElement());
-                }
-                Object[] result = new Object[list.size()];
-                list.toArray(result);
-                return result;
-            }
-            return super.getIds();
-        }
-
-        public Object get(String name, Scriptable start) {
-            Object value = super.get(name, start);
-            if (value == NOT_FOUND && context != null) {
-                value = context.getAttribute(name);
-                if (value == null) {
-                    value = NOT_FOUND;
-                }
-            }
-            return value;
-        }
-
-        /* TODO: Vote on the inclusion of this method
-        public String jsFunction_getRealPath(String path) {
-            return context.getRealPath(path);
-        }
-        */
-
-        // Context interface
-
-        public Object getAttribute(String name) {
-            return context.getAttribute(name);
-        }
-
-        public void setAttribute(String name, Object value) {
-            context.setAttribute(name, value);
-        }
-
-        public void removeAttribute(String name) {
-            context.removeAttribute(name);
-        }
-
-        public Enumeration getAttributeNames() {
-            return context.getAttributeNames();
-        }
-
-        public URL getResource(String path)
-            throws MalformedURLException {
-            return context.getResource(path);
-        }
-
-        public String getRealPath(String path) {
-            return context.getRealPath(path);
-        }
-
-        public String getMimeType(String file) {
-            return context.getMimeType(file);
-        }
-
-        public String getInitParameter(String name) {
-            return context.getInitParameter(name);
-        }
-
-        public InputStream getResourceAsStream(String path) {
-            return context.getResourceAsStream(path);
-        }
-    }
-
-    public static class FOM_Log extends ScriptableObject {
-
-        private Logger logger;
-
-        public FOM_Log() {
-        }
-
-        public FOM_Log(Object logger) {
-            this.logger = (Logger)unwrap(logger);
-        }
-
-        public String getClassName() {
-            return "FOM_Log";
-        }
-
-        public void jsFunction_debug(String message, Object throwable) {
-            throwable = unwrap(throwable);
-            if (throwable instanceof Throwable) {
-                logger.debug(message, (Throwable)throwable);
-            } else {
-                logger.debug(message);
-            }
-        }
-
-        public void jsFunction_info(String message, Object throwable) {
-            throwable = unwrap(throwable);
-            if (throwable instanceof Throwable) {
-                logger.info(message, (Throwable)throwable);
-            } else {
-                logger.info(message);
-            }
-        }
-
-        public void jsFunction_warn(String message, Object throwable) {
-            throwable = unwrap(throwable);
-            if (throwable instanceof Throwable) {
-                logger.warn(message, (Throwable)throwable);
-            } else {
-                logger.warn(message);
-            }
-        }
-
-        public void jsFunction_error(String message, Object throwable) {
-            throwable = unwrap(throwable);
-            if (throwable instanceof Throwable) {
-                logger.error(message, (Throwable)throwable);
-            } else {
-                logger.error(message);
-            }
-        }
-
-        public boolean jsFunction_isDebugEnabled() {
-            return logger.isDebugEnabled();
-        }
-
-        public boolean jsFunction_isInfoEnabled() {
-            return logger.isInfoEnabled();
-        }
-
-        public boolean jsFunction_isWarnEnabled() {
-            return logger.isWarnEnabled();
-        }
-
-        public boolean jsFunction_isErrorEnabled() {
-            return logger.isErrorEnabled();
-        }
-    }
-
-    public FOM_Request jsGet_request() {
+    public Scriptable jsGet_request() {
         return currentCall.getRequest();
     }
 
-    public FOM_Response jsGet_response() {
+    public Scriptable jsGet_response() {
         return currentCall.getResponse();
     }
 
-    public FOM_Log jsGet_log() {
+    public Scriptable jsGet_log() {
         return currentCall.getLog();
     }
 
-    public FOM_Context jsGet_context() {
+    public Scriptable jsGet_context() {
         return currentCall.getContext();
     }
 
-    public FOM_Session jsGet_session() {
+    public Scriptable jsGet_session() {
         return currentCall.getSession();
     }
 
@@ -1404,8 +579,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The request
      */
     public Request getRequest() {
-        FOM_Request fom_request = jsGet_request();
-        return fom_request != null ? fom_request.request : null;
+        return ObjectModelHelper.getRequest(ContextHelper.getObjectModel(currentCall.avalonContext));
     }
 
     /**
@@ -1413,10 +587,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The session (may be null)
      */
     public Session getSession() {
-        if (getRequest().getSession(false) == null) {
-            return null;
-        }
-        return jsGet_session().session;
+        return ObjectModelHelper.getRequest(ContextHelper.getObjectModel(currentCall.avalonContext)).getSession(true);
     }
 
     /**
@@ -1424,7 +595,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The response
      */
     public Response getResponse() {
-        return jsGet_response().response;
+        return ObjectModelHelper.getResponse(ContextHelper.getObjectModel(currentCall.avalonContext));
     }
 
     /**
@@ -1432,7 +603,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The context
      */
     public org.apache.cocoon.environment.Context getContext() {
-        return jsGet_context().context;
+        return ObjectModelHelper.getContext(ContextHelper.getObjectModel(currentCall.avalonContext));
     }
 
     /**
@@ -1442,15 +613,6 @@ public class FOM_Cocoon extends ScriptableObject {
     public Map getObjectModel() {
         return ContextHelper.getObjectModel(currentCall.avalonContext);
     }
-
-//    /**
-//     * Get the current Sitemap's component manager
-//     * @return The component manager
-//     */
-//
-//    public ComponentManager getComponentManager() {
-//        return currentCall.componentManager;
-//    }
 
     private Context getAvalonContext() {
         return currentCall.avalonContext;
