@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.39 2001-01-23 02:01:31 balld Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.40 2001-02-05 20:01:55 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.39 $ $Date: 2001-01-23 02:01:31 $
+ * @version $Revision: 1.40 $ $Date: 2001-02-05 20:01:55 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -302,29 +302,18 @@ public class XSPProcessor extends AbstractActor
         throw new RuntimeException ("Error loading logicsheet at " + location + " due to " + ex);
       }
     }
-    
-    Configurations poolConf = conf.getConfigurations("pool");
-    Properties poolProperties = poolConf.getProperties();
-    poolProperties.put("services.TurbineResourceService.classname", "org.apache.turbine.services.resources.TurbineResourceService");
-
-/*
-    Enumeration en = poolConf.keys();
-    
-    while (en.hasMoreElements()) {
-        String key = (String) en.nextElement();
-        String value = (String) poolConf.get(key);
-        logger.log("@@@"+key+"="+value+"@@@", Logger.DEBUG);
-    }
-*/    
 
     try {
+        Configurations poolConf = conf.getConfigurations("pool");
+        Properties poolProperties = poolConf.getProperties();
+        poolProperties.put("services.TurbineResourceService.classname", "org.apache.turbine.services.resources.TurbineResourceService");
         TurbineResourceService.setProperties(poolProperties);
         logger.log("TurbineResources all set!!", Logger.DEBUG);
-    } catch (IOException ioexp) {
+    } catch (Throwable turbine_t) {
         // should we consider this fatal and throw an exception? (SM)
         logger.log(this,
                    "Setting of TurbineResource properties failed due to " +
-                   ioexp,
+                   turbine_t,
                    Logger.WARNING);
     }
   }
