@@ -170,7 +170,7 @@
 	<description>Part of jakarta-avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-store-20020820.jar</lib>
+	<lib>core/excalibur-store-20030317.jar</lib>
 	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
  </file>
  <file>
