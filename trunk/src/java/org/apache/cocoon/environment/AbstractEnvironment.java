@@ -32,7 +32,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.25 2004/03/08 14:02:42 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.26 2004/03/18 15:15:09 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -276,5 +276,12 @@ public abstract class AbstractEnvironment
      */
     public void finishingProcessing() {
         // do nothing here
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isInternRedirect()
+     */
+    public boolean isInternalRedirect() {
+        return false;
     }
 }

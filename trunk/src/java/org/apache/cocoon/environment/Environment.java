@@ -26,7 +26,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.13 2004/03/08 14:02:43 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.14 2004/03/18 15:15:09 cziegeler Exp $
  */
 public interface Environment {
 
@@ -176,12 +176,19 @@ public interface Environment {
     void finishingProcessing();
     
     /**
-     * Is this environment external ? An external environment is one that is created in response
-     * to an external request (http, commandline, etc.). Environments created by the "cocoon:"
-     * protocol aren't external.
+     * Is this environment external ? An external environment is one that 
+     * is created in response to an external request (http, commandline, etc.). 
+     * Environments created by the "cocoon:" protocol aren't external.
      * 
-     * @return true is this environment is external
+     * @return true if this environment is external
      */
     boolean isExternal();
+    
+    /**
+     * Is this an internal redirect?
+     * An environment is on internal redirect if it is an internal request
+     * (via the cocoon: protocol) and used for a redirect.
+     */
+    boolean isInternalRedirect();
 }
 

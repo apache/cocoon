@@ -34,7 +34,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.10 2004/03/08 14:02:46 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.11 2004/03/18 15:15:10 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -223,5 +223,12 @@ public class MutableEnvironmentFacade implements Environment {
     
     public void reset() {
         this.env.reset();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isInternRedirect()
+     */
+    public boolean isInternalRedirect() {
+        return env.isInternalRedirect();
     }
 }

@@ -153,5 +153,11 @@ public class MockEnvironment implements Environment {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isInternalRedirect()
+     */
+    public boolean isInternalRedirect() {
+        return false;
+    }
 }
 

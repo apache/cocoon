@@ -37,7 +37,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: PipelineNode.java,v 1.2 2004/03/08 13:57:38 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.3 2004/03/18 15:15:10 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -169,7 +169,7 @@ public class PipelineNode extends SimpleParentProcessingNode implements Initiali
 
         } catch (Exception ex) {
 
-            if (!externalRequest) {
+            if (!externalRequest && !env.isInternalRedirect()) {
                 // Propagate exception on internal requests
                 throw ex;
 
