@@ -62,10 +62,11 @@ import java.util.Map;
 /**
  * This is the {@link Context} implementation for Cocoon components.
  * It extends the {@link DefaultContext} by a special handling for
- * getting objects from the object model.
- *
+ * getting objects from the object model and other application information.
+ * 
+ * @see org.apache.cocoon.components.ContextHelper
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.4 2004/02/20 20:34:37 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.5 2004/02/24 09:48:52 cziegeler Exp $
  */
 
 public class ComponentContext
@@ -118,12 +119,18 @@ public class ComponentContext
      */
     public Object get( final Object key )
     throws ContextException {
-        if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
+        if ( ContextHelper.CONTEXT_OBJECT_MODEL.equals(key)) {
             final Environment env = EnvironmentHelper.getCurrentEnvironment();
             if ( env == null ) {
                 throw new ContextException("Unable to locate " + key + " (No environment available)");
             }
             return env.getObjectModel();
+        } else if ( ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER.equals(key)) {
+            final Object manager = EnvironmentHelper.getSitemapServiceManager();
+            if ( manager == null ) {
+                throw new ContextException("Unable to locate " + key + " (No environment available)");
+            }
+            return manager;
         }
         if ( key instanceof String ) {
             String stringKey = (String)key;

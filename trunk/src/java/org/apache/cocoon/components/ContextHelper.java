@@ -64,7 +64,7 @@ import java.util.Map;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.7 2003/10/22 15:37:50 bloritsch Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.8 2004/02/24 09:48:52 cziegeler Exp $
  */
 
 public final class ContextHelper {
@@ -78,6 +78,9 @@ public final class ContextHelper {
     /** Application <code>Context</code> Key for the current response object */
     public static final String CONTEXT_RESPONSE_OBJECT = CONTEXT_OBJECT_MODEL + '.' + ObjectModelHelper.RESPONSE_OBJECT;
 
+    /** Application <code>Context</code> Key for the current sitemap service manager */
+    public static final String CONTEXT_SITEMAP_SERVICE_MANAGER = "sitemap-service-manager";
+    
     private ContextHelper() {
         // Forbid instantiation
     }
