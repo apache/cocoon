@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * It's actually a quick hack...
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RSSTransformer.java,v 1.6 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class RSSTransformer
 extends AbstractSAXTransformer
@@ -90,6 +90,7 @@ implements CacheableProcessingComponent {
                 // if no exception occurs, everything is fine!
                 parsed = serializer.getSAXFragment();
             } catch (Exception ignore) {
+                // just ignore all exceptions
             } finally {
                 this.manager.release( serializer );
             }
