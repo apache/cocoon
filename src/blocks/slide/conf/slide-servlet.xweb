@@ -1,5 +1,5 @@
 <xweb xpath="/web-app" 
-  unless="comment()[contains(., 'Slide DAV Server')]" 
+  unless="comment()[contains(., 'Definition and configuration of Slide')]" 
   insert-after="servlet[servlet-name = 'Cocoon']">
 
     <!-- Definition and configuration of Slide's WebDAV servlet.
