@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  $Id: release.xml,v 1.14 2004/05/19 11:33:35 cziegeler Exp $
+  $Id: release.xml,v 1.15 2004/05/27 12:34:41 cziegeler Exp $
 -->
 
 <document>
@@ -31,24 +31,6 @@
  </header>
 
  <body>
- <s1 title="Timeframe">
-  <p>This is the current time frame for the next releases:</p>
-  <ul>
-   <li>May, 24th 2004     : 2.1.5 (maintenance release)</li>
-   <li>Not schedulded yet : 2.2 Milestone 1</li>
-   <li>On request         : 2.0.5 (maintenance release)</li>
-  </ul>
- </s1>
-
- <s1 title="Version 2.2 Milestone 1">
- <p>Although this version might be long in the future, we already have some plans...</p>
- <ul>
-  <li>Design and implement blocks</li>
-  <li>Move to a new Avalon container implementation (Fortress)</li>
- </ul>
- <p>The <link href="updating.html">updating to 2.2</link> document contains more information
-   on how to prepare your application for the next major release.</p>
- </s1>
  <s1 title="General tasks for a release">
   <ul>
    <li>We have many open
