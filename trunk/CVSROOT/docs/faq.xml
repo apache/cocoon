@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE faqs SYSTEM "../dtd/faq-v10.dtd">
+<!-- <!DOCTYPE faqs SYSTEM "../dtd/faq-v10.dtd"> -->
 
 <faqs title="Cocoon Frequently Asked Questions">
 
@@ -26,7 +26,7 @@
 </faq>
 
 <faq>
- <question>"Where do I get more information on XSL and XML?"</question>
+ <question>Where do I get more information on XSL and XML?</question>
  <answer>
   <p>
     The web community is very exited about XML and XSL and many sources of

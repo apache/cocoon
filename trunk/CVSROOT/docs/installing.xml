@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
+<!-- <!DOCTYPE document SYSTEM "../dtd/document-v10.dtd"> -->
 
 <document>
  <header>
@@ -58,7 +58,8 @@
   <p>
    For this reason, in order to work out of the box and have complete operation, 
    you need to download all three packages (Xerces-J, Xalan-J and FOP) from the
-   <link href="http://xml.apache.org/dist/">xml.apache.org</link>. Once you have
+   <link href="http://xml.apache.org/dist/">xml.apache.org</link> distribution
+   area. Once you have
    all three jar packages required and all other packages that may be required
    by these projects, go ahead and follow the instructions for your servlet
    engine.

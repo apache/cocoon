@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
+<!-- <!DOCTYPE document SYSTEM "../dtd/document-v10.dtd"> -->
 
 <document>
  <header>
@@ -61,9 +61,10 @@
   formatted in the response stream. This has significant impacts on performance
   and memory needs:</p>
   
-  <ul>
-    <li>
-      <strong>incremental operation</strong>: the response is created
+  <dl>
+    <dt>incremental operation</dt>
+    <dd>
+      the response is created
       during document production. Client's perceived performance is dramatically
       improved since clients can start receiving data as soon as it is created,
       not after all processing stages have been performed. In those cases where
@@ -71,29 +72,33 @@
       internal buffers store the events until the operation can be performed.
       However, even in these cases performance can be increased with the use of
       tuned memory structures.
-    </li>
-    <li>
-      <strong>lowered memory consumption</strong>: since most of the
+    </dd>
+    <dt>lowered memory consumption</dt>
+    <dd>
+      since most of the
       server processing required in Cocoon is incremental, an incremental model
       allows XML production events to be transformed directly into output events
       and character written on streams, thus avoiding the need to store them in
       memory.
-    </li>
-    <li>
-      <strong>easier scalability</strong>: reduce memory needs allow more
+    </dd>
+    <dt>easier scalability</dt>
+    <dd>
+      reduce memory needs allow more
       concurrent operation to be possible, thus allowing the publishing system
       to scale as the load increases.
-    </li>
-    <li>
-      <strong>more optimizable code model</strong>: modern virtual
+    </dd>
+    <dt>more optimizable code model</dt>
+    <dd>
+      modern virtual
       machines are based on the idea of <em>hot spots</em>, code fragments that
       are used often and, if optimized, increase the process execution by far.
       This new event model allows easier detection of hot spots since it's a
       method driven operation, rather than a memory driven one. Hot methods can
       be identified earlier and their optimization performed better.
-    </li>
-    <li>
-      <strong>reduced garbage collection</strong>: even the most advanced
+    </dd>
+    <dt>reduced garbage collection</dt>
+    <dd> 
+      even the most advanced
       and lightweight DOM implementation require at least three to five times
       (and sometimes much more than this) more memory than original document
       size. This does not only reduce the scalability of the operation, but also
@@ -101,8 +106,8 @@
       must be collected after the response in sent to the client. Even if modern
       virtual machines reduced the overhead of garbage collection, less garbage
       will always have performance and scalability impacts.
-    </li>
-  </ul>
+    </dd>
+  </dl>
   
   <p>The above points, alone, would be enough for the Cocoon2
   paradigm shift, even if this event based model impacts not only the general

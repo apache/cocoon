@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE spec SYSTEM "../dtd/specification-v10.dtd">
+<!-- <!DOCTYPE spec SYSTEM "../dtd/specification-v10.dtd"> -->
 
 <spec>
  <header>
-  <title>eXtensible Server Pages (XSP) Layer 1</title>
+  <title>XSP Layer 1</title>
+  <subtitle>eXtensible Server Pages</subtitle>
   <version>11091999</version>
   <type>Working Draft</type>
   <authors>
@@ -131,12 +132,15 @@
 
 <s2 title="Relationship to Existing Standards">
   <p>Three standards have been especially influential:</p>
-  <ul>
-    <li><strong>JSP</strong> defines a way to embed programmatic logic into web documents.</li>
-    <li><strong>XSLT</strong> defines a way to transform XML documents.</li>
-    <li><strong>XML</strong> defines a flexible still highly structured paradigm for web
-      content generation and distribution.</li>
-  </ul>
+  <dl>
+    <dt>JSP</dt>
+    <dd>defines a way to embed programmatic logic into web documents.</dd>
+    <dt>XSLT</dt>
+    <dd>defines a way to transform XML documents.</dd>
+    <dt>XML</dt>
+    <dd>defines a flexible still highly structured paradigm for web
+      content generation and distribution.</dd>
+  </dl>
   <p>Many server side dynamic web content generators have been evaluated and confronted,
   especially WebMacro and GSP.</p>
 </s2>
@@ -189,9 +193,12 @@
   verbosity of XSP document, allowing the inclusion the default DTD via entity mapping. The
   standard way to include the XSP DTD into XSP documents is:</p>
 
-  <source><![CDATA[
-   <!DOCTYPE page PUBLIC "-//Apache//DTD XSP Layer 1//EN" "http://www.apache.org/1999/XSP/Layer1">  
-  ]]></source>
+<source><![CDATA[
+<!DOCTYPE page PUBLIC 
+   "-//Apache//DTD XSP Layer 1//EN" 
+   "http://www.apache.org/1999/XSP/Layer1"
+>
+]]></source>
 
 </s2>
 
@@ -206,48 +213,51 @@
   designed to include as content mark-up elements that belong to other namespaces.
   The XSchema effort will allow multi-namespace validation.</p>
 
-  <source><![CDATA[
-  
-  <!ENTITY % elements "xsp:expr | xsp:element | xsp:pi | xsp:comment">
-  
-  <!ELEMENT xsp:page (xsp:structure?, xsp:logic?, xsp:content)>
-  <!ATTLIST xsp:page
-    language CDATA #REQUIRED
-    result-ns NMTOKEN #IMPLIED
-    default-space (preserve|strip) "preserve"
-    indent-result (yes|no) "no"
-    xmlns:xsp CDATA #FIXED "http://www.apache.org/1999/XSP/Layer1"
-    xml:space (default|preserve) "preserve"
-  >
-  
-  <!ELEMENT xsp:structure (xsp:dtd?, xsp:include*)>
-  
-  <!ELEMENT xsp:dtd (#PCDATA)>
-  <!ELEMENT xsp:include (#PCDATA)>
-  
-  <!ELEMENT xsp:content (#PCDATA | xsp:logic | %elements;)*>
-  
-  <!ELEMENT xsp:logic (#PCDATA | xsp:content | %element;)*>
-  <!ATTLIST xsp:logic xml:space (default|preserve) "preserve">
-  
-  <!ELEMENT xsp:element
-            (#PCDATA | 
-            xsp:attribute | 
-            xsp:element | 
-            xsp:logic)*>
-  <!ATTLIST xsp:element
-            name CDATA #REQUIRED>
-  
-  <!ELEMENT xsp:attribute (#PCDATA)>
-  <!ATTLIST xsp:attribute 
-            name CDATA #REQUIRED
-            xml:space (default|preserve) "preserve">
-  
-  <!ELEMENT xsp:pi (#PCDATA | xsp:expr>
-  <!ELEMENT xsp:comment (#PCDATA | xsp:expr)>
-  <!ELEMENT xsp:expr (#PCDATA)>  
-  
-  ]]></source>
+<source><![CDATA[
+
+<!ENTITY % elements "xsp:expr | 
+                     xsp:element | 
+                     xsp:pi | 
+                     xsp:comment">
+
+<!ELEMENT xsp:page (xsp:structure?, xsp:logic?, xsp:content)>
+<!ATTLIST xsp:page
+  language CDATA #REQUIRED
+  result-ns NMTOKEN #IMPLIED
+  default-space (preserve|strip) "preserve"
+  indent-result (yes|no) "no"
+  xmlns:xsp CDATA #FIXED "http://www.apache.org/1999/XSP/Layer1"
+  xml:space (default|preserve) "preserve"
+>
+
+<!ELEMENT xsp:structure (xsp:dtd?, xsp:include*)>
+
+<!ELEMENT xsp:dtd (#PCDATA)>
+<!ELEMENT xsp:include (#PCDATA)>
+
+<!ELEMENT xsp:content (#PCDATA | xsp:logic | %elements;)*>
+
+<!ELEMENT xsp:logic (#PCDATA | xsp:content | %element;)*>
+<!ATTLIST xsp:logic xml:space (default|preserve) "preserve">
+
+<!ELEMENT xsp:element
+          (#PCDATA | 
+          xsp:attribute | 
+          xsp:element | 
+          xsp:logic)*>
+<!ATTLIST xsp:element
+          name CDATA #REQUIRED>
+
+<!ELEMENT xsp:attribute (#PCDATA)>
+<!ATTLIST xsp:attribute 
+          name CDATA #REQUIRED
+          xml:space (default|preserve) "preserve">
+
+<!ELEMENT xsp:pi (#PCDATA | xsp:expr>
+<!ELEMENT xsp:comment (#PCDATA | xsp:expr)>
+<!ELEMENT xsp:expr (#PCDATA)>  
+
+]]></source>
   
 </s2>
 </s1>
@@ -275,77 +285,82 @@
   of this specification to define a way to associate transformation sheets to pages. The
   associated logicsheet that uses the Java language as logic definition may look like:</p>
   
-  <source><![CDATA[
-    <?xml version="1.0"?>
-     <xsl:transformation 
-      xmlns:xsl="http://www.w3.org/1999/XSL/tranform" 
-      xmlns:xsp="http://www.apache.org/1999/XSP/Layer1"
-      result-ns="http://www.apache.org/1999/XSP/Layer1"
-     >
-        
-      <xsl:template match="page">
-       <xsp:page language="java">
+<source><![CDATA[
+<?xml version="1.0"?>
+<xsl:transformation 
+ xmlns:xsl="http://www.w3.org/1999/XSL/tranform" 
+ xmlns:xsp="http://www.apache.org/1999/XSP/Layer1"
+ result-ns="http://www.apache.org/1999/XSP/Layer1"
+>
+   
+ <xsl:template match="page">
+  <xsp:page language="java">
 
-        <xsp:structure>
-         <xsp:include>java.lang.*</xsp:include>
-        </xsp:structure>
-          
-        <xsp:logic>
-         private static int counter = 0;
-              
-         private synchronized int currentCount() {
-           return ++counter;
-         }
-        </xsp:logic>
-           
-        <xsp:content>
-         <page>
-          <xsl:apply-templates/>
-         </page>
-        </xsp:content>
-       </xsp:page>
-      </xsl:template>
+   <xsp:structure>
+    <xsp:include>java.lang.*</xsp:include>
+   </xsp:structure>
+     
+   <xsp:logic>
+    private static int counter = 0;
          
-      <xsl:template match="counter">    
-       <xsp:expr>currentCount()</xsp:expr>
-      </xsl:template>
+    private synchronized int currentCount() {
+      return ++counter;
+    }
+   </xsp:logic>
+      
+   <xsp:content>
+    <page>
+     <xsl:apply-templates/>
+    </page>
+   </xsp:content>
+  </xsp:page>
+ </xsl:template>
+    
+ <xsl:template match="counter">    
+  <xsp:expr>currentCount()</xsp:expr>
+ </xsl:template>
 
-      <!-- Transcribe everything else verbatim -->
-      <xsl:template match="*|@*|comment()|pi()|text()">
-       <xsl:copy>
-        <xsl:apply-templates/>
-       </xsl:copy>
-      </xsl:template>
-    ]]></source>
+ <!-- Transcribe everything else verbatim -->
+ <xsl:template match="*|@*|comment()|pi()|text()">
+  <xsl:copy>
+   <xsl:apply-templates/>
+  </xsl:copy>
+ </xsl:template>
+</xsl:transformation>
+]]></source>
     
   <p>After applying the above logic sheet, the resulting document would be equivalent to the
   following:</p>
   
-  <source><![CDATA[
-    <xsp:page 
-     result-ns="http://www.dummy.org/SimpleHomepageDTD"
-     language="java">
+<source><![CDATA[
+<xsp:page 
+ result-ns="http://www.dummy.org/SimpleHomepageDTD"
+ language="java">
 
-     <xsp:structure>
-      <xsp:include>java.lang.*</xsp:include>
-     </xsp:structure>
+ <xsp:structure>
+  <xsp:include>java.lang.*</xsp:include>
+ </xsp:structure>
 
-     <xsp:logic>
-      private static int counter = 0;
-            
-      private synchronized int currentCount() {
-        return ++counter;
-      }
-     </xsp:logic>
+ <xsp:logic>
+  private static int counter = 0;
+        
+  private synchronized int currentCount() {
+    return ++counter;
+  }
+ </xsp:logic>
 
-     <xsp:content>
-      <page>
-       <title>A Sample XSP Page</title>
-       <p>Hi, I've been hit <xsp:expr>currentCount()</xsp:expr> times.</p>
-      </page>
-     </xsp:content>
-    </xsp:page>     
-  ]]></source>
+ <xsp:content>
+  <page>
+   <title>A Sample XSP Page</title>
+   <p>
+    Hi, I've been hit 
+     <xsp:expr>currentCount()</xsp:expr>
+    times.
+   </p>
+  </page>
+ </xsp:content>
+</xsp:page>     
+]]></source>
   
   <p>At this point it's worth to note that from an XSP point of view, there is 
      no difference in how the XSP page was created, either directly written or 
@@ -355,57 +370,63 @@
      servlets were omitted for simplicity and this example must not be 
      considered mandating as a way to format XSP into servlet source code]</p>
   
-  <source><![CDATA[
-    // package automatically created from the full request URL...
-    package org.apache.cocoon.xsp.example;
+<source><![CDATA[
+// package automatically created from the full request URL...
+package org.apache.cocoon.xsp.example;
 
-    // packages imported automatically by source code generator
-    import java.io.*;
-    import java.util.*;
-    import javax.servlet.*;
-    import javax.servlet.http.*;
-    import org.w3c.dom.*;
-      
-    // packages imported due to XSP structure
-    import java.lang.*;
+// packages imported automatically by source code generator
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.w3c.dom.*;
+  
+// packages imported due to XSP structure
+import java.lang.*;
 
-    // class name automatically created from the request URI file name...
-    public class Counter extends HttpServlet {
+// class name automatically created from the 
+// request URI file name...
+public class Counter extends HttpServlet {
 
-      public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-      }
+  public void init(ServletConfig config) 
+    throws ServletException
+  {
+    super.init(config);
+  }
 
-      private static int counter = 0;
-                
-      private synchronized int currentCount() {
-        return ++counter;
-      }
-     
-      public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Document document = parser.createEmptyDocument();
-        Element root = document.createElement("page");
-        document.appendChild(root);
-      
-        Element element_1 = document.createElement("title");
-        root.appendChild(element_1);
-        Text textNode_1 = document.createTextNode("A Sample XSP Page");
-        element_1.appendChild(textNode_1);
+  private static int counter = 0;
+            
+  private synchronized int currentCount() {
+    return ++counter;
+  }
+ 
+  public void service(HttpServletRequest request, 
+       HttpServletResponse response) throws IOException 
+  {
+    Document document = parser.createEmptyDocument();
+    Element root = document.createElement("page");
+    document.appendChild(root);
+  
+    Element element_1 = document.createElement("title");
+    root.appendChild(element_1);
+    Text textNode_1 = document.createTextNode("A Sample XSP Page");
+    element_1.appendChild(textNode_1);
 
-        Element element_2 = document.createElement("p");
-        root.appendChild(element_2);
-        Text textNode_2 = document.createTextNode("Hi, I've been hit ");
-        element_2.appendChild(textNode_2);
-        Text textNode_3 = document.createTextNode((new StringBuffer.append(currentCount())).toString());
-        element_2.appendChild(textNode_3);
-        Text textNode_4 = document.createTextNode("times.");
-        element_2.appendChild(textNode_4);
-      
-        // Produce generated DOM tree on output as an XML stream
-        ((Child) document).toXMLString(response.getWriter());
-      }
-    }  
-  ]]></source>  
+    Element element_2 = document.createElement("p");
+    root.appendChild(element_2);
+    Text textNode_2 = document.createTextNode("Hi, I've been hit ");
+    element_2.appendChild(textNode_2);
+    StringBuffer buffer_1 = new StringBuffer.append(currentCount());
+    Text textNode_3 = document.createTextNode(string_1.toString());
+    element_2.appendChild(textNode_3);
+    Text textNode_4 = document.createTextNode("times.");
+    element_2.appendChild(textNode_4);
+  
+    // Produce generated DOM tree on output as an XML stream
+    ((Child) document).toXMLString(response.getWriter());
+  }
+}  
+]]></source>  
  
   <p>Note that in this example the XML document is being generated as a <em>stream</em>
   but a DOM tree is used to create it. The DOM tree can't be passed directly to
@@ -417,51 +438,59 @@
   <p>To solve this problem and speed up the execution on server side XML
   processing, the XSP can be compiled into something like this:</p>
 
-  <source><![CDATA[
-    // package automatically created from the full request URL...
-    package org.apache.cocoon.xsp.example;
+<source><![CDATA[
+// package automatically created from the full request URL...
+package org.apache.cocoon.xsp.example;
 
-    // packages imported automatically by source code generator
-    import java.io.*;
-    import java.util.*;
-    import org.xml.sax.*;
-    import org.apache.cocoon.*;
-      
-    // packages imported due to XSP structure
-    import java.lang.*;
+// packages imported automatically by source code generator
+import java.io.*;
+import java.util.*;
+import org.xml.sax.*;
+import org.apache.cocoon.*;
+  
+// packages imported due to XSP structure
+import java.lang.*;
 
-    // class name automatically created from the request URI file name...
-    public class Counter extends AbstractProducer {
+// class name automatically created from the 
+// request URI file name...
+public class Counter extends AbstractProducer {
 
-      private static final char[] chars_0 = {'A',' ','S','i','m','p','l','e',' ','X','S','P',' ','P','a','g','e'};
-      private static final char[] chars_1 = {'H','i',' ','I','\'','v','e',' ','b','e','e','n',' ','h','i','t',' '};
-      private static final char[] chars_3 = {' ','t','i','m','e','s'};
+  private static final char[] chars_0 = 
+   {'A',' ','S','i','m','p','l','e',' ','X','S','P',' ','P','a','g','e'};
+  private static final char[] chars_1 = 
+   {'H','i',' ','I','\'','v','e',' ','b','e','e','n',' ','h','i','t',' '};
+  private static final char[] chars_3 = 
+   {' ','t','i','m','e','s'};
 
-      private static int counter = 0;
-                
-      private synchronized int currentCount() {
-        return ++counter;
-      }
-     
-      public void toSAX(Request request, DocumentHandler handler) throws SAXException {
-        handler.startDocument();
-          handler.startElement("page", null);
-            handler.startElement("title", null);
-              handler.characters(chars_0, 0, 17);
-            handler.endElement("title");
-            handler.startElement("p", null);
-              handler.characters(chars_1, 0, 17);
-              String string_0 = new StringBuffer.append(currentCount())).toString();
-              int string_0_length = string_0.length();
-              char[] chars_2 = char[string_0_length];
-              string_0.getChars(0, string_0_length, chars_2, 0);
-              handler.characters(chars_3, 0, 6);
-            handler.endElement("p");
-          handler.endElement("page");
-        handler.endDocument();
-      }
-    }  
-  ]]></source>
+  private static int counter = 0;
+            
+  private synchronized int currentCount() {
+    return ++counter;
+  }
+ 
+  public void toSAX(Request request, DocumentHandler handler) 
+    throws SAXException 
+  {
+    handler.startDocument();
+      handler.startElement("page", null);
+        handler.startElement("title", null);
+          handler.characters(chars_0, 0, 17);
+        handler.endElement("title");
+        handler.startElement("p", null);
+          handler.characters(chars_1, 0, 17);
+          String string_0 = (new StringBuffer.append(
+            currentCount()
+          )).toString();
+          int string_0_length = string_0.length();
+          char[] chars_2 = char[string_0_length];
+          string_0.getChars(0, string_0_length, chars_2, 0);
+          handler.characters(chars_3, 0, 6);
+        handler.endElement("p");
+      handler.endElement("page");
+    handler.endDocument();
+  }
+}  
+]]></source>
 
   <p>The above shows one of the best features of XSP: output independence.
   Since the output objects are not accessible directly from the internal page
@@ -528,64 +557,67 @@
   programming code by <code>scriptlet</code> tags. The following is an example to show
   the different results based on the same logic and code.</p>
   
-  <source><![CDATA[
+<source><![CDATA[
+<xsp:logic>
+ e = request.getParameterNames(); 
+ if ((e != null) &amp;&amp; (e.hasMoreElements())) {
+  <xsl:content>
+   <list>
+    <title>Servlet Parameters</title>
     <xsp:logic>
-      e = request.getParameterNames(); 
-      if ((e != null) &amp;&amp; (e.hasMoreElements())) {
-         <xsl:content>
-           <list>
-             <title>Servlet Parameters</title>
-             <xsp:logic>
-                while (e.hasMoreElements()) { 
-                   String k = (String) e.nextElement();
-                   String val = request.getParameter(k); 
-                   String vals[] = request.getParameterValues(k);
-                   <xsp:element name="element">
-                      <xsp:attribute name="name">
-                         <xsp:expr>k</xsp:expr>
-                      </xsp:attribute>
-                      <xsp:logic>
-                         for(int i = 0; i &lt; vals.length; i++) {
-                            <item>
-                               <xsp:expr>vals[i]</xsp:expr>
-                            </item>
-                         }
-                      </xsp:logic>
-                   </xsp:element>
-                 }
-              </xsp:logic>
-           </list>
-         </xsl:content>
-       } 
-    </xsp:logic>  
-  ]]></source>
+     while (e.hasMoreElements()) { 
+      String k = (String) e.nextElement();
+      String val = request.getParameter(k); 
+      String vals[] = request.getParameterValues(k);
+      <xsp:element name="element">
+       <xsp:attribute name="name">
+        <xsp:expr>k</xsp:expr>
+       </xsp:attribute>
+       <xsp:logic>
+        for(int i = 0; i &lt; vals.length; i++) {
+         <item>
+          <xsp:expr>vals[i]</xsp:expr>
+         </item>
+        }
+       </xsp:logic>
+      </xsp:element>
+     }
+    </xsp:logic>
+   </list>
+  </xsl:content>
+ } 
+</xsp:logic>  
+]]></source>
 
   <p>This is the JSP equivalent:</p>
   
-  <source><![CDATA[
+<source><![CDATA[
+<jsp:scriplet>
+ e = request.getParameterNames(); 
+ if ((e != null) &amp;&amp; (e.hasMoreElements())) {
+</jsp:scriplet>
+  <list>
+   <title>Servlet Parameters</title>
    <jsp:scriplet>
-     e = request.getParameterNames(); 
-     if ((e != null) &amp;&amp; (e.hasMoreElements())) { </jsp:scriplet>
-       <list>
-       <title>Servlet Parameters</title>
-         <jsp:scriplet>
-         while (e.hasMoreElements()) { 
-           String k = (String) e.nextElement();
-           String val = request.getParameter(k); 
-           String vals[] = request.getParameterValues(k);
-           out.println("&lt;element name=\"name\"&gt;"); </jsp:scriplet>
-           <jsp:expression>k</jsp:expression>
-           <jsp:scriplet>
-           out.println("&lt;/element&gt;");
-           for(int i = 0; i &lt; vals.length; i++) { </jsp:scriplet>
-             <item>
-               <jsp:expression>vals[i]</jsp:expression>
-             </item>
-           <jsp:scriplet>}</jsp:scriplet>
-         <jsp:scriplet>}</jsp:scriplet>
-       </list>
-     <jsp:scriplet>}</jsp:scriplet>  
-  ]]></source>
+     while (e.hasMoreElements()) { 
+      String k = (String) e.nextElement();
+      String val = request.getParameter(k); 
+      String vals[] = request.getParameterValues(k);
+      out.println("&lt;element name=\"name\"&gt;");
+   </jsp:scriplet>
+      <jsp:expression>k</jsp:expression>
+      <jsp:scriplet>
+       out.println("&lt;/element&gt;");
+       for(int i = 0; i &lt; vals.length; i++) {
+      </jsp:scriplet>
+        <item>
+         <jsp:expression>vals[i]</jsp:expression>
+        </item>
+      <jsp:scriplet>}</jsp:scriplet>
+    <jsp:scriplet>}</jsp:scriplet>
+  </list>
+<jsp:scriplet>}</jsp:scriplet>  
+]]></source>
 
   <p>It must be noted the use of the <code>out</code> object in the JSP example while
   XSP provide specific tags to avoid that.</p>

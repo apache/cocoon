@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
+<!-- <!DOCTYPE document SYSTEM "../dtd/document-v10.dtd"> -->
 
 <document>
  <header>
@@ -88,11 +88,14 @@
   
   <p>The Cocoon processing model is based on the separation of</p>
   
-  <ul>
-    <li><strong>Production</strong>where XML content is generated based on Request parameters (servlet equivalent)</li>
-    <li><strong>Processing</strong>where the produced XML content is transformed/evaluated</li>
-    <li><strong>Formatting</strong>where the XML content is finally formatted into the wanted output format for client use.</li>
-  </ul>
+  <dl>
+    <dt>Production</dt>
+    <dd>where XML content is generated based on Request parameters (servlet equivalent)</dd>
+    <dt>Processing</dt>
+    <dd>where the produced XML content is transformed/evaluated</dd>
+    <dt>Formatting</dt>
+    <dd>where the XML content is finally formatted into the wanted output format for client use.</dd>
+  </dl>
   
   <p>This separation of working contexts allows Cocoon users to
   implement their own internal modules to add the functionality they require to
@@ -112,30 +115,35 @@
   <p>Here follows the code for an example producer distributed with
   Cocoon:</p>
   
-<source>
-public class DummyProducer extends AbstractProducer implements Status {
+<source><![CDATA[
+public class DummyProducer 
+  extends AbstractProducer 
+  implements Status 
+{
           
-  String dummy = "&lt;?xml version=\"1.0\"?&gt;" 
-      + "&lt;?cocoon:format type=\"text/html\"?&gt;"
-      + "&lt;html&gt;&lt;body&gt;"
-      + "&lt;h1 align=\"center\"&gt;"
+  String dummy = "<?xml version=\"1.0\"?>" 
+      + "<?cocoon:format type=\"text/html\"?>"
+      + "<html><body>"
+      + "<h1 align=\"center\">"
           + "Hello from a dummy page"
-      + "&lt;/h1&gt;"
-      + "&lt;/body&gt;&lt;/html&gt;";
+      + "</h1>"
+      + "</body></html>";
       
-  public Reader getStream(HttpServletRequest request) throws IOException {
-      return new StringReader(dummy);
+  public Reader getStream(HttpServletRequest request) 
+    throws IOException 
+  {
+    return new StringReader(dummy);
   }
 
   public String getPath(HttpServletRequest request) {
-      return "";
+    return "";
   }
   
   public String getStatus() {
-      return "Dummy Producer";
+    return "Dummy Producer";
   }
 }
-</source>
+]]></source>
 
   <p>The key method is <code>getStream()</code> which is responsible to create
   process the given servlet request and provide an output stream for reading the
@@ -162,22 +170,22 @@ public class DummyProducer extends AbstractProducer implements Status {
   it may have been produced from a file, from other sources or dynamically, see
   the above paragraph):</p>
   
-<source>
-&lt;?xml version="1.0"?&gt;
-&lt;page&gt;
- &lt;p&gt;Current time is &lt;time/&gt;&lt;/p&gt;
-&lt;/page&gt;
-</source>
+<source><![CDATA[
+<?xml version="1.0"?>
+<page>
+ <p>Current time is <time/></p>
+</page>
+]]></source>
   
   <p>Our simple example processor will look for the %lg;time/%gt; tags and will 
   expand them to the current local time, creating this result document:</p>
   
-<source>
-&lt;?xml version="1.0"?&gt;
-&lt;page&gt;
- &lt;p&gt;Current time is 6:48PM&lt;/p&gt;
-&lt;/page&gt;
-</source>
+<source><![CDATA[
+<?xml version="1.0"?>
+<page>
+ <p>Current time is 6:48PM</p>
+</page>
+]]></source>
             
   <p>Please, look at the shipped processors source code for example
   code and look at the <connect href="guide.xml">user guide</connect> on how to install and
@@ -190,24 +198,30 @@ public class DummyProducer extends AbstractProducer implements Status {
   includes a number of processors that implement common needs and situations.
   These are:</p>
   
-  <ul>
-    <li><strong>The XSLT processor</strong>
+  <dl>
+    <dt>The XSLT processor</dt>
+    <dd>
       the <em>XSLT</em> processor that applies XSLT
       transformations to the input document. XSLT allows you to solve your
       transformation needs as well as simple tag evaluation/processing due to
-      its extensible and programmable nature.</li>
-    <li><strong>The DCP processor</strong>
+      its extensible and programmable nature.
+    </dd>
+    <dt>The DCP processor</dt>
+    <dd>
       the <em>DCP</em> processor that evaluates XML processing
       instructions with multi-language (Java and EcmaScript) logic. This
       processor allows you to do programmatic substitution and inclusion
       eliminating the need for complex processing logic. See the <connect href="dcpprocessor.xml">DCP
-      user guide</connect> for more information.</li>
-    <li><strong>The SQL processor</strong>
+      user guide</connect> for more information.
+    </dd>
+    <dt>The SQL processor</dt>
+    <dd>
       the <em>SQL</em> processor that evaluates simple tags
       describing SQL queries to JDBC drivers and formats their result-set in XML
-      depending on given parameters. See the <connect href="sqlprocessor.html">SQL
-      processor user guide</connect> for more information.</li>
-  </ul>
+      depending on given parameters. See the <connect href="sqlprocessor.xml">SQL
+      processor user guide</connect> for more information.
+    </dd>
+  </dl>
 </s1>
 
 <s1 title="Future plans">
@@ -218,7 +232,7 @@ public class DummyProducer extends AbstractProducer implements Status {
   separation between content and logic in dynamically generated XML pages is not
   achieved with current Cocoon features.</p>
   
-  <p>To fill this whole, the <connect href="xsp/WD-xsp.xml">XSP
+  <p>To fill this whole, the <connect href="WD-xsp.xml">XSP
   (eXtensible Server Pages) technology</connect> was proposed. While in the <em>working
   draft</em> stage, we strongly believe that some of the issues expressed in that
   specification will be keys to the future of dynamic XML.</p>

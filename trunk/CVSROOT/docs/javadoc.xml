@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
+<!-- <!DOCTYPE document SYSTEM "../dtd/document-v10.dtd"> -->
 
 <document>
  <header>
   <title>Javadoc Documentation in XML</title>
   <authors>
    <person name="Kenneth Murphy" email="murphyk@umsystem.edu"/>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
   </authors>
  </header>
 
@@ -48,13 +49,13 @@ phases:</p>
   <ul>
     <li>javadoc.dtd ---&gt; javadoc_html.dtd ---&gt; HTML (this would create a
         javadoc that looks like the current HTML javadoc standard).</li>
-    <li>javadoc.dtd ---&gt; docBook.dtd&nbsp; (this would facilitate printed
+    <li>javadoc.dtd ---&gt; docBook.dtd (this would facilitate printed
         books based having heavy content about java API's. For example &quot;The
         JDBC API Tutorial and Reference: 2nd Edition&quot; could make heavy use
         of this.</li>
     <li>javadoc.dtd ---&gt; ebook.dtd (this would facilitate the electronic
         version of documentation)</li>
-    <li>javadoc.dtd ---&gt; ??? ---&gt; pdf&nbsp;</li>
+    <li>javadoc.dtd ---&gt; ??? ---&gt; pdf</li>
   </ul>
   <li>Using this method we will then enhance the existing Cocoon documentation to provide rich documentation
       using some subset of the above formats.</li>
@@ -64,33 +65,25 @@ phases:</p>
   </s1>
 
   <s1 title="Progress to date">
-  <p><strong>Current Status:</strong> Phase 2</p>
-  <p>Items currently under development:</p>
-  <ul>
-  <li>Phase 1</li>
-  <ul>
-   <li><connect href="../dtd/javadoc.dtd">javadoc.dtd</connect></li>
-   <ul>
-     <li>Note: I still need to update the sample to reflect the use of
-         namespaces and the addition of the interfaceref element</li>
-   </ul>
-  </ul>
-  <li>Phase 2</li>
-  <ul>
-    <li>Working on XML javadoc doclet</li>
-  </ul>
-  </ul>
+   <p>
+      The first phase has been complete and a complete javadoc DTD was
+      created. We feel confortable with the solidity of that DTD and we plan
+      to move over to the actual XML doclet implementation.
+   </p>
+   <p>
+      The problem is that the original Javadoc XML proposal author quit the
+      project for lack of time, so <strong>we are currently looking for people</strong>
+      to move the task forward since we are almost stuck at this point.
+   </p>
   </s1>
-
+  
   <s1 title="To do">
-   <p>Currently, I am needing lots of feedback on the javadoc.dtd. We can't proceed
-   to phase 2 until we feel we are on the right track with the DTD. It doesn't need
-   to be perfect, but it should be close. When I get the next round of feedback, I
-   am planning on adding &quot;import&quot; as an element of class. I am also
-   planning on moving the position of the element &quot;doc&quot; to the start of
-   each place it is appropriate. They will more closely reflect the source code and
-   it just makes since to put the documentation before not after what you are
-   talking about.</p>
+   <p>
+      Being the first phase complete (the DTD is still in working-draft phase,
+      but it's complete and usable), we need to write the doclet, but the
+      task is stalled for lack of active contributors. <strong>Any help is
+      always welcome</strong>.
+   </p>
   </s1>
 
  </body>

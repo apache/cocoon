@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE document SYSTEM "../dtd/document-v10.dtd">
-
-<?xml-stylesheet href="./stylesheet/simple.document.html.xsl" type="text/xsl"?>
+<!-- <!DOCTYPE document SYSTEM "../dtd/document-v10.dtd"> -->
 
 <document>
  <header>
@@ -14,7 +12,10 @@
  </header>
 
  <body>
- <s1 title="What is it?">	
+ <s1 title="What is it?">
+  
+  <img-block src="images/cocoon.jpg" alt="Cocoon"/>
+  
   <p>
    Cocoon is a 100% pure Java publishing framework that relies on new W3C
    technologies (such as DOM, XML, and XSL) to provide web content.
@@ -30,8 +31,8 @@
   </p>
   
   <p>
-   Read the <link href="technologies.html">Introduction on Cocoon
-   technologies</link> white paper to find out more on the subject.
+   Read the <connect href="technologies.xml">Introduction on Cocoon
+   technologies</connect> white paper to find out more on the subject.
   </p>
  </s1>
  
@@ -150,7 +151,7 @@
   </p>
   <p>
    For direct participation, we suggest you to subscribe to the 
-   <link href="http://xml.apache.org/???">Cocoon mail list</link> 
+   <link href="http://xml.apache.org/mail.html">Cocoon mail lists</link> 
    (follow the link for information on how to subscribe and to access the mail 
    list archives), to checkout the <link href="http://www.apache.com/cvsweb/index.cgi/cocoon/">
    latest and greatest code</link> (which you found in the xml-cocoon module in 
