@@ -43,7 +43,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.34 $ $Date: 2000-11-01 15:52:29 $
+ * @version CVS $Revision: 1.4.2.35 $ $Date: 2000-11-08 20:34:46 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -94,14 +94,6 @@ public class Cocoon
             throw new ConfigurationException("Could not load parser " + parser + ": " + e.getMessage());
         }
         this.componentManager.addComponentInstance(Roles.COCOON, this);
-
-        String processor = System.getProperty(PROCESSOR_PROPERTY, DEFAULT_PROCESSOR);
-        try {
-        org.apache.trax.Processor.setPlatformDefaultProcessor(processor);
-            this.components.put(Roles.PROCESSOR, ClassUtils.loadClass(processor));
-        } catch (Exception e) {
-            throw new ConfigurationException("Error creating processor (" + processor + ")");
-        }
     }
 
     /**

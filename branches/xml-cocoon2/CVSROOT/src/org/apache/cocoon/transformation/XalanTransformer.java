@@ -39,15 +39,19 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.XMLReader;
 
-import org.apache.trax.Templates;
-import org.apache.trax.Processor;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Templates;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.TransformerConfigurationException;
+import org.apache.xalan.transformer.TransformerImpl;
+
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-11-07 16:47:08 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-11-08 20:35:18 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -56,7 +60,7 @@ implements Transformer, Composer, Poolable, Configurable {
     private Store store = null;
 
     /** The XALAN Transformer */
-	org.apache.trax.Transformer transformer = null;
+	javax.xml.transform.Transformer transformer = null;
 
     /** Hash table for Templates */
     private static Hashtable templatesCache = new Hashtable();
@@ -64,8 +68,8 @@ implements Transformer, Composer, Poolable, Configurable {
     /** Is the cache turned on? (default is on) */
     private boolean useCache = true;
 
-    private org.apache.trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
-      throws SAXException, ProcessingException, IOException
+    private javax.xml.transform.Transformer getTransformer(EntityResolver resolver, String xsluri)
+      throws SAXException, ProcessingException, IOException, TransformerConfigurationException
     {
         // Only local files are checked for midification for compatibility reasons!
         // Using the entity resolver we get the filename of the current file:
@@ -95,8 +99,8 @@ implements Transformer, Composer, Poolable, Configurable {
         }
         if(templates == null)
         {
-    	    Processor processor = Processor.newInstance("xslt");
-            templates = processor.process(src);
+            TransformerFactory tfactory = TransformerFactory.newInstance();
+            templates = tfactory.newTemplates(new SAXSource(new InputSource(systemID)));
             if (this.useCache == true)
             {
                 // Is this a local file
@@ -152,7 +156,11 @@ implements Transformer, Composer, Poolable, Configurable {
         }
 
         /** get a transformer */
-    	transformer = getTransformer(resolver,xsluri);
+        try {
+    	    transformer = getTransformer(resolver,xsluri);
+        } catch (TransformerConfigurationException e){
+            throw new ProcessingException("Problem in getTransformer:" + e.toString());  
+        }
 
         if (request != null) {
             Enumeration parameters = request.getParameterNames();
@@ -160,12 +168,12 @@ implements Transformer, Composer, Poolable, Configurable {
                 String name = (String) parameters.nextElement();
                 if (isValidXSLTParameterName(name)) {
                     String value = request.getParameter(name);
-                    transformer.setParameter(name, null /* namespace */,value);
+                    transformer.setParameter(name,value);
                 }
             }
         }
 
-        ContentHandler chandler = transformer.getInputContentHandler();
+        ContentHandler chandler = ((TransformerImpl)transformer).getInputContentHandler();
         super.setContentHandler(chandler);
         if(chandler instanceof org.xml.sax.ext.LexicalHandler)
             this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)chandler);
@@ -188,7 +196,7 @@ implements Transformer, Composer, Poolable, Configurable {
      * accessing the protected <code>super.contentHandler</code> field.
      */
     public void setContentHandler(ContentHandler content) {
-        this.transformer.setContentHandler(content);
+        ((TransformerImpl)transformer).setContentHandler(content);
     }
 
     /**

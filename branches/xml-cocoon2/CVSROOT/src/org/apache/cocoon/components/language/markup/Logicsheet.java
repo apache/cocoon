@@ -31,11 +31,12 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-
-import org.apache.trax.Templates;
-import org.apache.trax.Processor;
-import org.apache.trax.Transformer;
-import org.apache.trax.TemplatesBuilder;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.Templates;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.TransformerConfigurationException;
+import org.apache.xalan.transformer.TrAXFilter;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -46,7 +47,7 @@ import org.apache.trax.TemplatesBuilder;
  * This class should probably be based on an interface...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-19 20:21:18 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-08 20:35:07 $
  */
 public class Logicsheet {
     /**
@@ -64,22 +65,12 @@ public class Logicsheet {
     public void setInputSource(InputSource inputSource)
         throws SAXException, IOException
     {
-        Processor processor = Processor.newInstance("xslt");
-
-        // Create a XMLReader with the namespace-prefixes feature
-        XMLReader reader = XMLReaderFactory.createXMLReader();
-        reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-
-        // Create the TemplatesBuilder and register as ContentHandler
-        TemplatesBuilder templatesBuilder = processor.getTemplatesBuilder();
-	reader.setContentHandler(templatesBuilder);
-	if(templatesBuilder instanceof org.xml.sax.ext.LexicalHandler)
-	    reader.setProperty("http://xml.org/sax/properties/lexical-handler",
-	                       templatesBuilder);
-
-        // Parse and get the templates
-        reader.parse(inputSource);
-        this.templates = templatesBuilder.getTemplates();
+        try {
+            TransformerFactory tfactory = TransformerFactory.newInstance();
+            templates = tfactory.newTemplates(new SAXSource(inputSource));
+        } catch (TransformerConfigurationException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -87,9 +78,15 @@ public class Logicsheet {
     *
     * @return The XMLFilter for the associated stylesheet.
     */
-    public XMLFilter getXMLFilter() {
-        return templates.newTransformer();
-
+    public XMLFilter getXMLFilter() 
+    {
+        XMLFilter filter = null;
+        try {
+            filter = new TrAXFilter(templates);
+        } catch (TransformerConfigurationException e){
+            e.printStackTrace();
+        }
+        return filter;
     }
 }
 

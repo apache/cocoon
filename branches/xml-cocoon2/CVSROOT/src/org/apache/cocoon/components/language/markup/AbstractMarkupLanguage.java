@@ -28,10 +28,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import org.apache.trax.Processor;
-import org.apache.trax.Transformer;
-import org.apache.trax.Templates;
-
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
@@ -51,7 +47,7 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-19 16:39:20 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-11-08 20:35:02 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable

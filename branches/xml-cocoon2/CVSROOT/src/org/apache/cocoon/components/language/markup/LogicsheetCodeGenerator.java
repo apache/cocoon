@@ -26,13 +26,11 @@ import org.apache.serialize.Method;
 import org.apache.serialize.Serializer;
 import org.apache.serialize.OutputFormat;
 
-import org.apache.trax.Transformer;
-
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 16:39:26 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-08 20:35:08 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 
