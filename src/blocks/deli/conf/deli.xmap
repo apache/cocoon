@@ -5,7 +5,7 @@
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
-      <transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>
+      <xslt-processor-role>xalan</xslt-processor-role>
     </map:transformer>
 
 </xmap>
