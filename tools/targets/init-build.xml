@@ -178,6 +178,8 @@
            nowarn="on"
            compiler="${compiler}"/>
 
+    <!-- Ant-Contrib tasks -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
   </target>
 
 <!-- === Preparation Targets ============================================= -->
