@@ -71,7 +71,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.4 2003/07/10 13:17:00 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.5 2003/10/15 20:57:43 cziegeler Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
@@ -83,8 +83,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     
 	private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
-    private Processor processor;
-
 	private ProcessingNode errorHandler;
 
     /**
@@ -92,7 +90,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      * @param processor The processor for this sitemap
      */
     public PipelinesNode(Processor processor) {
-        this.processor = processor;
+        //this.processor = processor;
     }
 
     /**
@@ -143,7 +141,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
 
         // Build a redirector
         ForwardRedirector redirector = new ForwardRedirector(
-            env, this.processor, this.manager, context.isBuildingPipelineOnly());
+            env, context.isBuildingPipelineOnly());
         this.setupLogger(redirector);
 
         Map objectModel = env.getObjectModel();
