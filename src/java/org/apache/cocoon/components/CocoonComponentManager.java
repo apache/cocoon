@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,17 +51,17 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.22 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
 implements SourceResolver
 {
- 
+
     /** The key used to store the current process environment */
     private static final String PROCESS_KEY = CocoonComponentManager.class.getName();
-         
-    
+
+
     /** The environment information */
     private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
 
@@ -70,10 +70,10 @@ implements SourceResolver
 
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
-    
+
     /** The parent component manager for implementing parent aware components */
     private ComponentManager parentManager;
-    
+
     /** Temporary list of parent-aware components.  Will be null for most of
      * our lifecycle. */
     private ArrayList parentAwareComponents = new ArrayList();
@@ -111,10 +111,10 @@ implements SourceResolver
     public static void enterEnvironment(Environment      env,
                                         ComponentManager manager,
                                         Processor        processor) {
-        if ( null == env || null == manager || null == processor) {                                       	
+        if ( null == env || null == manager || null == processor) {
             throw new RuntimeException("CocoonComponentManager.enterEnvironment: all parameters must be set: " + env + " - " + manager + " - " + processor);
         }
-        
+
         EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
 		if (stack == null) {
             stack = new EnvironmentStack();
@@ -122,7 +122,7 @@ implements SourceResolver
 		}
 		stack.push(new Object[] {env, processor, manager, new Integer(stack.getOffset())});
         stack.setOffset(stack.size()-1);
-        
+
         env.setAttribute("CocoonComponentManager.processor", processor);
     }
 
@@ -138,7 +138,7 @@ implements SourceResolver
             final Environment env = (Environment)objs[0];
             final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
             if ( globalComponents != null) {
-                
+
                 final Iterator iter = globalComponents.values().iterator();
                 while ( iter.hasNext() ) {
                     final Object[] o = (Object[])iter.next();
@@ -147,18 +147,35 @@ implements SourceResolver
                 }
             }
             env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
-        } 
+        }
     }
-    
-    public static void checkEnvironment(Logger logger) 
-    throws Exception {
-        // TODO (CZ): This is only for testing - remove it later on
+
+    /**
+     * INTERNAL METHOD. Do not use, can be removed without warning or deprecation cycle.
+     */
+    public static int markEnvironment() {
+        // TODO (CZ): This is only for testing - remove it later on. See also Cocoon.java.
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if (stack != null && !stack.isEmpty() ) {
-            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");   
-            throw new ProcessingException("Environment stack has not been cleaned up properly. "
-                                          +"Please report this (if possible together with a test case) "
-                                          +"to the Cocoon developers.");     
+        if (stack != null) {
+            return stack.size();
+        }
+
+        return 0;
+    }
+
+    /**
+     * INTERNAL METHOD. Do not use, can be removed without warning or deprecation cycle.
+     */
+    public static void checkEnvironment(int depth, Logger logger)
+    throws Exception {
+        // TODO (CZ): This is only for testing - remove it later on. See also Cocoon.java.
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        int currentDepth = stack != null? stack.size() : 0;
+        if (currentDepth != depth) {
+            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY!");
+            throw new ProcessingException("Environment stack has not been cleaned up properly. " +
+                                          "Please report this (and if possible, together with a test case) " +
+                                          "to the Cocoon developers.");
         }
     }
 
@@ -171,7 +188,7 @@ implements SourceResolver
         final Object[] objs = (Object[])stack.getCurrent();
         return stack.getEnvironmentAwareConsumerWrapper(consumer, ((Integer)objs[3]).intValue());
     }
-    
+
     /**
      * This hook has to be called before a request is processed.
      * The hook is called by the Cocoon component and by the
@@ -182,7 +199,7 @@ implements SourceResolver
      * @return A unique key within this thread.
      */
     public static Object startProcessing(Environment env) {
-		if ( null == env) {                                       	
+		if ( null == env) {
 			throw new RuntimeException("CocoonComponentManager.startProcessing: environment must be set.");
 		}
         final EnvironmentDescription desc = new EnvironmentDescription(env);
@@ -190,7 +207,7 @@ implements SourceResolver
 		env.startingProcessing();
         return desc;
     }
-    
+
     /**
      * This hook has to be called before a request is processed.
      * The hook is called by the Cocoon component and by the
@@ -251,7 +268,7 @@ implements SourceResolver
         // if we don't have an environment yet, just return null
         return null;
     }
-    
+
     /**
      * Return an instance of a component based on a Role.  The Role is usually the Interface's
      * Fully Qualified Name(FQN)--unless there are multiple Components for the same Role.  In that
@@ -319,7 +336,7 @@ implements SourceResolver
                 }
             }
         }
-        
+
         if (null != component && component instanceof GlobalRequestLifecycleComponent) {
             if (stack == null || stack.empty()) {
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
@@ -349,7 +366,7 @@ implements SourceResolver
 
             // FIXME: how can we prevent that this is called over and over again?
             SitemapConfigurationHolder holder;
-            
+
             holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
             if ( null == holder ) {
                 // create new holder
@@ -464,9 +481,9 @@ implements SourceResolver
             // and they will call {@link #release(Source)} during their
             // dispose().
         }
-        
+
         super.dispose();
-        
+
         // All components now are released so sourceResolver should be not
         // needed anymore.
         this.sourceResolver = null;
@@ -551,12 +568,12 @@ implements SourceResolver
 }
 
 final class EnvironmentDescription {
-    
+
     Environment environment;
     Map         objectModel;
     Map         requestLifecycleComponents;
     List        autoreleaseComponents      = new ArrayList(4);
-    
+
     /**
      * Constructor
      */
@@ -565,7 +582,7 @@ final class EnvironmentDescription {
         this.objectModel = env.getObjectModel();
     }
 
-    Map getGlobalRequestLifcecycleComponents() {    
+    Map getGlobalRequestLifcecycleComponents() {
         Map m = (Map)environment.getAttribute(GlobalRequestLifecycleComponent.class.getName());
         if ( m == null ) {
             m = new HashMap();
@@ -573,7 +590,7 @@ final class EnvironmentDescription {
         }
         return m;
     }
-    
+
     /**
      * Release all components of this environment
      * All RequestLifecycleComponents and autoreleaseComponents are
@@ -589,7 +606,7 @@ final class EnvironmentDescription {
             }
             this.requestLifecycleComponents.clear();
         }
-        
+
         for(int i = 0; i < autoreleaseComponents.size(); i++) {
             final Object[] o = (Object[])autoreleaseComponents.get(i);
             final Component component = (Component)o[0];
@@ -606,25 +623,25 @@ final class EnvironmentDescription {
         this.environment = null;
         this.objectModel = null;
     }
-  
+
 
     /**
      * Add a RequestLifecycleComponent to the environment
      */
-    void addRequestLifecycleComponent(final String role, 
-                                      final Component co, 
+    void addRequestLifecycleComponent(final String role,
+                                      final Component co,
                                       final ComponentManager manager) {
         if ( this.requestLifecycleComponents == null ) {
             this.requestLifecycleComponents = new HashMap();
         }
         this.requestLifecycleComponents.put(role, new Object[] {co, manager});
     }
-    
+
     /**
      * Add a GlobalRequestLifecycleComponent to the environment
      */
-    void addGlobalRequestLifecycleComponent(final String role, 
-                                      final Component co, 
+    void addGlobalRequestLifecycleComponent(final String role,
+                                      final Component co,
                                       final ComponentManager manager) {
         this.getGlobalRequestLifcecycleComponents().put(role, new Object[] {co, manager});
     }
@@ -638,7 +655,7 @@ final class EnvironmentDescription {
         }
         return this.requestLifecycleComponents.containsKey( role );
     }
-    
+
     /**
      * Do we already have a global request lifecycle component
      */
@@ -716,10 +733,10 @@ final class EnvironmentDescription {
             throw new ProcessingException("Unable to remove component from automatic release: component not found.");
         }
     }
-    
+
 }
 
-final class CloningInheritableThreadLocal 
+final class CloningInheritableThreadLocal
     extends InheritableThreadLocal {
 
     /**
@@ -731,7 +748,7 @@ final class CloningInheritableThreadLocal
      * This method merely returns its input argument, and should be overridden
      * if a different behavior is desired.
      *
-     * @param parentValue the parent thread's value 
+     * @param parentValue the parent thread's value
      * @return the child thread's initial value
      */
     protected Object childValue(Object parentValue) {
