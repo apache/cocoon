@@ -77,7 +77,7 @@ import java.util.StringTokenizer;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.1 2003/03/09 00:09:00 pier Exp $
+ * @version CVS $Id: JavaLanguage.java,v 1.2 2003/03/20 04:12:49 vgritsenko Exp $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
         implements Initializable, ThreadSafe, Composable, Disposable {
@@ -209,22 +209,21 @@ public class JavaLanguage extends CompiledProgrammingLanguage
 
             int pos = name.lastIndexOf(File.separatorChar);
             String filename = name.substring(pos + 1);
-            String pathname =
-                    baseDirectory.getCanonicalPath() + File.separator +
-                    name.substring(0, pos).replace(File.separatorChar, '/');
-            String filename_abs = pathname + File.separator + filename
-                    + "." + this.getSourceExtension();
 
-            compiler.setFile(filename_abs);
-            compiler.setSource(pathname);
-            compiler.setDestination(baseDirectory.getCanonicalPath());
-            compiler.setClasspath(baseDirectory.getCanonicalPath() + this.classpath);
+            final String basePath = baseDirectory.getCanonicalPath();
+            String filepath = basePath + File.separator
+                    + name + "." + getSourceExtension();
+
+            compiler.setFile(filepath);
+            compiler.setSource(basePath);
+            compiler.setDestination(basePath);
+            compiler.setClasspath(basePath + this.classpath);
 
             if (encoding != null) {
                 compiler.setEncoding(encoding);
             }
 
-            getLogger().debug("Compiling " + filename_abs);
+            getLogger().debug("Compiling " + filepath);
             if (!compiler.compile()) {
                 StringBuffer message = new StringBuffer("Error compiling ");
                 message.append(filename);
@@ -234,7 +233,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
                 CompilerError[] compilerErrors = new CompilerError[errors.size()];
                 errors.toArray(compilerErrors);
 
-                throw new LanguageException(message.toString(), filename_abs, compilerErrors);
+                throw new LanguageException(message.toString(), filepath, compilerErrors);
             }
 
         } catch (InstantiationException e) {
