@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,6 @@ public final class PoolSetterTask extends Task {
     private String element;
     private boolean isSitemap = true;
     private String poolMax = "32";
-    private String poolMin = "16";
-    private String poolGrow = "4";
 
     public void setFile(File file) {
         this.file = file;
@@ -58,14 +56,6 @@ public final class PoolSetterTask extends Task {
 
     public void setPoolMax(int value) {
         this.poolMax = String.valueOf(value);
-    }
-
-    public void setPoolMin(int value) {
-        this.poolMin = String.valueOf(value);
-    }
-
-    public void setPoolGrow(int value) {
-        this.poolGrow = String.valueOf(value);
     }
 
     public void execute() throws BuildException {
@@ -97,8 +87,6 @@ public final class PoolSetterTask extends Task {
                     for(int i=0; i < nodes.getLength(); i++) {
                         final Element e = (Element)nodes.item(i);
                         e.setAttributeNS(null, "pool-max", this.poolMax);
-                        e.setAttributeNS(null, "pool-min", this.poolMin);
-                        e.setAttributeNS(null, "pool-grow", this.poolGrow);
                         changed = true;
                     }
                 } else {

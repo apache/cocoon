@@ -37,14 +37,12 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained files
  * 
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  *
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageDirectoryGenerator.java,v 1.3 2004/05/26 11:37:05 cziegeler Exp $
+ * @version CVS $Id$
  */
 final public class ImageDirectoryGenerator extends DirectoryGenerator {
 

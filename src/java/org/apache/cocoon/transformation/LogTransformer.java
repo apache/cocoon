@@ -39,10 +39,7 @@ import java.util.Map;
  * @cocoon.sitemap.component.name  log
  * @cocoon.sitemap.component.logger sitemap.transformer.log
  * 
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
- * 
  *
  * The <code>LogTransformer</code> is a class that can be plugged into a pipeline
  * to print the SAX events which passes thru this transformer in a readable form
@@ -67,7 +64,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Id: LogTransformer.java,v 1.5 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id$
  *
  */
 public class LogTransformer

@@ -111,9 +111,7 @@ import java.util.Map;
  * @cocoon.sitemap.component.name   include
  * @cocoon.sitemap.component.logger sitemap.transformer.include
  *
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  */
 public class IncludeTransformer extends AbstractTransformer
                                 implements Serviceable, Configurable,

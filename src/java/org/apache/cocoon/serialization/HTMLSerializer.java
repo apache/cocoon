@@ -32,16 +32,14 @@ import java.io.OutputStream;
  * @cocoon.sitemap.component.mimetype  text/html
  * @cocoon.sitemap.component.logger sitemap.serializer.html
  * 
- * @cocoon.sitemap.component.pooling.min   4
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  * @cocoon.sitemap.component.configuration
  * <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
  * <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
  *
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: HTMLSerializer.java,v 1.3 2004/05/03 09:14:01 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class HTMLSerializer extends AbstractTextSerializer {
