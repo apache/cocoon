@@ -69,12 +69,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This module reads an XML file from any source available to the
- * system, parses it and returns a Document. Parts can be accessed
- * using XPath syntax. Sources can be held in memory for better
- * perfomance and reloaded if changed.
+ * This module provides an Input Module interface to any XML document, by using
+ * XPath expressions as attribute keys.
+ * The XML can be obtained from any Cocoon <code>Source</code> (e.g.,
+ * <code>cocoon:/...</code>, <code>context://..</code>, and regular URLs).
+ * Sources can be held in memory for better performance and reloaded if
+ * changed.
  *
- * <p> Caching and reloading can be turned on / off (default: on)
+ * <p>Caching and reloading can be turned on / off (default: on)
  * through <code>&lt;reloadable&gt;false&lt;/reloadable&gt;</code> and
  * <code>&lt;cachable&gt;false&lt;/cachable&gt;</code>. The file
  * (source) to use is specified through <code>&lt;file
@@ -84,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version $Id: XMLFileModule.java,v 1.1 2003/03/09 00:09:04 pier Exp $
+ * @version $Id: XMLFileModule.java,v 1.2 2003/03/12 15:04:38 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
