@@ -86,7 +86,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.5 2004/04/23 15:50:34 vgritsenko Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.6 2004/06/18 16:45:57 vgritsenko Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -212,11 +212,6 @@ public class CocoonPortlet extends GenericPortlet {
     protected String portletContextPath;
 
     /**
-     * This is the url to the portlet context directory
-     */
-    protected String portletContextURL;
-
-    /**
      * The RequestFactory is responsible for wrapping multipart-encoded
      * forms and for handing the file payload of incoming requests
      */
@@ -228,6 +223,17 @@ public class CocoonPortlet extends GenericPortlet {
      * '/portlets/' + portletName.
      */
     protected String servletPath;
+
+    /**
+     * Default scope for the session attributes, either
+     * {@link javax.portlet.PortletSession#PORTLET_SCOPE} or
+     * {@link javax.portlet.PortletSession#APPLICATION_SCOPE}.
+     * This corresponds to <code>default-session-scope</code>
+     * parameter, with default value <code>portlet</code>.
+     *
+     * @see org.apache.cocoon.environment.portlet.PortletSession
+     */
+    protected int defaultSessionScope;
 
     /**
      * Initialize this <code>CocoonPortlet</code> instance.
@@ -317,26 +323,6 @@ public class CocoonPortlet extends GenericPortlet {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Path for Root: " + path);
             }
-        }
-
-        try {
-            if (path.indexOf(':') > 1) {
-                this.portletContextURL = path;
-            } else {
-                this.portletContextURL = new File(path).toURL().toExternalForm();
-            }
-        } catch (MalformedURLException me) {
-            // VG: Novell has absolute file names starting with the
-            // volume name which is easily more then one letter.
-            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
-            try {
-                this.portletContextURL = new File(path).toURL().toExternalForm();
-            } catch (MalformedURLException ignored) {
-                throw new PortletException("Unable to determine portlet context URL.", me);
-            }
-        }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("URL for Root: " + this.portletContextURL);
         }
 
         this.forceLoadParameter = getInitParameter("load-class", null);
@@ -480,6 +466,13 @@ public class CocoonPortlet extends GenericPortlet {
             if (this.servletPath.length() > 0 && this.servletPath.charAt(0) != '/') {
                 this.servletPath += '/';
             }
+        }
+
+        final String sessionScopeParam = getInitParameter("default-session-scope", "portlet");
+        if ("application".equalsIgnoreCase(sessionScopeParam)) {
+            this.defaultSessionScope = javax.portlet.PortletSession.APPLICATION_SCOPE;
+        } else {
+            this.defaultSessionScope = javax.portlet.PortletSession.PORTLET_SCOPE;
         }
 
         // Add the portlet configuration
@@ -1380,13 +1373,13 @@ public class CocoonPortlet extends GenericPortlet {
         }
         env = new PortletEnvironment(servletPath,
                                      uri,
-                                     this.portletContextURL,
                                      req,
                                      res,
                                      this.portletContext,
                                      (PortletContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                      this.containerEncoding,
-                                     formEncoding);
+                                     formEncoding,
+                                     this.defaultSessionScope);
         env.enableLogging(getLogger());
         return env;
     }
@@ -1407,13 +1400,13 @@ public class CocoonPortlet extends GenericPortlet {
         }
         env = new PortletEnvironment(servletPath,
                                      uri,
-                                     this.portletContextURL,
                                      req,
                                      res,
                                      this.portletContext,
                                      (PortletContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                      this.containerEncoding,
-                                     formEncoding);
+                                     formEncoding,
+                                     this.defaultSessionScope);
         env.enableLogging(getLogger());
         return env;
     }
