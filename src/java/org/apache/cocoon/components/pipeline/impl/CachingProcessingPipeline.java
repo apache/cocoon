@@ -72,13 +72,13 @@ import java.util.Iterator;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.1 2003/03/09 00:09:08 pier Exp $
+ * @version CVS $Id: CachingProcessingPipeline.java,v 1.2 2003/03/13 05:58:28 jefft Exp $
  */
 public class CachingProcessingPipeline
     extends AbstractCachingProcessingPipeline {
 
     /**
-    * Cache longest cachable key
+    * Cache longest cacheable key
     */
     protected void cacheResults(Environment environment, OutputStream os)  throws Exception {
         if (this.toCacheKey != null) {
