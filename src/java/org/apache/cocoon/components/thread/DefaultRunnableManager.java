@@ -392,6 +392,33 @@ public class DefaultRunnableManager
     }
 
     /**
+     * Remove a <code>Runnable</code> from the command stack
+     *
+     * @param command The <code>Runnable</code> to be removed
+     */
+    public void remove( Runnable command )
+    {
+        synchronized( m_commandStack )
+        {
+            for( final Iterator i = m_commandStack.iterator(  ); i.hasNext(  ); )
+            {
+                final ExecutionInfo info = (ExecutionInfo)i.next(  );
+
+                if( info.m_command == command )
+                {
+                    i.remove(  );
+                    m_commandStack.notifyAll(  );
+
+                    return;
+                }
+            }
+        }
+
+        getLogger(  ).warn( "Could not find command " + command +
+                            " for removal" );
+    }
+
+    /**
      * The heart of the command manager
      */
     public void run(  )
@@ -806,7 +833,6 @@ public class DefaultRunnableManager
                 if( m_nextRun > 0 )
                 {
                     m_commandStack.add( this );
-                    m_commandStack.notifyAll(  );
                 }
             }
 
