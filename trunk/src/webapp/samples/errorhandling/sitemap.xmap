@@ -19,7 +19,10 @@
 	<map:pipelines>
 		<map:pipeline>
 			<map:match pattern="main">
-				<map:generate src="main.htm"/>
+				<map:generate src="main.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
 				<map:serialize/>
 			</map:match>
 		</map:pipeline>
@@ -39,8 +42,10 @@
 		</map:pipeline>
 
 		<map:handle-errors>
-			<map:generate src="generalerror.htm"/>
-			<map:serialize/>
+      <map:generate type="notifying"/>
+      <map:transform src="context://stylesheets/system/error2html.xslt">
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+       </map:transform>
 		</map:handle-errors>
 
 	</map:pipelines>
