@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<cars>
+  <make name="Audi">
+    <model name="A2"/>
+    <model name="A3"/>
+    <model name="A4"/>
+    <model name="A6"/>
+    <model name="A8"/>
+    <model name="TT"/>
+    <model name="Cabriolet"/>
+  </make>
+  <make name="Volkswagen">
+    <model name="Golf"/>
+    <model name="Passat"/>
+    <model name="Bora"/>
+  </make>
+  <make name="Mercedes">
+    <model name="CLK"/>
+    <model name="SLK"/>
+  </make>
+  <make name="Renault">
+    <model name="Twingo"/>
+    <model name="Senic"/>
+    <model name="Espace"/>
+  </make>
+</cars>
