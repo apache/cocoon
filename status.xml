@@ -205,6 +205,9 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="VG" type="add">
+     Faces block: Initial implementation of JavaServer Faces for Cocoon.
+   </action>
+   <action dev="VG" type="add">
      Taglib block: Initial implementation of BodyTag.
    </action>
    <action dev="VG" type="update">

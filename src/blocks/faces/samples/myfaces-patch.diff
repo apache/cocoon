@@ -1,0 +1,98 @@
+Index: src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java
+===================================================================
+RCS file: /cvsroot/myfaces/myfaces/src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java,v
+retrieving revision 1.28
+diff -u -u -r1.28 JspViewHandlerImpl.java
+--- src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	2 Sep 2004 09:04:14 -0000	1.28
++++ src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	16 Sep 2004 18:57:15 -0000
+@@ -29,13 +29,11 @@
+ import javax.faces.context.ExternalContext;
+ import javax.faces.context.FacesContext;
+ import javax.faces.render.RenderKitFactory;
+-import javax.servlet.ServletRequest;
+ import javax.servlet.ServletResponse;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ import javax.servlet.http.HttpSession;
+ import java.io.IOException;
+-import java.util.Enumeration;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Locale;
+@@ -95,10 +93,10 @@
+     {
+         //ExternalContext.getLocales() is missing. Next Spec will define it.
+         //But since we are in a JSP specific impl we can cast...
+-        Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
+-        while (locales.hasMoreElements())
++        Iterator locales = facesContext.getExternalContext().getRequestLocales();
++        while (locales.hasNext())
+         {
+-            Locale locale = (Locale) locales.nextElement();
++            Locale locale = (Locale) locales.next();
+             for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
+             {
+                 Locale supportLocale = (Locale)it.next();
+@@ -209,7 +207,7 @@
+ 
+         String viewId = facesContext.getViewRoot().getViewId();
+         ServletMapping servletMapping = getServletMapping(externalContext);
+-        if (servletMapping.isExtensionMapping())
++        if (servletMapping != null && servletMapping.isExtensionMapping())
+         {
+             String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+             String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
+@@ -297,7 +295,7 @@
+ 
+         ExternalContext externalContext = facescontext.getExternalContext();
+         ServletMapping servletMapping = getServletMapping(externalContext);
+-
++        if (servletMapping != null) {
+         if (servletMapping.isExtensionMapping())
+         {
+             // extension mapping
+@@ -334,6 +332,9 @@
+             }
+             return urlpattern + viewId;
+         }
++        }
++
++        return viewId;
+     }
+ 
+ 
+@@ -376,8 +377,9 @@
+         }
+         log.error("could not find pathMapping for servletPath = " + servletPath +
+                   " requestPathInfo = " + requestPathInfo);
+-        throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
+-                  " requestPathInfo = " + requestPathInfo);
++        return null;
++        //throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
++        //          " requestPathInfo = " + requestPathInfo);
+     }
+ 
+ }
+Index: src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java
+===================================================================
+RCS file: /cvsroot/myfaces/myfaces/src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java,v
+retrieving revision 1.40
+diff -u -u -r1.40 LifecycleImpl.java
+--- src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java	25 Aug 2004 13:54:02 -0000	1.40
++++ src/myfaces/net/sourceforge/myfaces/lifecycle/LifecycleImpl.java	16 Sep 2004 18:57:15 -0000
+@@ -316,6 +316,7 @@
+                                    log, "RequestServletPath is null, cannot determine viewId of current page.");
+ 
+             //TODO: JSF Spec 2.2.1 - what do they mean by "if the default ViewHandler implementation is used..." ?
++            /*
+             String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+             String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
+             DebugUtils.assertError(suffix.charAt(0) == '.',
+@@ -330,6 +331,7 @@
+             {
+                 viewId = viewId.substring(0, dot) + suffix;
+             }
++            */
+         }
+ 
+         return viewId;
