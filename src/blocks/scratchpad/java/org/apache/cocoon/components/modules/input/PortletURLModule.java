@@ -84,7 +84,7 @@ import java.util.Map;
  * <code>portlet:render:</code>, <code>portlet:resource:</code>) are omitted.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletURLModule.java,v 1.1 2003/12/03 13:09:34 vgritsenko Exp $
+ * @version CVS $Id: PortletURLModule.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
  */
 public class PortletURLModule extends AbstractInputModule implements ThreadSafe {
 
