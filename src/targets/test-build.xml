@@ -35,6 +35,10 @@
            fork="true">
       <classpath refid="test.classpath"/>
     </javac>
+
+    <jar jarfile="${build}/${name}-tests.jar">
+      <fileset dir="${build.test}" includes="**/*.class"/>
+    </jar>
   </target>
 
   <!-- Runs JUnit tests -->

@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.43 2003/04/17 09:52:31 stephan Exp $
+  CVS $Id: gump.xml,v 1.44 2003/04/17 14:01:42 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -78,6 +78,7 @@
 
     <jar name="cocoon.jar"/>
     <jar name="cocoon-deprecated.jar"/>
+    <jar name="cocoon-tests.jar"/>
 
     <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
 
