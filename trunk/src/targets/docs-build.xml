@@ -24,6 +24,8 @@
         <exclude name="images/**"/>
       </fileset>
     </copy>
+    <move file="${build.context}/sitemap-localdocs.xmap"
+      tofile="${build.context}/sitemap.xmap"/>
 
     <!-- Copy images -->
     <copy todir="${build.context}/images" filtering="off">
