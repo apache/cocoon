@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.12 2003/11/16 18:57:40 antonio Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.13 2003/11/16 23:01:59 antonio Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
          
@@ -210,14 +210,13 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 } else if (pipeContext.getLocaleParameter() != null) { // then use locale specified as transformer parameter, if any
                     pipeContext.setLocale(pipeContext.getLocaleParameter());
                 } else { // use locale specified in bizdata supplied for form
-                    String localeJXPath = "/locale";
                     Object locale = null;
                     try {
-                        locale = pipeContext.getJXPathContext().getValue(localeJXPath);
+                        locale = pipeContext.getJXPathContext().getValue("/locale");
                     } catch (JXPathException e) {}
                     if (locale != null)
                         pipeContext.setLocale((Locale)locale);
-                    else // final solution: use US locale
+                    else // final solution: use locale defined in the server machine
                         pipeContext.setLocale(Locale.getDefault());
                 }
 
@@ -308,7 +307,6 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         } catch (IOException ignored) {
             ignored.printStackTrace();
         }
-
         return translated.toString();
     }
 
@@ -328,49 +326,50 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void endElement(String namespaceURI, String localName, String qName)
             throws SAXException {
-        if (inWidgetElement && elementNestingCounter == widgetElementNesting &&
+        
+        if (inWidgetElement) {
+            if (elementNestingCounter == widgetElementNesting &&
                 namespaceURI.equals(Constants.WT_NS)
                 && (localName.equals("widget") || localName.equals("repeater-widget"))) {
-
-            if (repeaterWidget) {
-                Repeater repeater = (Repeater)widget;
-                WidgetReplacingPipe rowPipe = new WidgetReplacingPipe();
-                int rowCount = repeater.getSize();
-                for (int i = 0; i < rowCount; i++) {
-                    Repeater.RepeaterRow row = repeater.getRow(i);
-                    rowPipe.init(row, pipeContext);
-                    rowPipe.setContentHandler(contentHandler);
-                    rowPipe.setLexicalHandler(lexicalHandler);
-                    saxBuffer.toSAX(rowPipe);
-                    rowPipe.recycle();
+                    if (repeaterWidget) {
+                        Repeater repeater = (Repeater)widget;
+                        WidgetReplacingPipe rowPipe = new WidgetReplacingPipe();
+                        int rowCount = repeater.getSize();
+                        for (int i = 0; i < rowCount; i++) {
+                            Repeater.RepeaterRow row = repeater.getRow(i);
+                            rowPipe.init(row, pipeContext);
+                            rowPipe.setContentHandler(contentHandler);
+                            rowPipe.setLexicalHandler(lexicalHandler);
+                            saxBuffer.toSAX(rowPipe);
+                            rowPipe.recycle();
+                        }
+                    } else {
+                        stylingHandler.recycle();
+                        stylingHandler.setSaxFragment(saxBuffer);
+                        stylingHandler.setContentHandler(contentHandler);
+                        stylingHandler.setLexicalHandler(lexicalHandler);
+                        contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
+                        widget.generateSaxFragment(stylingHandler, pipeContext.getLocale());
+                        contentHandler.endPrefixMapping(Constants.WI_PREFIX);
+                    }
+                    inWidgetElement = false;
+                    widget = null;
+                } else {
+                    saxBuffer.endElement(namespaceURI, localName, qName);
                 }
-            } else {
-                stylingHandler.recycle();
-                stylingHandler.setSaxFragment(saxBuffer);
-                stylingHandler.setContentHandler(contentHandler);
-                stylingHandler.setLexicalHandler(lexicalHandler);
-                contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
-                widget.generateSaxFragment(stylingHandler, pipeContext.getLocale());
+        } else if (namespaceURI.equals(Constants.WT_NS)) {
+            if (localName.equals("widget-label") || localName.equals("repeater-widget-label")
+                || localName.equals("repeater-size") || localName.equals(CONTINUATION_ID)) {
+                // Do nothing
+            } else if (localName.equals(FORM_TEMPLATE_EL)) {
+                contextWidget = null;
+                contentHandler.endElement(Constants.WI_NS, FORM_TEMPLATE_EL,
+                        Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
-            }
-
-            inWidgetElement = false;
-            widget = null;
-        } else if (inWidgetElement) {
-            saxBuffer.endElement(namespaceURI, localName, qName);
-        } else if (namespaceURI.equals(Constants.WT_NS) &&
-                (localName.equals("widget-label") || localName.equals("repeater-widget-label")
-                || localName.equals("repeater-size"))) {
-            // do nothing
-        } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals(FORM_TEMPLATE_EL)) {
-            contextWidget = null;
-            contentHandler.endElement(Constants.WI_NS, FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
-            contentHandler.endPrefixMapping(Constants.WI_PREFIX);
-        } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals(CONTINUATION_ID)) {
-            // nothing
-        } else {
+            } else
+                super.endElement(namespaceURI, localName, qName);
+        } else
             super.endElement(namespaceURI, localName, qName);
-        }
         elementNestingCounter--;
     }
 
@@ -461,6 +460,12 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         else
             super.comment(ch, start, len);
     }
+    
+    public void recycle() {
+        super.recycle();
+        this.contextWidget = null;
+        this.widget = null;
+    }
 
     /**
      * This ContentHandler helps in inserting SAX events before the closing tag of the root
@@ -468,10 +473,10 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
      */
     public class InsertStylingContentHandler extends AbstractXMLPipe implements Recyclable {
         private int elementNesting = 0;
-        private SaxBuffer saxBuffer;
+        private SaxBuffer saxBuffer = null;
 
-        public void setSaxFragment(SaxBuffer saxBuffer) {
-            this.saxBuffer = saxBuffer;
+        public void setSaxFragment(SaxBuffer saxFragment) {
+            saxBuffer = saxFragment;
         }
 
         public void recycle() {
@@ -503,11 +508,4 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             super.endElement(uri, loc, raw);
         }
     }
-
-    public void recycle() {
-        super.recycle();
-        this.contextWidget = null;
-        this.widget = null;
-    }
-
 }
