@@ -51,7 +51,6 @@
 package org.apache.cocoon.bean;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.bean.helpers.Crawler;
 import org.apache.cocoon.bean.helpers.DelayedOutputStream;
@@ -68,26 +67,24 @@ import org.apache.excalibur.source.Source;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * <p>The Cocoon Bean simplifies usage of the Cocoon object. Allows to create, 
- * configure Cocoon instance and process requests, one by one or multiple 
+ * <p>The Cocoon Bean simplifies usage of the Cocoon object. Allows to create,
+ * configure Cocoon instance and process requests, one by one or multiple
  * with link traversal.</p>
  *
- * <p><b>WARNING:</b> This interface is not stable and could be changed in 
- * backward incompatible way without prior notice.</p> 
+ * <p><b>WARNING:</b> This interface is not stable and could be changed in
+ * backward incompatible way without prior notice.</p>
 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.32 2003/10/06 12:40:14 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.33 2003/10/06 14:41:55 vgritsenko Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -101,18 +98,18 @@ public class CocoonBean extends CocoonWrapper {
     private List excludePatterns = new ArrayList();
     private List includePatterns = new ArrayList();
     private List includeLinkExtensions = null;
-    
+
     // Internal Objects
     private boolean initialized;
     private List listeners = new ArrayList();
     private boolean verbose;
     SourceResolver sourceResolver;
-    private Crawler crawler;    
+    private Crawler crawler;
 
     public CocoonBean() {
         this.crawler = new Crawler();
     }
-    
+
     //
     // INITIALISATION METHOD
     //
@@ -175,7 +172,7 @@ public class CocoonBean extends CocoonWrapper {
     public boolean followLinks() {
         return followLinks;
     }
-    
+
     public boolean confirmExtensions() {
         return confirmExtension;
     }
@@ -244,7 +241,7 @@ public class CocoonBean extends CocoonWrapper {
         boolean confirmExtension,
         String logger)
         throws IllegalArgumentException {
-        
+
         Target target;
         if (root == null && type == null) {
             target = new Target(sourceURI, destURI);
@@ -264,7 +261,7 @@ public class CocoonBean extends CocoonWrapper {
         int preparedPattern[] = WildcardHelper.compilePattern(pattern);
         excludePatterns.add(preparedPattern);
     }
-    
+
     public void addIncludePattern(String pattern) {
         int preparedPattern[] = WildcardHelper.compilePattern(pattern);
         includePatterns.add(preparedPattern);
@@ -276,26 +273,26 @@ public class CocoonBean extends CocoonWrapper {
         }
         includeLinkExtensions.add(extension);
     }
-    
+
     public void addListener(BeanListener listener) {
         this.listeners.add(listener);
     }
 
-    public void pageGenerated(String sourceURI, 
-                              String destURI, 
-                              int pageSize, 
-                              int linksInPage, 
-                              int newLinksInPage, 
-                              int pagesRemaining, 
-                              int pagesComplete, 
+    public void pageGenerated(String sourceURI,
+                              String destURI,
+                              int pageSize,
+                              int linksInPage,
+                              int newLinksInPage,
+                              int pagesRemaining,
+                              int pagesComplete,
                               long timeTaken) {
         Iterator i = listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
-            l.pageGenerated(sourceURI, 
-                            destURI, 
-                            pageSize, 
-                            linksInPage, 
+            l.pageGenerated(sourceURI,
+                            destURI,
+                            pageSize,
+                            linksInPage,
                             newLinksInPage,
                             pagesRemaining,
                             pagesComplete,
@@ -381,7 +378,7 @@ public class CocoonBean extends CocoonWrapper {
                       + crawler.getRemainingCount());
           }
     }
-    
+
     /**
      * Processes the given Target and return all links.
      *
@@ -412,14 +409,12 @@ public class CocoonBean extends CocoonWrapper {
      * </ul>
      *
      * @param target a <code>Target</code> target to process
-     * @return a <code>Collection</code> containing all links found, as
-     * Target objects.
      * @exception Exception if an error occurs
      */
     private void processTarget(Crawler crawler, Target target) throws Exception {
 
         int status = 0;
-        
+
         int linkCount = 0;
         int newLinkCount = 0;
         int pageSize = 0;
@@ -460,7 +455,7 @@ public class CocoonBean extends CocoonWrapper {
 
                 if (!crawler.hasTranslatedLink(linkTarget)) {
                     try {
-                        final String mimeType = 
+                        final String mimeType =
                                 getType(linkTarget.getDeparameterizedSourceURI(), linkTarget.getParameters());
                         linkTarget.setMimeType(mimeType);
                         crawler.addTranslatedLink(linkTarget);
@@ -494,7 +489,7 @@ public class CocoonBean extends CocoonWrapper {
                 } else {
                     gatheredLinks = null;
                 }
-        
+
                 status =
                     getPage(
                         target.getDeparameterizedSourceURI(),
@@ -547,8 +542,8 @@ public class CocoonBean extends CocoonWrapper {
                         output.setFileOutputStream(stream);
                         output.flush();
                         output.close();
-                        pageGenerated(target.getSourceURI(), 
-                                      target.getAuthlessDestURI(), 
+                        pageGenerated(target.getSourceURI(),
+                                      target.getAuthlessDestURI(),
                                       pageSize,
                                       linkCount,
                                       newLinkCount,
@@ -580,7 +575,7 @@ public class CocoonBean extends CocoonWrapper {
         if (brokenLinkGenerate) {
             //Why decode this URI now?
             //String brokenFile = NetUtils.decodePath(destinationURI);
-            
+
             if (brokenLinkExtension != null) {
                 target.setExtraExtension(brokenLinkExtension);
             }
@@ -606,7 +601,7 @@ public class CocoonBean extends CocoonWrapper {
             }
         }
     }
-    
+
     public ModifiableSource getSource(Target target)
         throws IOException, ProcessingException {
         final String finalDestinationURI = target.getDestinationURI();
@@ -625,7 +620,7 @@ public class CocoonBean extends CocoonWrapper {
         this.releaseSource(src);
         return lastModified;
     }
-        
+
     public void releaseSource(Source source) {
         sourceResolver.release(source);
     }
@@ -633,13 +628,13 @@ public class CocoonBean extends CocoonWrapper {
         boolean included;
         Iterator i;
         HashMap map = new HashMap();
-        
+
         if (includePatterns.size() == 0) {
             included = true;
         } else {
             included = false;
             i = includePatterns.iterator();
-            while (i.hasNext()){ 
+            while (i.hasNext()){
                 int pattern[] = (int[])i.next();
                 if (WildcardHelper.match(map, uri, pattern)) {
                     included=true;
