@@ -36,6 +36,15 @@
   <fb:value id="number" path="aNumber"/>
   <fb:value id="choose" path="choose"/>
   <fb:value id="sex" path="sex"/>
+  <!--<fb:value id="enable" path="enable" direction="load"/>-->
+  <fb:javascript id="enable" path="enable" direction="save">
+    <!--<fb:load-form>
+    	widget.setValue(java.lang.Boolean.FALSE);
+    </fb:load-form>-->
+    <fb:save-form>
+      jxpathPointer.setValue(java.lang.Boolean.TRUE);
+    </fb:save-form>
+  </fb:javascript>
 
   <!--
     - An aggregatefield is a special kind of widget that lets

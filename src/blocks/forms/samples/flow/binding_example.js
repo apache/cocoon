@@ -76,6 +76,7 @@ function form2bean(form) {
     bean.setPhoneNumber("123456");
     bean.setBirthday(new java.util.Date());
     bean.setSex(Packages.org.apache.cocoon.forms.samples.Sex.FEMALE);
+    //bean.setEnable(java.lang.Boolean.FALSE);
     var contact = new Packages.org.apache.cocoon.forms.samples.Contact();
     contact.setId("1");
     contact.setFirstName("Hermann");

@@ -103,6 +103,10 @@
       </fd:datatype>
       <fd:selection-list type="enum" class="org.apache.cocoon.forms.samples.Sex"/>
     </fd:field>
+    
+    <fd:booleanfield id="enable">
+      <fd:label>Register Enable</fd:label>
+    </fd:booleanfield>
   
     <fd:multivaluefield id="drinks">
       <fd:label>Indicate which 2 of the following drinks you'd like to receive:</fd:label>
