@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: request.xsp,v 1.2 2003/05/07 04:57:15 vgritsenko Exp $ -->
+<!-- CVS $Id: request.xsp,v 1.1 2003/09/07 06:09:10 vgritsenko Exp $ -->
 
-<xsp:page language="java"
+<xsp:page language="javascript"
           xmlns:xsp="http://apache.org/xsp"  
           xmlns:xsp-request="http://apache.org/xsp/request/2.0">
 
 <page>
 
-<!-- Test set attribute using Java variable -->
-<xsp:logic>
-  String attribute= "Test Attribute Value!";
-</xsp:logic>
-<xsp-request:set-attribute name="attr"><xsp:expr>attribute</xsp:expr></xsp-request:set-attribute>
-
-<!-- Test set attribute using constant -->
-<xsp-request:set-attribute name="attr">Test Attribute Value!!!</xsp-request:set-attribute>
-
+<xsp-request:set-attribute name="attr">Test Attribute Value</xsp-request:set-attribute>
 
 <h1>xsp-request logicsheet output</h1>
 <table border="1">
@@ -50,8 +42,8 @@
   <td>getLocale</td><td><xsp:expr>request.getLocale()</xsp:expr></td>
     </tr>
 <tr>
-  <td>get-locales</td><td><xsp:expr>String.valueOf(<xsp-request:get-locales as="array"/>)</xsp:expr></td>
-  <td>getLocales</td><td><xsp:expr>String.valueOf(request.getLocales())</xsp:expr></td>
+  <td>get-locales</td><td><xsp:expr>String(<xsp-request:get-locales as="array"/>)</xsp:expr></td>
+  <td>getLocales</td><td><xsp:expr>String(request.getLocales())</xsp:expr></td>
     </tr>
 <tr>
   <td>get-parameter</td><td><xsp-request:get-parameter name="param"/></td>
@@ -61,12 +53,12 @@
   <td>get-parameter with default </td><td><xsp-request:get-parameter name="param" default="default"/></td>
     </tr>
 <tr>
-  <td>get-parameter-values (as array)</td><td><xsp:expr>String.valueOf(<xsp-request:get-parameter-values name="param" as="array"/>)</xsp:expr></td>
-  <td>getParameterValues</td><td><xsp:expr>String.valueOf(request.getParameterValues("param"))</xsp:expr></td>
+  <td>get-parameter-values (as array)</td><td><xsp:expr>String(<xsp-request:get-parameter-values name="param" as="array"/>)</xsp:expr></td>
+  <td>getParameterValues</td><td><xsp:expr>String(request.getParameterValues("param"))</xsp:expr></td>
     </tr>
 <tr>
-  <td>get-parameter-names (as array)</td><td><xsp:expr>String.valueOf(<xsp-request:get-parameter-names as="array"/>)</xsp:expr></td>
-  <td>getParameterNames</td><td><xsp:expr>String.valueOf(request.getParameterNames())</xsp:expr></td>
+  <td>get-parameter-names (as array)</td><td><xsp:expr>String(<xsp-request:get-parameter-names as="array"/>)</xsp:expr></td>
+  <td>getParameterNames</td><td><xsp:expr>String(request.getParameterNames())</xsp:expr></td>
     </tr>
 <tr>
   <td>get-header accept</td><td><xsp-request:get-header name="accept"/></td>
@@ -81,20 +73,20 @@ get-int-header
 get-date-header
 -->
 <tr>
-  <td>get-headers accept-language (as array)</td><td><xsp:expr>String.valueOf(<xsp-request:get-headers name="accept-language" as="array"/>)</xsp:expr></td>
+  <td>get-headers accept-language (as array)</td><td><xsp:expr>String(<xsp-request:get-headers name="accept-language" as="array"/>)</xsp:expr></td>
   <td>getHeaders</td><td><xsp:expr>request.getHeaders("accept-language")</xsp:expr></td>
     </tr>
 <tr>
-  <td>get-header-names (as array)</td><td><xsp:expr>String.valueOf(<xsp-request:get-header-names as="array"/>)</xsp:expr></td>
-  <td>getHeaderNames</td><td><xsp:expr>String.valueOf(request.getHeaderNames())</xsp:expr></td>
+  <td>get-header-names (as array)</td><td><xsp:expr>String(<xsp-request:get-header-names as="array"/>)</xsp:expr></td>
+  <td>getHeaderNames</td><td><xsp:expr>String(request.getHeaderNames())</xsp:expr></td>
     </tr>
 <tr>
   <td>get-attribute attr</td><td><xsp-request:get-attribute name="attr"/></td>
   <td>getAttribute</td><td><xsp:expr>request.getAttribute("attr")</xsp:expr></td>
     </tr>
 <tr>
-  <td>get-attribute-names (as array)</td><td><xsp:expr>String.valueOf(<xsp-request:get-attribute-names as="array"/>)</xsp:expr></td>
-  <td>getAttributeNames</td><td><xsp:expr>String.valueOf(request.getAttributeNames())</xsp:expr></td>
+  <td>get-attribute-names (as array)</td><td><xsp:expr>String(<xsp-request:get-attribute-names as="array"/>)</xsp:expr></td>
+  <td>getAttributeNames</td><td><xsp:expr>String(request.getAttributeNames())</xsp:expr></td>
     </tr>
 <tr>
   <td>get-requested-url</td><td><xsp-request:get-requested-url/></td>
@@ -163,10 +155,6 @@ get-date-header
   <td>get-requested-session-id</td><td><xsp-request:get-requested-session-id/></td>
   <td>getRequestedSessionId</td><td><xsp:expr>request.getRequestedSessionId()</xsp:expr></td>
     </tr>
-<tr>
-  <td>get-session-id</td><td><xsp-request:get-session-id/></td>
-  <td>getSession.getId</td><td><xsp:expr>request.getSession().getId()</xsp:expr></td>
-    </tr>
 </table>
 
 	<h1>xsp-request logicsheet output (as xml)</h1>
@@ -188,6 +176,7 @@ get-header user-agent       <xsp-request:get-header name="user-agent" as="xml"/>
 get-header-names            <xsp-request:get-header-names as="xml"/>
 get-int-header - no sample
 get-date-header - no sample
+get-headers - no sample
 get-headers                 <xsp-request:get-headers name="accept-language" as="xml"/>
 get-attribute attr          <xsp-request:get-attribute name="attr" as="xml"/>
 get-attribute-names         <xsp-request:get-attribute-names as="xml"/>
@@ -203,21 +192,19 @@ get-query-string            <xsp-request:get-query-string as="xml"/>
 get-protocol                <xsp-request:get-protocol as="xml"/>
 get-remote-host             <xsp-request:get-remote-host as="xml"/>
 is-secure                   <xsp-request:is-secure as="xml"/>
-get-path-translated         <xsp-request:get-path-translated as="xml"/>
 get-servlet-path            <xsp-request:get-servlet-path as="xml"/>
 get-user-principal          <xsp-request:get-user-principal as="xml"/>
 get-auth-type               <xsp-request:get-auth-type as="xml"/>
 is-user-in-role             <xsp-request:is-user-in-role role="admin" as="xml"/>
 get-requested-session-id    <xsp-request:get-requested-session-id as="xml"/>
-get-session-id              <xsp-request:get-session-id as="xml"/>
 </textarea>
 
 <xsp-request:remove-attribute name="attr"/>
 
 <h2>Links</h2>
-<a href="request?param=value&amp;a=b&amp;x=y">Get</a>
+<a href="request-test?param=value&amp;a=b&amp;x=y">Get</a>
 <br/>
-<form method="post" action="request">
+<form method="post" action="request-test">
 <input name="param"/>
 <input type="submit" value="Post"/>
 </form>

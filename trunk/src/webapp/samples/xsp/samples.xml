@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:15 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.4 2003/09/07 06:09:10 vgritsenko Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -49,10 +49,6 @@
    </sample>
   </group>
 
-<!-- 
-
-  Excluded until fixed. 
-  
   <group name="eXtensible Server Pages in Javascript">
    <sample name="Hello" href="js/hello">
     Hello in Javascript
@@ -71,6 +67,14 @@
    </sample>
   </group>
 
--->
-  
+  <group name="eXtensible Server Pages in Python">
+   <note>
+    This example requires python block, and jython.jar from www.jython.org.
+    Tested with versions 2.1 and 2.0
+   </note>
+   <sample name="Hello" href="python/hello">
+    Hello in Python
+   </sample>
+  </group>
+
 </samples>
