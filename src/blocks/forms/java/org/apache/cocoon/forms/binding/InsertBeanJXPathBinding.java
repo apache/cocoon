@@ -23,8 +23,8 @@ import org.apache.commons.jxpath.JXPathContext;
 
 /**
  * InsertBeanJXPathBinding provides an implementation of a {@link Binding}
- * that inserts a new instance of the specified bean (classname) into the target
- * back-end model upon save.
+ * that inserts a new instance of the specified bean (classname) or a new instance
+ * created by the model itself into the target back-end model upon save.
  * <p>
  * NOTES: <ol>
  * <li>This Binding does not perform any actions when loading.</li>
@@ -58,7 +58,8 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
      * Registers a JXPath Factory on the JXPath Context.
      * <p>
      * The factory will insert a new instance of the specified bean (classname)
-     * inside this object into the target objectmodel.
+     * inside this object into the target objectmodel or it will just call the
+     * add method if classname is null.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         try {
@@ -67,8 +68,13 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
             Class[] argTypes = new Class[1];
 
             // instantiate the new object
-            argTypes[0] = Class.forName(this.className);
-            args[0] = argTypes[0].newInstance();
+            if(this.className != null) {
+	            argTypes[0] = Class.forName(this.className);
+	            args[0] = argTypes[0].newInstance();
+            } else {
+            	argTypes = null;
+            	args = null;
+            }
 
             // lookup the named method on the parent
             Method addMethod =
