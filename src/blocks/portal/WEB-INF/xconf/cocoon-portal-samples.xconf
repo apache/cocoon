@@ -13,10 +13,15 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-
-  CVS $Id$
 -->
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-portal.xconf"/>
+
  <!-- THIS IS A SAMPLE PORTAL
       It demonstrates several features of the portal engine,
       so it's not optimized for production. Make sure that

@@ -15,7 +15,15 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <!--   NO DEPENDENCIES --> 
+
+  <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/web3/web3.roles"/>
 
   <web3 logger="core.web3">

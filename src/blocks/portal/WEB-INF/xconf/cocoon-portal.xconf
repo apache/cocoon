@@ -15,7 +15,16 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-session-fw.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-authentication-fw.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-html.xconf"/>
+
   <!-- Portal service definition template
   <component class="org.apache.cocoon.portal.impl.PortalServiceImpl" logger="portal" role="org.apache.cocoon.portal.PortalService">
    <portals>

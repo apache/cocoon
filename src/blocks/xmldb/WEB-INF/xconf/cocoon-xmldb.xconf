@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-databases.xconf"/>
+
   <source-factories>
     <!-- xmldb pseudo protocol -->
     <component-instance class="org.apache.cocoon.components.source.impl.XMLDBSourceFactory" name="xmldb">

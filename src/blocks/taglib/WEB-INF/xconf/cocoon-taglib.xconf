@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <!--   NO DEPENDENCIES --> 
+
   <component role="org.apache.cocoon.jxpath.JXPathCocoonContexts"
              class="org.apache.cocoon.jxpath.JXPathCocoonContexts"
              logger="core.jxpath"/>

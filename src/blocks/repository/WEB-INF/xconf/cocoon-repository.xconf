@@ -15,7 +15,16 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-databases.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-eventcache.xconf"/>
+
+  <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/repository/repository.roles"/>
 
   <source-repository logger="core.source-repository" />

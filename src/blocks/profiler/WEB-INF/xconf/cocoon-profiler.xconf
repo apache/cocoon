@@ -15,7 +15,12 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/profiler/profiler.roles"/>
 
   <!--+ 

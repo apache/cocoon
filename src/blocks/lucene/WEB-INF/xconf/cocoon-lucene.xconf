@@ -15,7 +15,16 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-forms.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-xsp.xconf"/>
+
+  <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/search/lucene.roles"/>
 
   <!-- Search:

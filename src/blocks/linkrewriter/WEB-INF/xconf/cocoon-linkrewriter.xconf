@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <!--   NO DEPENDENCIES --> 
+
   <input-modules>
 
       <!-- For the sitedemo sample -->
