@@ -12,36 +12,38 @@
  </header>
 
  <body>
-
- <s1 title="Updating Cocoon">
-  <p>
+  <s1 title="Updating Cocoon">
+   <p>
     Please take your time to read this document completely before trying to upgrade from
     a Cocoon 2.0.x installation to 2.1 (or above). You can also read it if you want to
     know what was going on in the development of Cocoon.
-  </p>
-  <p>
+   </p>
+   <p>
     The Cocoon team took great care in making this new version as compatible as
     possible. However, in order to achieve even more flexibility, usability and
     performance, the internal architecure of Cocoon has been improved. Due to these
     improvements it has not been possible to be compatible in every little detail.
     If you follow the instructions of document closely, however,
     you should be able to quickly upgrade your Cocoon 2.0.x installation.
-  </p>
-  <p>
-   The Cocoon team has developed many Avalon components that are not specific to Cocoon
-   and therefore have been donated to the Avalon Excalibur project and moved out
-   of Cocoon. This has led to some configuration changes which are also described
-   in this document.
-  </p>
- </s1>
+   </p>
+   <p>
+    The Cocoon team has developed many Avalon components that are not specific to Cocoon
+    and therefore have been donated to the Avalon Excalibur project and moved out
+    of Cocoon. This has led to some configuration changes which are also described
+    in this document.
+   </p>
+  </s1>
   <s1 title="Sitemap">
-   <p>There are some changes in the sitemap and in the configuration of some components in
-     the sitemap.</p>
+   <note>There are some changes in the sitemap and in the configuration of some
+    components in the sitemap. In general we recommend you to start with a new
+    sitemap from 2.1 and to adapt it to your needs. But for manual migration we
+    will list as many changes as possible.</note>
    <s2 title="Pipelines configuration in the sitemap">
      <p>
       The configuration of the pipelines has moved from cocoon.xconf to the sitemap.
-      To update your installation, you have to remove the "event-pipeline" and "stream-pipeline" section
-      from your cocoon.xconf and add the <code>map:pipes</code> section to the <code>map:components</code> section
+      To update your installation, you have to remove the "event-pipeline" and "stream-pipeline"
+      section from your cocoon.xconf (see also the cocoon.xconf section) and add the
+      <code>map:pipes</code> section to the <code>map:components</code> section
       of your sitemap. You can find the pipelines components definition in the sample
       main sitemap of Cocoon. Here is an example:
      </p>
@@ -75,42 +77,73 @@
  </map:pipelines>
 </map:sitemap>
      ]]></source>
-     <p>This is similar to choosing the type of a generator or any other sitemap
-       component. If the type attribute is omitted, the default configuration from the <code>map:components</code>
-       section is used.
+     <p>This is similar to choosing the type of a generator or any other sitemap component.
+       If the type attribute is omitted, the default configuration from the
+       <code>map:components</code> section is used.
      </p>
-     <p>So it's not that bad, despite incompatible changes in the Cocoon code there is
-       little to do to update your Cocoon installation.</p>
-    </s2>
-   <s2 title="Individual configuration of pipelines">
-    <p>The sitemap now provides individual configuration of <code>map:pipeline</code> sections.
-       You can now define one pipeline using caching, another one not using
-      caching at all and a third one using a different caching implementation, for example.
-    </p>
    </s2>
    <s2 title="FOP Serializer">
     <p>Relative paths in FOP serializer's <code>&lt;user-config&gt;</code> are now resolved
       relatively to the directory that contains the sitemap.</p>
     <p>All Cocoon URIs are supported too.</p>
    </s2>
-  <s2 title="Namespace changes">
+   <s2 title="Sitemap components">
+    <p>Some of the sitemap components have been removed from Cocoon sources, others were renamed.
+      If you have the old declaration in your sitemap, you will get
+      <code>ClassNotFoundException</code>s. Trial and error will probably be the fastest way for
+      removing them and getting a clean and working sitemap. Hopefully you are not using one of the
+      removed components. The following components are known to be removed or renamed:</p>
+    <ul>
+     <li>
+      <code>o.a.c.XTTransformer</code> - use the TraxTransformer instead.
+     </li>
+     <li>
+      <code>o.a.c.webapps.authentication.selection.MediaSelector</code> - the full qualified class
+      name has changed to <code>o.a.c.webapps.session.selection.MediaSelector</code>.
+     </li>
+    </ul>
+   </s2>
+   <s2 title="Error handling">
+     <p>The <code>map:handle-errors</code> section must now be a complete pipeline. This means the
+       old form</p>
+     <source><![CDATA[
+    <map:handle-errors>
+      <map:transform src="stylesheets/system/error2html.xsl"/>
+      <map:serialize status-code="404"/>
+    </map:handle-errors>
+  ]]></source>
+     <p>is no longer valid, because the generator is missing. Therefore you can now describe
+     explicitely the error handling. The replacement of the above looks like the following:</p>
+     <source><![CDATA[
+    <map:handle-errors>
+      <map:generate type="notifying"/>
+      <map:transform src="stylesheets/system/error2html.xsl"/>
+      <map:serialize status-code="404"/>
+    </map:handle-errors>
+  ]]></source>
+     <p>For a more detailed example have a look into the default sitemap delivered with Cocoon
+       sources or read the
+       <link href="../userdocs/concepts/errorhandling.html">documentation on error handling</link>.
+     </p>
+   </s2>
+  </s1>
+  <s1 title="Namespace changes">
     <p>
       In order to have consistent namespaces, some transformers and generators
       (listed below) use new namespaces. If you use any of these components, you
       will need to use the new namespaces.
     </p>
-    <s3 title="Request Generator">
+    <s2 title="Request Generator">
     <p>RequestGenerator changed its namespace from
       <code>http://xml.apache.org/cocoon/requestgenerator/2.0</code> to
       <code>http://apache.org/cocoon/request/2.0</code>.
     </p>
-    </s3>
-    <s3 title="I18nTransformer">
+    </s2>
+    <s2 title="I18nTransformer">
       <p>The I18nTransformer supports both
          <code>http://apache.org/cocoon/i18n/2.0</code> and
          <code>http://apache.org/cocoon/i18n/2.1</code> namespace.</p>
-    </s3>
-  </s2>
+    </s2>
   </s1>
   <s1 title="Changes in logging interfaces require recompilation">
     <p>
