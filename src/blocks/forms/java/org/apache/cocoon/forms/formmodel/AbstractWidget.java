@@ -171,8 +171,8 @@ public abstract class AbstractWidget implements Widget {
             relativeWidget = getForm();
             relativePath = path.substring(1);
         } else {
-            if (path.startsWith(".." + Widget.PATH_SEPARATOR))  {
-                relativeWidget = getParent();
+        	if (path.startsWith(".." + Widget.PATH_SEPARATOR))  {
+        		relativeWidget = getParent();
                 relativePath = path.substring(3);
             } else {
                 String childId = path.substring(0, sepPosition );
@@ -452,5 +452,14 @@ public abstract class AbstractWidget implements Widget {
         if (this.attributes != null) {
             this.attributes.remove(name);
         }
+    }
+    
+    public String toString() {
+        String className = this.getClass().getName();
+        int last = className.lastIndexOf('.');
+        if (last != -1) {
+            className = className.substring(last+1);
+        }
+        return className + "@" + getRequestParameterName();
     }
 }
