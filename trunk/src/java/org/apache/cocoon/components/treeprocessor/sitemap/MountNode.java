@@ -63,13 +63,12 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.excalibur.source.Source;
 
 /**
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.2 2003/04/29 10:45:20 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.3 2003/05/04 20:24:47 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
