@@ -19,14 +19,48 @@
   <title>HTMLArea</title>
   <content>
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
-      <div>
-        <ft:widget-label id="data"/><br/>
-        <ft:widget id="data">
-          <fi:styling type="htmlarea" style="width: 100%;" rows="20" cols="80"/>
+      <div style="width:500px">
+        <ft:widget-label id="data1"/><br/>
+        <ft:widget id="data1">
+          <fi:styling type="htmlarea" rows="8" style="width:100%">
+            <!-- at this place, the configuration property of the HTMLArea is under 'conf'
+                 available. Find more info about the available properties at
+                 http://www.htmlarea.com/htmlarea_2/documentation.html -->
+            <conf>
+              conf.statusBar = false;
+              conf.sizeIncludesToolbar = false;
+              conf.fullPage = false;
+              conf.toolbar = [
+                [ "bold", "italic", "separator",
+                  "subscript", "superscript", "separator",
+                  "insertorderedlist", "insertunorderedlist",
+                  "outdent", "indent", "separator",
+                  "inserthorizontalrule", "separator",
+                  "copy", "cut", "paste", "space", "undo", "redo",
+                  "separator", "showhelp"]
+                ];               
+            </conf>
+          </fi:styling>
         </ft:widget>
-        <br/>
-        <input type="submit"/>
       </div>
+      <p/>
+      <table border="1">
+        <tr>
+          <td><ft:widget-label id="data2"/></td>
+        </tr>
+        <tr>
+          <td>
+            <ft:widget id="data2">
+              <fi:styling type="htmlarea" rows="8" cols="70">
+                <!-- if you add initFunction, make sure that it is available at the browser -->
+                <!--initFunction>myInit</initFunction-->
+              </fi:styling>
+            </ft:widget>
+          </td>
+        </tr>
+      </table>
+      <p/>
+      <input type="submit"/>      
     </ft:form-template>
   </content>
 </page>

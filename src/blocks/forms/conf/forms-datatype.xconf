@@ -25,6 +25,7 @@
       <datatype name="string" src="org.apache.cocoon.forms.datatype.typeimpl.StringTypeBuilder">
         <convertors default="dummy" plain="dummy">
           <convertor name="dummy" src="org.apache.cocoon.forms.datatype.convertor.DummyStringConvertorBuilder"/>
+          <convertor name="htmlcleaner" src="org.apache.cocoon.forms.datatype.convertor.HtmlCleaningConvertorBuilder"/>
         </convertors>
       </datatype>
       <datatype name="integer" src="org.apache.cocoon.forms.datatype.typeimpl.IntegerTypeBuilder">
