@@ -62,12 +62,14 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.TimeZone;
 
@@ -76,6 +78,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlow;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -94,6 +97,7 @@ import org.apache.commons.jexl.util.introspection.VelPropertyGet;
 import org.apache.commons.jexl.util.introspection.VelPropertySet;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
+import org.apache.commons.jxpath.ExpressionContext;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathContextFactory;
@@ -104,6 +108,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeJavaClass;
@@ -149,9 +154,6 @@ import org.xml.sax.helpers.LocatorImpl;
  * <dt><code>request</code> (<code>org.apache.cocoon.environment.Request</code>)</dt>
  * <dd>The Cocoon current request</dd>
  *
- * <dt><code>response</code> (<code>org.apache.cocoon.environment.Response</code>)</dt>
- * <dd>The Cocoon response associated with the current request</dd>
- *
  * <dt><code>session</code> (<code>org.apache.cocoon.environment.Session</code>)</dt>
  * <dd>The Cocoon session associated with the current request</dd>
  *
@@ -159,7 +161,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * <dd>The Cocoon context associated with the current request</dd>
  *
  * <dt><code>parameters</code> (<code>org.apache.avalon.framework.parameters.Parameters</code>)</dt>
- * <dd>Any parameters passed to the generator in the pipeline</dd>
+ * <dd>A map of parameters passed to the generator in the pipeline</dd>
  * </dl>
  * </p>
  *
@@ -354,7 +356,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.19 2003/12/06 22:18:33 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.20 2003/12/10 01:57:09 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -514,7 +516,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             
             public Object invoke(Object thisArg) throws Exception {
-                Context.enter();
+                org.mozilla.javascript.Context cx = Context.enter();
                 try {
                     Scriptable thisObj;
                     if (!(thisArg instanceof Scriptable)) {
@@ -523,11 +525,23 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         thisObj = (Scriptable)thisArg;
                     }
                     Object result = ScriptableObject.getProperty(thisObj, name);
-                    if (result == Undefined.instance || 
-                        result == Scriptable.NOT_FOUND) {
-                        result = null;
+                    if (result == Scriptable.NOT_FOUND) {
+                        result = ScriptableObject.getProperty(thisObj, "get" + name.substring(0, 1).toUpperCase() + (name.length() > 1 ? name.substring(1) : ""));
+                        if (result != Scriptable.NOT_FOUND &&
+                            result instanceof Function) {
+                            try {
+                                result = ((Function)result).call(cx, 
+                                                                 ScriptableObject.getTopLevelScope(thisObj), thisObj, new Object[] {});
+                            } catch (JavaScriptException exc) {
+                                exc.printStackTrace();
+                                result = null;
+                            }
+                        }
                     } 
-                    if (result instanceof Wrapper) {
+                    if (result == Scriptable.NOT_FOUND ||
+                        result == Undefined.instance) {
+                        result = null;
+                    } else if (result instanceof Wrapper) {
                         if (!(result instanceof NativeJavaClass)) {
                             result = ((Wrapper)result).unwrap();
                         }
@@ -749,9 +763,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     static class MyVariables implements Variables {
 
+        MyVariables closure;
+
         Map localVariables = new HashMap();
 
         static final String[] VARIABLES = new String[] {
+            "cocoon",
             "continuation",
             "flowContext",
             "request",
@@ -760,21 +777,31 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             "session",
             "parameters"
         };
+        
+        Object cocoon;
 
+        // backward compatibility
         Object bean, kont, request, response,
             session, context, parameters;
 
-        MyVariables(Object bean, WebContinuation kont,
-                    Request request, Response response,
-                    org.apache.cocoon.environment.Context context,
-                    Parameters parameters) {
+        MyVariables(Object cocoon,
+                    Object bean, 
+                    WebContinuation kont,
+                    Object request,
+                    Object session,
+                    Object context,
+                    Object parameters) {
+            this.cocoon = cocoon;
             this.bean = bean;
             this.kont = kont;
             this.request = request;
-            this.session = request.getSession(false);
-            this.response = response;
+            this.session = session;
             this.context = context;
             this.parameters = parameters;
+        }
+
+        public MyVariables(MyVariables parent) {
+            this.closure = parent;
         }
 
         public boolean isDeclaredVariable(String varName) {
@@ -783,18 +810,33 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     return true;
                 }
             }
-            return localVariables.containsKey(varName);
+            if (localVariables.containsKey(varName)) {
+                return true;
+            }
+            if (closure != null) {
+                return closure.isDeclaredVariable(varName);
+            }
+            return false;
         }
         
         public Object getVariable(String varName) {
+            Object result = localVariables.get(varName);
+            if (result != null) {
+                return result;
+            }
+            if (closure != null) {
+                return closure.getVariable(varName);
+            }
+            if (varName.equals("cocoon")) {
+                return cocoon;
+            }
+            // backward compatibility
             if (varName.equals("continuation")) {
                 return kont;
             } else if (varName.equals("flowContext")) {
                 return bean;
             } else if (varName.equals("request")) {
                 return request;
-            } else if (varName.equals("response")) {
-                return response;
             } else if (varName.equals("session")) {
                 return session;
             } else if (varName.equals("context")) {
@@ -802,7 +844,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } else if (varName.equals("parameters")) {
                 return parameters;
             }
-            return localVariables.get(varName);
+            return null;
         }
         
         public void declareVariable(String varName, Object value) {
@@ -965,7 +1007,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     (org.apache.commons.jexl.Expression)compiled;
                 return e.evaluate(jexlContext);
             }
-            return expr.raw;
+            return compiled;
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t instanceof Exception) {
@@ -1045,7 +1087,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     (org.apache.commons.jexl.Expression)compiled;
                 return e.evaluate(jexlContext);
             }
-            return compiled;
+            return expr.raw;
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t instanceof Exception) {
@@ -1526,11 +1568,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     static class StartForEach extends StartInstruction {
         StartForEach(StartElement raw,
-                     Expression items, String var,
+                     Expression items, String var, String varStatus,
                      Expression begin, Expression end, Expression step, Boolean lenient) {
             super(raw);
             this.items = items;
             this.var = var;
+            this.varStatus = varStatus;
             this.begin = begin;
             this.end = end;
             this.step = step;
@@ -1538,6 +1581,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         final Expression items;
         final String var;
+        final String varStatus;
         final Expression begin;
         final Expression end;
         final Expression step;
@@ -2285,6 +2329,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                  FOR_EACH,
                                                  locator);
                     String var = attrs.getValue("var");
+                    String varStatus = attrs.getValue("varStatus");
                     if (items == null) {
                         if (select == null && (begin == null || end == null)) {
                             throw new SAXParseException("forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified", locator, null);
@@ -2299,7 +2344,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Boolean lenient = (lenientValue == null) ? null : Boolean.valueOf(lenientValue);
                     StartForEach startForEach = 
                         new StartForEach(startElement, expr, 
-                                         var, begin, end, step,lenient);
+                                         var, varStatus,
+                                         begin, end, step,lenient);
                     newEvent = startForEach;
                 } else if (localName.equals(FORMAT_NUMBER)) {
                     Expression value = 
@@ -2718,16 +2764,26 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                              Parameters parameters,
                              Map objectModel) {
         final Request request = ObjectModelHelper.getRequest(objectModel);
-        final Response response = ObjectModelHelper.getResponse(objectModel);
-        final org.apache.cocoon.environment.Context app =
-                  ObjectModelHelper.getContext(objectModel);
-        
-        this.variables = new MyVariables(contextObject,
-                                        kont,
-                                        request,
-                                        response,
-                                        app,
-                                        parameters);
+        final Object session = request.getSession(false);
+        final Object app =  ObjectModelHelper.getContext(objectModel);
+        Map cocoon = new HashMap();
+        cocoon.put("request", 
+                   FOM_JavaScriptFlowHelper.getFOM_Request(objectModel));
+        if (session != null) {
+            cocoon.put("session", 
+                       FOM_JavaScriptFlowHelper.getFOM_Session(objectModel));
+        }
+        cocoon.put("context", 
+                   FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
+        cocoon.put("continuation", kont);
+        cocoon.put("parameters", parameters.toProperties(parameters));
+        this.variables = new MyVariables(cocoon,
+                                         contextObject,
+                                         kont,
+                                         request,
+                                         session,
+                                         app,
+                                         parameters);
         Map map;
         if (contextObject instanceof Map) {
             map = (Map)contextObject;
@@ -2735,14 +2791,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             map = new HashMap();
             fillContext(contextObject, map);
         }
-        
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
         jxpathContext.setVariables(variables);
         jxpathContext.setLenient(parameters.getParameterAsBoolean("lenient-xpath", false));
         globalJexlContext = new MyJexlContext();
         globalJexlContext.setVars(map);
         map = globalJexlContext.getVars();
-        
+        map.put("cocoon", cocoon);
         if (contextObject != null) {
             map.put("flowContext", contextObject);
             // FIXME (VG): Is this required (what it's used for - examples)?
@@ -2753,15 +2808,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             map.put("java", javaPkg);
             map.put("Packages", pkgs);
         }
-        if (kont!=null) {
+        if (kont != null) {
             map.put("continuation", kont);
         }
         map.put("request", request);
-        map.put("response", response);
         map.put("context", app);
         map.put("parameters", parameters);
-        
-        final Object session = request.getSession(false);
         if (session != null) {
             map.put("session", session);
         }
@@ -2948,6 +3000,39 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
+    public static class LoopTagStatus {
+        Object current;
+        int index;
+        int count;
+        boolean first;
+        boolean last;
+        int begin;
+        int end;
+        int step;
+        
+        public Object getCurrent() {
+            return current;
+        }
+        public int getIndex() {
+            return index;
+        }
+        public int getCount() {
+            return count;
+        }
+        public boolean isFirst() {
+            return first;
+        }
+        public boolean isLast() {
+            return last;
+        }
+        public int getEnd() {
+            return end;
+        }
+        public int getStep() {
+            return step;
+        }
+    }
+    
     private void execute(final XMLConsumer consumer,
                          MyJexlContext jexlContext,
                          JXPathContext jxpathContext,
@@ -3104,7 +3189,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     org.apache.commons.jexl.util.Introspector.getUberspect().getIterator(result, new Info(ev.location.getSystemId(),
                                                                                                                           ev.location.getLineNumber(),
                                                                                                                           ev.location.getColumnNumber()));
-                                
                             }
                             if (iter == null) {
                                 iter = EMPTY_ITER;
@@ -3150,10 +3234,24 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 int i;
                 MyJexlContext localJexlContext = 
                     new MyJexlContext(jexlContext);
+                MyVariables localJXPathVariables = 
+                    new MyVariables((MyVariables)jxpathContext.getVariables());
+                    
                 for (i = 0; i < begin && iter.hasNext(); i++) {
                     iter.next();
                 }
-                for (; i <= end && iter.hasNext(); i++) {
+                LoopTagStatus status = null;
+                if (startForEach.varStatus != null) {
+                    status = new LoopTagStatus();
+                    status.end = end;
+                    status.step = step;
+                    status.first = true;
+                    localJexlContext.put(startForEach.varStatus,
+                                         status);
+                    localJXPathVariables.declareVariable(startForEach.varStatus,
+                                                         status);
+                }
+                for (int count = 1; i <= end && iter.hasNext(); i++, count++) {
                     Object value;
                     JXPathContext localJXPathContext = null;
                     value = iter.next();
@@ -3170,11 +3268,19 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         }
                     } else {
                         localJXPathContext =
-                            jxpathContextFactory.newContext(null, value);
+                            jxpathContextFactory.newContext(jxpathContext, 
+                                                            value);
                     }
-                    localJXPathContext.setVariables(variables);
+                    localJXPathContext.setVariables(localJXPathVariables);
                     if (startForEach.var != null) {
                         localJexlContext.put(startForEach.var, value);
+                    }
+                    if (status != null) {
+                        status.index = i;
+                        status.count = count;
+                        status.first = i == begin;
+                        status.current = value;
+                        status.last = (i == end || !iter.hasNext());
                     }
                     execute(consumer,
                             localJexlContext,
@@ -3355,10 +3461,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                        startElement.raw);
                     builder.endDocument();
                     Node node = builder.getDocument().getDocumentElement();
-                    MyVariables vars = 
+                    MyVariables parent = 
                         (MyVariables)jxpathContext.getVariables();
-                    Map saveLocals = vars.localVariables;
-                    vars.localVariables = new HashMap();
+                    MyVariables vars = new MyVariables(parent);
                     MyJexlContext localJexlContext = 
                         new MyJexlContext(globalJexlContext);
                     // JXPath doesn't handle NodeList, so convert it to
@@ -3370,7 +3475,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         arr[ii] = children.item(ii);
                     }
                     localJexlContext.put("content", arr);
-                    vars.localVariables.put("content", arr);
+                    vars.declareVariable("content", arr);
                     Iterator iter = def.parameters.entrySet().iterator();
                     while (iter.hasNext()) {
                         Map.Entry e = (Map.Entry)iter.next();
@@ -3383,7 +3488,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             val = default_;
                         }
                         localJexlContext.put(key, val);
-                        vars.localVariables.put(key, val);
+                        vars.declareVariable(key, val);
                     }
                     JXPathContext localJXPathContext =
                         jxpathContextFactory.newContext(null, arr);
@@ -3393,7 +3498,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                          consumer, 
                          localJexlContext, localJXPathContext,
                          def.body, def.endInstruction);
-                    vars.localVariables = saveLocals;
                     ev = startElement.endElement.next;
                     continue;
                 }

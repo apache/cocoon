@@ -35,51 +35,69 @@ The JXTemplate Generator supports two embedded expression languages: <link href=
  </source>
 <p>Embedded Jexl expressions are contained in <code>${}</code>.</p>
 <p>Embedded JXPath expressions are contained in <code>#{}</code>.</p>
-<p>The referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects 
-from a Flowscript. In addition the following implicit objects are available as
-both JXPath and Jexl variables in a template:</p>
+<p>The referenced objects may be Java Beans, DOM, or JavaScript objects 
+from a Flowscript. In addition, a special <code>cocoon</code> object providing access to the Cocoon <link href="api.html#FOM">FOM</link> is available as
+both a JXPath and Jexl variable in a template. 
+</p>
+<p>The <code>cocoon</code> object contains the following properties:</p>
+
 <dl>
-<dt><link href="../../../apidocs/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code> request</code></dt>
+<dt><link href="api.html#request">request</link></dt>
 <dd><br/>The current Cocoon request<br/></dd>
  
-<dt><br/><link href="../../../apidocs/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code> response</code></dt>
-<dd><br/>The Cocoon response associated with the current request<br/></dd>
+<dt><br/><link href="api.html#session">session</link></dt>
+<dd><br/>The user session associated with the current request<br/></dd>
  
-<dt><br/><link href="../../../apidocs/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code> session</code></dt>
-<dd><br/>The Cocoon session associated with the current request<br/></dd>
- 
-<dt><br/><link href="../../../apidocs/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code> context</code></dt>
+<dt><br/><link href="api.html#context">context</link></dt>
 <dd><br/>The Cocoon context associated with the current request<br/></dd>
  
-<dt><br/><code>org.apache.avalon.framework.parameter.Parameter[]</code><code> parameters</code></dt>
-<dd><br/>Any parameters passed to the generator in the pipeline<br/></dd>
+<dt><br/><code>parameters</code></dt>
+<dd><br/>A map containing the parameters passed to the generator in the pipeline<br/></dd>
+<dt><br/><link href="api.html#WebContinuation">continuation</link></dt>
+<dd><br/>The current Web Continuation from your Flowscript<br/></dd>
 </dl>
 <p>
 Jexl Example:</p>
 <source>
-The content type of the current request is ${request.contentType}
+The content type of the current request is ${cocoon.request.contentType}
 </source>
 <p>
 JXPath Example:</p>
 <source>
-The content type of the current request is #{$request/contentType}
+The content type of the current request is #{$cocoon/request/contentType}
 </source>
+</s1>
 <p> 
-The current Web Continuation from the Flowscript 
-is also available as a variable named <code>continuation</code>. You would 
-typically access its <code>id</code>:</p>
+You would typically access the <code>id</code> of the Web Continuation:</p>
 <source>
-&lt;form action="${continuation.id}"&gt;
+&lt;form action="${cocoon.continuation.id}"&gt;
 </source>
-<p>You can also reach previous continuations by using the <code>getParent()</code> function:</p>
+<p>You can also reach previous continuations via its <code>parent</code> property:</p>
 <source>
-&lt;form action="${continuation.getParent().id}" >
+&lt;form action="${cocoon.continuation.parent.id}" >
 </source>
 <p>or using an XPath expression:</p>
 <source>
-&lt;form action="#{getParent($continuation)/id}" >
+&lt;form action="#{$cocoon/continuation/parent/id}" >
 </source>
-</s1>
+
+<p>Deprecated Variables:</p>
+<p>The following variables are deprecated but still supported:</p>
+
+<dl>
+<dt><link href="../../../apidocs/org/apache/cocoon/environment/Request.html">org.apache.cocoon.environment.Request</link> <code>request</code></dt>
+<dd><br/>The current Cocoon request (deprecated: use <code>cocoon.request</code> instead)<br/></dd>
+
+<dt><link href="../../../apidocs/org/apache/cocoon/environment/Session.html">org.apache.cocoon.environment.Session</link> <code>session</code></dt>
+<dd><br/>The current user session (deprecated: use <code>cocoon.session</code> instead)<br/></dd>
+ 
+<dt><link href="../../../apidocs/org/apache/cocoon/environment/Context.html">org.apache.cocoon.environment.Context</link> <code>context</code></dt>
+<dd><br/>The current context (deprecated: use <code>cocoon.context</code> instead)<br/></dd>
+
+<dt><link href="../../../apidocs/org/apache/cocoon/components/flow/WebContinuation.html">org.apache.cocoon.components.flow.WebContinuation</link> <code>continuation</code></dt>
+<dd><br/>The current Web Continuation (deprecated: use <code>cocoon.continuation</code> instead)<br/></dd>
+</dl>
+
 <s1 title ="Tags">
 <p>The JXTemplate Generator tags are defined in the namespace</p>
 <source>
@@ -281,10 +299,10 @@ Only the value attribute is required. Its value should be an instance of the <co
 The <code>type</code> attribute indicates which fields of the specified <code>Date</code> instance are to be displayed, and should be either "time", "date", or "both". The default value for this attribute is "date", so if no <code>type</code> attribute is present, the <code>formatDate</code> tag -- true to its name -- will only display the date information associated with the <code>Date</code> instance, specified using the tag's value attribute. 
 </p>
 <p>
-The <code>dateStyle</code> and <code>timeStyle</code> attributes indicate how the date and time information should be formatted, respectively. Valid styles are "default", "short", "medium", "long", and "full". The default value is, naturally, "default", indicating that a locale-specific style should be used. The semantics for the other four style values are as defined by the @link{java.text.DateFormat} class. 
+The <code>dateStyle</code> and <code>timeStyle</code> attributes indicate how the date and time information should be formatted, respectively. Valid styles are "default", "short", "medium", "long", and "full". The default value is, naturally, "default", indicating that a locale-specific style should be used. The semantics for the other four style values are as defined by the java.text.DateFormat class. 
 </p>
 <p>
-Rather than relying on the built-in styles, you can use the pattern attribute to specify a custom style. When present, the value of the pattern attribute should be a pattern string following the conventions of the @link{java.text.SimpleDateFormat} class. These patterns are based on replacing designated characters within the pattern with corresponding date and time fields. For example, the pattern MM/dd/yyyy indicates that two-digit month and date values and a four-digit year value should be displayed, separated by forward slashes. 
+Rather than relying on the built-in styles, you can use the pattern attribute to specify a custom style. When present, the value of the pattern attribute should be a pattern string following the conventions of the java.text.SimpleDateFormat class. These patterns are based on replacing designated characters within the pattern with corresponding date and time fields. For example, the pattern MM/dd/yyyy indicates that two-digit month and date values and a four-digit year value should be displayed, separated by forward slashes. 
 </p>
 <p>
 If the <code>var</code> attribute is specified, then a String value containing the formatted date is assigned to the named variable. Otherwise, the <code>formatDate</code> tag will write out the formatting results.
