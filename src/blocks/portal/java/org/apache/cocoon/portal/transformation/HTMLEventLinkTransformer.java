@@ -32,10 +32,9 @@ import org.xml.sax.SAXException;
  * into events.
  * The transformer listens for the element a and form. Links
  * that only contain an anchor are ignored.
- * Current we only support POSTing of forms.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.10 2004/04/02 07:07:45 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.11 2004/04/15 07:51:41 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -130,7 +129,8 @@ extends AbstractCopletTransformer {
 
     protected void createFormEvent(Attributes attributes)
     throws SAXException {
-        AttributesImpl newAttributes = new AttributesImpl();
+        AttributesImpl newAttributes = new AttributesImpl(attributes);
+        newAttributes.removeAttribute("action");
         String link = attributes.getValue("action");
 
         CopletInstanceData cid = this.getCopletInstanceData();
@@ -140,11 +140,10 @@ extends AbstractCopletTransformer {
         newAttributes.addCDATAAttribute("value", link);
         newAttributes.addCDATAAttribute("coplet", cid.getId());
         newAttributes.addCDATAAttribute("format", "html-form");
-        newAttributes.addCDATAAttribute("method", "POST");
-        final String encType = attributes.getValue("enctype");
-        if ( encType != null ) {
-            newAttributes.addCDATAAttribute("enctype", encType);
+        if ( newAttributes.getIndex("method") == -1 ) {
+            newAttributes.addCDATAAttribute("method", "POST");
         }
+
         this.xmlConsumer.startPrefixMapping("coplet", CopletTransformer.NAMESPACE_URI);
         this.xmlConsumer.startElement(CopletTransformer.NAMESPACE_URI,
                 CopletTransformer.LINK_ELEM,
