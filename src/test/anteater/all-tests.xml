@@ -39,7 +39,6 @@
     <property file="${cocoon.base.dir}/local.build.properties"/>
     <property file="${cocoon.base.dir}/build.properties"/>
 
-    <echo>test init ${anteater.target.host}</echo>
     <property name="cocoon" value="http://${host}:${port}/${base}"/>
     <property name="src-webapp-dir" value="../../../../src/webapp"/>
     <property name="deploy-dir" value="../../../../build/webapp"/>
