@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Making a Contribution to Cocoon</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Introduction">
+  <p>
+   There are many ways of contributing to the Cocoon project. This document is mainly about
+   contributing new or improved code and/or documentation, but we would also be glad to have
+   extra help in any of the following areas:
+  </p>
+  <ul>
+   <li>Answering questions on the <code>cocoon-users</code> mailing list - there is often a problem of
+    having too many questioners and not enough experts to respond to all the questions.</li>
+   <li>Testing Cocoon (especially its less-frequently-used features) on various configurations
+    and reporting back.</li>
+   <li>Debugging - producing reproducable test cases and/or finding causes of bugs (at the time of
+    writing, some known bugs are informally listed on <connect href="todo.xml">To Do</connect>, but
+    eventually a bug database should be made available on the Apache site).</li>
+   <li>Specifying/analysing/designing new features for Cocoon 2 - and beyond. (If you wish to get involved
+    with this, please join <code>cocoon-dev@xml.apache.org</code>, install and try out Cocoon 2
+    and read some of the <link href="http://mail-archives.apache.org">mail archives</link>.
+    You should have a strong "fluency" in XML technologies, Java and a basic understanding of
+    the Cocoon 2 architecture - don't just say "it should have XYZ" without reading anything first -
+    chances are, someone's already thought of that feature!)</li>
+   <li>Packaging easy-to-install packages (such as RPMs) for the myriad of possible configurations out
+    there. (The Cocoon project does not maintain anything but the basic <code>.zip</code> and
+    <code>.tar.gz</code> packages, but anyone is welcome to build their own specific packages and
+    announce them on <code>cocoon-users</code>)</li>
+   <li>... and there is just one other thing - don't forget to tell everyone who asks how great Cocoon is! ;-)</li>
+  </ul>
+
+  <p></p>
+ </s1>
+</body>
+</document>
