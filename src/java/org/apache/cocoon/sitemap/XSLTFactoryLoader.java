@@ -55,9 +55,11 @@ import org.w3c.dom.NodeList;
 /**
  * This class is used as a XSLT extension class.
  *
+ * @deprecated This class has been used by the old sitemap engine
+ * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSLTFactoryLoader.java,v 1.2 2003/03/24 14:33:58 stefano Exp $
+ * @version CVS $Id: XSLTFactoryLoader.java,v 1.3 2004/02/21 15:46:39 cziegeler Exp $
  */
 public class XSLTFactoryLoader {
 
