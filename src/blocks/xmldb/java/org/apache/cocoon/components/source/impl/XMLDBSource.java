@@ -52,6 +52,7 @@ package org.apache.cocoon.components.source.impl;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
@@ -60,6 +61,7 @@ import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.ModifiableSource;
@@ -93,7 +95,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.10 2004/01/13 12:47:20 upayavira Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.11 2004/01/22 03:40:09 vgritsenko Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
@@ -399,7 +401,7 @@ public class XMLDBSource extends AbstractLogEnabled
     public String getURI() {
         return url;
     }
-    
+
     public long getContentLength() {
         return -1;
     }
@@ -412,7 +414,7 @@ public class XMLDBSource extends AbstractLogEnabled
         final String col = url.substring(0, url.lastIndexOf('/'));
         final String res = url.substring(url.lastIndexOf('/') + 1);
         boolean result = true;
-        
+
         /* Ignore the query: we're just testing if the document exists. */
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Testing existence of resource `" + res + "' from collection `" + url + "'; query (ignored) = `" + this.query + "'");
@@ -430,7 +432,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 }
             }
         } catch (XMLDBException xde) {
-            result = false; 
+            result = false;
         } finally {
             if (collection != null) {
                 try {
@@ -439,7 +441,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -468,8 +470,10 @@ public class XMLDBSource extends AbstractLogEnabled
 
         ComponentSelector serializerSelector = null;
         Serializer serializer = null;
+        // this.manager does not have Serializer
+        ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
         try {
-            serializerSelector = (ComponentSelector) this.manager.lookup(Serializer.ROLE + "Selector");
+            serializerSelector = (ComponentSelector) manager.lookup(Serializer.ROLE + "Selector");
             serializer = (Serializer)serializerSelector.select("xml");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             serializer.setOutputStream(os);
@@ -477,8 +481,8 @@ public class XMLDBSource extends AbstractLogEnabled
             toSAX(serializer);
 
             return new ByteArrayInputStream(os.toByteArray());
-        } catch (ServiceException e) {
-            throw new CascadingIOException("Could not lookup pipeline components", e);
+//        } catch (ServiceException e) {
+//            throw new CascadingIOException("Could not lookup pipeline components", e);
         } catch (ComponentException e) {
             throw new CascadingIOException("Could not lookup pipeline components", e);
         } catch (Exception e) {
@@ -488,10 +492,11 @@ public class XMLDBSource extends AbstractLogEnabled
                 serializerSelector.release(serializer);
             }
             if (serializerSelector != null) {
-                this.manager.release(serializerSelector);
+                manager.release(serializerSelector);
             }
         }
     }
+
     /**
      * Return an {@link OutputStream} to write to.
      */
@@ -533,9 +538,9 @@ public class XMLDBSource extends AbstractLogEnabled
             throw new SourceException(message);
         }
     }
-    
+
     /**
-     * Delete the source 
+     * Delete the source
      */
     public void delete() throws SourceException {
         String base = null;
@@ -544,12 +549,12 @@ public class XMLDBSource extends AbstractLogEnabled
             try {
                 // Cut trailing '/'
                 String k = this.url.substring(0, this.url.length() - 1);
-        
+
                 base = k.substring(0, k.lastIndexOf("/"));
                 name = k.substring(k.lastIndexOf("/")+1);
-                
+
                 Collection collection = DatabaseManager.getCollection(base);
-        
+
                 CollectionManagementService service =
                         (CollectionManagementService) collection.getService("CollectionManagementService", "1.0");
                 service.removeCollection(name);
@@ -562,9 +567,9 @@ public class XMLDBSource extends AbstractLogEnabled
             try {
                 base = this.url.substring(0, this.url.lastIndexOf("/"));
                 name = this.url.substring(this.url.lastIndexOf("/")+1);
-                
+
                 Collection collection = DatabaseManager.getCollection(base);
-                
+
                 Resource resource = collection.getResource(name);
                 if (resource == null) {
                     String message = "Resource " + name + " does not exist";
@@ -591,7 +596,7 @@ public class XMLDBSource extends AbstractLogEnabled
     public boolean canCancel(OutputStream stream) {
         return !this.os.isClosed();
     }
-    
+
     /**
      * Cancel the data sent to an <code>OutputStream</code> returned by
      * {@link #getOutputStream()}.
@@ -611,7 +616,7 @@ public class XMLDBSource extends AbstractLogEnabled
             baos = new ByteArrayOutputStream();
             isClosed = false;
         }
-        
+
         public void write(int b) throws IOException {
             baos.write(b);
         }
@@ -626,7 +631,7 @@ public class XMLDBSource extends AbstractLogEnabled
 
         public void close() throws IOException, SourceException {
             if (!isClosed) {
-                writeOutputStream(baos.toString()); 
+                writeOutputStream(baos.toString());
                 baos.close();
                 this.isClosed = true;
             }
@@ -634,11 +639,11 @@ public class XMLDBSource extends AbstractLogEnabled
 
         public void flush() throws IOException {
         }
-        
+
         public int size() {
             return baos.size();
         }
-        
+
         public boolean isClosed() {
             return this.isClosed;
         }
