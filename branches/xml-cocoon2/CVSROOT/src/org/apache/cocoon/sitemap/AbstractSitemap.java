@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-28 16:20:38 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:11 $
  */
 public abstract class AbstractSitemap
          implements Sitemap {      
@@ -70,10 +70,10 @@ public abstract class AbstractSitemap
      * @param request The request whose data must be inspected to assert whether
      * dynamically generated content has changed
      * @return Whether content has changes for this request's data
-     */
-    public boolean hasContentChanged(Environment environment) {
+     *//*
+    public boolean hasContentChanged(HttpServletRequest resuest) {
         return true;
-    }
+    }*/
 
      /** 
       * Loads a class specified in a sitemap component definition and
@@ -83,13 +83,16 @@ public abstract class AbstractSitemap
     throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Class cl = this.getClass().getClassLoader().loadClass(classURL);
         Object comp = cl.newInstance();
+        if (!(comp instanceof Component)) {
+            throw new IllegalAccessException ("Object "+classURL+" is not a Component");
+        }
         if (comp instanceof Composer) {
             ((Composer)comp).setComponentManager (this.manager);
         }
         if (comp instanceof Configurable) {
             ((Configurable)comp).setConfiguration (conf);
         }
-        return ((SitemapComponent)comp); 
+        return ((Component)comp); 
     } 
 
      /** 
@@ -140,10 +143,9 @@ public abstract class AbstractSitemap
     }
 
     /**
-     * Constructs a resource to the supplied <code>OutputStream</code>
-     * for the <code>Request</code> and <code>Response</code> arguments.
+     * Constructs a resource for the <code>Environment</code> arguments.
      * This method is supplied by the generated Sitemap.
      */
-    public abstract boolean process (Environment environment, OutputStream out)
+    public abstract boolean process (Environment environment)
     throws Exception;
 } 

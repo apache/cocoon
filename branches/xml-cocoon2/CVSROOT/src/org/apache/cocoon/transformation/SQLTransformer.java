@@ -7,34 +7,37 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLProducer;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.SAXException;
-import org.xml.sax.Locator;
-import org.xml.sax.ext.LexicalHandler;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Dictionary;
 import java.util.Enumeration;
+
+import org.apache.avalon.utils.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLProducer;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.SAXException;
+import org.xml.sax.Locator;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:40 $ $Author: rubys $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:13 $ $Author: giacomo $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -87,7 +90,7 @@ public class SQLTransformer extends AbstractTransformer {
 
     /** BEGIN SitemapComponent methods **/
 
-    public void setup(Environment environment, 
+    public void setup(EntityResolver resolver, Dictionary objectModel,
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {
         current_state = STATE_OUTSIDE;

@@ -9,7 +9,10 @@ package org.apache.cocoon.transformation;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Dictionary;
 import java.text.StringCharacterIterator;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
@@ -17,8 +20,6 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -31,6 +32,7 @@ import org.apache.xalan.xslt.XSLTProcessor;
 import org.apache.xalan.xslt.XSLTProcessorFactory;
 
 import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -39,7 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:40 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:12:14 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -50,13 +52,18 @@ implements Transformer, Composer {
     private XSLTProcessor processor=null;
 
     /**
-     * Set the <code>Environment</code> and sitemap
+     * Set the <code>EntityResolver</code>, the <code>Dictionary</code> with 
+     * the object model, the source and sitemap
      * <code>Parameters</code> used to process the request.
      */
-    public void setup(Environment environment, String src, Parameters par)
+    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par)
     throws SAXException, ProcessingException, IOException {
 
-
+        /** The Request object */
+        HttpServletRequest request=(HttpServletRequest)objectModel.get("request");
+        if (request == null) {
+            throw new ProcessingException ("Missing request object in obejctModel");
+        }
         // Check the stylesheet uri
         // String xsluri=par.getParameter("stylesheet",null); 
         String xsluri=src; 
@@ -67,7 +74,7 @@ implements Transformer, Composer {
         StylesheetRoot stylesheet=null;
         if (true) {
             XSLTProcessor loaderprocessor=XSLTProcessorFactory.getProcessor();
-            InputSource xslsrc=environment.resolveEntity(null,xsluri);
+            InputSource xslsrc=resolver.resolveEntity(null,xsluri);
             XSLTInputSource style=new XSLTInputSource(xslsrc);
             stylesheet=loaderprocessor.processStylesheet(style);
         }
@@ -75,11 +82,11 @@ implements Transformer, Composer {
         // Create the processor and set it as this documenthandler
         this.processor=XSLTProcessorFactory.getProcessor();
         this.processor.setStylesheet(stylesheet);
-		Enumeration enum = ((HttpEnvironment)environment).getRequest().getParameterNames();
+		Enumeration enum = request.getParameterNames();
 		while (enum.hasMoreElements()) {
 			String name = (String)enum.nextElement();
 			if (isValidXSLTParameterName(name)) {
-				String value = ((HttpEnvironment)environment).getRequest().getParameter(name);
+				String value = request.getParameter(name);
 				processor.setStylesheetParam(name,this.processor.createXString(value));
 			}
 		}

@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import org.apache.cocoon.sitemap.SitemapComponent;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
 
@@ -15,7 +15,7 @@ import org.apache.cocoon.xml.XMLProducer;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:40 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:14 $
  */
-public interface Transformer extends XMLProducer, XMLConsumer, SitemapComponent {
+public interface Transformer extends XMLProducer, XMLConsumer, SitemapModelComponent {
 }

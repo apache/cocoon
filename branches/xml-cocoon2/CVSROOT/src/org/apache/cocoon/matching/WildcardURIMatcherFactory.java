@@ -19,7 +19,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-28 16:20:24 $ 
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-04 21:11:53 $ 
  */ 
 
 public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements MatcherFactory {
@@ -42,7 +42,7 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
     throws ConfigurationException {
         StringBuffer result = new StringBuffer();
         return result.append ("java.util.ArrayList list = new ArrayList();")
-                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, environment.getUri(), ")
+                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, ((javax.servlet.http.HttpServletRequest)objectModel.get(\"request\")).getRequestURI(), ")
                      .append(prefix).append("_expr))")
                      .append ("return list;")
                      .append ("else return null;").toString();

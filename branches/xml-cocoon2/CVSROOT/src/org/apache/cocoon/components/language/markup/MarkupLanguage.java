@@ -10,8 +10,9 @@ package org.apache.cocoon.components.language.markup;
 import org.w3c.dom.Document;
 import org.apache.avalon.NamedComponent;
 
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+
+import org.xml.sax.EntityResolver;
 
 /**
  * This interface defines a markup language whose instance documents are to be
@@ -19,7 +20,7 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
  * document augmenting it with dynamic content
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:48:40 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:12 $
  */
 public interface MarkupLanguage extends NamedComponent {
   /**
@@ -42,6 +43,6 @@ public interface MarkupLanguage extends NamedComponent {
    */
   public String generateCode(
     Document document, String filename, ProgrammingLanguage programmingLanguage,
-    Environment environment
+    EntityResolver resolver
   ) throws Exception;
 }

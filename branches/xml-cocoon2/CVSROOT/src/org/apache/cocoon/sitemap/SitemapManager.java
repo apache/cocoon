@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-28 16:20:42 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:12:11 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -56,7 +56,7 @@ public class SitemapManager implements Configurable, Composer {
     }
 
     public boolean invoke (Environment environment, String uri_prefix, 
-                           String source, boolean check_reload, OutputStream out) 
+                           String source, boolean check_reload) 
     throws Exception {
         SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get (source);
         if (sitemapHandler != null) {
@@ -68,12 +68,12 @@ public class SitemapManager implements Configurable, Composer {
                     sitemapHandler.regenerateAsynchroniously(environment);
                 }
                 environment.changeContext (uri_prefix, source);
-                return sitemapHandler.process (environment, out);
+                return sitemapHandler.process (environment);
             } else {
                 sitemapHandler.regenerate(environment);
             }
             environment.changeContext (uri_prefix, source);
-            return sitemapHandler.process (environment, out);
+            return sitemapHandler.process (environment);
         } else {
             sitemapHandler = new SitemapHandler(source, check_reload);
             if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager (this.manager);
@@ -81,7 +81,7 @@ public class SitemapManager implements Configurable, Composer {
             sitemaps.put(source, sitemapHandler);
             sitemapHandler.regenerate(environment); 
             environment.changeContext (uri_prefix, source);
-            return sitemapHandler.process (environment, out);
+            return sitemapHandler.process (environment);
         }
     }
 

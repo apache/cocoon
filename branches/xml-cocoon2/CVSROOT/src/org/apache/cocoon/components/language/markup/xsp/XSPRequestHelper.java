@@ -9,7 +9,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.util.Enumeration;
 
-import org.apache.cocoon.environment.http.HttpRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
@@ -17,10 +17,10 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.SAXException;
 
 /**
- * The XSP <code>HttpRequest</code> object helper
+ * The <code>HttpServletRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:48:49 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:20 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -32,14 +32,14 @@ public class XSPRequestHelper extends XSPObjectHelper {
   }
 
   /**
-   * Output the uri associated with the given <code>HttpRequest</code>
+   * Output the uri associated with the given <code>HttpServletRequest</code>
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param contentHandler The SAX content handler
    * @exception SAXException If a SAX error occurs
    */
   public static void getUri(
-    HttpRequest request,
+    HttpServletRequest request,
     ContentHandler contentHandler
   )
     throws SAXException
@@ -51,12 +51,12 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * Return the given request parameter value or a user-provided default if
    * none was specified.
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param name The parameter name
    * @param defaultValue Value to substitute in absence of a parameter value
    */
   public static String getParameter(
-    HttpRequest request,
+    HttpServletRequest request,
     String name,
     String defaultValue
   ) {
@@ -73,14 +73,14 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * Output the given request parameter value or a user-provided default if
    * none was specified.
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param contentHandler The SAX content handler
    * @param name The parameter name
    * @param defaultValue Value to substitute in absence of a parameter value
    * @exception SAXException If a SAX error occurs
    */
   public static void getParameter(
-    HttpRequest request,
+    HttpServletRequest request,
     ContentHandler contentHandler,
     String name,
     String defaultValue
@@ -101,12 +101,12 @@ public class XSPRequestHelper extends XSPObjectHelper {
   /**
    * Output the request parameter values for a given name
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param contentHandler The SAX content handler
    * @exception SAXException If a SAX error occurs
    */
   public static void getParameterValues(
-    HttpRequest request,
+    HttpServletRequest request,
     ContentHandler contentHandler,
     String name
   )
@@ -131,12 +131,12 @@ public class XSPRequestHelper extends XSPObjectHelper {
   /**
    * Output parameter names for a given request
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param contentHandler The SAX content handler
    * @exception SAXException If a SAX error occurs
    */
   public static void getParameterNames(
-    HttpRequest request,
+    HttpServletRequest request,
     ContentHandler contentHandler
   )
     throws SAXException
@@ -155,11 +155,11 @@ public class XSPRequestHelper extends XSPObjectHelper {
   /**
    * Return the request header value for a given name
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param name The parameter name
    */
   public static String getHeader(
-    HttpRequest request,
+    HttpServletRequest request,
     String name
   ) {
     return request.getHeader(name);
@@ -168,13 +168,13 @@ public class XSPRequestHelper extends XSPObjectHelper {
   /**
    * Output the request header value for a given name
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param contentHandler The SAX content handler
    * @param name The parameter name
    * @exception SAXException If a SAX error occurs
    */
   public static void getHeader(
-    HttpRequest request,
+    HttpServletRequest request,
     ContentHandler contentHandler,
     String name
   )
@@ -199,12 +199,12 @@ public class XSPRequestHelper extends XSPObjectHelper {
   /**
    * Output the header names for a given request
    *
-   * @param request The Cocoon request
+   * @param request The HttpServletRequest request
    * @param contentHandler The SAX content handler
    * @exception SAXException If a SAX error occurs
    */
   public static void getHeaderNames(
-    HttpRequest request,
+    HttpServletRequest request,
     ContentHandler contentHandler
   )
     throws SAXException

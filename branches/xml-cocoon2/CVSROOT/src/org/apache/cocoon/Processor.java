@@ -18,13 +18,12 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-27 21:48:31 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:11:04 $
  */
 public interface Processor {
     /**
-     * Process the given <code>Environment</code> producing the output to the
-     * specified <code>OutputStream</code>.
+     * Process the given <code>Environment</code> producing the output
      */
-    public boolean process(Environment environment, OutputStream out)
+    public boolean process(Environment environment)
     throws Exception;
 }

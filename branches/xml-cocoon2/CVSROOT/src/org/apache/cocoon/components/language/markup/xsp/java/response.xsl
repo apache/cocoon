@@ -42,7 +42,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      XSPResponseHelper.setHeader(((HttpEnvironment)environment).getResponse(), <xsl:value-of select="$name"/>, <xsl:value-of select="$value"/>);
+      XSPResponseHelper.setHeader(response, <xsl:value-of select="$name"/>, <xsl:value-of select="$value"/>);
     </xsp:logic>
   </xsl:template>
 
@@ -59,7 +59,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      XSPResponseHelper.setContentType(((HttpEnvironment)environment).getResponse(), <xsl:value-of select="$type"/>);
+      XSPResponseHelper.setContentType(response, <xsl:value-of select="$type"/>);
     </xsp:logic>
   </xsl:template>
 

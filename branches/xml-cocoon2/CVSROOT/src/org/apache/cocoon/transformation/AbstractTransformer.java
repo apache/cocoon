@@ -7,7 +7,10 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
+import java.util.Dictionary;
+
 import org.apache.cocoon.xml.AbstractXMLProducer;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -16,7 +19,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:40 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:13 $
  */
 public abstract class AbstractTransformer extends AbstractXMLProducer
 implements Transformer {

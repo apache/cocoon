@@ -11,27 +11,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.xml.util.DocumentHandlerWrapper; 
 
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
 
-//import org.xml.sax.Attributes;
-//import org.xml.sax.AttributeList;
 import org.xml.sax.DocumentHandler;
-//import org.xml.sax.helpers.AttributeListImpl;
-//import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:37 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:12:01 $
  *
  */
 public class FO2PDFSerializer extends DocumentHandlerWrapper 
@@ -43,22 +39,14 @@ public class FO2PDFSerializer extends DocumentHandlerWrapper
     private Driver driver = null;
 
     /**
-     * Set the <code>Environment</code> and sitemap
-     * <code>Parameters</code> used to process the request.
+     * Set the <code>OutputStream</code> where the XML should be serialized.
      */
-    public void setup(Environment environment, String src, Parameters par) {
+    public void setOutputStream(OutputStream out) {
         driver = new Driver();
         driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
         driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
         driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-        ((HttpEnvironment)environment).getResponse().setContentType(par.getParameter("contentType","application/pdf"));
         this.setDocumentHandler (driver.getDocumentHandler());
-    }
-
-    /**
-     * Set the <code>OutputStream</code> where the XML should be serialized.
-     */
-    public void setOutputStream(OutputStream out) {
         driver.setWriter(new PrintWriter(out));
     }
  

@@ -9,8 +9,6 @@ package org.apache.cocoon.serialization;
 
 import org.apache.avalon.*;
 import org.apache.avalon.utils.*;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.*;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.*;
@@ -52,7 +50,7 @@ import org.w3c.dom.Text;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:37 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:02 $
  */
 public class ImageSerializer extends DOMBuilder implements Serializer, Composer {
    
@@ -67,12 +65,6 @@ public class ImageSerializer extends DOMBuilder implements Serializer, Composer 
     private LexicalHandler lexicalHandler=null;
     /** The component manager instance */
     private ComponentManager manager=null;
-    /** The current <code>Environment</code>. */
-    private Environment environment=null;
-    /** The current <code>Parameters</code>. */
-    private Parameters parameters=null;
-    /** The source URI associated with the request or <b>null</b>. */
-    private String source=null;
     /** The current <code>OutputStream</code>. */
     private OutputStream output=null;
 
@@ -81,16 +73,6 @@ public class ImageSerializer extends DOMBuilder implements Serializer, Composer 
      */
     public void setOutputStream(OutputStream out) {
         this.output=new BufferedOutputStream(out);
-    }
-
-    /**
-     * Set the <code>Environment</code> and sitemap
-     * <code>Parameters</code> used to process the request.
-     */
-    public void setup(Environment environment, String src, Parameters par) {
-        this.environment=environment;
-        this.source=src;
-        this.parameters=par;
         super.factory=(Parser)this.manager.getComponent("parser");
     }
 
@@ -142,7 +124,6 @@ public class ImageSerializer extends DOMBuilder implements Serializer, Composer 
      */
     public void notify(Document doc)
     throws SAXException {
-        ((HttpEnvironment)(this.environment)).getResponse().setContentType("image/jpeg");
         try {
             this.print(doc,this.output);
         } catch(IOException e) {

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.15 $ $Date: 2000-07-29 18:30:38 $
+ * @version CVS $Revision: 1.1.4.16 $ $Date: 2000-08-04 21:12:10 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -139,7 +139,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 if (uri.charAt(0)=='/') uri=uri.substring(1);
                 HttpEnvironment env = new HttpEnvironment (uri, req, res, context);
-                if (!this.cocoon.process(env,out)) {
+                if (!this.cocoon.process(env)) {
                     res.setStatus(res.SC_NOT_FOUND);
                     res.setContentType("text/html");
                     out.println("<html><head>");

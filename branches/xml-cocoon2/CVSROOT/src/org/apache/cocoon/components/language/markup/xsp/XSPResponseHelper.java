@@ -9,7 +9,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.util.Enumeration;
 
-import org.apache.cocoon.environment.http.HttpResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:48:49 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:21 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -34,21 +34,21 @@ public class XSPResponseHelper extends XSPObjectHelper {
   /**
    * Set the content header for a given response
    *
-   * @param response The Cocoon <code>HttpResponse</code>
+   * @param response The <code>HttpServletResponse</code>
    * @param name The header name
    * @param value The header value
    */
-  public static void setHeader(HttpResponse response, String name, String value) {
+  public static void setHeader(HttpServletResponse response, String name, String value) {
     response.setHeader(name, value);
   }
 
   /**
    * Set the content type for a given response
    *
-   * @param response The Cocoon <code>HttpResponse</code>
+   * @param response The <code>HttpServletResponse</code>
    * @param type The content type
    */
-  public static void setContentType(HttpResponse response, String type) {
+  public static void setContentType(HttpServletResponse response, String type) {
     response.setContentType(type);
   }
 }

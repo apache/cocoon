@@ -26,10 +26,11 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLProducer;
 
 import org.xml.sax.SAXException;
+import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-08-02 22:48:29 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-08-04 21:12:11 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -108,6 +109,7 @@ public class ResourcePipeline implements Composer {
             ((Configurable)this.serializer).setConfiguration (conf);
         this.serializerSource = source;
         this.serializerParam = param;
+        this.serializerMimeType = mimeType;
     }
 
     public void addTransformer (Transformer transformer, String source, 
@@ -123,39 +125,39 @@ public class ResourcePipeline implements Composer {
         this.transformerParams.add (param);
     }
 
-    public boolean process (Environment environment, OutputStream out)
+    public boolean process (Environment environment)
                             throws ProcessingException, IOException, SAXException {
         if (generator == null) {
             if (reader != null) {
                 if (readerMimeType != null)
                     environment.setContentType (readerMimeType);
-                reader.setup (environment, readerSource, readerParam);
-                reader.setOutputStream (out);
+                reader.setup ((EntityResolver)environment, environment.getObjectModel(), readerSource, readerParam);
+                reader.setOutputStream (environment.getOutputStream());
                 reader.generate();
             } else {
-                throw new ProcessingException ("Generator/Reader not specified");
+                throw new ProcessingException ("Generator or Reader not specified");
             }
         } else {
             if (serializer == null) {
                 throw new ProcessingException ("Serializer not specified");
             }
 
-            generator.setup (environment, generatorSource, generatorParam);
+            generator.setup ((EntityResolver)environment, environment.getObjectModel(), generatorSource, generatorParam);
             Transformer transformer = null;
             XMLProducer producer = generator;
             int i = transformers.size();
             for (int j=0; j < i; j++) {
                 transformer = (Transformer) transformers.elementAt (j);
-                transformer.setup (environment, (String)transformerSources.elementAt (j),
+                transformer.setup ((EntityResolver)environment, environment.getObjectModel(), 
+                               (String)transformerSources.elementAt (j),
                                (Parameters)transformerParams.elementAt (j));
                 producer.setConsumer (transformer);
                 producer = transformer;
             }
 
             if (serializerMimeType != null)
-                    environment.setContentType (readerMimeType); 
-            serializer.setup (environment, serializerSource, serializerParam);
-            serializer.setOutputStream (out);
+                    environment.setContentType (serializerMimeType); 
+            serializer.setOutputStream (environment.getOutputStream());
             producer.setConsumer (serializer);
             generator.generate();
         }

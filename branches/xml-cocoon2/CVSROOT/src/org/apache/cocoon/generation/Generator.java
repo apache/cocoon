@@ -8,18 +8,20 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
+
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.SitemapComponent;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.xml.XMLProducer;
+
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:00 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:44 $
  */
-public interface Generator extends XMLProducer, SitemapComponent {
+public interface Generator extends XMLProducer, SitemapModelComponent {
 
     public void generate()
     throws IOException, SAXException, ProcessingException;

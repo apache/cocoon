@@ -28,7 +28,7 @@ import org.apache.avalon.ComponentManager;
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-28 16:20:42 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-04 21:12:11 $
  */
 public class SitemapHandler implements Runnable, Configurable, Composer {
 
@@ -139,10 +139,10 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
         throwError();
     }
 
-    public boolean process (Environment environment, OutputStream out) 
+    public boolean process (Environment environment) 
     throws Exception {
         this.throwError();
-        return sitemap.process (environment, out);
+        return sitemap.process (environment);
     }
 
     /** Generate the Sitemap class */

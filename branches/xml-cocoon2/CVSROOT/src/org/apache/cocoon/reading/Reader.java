@@ -8,23 +8,20 @@
 package org.apache.cocoon.reading;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.SitemapComponent;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
+import org.apache.cocoon.sitemap.SitemapOutputComponent;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-28 16:20:31 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-08-04 21:11:56 $
  */
-public interface Reader extends SitemapComponent {
+public interface Reader extends SitemapModelComponent, SitemapOutputComponent {
 
-    /**
-     * Set the <code>OutputStream</code> where the XML should be serialized.
-     */
-    public void setOutputStream(OutputStream out);
-    public void generate() throws IOException, ProcessingException;
+    public void generate()
+    throws IOException, SAXException, ProcessingException;
 }

@@ -9,8 +9,11 @@ package org.apache.cocoon.environment.http;
 
 import java.io.File; 
 import java.io.IOException; 
+import java.io.OutputStream; 
 import java.net.MalformedURLException; 
 import java.net.URL; 
+import java.util.Dictionary; 
+import java.util.Hashtable; 
 
 import javax.servlet.ServletContext; 
 import javax.servlet.http.HttpServletRequest; 
@@ -33,39 +36,62 @@ public class HttpEnvironment implements Environment {
     private String view = "";
 
     /** The HttpServletRequest */
-    private HttpRequest req = null;
-
+    private HttpRequest request = null;
+    private HttpServletRequest servletRequest = null;
 
     /** The HttpServletResponse */ 
-    private HttpResponse res = null; 
+    private HttpResponse response = null; 
+    private HttpServletResponse servletResponse = null; 
  
     /** The ServletContext */ 
     private ServletContext servletContext  = null; 
  
+    /** The OutputStream */ 
+    private OutputStream outputStream = null; 
+ 
     /** The Context path */ 
     private URL context = null; 
+ 
+    /** The servlet object model */ 
+    private Hashtable objectModel = null; 
 
     /**
      * Constructs a HttpEnvironment object from a HttpServletRequest 
      * and HttpServletResponse objects
      */
-    public HttpEnvironment (String uri, HttpServletRequest req, 
-                            HttpServletResponse res, 
+    public HttpEnvironment (String uri, HttpServletRequest request, 
+                            HttpServletResponse response, 
                             ServletContext servletContext) 
-    throws MalformedURLException {
+    throws MalformedURLException, IOException {
         this.uri = uri;
-        this.view = req.getHeader("cocoon-view");
-        this.req = new HttpRequest (req, this);
-        this.res = new HttpResponse (res);
+        this.view = request.getHeader("cocoon-view");
+        this.request = new HttpRequest (request, this);
+        this.servletRequest = request;
+        this.response = new HttpResponse (response);
+        this.servletResponse = response;
         this.servletContext = servletContext; 
         this.context = new URL("file://"+servletContext.getRealPath("/"));
+        this.outputStream = response.getOutputStream();
+        this.objectModel = new Hashtable();
+        this.objectModel.put("request", this.request);
+        this.objectModel.put("response", this.response);
+        this.objectModel.put("context", this.servletContext);
     }
+
+    // Sitemap methods
+
+    /**
+     * Returns the uri in progress. The prefix is stripped off
+     */
+    public String getUri () {
+        return this.uri;
+    }
+
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
     public void changeContext(String prefix, String context) 
     throws MalformedURLException { 
-System.out.print ("HttpEnvironment.changeContext(prefix=\""+prefix+"\",context=\""+context+"\") => ");
         if (uri.startsWith (prefix)) {
             this.prefix.append (prefix);
             uri = uri.substring(prefix.length());
@@ -77,8 +103,9 @@ System.out.print ("HttpEnvironment.changeContext(prefix=\""+prefix+"\",context=\
         } else {
             //FIXME: should we throw an error here ?
         }
-System.out.println ("uri=\""+uri+"\",this.context=\""+this.context+"\"");
     }
+
+    // Request methods
 
     /**
      * Returns the request view
@@ -87,40 +114,32 @@ System.out.println ("uri=\""+uri+"\",this.context=\""+this.context+"\"");
         return this.view;
     }
 
-    /**
-     * Returns the uri in progress. The prefix is stripped off
-     */
-    public String getUri () {
-        return this.uri;
-    }
-
-    /**
-     * Returns a wrapped HttpResponse object of the real HttpServletResponse in progress
-     */
-    public HttpResponse getResponse () {
-        return this.res;
-    }
-
-    /**
-     * Returns a wrapped HttpRequest object of the real HttpServletRequest in progress
-     */
-    public HttpRequest getRequest () {
-        return this.req;
-    }
+    // Response methods
  
     /** 
      * Set the ContentType 
      */ 
     public void setContentType (String contentType) { 
-        this.res.setContentType (contentType); 
+        this.response.setContentType (contentType); 
     } 
+ 
+    /** 
+     * Get the OutputStream 
+     */ 
+    public OutputStream getOutputStream() throws IOException {
+        return this.outputStream;
+    }
+
+    // Object model method
 
     /**
-     * Returns the ServletContext in progress
+     * Returns a Dictionary containing environment specific objects
      */
-    public ServletContext getContext () {
-        return this.servletContext;
+    public Dictionary getObjectModel () {
+        return this.objectModel;
     }
+
+    // EntityResolver method
  
     /** 
      * Resolve an entity. 

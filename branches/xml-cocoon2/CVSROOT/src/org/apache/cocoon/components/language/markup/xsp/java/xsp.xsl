@@ -40,8 +40,6 @@
     import org.apache.avalon.*;
     import org.apache.avalon.utils.*;
     import org.apache.cocoon.*;
-    import org.apache.cocoon.environment.*;
-    import org.apache.cocoon.environment.http.*;
     import org.apache.cocoon.generation.*;
     import org.apache.cocoon.components.parser.*;
 

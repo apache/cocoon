@@ -14,16 +14,17 @@ import java.io.Reader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Stack;
+import java.util.Dictionary;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.ContentHandler;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
-import org.apache.cocoon.environment.Environment;
 import org.apache.avalon.utils.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
@@ -41,7 +42,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:40 $ $Author: rubys $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:14 $ $Author: giacomo $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -75,7 +76,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
 	protected Stack xmlbase_element_name_stack = new Stack();
 
-    public void setup(Environment environment, 
+    public void setup(EntityResolver resolver, Dictionary objectModel,
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {}
 	/*

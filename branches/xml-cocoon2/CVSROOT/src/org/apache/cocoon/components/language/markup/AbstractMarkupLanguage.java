@@ -35,7 +35,6 @@ import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.components.store.MemoryStore;
-import org.apache.cocoon.environment.Environment;
 
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
@@ -50,7 +49,7 @@ import java.net.MalformedURLException;
  * (as opposed to Cocoon2's standard SAX events)
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-27 21:48:40 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:12 $
  */
 public abstract class AbstractMarkupLanguage
   extends AbstractNamedComponent
@@ -250,7 +249,7 @@ e.printStackTrace();
    */
   public String generateCode(
     Document document, String filename, ProgrammingLanguage programmingLanguage,
-    Environment environment
+    EntityResolver resolver
   ) throws Exception {
     String languageName = programmingLanguage.getName();
 
@@ -272,7 +271,7 @@ e.printStackTrace();
     // Add user-defined logicsheets
     String[] logicsheetNames = this.getLogicsheets(document);
     for (int i = 0; i < logicsheetNames.length; i++) {
-      this.addLogicsheet(codeGenerator, logicsheetNames[i], document, environment);
+      this.addLogicsheet(codeGenerator, logicsheetNames[i], document, resolver);
     }
 
     // Add namespace-mapped logicsheets
@@ -288,13 +287,13 @@ e.printStackTrace();
         String namedLogicsheetName = language.getNamedLogicsheet(prefix);
 
         if (namedLogicsheetName != null) {
-          this.addLogicsheet(codeGenerator, namedLogicsheetName, document, environment);
+          this.addLogicsheet(codeGenerator, namedLogicsheetName, document, resolver);
         }
       }
     }
 
     // Add language-specific logicsheet (always last!)
-    this.addLogicsheet(codeGenerator, language.getLogicsheet(), document, environment);
+    this.addLogicsheet(codeGenerator, language.getLogicsheet(), document, resolver);
 
     return codeGenerator.generateCode(document, filename);
   }
@@ -313,15 +312,13 @@ e.printStackTrace();
     LogicsheetCodeGenerator codeGenerator,
     String logicsheetLocation,
     Document document,
-    Environment environemnt
+    EntityResolver entityResolver
   ) throws MalformedURLException, IOException, SAXException
   {
     String systemId = null;
     InputSource inputSource = null;
 
     if (logicsheetLocation.indexOf(":/") < 0) { // Relative to Cocoon root
-      EntityResolver entityResolver =
-        (EntityResolver) this.manager.getComponent("cocoon");
       inputSource = entityResolver.resolveEntity(null, logicsheetLocation);
       systemId = inputSource.getSystemId();
     } else { // Fully resolved URL

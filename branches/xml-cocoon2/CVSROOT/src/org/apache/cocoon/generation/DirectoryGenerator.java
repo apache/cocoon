@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Dictionary;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.environment.Environment;
 
 /**
  * Generates an XML directory listing.
@@ -52,7 +52,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-02 22:48:28 $ */
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:42 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
@@ -75,20 +75,23 @@ public class DirectoryGenerator extends ComposerGenerator {
     protected int depth;
     protected AttributesImpl attributes = new AttributesImpl();
     protected SimpleDateFormat dateFormatter;
+    protected EntityResolver resolver;
 
     /**
      * Set the request parameters. Must be called before the generate
      * method.
      *
-     * @param	environment
-     * 		the calling environment object
+     * @param	resolver
+     * 		the EntityResolver object
+     * @param	objectModel
+     * 		a <code>Dictionary</code> containing model object
      * @param	src
      * 		the URI for this request (?)
      * @param	par
      * 		configuration parameters
      */
-    public void setup(Environment environment, String src, Parameters par) {
-	super.setup(environment, src, par);
+    public void setup(EntityResolver resolver, Dictionary objectModel, String src, Parameters par) {
+	super.setup(resolver, objectModel, src, par);
 
 	String dateFormatString = par.getParameter("dateFormat", null);
 
@@ -117,13 +120,11 @@ public class DirectoryGenerator extends ComposerGenerator {
     public void generate()
     throws SAXException, IOException {
 
-        EntityResolver resolver;
         InputSource input;
 
 	URL url;
 	File path;
 
-	resolver = (EntityResolver)this.environment;
 	input = resolver.resolveEntity(null,super.source);
         url = new URL(input.getSystemId());
         path = new File(url.getFile());

@@ -1,5 +1,5 @@
 package org.apache.cocoon.matching;
-
+/*
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,4 +22,4 @@ public abstract class AuthenticationMatcher implements Matcher {
 
 	abstract boolean match(String username, String password);
 
-}
+}*/

@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.16 $ $Date: 2000-07-28 16:20:00 $
+ * @version CVS $Revision: 1.4.2.17 $ $Date: 2000-08-04 21:11:03 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, 
@@ -168,16 +168,15 @@ implements Component, Configurable, ComponentManager, Modifiable,
     }
 
     /**
-     * Process the given <code>Environment</code> producing the output to the
-     * specified <code>OutputStream</code>.
+     * Process the given <code>Environment</code> producing the output
      */
-    public boolean process(Environment environment, OutputStream out) 
+    public boolean process(Environment environment) 
     throws Exception  {
         String s = environment.resolveEntity(null,this.sitemapFileName).getSystemId();
         URL url = new URL (s);
         s = url.getFile();
         return this.sitemapManager.invoke (environment, "",
-                          s, true, out);
+                          s, true);
     }
 
     /** Get a new class */

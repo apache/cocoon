@@ -8,16 +8,33 @@
 package org.apache.cocoon.environment;
 
 import java.io.IOException; 
+import java.io.OutputStream; 
 import java.net.MalformedURLException; 
+import java.util.Dictionary; 
 
 import org.xml.sax.EntityResolver; 
 import org.xml.sax.SAXException; 
-import org.xml.sax.InputSource; 
- 
+
+/**
+ * Base interface for an environment abstraction 
+ *
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:11:33 $
+ */
+
 public interface Environment extends EntityResolver {
+    // Sitemap methods
+    public String getUri (); 
     public void changeContext (String uriprefix, String context) 
         throws MalformedURLException;
+
+    // Request methods
     public String getView ();
-    public String getUri (); 
+
+    // Response methods
     public void setContentType (String mimeType); 
-}
+    public OutputStream getOutputStream() throws IOException; 
+
+    // Object model
+    public Dictionary getObjectModel(); 
+  }

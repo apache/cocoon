@@ -15,7 +15,6 @@ import javax.servlet.http.*;
 
 import net.php.servlet;
 
-import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.components.parser.Parser;
 
 import org.xml.sax.InputSource;
@@ -27,9 +26,9 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-30 05:17:48 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:11:45 $
  */
-public class PhpGenerator extends ComposerGenerator {
+public class PhpGenerator extends ServletGenerator {
 
     /**
      * Stub implementation of Servlet Config
@@ -107,24 +106,22 @@ public class PhpGenerator extends ComposerGenerator {
     public void generate() throws IOException, SAXException {
 
         // ensure that we are serving a file...
-        InputSource inputSource = environment.resolveEntity(null, this.source);
+        InputSource inputSource = this.resolver.resolveEntity(null, this.source);
         String systemId = inputSource.getSystemId();
         if (!systemId.startsWith("file:/"))
             throw new IOException("protocol not supported: " + systemId);
 
         try {
-            HttpEnvironment env = (HttpEnvironment) environment;
-
             // construct both ends of the pipe
             PipedInputStream input = new PipedInputStream();
         
             // start PHP producing results into the pipe
             PhpServlet php = new PhpServlet();
-            php.init(new config(env.getContext()));
+            php.init(new config(context));
             php.setInput(systemId.substring(6));
             php.setOutput(new PipedOutputStream(input));
-            php.setRequest(env.getRequest());
-            php.setResponse(env.getResponse());
+            php.setRequest(request);
+            php.setResponse(response);
             new Thread(php).start();
 
             // pipe the results into the parser

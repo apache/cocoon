@@ -14,43 +14,34 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Hashtable;
+import java.util.Dictionary;
 
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.environment.http.HttpResponse;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.SitemapComponent;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-28 16:20:32 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-04 21:11:56 $
  */
 public class ResourceReader extends AbstractReader {
-
-    /** The OutputStream */
-    private OutputStream out;
-
-    /**
-     * Set the <code>OutputStream</code> where the XML should be serialized.
-     */
-    public void setOutputStream(OutputStream out) {
-        this.out = out;
-    }
 
     /**
      * Generates the requested resource.
      */
     public void generate() throws IOException, ProcessingException {
-        HttpEnvironment env = (HttpEnvironment)environment;
-        HttpResponse res = env.getResponse();
+        HttpServletResponse res = (HttpServletResponse) objectModel.get("response");
+        if (res == null) {
+           throw new ProcessingException ("Missing a Response object in the objectModel");
+        }
         String src = null;
         File file = null;
         URL url = null;
         try {
-            src = environment.resolveEntity (null,source).getSystemId();
+            src = this.resolver.resolveEntity (null,this.source).getSystemId();
             url = new URL (src);
         } catch (SAXException se) {
             throw new IOException ("ResourceReader: error resolving source \""

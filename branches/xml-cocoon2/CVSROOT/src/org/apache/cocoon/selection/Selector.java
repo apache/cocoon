@@ -7,24 +7,26 @@
  *****************************************************************************/
 package org.apache.cocoon.selection;
 
-import org.apache.cocoon.sitemap.SitemapComponent;
-import org.apache.cocoon.environment.Environment;
+import java.util.Dictionary;
+
+import org.apache.avalon.Component;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:36 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:59 $
  */
-public interface Selector extends SitemapComponent {
+public interface Selector extends Component {
     /**
-     * Selectors test pattern against some <code>Request</code> values
-     * and signals success with the returned boolean value
-     * @param expression The expression to test.
-     * @param request    The <code>Request</code> object which can be used
-     *                   to select values to test the expression.
-     * @return boolean   Signals successfull test.
+     * Selectors test pattern against some objects in a <code>Dictionary</code>
+     * model and signals success with the returned boolean value
+     * @param expression  The expression to test.
+     * @param objectModel The <code>Dictionary</code> containing object of the 
+     *                    calling environment which may be used
+     *                    to select values to test the expression.
+     * @return boolean    Signals successfull test.
      */
-    public boolean select (String expression, Environment environment);
+    public boolean select (String expression, Dictionary objectModel);
 }
 
 

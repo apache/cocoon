@@ -5,16 +5,23 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.serialization;
+package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.sitemap.SitemapOutputComponent;
-import org.apache.cocoon.xml.XMLConsumer;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.apache.avalon.Component;
 
 /**
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:02 $
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-08-04 21:12:12 $
  */
-public interface Serializer extends XMLConsumer, SitemapOutputComponent {
+public interface SitemapOutputComponent extends Component {
+
+    /**
+     * Set the <code>OutputStream</code> where the requested resource should 
+     * be serialized.
+     */
+    public void setOutputStream(OutputStream out) throws IOException;
 }

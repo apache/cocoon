@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-08-02 22:48:28 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-08-04 21:11:14 $
 -->
 
 <xsl:stylesheet 
@@ -30,6 +30,7 @@
 
     import java.util.List; 
     import java.util.ArrayList; 
+    import java.util.Dictionary; 
 
     import org.apache.avalon.Configurable;
     import org.apache.avalon.Configuration;
@@ -114,7 +115,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
-        private List <xsl:value-of select="$matcher-name"/> (String pattern, Environment environment) {
+        private List <xsl:value-of select="$matcher-name"/> (String pattern, Dictionary objectModel) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -134,7 +135,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($selector-name),string(@pattern),$config)"/>
-        private boolean <xsl:value-of select="$selector-name"/> (String pattern, Environment environment) {
+        private boolean <xsl:value-of select="$selector-name"/> (String pattern, Dictionary objectModel) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($selector-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -210,7 +211,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
 
     <xsl:for-each select="/map:sitemap/map:resources/map:resource">
       private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline, 
-          List listOfLists, Environment environment, OutputStream out) 
+          List listOfLists, Environment environment) 
       throws Exception { 
         List list = null;
         Parameters param = null; 
@@ -221,7 +222,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     /** 
      * Process to producing the output to the specified &gt;code&lt;OutputStream&gt;/code&lt;. 
      */ 
-    public boolean process(Environment environment, OutputStream out)  
+    public boolean process(Environment environment)  
     throws Exception { 
       ResourcePipeline pipeline = new ResourcePipeline ();
       pipeline.setComponentManager (this.manager);
@@ -236,7 +237,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           <xsl:choose>
           <xsl:when test="(./map:handle-errors)">
             try {
-              return error_process_<xsl:value-of select="$pipeline-position"/> (environment, out, e);
+              return error_process_<xsl:value-of select="$pipeline-position"/> (environment, e);
             } catch (Exception ex) {
               System.out.println (ex.toString());
               ex.printStackTrace(System.out);
@@ -255,7 +256,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
       <xsl:variable name="pipeline-position" select="position()"/>
       <xsl:if test="(./map:handle-errors)">
-        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, OutputStream out, Exception e) 
+        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, Exception e) 
         throws Exception { 
           ResourcePipeline pipeline = new ResourcePipeline ();
           pipeline.setComponentManager (this.manager);
@@ -309,7 +310,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:for-each>
     </xsl:variable>
-    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment)) != null) {
+    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment.getObjectModel())) != null) {
       listOfLists.add (list);  
       <xsl:apply-templates/>
     }
@@ -351,7 +352,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:choose>
         </xsl:for-each>
       </xsl:variable>
-      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", environment)) {
+      if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", environment.getObjectModel())) {
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -386,7 +387,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:with-param name="prefix">serializer</xsl:with-param>
       <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template> 
-    return pipeline.process (environment, out);
+    return pipeline.process (environment);
   </xsl:template> <!-- match="map:serialize" --> 
 
   <xsl:template match="map:read">
@@ -396,7 +397,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       <xsl:with-param name="prefix">reader</xsl:with-param>
       <xsl:with-param name="mime-type" select="@mime-type"/>
     </xsl:call-template> 
-    return pipeline.process (environment, out);
+    return pipeline.process (environment);
   </xsl:template> <!-- match="map:read" --> 
 
   <xsl:template match="map:mount">
@@ -419,17 +420,17 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='/'">
-        return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+        return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:when>
       <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='}'">
         String uri_prefix<xsl:value-of select="count(.)"/>=substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>");
         if (uri_prefix<xsl:value-of select="count(.)"/>.charAt(uri_prefix<xsl:value-of select="count(.)"/>.length()-1)=='/')
-          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
         else
-          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:when>
       <xsl:otherwise>
-        return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
+        return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:mount" -->
@@ -437,11 +438,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
   <xsl:template match="map:redirect-to">
     <xsl:choose>
       <xsl:when test="@resource">
-        return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment, out);
+        return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment);
       </xsl:when>
       <xsl:when test="@uri">
         // request.setUri ("<xsl:value-of select="@uri"/>");
-        // this.process(environment, out);
+        // this.process(environment);
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="error">
@@ -473,6 +474,18 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     <xsl:variable name="ns" select="namespace-uri(.)"/> 
     <xsl:for-each select="$components"> 
       confBuilder.startDocument ();
+      <xsl:if test="$ns">
+        confBuilder.startPrefixMapping("","<xsl:value-of select="namespace-uri(.)"/>"); 
+      </xsl:if>
+      <!-- Create root configuration -->      
+      attr.clear();  
+      <xsl:for-each select="attribute::*[name(.)!=$qname]">
+        attr.addAttribute ("", "<xsl:value-of select="local-name(.)"/>", 
+            "<xsl:value-of select="name(.)"/>", "CDATA", 
+            "<xsl:value-of select="."/>"); 
+      </xsl:for-each>
+      confBuilder.startElement ("", "<xsl:value-of select="translate(@name, '- ', '__')"/>",
+                                    "<xsl:value-of select="translate(@name, '- ', '__')"/>", attr); 
       <xsl:call-template name="nested-config-components">
         <xsl:with-param name="name" select="$name"/>
         <xsl:with-param name="config-name"><xsl:value-of select="concat(local-name(.),'/',@name)"/></xsl:with-param>
@@ -481,6 +494,12 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         <xsl:with-param name="type" select="@name"/>
         <xsl:with-param name="ns" select="$ns"/>
       </xsl:call-template>
+      <!-- end root configuration -->
+      confBuilder.endElement ("", "<xsl:value-of select="translate(@name, '- ', '__')"/>",
+                                  "<xsl:value-of select="translate(@name, '- ', '__')"/>"); 
+      <xsl:if test="$ns">
+        confBuilder.endPrefixMapping(""); 
+      </xsl:if>
       confBuilder.endDocument ();
       cconf = confBuilder.getConfiguration();
       <xsl:value-of select="$name"/>_config_<xsl:value-of select="translate(@name, '- ', '__')"/> = cconf;

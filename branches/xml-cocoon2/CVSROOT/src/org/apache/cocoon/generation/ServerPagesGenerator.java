@@ -33,10 +33,10 @@ import org.apache.cocoon.ProcessingException;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:01 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:46 $
  */
 public class ServerPagesGenerator
-  extends ComposerGenerator
+  extends ServletGenerator
   implements ContentHandler, LexicalHandler
 {
   /**
@@ -92,7 +92,7 @@ public class ServerPagesGenerator
    * @exception ProcessingException Error during load/execution
    */
   public void generate() throws IOException, SAXException, ProcessingException {
-    InputSource inputSource = this.environment.resolveEntity(null, this.source);
+    InputSource inputSource = this.resolver.resolveEntity(null, this.source);
 
     String systemId = inputSource.getSystemId();
 
@@ -118,7 +118,7 @@ public class ServerPagesGenerator
 
     try {
       generator = (Generator)
-        programGenerator.load(file, markupLanguage, programmingLanguage, environment);
+        programGenerator.load(file, markupLanguage, programmingLanguage, resolver);
     } catch (Exception e) {
 e.printStackTrace();
       throw new ProcessingException(e.getMessage());
@@ -131,7 +131,7 @@ e.printStackTrace();
 
     generator.setContentHandler(this);
     generator.setLexicalHandler(this);
-    generator.setup(this.environment, this.source, this.parameters);
+    generator.setup(this.resolver, this.objectModel, this.source, this.parameters);
 
     generator.generate();
 

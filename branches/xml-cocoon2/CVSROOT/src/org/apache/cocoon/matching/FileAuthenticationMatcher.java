@@ -1,5 +1,5 @@
 package org.apache.cocoon.matching;
-
+/*
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.cocoon.environment.Environment; 
 import org.apache.avalon.utils.Parameters; 
 
 public class FileAuthenticationMatcher extends AuthenticationMatcher implements Configurable {
@@ -22,10 +21,10 @@ public class FileAuthenticationMatcher extends AuthenticationMatcher implements 
 			String name = param.getAttribute("name");
 			String value = param.getAttribute("value");
 			if (!name.equals("src")) {
-				/** load the file indicated by value (relative to what?)
+*/				/** load the file indicated by value (relative to what?)
 				    fill hashtable with users/passwords (plaintext for now)
 			     **/
-			}
+/*			}
 		}
 	}
 
@@ -47,4 +46,4 @@ public class FileAuthenticationMatcher extends AuthenticationMatcher implements 
    public void setup (Environment environment, String src, Parameters param) {
    }
 
-}
+}*/
