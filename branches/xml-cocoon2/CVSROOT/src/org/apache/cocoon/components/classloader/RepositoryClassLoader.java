@@ -34,9 +34,9 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-06 15:23:38 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-09 04:19:26 $
  */
-class RepositoryClassLoader extends URLClassLoader implements Loggable {
+public class RepositoryClassLoader extends URLClassLoader implements Loggable {
 
   /**
    * The logger

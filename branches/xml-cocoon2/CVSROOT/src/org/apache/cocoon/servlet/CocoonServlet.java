@@ -40,6 +40,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
@@ -56,7 +57,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.50 $ $Date: 2001-02-08 17:51:09 $
+ * @version CVS $Revision: 1.1.4.51 $ $Date: 2001-02-09 04:19:27 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -75,6 +76,7 @@ public class CocoonServlet extends HttpServlet {
     private String classpath;
     private File workDir;
     private String root;
+    private RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
@@ -107,7 +109,7 @@ public class CocoonServlet extends HttpServlet {
 
         this.root = this.context.getRealPath("/");
 
-        ClassUtils.setClassLoader(this.getClass().getClassLoader());
+        ClassUtils.setClassLoader(this.classloader);
 
         NetUtils.setContext(this.context);
 
@@ -122,6 +124,10 @@ public class CocoonServlet extends HttpServlet {
      * It iterates through every file in the lib directory and adds
      * it to the classpath.
      *
+     * Also, we add the files to the ClassLoader for the Cocoon system.
+     * In order to protect ourselves from skitzofrantic classloaders,
+     * we need to work with a known one.
+     *
      * @param context  The ServletContext to perform the lookup.
      *
      * @throws ServletException
@@ -132,6 +138,12 @@ public class CocoonServlet extends HttpServlet {
         String classDir = context.getRealPath("/WEB-INF/classes");
         File root = new File(context.getRealPath("/WEB-INF/lib"));
 
+        try {
+            this.classloader.addDirectory(new File(classDir));
+        } catch (Exception e) {
+            log.debug("Could not add directory" + classDir, e);
+        }
+
         buildClassPath.append(classDir);
 
         if (root.isDirectory()) {
@@ -140,6 +152,12 @@ public class CocoonServlet extends HttpServlet {
             for (int i = 0; i < libraries.length; i++) {
                 buildClassPath.append(File.pathSeparatorChar)
                               .append(IOUtils.getFullFilename(libraries[i]));
+
+                try {
+                    this.classloader.addDirectory(libraries[i]);
+                } catch (Exception e) {
+                    log.debug("Could not add file" + IOUtils.getFullFilename(libraries[i]));
+                }
             }
         }
 
@@ -179,10 +197,12 @@ public class CocoonServlet extends HttpServlet {
                           "/WEB-INF/logs/cocoon.log";
 
             final Category cocoonCategory = LogKit.createCategory("cocoon", logPriority);
-            log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
-                    new FileOutputLogTarget(path),
-                    new ServletLogTarget(context, Priority.ERROR)
+            this.log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
+                       new FileOutputLogTarget(path),
+                       new ServletLogTarget(context, Priority.ERROR)
                 });
+
+            this.classloader.setLogger(this.log);
         } catch (Exception e) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
