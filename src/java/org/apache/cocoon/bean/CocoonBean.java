@@ -86,7 +86,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.26 2003/09/15 19:18:17 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.27 2003/09/18 12:11:50 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -100,7 +100,8 @@ public class CocoonBean extends CocoonWrapper {
     private String brokenLinkExtension = "";
     private List excludePatterns = new ArrayList();
     private List includePatterns = new ArrayList();
-
+    private List includeLinkExtensions = null;
+    
     // Internal Objects
     private Map allProcessedLinks;
     private Map allTranslatedLinks;
@@ -223,15 +224,36 @@ public class CocoonBean extends CocoonWrapper {
         includePatterns.add(preparedPattern);
     }
 
+    public void addIncludeLinkExtension(String extension) {
+        if (includeLinkExtensions == null) {
+            includeLinkExtensions = new ArrayList();
+        }
+        includeLinkExtensions.add(extension);
+    }
+    
     public void addListener(BeanListener listener) {
         this.listeners.add(listener);
     }
 
-    public void pageGenerated(String uri, int linksInPage, int pagesRemaining) {
+    public void pageGenerated(String sourceURI, 
+                              String destURI, 
+                              int pageSize, 
+                              int linksInPage, 
+                              int newLinksInPage, 
+                              int pagesRemaining, 
+                              int pagesComplete, 
+                              long timeTaken) {
         Iterator i = listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
-            l.pageGenerated(uri, "", 0, linksInPage, 0, pagesRemaining, 0, 0L);
+            l.pageGenerated(sourceURI, 
+                            destURI, 
+                            pageSize, 
+                            linksInPage, 
+                            newLinksInPage,
+                            pagesRemaining,
+                            pagesComplete,
+                            timeTaken);
         }
     }
 
@@ -256,6 +278,14 @@ public class CocoonBean extends CocoonWrapper {
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
             l.brokenLinkFound(uri, "", warning, null);
+        }
+    }
+
+    public void pageSkipped(String uri, String message) {
+        Iterator i = listeners.iterator();
+        while (i.hasNext()) {
+            BeanListener l = (BeanListener) i.next();
+            l.pageSkipped(uri, message);
         }
     }
 
@@ -371,6 +401,10 @@ public class CocoonBean extends CocoonWrapper {
         int status = 0;
         
         int linkCount = 0;
+        int newLinkCount = 0;
+        int pageSize = 0;
+        
+        long startTimeMillis = System.currentTimeMillis();
 
         if (confirmExtension) {
             if (null == allTranslatedLinks.get(target.getSourceURI())) {
@@ -389,9 +423,8 @@ public class CocoonBean extends CocoonWrapper {
 
         // Process links
         final HashMap translatedLinks = new HashMap();
-        List gatheredLinks = new ArrayList();
         final List targets = new ArrayList();
-        if (followLinks && confirmExtension) {
+        if (followLinks && confirmExtension && isCrawlablePage(target)) {
             final Iterator i =
                 this.getLinks(target.getDeparameterizedSourceURI(), target.getParameters()).iterator();
 
@@ -400,13 +433,12 @@ public class CocoonBean extends CocoonWrapper {
                 Target linkTarget = target.getDerivedTarget(linkURI);
 
                 if (linkTarget == null) {
-                    System.out.println("Skipping "+ linkURI);
-                    //@TODO@ Log/report skipped link
+                    pageSkipped(linkURI, "link does not share same root as parent");
                     continue;
                 }
 
                 if (!isIncluded(linkTarget.getSourceURI())) {
-                    //@TODO@ Log/report skipped link
+                    pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
                     continue;
                 }
 
@@ -436,6 +468,13 @@ public class CocoonBean extends CocoonWrapper {
             // Process URI
             DelayedOutputStream output = new DelayedOutputStream();
             try {
+                List gatheredLinks;
+                if (!confirmExtension && followLinks && isCrawlablePage(target)) {
+                    gatheredLinks = new ArrayList();
+                } else {
+                    gatheredLinks = null;
+                }
+        
                 status =
                     getPage(
                         target.getDeparameterizedSourceURI(),
@@ -450,7 +489,7 @@ public class CocoonBean extends CocoonWrapper {
                         "Resource not found: " + status);
                 }
 
-                if (followLinks && !confirmExtension) {
+                if (gatheredLinks != null) {
                     for (Iterator it = gatheredLinks.iterator();it.hasNext();) {
                         String linkURI = (String) it.next();
                         Target linkTarget = target.getDerivedTarget(linkURI);
@@ -470,7 +509,6 @@ public class CocoonBean extends CocoonWrapper {
                     linkCount = gatheredLinks.size();
                 }
 
-                pageGenerated(target.getSourceURI(), linkCount, 0); // @todo@ get the number of pages remaining here
             } catch (ProcessingException pe) {
                 output.close();
                 output = null;
@@ -482,11 +520,21 @@ public class CocoonBean extends CocoonWrapper {
 
                     ModifiableSource source = getSource(target);
                     try {
+                        pageSize = output.size();
                         OutputStream stream = source.getOutputStream();
 
                         output.setFileOutputStream(stream);
                         output.flush();
                         output.close();
+                        pageGenerated(target.getSourceURI(), 
+                                      target.getAuthlessDestURI(), 
+                                      pageSize,
+                                      linkCount,
+                                      newLinkCount,
+                                      0, //pagesRemaining,  @TODO@ Implement this
+                                      0, //pagesComplete,   @TODO@ Implement this
+                                      System.currentTimeMillis()- startTimeMillis);
+
                     } catch (IOException ioex) {
                         log.warn(ioex.toString());
                     } finally {
@@ -499,11 +547,6 @@ public class CocoonBean extends CocoonWrapper {
             this.sendBrokenLinkWarning(target.getSourceURI(), "URI not found");
         }
 
-/*  Commenting out timestamp - will reimplement properly using the BeanListener interface
-        double d = (System.currentTimeMillis()- startTimeMillis);
-        String time = " [" + (d/1000) + " seconds]";
-        System.out.println("        "+ time);
-*/
         return targets;
     }
 
@@ -520,7 +563,7 @@ public class CocoonBean extends CocoonWrapper {
             //String brokenFile = NetUtils.decodePath(destinationURI);
             
             if (brokenLinkExtension != null) {
-                target.setExtension(brokenLinkExtension);
+                target.setExtraExtension(brokenLinkExtension);
             }
             SimpleNotifyingBean n = new SimpleNotifyingBean(this);
             n.setType("resource-not-found");
@@ -596,5 +639,13 @@ public class CocoonBean extends CocoonWrapper {
             }
         }
         return included;
+    }
+    private boolean isCrawlablePage(Target target) {
+        if (includeLinkExtensions == null) {
+            return true;
+        } else {
+            String extension = target.getExtension();
+            return includeLinkExtensions.contains(target.getExtension());
+        }
     }
 }
