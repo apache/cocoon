@@ -949,6 +949,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-forms" type="samples"/>
     <depend project="cocoon-block-lucene"/>
+    <depend project="jakarta-lucene"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
