@@ -55,7 +55,7 @@
 
  <author>Donald A. Ball Jr.</author>
  <author>Ugo Cei</author>
- <version>1.1</version>
+ <version>1.2</version>
 -->
 <xsl:stylesheet
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -75,9 +75,11 @@
    <xsp:include>javax.mail.Address</xsp:include>
    <xsp:include>javax.mail.Part</xsp:include>
    <xsp:include>javax.mail.Multipart</xsp:include>
+   <xsp:include>javax.mail.Flags</xsp:include>
    <xsp:include>javax.mail.internet.MimeMessage</xsp:include>
    <xsp:include>javax.mail.internet.MimePart</xsp:include>
-   <xsp:include>javax.text.DateFormat</xsp:include>
+   <xsp:include>javax.mail.internet.InternetAddress</xsp:include>
+   <xsp:include>java.text.DateFormat</xsp:include>
   </xsp:structure>
   <xsl:apply-templates/>
   <xsp:logic>
@@ -121,7 +123,7 @@
    <xsl:with-param name="content" select="mail:host"/>
   </xsl:call-template>
  </xsl:variable>
- <xsl:variable name="port">  <!-- POP3 is conventionally on port 110 -->
+ <xsl:variable name="port">    <!-- POP3 is conventionally on port 110 -->
   <xsl:call-template name="get-nested-string">
    <xsl:with-param name="content" select="mail:port"/>
   </xsl:call-template>
@@ -164,7 +166,7 @@
     String.valueOf(<xsl:copy-of select="$password"/>));
    Folder _mail_folder = _mail_store.getDefaultFolder();
    _mail_folder = _mail_folder.getFolder(String.valueOf(<xsl:copy-of select="$mbox"/>));
-   _mail_folder.open(Folder.READ_ONLY);
+   _mail_folder.open(Folder.READ_WRITE);
    <xsl:apply-templates select="mail:results/*"/>
    _mail_folder.close(false);
    _mail_store.close();
@@ -218,7 +220,7 @@
   </xsp:logic>
 </xsl:template>
 
-<xsl:template match="mail:results//mail:get-message//mail:get-subject">
+<xsl:template match="mail:results//mail:get-messages//mail:get-subject">
  <xsp:expr>_mail_message.getSubject()</xsp:expr>
 </xsl:template>
 
@@ -226,18 +228,25 @@
  <xsp:expr>DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT).format(_mail_message.getSentDate())</xsp:expr>
 </xsl:template>
 
-<xsl:template match="mail:results//mail:get-message//mail:get-from">
+<xsl:template match="mail:results//mail:get-messages//mail:get-from">
  <xsp:logic>
   {
    Address _mail_from[] = _mail_message.getFrom();
-   for (int _mail_i=0; _mail_i &lt; _mail_from.length; _mail_i++) {
-    <address><xsp:expr>_mail_from[_mail_i].toString()</xsp:expr></address>
+   for (int _mail_j=0; _mail_j &lt; _mail_from.length; _mail_j++) {
+     if (_mail_from[_mail_j] instanceof InternetAddress) {
+       InternetAddress _mail_ia = (InternetAddress) _mail_from[_mail_j];
+       <internet-address>
+         <address><xsp:expr>_mail_ia.getAddress()</xsp:expr></address>
+         <personal><xsp:expr>_mail_ia.getPersonal()</xsp:expr></personal>
+       </internet-address>
+     }
+     <address><xsp:expr>_mail_from[_mail_j].toString()</xsp:expr></address>
    }
   }
  </xsp:logic>
 </xsl:template>
 
-<xsl:template match="mail:results//mail:get-message//mail:get-recipients">
+<xsl:template match="mail:results//mail:get-messages//mail:get-recipients">
  <xsp:logic>
   {
    String _mail_type = "<xsl:value-of select="@type"/>";
@@ -255,14 +264,39 @@
    } else {
     _mail_to = _mail_message.getRecipients(_mail_recipient_type);
    }
-   for (int _mail_i=0; _mail_i &lt; _mail_to.length; _mail_i++) {
-    <address><xsp:expr>_mail_to[_mail_i].toString()</xsp:expr></address>
+   for (int _mail_j=0; _mail_j &lt; _mail_to.length; _mail_j++) {
+    <address><xsp:expr>_mail_to[_mail_j].toString()</xsp:expr></address>
    }
   }
  </xsp:logic>
 </xsl:template>
 
-<xsl:template match="mail:results//mail:get-message//get-all-headers">
+<xsl:template match="mail:results//mail:get-messages//mail:get-flags">
+ <xsp:logic>
+  {
+    if (_mail_message.isSet(Flags.Flag.ANSWERED)) {
+      <flag>answered</flag>
+    }
+    if (_mail_message.isSet(Flags.Flag.DELETED)) {
+      <flag>deleted</flag>
+    }
+    if (_mail_message.isSet(Flags.Flag.DRAFT)) {
+      <flag>draft</flag>
+    }
+    if (_mail_message.isSet(Flags.Flag.FLAGGED)) {
+      <flag>flagged</flag>
+    }
+    if (_mail_message.isSet(Flags.Flag.RECENT)) {
+      <flag>recent</flag>
+    }
+    if (_mail_message.isSet(Flags.Flag.SEEN)) {
+      <flag>seen</flag>
+    }
+  }
+ </xsp:logic>
+</xsl:template>
+
+<xsl:template match="mail:results//mail:get-messages//mail:get-all-headers">
  <xsp:logic>
  {
   Enumeration _mail_enum = _mail_message.getAllHeaderLines();
@@ -273,7 +307,7 @@
  </xsp:logic>
 </xsl:template>
 
-<xsl:template match="mail:results//mail:get-message//get-content">
+<xsl:template match="mail:results//mail:get-messages//mail:get-content">
  <xsp:logic>
   _mail_process_content(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_mail_message);
  </xsp:logic>
