@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.7 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: Repeater.java,v 1.8 2004/04/21 13:33:37 mpo Exp $
  */
 public class Repeater extends AbstractWidget 
 //implements ContainerWidget 
@@ -334,13 +334,13 @@ public class Repeater extends AbstractWidget
             return Repeater.this.getForm();
         }
 
-        public String getNamespace() {
-            return getParent().getNamespace() + "." + getId();
-        }
-
-        public String getFullyQualifiedId() {
-            return getParent().getNamespace() + "." + getId();
-        }
+//        public String getNamespace() {
+//            return getParent().getNamespace() + "." + getId();
+//        }
+//
+//        public String getFullyQualifiedId() {
+//            return getParent().getNamespace() + "." + getId();
+//        }
 
         public void setParent(Widget widget) {
             throw new RuntimeException("Parent of RepeaterRow is fixed, and cannot be set.");
