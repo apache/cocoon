@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 
-<samplesxpipe xpath="/sitemap/pipelines/pipeline[last()]"
-       unless="match[@pattern='xmldb/**']">
+<samplesxpipe xpath="/sitemap/pipelines"
+       unless="pipeline/match[@pattern='xmldb/**']">
 
+  <map:pipeline>
     <!-- ======================= XML:DB ============================== -->
     <map:match pattern="xmldb/**">
       <map:match type="request-parameter" pattern="xpath">
@@ -13,4 +14,5 @@
       <map:generate src="xmldb:xindice://localhost:4080/db/{1}"/>
       <map:serialize type="xml"/>
     </map:match>
+  </map:pipeline>
 </samplesxpipe>

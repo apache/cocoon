@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 
-<samplesxpipe xpath="/sitemap/pipelines/pipeline[last()]"
-       unless="match[@pattern='xmldb-generator/db/**/']">
+<samplesxpipe xpath="/sitemap/pipelines"
+       unless="pipeline/match[@pattern='xmldb-generator/db/**/']">
 
+  <map:pipeline>
     <!-- =================== XML:DB Generators ========================= -->
     <!-- BEWARE: the following examples use the unmaintained XML:DB      -->
     <!-- generators, going to be deprecated soon.                        -->
@@ -16,4 +17,5 @@
       <map:generate type="xmldb" src="/{1}"/>
       <map:serialize type="xml"/>
     </map:match>
+  </map:pipeline>
 </samplesxpipe>
