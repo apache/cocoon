@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tab-layout renderer-name="tab" static="true" name="tab">
+<composite-layout renderer-name="tab" static="true" name="tab">
     <named-item name="News">
-        <column-layout renderer-name="column" name="column">
+        <composite-layout renderer-name="column" name="column">
             <item>
                 <parameter name="width" value="350" />
-                <row-layout renderer-name="row" static="true" name="row">
+                <composite-layout renderer-name="row" static="true" name="row">
                     <item>
 		                <coplet-layout renderer-name="window" static="true" name="coplet">
 		                    <id>1</id>
@@ -19,10 +19,10 @@
 		                    <coplet-instance-data>NYTBusiness-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
-                </row-layout>
+                </composite-layout>
             </item>
             <item>
-                <row-layout renderer-name="row" static="false" name="row">
+                <composite-layout renderer-name="row" static="false" name="row">
                     <item>
 		                <coplet-layout renderer-name="window" name="coplet">
 		                    <id>3</id>
@@ -31,7 +31,7 @@
 		                </coplet-layout>
                     </item>
                     <item>
-                        <column-layout renderer-name="column" name="column">
+                        <composite-layout renderer-name="column" name="column">
                             <item>
                                 <frame-layout renderer-name="frame" name="frame">
                                     <id>a</id>
@@ -45,10 +45,10 @@
 				                    <coplet-instance-data>CNET News-1</coplet-instance-data>
                                 </coplet-layout>
                             </item>
-                        </column-layout>
+                        </composite-layout>
 		            </item>
                     <item>
-                        <column-layout renderer-name="column" name="column">
+                        <composite-layout renderer-name="column" name="column">
                             <item>
                                 <coplet-layout renderer-name="window" name="coplet">
 				                    <id>5</id>
@@ -63,12 +63,12 @@
                                     <source>cocoon://samples/portal/news/CNNEurope.rss</source>
                                 </frame-layout>
                             </item>
-                        </column-layout>
+                        </composite-layout>
                     </item>
-                </row-layout>
+                </composite-layout>
             </item>
             <item>
-                <row-layout renderer-name="row" static="false" name="row">
+                <composite-layout renderer-name="row" static="false" name="row">
                     <item>
 		                <coplet-layout renderer-name="window" name="coplet">
 		                    <id>6</id>
@@ -83,14 +83,14 @@
 		                    <coplet-instance-data>CNNEurope-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
-                </row-layout>
+                </composite-layout>
             </item>
-        </column-layout>
+        </composite-layout>
     </named-item>
     <named-item name="Weblogs">
-        <column-layout renderer-name="column" name="column">
+        <composite-layout renderer-name="column" name="column">
             <item>
-                <row-layout renderer-name="row" name="row">
+                <composite-layout renderer-name="row" name="row">
                     <item>
 		                <coplet-layout renderer-name="window" name="coplet">
 		                    <id>8</id>
@@ -107,10 +107,10 @@
 		                    <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
-                </row-layout>
+                </composite-layout>
             </item>
             <item>
-                <row-layout renderer-name="row" name="row">
+                <composite-layout renderer-name="row" name="row">
                     <item>
 		                <coplet-layout renderer-name="window" name="coplet">
 		                    <id>10</id>
@@ -119,14 +119,14 @@
 		                    <coplet-instance-data>Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
-                </row-layout>
+                </composite-layout>
             </item>
-        </column-layout>
+        </composite-layout>
     </named-item>
     <named-item name="Cocoon">
-        <row-layout renderer-name="row" name="row">
+        <composite-layout renderer-name="row" name="row">
             <item>
-                <column-layout renderer-name="column" name="column">
+                <composite-layout renderer-name="column" name="column">
                     <item>
 		                <coplet-layout renderer-name="window" name="coplet">
 		                    <id>11</id>
@@ -141,8 +141,8 @@
 		                    <coplet-instance-data>Overview-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
-	            </column-layout>
+	            </composite-layout>
             </item>
-        </row-layout>
+        </composite-layout>
     </named-item>
-</tab-layout>
+</composite-layout>

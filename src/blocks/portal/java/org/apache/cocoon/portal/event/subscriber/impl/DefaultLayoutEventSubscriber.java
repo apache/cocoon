@@ -57,9 +57,9 @@ import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.aspect.TabLayoutStatus;
-import org.apache.cocoon.portal.layout.impl.TabLayout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
@@ -67,7 +67,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.2 2003/05/08 13:38:11 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.3 2003/05/19 13:06:06 cziegeler Exp $
  */
 public final class DefaultLayoutEventSubscriber 
     implements Subscriber {
@@ -104,7 +104,7 @@ public final class DefaultLayoutEventSubscriber
             LayoutEvent statusEvent = (LayoutEvent)event;
             Layout layout = (Layout)statusEvent.getTarget();
             // TODO should not depend on special Layout 
-            if (layout instanceof TabLayout) {
+            if (layout instanceof CompositeLayout) {
                 ProfileManager profileManager = null;
                 try {
                     profileManager = (ProfileManager) this.componentManager.lookup(ProfileManager.ROLE);

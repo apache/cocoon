@@ -60,12 +60,17 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.1 2003/05/19 12:50:59 cziegeler Exp $
+ * @version CVS $Id: CompositeLayout.java,v 1.2 2003/05/19 13:06:06 cziegeler Exp $
  */
-public abstract class CompositeLayout extends AbstractLayout {
+public class CompositeLayout extends AbstractLayout {
 
 	protected List items = new ArrayList();
 
+    /**
+     * Constructor
+     */
+    public CompositeLayout() {}
+    
 	/**
 	 * Add indexed item to the itemList.
 	 * @param index, index for the position inside the list
