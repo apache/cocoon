@@ -16,14 +16,8 @@
 
 package org.apache.cocoon.transformation;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockEnvironment;
 
 /**
  * A simple testcase for FilterTransformer.
@@ -33,22 +27,13 @@ import org.apache.cocoon.environment.mock.MockEnvironment;
  */
 public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     
-    /**
-     * Run this test suite from commandline
-     *
-     * @param args commandline arguments (ignored)
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.SitemapComponentTestCase#getSitemapComponentInfo()
      */
-    public static void main( String[] args ) {
-        TestRunner.run(suite());
-    }
-    
-    /** Create a test suite.
-     * This test suite contains all test cases of this class.
-     * @return the Test object containing all test cases.
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(XIncludeTransformerTestCase.class);
-        return suite;
+    protected String[] getSitemapComponentInfo() {
+        return new String[] {Transformer.class.getName(),
+                             XIncludeTransformer.class.getName(),
+                             "xinclude"};
     }
     
     /** Testcase for xinclude simple include
@@ -64,18 +49,10 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         String result = "resource://org/apache/cocoon/transformation/xinclude-result-1.xml";
         String src =  null;
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         assertEqual( load(result),
         transform("xinclude", src, parameters, load(input)));
-        
-        EnvironmentHelper.leaveProcessor();
     }
+
     /** Testcase for xinclude simple text include
      *
      * @throws Exception if ServiceManager enterEnvironment fails
@@ -89,17 +66,8 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         String result = "resource://org/apache/cocoon/transformation/xinclude-result-2.xml";
         String src =  null;
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         assertEqual( load(result),
         transform("xinclude", src, parameters, load(input)));
-        
-        EnvironmentHelper.leaveProcessor();
     }
     
 }

@@ -16,14 +16,8 @@
 
 package org.apache.cocoon.transformation;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.environment.mock.MockSession;
@@ -38,22 +32,13 @@ import org.w3c.dom.Document;
  */
 public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
     
-    /**
-     * Run this test suite from commandline
-     *
-     * @param args commandline arguments (ignored)
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.SitemapComponentTestCase#getSitemapComponentInfo()
      */
-    public static void main( String[] args ) {
-        TestRunner.run(suite());
-    }
-    
-    /** Create a test suite.
-     * This test suite contains all test cases of this class.
-     * @return the Test object containing all test cases.
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(EncodeURLTransformerTestCase.class);
-        return suite;
+    protected String[] getSitemapComponentInfo() {
+        return new String[] {Transformer.class.getName(),
+                             EncodeURLTransformer.class.getName(),
+                             "encodeurl"};
     }
     
     /** Testcase for encode url transformation
@@ -69,15 +54,6 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
         String result = "resource://org/apache/cocoon/transformation/encodeurl-result-1.xml";
         String src =  null;
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         Document inputDocument = load(input);
         Document resultDocument = load(result);
         Document transformDocument = transform("encodeurl", src, parameters, inputDocument);
@@ -85,8 +61,6 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
         printDocs( resultDocument, inputDocument, transformDocument );
         
         assertIdentical( resultDocument, transformDocument );
-        
-        EnvironmentHelper.leaveProcessor();
     }
     
     /** Testcase for encode url transformation
@@ -112,23 +86,12 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
 
         session.setIsNew(true);
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         Document inputDocument = load(input);
         Document resultDocument = load(result);
         Document transformDocument = transform("encodeurl", src, parameters, inputDocument);
         
         printDocs( resultDocument, inputDocument, transformDocument );
         assertIdentical( resultDocument, transformDocument );
-        
-        EnvironmentHelper.leaveProcessor();
     }
     
     /**

@@ -20,9 +20,6 @@
  </context>
 
  <roles>
-  <role name="org.apache.cocoon.Processor"
-        shorthand="sitemap"
-        default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
   <role name="org.apache.excalibur.xml.dom.DOMParser"
         shorthand="dom-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
@@ -42,10 +39,6 @@
         shorthand="xpath-processor"
         default-class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"/>
 
-  <role name="org.apache.cocoon.transformation.TransformerSelector"
-        shorthand="transformers"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
-        
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
         default-class="org.apache.excalibur.store.impl.MemoryStore"/>
@@ -57,10 +50,6 @@
  </roles>
 
  <components>
-  <sitemap check-reload="yes" 
-    file="context://sitemap.xmap" 
-    logger="sitemap"/>
-
   <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
    <parameter name="validate" value="false"/>
    <parameter name="namespace-prefixes" value="false"/>
@@ -80,12 +69,6 @@
    <parameter name="incremental-processing" value="true"/>
   </xslt-processor>
 
-  <transformers logger="test">
-   <component-instance class="org.apache.cocoon.transformation.AugmentTransformer" 
-                       name="augment">
-   </component-instance>
-
-  </transformers>
  </components>
 
 </testcase>

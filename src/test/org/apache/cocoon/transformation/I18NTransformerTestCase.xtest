@@ -20,9 +20,6 @@
  </context>
 
  <roles>
-  <role name="org.apache.cocoon.Processor"
-        shorthand="sitemap"
-        default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
   <role name="org.apache.excalibur.xml.dom.DOMParser"
         shorthand="dom-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
@@ -61,10 +58,6 @@
  </roles>
 
  <components>
-  <sitemap check-reload="yes" 
-    file="context://sitemap.xmap" 
-    logger="sitemap"/>
-
   <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
    <parameter name="validate" value="false"/>
    <parameter name="namespace-prefixes" value="false"/>

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon;
 
 import java.io.ByteArrayOutputStream;
@@ -43,7 +42,9 @@ import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.core.container.CocoonServiceManager;
 import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockContext;
+import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRedirector;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
@@ -352,73 +353,83 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
      * @param input Input document.
      */ 
     public final Document transform(String type, String source, Parameters parameters, Document input) 
-        throws SAXException, ProcessingException, IOException {
+    throws Exception {
+        // enter & leave environment, as a manager is looked up using
+        // the processing context stack
+        MockEnvironment env = new MockEnvironment();
+        Processor processor = new MockProcessor();
+        
+        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
 
-        ServiceSelector selector = null;
-        Transformer transformer = null;
-        SourceResolver resolver = null;
-        SAXParser parser = null;
-        Source inputsource = null;
-
-        assertNotNull("Test for component manager", this.getManager());
-
-        Document document = null;
         try {
-            selector = (ServiceSelector) this.lookup(Transformer.ROLE+
-                "Selector");
-            assertNotNull("Test lookup of transformer selector", selector);
-
-            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
-            assertNotNull("Test lookup of source resolver", resolver);
-
-            parser = (SAXParser) this.lookup(SAXParser.ROLE);
-            assertNotNull("Test lookup of parser", parser);
-
-
-            assertNotNull("Test if transformer name is not null", type);
-            transformer = (Transformer) selector.select(type);
-            assertNotNull("Test lookup of transformer", transformer);
-
-            transformer.setup(new SourceResolverAdapter(resolver, getManager()),
-                                  objectmodel, source, parameters);
-
-            DOMBuilder builder = new DOMBuilder();
-            transformer.setConsumer(new WhitespaceFilter(builder));
-
-            assertNotNull("Test if input document is not null", input);
-            DOMStreamer streamer = new DOMStreamer(transformer);
-            streamer.stream(input);
-
-            document = builder.getDocument();
-            assertNotNull("Test for transformer document", document);
-
-        } catch (ServiceException ce) {
-            getLogger().error("Could not retrieve transformer", ce);
-            ce.printStackTrace();
-            fail("Could not retrieve transformer:"+ce.toString());
+            ServiceSelector selector = null;
+            Transformer transformer = null;
+            SourceResolver resolver = null;
+            SAXParser parser = null;
+            Source inputsource = null;
+    
+            assertNotNull("Test for component manager", this.getManager());
+    
+            Document document = null;
+            try {
+                selector = (ServiceSelector) this.lookup(Transformer.ROLE+
+                    "Selector");
+                assertNotNull("Test lookup of transformer selector", selector);
+    
+                resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
+                assertNotNull("Test lookup of source resolver", resolver);
+    
+                parser = (SAXParser) this.lookup(SAXParser.ROLE);
+                assertNotNull("Test lookup of parser", parser);
+    
+    
+                assertNotNull("Test if transformer name is not null", type);
+                transformer = (Transformer) selector.select(type);
+                assertNotNull("Test lookup of transformer", transformer);
+    
+                transformer.setup(new SourceResolverAdapter(resolver, getManager()),
+                                      objectmodel, source, parameters);
+    
+                DOMBuilder builder = new DOMBuilder();
+                transformer.setConsumer(new WhitespaceFilter(builder));
+    
+                assertNotNull("Test if input document is not null", input);
+                DOMStreamer streamer = new DOMStreamer(transformer);
+                streamer.stream(input);
+    
+                document = builder.getDocument();
+                assertNotNull("Test for transformer document", document);
+    
+            } catch (ServiceException ce) {
+                getLogger().error("Could not retrieve transformer", ce);
+                ce.printStackTrace();
+                fail("Could not retrieve transformer:"+ce.toString());
+            } finally {
+                if (transformer!=null) {
+                    selector.release(transformer);
+                }
+    
+                if (selector!=null) {
+                    this.release(selector);
+                }
+    
+                if (inputsource!=null) {
+                    resolver.release(inputsource);
+                }
+    
+                if (resolver!=null) {
+                    this.release(resolver);
+                }
+    
+                if (parser!=null) {
+                    this.release(parser);
+                }
+            }
+    
+            return document;
         } finally {
-            if (transformer!=null) {
-                selector.release(transformer);
-            }
-
-            if (selector!=null) {
-                this.release(selector);
-            }
-
-            if (inputsource!=null) {
-                resolver.release(inputsource);
-            }
-
-            if (resolver!=null) {
-                this.release(resolver);
-            }
-
-            if (parser!=null) {
-                this.release(parser);
-            }
+            EnvironmentHelper.leaveProcessor();           
         }
-
-        return document; 
     }
 
     /**

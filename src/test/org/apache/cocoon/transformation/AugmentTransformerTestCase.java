@@ -16,15 +16,8 @@
 
 package org.apache.cocoon.transformation;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.w3c.dom.Document;
 
 
@@ -36,24 +29,15 @@ import org.w3c.dom.Document;
  */
 public class AugmentTransformerTestCase extends SitemapComponentTestCase {
     
-    /**
-     * Run this test suite from commandline
-     *
-     * @param args commandline arguments (ignored)
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.SitemapComponentTestCase#getSitemapComponentInfo()
      */
-    public static void main( String[] args ) {
-        TestRunner.run(suite());
+    protected String[] getSitemapComponentInfo() {
+        return new String[] {Transformer.class.getName(),
+                             AugmentTransformer.class.getName(),
+                             "augment"};
     }
-    
-    /** Create a test suite.
-     * This test suite contains all test cases of this class.
-     * @return the Test object containing all test cases.
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(AugmentTransformerTestCase.class);
-        return suite;
-    }
-    
+
     /** Testcase for augment transformation
      *
      * @throws Exception if ServiceManager enterEnvironment fails
@@ -68,13 +52,6 @@ public class AugmentTransformerTestCase extends SitemapComponentTestCase {
         String result = "resource://org/apache/cocoon/transformation/augment-result-1.xml";
         String src =  null;
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         Document resultDocument = load(result);
         Document inputDocument = load(input);
         Document transformDocument = transform("augment", src, parameters, inputDocument );
@@ -82,8 +59,6 @@ public class AugmentTransformerTestCase extends SitemapComponentTestCase {
         printDocs( resultDocument, inputDocument, transformDocument );
         
         assertIdentical( resultDocument, transformDocument );
-        
-        EnvironmentHelper.leaveProcessor();
     }
     
     /**
