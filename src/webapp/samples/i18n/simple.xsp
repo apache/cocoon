@@ -2,8 +2,8 @@
 <xsp:page language="java" 
     xmlns:xsp="http://apache.org/xsp" 
     xmlns:xsp-request="http://apache.org/xsp/request/2.0" 
-    xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
->
+    xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
     <xsp:logic>
         private static int count = 0;
     </xsp:logic>
@@ -66,9 +66,9 @@
             </para>
             <para title="forth" name="article" i18n:attr="title name">
                 <i18n:translate>
-				One = {one}, two = {two}, {third}! {forth}
-				This line is not translated {forth}
-				<i18n:param name="one">
+                    One = {one}, two = {two}, {third}! {forth}
+                    This line is not translated {forth}
+                    <i18n:param name="one">
                         <i18n:text>
                             <xsp:expr>"ONE".toLowerCase()</xsp:expr>
                         </i18n:text>
@@ -82,17 +82,17 @@
             </para>
             <para title="Number formatting (not translated)" name="article" i18n:attr="name">
                 <i18n:translate>
-		          Number: {0} | Currency: {1} | Percent: {2}, processed on: {3}
-				<!--Old format: i18n:param type="number" src-locale="en" value="1703.74" /-->
-				<i18n:param>
-				    <i18n:number src-locale="en"><xsp:expr>17 + 3 + 1974</xsp:expr></i18n:number>
-				</i18n:param>
-				<!--Old format: i18n:param type="currency" src-locale="en">27.24</i18n:param-->
-				<i18n:param>
-				    <i18n:number type="currency" src-locale="en"><xsp:expr>2002.0 / 28.0</xsp:expr></i18n:number>
-				</i18n:param>
-				<i18n:param><i18n:number type="percent" src-locale="en" value="1.205"/></i18n:param>
-				<i18n:param><i18n:date-time pattern="MEDIUM"/></i18n:param>
+                    Number: {0} | Currency: {1} | Percent: {2}, processed on: {3}
+                    <!--Old format: i18n:param type="number" src-locale="en" value="1703.74" /-->
+                    <i18n:param>
+                        <i18n:number src-locale="en"><xsp:expr>17 + 3 + 1974</xsp:expr></i18n:number>
+                    </i18n:param>
+                    <!--Old format: i18n:param type="currency" src-locale="en">27.24</i18n:param-->
+                    <i18n:param>
+                        <i18n:number type="currency" src-locale="en"><xsp:expr>2002.0 / 28.0</xsp:expr></i18n:number>
+                    </i18n:param>
+                    <i18n:param><i18n:number type="percent" src-locale="en" value="1.205"/></i18n:param>
+                    <i18n:param><i18n:date-time pattern="MEDIUM"/></i18n:param>
                 </i18n:translate>
             </para>
         </content>
