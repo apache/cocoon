@@ -63,7 +63,7 @@
     <p>The resolver used for resolving XML entities has also been moved to Excalibur.
      In the cocoon.xconf the hint name has therefore changed from <em>resolver</em> to
      <em>entity-resolver</em>. The configuration has not changed, so if you want to
-     manually update swap the hint names.</p>
+     manually update swap the hint names and the implementation.</p>
     <p>From within your source code you should not lookup the
       <em>org.apache.cocoon.components.resolver.Resolver.ROLE</em> anymore; use
       <em>org.apache.excalibur.xml.EntityResolver.ROLE</em> instead.
