@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.8 2003/07/10 13:16:59 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.9 2003/07/11 20:34:22 joerg Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -95,7 +95,7 @@ public class AuthenticationProfileManager
     
     /**
      * Get the current authentication state of the user
-     * @return
+     * @return the current authentication state of the user
      */
     protected RequestState getRequestState() {
         AuthenticationManager authManager = null;
