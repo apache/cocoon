@@ -322,6 +322,22 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Prepares the libraries for the war package                          -->
   <!-- =================================================================== -->
+  <target name="prepare-xsp" depends="package" if="compile.xsp">
+    <java classname="org.apache.cocoon.Main" fork="yes">
+      <arg line="-x -w ${build.war}/WEB-INF/classes -c webapp" />
+      <classpath>
+        <fileset dir="lib">
+          <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${build.dir}/${name}.jar"/>
+        <pathelement location="${java.home}/../lib/tools.jar"/>
+      </classpath>
+    </java>  
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Prepares the libraries for the war package                          -->
+  <!-- =================================================================== -->
   <target name="prepare-webapp-libs" depends="package" if="include.webapp.libs">
     <copy todir="${build.war}/WEB-INF/lib">
       <fileset dir="${lib.dir}">
@@ -340,7 +356,7 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Creates the war file                                                -->
   <!-- =================================================================== -->
-  <target name="webapp" depends="prepare-webapp, prepare-webapp-libs" description="Generates the war package">
+  <target name="webapp" depends="prepare-webapp, prepare-webapp-libs, prepare-xsp" description="Generates the war package">
     <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
 

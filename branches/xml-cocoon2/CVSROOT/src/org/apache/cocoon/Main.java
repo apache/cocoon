@@ -44,13 +44,14 @@ import org.apache.log.LogKit;
 import org.apache.log.Priority;
 import org.apache.log.Category;
 import org.apache.log.output.FileOutputLogTarget;
+import org.apache.log.output.DefaultOutputLogTarget;
 import org.apache.log.LogTarget;
 
 /**
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.27 $ $Date: 2001-03-19 17:08:32 $
+ * @version CVS $Revision: 1.1.4.28 $ $Date: 2001-04-02 16:35:50 $
  */
 
 public class Main {
@@ -109,7 +110,7 @@ public class Main {
         String workDir = Constants.DEFAULT_WORK_DIR;
         List targets = new ArrayList();
         CLArgsParser parser = new CLArgsParser(args, options);
-        String logUrl = "logs/cocoon.log";
+        String logUrl = null;
         String logLevel = "DEBUG";
         boolean xspOnly = false;
 
@@ -161,8 +162,10 @@ public class Main {
         try {
             LogKit.setGlobalPriority(LogKit.getPriorityForName(logLevel));
             Category cocoonCategory = LogKit.createCategory("cocoon", LogKit.getPriorityForName(logLevel));
-
-            log = LogKit.createLogger(cocoonCategory,new LogTarget[] {new FileOutputLogTarget(logUrl)});
+            if(logUrl == null)
+                log = LogKit.createLogger(cocoonCategory,new LogTarget[] {new DefaultOutputLogTarget(System.out)});
+            else
+                log = LogKit.createLogger(cocoonCategory,new LogTarget[] {new FileOutputLogTarget(logUrl)});
         } catch (MalformedURLException mue) {
             String error = "Cannot write on the specified log file.  Please, make sure the path exists and you have write permissions.";
             LogKit.log(error, mue);
@@ -191,7 +194,7 @@ public class Main {
             System.exit(1);
         }
 
-        if (targets.size() == 0) {
+        if (targets.size() == 0 && xspOnly == false) {
             String error = "Please, specify at least one starting URI.";
             log.error(error);
             System.out.println(error);
@@ -199,7 +202,9 @@ public class Main {
         }
 
         try {
-            File dest = getDir(destDir, "destination");
+            File dest = null;
+            if(!xspOnly)
+                dest = getDir(destDir, "destination");
             File work = getDir(workDir, "working");
             File context = getDir(contextDir, "context");
             File conf = getConfigurationFile(context);
@@ -215,7 +220,8 @@ public class Main {
             c.init();
             Main main = new Main(c, context, dest);
             main.warmup();
-            main.process(targets, xspOnly);
+            if(main.process(targets, xspOnly)==0)
+                main.recursivelyProcessXSP(context, context);
             c.dispose();
             log.info("Done");
         } catch (Exception e) {
@@ -317,7 +323,8 @@ public class Main {
     /**
      * Process the URI list and process them all independently.
      */
-    public void process(Collection uris, boolean xspOnly) throws Exception {
+    public int process(Collection uris, boolean xspOnly) throws Exception {
+        int nCount = 0;
         log.info("...ready, let's go:");
         Iterator i = uris.iterator();
         while (i.hasNext()) {
@@ -325,6 +332,26 @@ public class Main {
                 this.processXSP(NetUtils.normalize((String) i.next()));
             else 
                 this.processURI(NetUtils.normalize((String) i.next()), 0);
+            nCount++;
+        }
+        return nCount;
+    }
+
+    /**
+     * Recurse the directory hierarchy and process the XSP's.
+     */
+    public void recursivelyProcessXSP(File contextDir, File file) {
+        if (file.isDirectory()) {
+            String entries[] = file.list();
+            for (int i = 0; i < entries.length; i++) {
+                recursivelyProcessXSP(contextDir, new File(file, entries[i]));
+            }
+        } else if(file.getName().toLowerCase().endsWith(".xsp")) {
+            try {
+                this.processXSP(IOUtils.getContextFilePath(contextDir.getCanonicalPath(),file.getCanonicalPath()));
+            } catch (Exception e){
+                //Ignore for now.
+            }
         }
     }
 
