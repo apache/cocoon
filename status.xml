@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.279 2004/03/15 10:31:37 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.280 2004/03/15 11:38:23 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="27518" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+     Portal: Fix problems with minimizing/maximizing of portlets.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="26566" due-to="Simon Mieth" due-to-email="simon.mieth@t-online.de">
      Portal: Fix problems with the portal block and using the CLI.
    </action>
