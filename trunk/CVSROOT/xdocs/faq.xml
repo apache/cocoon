@@ -79,21 +79,55 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 </faq>
 
 <faq>
- <question>why <code>xsl:output</code> doesn't work?</question>
+ <question>Why doesn't <code>xsl:output</code> work?</question>
  <answer>
   <p>The Cocoon project doesn't implement the <code>xsl:output</code> feature for XSLT
   because we believe it breaks the separation of concerns and doesn't match the
   internal Cocoon architecture.</p>
-  <p>On the other hand, we do understand the importance for a stylesheet to
-  specify how the content should be presented to the requesting client, for this
+  <p>On the other hand, we do understand the importance of
+  specifying how the content should be presented to the requesting client. For this
   reason, Cocoon uses the <code>cocoon-format</code> processing instruction to
   tell the engine which formatter to use to format the transformation output.
   So, by placing:</p>
   <source><![CDATA[<?cocoon-format type="text/html/loose"?>]]></source>
-  <p>you indicate the page containing this processing instruction should be
+  <p>in the source document (but make sure your stylesheet copies the PIs, see the question below), 
+  you indicate the page containing this processing instruction should be
   encoded and sent using the formatting properties contained in your <code>cocoon.properties</code>
-  file, associated to the type <code>text/html/loose</code>. Please, look at the
-  configuration file to know more about the formatting parameters available.</p>
+  file, associated to the type <code>text/html/loose</code>. Please look at the
+  configuration file to find out more about the formatting parameters available.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>my processing instructions disappear, what's wrong?</question>
+ <answer>
+  <p>all XSLT stylesheet inherit default templates that strip all comments and
+  processing instructions. For this reason, they are not copied unless your
+  stylesheet explicitly says so.</p>
+  <p>The are two alternatives for letting your PIs pass thru:</p>
+  <ol>
+   <li>use <code>xsl:processing-instruction</code> in your stylesheet to generate the PI</li>
+   <li>add a <code>xsl:template</code> that matches for <code>processing-instruction()</code></li>
+  </ol>
+  <p>For example:</p>
+<source><![CDATA[
+<xsl:template match="comment()|processing-instruction()">
+ <xsl:copy>
+  <xsl:apply-templates/>
+ </xsl:copy>
+</xsl:template>
+]]></source>
+  <p>copies over all the comments and processing instructions.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>rendering my XSP pages takes very long and an internal server error is shown, what's wrong?</question>
+ <answer>
+  <p>This appears as a timeout problem for mod_jserv. Add <code>ApJServVMTimeout 60</code> 
+  to your <code>jserv.conf</code> file to set the response timeout to 60 seconds, 
+  or increase that number if your machine is very slow and the compilers takes
+  more than that time to compile the XSP page the first time you hit it.</p>
  </answer>
 </faq>
 
