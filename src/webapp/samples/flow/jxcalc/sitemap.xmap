@@ -1,13 +1,6 @@
 <?xml version="1.0"?>
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
- <map:components>
-
-  <map:generators default="file">   
-    <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
-  </map:generators>
-
-</map:components>
 
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="javascript">
