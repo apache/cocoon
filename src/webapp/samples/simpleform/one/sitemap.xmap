@@ -75,7 +75,7 @@
    <map:match pattern="index">
      <map:act type="form-validator">
         <map:parameter name="descriptor" value="descriptor.xml"/>
-        <map:parameter name="validate-set" value="car-reservation"/>
+        <map:parameter name="constraint-set" value="car-reservation"/>
         <!--+
             | this is the success case
             +-->

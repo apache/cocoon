@@ -39,20 +39,20 @@
  <map:action-sets>
   <map:action-set name="process">
    <map:act type="form-validator" action="Create Department">
-     <map:parameter name="validate-set" value="add"/>
+     <map:parameter name="constraint-set" value="add"/>
      <map:act type="dbAdd"/>
    </map:act>
    <map:act type="form-validator" action="Update Department">
-     <map:parameter name="validate-set" value="update"/>
+     <map:parameter name="constraint-set" value="update"/>
      <map:act type="dbUpd"/>
    </map:act>
    <map:act type="dbDel" action="Delete Department"/>
    <map:act type="form-validator" action="Create Employee">
-     <map:parameter name="validate-set" value="add"/>
+     <map:parameter name="constraint-set" value="add"/>
      <map:act type="dbAdd"/>
    </map:act>
    <map:act type="form-validator" action="Update Employee">
-     <map:parameter name="validate-set" value="update"/>
+     <map:parameter name="constraint-set" value="update"/>
      <map:act type="dbUpd"/>
    </map:act>
    <map:act type="dbDel" action="Delete Employee"/>

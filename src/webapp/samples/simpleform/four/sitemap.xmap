@@ -53,7 +53,7 @@
        | of the new Document.
        |
        +-->
-   <map:transformer name="sfinstance" 
+   <map:transformer name="simpleform-instance-extraction"
                     logger="sitemap.transformer.simpleform-request" 
                     src="org.apache.cocoon.transformation.SimpleFormInstanceExtractionTransformer">
      <output name="request-attr-map"/>
@@ -167,7 +167,7 @@
                +-->
            <map:act type="form-validator">
              <map:parameter name="descriptor" value="descriptor.xml"/>
-             <map:parameter name="validate-set" value="car-reservation"/>
+             <map:parameter name="constraint-set" value="car-reservation"/>
              <!--+
                  | this is the success case
                  |
@@ -185,20 +185,13 @@
          | this branch contains the failed validation.
          | Since the "success" pipeline ends with a resource, the following is only 
          | applied if validation has not been successful.
-         |
          +-->
     <map:generate type="file" src="form.xml"/>    
-    <!--+
-        | extract the instance data
-        +-->
-    <map:transform type="sfinstance"/>
-    <!--+
-        | fill in the instance data 
-        +-->
+    <!-- extract the instance data -->
+    <map:transform type="simpleform-instance-extraction"/>
+    <!-- fill in the instance data -->
     <map:transform type="simpleform-instance"/>
-    <!--+
-        | fill in the request parameters, and error tags 
-        +-->
+    <!-- fill in the request parameters, and error tags -->
     <map:transform type="simpleform"/>
     <map:call resource="static-page">
       <map:parameter name="file" value="form"/>
@@ -209,7 +202,7 @@
    <map:match pattern="*">
      <map:redirect-to uri="index"/>
    </map:match>
-        
+
   </map:pipeline>
  </map:pipelines>
 

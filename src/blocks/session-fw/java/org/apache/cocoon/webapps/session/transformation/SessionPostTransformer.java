@@ -50,7 +50,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * implementation of the SessionTransformer would be very unperformant).
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPostTransformer.java,v 1.7 2004/03/19 14:16:54 cziegeler Exp $
+ * @version CVS $Id: SessionPostTransformer.java,v 1.8 2004/04/03 03:01:35 joerg Exp $
  */
 public class SessionPostTransformer extends SessionPreTransformer {
 
@@ -96,7 +96,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
     /** The form validation rules */
     public static final String FORM_VALIDATION_ELEMENT = "validate";
     public static final String FORM_VALIDATION_SOURCE_ATTRIBUTE = "src";
-    public static final String FORM_VALIDATESET_ELEMENT = "validate-set";
+    public static final String FORM_VALIDATESET_ELEMENT = "constraint-set";
 
     /** State: no element parsed */
     private static final int STATE_OUTSIDE = 0;
@@ -332,7 +332,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
                     session.setAttribute(this.formName, conf);
 
                     if (validationDoc != null) {
-                        //validationDoc contains "validate-set" element
+                        //validationDoc contains "constraint-set" element
                         validationDoc.normalize();
                         Node validationNode = validationDoc.getFirstChild();
                         while (validationNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -348,14 +348,14 @@ public class SessionPostTransformer extends SessionPreTransformer {
                             String validationXML = XMLUtils.serializeNode(validationNode, props);
                             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
                             conf = builder.build(new ByteArrayInputStream(validationXML.getBytes()));
-                            session.setAttribute(this.formName + "validate-set", conf);
+                            session.setAttribute(this.formName + "constraint-set", conf);
                         }
                     }
 
                 } catch (SourceException se) {
                     throw new ProcessingException("Cannot resolve" + source, se);
                 } catch (ConfigurationException ce) {
-                    throw new ProcessingException("Error building Configuration out of validate-set element", ce);
+                    throw new ProcessingException("Error building Configuration out of constraint-set element", ce);
                 }
 
             } else if (validationDoc != null) {
@@ -379,7 +379,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
                         Session session = this.getSessionManager().getSession(true);
                         session.setAttribute(this.formName, conf);
                         //the constraint-set to validate is the first and single one
-                        session.setAttribute(this.formName + "validate-set", conf.getChildren("constraint-set")[0]);
+                        session.setAttribute(this.formName + "constraint-set", conf.getChildren("constraint-set")[0]);
 
                     }
                 } catch (ConfigurationException ce) {

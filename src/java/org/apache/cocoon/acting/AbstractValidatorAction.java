@@ -66,11 +66,11 @@ import java.util.Vector;
  * <pre>
  * &lt;map:act type="validator"&gt;
  *         &lt;parameter name="descriptor" value="context://descriptor.xml"&gt;
- *         &lt;parameter name="validate-set" value="is-logged-in"&gt;
+ *         &lt;parameter name="constraint-set" value="is-logged-in"&gt;
  * &lt;/map:act&gt;
  * </pre>
  *
- * <p>The parameter "validate-set" tells to take a given
+ * <p>The parameter "constraint-set" tells to take a given
  * "constraint-set" from description file and test all parameters
  * against given criteria. This variant is more powerful, more aspect
  * oriented and more flexibile than the previous one, because it
@@ -187,7 +187,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.11 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.12 2004/04/03 03:01:35 joerg Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -223,12 +223,22 @@ public abstract class AbstractValidatorAction
         if (conf == null)
             return null;
 
-        String valstr =
-            parameters.getParameter("validate", (String) settings.get("validate", "")).trim();
-        String valsetstr =
-            parameters
-                .getParameter("validate-set", (String) settings.get("validate-set", ""))
-                .trim();
+        String valStr =
+            parameters.getParameter("validate", (String)settings.get("validate", "")).trim();
+        String valSetStr =
+            parameters.getParameter("validate-set", (String)settings.get("validate-set", "")).trim();
+        String constraintSetStr =
+            parameters.getParameter("constraint-set", (String)settings.get("constraint-set", "")).trim();
+        if (!"".equals(valSetStr)) {
+            if (getLogger().isInfoEnabled()) {
+                getLogger().info("Using sitemap parameter 'validate-set' for specifying "
+                                 + "the constraint-set for the ValidatorActions is deprecated in "
+                                 + "favor of 'constraint-set' due to consistency in the naming.");
+            }
+            if ("".equals(constraintSetStr)) {
+                constraintSetStr = valSetStr;
+            }
+        }
         Map desc = this.indexConfiguration(conf.getChildren("parameter"));
 
         Map actionMap = new HashMap();
@@ -236,18 +246,17 @@ public abstract class AbstractValidatorAction
         Collection params = null;
         boolean allOK = false;
 
-        if (!"".equals(valstr)) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug(
-                    "Validating parameters " + "as specified via 'validate' parameter");
-            params = this.getSetOfParameterNamesFromSitemap(valstr, desc);
-
-        } else if (!"".equals(valsetstr)) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug(
-                    "Validating parameters " + "from given constraint-set " + valsetstr);
+        if (!"".equals(valStr)) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Validating parameters as specified via 'validate' parameter");
+            }
+            params = this.getSetOfParameterNamesFromSitemap(valStr, desc);
+        } else if (!"".equals(constraintSetStr)) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Validating parameters from given constraint-set " + constraintSetStr);
+            }
             Map csets = this.indexConfiguration(conf.getChildren("constraint-set"));
-            params = this.resolveConstraints(valsetstr, csets);
+            params = this.resolveConstraints(constraintSetStr, csets);
         }
         
         if (params == null) {
