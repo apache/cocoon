@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-15 20:35:16 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-12 09:50:40 $
  */
 public abstract class AbstractSitemap implements Sitemap {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -142,6 +142,8 @@ public abstract class AbstractSitemap implements Sitemap {
                 } else {
                     result.append((String)((Map)list.get(k)).get(s.substring(m+1)));
                 }
+                log.debug("substitute evaluated value for " + (m == -1 ? s : s.substring(m+1))
+                       + " as " + (String)((Map)list.get(k)).get(m == -1 ? s : s.substring(m+1)));
             }
             if (ii < expr.length()) {
                 result.append(expr.substring(ii));
