@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.221 2004/01/03 16:07:58 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.222 2004/01/05 15:01:19 unico Exp $:-->
 
 <status>
  <developers>
@@ -190,6 +190,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UH" type="fix" fixes-bug="25694" due-to-email="johan@hippo.nl" due-to="Johan Stuyts">
+     JSPEngineImpl incorrectly converts bytes to characters.
+   </action>
    <action dev="VG" type="update">
      Woody expression manager supports registration of custom functions (see cocoon.xconf).
      Added IsNull function.
