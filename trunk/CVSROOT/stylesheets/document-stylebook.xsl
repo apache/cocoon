@@ -112,16 +112,25 @@
 
 <!-- table (just copy over) -->
 
- <xsl:template match="table|tr">
+ <xsl:template match="table">
+  <p>
+   <strong><xsl:value-of select="caption"/></strong>
+   <xsl:copy>
+    <xsl:apply-templates/>
+   </xsl:copy>
+  </p>
+ </xsl:template>
+
+ <xsl:template match="caption">
+  <!-- ignore -->
+ </xsl:template>
+
+ <xsl:template match="tr">
   <xsl:copy>
    <xsl:apply-templates/>
   </xsl:copy>
  </xsl:template>
 
- <xsl:template match="caption|colgroup|thead|tfoot|tbody">
-  <!-- ignore -->
- </xsl:template>
- 
  <xsl:template match="th">
   <th colspan="{@colspan}" rowspan="{@rowspan}">
    <xsl:apply-templates/>
@@ -142,7 +151,7 @@
   </xsl:copy>
  </xsl:template>
 
- <xsl:template match="img-block">
+ <xsl:template match="figure">
   <p>
    <img src="{@src}" alt="{@alt}"/>
   </p>
