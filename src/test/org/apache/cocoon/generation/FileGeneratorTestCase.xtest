@@ -11,7 +11,7 @@
   </factories>
   <targets>
    <file id="root">
-    <filename>cocoon-filegenerator-test.log</filename>
+    <filename>build/cocoon-filegenerator-test.log</filename>
     <format type="extended">
      %7.7{priority} %5.5{time}   [%8.8{category}] (%{context}): %{message}\n%{throwable}
     </format>
