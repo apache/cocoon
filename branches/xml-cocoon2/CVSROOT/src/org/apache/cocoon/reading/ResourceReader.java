@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-23 14:01:27 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-23 21:36:37 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -77,36 +78,41 @@ public class ResourceReader extends AbstractReader implements Composer {
         }
 
         if (res == null) {
-           this.manager.release((Component) urlFactory);
            throw new ProcessingException ("Missing a Response object in the objectModel");
         }
+
         if (req == null) {
-           this.manager.release((Component) urlFactory);
            throw new ProcessingException ("Missing a Request object in the objectModel");
         }
+
         String src = null;
         File file = null;
         URL url = null;
         URLConnection conn = null;
         InputStream is = null;
         long len = 0;
+
         try {
             if(this.source.indexOf(":/") != -1) {
                 src = this.source;
                 url = urlFactory.getURL (src);
                 conn = url.openConnection();
+
                 if (!modified (conn.getLastModified(), req, res)) {
                     return;
                 }
+
                 len = conn.getContentLength();
                 is = conn.getInputStream();
             } else {
                 src = this.resolver.resolveEntity (null,this.source).getSystemId();
                 url = urlFactory.getURL (src);
                 file = new File (url.getFile());
+
                 if (!modified (file.lastModified(), req, res)) {
                     return;
                 }
+
                 len = file.length();
                 is = new FileInputStream (file);
             }
@@ -121,16 +127,24 @@ public class ResourceReader extends AbstractReader implements Composer {
         } finally {
             this.manager.release((Component) urlFactory);
         }
-        byte[] buffer = new byte[(int)len];
-        is.read(buffer);
-        is.close();
-        res.setContentLength(buffer.length);
-        long expires = parameters.getParameterAsInteger("expires", -1);
-        if (expires > 0) {
-            res.setDateHeader("Expires", System.currentTimeMillis()+expires);
+
+        try {
+            byte[] buffer = new byte[(int)len];
+            is.read(buffer);
+            is.close();
+            res.setContentType(this.getMimeType());
+            res.setContentLength(buffer.length);
+            long expires = parameters.getParameterAsInteger("expires", -1);
+
+            if (expires > 0) {
+                res.setDateHeader("Expires", new Date().getTime() + expires);
+            }
+
+            res.setHeader("Accept-Ranges", "bytes");
+            out.write ( buffer );
+        } catch (IOException ioe) {
+            getLogger().debug("Received an IOException, assuming client severed connection on purpose");
         }
-        res.setHeader("Accept-Ranges", "bytes");
-        out.write ( buffer );
     }
 
     /**
@@ -139,9 +153,11 @@ public class ResourceReader extends AbstractReader implements Composer {
     private boolean modified (long lastModified, HttpServletRequest req, HttpServletResponse res) {
         res.setDateHeader("Last-Modified", lastModified);
         long if_modified_since = req.getDateHeader("if-modified-since");
+
         if (if_modified_since >= lastModified) {
             res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
         }
+
         getLogger().debug("ResourceReader: resource has " + ((if_modified_since < lastModified) ? "" : "not ") + "been modified");
         return (if_modified_since < lastModified);
     }
@@ -151,6 +167,7 @@ public class ResourceReader extends AbstractReader implements Composer {
      */
     public String getMimeType () {
         ServletContext ctx = (ServletContext) objectModel.get("context");
+
         if (ctx != null) {
            return ctx.getMimeType(this.source);
         } else {
