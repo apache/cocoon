@@ -91,7 +91,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.4 2003/06/24 16:59:20 cziegeler Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.5 2003/07/02 17:05:37 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -345,17 +345,10 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
      * @return a <code>Scriptable</code> value
      * @exception Exception if an error occurs
      */
-    protected Scriptable enterContext(Environment environment)
-        throws Exception
-    {
-        Context context = Context.enter();
-        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
-        context.setGeneratingDebug(true);
-        context.setCompileFunctionsWithDynamicScope(true);
-        context.setErrorReporter(errorReporter);
-        Scriptable thrScope = null;
-
-
+    private void setupContext(Environment environment,
+                              org.mozilla.javascript.Context context,
+                              Scriptable thrScope)
+        throws Exception {
         // Try to retrieve the scope object from the session instance. If
         // no scope is found, we create a new one, but don't place it in
         // the session.
@@ -365,7 +358,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         // the session object, where it's later retrieved from here. This
         // behaviour allows multiple JavaScript functions to share the
         // same global scope.
-        thrScope = getSessionScope(environment);
+
         FOM_Cocoon cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
         long lastExecTime = ((Long)thrScope.get(LAST_EXEC_TIME,
                                            thrScope)).longValue();
@@ -425,24 +418,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
             }
         }
-        return thrScope;
     }
-
-    /**
-     * Remove the Cocoon object from the JavaScript thread scope so it
-     * can be garbage collected, together with all the objects it
-     * contains.
-     */
-    protected void exitContext(Scriptable thrScope)
-    {
-        // thrScope may be null if an exception occurred compiling a script
-        if (thrScope != null) {
-            FOM_Cocoon cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
-            cocoon.invalidate();
-        }
-        Context.exit();
-    }
-
 
     /**
      * Compile filename as JavaScript code
@@ -500,60 +476,67 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                              Environment environment)
         throws Exception
     {
-        Scriptable thrScope = null;
-        try {
-            thrScope = enterContext(environment);
-
-            Context context = Context.getCurrentContext();
-            FOM_Cocoon cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
-            if (enableDebugger) {
-                if (!getDebugger().isVisible()) {
-                    // only raise the debugger window if it isn't already visible
-                    getDebugger().setVisible(true);
+        Context context = Context.enter();
+        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
+        context.setGeneratingDebug(true);
+        context.setCompileFunctionsWithDynamicScope(true);
+        context.setErrorReporter(errorReporter);
+        FOM_Cocoon cocoon = null;
+        Scriptable thrScope = getSessionScope(environment);
+        synchronized (thrScope) {
+            try {
+                setupContext(environment, context, thrScope);
+                cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
+                if (enableDebugger) {
+                    if (!getDebugger().isVisible()) {
+                        // only raise the debugger window if it isn't already visible
+                        getDebugger().setVisible(true);
+                    }
                 }
-            }
-            int size = (params != null ? params.size() : 0);
-            Object[] funArgs = new Object[size];
-            NativeArray parameters = new NativeArray(size);
-            if (size != 0) {
-                for (int i = 0; i < size; i++) {
-                    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-                    funArgs[i] = arg.value;
-                    if (arg.name == null) arg.name = "";
-                    parameters.put(arg.name, parameters, arg.value);
+                int size = (params != null ? params.size() : 0);
+                Object[] funArgs = new Object[size];
+                NativeArray parameters = new NativeArray(size);
+                if (size != 0) {
+                    for (int i = 0; i < size; i++) {
+                        Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+                        funArgs[i] = arg.value;
+                        if (arg.name == null) arg.name = "";
+                        parameters.put(arg.name, parameters, arg.value);
+                    }
                 }
+                //cocoon.setParameters(parameters);
+                Object fun = ScriptableObject.getProperty(thrScope, funName);
+                if (fun == Scriptable.NOT_FOUND) {
+                    fun = funName; // this will produce a better error message
+                }
+                ScriptRuntime.call(context, fun, thrScope, 
+                                   funArgs, thrScope);
+            } catch (JavaScriptException ex) {
+                EvaluatorException ee =
+                    Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                                                            ex.getMessage()));
+                Throwable unwrapped = unwrap(ex);
+                if (unwrapped instanceof ProcessingException) {
+                    throw (ProcessingException)unwrapped;
+                }
+                
+                throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
+            } catch (EcmaError ee) {
+                String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+                if (ee.getSourceName() != null) {
+                    Context.reportRuntimeError(msg,
+                                               ee.getSourceName(),
+                                               ee.getLineNumber(),
+                                               ee.getLineSource(),
+                                               ee.getColumnNumber());
+                } else {
+                    Context.reportRuntimeError(msg);
+                }
+                throw new CascadingRuntimeException(ee.getMessage(), ee);
+            } finally {
+                cocoon.invalidate();
+                Context.exit();
             }
-            //cocoon.setParameters(parameters);
-            Object fun = ScriptableObject.getProperty(thrScope, funName);
-            if (fun == Scriptable.NOT_FOUND) {
-                fun = funName; // this will produce a better error message
-            }
-            ScriptRuntime.call(context, fun, thrScope, 
-                               funArgs, thrScope);
-        } catch (JavaScriptException ex) {
-            EvaluatorException ee =
-                Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                                        ex.getMessage()));
-            Throwable unwrapped = unwrap(ex);
-            if (unwrapped instanceof ProcessingException) {
-                throw (ProcessingException)unwrapped;
-            }
-
-            throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
-        } catch (EcmaError ee) {
-            String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
-            if (ee.getSourceName() != null) {
-                Context.reportRuntimeError(msg,
-                                           ee.getSourceName(),
-                                           ee.getLineNumber(),
-                                           ee.getLineSource(),
-                                           ee.getColumnNumber());
-            } else {
-                Context.reportRuntimeError(msg);
-            }
-            throw new CascadingRuntimeException(ee.getMessage(), ee);
-        } finally {
-            exitContext(thrScope);
         }
     }
 
@@ -582,49 +565,51 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         // continuation with the environment and context objects.
         Continuation k = (Continuation)wk.getContinuation();
         Scriptable kScope = k.getParentScope();
-        FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-        cocoon.setup(this, environment, manager);
-        if (enableDebugger) {
-            getDebugger().setVisible(true);
-        }
-        //int size = (params != null ? params.size() : 0);
-        //NativeArray parameters = new NativeArray(size);
-
-        //if (size != 0) {
-        //for (int i = 0; i < size; i++) {
-        //Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-        //parameters.put(arg.name, parameters, arg.value);
-        //}
-        //}
-        //cocoon.setParameters(parameters);
-        Object[] args = new Object[] {k};
-        try {
-            ScriptableObject.callMethod(cocoon, "handleContinuation", args);
-        } catch (JavaScriptException ex) {
-            EvaluatorException ee =
-                Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                                        ex.getMessage()));
-            Throwable unwrapped = unwrap(ex);
-            if (unwrapped instanceof ProcessingException) {
-                throw (ProcessingException)unwrapped;
+        synchronized (kScope) {
+            FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
+            cocoon.setup(this, environment, manager);
+            if (enableDebugger) {
+                getDebugger().setVisible(true);
             }
-
-            throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
-        } catch (EcmaError ee) {
-            String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
-            if (ee.getSourceName() != null) {
-                Context.reportRuntimeError(msg,
-                                           ee.getSourceName(),
-                                           ee.getLineNumber(),
-                                           ee.getLineSource(),
-                                           ee.getColumnNumber());
-            } else {
-                Context.reportRuntimeError(msg);
+            //int size = (params != null ? params.size() : 0);
+            //NativeArray parameters = new NativeArray(size);
+            
+            //if (size != 0) {
+            //for (int i = 0; i < size; i++) {
+            //Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+            //parameters.put(arg.name, parameters, arg.value);
+            //}
+            //}
+            //cocoon.setParameters(parameters);
+            Object[] args = new Object[] {k};
+            try {
+                ScriptableObject.callMethod(cocoon, "handleContinuation", args);
+            } catch (JavaScriptException ex) {
+                EvaluatorException ee =
+                    Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                                                            ex.getMessage()));
+                Throwable unwrapped = unwrap(ex);
+                if (unwrapped instanceof ProcessingException) {
+                    throw (ProcessingException)unwrapped;
+                }
+                
+                throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
+            } catch (EcmaError ee) {
+                String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+                if (ee.getSourceName() != null) {
+                    Context.reportRuntimeError(msg,
+                                               ee.getSourceName(),
+                                               ee.getLineNumber(),
+                                               ee.getLineSource(),
+                                               ee.getColumnNumber());
+                } else {
+                    Context.reportRuntimeError(msg);
+                }
+                throw new CascadingRuntimeException(ee.getMessage(), ee);
+            } finally {
+                cocoon.invalidate();
+                Context.exit();
             }
-            throw new CascadingRuntimeException(ee.getMessage(), ee);
-        } finally {
-            cocoon.invalidate();
-            Context.exit();
         }
     }
 
@@ -639,15 +624,17 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         return e;
     }
 
+    // package access as this is called by FOM_Cocoon
     void forwardTo(Scriptable scope, FOM_Cocoon cocoon,
-                   String uri, Object bizData,
-                   WebContinuation continuation,
-                   Environment environment)
+                           String uri, Object bizData,
+                           WebContinuation continuation,
+                           Environment environment)
         throws Exception {
         setupView(scope, cocoon ,environment);
         super.forwardTo(uri, bizData, continuation, environment);
     }
 
+    // package access as this is called by FOM_Cocoon
     boolean process(Scriptable scope, FOM_Cocoon cocoon,
                     String uri, Object bizData, 
                     OutputStream out, Environment environment)
