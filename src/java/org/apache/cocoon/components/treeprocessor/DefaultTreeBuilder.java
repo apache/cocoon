@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
+import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.excalibur.source.Source;
@@ -115,6 +116,15 @@ public class DefaultTreeBuilder
      * The sitemap component information grabbed while building itsMaanger
      */
     protected ProcessorComponentInfo itsComponentInfo;
+
+    /** Optional application container */
+    protected ComponentLocator applicationContainer;
+
+    /** Optional event listeners for the enter sitemap event */
+    protected List enterSitemapEventListeners = new ArrayList();
+
+    /** Optional event listeners for the leave sitemap event */
+    protected List leaveSitemapEventListeners = new ArrayList();
 
     // -------------------------------------
 
@@ -241,6 +251,32 @@ public class DefaultTreeBuilder
 
     public ClassLoader getBuiltProcessorClassLoader() {
         return this.itsClassLoader;
+    }
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getComponentLocator()
+     */
+    public ComponentLocator getComponentLocator() {
+        // Useless method as it's redefined in SitemapLanguage
+        return this.applicationContainer;
+    }
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getEnterSitemapEventListeners()
+     */
+    public List getEnterSitemapEventListeners() {
+        // we make a copy here, so we can clear(recylce) the list after the
+        // sitemap is build
+        return (List)((ArrayList)this.enterSitemapEventListeners).clone();
+    }
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getLeaveSitemapEventListeners()
+     */
+    public List getLeaveSitemapEventListeners() {
+        // we make a copy here, so we can clear(recylce) the list after the
+        // sitemap is build
+        return (List)((ArrayList)this.leaveSitemapEventListeners).clone();
     }
 
     /**
@@ -551,6 +587,9 @@ public class DefaultTreeBuilder
         this.registeredNodes.clear();
 
         VariableResolverFactory.setDisposableCollector(null);
+        this.applicationContainer = null;
+        this.enterSitemapEventListeners.clear();
+        this.leaveSitemapEventListeners.clear();
     }
 
     public void dispose() {

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
@@ -32,6 +33,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
@@ -66,6 +68,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** The sitemap executor */
     private SitemapExecutor sitemapExecutor;
 
+    /** Optional application container */
+    private ComponentLocator applicationContainer;
+
     /**
      * Builds a concrete processig, given the wrapping processor
      */
@@ -79,7 +84,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ServiceManager manager, ClassLoader classloader, ProcessingNode rootNode, List disposableNodes) {
+    public void setProcessorData(ServiceManager manager, 
+                                 ClassLoader classloader, 
+                                 ProcessingNode rootNode, 
+                                 List disposableNodes,
+                                 ComponentLocator componentLocator,
+                                 List             enterSitemapEventListeners,
+                                 List             leaveSitemapEventListeners) {
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
@@ -95,6 +106,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.componentConfigurations = componentConfigurations;
     }
 
+    /**
+     * @see org.apache.cocoon.Processor#getComponentConfigurations()
+     */
     public Configuration[] getComponentConfigurations() {
         if (this.componentConfigurations == null) {
             if (this.wrappingProcessor.parent != null) {
@@ -135,6 +149,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         return this.wrappingProcessor;
     }
 
+    /**
+     * @see org.apache.cocoon.Processor#getRootProcessor()
+     */
     public Processor getRootProcessor() {
         return this.wrappingProcessor.getRootProcessor();
     }
@@ -298,6 +315,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // Ensure it won't be used anymore
         this.rootNode = null;
         this.sitemapExecutor = null;
+        ContainerUtil.dispose(this.applicationContainer);
+        this.applicationContainer = null;
     }
 
     private class TreeProcessorRedirector extends ForwardRedirector {

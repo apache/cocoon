@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,9 +59,6 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
-    
-    /** Optional application container */
-    private ComponentLocator applicationContainer;
 
     /**
      * Build a component manager with the contents of the &lt;map:components&gt; element of
@@ -118,6 +115,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             c.addAll(config);
             c.removeChild(config.getChild("application-container"));
             c.removeChild(config.getChild("classpath"));
+            c.removeChild(config.getChild("listeners"));
 
             ContainerUtil.configure(newManager, c);
             ContainerUtil.initialize(newManager);
@@ -191,15 +189,6 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         this.viewsNode = null;
         this.isBuildingView = false;
         this.isBuildingErrorHandler = false;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        ContainerUtil.dispose(this.applicationContainer);
-        this.applicationContainer = null;
-        super.dispose();
     }
 
     /**
