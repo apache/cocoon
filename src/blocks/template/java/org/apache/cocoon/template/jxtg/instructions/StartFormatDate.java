@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.template.jxtg.script.event;
+package org.apache.cocoon.template.jxtg.instructions;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +26,9 @@ import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.script.event.Event;
+import org.apache.cocoon.template.jxtg.script.event.StartElement;
+import org.apache.cocoon.template.jxtg.script.event.StartInstruction;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
