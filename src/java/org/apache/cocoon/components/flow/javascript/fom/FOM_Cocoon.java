@@ -15,12 +15,19 @@
  */
 package org.apache.cocoon.components.flow.javascript.fom;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
@@ -124,9 +131,9 @@ public class FOM_Cocoon extends ScriptableObject {
                 return session;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);            
-            session = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getRequest(objectModel).getSession(true),
-                    getParentScope());
+            session = new FOM_Session(
+                    getParentScope(),
+                    ObjectModelHelper.getRequest(objectModel).getSession(true));
             return session;
         }
 
@@ -135,9 +142,9 @@ public class FOM_Cocoon extends ScriptableObject {
                 return request;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            request = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getRequest(objectModel),
-                    getParentScope());
+            request = new FOM_Request(
+                    getParentScope(),
+                    ObjectModelHelper.getRequest(objectModel));
             return request;
         }
 
@@ -146,9 +153,9 @@ public class FOM_Cocoon extends ScriptableObject {
                 return context;
             }
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-            context = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getContext(objectModel),
-                    getParentScope());
+            context = new FOM_Context(
+                    getParentScope(),
+                    ObjectModelHelper.getContext(objectModel));
             return context;
         }
 
@@ -423,9 +430,34 @@ public class FOM_Cocoon extends ScriptableObject {
      * attributes can be accessed as properties. Do we want to keep this?
      */
     private static abstract class AttributeHolderJavaObject extends NativeJavaObject {
+        
+        private static Map classProps = new HashMap();
+        private Set propNames;
+
         public AttributeHolderJavaObject(Scriptable scope, Object object, Class clazz) {
             super(scope, object, clazz);
+            this.propNames = getProperties(object.getClass());
         }
+        
+        /** Compute the names of JavaBean properties so that we can filter them our in get() */
+        private static Set getProperties(Class clazz) {
+            Set result = (Set)classProps.get(clazz);
+            if (result == null) {
+                try {
+                    PropertyDescriptor[] descriptors = Introspector.getBeanInfo(clazz).getPropertyDescriptors();
+                    result = new HashSet();
+                    for (int i = 0; i < descriptors.length; i++) {
+                        result.add(descriptors[i].getName());
+                    }
+                } catch (IntrospectionException e) {
+                    // Cannot introspect: just consider there are no properties
+                    result = Collections.EMPTY_SET;
+                }
+                classProps.put(clazz, result);
+            }
+            return result;
+        }
+        
         
         protected abstract Enumeration getAttributeNames();
         protected abstract Object getAttribute(String name);
@@ -448,7 +480,13 @@ public class FOM_Cocoon extends ScriptableObject {
         }
         
         public Object get(String name, Scriptable start) {
-            Object result = super.get(name, start);
+            Object result;
+            // Filter out JavaBean properties. We only want methods of the underlying object.
+            if (this.propNames.contains(name)) {
+                result = NOT_FOUND;
+            } else {
+                result = super.get(name, start);
+            }
             if (result == NOT_FOUND) {
                 result = getAttribute(name);
                 if (result != null) {
