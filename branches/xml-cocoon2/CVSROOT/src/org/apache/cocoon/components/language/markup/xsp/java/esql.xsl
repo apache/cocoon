@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.32 2001-01-17 14:30:08 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.33 2001-01-17 20:17:24 balld Exp $-->
 <!--
 
  ============================================================================
@@ -205,6 +205,7 @@
       class EsqlConnection {
         <xsl:choose>
           <xsl:when test="$environment = 'cocoon1'">
+            static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
             DBConnection db_connection = null;
           </xsl:when>
           <xsl:when test="$environment = 'cocoon2'">
@@ -268,11 +269,11 @@
         </xsl:when>
         <xsl:when test="esql:pool and $environment = 'cocoon2'">
           try {
-              _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
-              _esql_connection.connection = _esql_connection.datasource.getConnection();
-          } catch (Exception cmse) {
-              cocoonLogger.error("Could not get the datasource", cmse);
-              throw new RuntimeException("Could not get the datasource" + cmse.toString());
+            _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
+            _esql_connection.connection = _esql_connection.datasource.getConnection();
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            cocoonLogger.error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
+            throw new RuntimeException("Could not get the datasource "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
           }
         </xsl:when>
         <xsl:otherwise>
