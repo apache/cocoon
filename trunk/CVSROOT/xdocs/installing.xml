@@ -1072,6 +1072,11 @@ You could also make these three configuration changes via
    <td>JDK 1.2</td>
   </tr>
   <tr>
+   <td>Windows 98 SE</td>
+   <td colspan="2">Tomcat 3.2.1</td>
+   <td>JDK 1.3</td>
+  </tr>
+  <tr>
    <td>Windows NT 4.0</td>
    <td>IIS 4.0</td>
    <td>ServletExec 2.2</td>
