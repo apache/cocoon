@@ -1,17 +1,17 @@
-<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>othello</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content">
-		<p class="title">Othello</p>
-		<p class="paratitle">Ο Στόχος</p>
-		<p>The idea: a project that can easy build small to medium web sites usign apache cocoon.</p>
-		<p>The project must be template-based and able to be reused leaving the sitemap.xmap untouched.</p>
-		<p>sitemap.xmap must be a "black box" that implements as many cocoon capabilities as possible.</p>
-		<p class="paratitle">Current state</p>
-		<p>ALPHA</p>
-	</body>
+  <head>
+    <osm:pageTitle>
+      <osm:text>othello</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">Othello</p>
+    <p class="paratitle">Στόχος</p>
+    <p>Η ιδέα: ένα έ�?γο για τη ε�?κολη δημιου�?γία μικ�?ών έως μεσαίων σε μέγεθος δικτυακών τόπων βασισμένους στο έ�?γο Cocoon της Apache.</p>
+    <p>Το έ�?γο π�?έπει να είναι template-based και να μπο�?εί να επαναχ�?ησιμοποιηθεί αφήνοντας το sitemap.xmap ανέπαφο.</p>
+    <p>το sitemap.xmap π�?έπει να είναι ένα  "black box" που θα ενσωματώνει όσο το δυνατό πε�?ισσότε�?ες δυνατότητες/λειτου�?γίες.</p>
+    <p class="paratitle">Current state</p>
+    <p>ALPHA</p>
+  </body>
 </html>

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
-<html xmlns:osm="http://osmosis.gr/osml/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://osmosis.gr/osml/1.0
-C:\OSML\schema\main.xsd">
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
 	<head>
 		<osm:pageTitle>
 			<osm:text>quick reference</osm:text>
@@ -18,8 +16,8 @@ C:\OSML\schema\main.xsd">
 		<p class="notes"><![CDATA[i18n and osm namespaces must be declared.]]></p>
 		<p>
 			<pre><![CDATA[
-     <html xmlns="http://www.w3.org/1999/xhtml"  
-              xmlns:osm="http://osmosis.gr/osml/1.0"  
+     <html xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:osm="http://osmosis.gr/osml/1.0"
               xmlns:i18n="http://apache.org/cocoon/i18n/2.1">]]></pre>
 		</p>
 		<p class="paratitle">Content</p>

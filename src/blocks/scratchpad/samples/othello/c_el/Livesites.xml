@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>othello live sites</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content">
-		<p class="title">Δικτυακοί τόποι</p>
-		<p>Live sites based on Osmosis Othello.</p>
-		<osm:list>
-			<osm:listItem href="http://www.bonsaiflo.gr">bonsai flowers</osm:listItem>
-			<osm:listItem href="http://www.rodopi-sa.gr">Rodopi SA</osm:listItem>
-			<osm:listItem href="http://www.megabag.gr">Megabag SA</osm:listItem>
-			<osm:listItem href="http://www.forestland.gr">Forestland adventure travel</osm:listItem>
-			<osm:listItem href="http://www.porovistonis.gr">Hotel Porto Vistonis</osm:listItem>
-			<osm:listItem href="http://www.g-arseniou.gr">Men's Wear Arseniou Grigoris</osm:listItem>
-			<osm:listItem href="http://www.kottakis.gr">Traditional railing manufactory</osm:listItem>
-		</osm:list>
-	</body>
+  <head>
+    <osm:pageTitle>
+      <osm:text>othello live sites</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">Δικτυακοί τόποι στον αέ�?α</p>
+    <p>Δικτυακοί τόποι βασισμένοι στο Othello.</p>
+    <osm:list>
+      <osm:listItem href="http://www.bonsaiflo.gr">Ανθη Φυτά Bonsai</osm:listItem>
+      <osm:listItem href="http://www.rodopi-sa.gr">Βιομηχανία Γάλακτος Ξάνθης ΑΕ "ΡΟΔΟΠΗ"</osm:listItem>
+      <osm:listItem href="http://www.megabag.gr">Μεγασάκοι ΑΒΕΕ</osm:listItem>
+      <osm:listItem href="http://www.forestland.gr">Forestland adventure travel</osm:listItem>
+      <osm:listItem href="http://www.porovistonis.gr">Hotel Porto Vistonis</osm:listItem>
+      <osm:listItem href="http://www.g-arseniou.gr">Ανδ�?ικό �?τ�?σιμο Α�?σενίου</osm:listItem>
+      <osm:listItem href="http://www.kottakis.gr">Τέχνη και Πα�?άδοση - Κωττάκης</osm:listItem>
+    </osm:list>
+  </body>
 </html>

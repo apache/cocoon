@@ -1,170 +1,207 @@
 <?xml version="1.0"?>
-<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
-<!-- edited with STYLEVISION v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 	<!-- =========================== Components ================================ -->
-	<map:components>
-		<map:generators default="file"/>
-		<map:transformers default="xslt">
-			<!-- Configure i18n transformer -->
-			<map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-			  <catalogues default="messages">
-			    <catalogue id="messages" name="messages" location="translations"/>
-			  </catalogues>
-			  <cache-at-startup>true</cache-at-startup>			
-	
-				<!-- This parameter sets the base name for dictionary files 
-				<catalogue-name>messages</catalogue-name> -->
-				<!-- This parameter sets the path where dictionaries are placed 
-				<catalogue-location>translations</catalogue-location> 
-				<cache-at-startup>true</cache-at-startup> -->
-			</map:transformer>
-		</map:transformers>
-		<map:readers default="resource"/>
-		<map:serializers default="html">
-			<map:serializer name="html" mime-type="text/html" src="org.apache.cocoon.serialization.HTMLSerializer">
-				<!--				<encoding>utf-8</encoding> -->
-			</map:serializer>
-			<map:serializer name="xml" mime-type="text/xml" src="org.apache.cocoon.serialization.XMLSerializer">
-				<!--				<encoding>utf-8</encoding>-->
-			</map:serializer>
-		</map:serializers>
-		<map:selectors default="browser"/>
-		<!-- =========================== Actions ================================= -->
-		<map:actions>
-			<!-- LocaleAction is used to set/get current users locale. See Javadocs for details. -->
-			<map:action name="locale" logger="sitemap.action.locale" src="org.apache.cocoon.acting.LocaleAction">
-				<!-- Creates a new session if needed. Used with 'store-in-session' param -->
-				<create-session>true</create-session>
-				<!-- Stores locale information in session. A session should be created before, 
-                       otherwise 'create-session' should be true.
-                -->
-				<store-in-session>true</store-in-session>
-				<!-- Stores locale information in request attributes -->
-				<store-in-request>true</store-in-request>
-				<!-- Stores locale information in a client cookie -->
-				<store-in-cookie>false</store-in-cookie>
-				<!-- Uncomment as needed to override defaults:
-		                <locale-attribute>locale</locale-attribute>
-		                <language-attribute>language</language-attribute>
-		                <country-attribute>country</country-attribute>
-		                <variant-attribute>variant</variant-attribute>
-                -->
-			</map:action>
-		</map:actions>
-	</map:components>
-	<!-- =========================== Resources =============================== -->
-	<map:resources>
-		<!-- This resource is used to create a composite layout page -->
-		<map:resource name="layoutHome">
-			<map:aggregate element="layout">
-				<map:part src="cocoon:/layout/home.xhtml"/>
-			</map:aggregate>
-			<map:serialize type="xml"/>
-		</map:resource>
-		<map:resource name="layoutMain">
-			<map:aggregate element="layout">
-				<map:part src="cocoon:/layout/main.xhtml"/>
-			</map:aggregate>
-			<map:serialize type="xml"/>
-		</map:resource>
-		<!-- builders are used to create a composition of layout and content-->
-		<map:resource name="homebuilder">
-			<map:aggregate element="site">
-				<map:part src="cocoon:/get/HomeLayout"/>
-				<map:part src="cocoon:/blocks/blocks.xml"/>
-				<map:part src="cocoon:/xml/Home.xml" label="content"/>
-			</map:aggregate>
-			<!-- copy xml element to the right position (elements re-arraignment-->
-			<map:transform src="osml/core/layout.xsl"/>
-			<!-- start transformations -->
-			<map:transform src="osml/core/core.xsl"/>
-			<map:serialize type="xhtml"/>
-		</map:resource>
-		<map:resource name="sitebuilder">
-			<map:aggregate element="site">
-				<map:part src="cocoon:/get/MainLayout"/>
-				<map:part src="cocoon:/blocks/blocks.xml"/>
-				<map:part src="cocoon:/xml/{../1}.xml" label="content"/>
-			</map:aggregate>
-			<!-- copy xml element to the right position (elements re-arraignment-->
-			<map:transform src="osml/core/layout.xsl"/>
-			<!-- start transformations -->
-			<map:transform src="osml/core/core.xsl"/>
-			<map:serialize type="xhtml"/>
-		</map:resource>
-	</map:resources>
-	<!-- =========================== Pipelines ================================= -->
-	<map:pipelines>
-		<!-- use case pipeline - URI request handling -->
-		<map:pipeline>
-			<map:act type="locale">
-				<map:match pattern="">
-					<map:redirect-to uri="Home?locale=en"/>
-				</map:match>
-				<map:match pattern="Home*">
-					<map:call resource="homebuilder"/>
-				</map:match>
-				<map:match pattern="*">
-					<map:call resource="sitebuilder"/>
-				</map:match>
-			</map:act>
-		</map:pipeline>
-		<!-- Content processing  [ internall call from resources ]-->
-		<map:pipeline>
-			<map:act type="locale">
-				<!-- GET content from resources -->
-				<map:match pattern="get/HomeLayout">
-					<map:call resource="layoutHome"/>
-				</map:match>
-				<map:match pattern="get/MainLayout">
-					<map:call resource="layoutMain"/>
-				</map:match>
-				<!-- xml content with file based multilanguage support -->
-				<map:match pattern="xml/*.xml">
-					<map:generate src="c_{../locale}/{1}.xml"/>
-					<map:transform type="i18n">
-						<map:parameter name="locale" value="{../locale}"/>
-					</map:transform>
-					<map:serialize type="xml"/>
-				</map:match>
-				<map:match pattern="blocks/*.xml">
-					<map:generate src="blocks/{1}.xml"/>
-					<map:transform type="i18n">
-						<map:parameter name="locale" value="{../locale}"/>
-					</map:transform>
-					<map:serialize type="xml"/>
-				</map:match>
-				<!-- xml main site files -->
-				<map:match pattern="layout/*.xhtml">
-					<map:generate src="{1}.xhtml"/>
-					<map:serialize type="xml"/>
-				</map:match>
-			</map:act>
-		</map:pipeline>
-		<!-- === Static content === -->
-		<map:pipeline>
-			<map:match pattern="javascript/*.js">
-				<map:read src="javascript/{1}.js"/>
-			</map:match>
-			<map:match pattern="static/themes/*.css">
-				<map:read src="static/themes/{1}.css"/>
-			</map:match>
-			<map:match pattern="static/images/*.*">
-				<map:read src="static/images/{1}.{2}" mime-type="image/gif"/>
-			</map:match>
-			<map:match pattern="static/themes/images/*.*">
-				<map:read src="static/themes/images/{1}.{2}" mime-type="image/gif"/>
-			</map:match>
-			<map:match pattern="static/images/**/*.*">
-				<map:read src="static/images/{1}/{2}.{3}" mime-type="image/gif"/>
-			</map:match>
-			<map:match pattern="static/themes/images/**/*.*">
-				<map:read src="static/themes/images/{1}/{2}.{3}" mime-type="image/gif"/>
-			</map:match>
-			<map:match pattern="static/download/*.*">
-				<map:read src="static/download/{1}.{2}" mime-type="application/zip"/>
-			</map:match>
-		</map:pipeline>
-	</map:pipelines>
+  <map:components>
+    <map:generators default="file"/>
+    <map:transformers default="xslt">
+      <!-- Configure i18n transformer -->
+      <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="messages">
+          <catalogue id="messages" name="messages" location="translations"/>
+        </catalogues>
+        <cache-at-startup>true</cache-at-startup>
+        <!-- This parameter sets the base name for dictionary files
+        <catalogue-name>messages</catalogue-name> -->
+        <!-- This parameter sets the path where dictionaries are placed
+        <catalogue-location>translations</catalogue-location>
+        <cache-at-startup>true</cache-at-startup> -->
+      </map:transformer>
+    </map:transformers>
+    <map:readers default="resource"/>
+    <map:serializers default="html">
+      <map:serializer name="html" mime-type="text/html" src="org.apache.cocoon.serialization.HTMLSerializer"/>
+      <map:serializer name="xml" mime-type="text/xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
+    </map:serializers>
+    <map:selectors default="browser"/>
+    <!-- =========================== Actions ================================= -->
+    <map:actions>
+      <!-- LocaleAction is used to set/get current users locale. See Javadocs for details. -->
+      <map:action name="locale" logger="sitemap.action.locale" src="org.apache.cocoon.acting.LocaleAction">
+        <!-- Creates a new session if needed. Used with 'store-in-session' param -->
+        <create-session>true</create-session>
+        <!-- Stores locale information in session. A session should be created before, 
+             otherwise 'create-session' should be true.-->
+        <store-in-session>true</store-in-session>
+        <!-- Stores locale information in request attributes -->
+        <store-in-request>true</store-in-request>
+        <!-- Stores locale information in a client cookie -->
+        <store-in-cookie>false</store-in-cookie>
+        <!-- Uncomment as needed to override defaults:
+            <locale-attribute>locale</locale-attribute>
+            <language-attribute>language</language-attribute>
+            <country-attribute>country</country-attribute>
+            <variant-attribute>variant</variant-attribute>
+        -->
+      </map:action>
+    </map:actions>
+  </map:components>
+  <!-- =========================== Resources =============================== -->
+  <map:resources>
+    <!-- This resource is used to create a composite layout page 
+      in this case we have only one .xhtml file tha descripe the layout
+      but this can be extented.
+    -->
+    <map:resource name="layoutHome">
+      <map:aggregate element="layout">
+        <map:part src="cocoon:/layout/home.xhtml"/>
+      </map:aggregate>
+      <map:serialize type="xml"/>
+    </map:resource>
+    <map:resource name="layoutMain">
+      <map:aggregate element="layout">
+        <map:part src="cocoon:/layout/main.xhtml"/>
+      </map:aggregate>
+      <map:serialize type="xml"/>
+    </map:resource>
+    <!-- builders
+      builders are used to create a composition of layout and content
+
+      for each request othello create a respond page, this page content come from 
+        - request
+        - block(s)
+
+        the builder run in three steps
+        Step 1:
+        aggregate the content from request, all blocks, and template layout instructions HomeLayout or MainLayout xhtml
+
+        Step 2 (first transformation):
+        the content is placed to the right place in layout template consindering <osm:block-copy/> and <osm:content-copy/> elements
+
+        Step 3 (final transformation)
+
+        Blocks
+        blocks.xml has content that will be common in all or some of web sites pages
+          for example:
+            headers
+            footers
+            menus
+            announcements
+
+          the content in every block can be
+          - xhtml fragments
+          - custom elements
+
+          and can be either static writen in bocks.xml or dynamic comming from a pipeline using cinclude protocol
+
+          every block can be placed somewhere in template using <osm:block-copy select="block-id"/>
+
+    -->
+    <map:resource name="homebuilder">
+
+      <map:aggregate element="site">
+        <map:part src="cocoon:/get/HomeLayout"/>
+        <map:part src="cocoon:/blocks/blocks.xml"/>
+        <map:part src="cocoon:/xml/Home.xml" label="content"/>
+      </map:aggregate>
+      <!-- copy xml element to the right position (elements re-arraignment)-->
+      <map:transform src="osml/core/layout.xsl"/>
+      <!-- start transformations -->
+      <!-- elements belongs to osm: namespace will be transformed using instructions from *.xsl files in osml/plugins/{1}.xsl
+        all other elements will just be coped.
+        every xsl in osml/plugins must be included in core.xsl
+
+        custom element can be created just adding custom tranformations rules xsl files in osml/plugins. osm or any other namespace can be used
+      -->
+      <map:transform src="osml/core/core.xsl"/>
+      <map:serialize type="xhtml"/>
+    </map:resource>
+
+    <map:resource name="sitebuilder">
+      <map:aggregate element="site">
+        <map:part src="cocoon:/get/MainLayout"/>
+        <map:part src="cocoon:/blocks/blocks.xml"/>
+        <map:part src="cocoon:/xml/{../1}.xml"/>
+      </map:aggregate>
+      <!-- copy xml element to the right position (elements re-arraignment-->
+      <map:transform src="osml/core/layout.xsl"/>
+      <!-- start transformations -->
+      <map:transform src="osml/core/core.xsl"/>
+      <map:serialize type="xhtml"/>
+    </map:resource>
+  </map:resources>
+  <!-- =========================== Pipelines ================================= -->
+  <map:pipelines>
+    <!-- use case pipeline - URI request handling -->
+    <map:pipeline>
+      <map:act type="locale">
+        <map:match pattern="">
+          <map:redirect-to uri="Home?locale=en"/>
+        </map:match>
+        <map:match pattern="Home*">
+          <map:call resource="homebuilder"/>
+        </map:match>
+        <map:match pattern="*">
+          <map:call resource="sitebuilder"/>
+        </map:match>
+      </map:act>
+    </map:pipeline>
+    <!-- Content processing  [ internall call from resources ]
+      in production this pipeline can be internal-only 
+    -->
+    <map:pipeline>
+      <map:act type="locale">
+        <!-- GET content from resources -->
+        <map:match pattern="get/HomeLayout">
+          <map:call resource="layoutHome"/>
+        </map:match>
+        <map:match pattern="get/MainLayout">
+          <map:call resource="layoutMain"/>
+        </map:match>
+        <!-- xml content with file based multilanguage support -->
+        <map:match pattern="xml/*.xml">
+          <map:generate src="c_{../locale}/{1}.xml"/>
+          <map:transform type="i18n">
+            <map:parameter name="locale" value="{../locale}"/>
+          </map:transform>
+          <map:serialize type="xml"/>
+        </map:match>
+        <map:match pattern="blocks/*.xml">
+          <map:generate src="blocks/{1}.xml"/>
+          <map:transform type="i18n">
+            <map:parameter name="locale" value="{../locale}"/>
+          </map:transform>
+          <map:serialize type="xml"/>
+        </map:match>
+        <!-- xml main site files -->
+        <map:match pattern="layout/*.xhtml">
+          <map:generate src="{1}.xhtml"/>
+          <map:serialize type="xml"/>
+        </map:match>
+      </map:act>
+    </map:pipeline>
+    <!-- === Static content === -->
+    <map:pipeline>
+      <map:match pattern="javascript/*.js">
+        <map:read src="javascript/{1}.js"/>
+      </map:match>
+      <map:match pattern="static/themes/*.css">
+        <map:read src="static/themes/{1}.css"/>
+      </map:match>
+      <map:match pattern="static/images/*.*">
+        <map:read src="static/images/{1}.{2}" mime-type="image/gif"/>
+      </map:match>
+      <map:match pattern="static/themes/images/*.*">
+        <map:read src="static/themes/images/{1}.{2}" mime-type="image/gif"/>
+      </map:match>
+      <map:match pattern="static/images/**/*.*">
+        <map:read src="static/images/{1}/{2}.{3}" mime-type="image/gif"/>
+      </map:match>
+      <map:match pattern="static/themes/images/**/*.*">
+        <map:read src="static/themes/images/{1}/{2}.{3}" mime-type="image/gif"/>
+      </map:match>
+      <map:match pattern="static/download/*.*">
+        <map:read src="static/download/{1}.{2}" mime-type="application/zip"/>
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>

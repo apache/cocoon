@@ -1,9 +1,9 @@
-<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>apache cocoon</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content"/>
+  <head>
+    <osm:pageTitle>
+      <osm:text>apache cocoon</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content"/>
 </html>

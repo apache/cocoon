@@ -6,8 +6,10 @@
     </osm:pageTitle>
   </head>
   <body contentID="content">
-    <p class="title">Παράδειγμα XHTML</p>
-    <p>This page is created using simple XHTML markup.</p>
+    <p class="title">XHTML Example</p>
+    <p>This page is created using simple XHTML markup from a .xhtml file.</p>
+    <p>For a request for example: "http://.../TestPage" generator look for TestPage.xml to get content. If TestPage.xml does not exits then generator look for TestPage.xhtml. If .xhtml file exist then content inside elements with contentID attribute is used and placed in the right place in template.</p>
+    <p>Look at main.xhtml template file for<![CDATA[ <osm:content-copy select="content"/>]]></p>
     <p class="paratitle">Table</p>
     <table>
       <tr>

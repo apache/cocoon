@@ -1,14 +1,26 @@
-<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>othello</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content">
-		<p class="title">A site in few steps</p>
-		<p class="paratitle">Mini Howto</p>
-		<p>how to create a web site in few steps using cocoon and othelo.</p>
-		<p class="notes">work in progress</p>
-	</body>
+  <head>
+    <osm:pageTitle>
+      <osm:text>othello</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">A site in few steps</p>
+    <p class="paratitle">Mini Howto</p>
+    <p>how to create a web site in few steps using cocoon and othelo.</p>
+    <p class="notes">Work in progress ..</p>
+    <p class="paratitle">Add your own content</p>
+    <p class="parasubtitle">XHTML</p>
+    <ul>
+      <li>Create a .xhtml file (MyContet.xhtml) with your content.</li>
+      <li>add in body element an attribute "contentID"
+		<pre>
+		<![CDATA[<body contentID="content" ...]]></pre>
+      </li>
+      <li>Put this file in content directory c_en.</li>
+      <li>as for http:// .... /samples/scratchpad/othello/MyContent </li>
+    </ul>
+    <p class="notes"/>
+  </body>
 </html>

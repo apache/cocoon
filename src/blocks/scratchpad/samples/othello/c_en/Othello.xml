@@ -1,17 +1,17 @@
-<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>othello</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content">
-		<p class="title">Othello</p>
-		<p class="paratitle">Objective</p>
-		<p>The idea: a project that can easy build small to medium web sites usign apache cocoon.</p>
-		<p>The project must be template-based and able to be reused leaving the sitemap.xmap untouched.</p>
-		<p>sitemap.xmap must be a "black box" that implements as many cocoon capabilities as possible.</p>
-		<p class="paratitle">Current state</p>
-		<p>ALPHA</p>
-	</body>
+  <head>
+    <osm:pageTitle>
+      <osm:text>othello</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">Othello</p>
+    <p class="paratitle">Objective</p>
+    <p>The idea: a project that can easy build small to medium web sites usign apache cocoon.</p>
+    <p>The project must be template-based and able to be reused leaving the sitemap.xmap untouched.</p>
+    <p>sitemap.xmap must be a "black box" that implements as many cocoon capabilities as possible.</p>
+    <p class="paratitle">Current state</p>
+    <p>ALPHA</p>
+  </body>
 </html>
