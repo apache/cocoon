@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.236 2004/07/04 09:45:33 antonio Exp $
+    | CVS $Id: jars.xml,v 1.237 2004/07/08 09:17:31 unico Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -558,7 +558,7 @@
     <title>EHCache</title>
     <description>Easy Hibernate Cache</description>
     <used-by>EHCache Store</used-by>
-    <lib>scratchpad/lib/ehcache-0.8.jar</lib>
+    <lib>scratchpad/lib/ehcache-0.9.jar</lib>
     <homepage>http://ehcache.sourceforge.net/</homepage>
   </file>
 
