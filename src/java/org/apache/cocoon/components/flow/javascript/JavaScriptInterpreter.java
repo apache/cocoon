@@ -90,7 +90,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.13 2003/03/27 19:11:53 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.14 2003/04/01 12:31:25 stefano Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -321,8 +321,8 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
+        
         String uriPrefix = environment.getURIPrefix();
-        System.out.println("set uriPrefix="+uriPrefix);
         userScopes.put(uriPrefix, scope);
     }
 
