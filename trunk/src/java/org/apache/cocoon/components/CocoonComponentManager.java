@@ -53,7 +53,6 @@ package org.apache.cocoon.components;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.SourceResolver;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -69,15 +68,11 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.25 2003/10/22 15:37:50 bloritsch Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.26 2003/10/22 15:48:51 cziegeler Exp $
  */
 public final class CocoonComponentManager
-implements SourceResolver, ServiceManager
+implements ServiceManager
 {
-
-
-    /** The configured {@link SourceResolver} */
-    private SourceResolver sourceResolver;
 
     /** The parent component manager for implementing parent aware components */
     private ServiceManager parentManager;
@@ -107,21 +102,7 @@ implements SourceResolver, ServiceManager
      */
     public Object lookup( final String role )
     throws ServiceException {
-        if( null == role ) {
-            final String message =
-                "ComponentLocator Attempted to retrieve component with null role.";
-
-            throw new ServiceException( role, message );
-        }
-        if ( role.equals(SourceResolver.ROLE) ) {
-            if ( null == this.sourceResolver ) {
-                this.sourceResolver = (SourceResolver) parentManager.lookup( role );
-            }
-            return this;
-        }
-
-
-        return component;
+        return parentManager.lookup(role);
     }
 
     /**
@@ -129,24 +110,7 @@ implements SourceResolver, ServiceManager
      * ComponentHandler, and let's the ComponentHandler take care of the actual work.
      */
     public void release( final Object component ) {
-        if( null == component ) {
-            return;
-        }
-
-        if ( component == this ) {
-            return;
-        }
         parentManager.release( component);
-    }
-
-    /**
-     * Dispose
-     */
-    public void dispose() {
-        if ( null != this.sourceResolver ) {
-            parentManager.release( this.sourceResolver );
-            this.sourceResolver = null;
-        }
     }
 
     /* (non-Javadoc)
