@@ -54,6 +54,8 @@ import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 /**
  * Abstract base class for inspectors that can calculate 
@@ -82,6 +84,8 @@ public abstract class AbstractImageSourceInspector
      * <code>height</code> property name.
      */
     public static final String IMAGE_HEIGHT_PROPERTY_NAME = "height";
+    
+    private static final SourceValidity VALIDITY = new NOPValidity();
     
     private static final String[] HANDLED_PROPERTIES = new String[] {
         PROPERTY_NS + "#" + IMAGE_HEIGHT_PROPERTY_NAME,
@@ -128,6 +132,13 @@ public abstract class AbstractImageSourceInspector
         return namespace.equals(PROPERTY_NS) && 
                    (name.equals(IMAGE_WIDTH_PROPERTY_NAME) || 
                    name.equals(IMAGE_HEIGHT_PROPERTY_NAME));
+    }
+    
+    /**
+     * Returns NOPValidity
+     */
+    public SourceValidity getValidity(Source source) {
+        return VALIDITY;
     }
     
     /**

@@ -81,7 +81,7 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceDescriptorManager.java,v 1.6 2003/11/21 11:37:48 unico Exp $
+ * @version CVS $Id: SourceDescriptorManager.java,v 1.7 2003/11/21 16:09:28 unico Exp $
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 
 implements SourceDescriptor, Contextualizable, Serviceable, 
@@ -248,13 +248,11 @@ Configurable, Initializable, Disposable, ThreadSafe {
         final Iterator inspectors = m_inspectors.iterator();
         while (inspectors.hasNext()) {
             inspector = (SourceInspector) inspectors.next();
-            if (inspector instanceof SourceDescriptor) {
-                SourceValidity sv = ((SourceDescriptor) inspector).getValidity(source);
-                if (sv == null) {
-                    return null;
-                }
-                validity.add(sv);
+            SourceValidity sv = inspector.getValidity(source);
+            if (sv == null) {
+                return null;
             }
+            validity.add(sv);
         }
         return validity;
     }
