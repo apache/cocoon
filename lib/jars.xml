@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.64 2003/07/11 20:25:30 joerg Exp $
+    | CVS $Id: jars.xml,v 1.65 2003/07/12 13:49:56 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -496,7 +496,7 @@
   <title>Transform HTML to XML</title>
   <description>Tidy is a HTML syntax checker and pretty printer.</description>
   <used-by>HTML generator (html block), RSSTransformer (Portal block)</used-by>
-  <lib>optional/jtidy-04aug2000r7-dev.jar</lib>
+  <lib>html/lib/jtidy-04aug2000r7-dev.jar</lib>
   <homepage>http://lempinen.net/sami/jtidy/</homepage>
  </file>
 
