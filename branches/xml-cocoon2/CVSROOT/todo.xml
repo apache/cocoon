@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.18 2001-02-27 19:41:58 bloritsch Exp $
+  $Id: todo.xml,v 1.6.2.19 2001-03-20 12:37:02 cziegeler Exp $
 -->
 
 
@@ -20,6 +20,7 @@
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
+  <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
  </devs>
 
  <actions priority="high">
