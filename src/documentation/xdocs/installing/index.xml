@@ -231,9 +231,10 @@ export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
     </s1>
 
     <s1 title="Building Cocoon">
-      <p>If you downloaded the binary distribution of Cocoon, you can
+<!-- <p>If you downloaded the binary distribution of Cocoon, you can
         skip this chapter and proceed to the "Installing Cocoon".
-      </p>
+      </p> 
+-->
 
 <!-- TODO: Replacing HSQLDB with other SQL DB
     <s2 title="Making the sql examples work out of the box">
@@ -260,78 +261,42 @@ export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
     </s2>
 -->
 
-    <s2 title="Adding optional components">
+    <s2 title="Optional functionality">
+    <note>This is an area that has changed significantly since 2.0</note>
+     <s3 title="Blocks">
+     <p>Additional "components" in Cocoon 2.1 are now implemented using a partial 
+     implementation of a concept called "blocks".  Full support (planned for the 
+     next release) will include hot-deployable services with java-like extension 
+     and inheritance. For this release, blocks are implemented as self contained 
+     units of code, samples, files and configuration.  Most, if not all optional 
+     features have been factored out into blocks and can be neatly included or 
+     excluded as a unit.  
+     </p>
+     <p>Most blocks are configured by default to be included in the build, but can 
+     be excluded using a <code>local.blocks.properties</code> file.</p>
      <p>
-      Some of the components delivered with Cocoon require additional libraries,
-      e.g. the Php generator or the FOP serializer (for more information about
-      these components, refer to their documentation).
+      Some blocks delivered with Cocoon require additional libraries which can not 
+      be redistributed with Cocoon (e.g. the Php block) the documentation for 
+      these should provide more information, and you should find a "mocks" directory 
+      containing non-functional code provided merely to allow compilation.
      </p>
-     <p>
-      Most of these libraries are already included in the distribution, but some
-      have to be downloaded manually. The build task checks whether you have
-      the required libraries or not and includes the optional components only
-      if you have the libraries available when you build Cocoon. Refer to the
-      <link href="jars.html">Cocoon JARs</link> page for a list of libraries
-      and locations where you could get them.
-     </p>
-     <p>
-      A library/package is available to the build process when it is located
-      in the <code>./lib/optional</code> or the <code>./lib/local</code> directory.
-     </p>
-     <p>
-      The following table contains a list of the optional components,
-      their needed libraries and if they are already included or not.
-     </p>
-     <!-- TODO: Update -->
-     <table>
-       <tr>
-         <th>Component</th>
-         <th>Required Library</th>
-         <th>Library Included</th>
-       </tr>
-       <tr>
-         <td>HTML Generator</td>
-         <td><link href="http://sourceforge.net/projects/jtidy">JTidy</link></td>
-         <td>Yes</td>
-       </tr>
-       <tr>
-         <td>Php Generator</td>
-         <td><link href="http://www.php.net">Php Servlet</link></td>
-         <td>No</td>
-       </tr>
-       <tr>
-         <td>LDAP Transformer</td>
-         <td><link href="http://java.sun.com/products/jndi">JNDI</link></td>
-         <td>No</td>
-       </tr>
-       <tr>
-         <td>PDF Serializer</td>
-         <td><link href="http://xml.apache.org/fop/index.html">FOP</link></td>
-         <td>Yes</td>
-       </tr>
-       <tr>
-         <td>RTF Serializer</td>
-         <td><link href="http://www.jfor.org">jfor</link></td>
-         <td>No</td>
-       </tr>
-     </table>
-     <p>If you want to add additional libraries, put them in the <code>./lib/local</code>
-       directory as this directory is not touched by CVS.
-       <strong>Note:</strong> If you added a library/package, you
-      need to rebuild Cocoon as described in 'Create the Cocoon WAR package'.
-     </p>
-    </s2>
-    <s2 title="Building a minimal Cocoon">
-      <p>If you want to build a minimal Cocoon, simply remove all optional libraries
-        from the <code>./lib/local</code> and the <code>./lib/optional</code> directory.
-        Make a <code>build clean</code> and then a build with the target you want.
-        However, if you want to build a web application make sure you leave the
-        <code>servlet.jar</code> in the <code>./lib/optional</code> directory.
+     </s3>
+     <s3 title="Optional Jars">
+     <p>Some additional libraries could not be factored out 
+     into a block.  For example, the Jakarta Commons HttpClient jar is used by 
+     several different optional components, some not in blocks.  If you determine 
+     that one of these is not necessary for your build, you can eliminate it from 
+     your build by removing its entry in lib/jars.xml and removing the jar from 
+     lib/optional.</p>  
+     </s3>
+    <s3 title="Building a minimal Cocoon">
+      <p>By creating and editing local.build.properties and local.blocks.properties you 
+      can remove any unnecessary features you desire.
       </p>
-      <p><strong>Note:</strong>This feature is only available in the latest developer 
-        version of Cocoon which you can find in the CVS. </p>
+    </s3>
     </s2>
     <s2 title="Running the build">
+    <note>This is an area that has changed significantly since 2.0</note>
       <p>Cocoon uses <link href="http://jakarta.apache.org/ant/">Jakarta Ant</link>
       for the build and installation, and comes with a build script
       ([unix]./build.sh, [win32] .\build.bat) that automates the process.</p>
@@ -340,32 +305,24 @@ export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
       run the build script at least once after every CVS checkout, to ensure that
       extra initializations like jar copying are done correctly.</note>
 
-      <note>The UNIX build script (build.sh) overrides the existing ANT_HOME variable.</note>
+      <note>The build script overrides the existing ANT_HOME variable.</note>
 
       <p>There are basically two options that can be set as parameters to
       the script: <strong>targets</strong> and <strong>properties</strong>.</p>
+      
+      <note>The use of -D style properties as parameters to the build is deprecated.  
+      Use the build and blocks properties files instead.</note>
 
       <s3 title="About build targets">
         <p>Targets are the execution units available in
         <link href="http://jakarta.apache.org/ant/">Ant</link> build files.</p>
 
-        <p>Only one target can be specified per run, by appending it to
+        <p>Targets are specified by appending them to
         the script invocation:</p>
 
 <source>
-[unix]  ./build.sh target
-[win32] .\build.bat target</source>
-
-      </s3>
-
-      <s3 title="About build properties">
-        <p>A target can use properties, that can, or must in some cases, be specified.
-        Multiple properties can be set, by appending them like this to
-        the script invocation:</p>
-
-<source>
-[unix]  ./build.sh -Dpropertyname=propertyvalue [target]
-[win32] .\build.bat -Dpropertyname=propertyvalue [target]</source>
+[unix]  ./build.sh target1 target2 ...
+[win32] .\build.bat target1 target2 ...</source>
 
       </s3>
 
@@ -374,124 +331,18 @@ export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
         important targets. If no target is specified, the default one 
         is used (defined in build.xml).</p>
 
-        <note>Some targets are preliminary and their call method will change
+<!--        <note>Some targets are preliminary and their call method will change
         in the future. Preliminary targets are marked as [BETA].</note>
-      
+-->      
         <p>Cocoon targets place work files and results in a build directory
         under the cocoon root. The only exception are the distribution targets
         that build in a directory called dist.</p> 
-        <p>The target you will most use is propably the <strong>webapp</strong>
-          target which builds a Cocoon web application. For more information see below.</p>
-         
-        <s4 title="build all">
-          <p>Builds all main Cocoon targets to create the <strong>cocoon.jar</strong>
-             package.
-          </p>
-          <ul>
-           <li><strong>target:</strong> all</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-
-         <note>This is currently the default target.</note>  
-
-         <note>Available in interactive build.</note>          
-        </s4>
-
-        <s4 title="build interactive">
-          <p>Shows common build targets and asks the user for eventual
-             properties that may be needed.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> interactive</li>
-           <li><strong>required properties:</strong> none - asks if needed</li>
-           <li><strong>buildfile:</strong> build.xml</li>           
-          </ul>
-          
-         <note>This is the recommended target for first-time users.</note>  
-        </s4>
+        <p>The key targets you will use most often are noted below.  For a listing 
+        of all available targets, run:</p>  
         
-        <s4 title="[BETA] build installwar">
-          <p>Builds and installs Cocoon war package in a specified directory.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> installwar</li>
-           <li><strong>required properties:</strong> 
-                 asks the user for installation path</li>
-           <li><strong>buildfile:</strong> build.xml</li>                     
-          </ul>
-
-         <note>This is the recommended target for an easy install in Tomcat.</note>  
-         
-         <note>Available in interactive build.</note>         
-        </s4>     
-        
-        <s4 title="build docs">
-          <p>Builds the Cocoon documentation in html format.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> docs</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>Available in interactive build.</note>  
-        </s4>      
-
-        <s4 title="build javadocs">
-          <p>Builds the Cocoon javadocs in html format.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> javadocs</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>Available in interactive build.</note>  
-        </s4>           
-
-        <s4 title="build printer-docs">
-          <p>Builds the Cocoon documentation in html printer-friendly format.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> printer-docs</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>Available in interactive build.</note>  
-        </s4>   
-
-        <s4 title="build test">
-          <p>Runs Cocoon unit tests.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> test</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>Available in interactive build.</note>  
-        </s4>   
-
-        <s4 title="build compile">
-          <p>Compiles Cocoon source files.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> compile</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>Available in interactive build.</note>  
-        </s4>   
+<source>
+[unix]  ./build.sh -projecthelp
+[win32] .\build.bat -projecthelp</source>         
 
         <s4 title="build clean">
           <p>Cleans the build directory. It is recommended to clean Cocoon
@@ -499,106 +350,36 @@ export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
             libraries from the <code>./lib/optional/</code>
             directory, or change JDK version.
           </p>
-          
-          <ul>
-           <li><strong>target:</strong> clean</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>Available in interactive build.</note>  
         </s4>    
         
-        <s4 title="build dist">
-          <p>Creates source and binary distributions of Cocoon. This target
-            is not intented for the usual Cocoon user; it's primary used
-            by the Cocoon developers to create a new distribution.
+        <s4 title="build webapp [default]">
+          <p>Builds a Cocoon web application in build/webapp. This is the default target, so 
+          running the build script with no arguments calls this target.
           </p>
-          
-          <ul>
-           <li><strong>target:</strong> dist</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-          
-         <note>The results are in the dist directory.</note>  
+          <note>For quick testing, a stripped down version of Jetty is included in the 
+          distribution.  After a <code>build webapp</code> <code>cocoon servlet</code> 
+          will launch Jetty and Cocoon will be available at http://localhost:8888/</note>
+        </s4>  
+
+        <s4 title="build war">
+          <p>Builds a Cocoon web application in build/webapp and packages it as a .war file. 
+          </p>
         </s4>  
         
-        <s4 title="build webapp">
-  
-          <p>Creates the Cocoon WAR package. It's a non-interactive version
-             of installwar.</p>
-
-          <ul>
-           <li><strong>target:</strong> webapp</li>
-           <li><strong>required properties:</strong> none</li>
-           <li><strong>buildfile:</strong> build.xml</li>               
-          </ul>
-              
-          <p>To do this you simply have to type:</p>
-    
-<source>
-[unix]  ./build.sh  webapp
-[win32] .\build.bat webapp</source>
-    
-          <p>this will create the <code>cocoon.war</code> file in the
-          <code>./build/cocoon</code> directory. Follow instructions in the next
-            chapter to deploy this webapp in your container.</p>
-          <p>If you want a "clean" web application, you can specify these optional
-            properties:</p>
-          <ul>
-           <li>exclude.webapp.samples : to exclude the samples</li>
-           <li>exclude.webapp.documentation : to exclude the documentation</li>
-           <li>exclude.webapp.javadocs : to exclude the java docs</li>
-           <li>exclude.webapp.libs : to exclude the jar libraries</li>
-          </ul>
-          <p>So, if you first remove all libraries from the <code>./lib/local</code>
-            and the <code>./lib/optional</code> directory except the <code>servlet.jar</code>
-            and then type:</p>
-<source>
-[unix]  ./build.sh  -Dexclude.webapp.samples=yes 
-                    -Dexclude.webapp.documenation=yes
-                    -Dexclude.webapp.javadocs=yes webapp
-[win32] .\build.bat -Dexclude.webapp.samples=yes 
-                    -Dexclude.webapp.documenation=yes
-                    -Dexclude.webapp.javadocs=yes webapp</source>
-          <p>you get a minimal Cocoon web application without any samples or documentation.
-            But remember to make a <code>build clean</code> beforehand.</p>
-      <p><strong>Note:</strong>This feature is only available in the latest developer 
-        version of Cocoon which you can find in the CVS. </p>
-        </s4>
-      
-        <s4 title="[BETA] build try">
-          <p>Makes it possible to try new build targets that have not yet made
-          it into the core build. These targets are in tools/builds/try.xml.
-          </p>
-          
-          <ul>
-           <li><strong>target:</strong> try</li>
-           <li><strong>required properties:</strong> try.target</li>
-           <li><strong>buildfiles:</strong> build.xml, tools/build-t.xml</li>               
-          </ul>
-          
-          <p>To test target test-target for example, you simply have to type:</p>
-    
-<source>
-[unix]  ./build.sh  try -Dtry.target=test-target 
-[win32] .\build.bat try -Dtry.target=test-target</source>
-          
-          <note>Targets are in tools/build-t.xml.</note>
-        </s4>
       </s3>
     </s2>
   </s1>
  
   <s1 title="Installing Cocoon">
     <p>In most servlet engines, this is just a matter of copying
-    the war file in a specific directory and the engine will take
-    care of installing it when restarted.</p>
+    the war file or webapp directory to a specific directory and the 
+    engine will take care of installing it when restarted.</p>
 
+<!--
     <note>The first time that you start Cocoon, it will take a few
       seconds, since Cocoon needs to compile parts of itself.</note>
-
+-->
+<!--
     <p>After that, point your browser to
      <code>http://localhost:8080/cocoon/</code> which will generate the live
      <link href="../overview.html#samples">Samples</link> and also lead you
@@ -609,7 +390,12 @@ export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
      documentation, while
      <code>http://localhost:8080/cocoon/samples/</code> is the Samples.
     </note>
-
+-->
+	<note>If you are using JDK 1.4, be sure you have read and followed the 
+	"Java 1.4 configuration" information above.</note>
+	<p>If those simple instructions do not work as expected, you may find 
+	help in some of the container-specific notes below contributed by 
+	users:</p>
     <s2 title="Installing on Tomcat 3.3.X">
       <p>This is a very easy installation.</p>
 
