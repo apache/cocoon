@@ -51,7 +51,7 @@ package org.apache.cocoon.components.flow;
  * The continuation manager maintains a forrest of {@link
  * WebContinuation} trees. Each tree defines the flow of control for a
  * user within the application.
- * 
+ *
  * A <code>WebContinuation</code> is created for a continuation object
  * from the scripting language used. A continuation object in the
  * implementation of the scripting language is an opaque object
@@ -61,48 +61,47 @@ package org.apache.cocoon.components.flow;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
  * @see WebContinuation
- * @version CVS $Id: ContinuationsManager.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManager.java,v 1.3 2003/03/20 01:24:57 vgritsenko Exp $
  */
-public interface ContinuationsManager
-{
-  public final String ROLE = ContinuationsManager.class.getName();
+public interface ContinuationsManager {
+    public final String ROLE = ContinuationsManager.class.getName();
 
-  /**
-   * Create a <code>WebContinuation</code> object given a native
-   * continuation object and its parent. If the parent continuation is
-   * null, the <code>WebContinuation</code> returned becomes the root
-   * of a tree in the forrest.
-   *
-   * @param kont an <code>Object</code> value
-   * @param parentKont a <code>WebContinuation</code> value
-   * @param timeToLive an <code>int</code> value indicating how long
-   * in seconds this continuation will live in the server if not
-   * accessed
-   * @return a <code>WebContinuation</code> value
-   * @see WebContinuation
-   */
-  public WebContinuation createWebContinuation(Object kont,
-                                               WebContinuation parentKont,
-                                               int timeToLive);
+    /**
+     * Create a <code>WebContinuation</code> object given a native
+     * continuation object and its parent. If the parent continuation is
+     * null, the <code>WebContinuation</code> returned becomes the root
+     * of a tree in the forrest.
+     *
+     * @param kont an <code>Object</code> value
+     * @param parentKont a <code>WebContinuation</code> value
+     * @param timeToLive an <code>int</code> value indicating how long
+     * in seconds this continuation will live in the server if not
+     * accessed
+     * @return a <code>WebContinuation</code> value
+     * @see WebContinuation
+     */
+    public WebContinuation createWebContinuation(Object kont,
+                                                 WebContinuation parentKont,
+                                                 int timeToLive);
 
-  /**
-   * Invalidates a <code>WebContinuation</code>. This effectively
-   * means that the continuation object associated with it will no
-   * longer be accessible from Web pages. Invalidating a
-   * <code>WebContinuation</code> invalidates all the
-   * <code>WebContinuation</code>s which are children of it.
-   *
-   * @param k a <code>WebContinuation</code> value
-   */
-  public void invalidateWebContinuation(WebContinuation k);
+    /**
+     * Invalidates a <code>WebContinuation</code>. This effectively
+     * means that the continuation object associated with it will no
+     * longer be accessible from Web pages. Invalidating a
+     * <code>WebContinuation</code> invalidates all the
+     * <code>WebContinuation</code>s which are children of it.
+     *
+     * @param k a <code>WebContinuation</code> value
+     */
+    public void invalidateWebContinuation(WebContinuation k);
 
-  /**
-   * Given a <code>WebContinuation</code> id, retrieve the associated
-   * <code>WebContinuation</code> object.
-   *
-   * @param id a <code>String</code> value
-   * @return a <code>WebContinuation</code> object, or null if no such
-   * <code>WebContinuation</code> could be found.
-   */
-  public WebContinuation lookupWebContinuation(String id);
+    /**
+     * Given a <code>WebContinuation</code> id, retrieve the associated
+     * <code>WebContinuation</code> object.
+     *
+     * @param id a <code>String</code> value
+     * @return a <code>WebContinuation</code> object, or null if no such
+     * <code>WebContinuation</code> could be found.
+     */
+    public WebContinuation lookupWebContinuation(String id);
 }
