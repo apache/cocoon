@@ -113,8 +113,8 @@
       <br/>
       
       <ft:widget id="ok"/>
-      
-      <a href="do-taskTree.flow">Restart this sample</a>
+      <br/>
+      <a href="do-taskTree.flow">Restart this sample</a> - <a href="./">Back to samples</a>
     </ft:form-template>
   </content>
 </page>
