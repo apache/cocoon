@@ -37,6 +37,10 @@ The initial code of the new ojb block and other contributions from Antonio Galla
 and Carlos Chávez are made posible by the time donated by AG Software, S. A.
 (http://www.agssa.net).
 
+The initial code of the official Cocoon form handling block (CForms) 
+evolved from the Woody donation made by Outerthought
+(http://outerthought.org).
+
 
  Credits of included software
  ----------------------------
