@@ -63,10 +63,12 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
+ * The default implementation
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStoreImpl.java,v 1.1 2003/08/21 06:41:19 cziegeler Exp $
+ * @version CVS $Id: RequestDataStoreImpl.java,v 1.1 2003/09/01 14:45:07 cziegeler Exp $
+ * @since 2.1.1
  */
 public class RequestDataStoreImpl
     extends AbstractLogEnabled

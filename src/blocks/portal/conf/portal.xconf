@@ -82,5 +82,4 @@
  <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" />
 
  <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" />
- <component class="org.apache.cocoon.components.persistence.RequestDataStoreImpl" role="org.apache.cocoon.components.persistence.RequestDataStore" />
 </xconf>

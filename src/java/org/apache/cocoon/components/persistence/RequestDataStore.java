@@ -52,10 +52,22 @@ package org.apache.cocoon.components.persistence;
 
 
 /**
+ * A request data store is a component that manages data that are
+ * linked to the current request.
+ * With the setRequestData() method you can link any object to the
+ * current request. This object can be fetched via getRequestData()
+ * as long as the request is running. This data is not available
+ * in any sub-request (cocoon: protocol calls).
+ * If you want to share data between the main request and any sub-request
+ * than you have to use the setGlobalRequestData etc. methods.
+ * 
+ * This component is a replacement for the request lifecycle and
+ * global request lifecycle components.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStore.java,v 1.1 2003/08/21 06:41:19 cziegeler Exp $
+ * @version CVS $Id: RequestDataStore.java,v 1.1 2003/09/01 14:45:07 cziegeler Exp $
+ * @since 2.1.1
  */
 public interface RequestDataStore {
         

@@ -70,8 +70,10 @@ import org.xml.sax.SAXException;
  * 
  * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
  * 
+ * @deprecated This component is deprecated. Use the 
+ *             {@link org.apache.cocoon.components.persistence.RequestDataStore} instead.
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.3 2003/07/11 20:34:22 joerg Exp $
+ * @version CVS $Id: RequestLifecycleComponent.java,v 1.4 2003/09/01 14:45:07 cziegeler Exp $
  */
 public interface RequestLifecycleComponent extends Poolable {
 
