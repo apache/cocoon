@@ -671,14 +671,17 @@ public class CoreServiceManager
             
             loadURI(src, loadedURIs, includeStatement);
         } else {
+            final String ending = includeStatement.getAttribute("postfix", null);
             Source directory = null;
             try {
                 directory = this.cachedSourceResolver.resolveURI(directoryURI, contextURI, null);
                 if ( directory instanceof TraversableSource ) {
                     final Iterator children = ((TraversableSource)directory).getChildren().iterator();
                     while ( children.hasNext() ) {
-                        Source s = (Source)children.next();
-                        this.loadURI(s, loadedURIs, includeStatement);
+                        final Source s = (Source)children.next();
+                        if ( ending == null || s.getURI().endsWith(ending) ) {
+                            this.loadURI(s, loadedURIs, includeStatement);
+                        }
                     }
                 } else {
                     throw new ConfigurationException("Include.dir must point to a directory, '" + directory.getURI() + "' is not a directory.'");
