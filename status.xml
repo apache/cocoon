@@ -205,11 +205,7 @@
      Tour block: fix "shapes" sample using if/else in flowscript
      instead of switch.
    </action>
-   <action dev="VG" type="update">
-     Build: Added exclude.all.blocks and include.all.blocks properties
-     to quickly toggle all blocks on or off.
-   </action>
-   <action dev="AG" type="">
+   <action dev="AG" type="remove">
      Removed deprecated Pizza compiler support in XSP.
    </action>
    <action dev="SW" type="add">
