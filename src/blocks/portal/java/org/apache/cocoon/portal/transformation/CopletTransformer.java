@@ -64,6 +64,7 @@ import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -87,7 +88,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.13 2003/12/12 15:53:19 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.14 2004/02/13 11:50:30 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -126,7 +127,7 @@ extends AbstractCopletTransformer {
     protected List collectedEvents = new ArrayList();
     
     /** The content of the links */
-    protected String content;
+    protected XMLizable content;
     
     /**
      * Creates new CopletTransformer.
@@ -228,7 +229,7 @@ extends AbstractCopletTransformer {
             }
             this.stack.push(format);
         } else if ( name.equals(CONTENT_ELEM) && this.insideLinks ) {
-            this.startTextRecording();
+            this.startSAXRecording();
         } else {
             super.startTransformingElement(uri, name, raw, attr);
         }
@@ -264,7 +265,7 @@ extends AbstractCopletTransformer {
             }
             this.collectedEvents.clear();
             if ( this.content != null ) {
-                this.sendTextEvent(this.content);
+                this.content.toSAX(this.contentHandler);
                 this.content = null;
             }
             String elem = (String)this.stack.pop();
@@ -272,7 +273,7 @@ extends AbstractCopletTransformer {
                 this.sendEndElementEvent(elem);
             }
         } else if ( name.equals(CONTENT_ELEM) && this.insideLinks ) {
-            this.content = this.endTextRecording();
+            this.content = this.endSAXRecording();
         } else if (!name.equals(COPLET_ELEM)) {
             super.endTransformingElement(uri, name, raw);
         }  
