@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -45,7 +46,7 @@ import org.xml.sax.SAXException;
  * @see org.apache.taglibs.standard.tag.common.core
  * 
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: ForEachSupport.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class ForEachSupport extends LoopTagSupport {
 
@@ -253,7 +254,7 @@ public abstract class ForEachSupport extends LoopTagSupport {
     protected ForEachIterator toForEachIterator(boolean[] a) {
         Boolean[] wrapped = new Boolean[a.length];
         for (int i = 0; i < a.length; i++)
-            wrapped[i] = new Boolean(a[i]);
+            wrapped[i] = BooleanUtils.toBooleanObject(a[i]);
         return new SimpleForEachIterator(Arrays.asList(wrapped).iterator());
     }
 

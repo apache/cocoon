@@ -323,7 +323,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
             String mType = attr.getValue("mime-type");
             if (mType != null) {
-                this.bodyMimeType = new String(mType);
+                this.bodyMimeType = mType;
             } else {
                 this.bodyMimeType = DEFAULT_BODY_MIMETYPE;
             }

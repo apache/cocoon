@@ -39,6 +39,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.servlet.multipart.Part;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 
 
@@ -77,7 +78,7 @@ import org.apache.excalibur.source.Source;
  * <tr><td>object     </td><td>Object      </td><td>        </td><td>Object       </td></tr>
  * </table></p>
  *
- * @version CVS $Id: JDBCTypeConversions.java,v 1.7 2004/03/05 13:01:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class JDBCTypeConversions {
     public static final Map typeConstants;
@@ -207,7 +208,7 @@ public class JDBCTypeConversions {
             value = set.getArray(dbcol); // new Integer(set.getInt(dbcol));
             break;
         case Types.BIT:
-            value = new Boolean(set.getBoolean(dbcol));
+            value = BooleanUtils.toBooleanObject(set.getBoolean(dbcol));
             break;
         case Types.STRUCT:
             value = (Struct) set.getObject(dbcol);
@@ -517,8 +518,8 @@ public class JDBCTypeConversions {
             Integer i = null;
             if (value instanceof Integer) {
                 i = (Integer) value;
-            } else if (value instanceof java.lang.Number) {
-                i = new Integer(((java.lang.Number) value).intValue());
+            } else if (value instanceof Number) {
+                i = new Integer(((Number) value).intValue());
             } else {
                 i = new Integer(value.toString());
             }
@@ -528,21 +529,19 @@ public class JDBCTypeConversions {
             //System.out.println("BIT");
             Boolean bo = null;
             if (value instanceof Boolean) {
-                bo = (Boolean) value;
-            } else if (value instanceof java.lang.Number) {
-                bo = new Boolean(((java.lang.Number) value).intValue()==1);
+                bo = (Boolean)value;
+            } else if (value instanceof Number) {
+                bo = BooleanUtils.toBooleanObject(((Number) value).intValue()==1);
             } else {
-                bo = new Boolean(value.toString());
+                bo = BooleanUtils.toBooleanObject(value.toString());
             }
             statement.setBoolean(position, bo.booleanValue());
             break;
-            
+
         default:
             //System.out.println("default");
             throw new SQLException("Impossible exception - invalid type ");
         }
         //System.out.println("========================================================================");
     }
-    
-    
 }

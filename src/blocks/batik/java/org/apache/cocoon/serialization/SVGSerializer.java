@@ -40,6 +40,7 @@ import org.apache.cocoon.components.url.ParsedContextURLProtocolHandler;
 import org.apache.cocoon.components.url.ParsedResourceURLProtocolHandler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.dom.SVGBuilder;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.w3c.dom.Document;
@@ -50,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.16 2004/03/28 05:29:04 antonio Exp $
+ * @version CVS $Id$
  */
 public class SVGSerializer extends SVGBuilder
 implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -164,7 +165,7 @@ implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Con
                     value = new Integer(parameters[i].getAttributeAsInteger("value"));
                 } else if ("BOOLEAN".equals(keyType)) {
                     // Can throw an exception.
-                    value = new Boolean(parameters[i].getAttributeAsBoolean("value"));
+                    value = BooleanUtils.toBooleanObject(parameters[i].getAttributeAsBoolean("value"));
                 } else if ("COLOR".equals(keyType)) {
                     // Can throw an exception
                     String stringValue = parameters[i].getAttribute("value");

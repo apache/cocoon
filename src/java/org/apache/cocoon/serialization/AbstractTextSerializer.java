@@ -27,6 +27,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -348,7 +349,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
 
             getLogger().debug("Trax handler " + handler.getClass().getName() + msg);
 
-            needsNamespaceCache.put(factory.getClass().getName(), new Boolean(needsIt));
+            needsNamespaceCache.put(factory.getClass().getName(), BooleanUtils.toBooleanObject(needsIt));
 
             return needsIt;
         }

@@ -90,9 +90,9 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion {
 	 */
 	public SimpleLuceneCriterionBean copy () {
 		SimpleLuceneCriterionBean criterion = new SimpleLuceneCriterionBean ();
-		if (mField != null) criterion.setField (new String (mField));
-		if (mMatch != null) criterion.setMatch (new String (mMatch));
-		if (mValue != null) criterion.setValue (new String (mValue));
+		if (mField != null) criterion.setField(mField);
+		if (mMatch != null) criterion.setMatch(mMatch);
+		if (mValue != null) criterion.setValue(mValue);
 		return criterion;
 	}
 

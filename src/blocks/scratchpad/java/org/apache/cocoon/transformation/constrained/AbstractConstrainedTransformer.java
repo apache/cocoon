@@ -28,6 +28,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -42,7 +43,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author     <a href="mailto:tom.klaasen@pandora.be">Tom Klaasen</a>
- * @version CVS $Id: AbstractConstrainedTransformer.java,v 1.4 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractConstrainedTransformer
 		 extends AbstractTransformer {
@@ -169,7 +170,7 @@ public abstract class AbstractConstrainedTransformer
 
 			while (constraintsIter.hasNext()) {
 				if (((XmlTreeConstraint) constraintsIter.next())
-						.isAllowed(new Boolean(isMyUri), this.myUriOpenElements,
+						.isAllowed(BooleanUtils.toBooleanObject(isMyUri), this.myUriOpenElements,
 						this.globalOpenElements)) {
 					return;
 				}
@@ -205,7 +206,7 @@ public abstract class AbstractConstrainedTransformer
 					currentConstraint =
 							(XmlTreeConstraint) constraintsIter.next();
 					isAllowed =
-							currentConstraint.isAllowed(new Boolean(isMyUri),
+							currentConstraint.isAllowed(BooleanUtils.toBooleanObject(isMyUri),
 							this.myUriOpenElements,
 							this.globalOpenElements);
 
