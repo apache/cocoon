@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.7 2003/05/17 15:33:36 vgritsenko Exp $
+:: $Id: cocoon.bat,v 1.8 2003/06/27 23:18:31 joerg Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -24,7 +24,7 @@
 ::
 :: JETTY_PORT
 ::   Override the default port for Jetty
-:: 
+::
 :: JETTY_ADMIN_PORT
 ::   The port where the jetty web administration should bind
 ::
