@@ -50,15 +50,38 @@
 */
 package org.apache.cocoon.components.jxdom;
 
-import org.w3c.dom.*;
-import org.apache.commons.jxpath.*;
-import org.apache.commons.jxpath.ri.model.NodePointer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.jxpath.CompiledExpression;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathContextFactory;
+import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.jxpath.ri.QName;
-import java.util.*;
+import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Comment;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
 
 /**
- * <p>DOM Wrapper for Java Beans and JavaScript objects utilizing Apache JXPath's Introspector.
- * </p>
+ * DOM Wrapper for Java Beans and JavaScript objects utilizing Apache JXPath's Introspector.
+ *
+ * @version CVS $ID$
  */
 
 public class DocumentAdapter implements Document {
