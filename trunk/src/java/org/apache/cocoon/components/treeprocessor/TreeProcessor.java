@@ -50,6 +50,11 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.logger.LogKitManageable;
@@ -79,17 +84,11 @@ import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.excalibur.source.Source;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.9 2003/07/28 18:09:48 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.10 2003/07/29 07:41:27 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -470,9 +469,10 @@ public class TreeProcessor
      */
     protected void disposeTree() {
         if (this.disposableNodes != null) {
-            Iterator iter = this.disposableNodes.iterator();
-            while (iter.hasNext()) {
-                ((Disposable)iter.next()).dispose();
+            // we must dispose the nodes in reverse order
+            // otherwise selector nodes are freed before the components node
+            for(int i=this.disposableNodes.size()-1; i>-1; i--) {
+                ((Disposable)disposableNodes.get(i)).dispose();
             }
             this.disposableNodes = null;
         }
