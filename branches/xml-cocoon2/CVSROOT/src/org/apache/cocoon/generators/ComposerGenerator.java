@@ -7,21 +7,27 @@
  *****************************************************************************/
 package org.apache.cocoon.generators;
 
-import java.io.IOException;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.SitemapComponent;
-import org.apache.cocoon.xml.XMLProducer;
-import org.xml.sax.SAXException;
+import org.apache.arch.Composer;
+import org.apache.arch.ComponentManager;
+import org.apache.cocoon.Cocoon;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 03:41:49 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 03:41:49 $
  */
-public interface Generator extends XMLProducer, SitemapComponent {
+public abstract class ComposerGenerator extends AbstractGenerator
+implements Composer {
 
-    public void generate()
-    throws IOException, SAXException, ProcessingException;
-    
+    /** The component manager instance */
+    protected ComponentManager manager=null;
+
+    /**
+     * Set the current <code>ComponentManager</code> instance used by this
+     * <code>Composer</code>.
+     */
+    public void setComponentManager(ComponentManager manager) {
+        this.manager=manager;
+    }
 }

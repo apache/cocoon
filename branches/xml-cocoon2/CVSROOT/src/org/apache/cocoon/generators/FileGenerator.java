@@ -8,20 +8,28 @@
 package org.apache.cocoon.generators;
 
 import java.io.IOException;
+import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.SitemapComponent;
-import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 03:41:49 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 03:41:49 $
  */
-public interface Generator extends XMLProducer, SitemapComponent {
+public abstract class FileGenerator extends ComposerGenerator {
 
+    /**
+     * Generate XML data.
+     */
     public void generate()
-    throws IOException, SAXException, ProcessingException;
-    
+    throws IOException, SAXException {
+        Parser parser=(Parser)this.manager.getComponent("parser");
+        Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
+        parser.setContentHandler(this.contentHandler);
+        parser.setLexicalHandler(this.lexicalHandler);
+        parser.parse(cocoon.resolveEntity(this.source));
+    }    
 }
