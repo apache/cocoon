@@ -49,7 +49,7 @@
   </map:serializers>
 
   <map:selectors default="browser">
-   <map:selector name="browser" factory="org.apache.cocoon.selection.BrowserSelectorFactory">
+   <map:selector name="browser" src="org.apache.cocoon.selection.BrowserSelectorFactory">
     <!-- # NOTE: The appearance indicates the search order. This is very important since
          #       some words may be found in more than one browser description. (MSIE is
          #       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
@@ -73,8 +73,8 @@
   </map:selectors>
 
   <map:matchers default="uri">
-   <map:matcher name="uri"        factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
-   <map:matcher name="uri-regexp" factory="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
+   <map:matcher name="uri"        src="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+   <map:matcher name="uri-regexp" src="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
   </map:matchers>
 
  </map:components>
