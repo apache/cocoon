@@ -17,7 +17,7 @@ package org.apache.cocoon.forms.datatype.convertor;
 
 /**
  *
- * @version CVS $Id: DefaultFormatCache.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id$
  */
 public class DefaultFormatCache implements Convertor.FormatCache {
     private Object object;

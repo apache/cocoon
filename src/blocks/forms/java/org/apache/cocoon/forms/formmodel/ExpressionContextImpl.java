@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Implementation of the ExpressionContext required for the evaluation of
  * expressions by xReporter expression interpreter.
  * 
- * @version $Id: ExpressionContextImpl.java,v 1.3 2004/05/07 16:43:42 mpo Exp $
+ * @version $Id$
  */
 public class ExpressionContextImpl implements ExpressionContext {
     private Widget widget;

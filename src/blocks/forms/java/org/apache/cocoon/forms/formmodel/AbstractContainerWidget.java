@@ -37,7 +37,8 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     /**
      * Constructs AbstractContainerWidget
      */
-    public AbstractContainerWidget() {
+    public AbstractContainerWidget(AbstractContainerDefinition definition) {
+        super(definition);
         widgets = new WidgetList();
     }
 
@@ -54,6 +55,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     }
 
     public void addChild(Widget widget) {
+        // order is important
         widgets.addWidget(widget);
         widget.setParent(this);
     }
@@ -82,7 +84,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *                    of the contained widgets.
      */
     public void readFromRequest(FormContext formContext) {
-        if(getProcessChildRequests() == true) {
+        if(getCombinedState().isAcceptingInputs() && getProcessChildRequests()) {
             widgets.readFromRequest(formContext);
         }
     }
@@ -99,6 +101,9 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *         extra validation rules on this containment level are ok.
      */
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         // Validate children first, then always validate self. Return combined result.
         final boolean valid = widgets.validate();
         return super.validate() && valid;
@@ -113,6 +118,8 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * @throws SAXException
      */
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        widgets.generateSaxFragment(contentHandler, locale);
+        if (getCombinedState().isDisplayingValues()) {
+            widgets.generateSaxFragment(contentHandler, locale);
+        }
     }
 }

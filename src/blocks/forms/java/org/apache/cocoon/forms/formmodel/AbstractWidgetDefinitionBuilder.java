@@ -81,6 +81,17 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
             widgetDefinition.setId(id);
         }
 
+        // state
+        String stateValue = DomHelper.getAttribute(widgetElement, "state", null);
+        if (stateValue != null) {
+            WidgetState state = WidgetState.stateForName(stateValue);
+            if (state == null) {
+                throw new Exception ("Unknow value '" + stateValue +"' for state attribute at " +
+                        DomHelper.getLocation(widgetElement));
+            }
+            widgetDefinition.setState(state);
+        }
+
         // attributes
         Element attrContainer = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "attributes", false);
         if (attrContainer != null) {

@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.samples.bindings;
 /**
  * LenientBaseBean
  * @author Marc Portier
- * @version $Id: LenientBaseBean.java,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+ * @version $Id$
  */
 public class LenientBaseBean {
     protected String breakingField;

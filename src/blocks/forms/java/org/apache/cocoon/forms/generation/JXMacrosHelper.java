@@ -1,3 +1,19 @@
+/*
+ * Copyright 1999-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.apache.cocoon.forms.generation;
 
 import java.util.HashMap;
@@ -14,7 +30,6 @@ import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.collections.ArrayStack;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -44,7 +59,7 @@ public class JXMacrosHelper {
         this.cocoonConsumer = consumer;
     }
 
-    public void startForm(Map attributes) throws SAXException {
+    public void startForm(Form form, Map attributes) throws SAXException {
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
         Iterator iter = attributes.entrySet().iterator();
@@ -89,18 +104,14 @@ public class JXMacrosHelper {
      * @param currentWidget
      * @param id
      */
-    public Widget getWidget(Widget currentWidget, String id) {
-        Widget result = null;
-
-        if (currentWidget instanceof ContainerWidget) {
-            result = ((ContainerWidget)currentWidget).getChild(id);
-        }
+    public Widget getWidget(Widget currentWidget, String path) {
+        Widget result = currentWidget.lookupWidget(path);
 
         if (result != null) {
             return result;
         } else {
             throw new IllegalArgumentException("Widget '" + currentWidget +
-                                               "' has no child named '" + id + "'");
+                                               "' has no child named '" + path + "'");
         }
     }
 
@@ -141,20 +152,12 @@ public class JXMacrosHelper {
         getRepeater(widget, id).generateSize(this.cocoonConsumer);
     }
 
-    private static final String VALIDATION_ERROR = "validation-error";
-
     public void generateValidationError(ValidationError error) throws SAXException {
         // Needs to be buffered
         RootBufferingPipe pipe = new RootBufferingPipe(this.cocoonConsumer);
         this.stack.push(pipe);
         this.stack.push(error);
-        pipe.startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, XMLUtils.EMPTY_ATTRIBUTES);
         error.generateSaxFragment(pipe);
-        pipe.endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
-    }
-
-    public boolean isValidationError(Object object) {
-        return object instanceof ValidationError;
     }
 
     public void defineClassBody(Form form, String id, Object body) {
@@ -180,6 +183,10 @@ public class JXMacrosHelper {
     public boolean isSelectedCase(Widget unionWidget, String caseValue) {
         String value = (String)unionWidget.getValue();
         return caseValue.equals(value != null ? value : "");
+    }
+
+    public boolean isVisible(Widget widget) {
+        return widget.getCombinedState().isDisplayingValues();
     }
 
     /**

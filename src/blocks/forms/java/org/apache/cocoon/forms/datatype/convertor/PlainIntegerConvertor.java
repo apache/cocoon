@@ -25,7 +25,7 @@ import java.util.Locale;
  * formatting. It simply uses String.valueOf() and Long.parseLong().
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PlainIntegerConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $ 
+ * @version CVS $Id$ 
  */
 public class PlainIntegerConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * &lt;/fb:insert-node&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class InsertNodeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

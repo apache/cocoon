@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: StructJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id$
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
 

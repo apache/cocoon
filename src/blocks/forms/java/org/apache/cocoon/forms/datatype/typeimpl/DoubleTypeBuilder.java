@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link DoubleType}s.
  *
- * @version $Id: DoubleTypeBuilder.java,v 1.1 2004/03/18 11:45:55 bruno Exp $
+ * @version $Id$
  */
 public class DoubleTypeBuilder extends AbstractDatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {

@@ -95,6 +95,9 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
+        if (!getCombinedState().isAcceptingInputs())
+            return;
+
         String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
         if (newEnteredValue != null) {
             // There is one aggregated entered value. Read it and split it.
@@ -191,6 +194,9 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (enteredValue != null && !fieldsHaveValues()) {
             XMLizable failMessage = getAggregateFieldDefinition().getSplitFailMessage();
             if (failMessage != null) {

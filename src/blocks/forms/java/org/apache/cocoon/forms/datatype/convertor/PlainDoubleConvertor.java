@@ -24,7 +24,7 @@ import java.util.Locale;
  * Convertor for java.lang.Doubles that does not do any (Locale-dependent)
  * formatting. It simply uses String.valueOf() and Long.parseLong().
  *
- * @version CVS $Id: PlainDoubleConvertor.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id$
  */
 public class PlainDoubleConvertor implements Convertor {
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

@@ -53,6 +53,7 @@ public class Form extends AbstractContainerWidget {
     private CursorableLinkedList events;
 
     public Form(FormDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -82,8 +83,8 @@ public class Form extends AbstractContainerWidget {
     }
 
     /**
-     * Fire the events that have been queued.
-     * Note that event handling can fire new events.
+     * Fire the widget events that have been queued. Note that event handling can fire new
+     * events.
      */
     public void fireEvents() {
         if (this.events != null) {

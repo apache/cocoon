@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:struct&gt;
  * </code></pre>
  *
- * @version CVS $Id: StructJXPathBindingBuilder.java,v 1.3 2004/04/12 14:05:08 tim Exp $
+ * @version CVS $Id$
  */
 public class StructJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.event.ActionListener;
  * The definition for a repeater action that adds a row to a sibling repeater.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: AddRowActionDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id$
  */
 public class AddRowActionDefinition extends RepeaterActionDefinition {
     

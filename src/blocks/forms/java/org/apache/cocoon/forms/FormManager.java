@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 /**
  * Work interface for the component that can create {@link Form}s.
  * 
- * @version $Id: FormManager.java,v 1.3 2004/06/01 10:51:28 bruno Exp $
+ * @version $Id$
  */
 public interface FormManager {
     

@@ -36,7 +36,7 @@ import org.mozilla.javascript.Script;
  * Listeners built by {@link org.apache.cocoon.forms.event.impl.JavaScriptWidgetListenerBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListener.java,v 1.5 2004/06/15 07:33:43 sylvain Exp $
+ * @version CVS $Id$
  */
 public abstract class JavaScriptWidgetListener {
     

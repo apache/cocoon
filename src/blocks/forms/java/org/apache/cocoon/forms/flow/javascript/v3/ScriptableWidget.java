@@ -32,6 +32,7 @@ import org.apache.cocoon.forms.formmodel.SelectableWidget;
 import org.apache.cocoon.forms.formmodel.Submit;
 import org.apache.cocoon.forms.formmodel.Upload;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.forms.formmodel.WidgetState;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
@@ -450,6 +451,27 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
 
     public String jsFunction_getId() {
         return delegate.getId();
+    }
+
+    public WidgetState jsGet_state() {
+        return delegate.getState();
+    }
+
+    public void jsSet_state(Object stateObj) {
+        Object obj = unwrap(stateObj);
+        WidgetState state = null;
+
+        if (obj instanceof String) {
+            state = WidgetState.stateForName((String)obj);
+        } else if (obj instanceof WidgetState) {
+            state = (WidgetState)obj;
+        }
+
+        if (state == null) {
+            throw new IllegalArgumentException("Invalid value for widgetState " + stateObj);
+        }
+
+        delegate.setState(state);
     }
 
     public ScriptableWidget jsFunction_getSubmitWidget() {

@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @see SubmitDefinitionBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Submit.java,v 1.2 2004/04/09 16:43:21 mpo Exp $
+ * @version CVS $Id$
  */
 public class Submit extends Action {
 

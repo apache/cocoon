@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.datatype.typeimpl;
  * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation
  * for double numbers (backed by the java.lang.Double class).
  *
- * @version $Id: DoubleType.java,v 1.1 2004/03/18 11:45:55 bruno Exp $
+ * @version $Id$
  */
 public class DoubleType extends AbstractDatatype {
     public Class getTypeClass() {

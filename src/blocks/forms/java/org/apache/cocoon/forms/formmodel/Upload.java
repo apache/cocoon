@@ -48,6 +48,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     private ValidationError validationError;
 
     public Upload(UploadDefinition uploadDefinition) {
+        super(uploadDefinition);
         this.uploadDefinition = uploadDefinition;
     }
 
@@ -72,38 +73,42 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessMyRequests() == true) {
-            Object obj = formContext.getRequest().get(getRequestParameterName());
+        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+            return;
 
-            // If the request object is a Part, keep it
-            if (obj instanceof Part) {
-                Part requestPart = (Part)obj;
-                if (this.part != null) {
-                    // Replace the current part
-                    this.part.dispose();
-                }
+        Object obj = formContext.getRequest().get(getRequestParameterName());
 
-                // Keep the request part
-                requestPart.setDisposeWithRequest(false);
-                this.part = requestPart;
-                this.validationError = null;
-
-            // If it's not a part and not null, clear any existing value
-            // We also check if we're the submit widget, as a result of clicking the "..." button
-            } else if (obj != null || getForm().getSubmitWidget() == this){
-                // Clear the part, if any
-                if (this.part != null) {
-                    this.part.dispose();
-                    this.part = null;
-                }
-                this.validationError = null;
+        // If the request object is a Part, keep it
+        if (obj instanceof Part) {
+            Part requestPart = (Part)obj;
+            if (this.part != null) {
+                // Replace the current part
+                this.part.dispose();
             }
 
-            // And keep the current state if the parameter doesn't exist or is null
-       }
+            // Keep the request part
+            requestPart.setDisposeWithRequest(false);
+            this.part = requestPart;
+            this.validationError = null;
+
+        // If it's not a part and not null, clear any existing value
+        // We also check if we're the submit widget, as a result of clicking the "..." button
+        } else if (obj != null || getForm().getSubmitWidget() == this){
+            // Clear the part, if any
+            if (this.part != null) {
+                this.part.dispose();
+                this.part = null;
+            }
+            this.validationError = null;
+        }
+
+        // And keep the current state if the parameter doesn't exist or is null
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (this.part == null) {
             if (this.uploadDefinition.isRequired()) {
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));

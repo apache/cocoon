@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class SimpleRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

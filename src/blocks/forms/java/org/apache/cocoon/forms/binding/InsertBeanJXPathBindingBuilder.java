@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * &lt;fb:insert-bean classname="..child-bean-class.." addmethod="..method-to-add.."/&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertBeanJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class InsertBeanJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  *                      value="<i>attribute-value</i>"/&gt;
  * </code></pre>
  *
- * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class SetAttributeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

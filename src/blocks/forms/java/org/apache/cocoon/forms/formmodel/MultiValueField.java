@@ -64,6 +64,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     private ValidationError validationError;
 
     public MultiValueField(MultiValueFieldDefinition definition) {
+        super(definition);
         this.definition = definition;
     }
 
@@ -72,42 +73,45 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void readFromRequest(FormContext formContext) {
-        if(getProcessMyRequests() == true) {
-            enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
-            validationError = null;
-            values = null;
+        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+            return;
 
-            boolean conversionFailed = false;
-            if (enteredValues != null) {
-                // Normally, for MultiValueFields, the user selects the values from
-                // a SelectionList, and the values in a SelectionList are garanteed to
-                // be valid, so the conversion from String to native datatype should
-                // never fail. But it could fail if users start messing around with
-                // request parameters.
-                Object[] tempValues = (Object[])Array.newInstance(getDatatype().getTypeClass(), enteredValues.length);
-                for (int i = 0; i < enteredValues.length; i++) {
-                    String param = enteredValues[i];
-                    ConversionResult conversionResult =
-                        definition.getDatatype().convertFromString(param, formContext.getLocale());
-                    if (conversionResult.isSuccessful()) {
-                        tempValues[i] = conversionResult.getResult();
-                    } else {
-                        conversionFailed = true;
-                        break;
-                    }
+        enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
+        validationError = null;
+        values = null;
+
+        boolean conversionFailed = false;
+        if (enteredValues != null) {
+            // Normally, for MultiValueFields, the user selects the values from
+            // a SelectionList, and the values in a SelectionList are garanteed to
+            // be valid, so the conversion from String to native datatype should
+            // never fail. But it could fail if users start messing around with
+            // request parameters.
+            Object[] tempValues = (Object[])Array.newInstance(getDatatype().getTypeClass(), enteredValues.length);
+            for (int i = 0; i < enteredValues.length; i++) {
+                String param = enteredValues[i];
+                ConversionResult conversionResult = definition.getDatatype().convertFromString(param, formContext.getLocale());
+                if (conversionResult.isSuccessful()) {
+                    tempValues[i] = conversionResult.getResult();
+                } else {
+                    conversionFailed = true;
+                    break;
                 }
-
-                if (!conversionFailed)
-                    values = tempValues;
-                else
-                    values = null;
-            } else {
-                values = new Object[0];
             }
+
+            if (!conversionFailed)
+                values = tempValues;
+            else
+                values = null;
+        } else {
+            values = new Object[0];
         }
     }
 
     public boolean validate() {
+        if (!getCombinedState().isAcceptingInputs())
+            return true;
+
         if (values != null)
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else

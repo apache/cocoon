@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * Will produce exactly one characters call, no start/endDocument calls.
  * 
- * @version $Id: StringMessage.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version $Id$
  */
 public class StringMessage implements XMLizable {
     private char[] ch;

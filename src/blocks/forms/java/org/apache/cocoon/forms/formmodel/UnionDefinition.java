@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Union} widget.
  *
- * @version $Id: UnionDefinition.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class UnionDefinition extends AbstractContainerDefinition {
     private String caseWidgetId;

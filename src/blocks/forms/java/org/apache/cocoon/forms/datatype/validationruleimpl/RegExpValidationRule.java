@@ -30,7 +30,7 @@ import org.outerj.expression.ExpressionContext;
  * <p>The <a href="http://jakarta.apache.org/oro/">Jakarta ORO</a> library
  * is used as regexp engine.
  * 
- * @version $Id: RegExpValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
+ * @version $Id$
  */
 public class RegExpValidationRule extends AbstractValidationRule {
 	/** Compiled regular expression. */

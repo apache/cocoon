@@ -23,7 +23,7 @@ import java.util.EventListener;
  * <code>java.awt.AWTEventMulticaster</code> for more information on its use.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetEventMulticaster.java,v 1.2 2004/06/15 07:33:43 sylvain Exp $
+ * @version CVS $Id$
  */
 public class WidgetEventMulticaster extends AWTEventMulticaster implements
     ActionListener, ValueChangedListener, ProcessingPhaseListener {
