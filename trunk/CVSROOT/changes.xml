@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.63 2000-05-02 04:52:40 balld Exp $
+  $Id: changes.xml,v 1.64 2000-05-05 03:39:41 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,7 +17,7 @@
 
  <release version="@version@" date="@date@">
   <action dev="DB" type="fix">
-   Added code to XSLTProcessor to not import request parameters that are not valid XML Qnames.
+   Added code to XSLTProcessor to not import request parameters whose names are not valid XML Qnames and code to XalanTransformer to quote request parameter values to bypass the expression parsing routines.
   </action>
   <action dev="DB" type="update">
    Added column formatting to XSP SQL taglib.
