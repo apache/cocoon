@@ -5,6 +5,25 @@
 <faqs title="Cocoon Frequently Asked Questions">
 
 <faq>
+ <question>Previous Cocoon releases said that this product was to consider a 
+ proof of concept rather than a working solution. I can't find that sentence
+ anymore. What happened?</question>
+ <answer>
+  <p>We believe that Cocoon has entered the final stage of its evolution but
+  as it stands today, it is ready to be used for a production environment.</p>
+  <p>Careful, we don't say it's perfect or bug-free, this is impossible to say,
+  but at least, we think this technology is good enough for you to try it out
+  against other solutions for web publishing.</p>
+  <p>Warning: this doesn't mean that Cocoon evolution came to an end, not at all,
+  but that we believe it's mature enough to be deployed in a working environment
+  with no particular problems.</p>
+  <p>Note, however, that this software comes "as is" so you should always be
+  aware of the risks as for any other open source software, but I think that
+  if you read this, you already know what we mean :)</p>
+ </answer>
+</faq>
+
+<faq>
  <question>How do I pipe my servlet output into Cocoon?</question>
  <answer>
   <p>Simple answer: <em>you don't!!!</em> read <connect href="dynamic.xml">the page
@@ -117,7 +136,45 @@
             return mapPath;]]></source>
  </answer>
 </faq>
- 
+
+<faq>
+ <question>Are external entities still broken?</question>
+ <answer>
+  <p>No, external entity support has been fixed for both absolute and relative
+  URIs. Note that ProjectX and Xerces behave differently on these but this
+  is not something we are in control of.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>Why %lt;xsl:import%gt; and %lt;xsl:include%gt; don't work with Xalan?</question>
+ <answer>
+  <p>This is a problem in the way that Xalan handles DOM-based stylesheets, it will be
+  fixed as soon as Cocoon moves on a SAX based architecture. As a work around, you can
+  consider using XT which has no problems.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>I see that Cocon 1.x has starting to incorporate features planned for 
+ Cocoon 2.x, why?</question>
+ <answer>
+  <p>We believe that smooth project evolution is much better than step-wise
+  revolutionary paths. For this reason, we'll try hard to incorporate all the
+  Cocoon2 features in the main project thus limiting the porting effort for you
+  over time.</p>
+  <p>Note that this doesn't mean that Cocoon won't change in the future and we
+  state clearly that we do care about back compatibility but only when this is
+  not limiting the evolution of he platform too much.</p>
+  <p>For this reason, while the DOM->SAX evolution might be totally painless, the
+  sitemap proposal will completely change the Cocoon configurations. Anyway, Cocoon
+  has a long way to go and if it changes during its evolution to a final state,
+  don't complain: you have been warned.</p>
+  <p>However, we DO consider and value the time you invested in Cocoon so we'll
+  do our best to make sure that unneeded back incompatibilities don't get included.</p>
+ </answer>
+</faq>
+
 <faq>
  <question>The XSL book I read says the correct way of indicating the XSL stylesheet is by
     using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
