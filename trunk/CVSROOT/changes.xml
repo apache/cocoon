@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.64 2000-05-05 03:39:41 balld Exp $
+  $Id: changes.xml,v 1.65 2000-05-06 11:11:37 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Changed behavior for absolute stylesheet hrefs which now point to absolute URI addresses.
+  </action>
+ </release>
+ 
+ <release version="1.7.3" date="May 5 2000">
   <action dev="DB" type="fix">
    Added code to XSLTProcessor to not import request parameters whose names are not valid XML Qnames and code to XalanTransformer to quote request parameter values to bypass the expression parsing routines.
   </action>
