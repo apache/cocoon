@@ -4,46 +4,29 @@
 ====================================
 
 1. Copy the Java Transaction API (JTA) jar into
-   lib/local.
+   lib/local before building or to ./build/webapp/WEB-INF/lib 
+   after building.
 
 2. Enable the option 'enable-uploads' within 
-   src/webapp/WEB-INF/web.xml 
+   src/webapp/WEB-INF/web.xml
 
-3. Install the Web Application via in Tomcat
+3. Startup cocoon
 
- ./build.sh -Dinstall.war=$TOMCAT_HOME/webapps install
+4. Access the slide repository via Cocoon
 
-4. Start Tomcat
-
- $TOMCAT_HOME/bin/catalina.sh run
-
-5. Access the slide repository via Cocoon
-
- http://localhost:8080/cocoon/samples/slide/
+ http://localhost:8888/samples/slide/
 
 [OPTIONAL]
 
-6. If you want an access via WebDAV copy the web.xml into WEB-INF/
-   This file includes the WebDAV Servlet from Slide.
+5. If you want an access via WebDAV uncomment the webdav servlet-mapping
+   declaration in web.xml
 
-7. Add users to tomcat-users.xml for the MemoryRealm
 
- <role rolename="user"/>
- <role rolename="root"/>
- <user username="john" password="john" roles="user"/>
- <user username="root" password="root" roles="root,user"/>
+6. Access WebDAV via MS WebFolders, Cadaver or whatever
 
-   You can use the SlideRealm instead of the MemoryRealm.
-
-8. Access WebDAV via MS WebFolders, Cadaver or whatever
-
- http://localhost:8080/cocoon/webdav/
-
-(The Slide initialization will take the configuration, which
- the web.xml file specify)
+ http://localhost:8888/webdav/
 
 Have fun, Stephan Michels <stephan@apache.org>
-
 
 Some things must be fixed:
 
