@@ -52,13 +52,60 @@
 
        WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
 */
-
-function isAuthenticated(handler) {
+function auth_isAuthenticated(handler) {
     var authMgr = null;
     try {
-        authMgr = cocoon.getComponent(Packagesorg.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
+        // ApplicationName, do we need it?
+        authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
         
-        return authMgr.isAuthenticated(handler);
+        return authMgr.isAuthenticated(handler)!=null;
+    } finally {
+        cocoon.releaseComponent(authMgr);
+    }
+}
+
+function auth_login(handler, application, params) {
+
+    var authParams = new Packages.org.apache.excalibur.source.SourceParameters();
+    for (var name in params) {
+//      if ((""+name.substring(0,10)) == "parameters_")) {
+        authParams.setParameter(name, params[name]);
+  //    }
+    }
+    
+    var authMgr = null;
+    try {
+        authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
+        return authMgr.login( handler, application, authParams) != null;
+    } finally {
+        cocoon.releaseComponent(authMgr);
+    }
+}
+
+function auth_logout(handler, modeString) {
+    var mode;
+    if ( modeString == null | modeString == "" || modeString == "if-not-authenticated" ) {
+        mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IF_NOT_AUTHENTICATED;
+    } else if ( modeString == "if-unused" ) {
+        mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IF_UNUSED;
+    } else if ( modeString == "immediately" ) {
+        mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY;
+    } else {
+       throw new Error("Unknown mode"); // " + modeString);
+    }
+
+    var authMgr = null;
+    try {
+        authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
+        var state = authMgr.getState();
+
+        if (handler == null && state!=null) {
+            handler = state.getHandlerName();
+        }
+
+        if ( null == handler )
+            throw new Error("LogoutAction requires at least the handler parameter.");
+        authMgr.logout( handler, mode );
     } finally {
         cocoon.releaseComponent(authMgr);
     }
