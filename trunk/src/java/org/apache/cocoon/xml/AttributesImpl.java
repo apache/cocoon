@@ -50,13 +50,29 @@
 */
 package org.apache.cocoon.xml;
 
+import org.xml.sax.Attributes;
+
 /**
  * A helper Class creating SAX Attributes
  * 
  * @author <a href="mailto:volker.schmitt@basf-ag.de">Volker Schmitt</a>
- * @version CVS $Id: AttributesImpl.java,v 1.2 2003/12/11 14:28:50 cziegeler Exp $
+ * @version CVS $Id: AttributesImpl.java,v 1.3 2004/01/29 11:15:10 cziegeler Exp $
  */
 public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
+
+    /**
+     * Constructor
+     */
+    public AttributesImpl() {
+        super();
+    }
+
+    /**
+     *  Constructor
+     */
+    public AttributesImpl(Attributes attr) {
+        super(attr);
+    }
 
 	/**
 	 * Add an attribute of type CDATA with empty Namespace to the end of the list.
