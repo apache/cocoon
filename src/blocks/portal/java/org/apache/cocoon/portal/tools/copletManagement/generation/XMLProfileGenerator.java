@@ -57,7 +57,7 @@ extends ServiceableGenerator {
         final Request request = ObjectModelHelper.getRequest(this.objectModel);
         final Object context = FlowHelper.getContextObject(this.objectModel);
         Map myMap = new HashMap();
-        if(context instanceof Map) {
+        if (context instanceof Map) {
             myMap = (Map) context;
         } else {
             fillContext(context, myMap);

@@ -25,9 +25,8 @@ import org.apache.cocoon.portal.tools.model.User;
  * @version CVS $Id$
  */
 public class MultipleRoleMatcher
-implements
-    RoleMatcher
-{
+implements RoleMatcher {
+    
     /**
      * The character used to seperate multiple roles.
      */
@@ -41,8 +40,7 @@ implements
     /**
      * Creates a new MultipleRoleMatcher.
      */
-    public MultipleRoleMatcher(String roles)
-    {
+    public MultipleRoleMatcher(String roles) {
         StringTokenizer tokenizer = new StringTokenizer(
             roles,
             ROLE_SEPARATOR,
@@ -52,8 +50,7 @@ implements
 
         String token;
         int i = 0;
-        while (tokenizer.hasMoreTokens())
-        {
+        while (tokenizer.hasMoreTokens()) {
             token = tokenizer.nextToken();
             this.roles[i] = token;
             i++;
@@ -65,13 +62,14 @@ implements
      * 
      * @see com.vodafone.veap.util.RoleMatcher#matches(com.vodafone.veap.model.User)
      */
-    public boolean matches(User user)
-    {
+    public boolean matches(User user) {
         // The user must have all roles
         int length = this.roles.length;
-        for (int i = 0; i < length; i++)
-            if (!user.hasRole(this.roles[i]))
+        for (int i = 0; i < length; i++) {
+            if (!user.hasRole(this.roles[i])) {
                 return false;
+            }
+        }
         return true;
     }
 }

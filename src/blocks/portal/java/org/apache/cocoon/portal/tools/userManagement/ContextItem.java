@@ -22,8 +22,8 @@ package org.apache.cocoon.portal.tools.userManagement;
  */
 public class ContextItem {
 	
-	private String key = "";
-	private String value = "";
+	private final String key;
+	private final String value;
 	
 	public ContextItem(String key, String value){
 		this.key = key;
@@ -34,13 +34,8 @@ public class ContextItem {
 	public String getKey() {
 		return key;
 	}
+    
 	public String getValue() {
 		return value;
-	}
-	public void setKey(String string) {
-		key = string;
-	}
-	public void setValue(String string) {
-		value = string;
 	}
 }

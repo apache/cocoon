@@ -31,7 +31,6 @@ import org.xml.sax.SAXException;
  */
 public class PortalToolBuilder {
     
-    
     public PortalTool buildTool(File confFile, String rootDir, String pluginDir, String i18nDir) {
         PortalTool pTool = null;
         try {
@@ -61,8 +60,12 @@ public class PortalToolBuilder {
 			}
 			pTool = new PortalTool(toolName, toolId, functions, i18n);
         } catch (ConfigurationException ece) {
+            // TODO
         } catch (SAXException esax) {
-		} catch (IOException eio) {}
+            // TODO
+		} catch (IOException eio) {
+            // TODO
+        }
 		return pTool;
     }
    

@@ -28,11 +28,11 @@ import java.util.List;
  */
 public class PortalTool {
 	
-	HashMap functions = new HashMap();
+    protected final HashMap functions;
 	
-	String toolName = "";
-	String toolId = "";
-	ArrayList i18n = new ArrayList();
+	protected final String toolName;
+	protected final String toolId;
+	protected final ArrayList i18n;
 	
 	/**
 	 * Creates a new Portal Tool
@@ -74,7 +74,7 @@ public class PortalTool {
 	    Collection funs = functions.values();
 	    for(Iterator it = funs.iterator(); it.hasNext(); ) {
 	        PortalToolFunction ptf = (PortalToolFunction) it.next();
-	        if(ptf.isInternal()) {
+	        if (ptf.isInternal()) {
 	            internal.add(ptf);
 	        }
 	    }
@@ -89,7 +89,7 @@ public class PortalTool {
 	    Collection funs = functions.values();
 	    for(Iterator it = funs.iterator(); it.hasNext(); ) {
 	        PortalToolFunction ptf = (PortalToolFunction) it.next();
-	        if(!ptf.isInternal()) {
+	        if (!ptf.isInternal()) {
 	            publik.add(ptf);
 	        }
 	    }

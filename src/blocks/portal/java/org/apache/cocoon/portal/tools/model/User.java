@@ -59,8 +59,9 @@ public class User {
 	
     public boolean hasRole(String role) {
         for(Iterator it = roles.iterator(); it.hasNext();) {
-            if(((String) it.next()).equals(role)) 
+            if(((String) it.next()).equals(role)) {
                 return true;
+            }
         }
 		return false;
 	}

@@ -44,9 +44,7 @@ public class PortalToolsLayoutTransformer extends AbstractSAXTransformer impleme
 	public static final String ROLE = PortalToolsLayoutTransformer.class.getName();
 	
 	private PortalToolManager pm;
-	private String selected = null;
-	public PortalToolsLayoutTransformer() {
-	}
+	private String selected;
 
 	/* (non-Javadoc)
 	 * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -74,7 +72,11 @@ public class PortalToolsLayoutTransformer extends AbstractSAXTransformer impleme
 	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
 	 */
 	public void dispose() {
-		this.manager.release(pm);
+        if ( this.manager != null ) {
+		    this.manager.release(pm);
+            pm = null;
+            this.manager = null;
+        }
 	}
 	
 

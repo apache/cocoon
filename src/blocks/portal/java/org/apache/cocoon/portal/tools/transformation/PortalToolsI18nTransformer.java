@@ -21,12 +21,10 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationSerializer;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.tools.PortalToolCatalogue;
 import org.apache.cocoon.portal.tools.PortalToolManager;
 import org.apache.cocoon.transformation.I18nTransformer;
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -36,49 +34,44 @@ public class PortalToolsI18nTransformer extends I18nTransformer {
     
     public static String ROLE = PortalToolsI18nTransformer.class.getName();
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration conf) throws ConfigurationException {
-      /*
-      <catalogues default="portalTools">
-                <catalogue id="portalTools" name="portalTools" location="cocoon:/i18n"/>
-      </catalogues>
-      */
+        /*
+        <catalogues default="portalTools">
+          <catalogue id="portalTools" name="portalTools" location="cocoon:/i18n"/>
+        </catalogues>
+        */
         
-        if(conf.getChild("catalogues").getAttribute("new", "no").equals("no")) {
+        if (conf.getChild("catalogues").getAttribute("new", "no").equals("no")) {
             super.configure(conf);
             return;
         }
-      DefaultConfiguration root = new DefaultConfiguration("root");
-      DefaultConfiguration defconf = new DefaultConfiguration("catalogues");
-      defconf.setAttribute("default", "default");
-      root.addChild(defconf);
-      PortalToolManager ptm;
-      try {
-          System.out.println("getting toolmananger:");
-      ptm = (PortalToolManager) this.manager.lookup(PortalToolManager.ROLE);
-      System.out.println("getting catalog list");
-      List i18nc = ptm.getI18n();
-      for(Iterator it = i18nc.iterator(); it.hasNext();) {
-          PortalToolCatalogue ptc = (PortalToolCatalogue) it.next();
-	    System.out.println("ptc: " + ptc);
-	    DefaultConfiguration catConf = new DefaultConfiguration("catalogue");
-	    catConf.setAttribute("id", ptc.getId());
-	    catConf.setAttribute("name", ptc.getName());
-	    catConf.setAttribute("location", ptc.getLocation());
-	    defconf.addChild(catConf);
-      }
-      System.out.println("conf:");
-      System.out.println(new DefaultConfigurationSerializer().serialize(conf));
-      System.out.println("new Conf:");
-      System.out.println(new DefaultConfigurationSerializer().serialize(defconf));
-      super.configure(root);
-      this.manager.release(ptm);
-      } catch (ServiceException e) {
-         e.printStackTrace();
-      } catch (ConfigurationException e) {
-                e.printStackTrace();
-      } catch (SAXException e) {
-                e.printStackTrace();
-      }
+        DefaultConfiguration root = new DefaultConfiguration("root");
+        DefaultConfiguration defconf = new DefaultConfiguration("catalogues");
+        defconf.setAttribute("default", "default");
+        root.addChild(defconf);
+        PortalToolManager ptm = null;
+        try {
+            ptm = (PortalToolManager) this.manager.lookup(PortalToolManager.ROLE);
+            List i18nc = ptm.getI18n();
+            for(Iterator it = i18nc.iterator(); it.hasNext();) {
+                PortalToolCatalogue ptc = (PortalToolCatalogue) it.next();
+                DefaultConfiguration catConf = new DefaultConfiguration("catalogue");
+	            catConf.setAttribute("id", ptc.getId());
+	            catConf.setAttribute("name", ptc.getName());
+                catConf.setAttribute("location", ptc.getLocation());
+                defconf.addChild(catConf);
+            }
+            super.configure(root);
+        } catch (ServiceException e) {
+           e.printStackTrace();
+        } catch (ConfigurationException e) {
+           e.printStackTrace();
+        } finally {
+            this.manager.release(ptm);            
+        }
     }
 
 }
