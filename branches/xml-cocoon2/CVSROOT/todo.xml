@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.11 2000-08-21 17:33:04 stefano Exp $
+  $Id: todo.xml,v 1.6.2.12 2000-09-27 14:29:18 stefano Exp $
 -->
 
 
@@ -22,6 +22,11 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Finish writing the command line interface and design the link rewriting
+   behavior that cannot work with views.
+  </action>
+
   <action context="code">
    Write URLHandler for the protocols defined in the sitemap, e.g. class://. cvs://
   </action>

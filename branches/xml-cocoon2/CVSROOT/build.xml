@@ -13,7 +13,7 @@
 Installing the build tools
 ==========================
 
-The Cocoon build system is based on Ant, which is a Java building tool
+The Cocoon build system is based on Apache Ant, which is a Java building tool
 originally developed for the Tomcat project but now used in many other
 Apache projects and extended by many developers.
 
@@ -22,11 +22,12 @@ Ant is a little but very handy tool that uses a build file written in XML
 "http://jakarta.apache.org/ant/".
 
 To make things easier for you, the Cocoon distribution contains a precompiled
-version of Ant and the build scripts take care of all the classpath issues.
+version of Ant and the build scripts take care of running it.
 
 The only thing that you have to make sure, is the "JAVA_HOME" environment
-property should be set to match the JVM you want to use. That's all you have
-to do.
+property should be set to match the JVM you want to use. 
+
+That's all you have to do to be ready to go.
 
 
 Building instructions
@@ -41,7 +42,7 @@ where this very file is located. Then type
 if everything is right and all the required packages are visible, this action
 will generate a file called "cocoon.jar" in the "./build/cocoon" directory.
 Note, that if you do further development, compilation time is reduced since
-Ant is able of detecting which files have changed an to recompile them at need.
+Ant is able of detecting which files have changed and to recompile them at need.
 
 Also, you'll note that reusing a single JVM instance for each task, increases
 tremendously the performance of the whole build system, compared to other
@@ -53,7 +54,7 @@ Building on another directory
 
 Sometimes you might want to build on an external directory to keep the 
 distribution clean: no worries, this is just an environment property away.
-Suppose you want to use the "../build" directory instead you simply tipe
+Suppose you want to use the "../build" directory instead, you simply tipe
 
  [unix]  ./build.sh  -Dbuild.root=../build
  [win32] .\build.bat -Dbuild.root=..\build
@@ -62,7 +63,7 @@ By using the -Dxxx=yyy argument, you are setting environments in the JVM: Ant
 is designed to give higher priority to system environments to allow you to
 modify _any_ <property> that you can find in the building instructions below,
 so it's just a matter of understanding what property you want to change
-and you don't have to touch this file.
+and you don't have to touch this file (which you shouldn't need to do).
 
 
 Build targets
@@ -80,35 +81,9 @@ pretty self-explanatory or type
  [unix]  ./build.sh  -projecthelp
  [win32] .\build.bat -projecthelp
  
-
-Install target
-==============
-
-The install target is mainly a facility to allow you to install a newly build
-cocoon + web application in your servlet container. If called normally it
-doesn't do anything, but if you type
-
- [unix]  ./build.sh  -Dinstall.war=../tomcat/webapps install
- [win32] .\build.bat -Dinstall.war=..\tomcat\webapps install
-
-overriding the installation properties, it copies the Cocoon war package
-in the specified directory. Normally the cocoon.war doesn't contain the required
-libraries so you have to make sure your servlet container has them in your
-classpath.
-
-But this build system allows you to create a complete war file that contains
-all the required libraries (careful that it gets pretty big) that allows you
-to install it in your servlet container you just have to fire it up without 
-doing anything else. Pretty slick, isn't it? To do this you have to set a 
-variable and this can trigger different behavior of the build system.
-
-These are the arguments that count for installation:
-
- -Dinclude.webapp.libs=yes     installs the libraries in the war (highly suggested)
- -Dremove.webapp=yes          removes the uncompressed webapp
- 
-That's all you have to know to start hacking Cocoon... so what are you 
-waiting for? C'mon, dive in and have fun. 
+and concentrate on the target descriptions that start with a star '*': these
+are the one you should call, the others are internal targets that are called
+by the main ones.
 
                               Happy hacking from the Apache Cocoon Dev Team :)
 
@@ -133,7 +108,7 @@ waiting for? C'mon, dive in and have fun.
     <property name="fullname" value="Apache Cocoon"/>
     <property name="Name"     value="Cocoon"/>
     <property name="name"     value="cocoon"/>
-    <property name="version"  value="2.0a2"/>
+    <property name="version"  value="2.0a3"/>
     <property name="year"     value="1999-2000"/>
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
@@ -232,7 +207,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare-src" description="Compiles the source code">
+  <target name="compile" depends="prepare-src" description="* Compiles the source code">
     <copydir src="${build.src}" dest="${build.dest}">
       <include name="**/Manifest.mf"/>
       <include name="**/*.xsl"/>
@@ -270,7 +245,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Creates the jar file                                                -->
   <!-- =================================================================== -->
-  <target name="package" depends="compile" description="Generates the jar package">
+  <target name="package" depends="compile" description="* Generates the jar package">
     <jar jarfile="${build.dir}/${name}.jar"
          basedir="${build.dest}"
          manifest="${build.src}/Manifest.mf"
@@ -317,7 +292,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Creates the war file                                                -->
   <!-- =================================================================== -->
-  <target name="webapp" depends="prepare-webapp, prepare-webapp-libs" description="Generates the war package">
+  <target name="webapp" depends="prepare-webapp, prepare-webapp-libs" description="* Generates the war package">
     <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
 
@@ -331,7 +306,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Installs Cocoon file                                                -->
   <!-- =================================================================== -->
-  <target name="install" depends="package, webapp, remove-webapp" if="install.war" description="Installs the war package">
+  <target name="install" depends="package, webapp, remove-webapp" if="install.war" description="* Installs the war package">
     <copyfile src="${build.dir}/${name}.war" dest="${install.war}/${name}.war"/>
   </target>
 
@@ -349,7 +324,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
-  <target name="docs" depends="prepare-docs" description="Generates the documentation">
+  <target name="docs" depends="prepare-docs" description="* Generates the documentation">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java classname="${doc.generator}">
@@ -361,7 +336,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Generate printer-friendly HTML docs                                 -->
   <!-- =================================================================== -->
-  <target name="printer-docs" depends="prepare-docs" description="Generates printer-friendly documentation">
+  <target name="printer-docs" depends="prepare-docs" description="* Generates printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java classname="${doc.generator}">
@@ -373,7 +348,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
-  <target name="site" depends="prepare-docs" description="Generates the web site (for site maintainers only)">
+  <target name="site" depends="prepare-docs" description="* Generates the web site (for site maintainers only)">
     <mkdir dir="${site}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java classname="${doc.generator}">
@@ -385,7 +360,7 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare-src" description="Generates the API documentation">
+  <target name="javadocs" depends="prepare-src" description="* Generates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="${packages}"
              sourcepath="${build.src}"
@@ -405,32 +380,30 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-<!--  <target name="dist" depends="package, webapp, docs, javadocs" description="Prepares the distribution"> -->
-  <target name="dist" depends="package, webapp" description="Prepares the distribution">
+<!--  <target name="dist" depends="package, webapp, docs, javadocs" description="* Prepares the distribution"> -->
+  <target name="dist" depends="package, webapp" description="* Prepares the distribution">
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}/lib"/>
     <mkdir dir="${dist.dir}/src"/>
-    <mkdir dir="${dist.dir}/conf"/>
     <mkdir dir="${dist.dir}/docs"/>
     <mkdir dir="${dist.dir}/docs/api"/>
-    <mkdir dir="${dist.dir}/skins"/>
     <mkdir dir="${dist.dir}/webapp"/>
-    <mkdir dir="${dist.dir}/xdocs"/>
 
     <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/lib/${name}.jar"/>
-    <copyfile src="${build.dir}/${name}.war" dest="${dist.dir}/webapp/${name}.war"/>
 
     <copydir src="${build.src}"      dest="${dist.dir}/src"/>
-    <copydir src="${webapp.dir}"     dest="${dist.dir}/conf" includes="*.x*" excludes="*/**"/>
+    <copydir src="${build.war}"      dest="${dist.dir}/webapp"/>
+    <copydir src="${lib.dir}"        dest="${dist.dir}/lib"/>
+
+<!--
     <copydir src="${build.docs}"     dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
     <copydir src="${docs.dir}"       dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
     <copydir src="${docs.dir}"       dest="${dist.dir}" includes="changes.xml, todo.xml"/>
     <copydir src="${skins.dir}"      dest="${dist.dir}/skins"/>
-    <copydir src="${lib.dir}"        dest="${dist.dir}/lib"/>
+-->
 
-    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, index.html, *.sh, *.bat" filtering="on"/>
-    <copydir src="${build.war}"      dest="${dist.dir}/webapp"/>
+    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, INSTALL, WARNING, *.sh, *.bat" filtering="on"/>
 
     <chmod perm="+x" file="${dist.dir}/run.sh"/>
     <chmod perm="+x" file="${dist.dir}/build.sh"/>
@@ -444,14 +417,14 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Packages the distribution as .zip                                   -->
   <!-- =================================================================== -->
-  <target name="dist-zip" depends="dist" description="Generates the distribution as a .zip file">
+  <target name="dist-zip" depends="dist" description="* Generates the distribution as a .zip file">
     <zip zipfile="${dist.target}/${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with .tar.gzip                            -->
   <!-- =================================================================== -->
-  <target name="dist-tgz" depends="dist" description="Generates the distribution as a .tar.gz file">
+  <target name="dist-tgz" depends="dist" description="* Generates the distribution as a .tar.gz file">
     <tar tarfile="${dist.target}/${Name}-${version}.tar" basedir="${dist.root}" includes="**"/>
     <gzip zipfile="${dist.target}/${Name}-${version}.tar.gz" src="${dist.target}/${Name}-${version}.tar"/>
   </target>
@@ -459,14 +432,14 @@ waiting for? C'mon, dive in and have fun.
   <!-- =================================================================== -->
   <!-- Clean targets                                                       -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init" description="Cleans the build directories">
+  <target name="clean" depends="init" description="* Cleans the build directories">
     <delete file="${docs.dir}/changes.xml"/>
     <delete file="${docs.dir}/todo.xml"/>
     <delete file="${docs.dir}/book.xml"/>
     <deltree dir="${build.dir}"/>
   </target>
 
-  <target name="distclean" depends="clean" description="Cleans everything to the original state">
+  <target name="distclean" depends="clean" description="* Cleans everything to the original state">
     <deltree dir="${build.root}"/>
     <delete file="${dist.target}/${Name}-${version}.tar.gz"/>
     <delete file="${dist.target}/${Name}-${version}.tar"/>

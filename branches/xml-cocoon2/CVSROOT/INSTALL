@@ -1,0 +1,118 @@
+
+
+                      *-----------------------------*
+                      |     I  N  S  T  A  L  L     |
+                      *-----------------------------*
+
+
+  You have downloaded Cocoon and you don't like to read verbose docs, right?
+  
+  Great, this file is for you.
+  
+ 
+ 1) Have your Servlet 2.2 compatible servlet engine installed.
+  
+  If you don't know how to do this, well, stop right here and move to the 
+  Apache Tomcat project (http://jakarta.apache.org/tomcat/) then come back
+  when you are done.
+
+  Done? Ok, let's go on.
+
+  
+ 2) Set your JAVA_HOME enviornment
+  
+  You have to set your JAVA_HOME enviornment to point to the root directory of
+  the Java Development Kit installed on your machine. To do this simply type:
+  
+    [unix] JAVA_HOME=/path/to/java/
+    [win32] SET JAVA_HOME=c:\path\to\java
+
+  your mileage may vary, but you know how to setup enviornments, right?
+
+  
+ 3) Create the Cocoon WAR package.
+  
+  To do this you simply have to type, depending on your operating system
+  
+    [unix]  ./build.sh  -Dinclude.webapp.libs=yes webapp
+    [win32] .\build.bat -Dinclude.webapp.libs=yes webapp
+  
+  this will create the "cocoon.war" file in the './build/cocoon' directory.
+
+
+ 4) Install the WAR package in your servlet container.
+  
+  There is no standard way to do this, but in most servlet engines, this is 
+  just a matter of copying the war file in a specific directory and the
+  engine will take care of installing it when restarted. 
+  
+  For Apache Tomcat, you have to copy the WAR archive into the '/webapps'
+  directory so do
+  
+    [unix] cp ./build/cocoon/cocoon.war $TOMCAT_HOME/webapps/cocoon.war
+    [unix] copy .\build\cocoon\cocoon.war %TOMCAT_HOME%\webapps\cocoon.war
+  
+  where TOMCAT_HOME points to the directory where tomcat is installed (note:
+  you don't need to set it in the enviornment, it's there only to show you)
+
+
+ 5) Restart the servlet engine.
+
+
+ 6) Access the URI 'http://localhost/cocoon/' with your favorite browser
+
+ 
+ 7) Wait a few seconds (Cocoon needs to compile parts of itself when launched)
+ 
+
+ 8) Say hallo to Cocoon :)
+  
+
+
+  FAQ
+  ---
+  
+  1) Why nothing happens when I access 'http://localhost/cocoon/'?
+
+  You might want to check a few things:
+  
+   - is your server listening to port 80? if not, you have to call the right
+     port like in 'http://localhost:8080/cocoon/'. Note that Apache Tomcat
+     binds by default to port 8080, NOT 80.
+     
+   - did your servlet engine install the WAR file? you can check by making
+     sure the WAR file was unpacked or connecting to the administration tools
+     of your servlet engine.
+     
+   - did you restart the servlet engine? if not, do it.
+   
+   
+  2) Why does Cocoon takes so long to start?
+  
+  Cocoon compiles sitemaps into java classes to increase runtime performance,
+  this is done only at startup and only if the sitemap file is modified, for 
+  all the other requests the compiled sitemap is executed.
+  
+ 
+  3) Why is cocoon.war so big?
+  
+  Cocoon.war includes all the libraries that it requires to run. They are 
+  several megabytes of Java classes and it also includes the JDK javac compiler
+  which must be present in the war file to allow page compilation without 
+  classloading problems.
+  
+
+  4) I'm still stuck, what do I do?
+  
+  Well, contact the Cocoon Users mail list (cocoon-users@xml.apache.org).
+  Please, do not contact developers directly for help since the user list are
+  normally much more responsive and users normally have more experience in
+  solving installation problems than developers do.
+
+  
+  Happy hacking with Apache Cocoon.
+
+                                           The Apache XML Project
+                                           http://xml.apache.org/
+
+  

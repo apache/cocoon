@@ -44,10 +44,12 @@
   Installation Instructions and Documentation
   -------------------------------------------
 
+  Read the INSTALL file in this directory for the installation instructions.
+
   The documentation available as of the date of this release is
   included in the "docs/" directory.
 
-  Look for the most updated documentation on the Cocoon web site under
+  Look for the most updated documentation on the Apache Cocoon web site under
   the Apache XML Project (http://xml.apache.org/cocoon/).
 
 
