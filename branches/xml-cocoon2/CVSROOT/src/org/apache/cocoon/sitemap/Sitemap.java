@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 12:56:19 $
+ * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-02-27 14:57:26 $
  */
 public class Sitemap implements Composer, Configurable, Processor {
     
@@ -82,9 +82,6 @@ public class Sitemap implements Composer, Configurable, Processor {
                                     "of the partition named \""+name+"\"",co);
             }
         }
-        if (this.partition==null)
-            throw new ConfigurationException("No default partition configured",
-                                             conf);
     }
 
     /**
@@ -93,7 +90,8 @@ public class Sitemap implements Composer, Configurable, Processor {
      */
     public boolean process(Request req, Response res, OutputStream out)
     throws SAXException, IOException, ProcessingException {
-        if(this.partition.process(req,res,out)) return(true);
+        if(this.partition!=null)
+            if(this.partition.process(req,res,out)) return(true);
 
         Enumeration e=partitions.elements();
         while (e.hasMoreElements()) {
@@ -101,5 +99,20 @@ public class Sitemap implements Composer, Configurable, Processor {
             if (p.process(req,res,out)) return(true);
         }
         return(false);
+    }
+
+    public String resolve(String source, String part, SitemapPartition caller) {
+        if ((part==null)||("default".equals(part))) {
+            if (caller!=this.partition)
+                return(this.partition.resolve(source,part,null));
+            return(null);
+        }
+        
+        SitemapPartition p=(SitemapPartition)this.partitions.get(part);
+        if ((p!=null)&&(p!=caller)) {
+            return(p.resolve(source,part,null));
+        }
+
+        return(null);
     }
 }

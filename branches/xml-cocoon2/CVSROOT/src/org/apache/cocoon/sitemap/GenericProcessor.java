@@ -35,9 +35,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-02-27 12:56:19 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-02-27 14:57:26 $
  */
-public class GenericProcessor implements Composer, Configurable, Processor {
+public class GenericProcessor
+implements Composer, Configurable, Processor, LinkResolver {
 
     /** The component manager instance */
     private ComponentManager manager=null;
@@ -85,7 +86,7 @@ public class GenericProcessor implements Composer, Configurable, Processor {
     public void setConfiguration(Configuration conf)
     throws ConfigurationException {
         String uri=conf.getAttribute("uri");
-        if ((uri.length()==0)||(uri.charAt(0)!='/')) uri='/'+uri;
+        //if ((uri.length()==0)||(uri.charAt(0)!='/')) uri='/'+uri;
         String source=conf.getAttribute("source",null);
         try {
             if(source==null) {
@@ -115,6 +116,7 @@ public class GenericProcessor implements Composer, Configurable, Processor {
         while (e.hasMoreElements()) {
             Configuration f=(Configuration)e.nextElement();
             this.filters.addElement("filter:"+c.getAttribute("name"));
+            this.filtersParam.addElement(Parameters.fromConfiguration(c));
         }
     }
 
@@ -134,11 +136,13 @@ public class GenericProcessor implements Composer, Configurable, Processor {
         Serializer s=(Serializer)this.manager.getComponent(this.serializer);
         s.setup(req,res,src,this.serializerParam);
         s.setOutputStream(out);
-        XMLConsumer current=s;
+        LinkTranslator t=new LinkTranslator(this,req.getUri());
+        t.setConsumer(s);
+        XMLConsumer current=t;
         for (int x=0; x<this.filters.size(); x++) {
             String k=(String)this.filters.elementAt(x);
             Filter f=(Filter)this.manager.getComponent(k);
-            f.setup(req,res,src,null);
+            f.setup(req,res,src,(Parameters)this.filtersParam.elementAt(x));
             f.setConsumer(current);
             current=f;
         }
@@ -148,5 +152,16 @@ public class GenericProcessor implements Composer, Configurable, Processor {
         g.setup(req,res,src,this.generatorParam);
         g.generate();
         return(true);
+    }
+    
+    /**
+     * Resolve a link against a source into the target URI space.
+     */
+    public String resolve(String source, String partition) {
+        if ((partition==null)||(this.partition.name.equals(partition))) {
+            String translated=this.sourceTranslator.translate(source);
+            if (translated!=null) return(translated);
+        }
+        return(this.partition.resolve(source,partition,this));
     }
 }

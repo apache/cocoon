@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.5 $ $Date: 2000-02-27 12:56:18 $
+ * @version CVS $Revision: 1.1.4.6 $ $Date: 2000-02-27 14:58:16 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -116,7 +116,7 @@ public class CocoonServlet extends HttpServlet {
         // We got it... Process the request
         String uri=req.getPathInfo();
         if (uri!=null) try {
-            //if (uri.charAt(0)=='/') uri=uri.substring(1);
+            if (uri.charAt(0)=='/') uri=uri.substring(1);
             CocoonServletRequest request=new CocoonServletRequest(req,uri);
             CocoonServletResponse response=new CocoonServletResponse(res);
             if (!this.cocoon.process(request,response,out)) {

@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 12:56:19 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 14:57:26 $
  */
 public class SitemapPartition implements Composer, Configurable, Processor {
 
@@ -102,4 +102,21 @@ public class SitemapPartition implements Composer, Configurable, Processor {
         }
         return(false);
     }
+
+    /**
+     * Resolve a link against a source into the target URI space.
+     */
+    public String resolve(String source, String partition, LinkResolver orig) {
+        if ((partition==null)||(this.name.equals(partition))) {
+            Enumeration e=this.processors.elements();
+            while (e.hasMoreElements()) {
+                LinkResolver r=(LinkResolver)e.nextElement();
+                if (orig==r) continue;
+                String translated=r.resolve(source,partition);
+                if (translated!=null) return(translated);
+            }
+        }
+        return(this.sitemap.resolve(source,partition,this));
+    }
+
 }
