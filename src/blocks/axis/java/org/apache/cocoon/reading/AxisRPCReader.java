@@ -63,12 +63,12 @@ import javax.servlet.http.HttpUtils;
 import javax.xml.soap.SOAPException;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.Constants;
@@ -111,11 +111,12 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  *
- * @version CVS $Id: AxisRPCReader.java,v 1.3 2003/06/18 11:18:35 giacomo Exp $
+ * @version CVS $Id: AxisRPCReader.java,v 1.4 2003/07/11 18:32:25 joerg Exp $
  */
-public class AxisRPCReader extends ComposerReader
+public class AxisRPCReader extends ServiceableReader
     implements Configurable, Disposable
 {
+
     // soap server reference
     private SoapServer m_server;
     
@@ -130,17 +131,8 @@ public class AxisRPCReader extends ComposerReader
         m_isDevelompent = config.getChild("development-stage").getValueAsBoolean(m_isDevelompent );
 	}
 
-    /**
-     * Compose this reader
-     *
-     * @param manager a <code>ComponentManager</code> instance
-     * @exception ComponentException if an error occurs
-     */
-    public void compose(final ComponentManager manager)
-        throws ComponentException
-    {
-        super.compose(manager);
-
+    public void service(final ServiceManager manager) throws ServiceException {
+        super.service(manager);
         // set soap server reference
         m_server = (SoapServer) manager.lookup(SoapServer.ROLE);
     }

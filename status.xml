@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.87 2003/07/11 14:29:15 gianugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.88 2003/07/11 18:32:25 joerg Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="update">
+   All Reader accessing Avalon components now extend the ServiceableReader
+   instead of deprecated ComposerReader. It pertains the JSPReader, the
+   DatabaseReader and the AxisRPCReader.
+  </action>
   <action dev="GR" type="add">
    Added a WebDAV block, with an initial implementation of
    a modifiable and traversable WebDAV source.

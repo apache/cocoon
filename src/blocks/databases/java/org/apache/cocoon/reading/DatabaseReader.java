@@ -60,16 +60,15 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Map;
 
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -91,11 +90,12 @@ import org.xml.sax.SAXException;
  * to pull the image from, and source specifies the source key information.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: DatabaseReader.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: DatabaseReader.java,v 1.3 2003/07/11 18:32:25 joerg Exp $
  */
-public class DatabaseReader
-   extends ComposerReader
-   implements Configurable, Disposable, CacheableProcessingComponent {
+public class DatabaseReader extends ServiceableReader
+    implements Configurable, Disposable, CacheableProcessingComponent
+{
+
     private ComponentSelector dbselector;
     private String dsn;
     private long lastModified = System.currentTimeMillis();
@@ -107,12 +107,8 @@ public class DatabaseReader
     private boolean doCommit = false;
     private boolean defaultCache = true;
 
-    /**
-     * Compose the object so that we get the <code>Component</code>s we need from
-     * the <code>ComponentManager</code>.
-     */
-    public void compose(final ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(final ServiceManager manager) throws ServiceException {
+        super.service(manager);
         this.dbselector = (ComponentSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
 
