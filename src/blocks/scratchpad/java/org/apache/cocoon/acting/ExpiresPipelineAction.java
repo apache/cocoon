@@ -19,7 +19,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.SimpleCacheKey;
+import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -38,7 +38,7 @@ import java.util.Map;
  *                   action with value remove (required)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ExpiresPipelineAction.java,v 1.3 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: ExpiresPipelineAction.java,v 1.4 2004/04/15 08:05:56 cziegeler Exp $
  * @since 2.1.1
  */
 public class ExpiresPipelineAction extends ServiceableAction implements ThreadSafe {
@@ -57,12 +57,12 @@ public class ExpiresPipelineAction extends ServiceableAction implements ThreadSa
             if ( cacheKey != null ) {
                 Cache cache = null;
 
-                SimpleCacheKey key = new SimpleCacheKey(cacheKey, true);
+                IdentifierCacheKey key = new IdentifierCacheKey(cacheKey, true);
                 try {
                     cache = (Cache)this.manager.lookup(cacheRole);
                     cache.remove(key);
                 
-                    key = new SimpleCacheKey(cacheKey, false);
+                    key = new IdentifierCacheKey(cacheKey, false);
                     cache.remove(key);
                 } catch (Exception ex) {
                     if (this.getLogger().isDebugEnabled()) {

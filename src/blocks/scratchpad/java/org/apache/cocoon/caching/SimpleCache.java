@@ -44,7 +44,7 @@ import org.apache.excalibur.source.impl.validity.FileTimeStampValidity;
  *
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleCache.java,v 1.3 2004/04/15 08:04:39 cziegeler Exp $
+ * @version CVS $Id: SimpleCache.java,v 1.4 2004/04/15 08:05:55 cziegeler Exp $
  */
 public class SimpleCache extends CacheImpl {
 
@@ -70,8 +70,8 @@ public class SimpleCache extends CacheImpl {
         String filename;
         if ( key instanceof String ) {
             filename = NetUtils.absolutize(this.baseDirectory, (String)key);    
-        } else if ( key instanceof SimpleCacheKey ) {
-            filename = NetUtils.absolutize(this.baseDirectory, ((SimpleCacheKey)key).getKey());    
+        } else if ( key instanceof IdentifierCacheKey ) {
+            filename = NetUtils.absolutize(this.baseDirectory, ((IdentifierCacheKey)key).getKey());    
         } else {
             filename = NetUtils.absolutize(this.baseDirectory, key.toString());
         }

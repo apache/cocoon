@@ -23,7 +23,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.SimpleCacheKey;
+import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.cron.ConfigurableCronJob;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -58,7 +58,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * </ul>
  *  
  * @since 2.1.1
- * @version CVS $Id: UpdateTarget.java,v 1.5 2004/03/24 15:19:20 unico Exp $
+ * @version CVS $Id: UpdateTarget.java,v 1.6 2004/04/15 08:05:56 cziegeler Exp $
  */
 public class UpdateTarget extends AbstractLogEnabled
 implements Serviceable, ConfigurableCronJob {
@@ -74,7 +74,7 @@ implements Serviceable, ConfigurableCronJob {
     private boolean failSafe;
     
     // the key under which to store the CachedResponse in the Cache
-    private SimpleCacheKey cacheKey;
+    private IdentifierCacheKey cacheKey;
     
         
     // ---------------------------------------------------- Lifecycle
@@ -98,7 +98,7 @@ implements Serviceable, ConfigurableCronJob {
         this.cacheRole = pars.getParameter("cache-role", Cache.ROLE);
         this.expires = pars.getParameterAsInteger("cache-expires", 60);
         this.failSafe = pars.getParameterAsBoolean("fail-safe", true);
-        this.cacheKey = (SimpleCacheKey) objects.get("cache-key");
+        this.cacheKey = (IdentifierCacheKey) objects.get("cache-key");
     }
     
     

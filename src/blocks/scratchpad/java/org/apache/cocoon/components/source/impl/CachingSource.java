@@ -32,7 +32,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.SimpleCacheKey;
+import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  * always. <code>0</code> can be used to achieve the exact opposite. That is to say, 
  * the cached contents will be thrown out and updated immediately and unconditionally.
  * <p>
- * @version CVS $Id: CachingSource.java,v 1.10 2004/03/24 18:54:23 joerg Exp $
+ * @version CVS $Id: CachingSource.java,v 1.11 2004/04/15 08:05:56 cziegeler Exp $
  */
 public class CachingSource extends AbstractLogEnabled
 implements Source, Serviceable, Initializable, XMLizable {
@@ -104,7 +104,7 @@ implements Source, Serviceable, Initializable, XMLizable {
     final protected String protocol;
     
     /** The key used in the store */
-    final protected SimpleCacheKey cacheKey;
+    final protected IdentifierCacheKey cacheKey;
     
     /** number of seconds before cached object becomes invalid */
     final protected int expires;
@@ -136,7 +136,7 @@ implements Source, Serviceable, Initializable, XMLizable {
         if (cacheName != null) {
             key += ":" + cacheName;
         }
-        this.cacheKey = new SimpleCacheKey(key, false);
+        this.cacheKey = new IdentifierCacheKey(key, false);
     }
         
     /**
@@ -489,7 +489,7 @@ implements Source, Serviceable, Initializable, XMLizable {
     /**
      * Return the used key.
      */
-    protected SimpleCacheKey getCacheKey() {
+    protected IdentifierCacheKey getCacheKey() {
         return this.cacheKey;
     }
     
