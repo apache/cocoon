@@ -67,6 +67,7 @@ import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
 
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -90,7 +91,7 @@ import java.io.StringReader;
  * </pre>
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptGenerator.java,v 1.1 2003/03/09 00:02:45 pier Exp $
+ * @version CVS $Id: ScriptGenerator.java,v 1.2 2003/08/04 03:09:16 joerg Exp $
  */
 public class ScriptGenerator extends ComposerGenerator implements Configurable {
 
@@ -160,9 +161,7 @@ public class ScriptGenerator extends ComposerGenerator implements Configurable {
 
             getLogger().debug("file resolved to [" + this.inputSource.getURI() + "]");
 
-            // TODO: why doesn't this work?
-            // Reader in = src.getCharacterStream();
-            Reader in = new java.io.InputStreamReader(this.inputSource.getInputStream());
+            Reader in = new InputStreamReader(this.inputSource.getInputStream());
 
             // Set up the BSF manager and register relevant helper "beans"
             BSFManager mgr = new BSFManager();
