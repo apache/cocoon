@@ -18,7 +18,7 @@
 <!--
   Author: Ovidiu Predescu "ovidiu@cup.hp.com"
   Date: October 9, 2001
-  CVS $Id: getquote1.xsp,v 1.3 2004/03/06 02:26:04 antonio Exp $
+  CVS $Id: getquote3.xsp,v 1.1 2004/03/10 14:26:29 stephan Exp $
  -->
 
 <xsp:page language="java"
@@ -27,22 +27,22 @@
           xmlns:xscript="http://apache.org/xsp/xscript/1.0"
           xmlns:soap="http://apache.org/xsp/soap/3.0">
   <page>
-    <title>SOAP Stock Quote Example 1</title>
+    <title>SOAP Stock Quote Example 3</title>
 
     <content>
+
       <xsp:logic>
         String symbol = request.getParameter("symbol");
-
         if (symbol == null || symbol.equals("")) {
            <para>This page demonstrates the SOAP logicsheet for
            Cocoon2. It accesses a SOAP service that provides stock quotes
            and displays the result.</para>
 
-           <para>The SOAP result is placed in the generated page, and the
-           stock price is extracted from it using an external XSLT
-           stylesheet. Compare this approach with the one used in
-           <code>soap-getquote2.xsp</code>, which uses an internal XScript
-           stylesheet to extract the stock price.</para>
+           <para>This is yet another example of the XScript and SOAP
+           logicsheets. This sample is very similar with
+           <code>soap-getquote2.xsp</code>, except that the stylesheet is
+           defined in an external file.
+           </para>
 
            <para>Please enter the stock ticker: </para>
            <form href="soap-getquote">
@@ -50,14 +50,22 @@
              <input value="Do it!" type="submit"/>
            </form>
         } else {
-          <para>The stock price for <xsp:expr>symbol</xsp:expr> is 
+          <para>
+            The stock price for <xsp:expr>symbol</xsp:expr> is 
 
-            <soap:call url="http://services.xmethods.net:80/soap">
-              <ns1:getQuote xmlns:ns1="urn:xmethods-delayed-quotes">
-                <soap:enc/>
-                <symbol xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"><xsp-request:get-parameter name="symbol"/></symbol>
-              </ns1:getQuote>
-            </soap:call>
+            <xscript:variable name="soap-result">
+              <soap:call url="http://services.xmethods.net:80/soap">
+                <ns1:getQuote xmlns:ns1="urn:xmethods-delayed-quotes">
+                  <soap:enc/>
+                  <symbol xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance" xmlns:xsd="http://www.w3.org/1999/XMLSchema"><xsp-request:get-parameter name="symbol"/></symbol>
+                </ns1:getQuote>
+              </soap:call>
+            </xscript:variable>
+
+            <xscript:variable name="stylesheet"
+                              href="stylesheets/soap-getquote3.xsl"/>
+
+            <xscript:transform name="soap-result" stylesheet="stylesheet"/>
           </para>
 
           <form href="soap-getquote">
