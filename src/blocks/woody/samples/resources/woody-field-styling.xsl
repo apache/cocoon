@@ -50,7 +50,9 @@
       +-->
   <xsl:template match="wi:*" mode="styling">
     <xsl:apply-templates select="wi:styling/@*" mode="styling"/>
-    <!--+ @listbox-size needs to be handled separately as even if it is not
+
+    <!--+ 
+        | @listbox-size needs to be handled separately as even if it is not
         | specified some output (@size) must be generated.
         | Separating this out into this common styling looks a bit like
         | over-separation, doesn't it?
@@ -80,11 +82,14 @@
   <xsl:template match="wi:styling/@list-type | wi:styling/@list-orientation |
                        wi:styling/@listbox-size | wi:styling/@format"
                 mode="styling">
-    <!-- They are just markers for the stylesheet and don't go through to HTML. -->
+    <!--+
+        | Ignore marker attributes so they don't go into the resuling HTML.
+        +-->
   </xsl:template>
 
   <xsl:template match="wi:styling/@type" mode="styling">
-    <!--+ Do we have a duplicate semantic usage of @type??
+    <!--+ 
+        | Do we have a duplicate semantic usage of @type?
         | @type is only a marker for the stylesheet in general, but some of the
         | types must/should be in the HTML output too.
         +-->
