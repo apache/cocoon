@@ -56,6 +56,9 @@ import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -65,21 +68,25 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.2 2003/10/30 13:02:31 cziegeler Exp $
  */
 
 
 public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
-  implements ProcessingNodeBuilder, Recomposable {
+  implements ProcessingNodeBuilder, Recomposable, Serviceable {
 
     protected TreeBuilder treeBuilder;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
+    public void compose(ComponentManager manager) throws ComponentException {
+    
+    }
+    
     public void recompose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }

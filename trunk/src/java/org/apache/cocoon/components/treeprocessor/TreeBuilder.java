@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -63,11 +62,10 @@ import java.util.List;
  * all the necessary functionality to create new instances of a TreeProcessor.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.4 2003/10/24 21:05:27 bloritsch Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.5 2003/10/30 13:02:31 cziegeler Exp $
  */
 
 public interface TreeBuilder
-        extends Component
 {
 
     /**

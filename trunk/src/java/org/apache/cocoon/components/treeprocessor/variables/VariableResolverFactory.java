@@ -50,14 +50,14 @@
 */
 package org.apache.cocoon.components.treeprocessor.variables;
 
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.sitemap.PatternException;
 
 import java.util.List;
 
 /**
  *
- * @version CVS $Id: VariableResolverFactory.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: VariableResolverFactory.java,v 1.3 2003/10/30 12:59:00 cziegeler Exp $
  */
 public class VariableResolverFactory {
     
@@ -133,7 +133,7 @@ public class VariableResolverFactory {
      * Get a resolver for a given expression. Chooses the most efficient implementation
      * depending on <code>expression</code>.
      */
-    public static VariableResolver getResolver(String expression, ComponentManager manager) throws PatternException {
+    public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
         if (needsResolve(expression)) {
             VariableResolver resolver = new PreparedVariableResolver(expression, manager);
             List collector = (List)disposableCollector.get();

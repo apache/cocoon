@@ -51,10 +51,10 @@
 package org.apache.cocoon.components.treeprocessor.variables;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -69,12 +69,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.3 2003/10/30 12:59:00 cziegeler Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
-    private ComponentManager manager;
-    private ComponentSelector selector;
+    private ServiceManager manager;
+    private ServiceSelector selector;
     
     final private List items = new ArrayList();
 
@@ -92,7 +92,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static final Integer STATEFUL_MODULE_OBJ = new Integer(STATEFUL_MODULE);
     private static final Integer ANCHOR_OBJ = new Integer(ANCHOR);
     
-    public PreparedVariableResolver(String expr, ComponentManager manager) throws PatternException {
+    public PreparedVariableResolver(String expr, ServiceManager manager) throws PatternException {
         
         super(expr);
         this.manager = manager;
@@ -193,8 +193,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         if (this.selector == null) {
             try {
                 // First access to a module : lookup selector
-                this.selector = (ComponentSelector)this.manager.lookup(InputModule.ROLE + "Selector");
-            } catch(ComponentException ce) {
+                this.selector = (ServiceSelector)this.manager.lookup(InputModule.ROLE + "Selector");
+            } catch(ServiceException ce) {
                 throw new PatternException("Cannot access input modules selector", ce);
             }
         }
@@ -203,7 +203,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         InputModule module;
         try {
             module = (InputModule)this.selector.select(moduleName);
-        } catch(ComponentException ce) {
+        } catch(ServiceException ce) {
             throw new PatternException("Cannot get InputModule named '" + moduleName +
                 "' in expression '" + this.originalExpr + "'", ce);
         }
@@ -320,7 +320,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                                 result.append(value);
                             }
                             
-                        } catch(ComponentException compEx) {
+                        } catch(ServiceException compEx) {
                             throw new PatternException("Cannot get module '" + moduleName +
                                 "' in expression '" + this.originalExpr + "'", compEx);
                                 
