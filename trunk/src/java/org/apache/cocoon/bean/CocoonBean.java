@@ -63,14 +63,24 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceUtil;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>The Cocoon Bean simplifies usage of the Cocoon object. Allows to create,
@@ -84,7 +94,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.33 2003/10/06 14:41:55 vgritsenko Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.34 2003/10/07 09:59:17 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -92,6 +102,7 @@ public class CocoonBean extends CocoonWrapper {
     private boolean followLinks = true;
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
+    private boolean checksumCompare = false;
     private String defaultFilename = Constants.INDEX_URI;
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";
@@ -104,7 +115,10 @@ public class CocoonBean extends CocoonWrapper {
     private List listeners = new ArrayList();
     private boolean verbose;
     SourceResolver sourceResolver;
-    private Crawler crawler;
+
+    private Crawler crawler;    
+    private String checksumsURI = null;
+    private Map checksums;
 
     public CocoonBean() {
         this.crawler = new Crawler();
@@ -169,6 +183,10 @@ public class CocoonBean extends CocoonWrapper {
         this.brokenLinkExtension = brokenLinkExtension;
     }
 
+    public void setChecksumURI(String uri) {
+        this.checksumsURI = uri;
+    }
+    
     public boolean followLinks() {
         return followLinks;
     }
@@ -351,6 +369,8 @@ public class CocoonBean extends CocoonWrapper {
             this.initialize();
         }
 
+        readChecksumFile();
+        
         if (crawler.getRemainingCount()==0) {
             super.precompile();
         } else {
@@ -364,6 +384,9 @@ public class CocoonBean extends CocoonWrapper {
                 }
             }
         }
+        
+        writeChecksumFile();
+        
         if (log.isInfoEnabled()) {
               log.info(
                   "  Memory used: "
@@ -537,20 +560,24 @@ public class CocoonBean extends CocoonWrapper {
                     ModifiableSource source = getSource(target);
                     try {
                         pageSize = output.size();
-                        OutputStream stream = source.getOutputStream();
-
-                        output.setFileOutputStream(stream);
-                        output.flush();
-                        output.close();
-                        pageGenerated(target.getSourceURI(),
-                                      target.getAuthlessDestURI(),
-                                      pageSize,
-                                      linkCount,
-                                      newLinkCount,
-                                      crawler.getRemainingCount(),
-                                      crawler.getProcessedCount(),
-                                      System.currentTimeMillis()- startTimeMillis);
-
+                        
+                        if (this.checksumsURI == null || !isSameContent(output, target)) {
+                            OutputStream stream = source.getOutputStream();
+                            output.setFileOutputStream(stream);
+                            output.flush();
+                            output.close();
+                            pageGenerated(target.getSourceURI(), 
+                                          target.getAuthlessDestURI(), 
+                                          pageSize,
+                                          linkCount,
+                                          newLinkCount,
+                                          crawler.getRemainingCount(),
+                                          crawler.getProcessedCount(),
+                                          System.currentTimeMillis()- startTimeMillis);
+                        } else {
+                            output.close();
+                            pageSkipped(target.getSourceURI(), "Page not changed");
+                        }
                     } catch (IOException ioex) {
                         log.warn(ioex.toString());
                     } finally {
@@ -560,7 +587,8 @@ public class CocoonBean extends CocoonWrapper {
             }
         } catch (Exception rnfe) {
             log.warn("Could not process URI: " + target.getSourceURI());
-            this.sendBrokenLinkWarning(target.getSourceURI(), "URI not found");
+            rnfe.printStackTrace();
+            this.sendBrokenLinkWarning(target.getSourceURI(), "URI not found: "+rnfe.getMessage());
         }
     }
 
@@ -659,6 +687,70 @@ public class CocoonBean extends CocoonWrapper {
             return true;
         } else {
             return includeLinkExtensions.contains(target.getExtension());
+        }
+    }
+
+    /* NB. This is a temporary solution - it may well be replaced by storing the checksum info
+     *     in the XML 'report' file, along with details of what pages were created, etc. 
+     */ 
+    private void readChecksumFile() throws Exception {
+        checksums = new HashMap();
+        
+        try {
+            Source checksumSource = sourceResolver.resolveURI(checksumsURI);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(checksumSource.getInputStream()));
+            String line;
+            int lineNo=0;
+            while ((line = reader.readLine())!=null) {
+                lineNo++;
+                if (line.trim().startsWith("#") || line.trim().length()==0 ) {
+                    continue;
+                }
+                if (line.indexOf("\t")==-1) { 
+                    throw new ProcessingException("Missing tab at line "+lineNo+" of " + checksumsURI);
+                }
+                String filename = line.substring(0,line.indexOf("\t"));
+                String checksum = line.substring(line.indexOf("\t")+1);
+                checksums.put(filename, checksum);
+            }
+            reader.close();
+        } catch (SourceNotFoundException e) {
+            // return leaving checksums map empty
+        }
+    }
+    
+    private void writeChecksumFile() throws Exception {
+        Source checksumSource = sourceResolver.resolveURI(checksumsURI);
+        if (!(checksumSource instanceof ModifiableSource)) {
+            throw new ProcessingException("Checksum file is not Modifiable:" + checksumSource);
+        }
+        ModifiableSource source = (ModifiableSource) checksumSource;
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(source.getOutputStream()));
+        Iterator i = checksums.keySet().iterator();
+        while (i.hasNext()){
+            String key = (String) i.next();
+            String checksum = (String) checksums.get(key);
+            writer.println(key + "\t" + checksum);
+        }
+        writer.close();
+    }
+
+    private boolean isSameContent(DelayedOutputStream stream, Target target) {
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(stream.getContent());
+            String streamDigest = SourceUtil.encodeBASE64(new String(md5.digest()));
+            String targetDigest = (String)checksums.get(target.getSourceURI());
+            
+            if (streamDigest.equals(targetDigest)) {
+                return true;
+            } else {
+                checksums.put(target.getSourceURI(), streamDigest);
+                return false;
+            }
+        } catch (NoSuchAlgorithmException e) {
+            // or do something:
+            return false;
         }
     }
 }
