@@ -152,7 +152,6 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     }
     
     protected void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
-        List result = null;
         Element validatorElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "validation");
         if (validatorElement != null) {
             NodeList list = validatorElement.getChildNodes();

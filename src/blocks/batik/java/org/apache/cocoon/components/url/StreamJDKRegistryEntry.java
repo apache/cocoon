@@ -75,7 +75,7 @@ import org.apache.batik.util.ParsedURL;
 /**
  * This Image tag registy entry is setup to wrap the core JDK Image stream tools.  
  * 
- * @version CVS $Id: StreamJDKRegistryEntry.java,v 1.1 2004/02/04 14:39:28 sylvain Exp $
+ * @version CVS $Id: StreamJDKRegistryEntry.java,v 1.2 2004/02/04 18:07:51 joerg Exp $
  */
 public class StreamJDKRegistryEntry extends AbstractRegistryEntry 
     implements URLRegistryEntry {
@@ -183,13 +183,11 @@ public class StreamJDKRegistryEntry extends AbstractRegistryEntry
         while (true) {
             try {
                 mediaTracker.waitForID(myID);
-            }
-            catch(InterruptedException ie) {
-                                // Something woke us up but the image
-                                // isn't done yet, so try again.
+            } catch(InterruptedException ie) {
+                // Something woke us up but the image
+                // isn't done yet, so try again.
                 continue;
-            };
-
+            }
             // All done!
             break;
         }
