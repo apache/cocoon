@@ -18,6 +18,8 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -47,6 +49,23 @@ import org.xml.sax.SAXException;
  *   &lt;/composite&gt;
  * </pre>
  *
+ * <h2>Example XML with sub-navigation:</h2>
+ * <pre>
+ *   &lt;composite&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;named-item name="..." selected="true"&gt;
+ *       &lt;!-- output from processing layout --&gt;
+ *     &lt;/named-item&gt;
+ *     &lt;named-item name="..." parameter="link-event"/&gt;
+ *     &lt;named-item name="..." parameter="link-event"&gt;
+ *       &lt;<i>child-tag-name</i>&gt;
+ *         &lt;named-item name="..." parameter="link-event"/&gt;
+ *         &lt;named-item name="..." parameter="link-event"/&gt;
+ *       &lt;/<i>child-tag-name</i>&gt;
+ *     &lt;/named-item&gt;
+ *   &lt;/composite&gt;
+ * </pre>
+ *
  * <h2>Applicable to:</h2>
  * <ul>
  *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
@@ -60,6 +79,10 @@ import org.xml.sax.SAXException;
  *      <td></td><td>String</td><td><code>"composite"</code></td></tr>
  *  <tr><th>root-tag</th><td>Should a tag enclosing the following output be generated?</td>
  *      <td></td><td>boolean</td><td><code>true</code></td></tr>
+ *  <tr><th>child-tag-name</th><td>The name of the tag to enclose named items (i.e. the subnavigation)
+ * of non-selected items. If a value is not specified then no sub-navigation named items will be
+ * generated.</td>
+ *      <td></td><td>String</td><td><code>""</code></td></tr>
  * </tbody></table>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
@@ -95,6 +118,7 @@ public class TabContentAspect
             // loop over all tabs
             for (int j = 0; j < tabLayout.getSize(); j++) {
                 Item tab = tabLayout.getItem(j);
+                ChangeAspectDataEvent event = null;
 
                 // open named-item tag
                 attributes.clear();
@@ -104,7 +128,7 @@ public class TabContentAspect
                 if (j == selected) {
                     attributes.addCDATAAttribute("selected", "true");
                 }
-                ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, config.aspectName, new Integer(j)); 
+                event = new ChangeAspectDataEvent(tabLayout, config.aspectName, new Integer(j));
                 attributes.addCDATAAttribute("parameter", service.getComponentManager().getLinkService().getLinkURI(event)); 
 
                 // add parameters
@@ -117,7 +141,12 @@ public class TabContentAspect
                 XMLUtils.startElement(handler, "named-item", attributes);
                 if (j == selected) {
                     this.processLayout(tab.getLayout(), service, handler);
+                } else if (config.showAllNav) {
+                    List events = new ArrayList();
+                    events.add(event);
+                    this.processNav(context, tab.getLayout(), service, handler, events);
                 }
+
                 // close named-item tag
                 XMLUtils.endElement(handler, "named-item");
             }
@@ -128,8 +157,6 @@ public class TabContentAspect
         } else {
             throw new SAXException("Wrong layout type, TabLayout expected: " + layout.getClass().getName());
         }
-
-
     }
 
     /**
@@ -148,14 +175,89 @@ public class TabContentAspect
         return Collections.singletonList(desc).iterator();
     }
 
+    /*
+     * Generate the sub navigation for non-selected tabs
+     * @param context
+     * @param layout
+     * @param service
+     * @param handler
+     * @throws SAXException
+     */
+    private void processNav(RendererAspectContext context,
+                            Layout layout,
+                            PortalService service,
+                            ContentHandler handler,
+                            List parentEvents)
+        throws SAXException {
+        if (layout instanceof CompositeLayout) {
+            CompositeLayout tabLayout = (CompositeLayout)layout;
+
+            if (tabLayout.getSize() == 0) {
+                return;
+            }
+            TabPreparedConfiguration config =
+                (TabPreparedConfiguration) context.getAspectConfiguration();
+            AttributesImpl attributes = new AttributesImpl();
+            boolean subNav = false;
+
+            // loop over all tabs
+            for (int j = 0; j < tabLayout.getSize(); j++) {
+                Item tab = tabLayout.getItem(j);
+
+                // open named-item tag
+                attributes.clear();
+                if (tab instanceof NamedItem) {
+                    if (!subNav) {
+                        XMLUtils.startElement(handler, config.childTagName);
+                        subNav = true;
+                    }
+                    attributes.addCDATAAttribute("name",
+                        String.valueOf(((NamedItem) tab).getName()));
+                    ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout,
+                        config.aspectName, new Integer(j));
+                    List events = new ArrayList(parentEvents);
+                    events.add(event);
+
+                    attributes.addCDATAAttribute("parameter",
+                        service.getComponentManager().getLinkService().getLinkURI(events));
+
+                    // add parameters
+                    final Iterator iter = tab.getParameters().entrySet().iterator();
+                    while (iter.hasNext()) {
+                        final Map.Entry entry = (Map.Entry) iter.next();
+                        attributes.addCDATAAttribute((String) entry.getKey(),
+                            (String) entry.getValue());
+                    }
+
+                    XMLUtils.startElement(handler, "named-item", attributes);
+
+                    this.processNav(context, tab.getLayout(), service, handler, events);
+
+                    // close named-item tag
+                    XMLUtils.endElement(handler, "named-item");
+                }
+
+
+            }
+            // close sub-nav tag
+            if (subNav) {
+                XMLUtils.endElement(handler, config.childTagName);
+            }
+        }
+    }
+
     protected class TabPreparedConfiguration extends PreparedConfiguration {
         public String aspectName;
         public String store;
-        
+        public boolean showAllNav = false;
+        public String childTagName;
+
         public void takeValues(TabPreparedConfiguration from) {
             super.takeValues(from);
             this.aspectName = from.aspectName;
             this.store = from.store;
+            this.showAllNav = from.showAllNav;
+            this.childTagName = from.childTagName;
         }
     }
     
@@ -168,6 +270,10 @@ public class TabContentAspect
         pc.takeValues((PreparedConfiguration)super.prepareConfiguration(configuration));
         pc.aspectName = configuration.getParameter("aspect-name", "tab");
         pc.store = configuration.getParameter("store");
+        pc.childTagName = configuration.getParameter("child-tag-name", "");
+        if (!pc.childTagName.equals("")) {
+            pc.showAllNav = true;
+        }
         return pc;
     }
 
