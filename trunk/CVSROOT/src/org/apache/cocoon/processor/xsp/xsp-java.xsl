@@ -319,11 +319,12 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- *** Dynamic Tag Support - EXPERIMENTAL AND UNOFFICIAL - uncomment to use
   <xsl:template match="xsp:variable"/>
+  -->
 
-  <!-- *** Dynamic Tag Support *** -->
-
-  <!-- Expand dynamic tags to code -->
+  <!-- *** Dynamic Tag Support - EXPERIMENTAL AND UNOFFICIAL - uncomment to use
+  Expand dynamic tags to code
   <xsl:template name="expr-value" match="xsp:expr-value">
     <xsl:choose>
       <xsl:when test="name(*[1]) = 'xsp:expr'">
@@ -332,13 +333,16 @@
       <xsl:otherwise>"<xsl:value-of select="."/>"</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  -->
 
-  <!-- Prolog declarations required to mix code and markup -->
+  <!-- *** Dynamic Tag Support - EXPERIMENTAL AND UNOFFICIAL - uncomment to use
+  Prolog declarations required to mix code and markup
   <xsl:template match="xsp:declare-node-stack">
     Node xspParentNode = null;
     Node xspCurrentNode = <xsl:value-of select="@node-argument"/>;
     Stack xspNodeStack = new Stack();
     Document document = <xsl:value-of select="@node-argument"/>.getOwnerDocument();
   </xsl:template>
+  -->
 
 </xsl:stylesheet>

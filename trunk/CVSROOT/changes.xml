@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.177 2001-01-16 15:50:26 greenrd Exp $ 
+  $Id: changes.xml,v 1.178 2001-01-16 17:40:11 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -25,9 +25,10 @@
    now show up perfectly in all versions of Internet Explorer - as far as we know!
   </action>
   <action dev="DB" type="add">
-   Added experimental support for xsp:variable declaration and method calling to util taglib.
+   Added EXPERIMENTAL support for xsp:variable declaration and code generation to xsp core logicsheet,
+   and method calling to util taglib.
    This is designed to automatically pass through required environment variables such
-   as xspCurrentNode.
+   as xspCurrentNode. Need to uncomment the templates at the end of xsp-java.xsl to use this.
   </action>
   <action dev="DB" type="update">
    In esql, encoding is now an element not an attribute, to allow passthru.
