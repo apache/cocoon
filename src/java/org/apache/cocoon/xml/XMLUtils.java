@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,15 +44,17 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.8 2004/05/25 14:24:01 cziegeler Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.9 2004/06/18 12:01:26 vgritsenko Exp $
  */
 public class XMLUtils {
 
     public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
 
-    //using parent because some dom implementations like jtidy are bugged,
-    //cannot get parent or delete child
+    // FIXME: parent parameter not used anymore
+    // Using parent because some dom implementations like jtidy are bugged,
+    // cannot get parent or delete child
     public static void stripDuplicateAttributes(Node node, Node parent) {
+
         // The output depends on the type of the node
         switch(node.getNodeType()) {
         case Node.DOCUMENT_NODE: {
@@ -64,6 +66,7 @@ public class XMLUtils {
             }
             break;
         }
+
         case Node.ELEMENT_NODE: {
             Element elt = (Element) node;
             NamedNodeMap attrs = elt.getAttributes();
@@ -71,40 +74,37 @@ public class XMLUtils {
             ArrayList nodesToRemove = new ArrayList();
             int nodesToRemoveNum = 0;
 
-            for(int i = 0; i < attrs.getLength(); i++) {
-                Node a = attrs.item(i);
+            for (int i = 0; i < attrs.getLength(); i++) {
+                final Node a = attrs.item(i);
 
-              for(int j = 0; j < attrs.getLength(); j++) {
-                  Node b = attrs.item(j);
+                for (int j = 0; j < attrs.getLength(); j++) {
+                    final Node b = attrs.item(j);
 
-                  //if there are two attributes with same name
-                  if(i!=j&&(a.getNodeName().equals(b.getNodeName())))
-                  {
-                    nodesToRemove.add(b);
-                    nodesToRemoveNum++;
-                  }
-
-              }
-
+                    //if there are two attributes with same name
+                    if (i != j && (a.getNodeName().equals(b.getNodeName()))) {
+                        nodesToRemove.add(b);
+                        nodesToRemoveNum++;
+                    }
+                }
             }
 
-            for(int i=0;i<nodesToRemoveNum;i++)
-            {
-              org.w3c.dom.Attr nodeToDelete = (org.w3c.dom.Attr) nodesToRemove.get(i);
-              org.w3c.dom.Element nodeToDeleteParent =  (org.w3c.dom.Element)node; //nodeToDelete.getParentNode();
-              nodeToDeleteParent.removeAttributeNode(nodeToDelete);
+            for (int i = 0; i < nodesToRemoveNum; i++) {
+                org.w3c.dom.Attr nodeToDelete = (org.w3c.dom.Attr) nodesToRemove.get(i);
+                org.w3c.dom.Element nodeToDeleteParent = (org.w3c.dom.Element) node; // nodeToDelete.getParentNode();
+                nodeToDeleteParent.removeAttributeNode(nodeToDelete);
             }
 
             nodesToRemove.clear();
 
             Node child = elt.getFirstChild();
-            while(child != null) {
+            while (child != null) {
                 stripDuplicateAttributes(child, node);
                 child = child.getNextSibling();
             }
 
             break;
         }
+
         default:
             //do nothing
             break;
@@ -156,9 +156,9 @@ public class XMLUtils {
         format.put(OutputKeys.METHOD, "xml");
         format.put(OutputKeys.OMIT_XML_DECLARATION, (omitXMLDeclaration ? "yes" : "no"));
         format.put(OutputKeys.INDENT, "yes");
-        return format;        
+        return format;
     }
-    
+
     /**
      * Serialize a DOM node to a String.
      * The format of the output can be specified with the properties.
@@ -166,6 +166,7 @@ public class XMLUtils {
      */
     public static String serializeNode(Node node, Properties format)
     throws ProcessingException {
+
         try {
             if (node == null) {
                 return "";
@@ -177,18 +178,20 @@ public class XMLUtils {
             transformerHandler.setResult(new StreamResult(writer));
             if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.startDocument();
-            } 
+            }
             DOMStreamer domStreamer = new DOMStreamer(transformerHandler, transformerHandler);
             domStreamer.stream(node);
             if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.endDocument();
-            } 
+            }
             return writer.toString();
         } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException("TransformerException: " + local, local);
+            throw new ProcessingException("TransformerException: " + local,
+                                          local);
         } catch (SAXException local) {
-            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + local, local);
-        }        
+            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + local,
+                                          local);
+        }
     }
 
     /**
@@ -200,6 +203,7 @@ public class XMLUtils {
     public static void data(ContentHandler contentHandler,
                             String data)
     throws SAXException {
+
         contentHandler.characters(data.toCharArray(), 0, data.length());
     }
 
@@ -212,6 +216,7 @@ public class XMLUtils {
      */
     public static void valueOf(ContentHandler contentHandler, String text)
     throws SAXException {
+
         if (text != null) {
             data(contentHandler, text);
         }
@@ -227,6 +232,7 @@ public class XMLUtils {
     public static void valueOf(ContentHandler contentHandler,
                                org.apache.excalibur.xml.sax.XMLizable v)
     throws SAXException {
+
         if (v != null) {
             v.toSAX(contentHandler);
         }
@@ -241,6 +247,7 @@ public class XMLUtils {
      */
     public static void valueOf(ContentHandler contentHandler, Node v)
     throws SAXException {
+
         if (v != null) {
             DOMStreamer streamer = new DOMStreamer(contentHandler);
             if (contentHandler instanceof LexicalHandler) {
@@ -261,6 +268,7 @@ public class XMLUtils {
     public static void valueOf(ContentHandler contentHandler,
                                Collection v)
     throws SAXException {
+
         if (v != null) {
             Iterator iterator = v.iterator();
             while (iterator.hasNext()) {
@@ -282,6 +290,7 @@ public class XMLUtils {
      */
     public static void valueOf(ContentHandler contentHandler, Object v)
     throws SAXException {
+
         if (v == null) {
             return;
         }
@@ -328,8 +337,10 @@ public class XMLUtils {
      *            wrapping another exception.
      * @see #endElement(ContentHandler, String)
      */
-    public static void createElement(ContentHandler contentHandler, String localName) 
+    public static void createElement(ContentHandler contentHandler,
+                                     String localName)
     throws SAXException {
+
         startElement(contentHandler, localName);
         endElement(contentHandler, localName);
     }
@@ -344,8 +355,11 @@ public class XMLUtils {
      *            wrapping another exception.
      * @see #endElement(ContentHandler, String)
      */
-    public static void createElement(ContentHandler contentHandler, String localName, String stringValue)
-        throws SAXException {
+    public static void createElement(ContentHandler contentHandler,
+                                     String localName,
+                                     String stringValue)
+    throws SAXException {
+
         startElement(contentHandler, localName);
         data(contentHandler, stringValue);
         endElement(contentHandler, localName);
@@ -363,8 +377,11 @@ public class XMLUtils {
      * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
-    public static void createElement(ContentHandler contentHandler, String localName, Attributes atts) 
+    public static void createElement(ContentHandler contentHandler,
+                                     String localName,
+                                     Attributes atts)
     throws SAXException {
+
         startElement(contentHandler, localName, atts);
         endElement(contentHandler, localName);
     }
@@ -383,8 +400,12 @@ public class XMLUtils {
      * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
-    public static void createElement(ContentHandler contentHandler, String localName, Attributes atts, String stringValue)
-        throws SAXException {
+    public static void createElement(ContentHandler contentHandler,
+                                     String localName,
+                                     Attributes atts,
+                                     String stringValue)
+    throws SAXException {
+
         startElement(contentHandler, localName, atts);
         data(contentHandler, stringValue);
         endElement(contentHandler, localName);
@@ -398,8 +419,11 @@ public class XMLUtils {
      *            wrapping another exception.
      * @see #endElement(ContentHandler, String)
      */
-    public static void createElementNS(ContentHandler contentHandler, String namespaceURI, String localName)
-        throws SAXException {
+    public static void createElementNS(ContentHandler contentHandler,
+                                       String namespaceURI,
+                                       String localName)
+    throws SAXException {
+
         startElement(contentHandler, namespaceURI, localName);
         endElement(contentHandler, namespaceURI, localName);
     }
@@ -414,17 +438,17 @@ public class XMLUtils {
      *            wrapping another exception.
      * @see #endElement(ContentHandler, String)
      */
-    public static void createElementNS(
-        ContentHandler contentHandler,
-        String namespaceURI,
-        String localName,
-        String stringValue)
+    public static void createElementNS(ContentHandler contentHandler,
+                                       String namespaceURI,
+                                       String localName,
+                                       String stringValue)
     throws SAXException {
+
         startElement(contentHandler, namespaceURI, localName);
         data(contentHandler, stringValue);
         endElement(contentHandler, namespaceURI, localName);
     }
-    
+
     /**
      * Create a start and endElement
      *
@@ -437,16 +461,16 @@ public class XMLUtils {
      * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
-    public static void createElementNS(
-        ContentHandler contentHandler,
-        String namespaceURI,
-        String localName,
-        Attributes atts)
+    public static void createElementNS(ContentHandler contentHandler,
+                                       String namespaceURI,
+                                       String localName,
+                                       Attributes atts)
     throws SAXException {
+
         startElement(contentHandler, namespaceURI, localName, atts);
         endElement(contentHandler, namespaceURI, localName);
     }
-    
+
     /**
      * Create a start and endElement with a empty Namespace
      * The content of the Element is set to the stringValue parameter
@@ -461,19 +485,19 @@ public class XMLUtils {
      * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
-    public static void createElementNS(
-        ContentHandler contentHandler,
-        String namespaceURI,
-        String localName,
-        Attributes atts,
-        String stringValue)
+    public static void createElementNS(ContentHandler contentHandler,
+                                       String namespaceURI,
+                                       String localName,
+                                       Attributes atts,
+                                       String stringValue)
     throws SAXException {
+
         startElement(contentHandler, namespaceURI, localName, atts);
         data(contentHandler, stringValue);
         endElement(contentHandler, namespaceURI, localName);
     }
-    
-   
+
+
     /**
      * Create endElement with empty Namespace
      *
@@ -483,11 +507,13 @@ public class XMLUtils {
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
      */
-    public static void endElement(ContentHandler contentHandler, String localName) 
+    public static void endElement(ContentHandler contentHandler,
+                                  String localName)
     throws SAXException {
+
         contentHandler.endElement("", localName, localName);
     }
-    
+
     /**
      * Create endElement
      * Prefix must be mapped to empty String
@@ -498,11 +524,14 @@ public class XMLUtils {
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
      */
-    public static void endElement(ContentHandler contentHandler, String namespaceURI, String localName) 
+    public static void endElement(ContentHandler contentHandler,
+                                  String namespaceURI,
+                                  String localName)
     throws SAXException {
+
         contentHandler.endElement(namespaceURI, localName, localName);
     }
-    
+
     /**
      * Create a startElement with a empty Namespace and without Attributes
      *
@@ -511,8 +540,10 @@ public class XMLUtils {
      *            wrapping another exception.
      * @see #endElement(ContentHandler, String)
      */
-    public static void startElement(ContentHandler contentHandler, String localName) 
+    public static void startElement(ContentHandler contentHandler,
+                                    String localName)
     throws SAXException {
+
         contentHandler.startElement("", localName, localName, EMPTY_ATTRIBUTES);
     }
 
@@ -526,8 +557,11 @@ public class XMLUtils {
      *            wrapping another exception.
      * @see #endElement(ContentHandler, String)
      */
-    public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName)
+    public static void startElement(ContentHandler contentHandler,
+                                    String namespaceURI,
+                                    String localName)
     throws SAXException {
+
         contentHandler.startElement(namespaceURI, localName, localName, EMPTY_ATTRIBUTES);
     }
 
@@ -543,8 +577,11 @@ public class XMLUtils {
      * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
-    public static void startElement(ContentHandler contentHandler, String localName, Attributes atts) 
+    public static void startElement(ContentHandler contentHandler,
+                                    String localName,
+                                    Attributes atts)
     throws SAXException {
+
         contentHandler.startElement("", localName, localName, atts);
     }
 
@@ -562,8 +599,12 @@ public class XMLUtils {
      * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
-    public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName, Attributes atts)
+    public static void startElement(ContentHandler contentHandler,
+                                    String namespaceURI,
+                                    String localName,
+                                    Attributes atts)
     throws SAXException {
+
         contentHandler.startElement(namespaceURI, localName, localName, atts);
     }
 }
