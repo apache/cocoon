@@ -39,9 +39,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
@@ -170,11 +170,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.12 2004/07/22 15:03:31 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.13 2004/07/22 15:12:44 cziegeler Exp $
  *
  */
-public class SendMailTransformer extends AbstractSAXTransformer
-    implements Parameterizable, Recyclable {
+public class SendMailTransformer extends AbstractSAXTransformer {
+    
     /*
      * constants, related to elements in configuration-file
      */
@@ -231,8 +231,11 @@ public class SendMailTransformer extends AbstractSAXTransformer
     protected int                  port;
     protected String               contextPath;
     protected boolean              sendPartial;
-    protected Message              smtpMessage = null;
+    protected Message              smtpMessage;
 
+    protected String defaultSmtpHost;
+    protected String defaultFromAddress;
+    
     /**
      * create a new Transformer
      */
@@ -240,6 +243,16 @@ public class SendMailTransformer extends AbstractSAXTransformer
         this.defaultNamespaceURI = NAMESPACE;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration configuration)
+    throws ConfigurationException {
+        super.configure(configuration);
+        this.defaultSmtpHost = configuration.getChild("smtphost").getValue("");
+        this.defaultFromAddress = configuration.getChild("from").getValue("");
+    }
+    
     /**
      * invoked every time when the transformer is triggered by the pipeline
      */
@@ -247,8 +260,8 @@ public class SendMailTransformer extends AbstractSAXTransformer
                       Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        this.mailHost    = par.getParameter(PARAM_SMTPHOST, "");
-        this.fromAddress = par.getParameter(PARAM_FROM, "");
+        this.mailHost    = par.getParameter(PARAM_SMTPHOST, this.defaultSmtpHost);
+        this.fromAddress = par.getParameter(PARAM_FROM, this.defaultFromAddress);
         this.port        = this.request.getServerPort();
         this.contextPath = this.request.getContextPath();
         this.sendPartial = par.getParameterAsBoolean(PARAM_SENDPARTIAL, true);
@@ -272,15 +285,6 @@ public class SendMailTransformer extends AbstractSAXTransformer
     	} catch (ParameterException pe) {
     	    this.getLogger().debug("Parameter <body> not set."); 
     	}				    
-
-        this.defaultNamespaceURI = NAMESPACE;
-    }
-
-    /**
-     * invoked initially
-     */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        // nothing to do by now
     }
 
     /**
