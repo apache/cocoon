@@ -200,6 +200,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="remove">
+     Flowscript: Removed support for passing sitemap parameters into flowscript
+     function as positional arguments. Use cocoon.parameters instead.
+   </action>
    <action dev="RP" type="update" due-to="Igor Bukanov" fixes-bug="31649" due-to-email="igor@fastmail.fm">
      Use official Rhino implementation which supports continuations since 1.6. For the most
      flowscripts there shouldn't be any issues, though there are differences that may lead
@@ -215,17 +219,13 @@
      catch(return) and catch(continue) e.g.
      <code>
 	var pool = ...;
-	
 	function someFunction() {
-	
 	     var conn = pool.getConnection();
 	     ...
-	
 	     catch (break) {
 		 conn.close();
 		 conn = null;
 	     }
-	
 	     catch (continue) {
 		 conn = pool.getConnection();
 	     }
@@ -234,9 +234,7 @@
      can be replaced by catching the ContinuationException:
      <code>
      	var pool = ...;    
-	
 	function someFunction() {
-	
 	     var conn = null;
 	     try {
 		 if (conn == null) {
@@ -370,6 +368,11 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="remove">
+     Flowscript: Deprecated support for passing sitemap parameters into flowscript
+     function as positional arguments. Use cocoon.parameters instead. Support will
+     be removed completely in Cocoon 2.2.
+   </action>
    <action dev="RG" type="fix" fixes-bug="32159" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
      Portal: Request content length and content type are required in portlet ActionRequest 
      for custom upload handling.     
