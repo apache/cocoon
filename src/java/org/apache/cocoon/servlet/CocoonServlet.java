@@ -118,7 +118,6 @@ import org.apache.log.Priority;
 import org.apache.log.ErrorHandler;
 import org.apache.log.util.DefaultErrorHandler;
 import org.apache.log.output.ServletOutputLogTarget;
-import org.apache.log.util.DefaultErrorHandler;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -130,7 +129,7 @@ import org.apache.log.util.DefaultErrorHandler;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.15 2003/09/10 17:58:26 proyal Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.16 2003/09/16 01:51:05 ghoward Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1184,6 +1183,9 @@ public class CocoonServlet extends HttpServlet {
 
             try {
                 if (request instanceof MultipartHttpServletRequest) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Deleting uploaded file(s).");
+                    }
                     ((MultipartHttpServletRequest) request).cleanup();
                 }
             } catch (IOException e) {
