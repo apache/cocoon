@@ -211,6 +211,10 @@
    <action dev="LG" type="add">
      Polish i18n for CForms.
    </action>
+   <action dev="VG" type="update">
+     OJB Block: Renamed JdoPMF component to JDO, OdmgImplementation to ODMG, and
+     removed PBFactory component - please use OJB PersistenceFactory API directly.
+   </action>
    <action dev="VG" type="fix">
      Runnable Manager: Fix bug preventing scheduling of two different jobs at the same time.
    </action>
