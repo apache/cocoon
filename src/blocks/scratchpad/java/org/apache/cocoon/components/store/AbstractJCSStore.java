@@ -65,49 +65,54 @@ import org.apache.excalibur.store.impl.AbstractReadWriteStore;
 /**
  * TODO - This store implementation should be moved to excalibur store
  * 
+ * The JCS Configuration file - for details see: 
+ * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
+ * 
  * @author <a href="mailto:cmoss@tvnz.co.nz">Corin Moss</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  */
 public abstract class AbstractJCSStore
     extends AbstractReadWriteStore
     implements Store, ThreadSafe {
     
-    /**The JCS Configuration file - for details see: 
-    *http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
-    */
-    protected File m_JCSConfigFile;
-    
     /** The Java Cache System object */
     protected JCS m_JCS;
     
     /**The Region as used by JCS*/
-    protected String m_region;
+    private String m_region;
 
     /**The group name as used by JCS getGroupKeys*/
-    protected String m_group;
+    private String m_group;
     
 
      
-    public void setup(final File configFile, final String regionName, final String groupName) 
-      throws IOException, CacheException {
+    public void setup(final File configFile, 
+                      final String regionName, 
+                      final String groupName) 
+    throws IOException, CacheException {
    
-        this.m_JCSConfigFile = configFile;
         this.m_region = regionName;
         this.m_group = groupName;
         
-        getLogger().debug("CEM Loading config: '" + this.m_JCSConfigFile.getAbsolutePath() + "'");
-        getLogger().debug("CEM Loading region: '" + this.m_region + "'");
-        getLogger().debug("CEM Loading group: '" + this.m_group + "'");
+        if ( this.getLogger().isDebugEnabled() ) {
+            if ( configFile != null ) {
+                getLogger().debug("CEM Loading config: '" + configFile.getAbsolutePath() + "'");
+            }
+            getLogger().debug("CEM Loading region: '" + this.m_region + "'");
+            getLogger().debug("CEM Loading group: '" + this.m_group + "'");
+        }
 
-        /* Does config exist? */
-       // if (this.m_JCSConfigFile.exists()) 
-       // {
-            getLogger().debug("CEM Setting full path: " + this.m_JCSConfigFile.getAbsolutePath());
-            
-            JCS.setConfigFilename( this.m_JCSConfigFile.getAbsolutePath() );
-       // } else {         
-        //    throw new IOException( "Error reading JCS Config '" + this.m_JCSConfigFile.getAbsolutePath() + "'. File not found." );
-       // }
-
+        if ( configFile != null ) {
+            /* Does config exist? */
+            // if (this.m_JCSConfigFile.exists()) 
+            // {
+                getLogger().debug("CEM Setting full path: " + configFile.getAbsolutePath());
+                
+                JCS.setConfigFilename( configFile.getAbsolutePath() );
+           // } else {         
+            //    throw new IOException( "Error reading JCS Config '" + this.m_JCSConfigFile.getAbsolutePath() + "'. File not found." );
+           // }
+        }
 
         try {
            m_JCS = JCS.getInstance( m_region );
