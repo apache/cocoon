@@ -349,5 +349,5 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
             getLogger().error("Exception: ", e);
         }
         return null;
-    }    
+    }
 }

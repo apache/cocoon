@@ -60,7 +60,7 @@ public class EndpointDefinition {
      * Returns the target namespace of the WSDL document in which this endpoint
      * is defined.
      *
-     * @return
+     * @return String
      */
     public String getNamespaceURI() {
         return namespaceURI;
@@ -69,7 +69,7 @@ public class EndpointDefinition {
     /**
      * Returns the name of the service that this endpoint belongs to.
      *
-     * @return
+     * @return String
      */
     public String getServiceName() {
         return service.getQName().getLocalPart();
@@ -78,7 +78,7 @@ public class EndpointDefinition {
     /**
      * Returns the name of the port that concretely defines the endpoint.
      *
-     * @return
+     * @return String
      */
     public String getPortName() {
         return port.getName();

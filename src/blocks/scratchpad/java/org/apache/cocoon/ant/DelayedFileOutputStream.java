@@ -28,7 +28,7 @@ import java.io.OutputStream;
  *   A output stream writing to a ByteArrayOutputStream, until FilOutputStream target is defined.
  *
  * @author    huber@apache.org
- * @version CVS $Id: DelayedFileOutputStream.java,v 1.2 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DelayedFileOutputStream extends OutputStream {
     /**
@@ -182,9 +182,7 @@ public class DelayedFileOutputStream extends OutputStream {
                 baos.close();
             }
         } catch (IOException ioe) {
-            if (ioexception == null) {
-                ioexception = ioe;
-            }
+            ioexception = ioe;
         } finally {
             baos = null;
         }
@@ -227,9 +225,7 @@ public class DelayedFileOutputStream extends OutputStream {
                 baos.flush();
             }
         } catch (IOException ioe) {
-            if (ioexception == null) {
-                ioexception = ioe;
-            }
+            ioexception = ioe;
         }
 
         // flush fos
