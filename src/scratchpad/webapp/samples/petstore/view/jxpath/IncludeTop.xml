@@ -18,7 +18,7 @@
       <img border="0" src="images/separator.gif" />
 
 <t:choose>
-  <t:when test="{accountForm/signOn}"> 
+  <t:when test="#{accountForm/signOn}"> 
       <a href="signonForm.do">
       <img border="0" name="img_signin" src="images/sign-in.gif" /></a>
   </t:when>
@@ -44,10 +44,10 @@
 <t:import uri="view/jxpath/IncludeQuickHeader.xml"/>
 
 <!-- Support for non-traditional but simpler use of errors... -->
-<t:if test="{errors}">
-  <t:for-each select="{errors}">
+<t:if test="#{errors}">
+  <t:for-each select="#{errors}">
     <B><FONT color="RED">
-      <BR>{.}</BR>
+      <BR>#{.}</BR>
     </FONT></B>
   </t:for-each>
 </t:if>

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
-        <form method="POST" styleId="workingAccountForm" action="{$continuation/id}.kont">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <form method="POST" styleId="workingAccountForm" action="#{$continuation/id}.kont">
 <!--
         <input type="hidden" name="validate" value="editAccount" />
         <input type="hidden"  name="account.username" /> -->

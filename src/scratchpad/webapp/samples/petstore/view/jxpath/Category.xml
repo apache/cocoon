@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
         <backpointer name="Main Menu" do="index.do" />
-        <category name="{category/name}">
+        <category name="#{category/name}">
             <jxpath:for-each select="productList" >
-                <product name="{name}" id="{productId}"/>
+                <product name="#{name}" id="#{productId}"/>
             </jxpath:for-each>
-            <situation firstPage="{firstPage}" lastPage="{lastPage}" continuation="{$continuation/id}"/>
+            <situation firstPage="#{firstPage}" lastPage="#{lastPage}" continuation="#{$continuation/id}"/>
         </category>
     </site>
 </page>

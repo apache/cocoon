@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
         <backpointer name="Main Menu" do="index.do" />
         <message></message>
-        <panel header="Order #{order/orderId}" subheader="{order/orderDate}">
+        <panel header="Order ##{order/orderId}" subheader="#{order/orderDate}">
             <panel label="Payment Details">
                 <field label="Card Type"><jxpath:value-of select="order/cardType" /></field>
                 <field label="Card Number"><jxpath:value-of select="order/creditCard" /></field>
@@ -35,7 +35,7 @@
                 <field empty="2">
                     <cart name="Status">
                         <jxpath:for-each select="itemList" >
-                            <item product-id="{item/productId}" id="{item/itemId}">
+                            <item product-id="#{item/productId}" id="#{item/itemId}">
                                 <desc>
                                     <jxpath:value-of select="item/attr1"/> 
                                     <jxpath:value-of select="item/attr2"/> 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
-    <site signOn="{accountForm/signOn}" view="jxpath">
-        <form method="POST" label="signon" action="{$continuation/id}.kont">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <form method="POST" label="signon" action="#{$continuation/id}.kont">
             <message type="warning"><jxpath:value-of select="//message"/></message>
             <input type="text" name="username" value="j2ee" label="Username" />
             <input type="password" name="password" value="j2ee" label="Password" />
