@@ -52,7 +52,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 /**
- * The default implementation of {@link ContinuationsManager}. < <br/>There are
+ * The default implementation of {@link ContinuationsManager}. <br/>There are
  * two modes of work: <br/>
  * <ul>
  * <li><b>standard mode </b>- continuations are stored in single holder. No
