@@ -1,4 +1,4 @@
-/*-- $Id: ProducerFromFile.java,v 1.8 2000-04-04 11:12:49 stefano Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.9 2000-05-06 11:13:53 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * based on its tranlated path.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-04-04 11:12:49 $
+ * @version $Revision: 1.9 $ $Date: 2000-05-06 11:13:53 $
  */
 
 public class ProducerFromFile extends AbstractProducer implements Status {
@@ -83,8 +83,7 @@ public class ProducerFromFile extends AbstractProducer implements Status {
     }
     
     public String getPath(HttpServletRequest request) {
-        String basename = Utils.getBasename(request, this.context);
-        return basename.substring(0, basename.lastIndexOf('/') + 1);
+        return Utils.getBasepath(request, this.context);
     }
     
     public boolean hasChanged(Object context) {
