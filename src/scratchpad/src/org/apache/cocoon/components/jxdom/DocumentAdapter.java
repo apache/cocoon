@@ -136,7 +136,7 @@ public class DocumentAdapter implements Document {
     public DocumentAdapter(Object obj, String tagName) {
         root = new ElementAdapter(this, 
                                   GET_SELF.getPointer(newContext(obj), "."),
-                                  -1,
+                                  -10,
                                   tagName,
                                   obj);
     }
@@ -392,7 +392,7 @@ public class DocumentAdapter implements Document {
         Object nodeValue;
         NodeList childNodes;
         NamedNodeMap attributes;
-        Node firstChild, lastChild, nextSibling, prevSibling;
+        Node nextSibling, prevSibling;
 
         public Object unwrap() {
             return nodeValue;
@@ -410,13 +410,15 @@ public class DocumentAdapter implements Document {
             super(parent, ptr);
             myIndex = index;
             this.tagName = tagName;
+            if (nodeValue == null) {
+                nodeValue = "";
+            }
             this.nodeValue = nodeValue;
             if (nodeValue instanceof String ||
                 nodeValue instanceof Boolean ||
                 nodeValue instanceof Number) {
                 final TextAdapter text = new TextAdapter(this, ptr,
                                                          nodeValue);
-                firstChild = lastChild = text;
                 childNodes = new NodeList() {
                         public int getLength() {
                             return 1;
@@ -462,27 +464,7 @@ public class DocumentAdapter implements Document {
 
         public NodeList getChildNodes() {
             if (childNodes == null) {
-                final Pointer parentPtr = ptr;
                 final List nodeList = new ArrayList();
-                Iterator iter = GET_CHILD_NODES.iteratePointers(getContext());
-                for (int i = 0; iter.hasNext(); i++) {
-                    NodePointer p = (NodePointer)iter.next();
-                    Object nodeValue = p.getNode();
-                    if (nodeValue instanceof NodeAdapter) {
-                        p = (NodePointer) ((NodeAdapter)nodeValue).ptr;
-                        nodeValue = p.getNode();
-                    } else if (nodeValue instanceof DocumentAdapter) {
-                        nodeValue = ((DocumentAdapter)nodeValue).unwrap();
-                    }
-                    if (nodeValue instanceof Node) {
-                        nodeList.add(nodeValue);
-                    } else {
-                        QName q = p.getName();
-                        nodeList.add(new ElementAdapter(this, p, i, 
-                                                        q.getName(),
-                                                        nodeValue));
-                    }
-                }
                 childNodes = new NodeList() {
                         public int getLength() {
                             return nodeList.size();
@@ -491,6 +473,25 @@ public class DocumentAdapter implements Document {
                             return (Node)nodeList.get(i);
                         }
                     };
+                Iterator iter = GET_CHILD_NODES.iteratePointers(getContext());
+                for (int i = 0; iter.hasNext(); i++) {
+                    NodePointer p = (NodePointer)iter.next();
+                    Object value = p.getNode();
+                    if (value instanceof NodeAdapter) {
+                        p = (NodePointer) ((NodeAdapter)value).ptr;
+                        value = p.getNode();
+                    } else if (value instanceof DocumentAdapter) {
+                        value = ((DocumentAdapter)value).unwrap();
+                    }
+                    if (value instanceof Node) {
+                        nodeList.add(value);
+                    } else {
+                        QName q = p.getName();
+                        nodeList.add(new ElementAdapter(this, p, i, 
+                                                        q.getName(),
+                                                        value));
+                    }
+                }
             }
             return childNodes;
         }
@@ -584,6 +585,7 @@ public class DocumentAdapter implements Document {
 
         
         public NamedNodeMap getAttributes() {
+            if (true) return EMPTY_NODE_MAP;
             if (attributes == null) {
                 Iterator iter = GET_ATTRS.iteratePointers(getContext());
                 final List attrList = new ArrayList();
