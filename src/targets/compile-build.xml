@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Compile targets">
   <!-- Compilation Targets =================================================== -->
 
   <!-- compiles everything -->
@@ -164,4 +162,3 @@
          target="compile"/>
   </target>
 
-</project>

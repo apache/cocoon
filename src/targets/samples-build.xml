@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Sample targets">
   <!-- Samples Targets ======================================================= -->
 
   <target name="samples" depends="prepare, init-xpatch" unless="unless.exclude.webapp.samples">
@@ -74,4 +72,3 @@
          target="samples"/>
   </target>
   
-</project>

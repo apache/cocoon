@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Test targets">
   <!-- Test targets =========================================================== -->
 
   <!-- Runs all tests -->
@@ -71,4 +69,3 @@
     -->
   </target>
 
-</project>
