@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.7 2003/03/16 08:07:29 jefft Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.8 2003/03/17 10:44:07 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -466,9 +466,10 @@ public class DOMStreamer implements XMLProducer {
                             Map.Entry entry = (Map.Entry) localNsDeclIt.next();
                             String pr = (String) entry.getKey();
                             String ns = (String) entry.getValue();
-                            String pr1 = pr.equals("") ? "xmlns" : pr;
-                            String qn = pr.equals("") ? "xmlns" : "xmlns:" + pr;
-                            newAttrs.addAttribute("", pr1, qn, "CDATA", ns);
+                            // the following lines enable the creation of explicit xmlns attributes
+                            //String pr1 = pr.equals("") ? "xmlns" : pr;
+                            //String qn = pr.equals("") ? "xmlns" : "xmlns:" + pr;
+                            //newAttrs.addAttribute("", pr1, qn, "CDATA", ns);
                             // System.out.println("starting prefix mapping  for prefix " + pr + " for " + ns);
                             contentHandler.startPrefixMapping(pr, ns);
                         }
@@ -535,7 +536,6 @@ public class DOMStreamer implements XMLProducer {
          * @return the namespace, or null if not found.
          */
         public String getNamespaceForPrefix(String prefix, Element namespaceContext) {
-            // TODO cache this information in the ElementInfo objects?
             int type;
             Node parent = namespaceContext;
             String namespace = null;
