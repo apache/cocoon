@@ -117,7 +117,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.53 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -2327,6 +2327,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         this.globalJexlContext = null;
         this.variables = null;
         this.definitions = null;
+        this.cocoon = null;
         super.recycle();
     }
 
