@@ -4,19 +4,20 @@
 <!-- ===================== General Components =========================== -->
 
   <!-- Storing:
-       freememory: Indicates how much memory should be left free in the 
+       freememory: Indicates how much memory should be left free in the
                    JVM for normal operation.
-       heapsize: Indicates how big the heap size can grow to before the 
+       heapsize: Indicates how big the heap size can grow to before the
                  cleanup thread kicks in.
-       objectlifetime: Indicates how long (seconds) a cache object will 
-                       be hold in memory. The object will be thrown out, 
-                       when the time is over. 
+       objectlifetime: Indicates how long (seconds) a cache object will
+                       be hold in memory. The object will be thrown out,
+                       when the time is over.
        interval: Indicates the interval of the cleanup thread in seconds.
        maxobjects: Indicates how many objects will be hold in the cache.
                    When the number of maxobjects has been reached. The
                    last object in the cache will be thrown out.
        usethread: Indicates whether we use a cleanup thread or not.
        threadpriority: Indicates the priority of the cleanup thread.
+                       (1 is the lowest priority and 10 is the highest).
   -->
   <store class="org.apache.cocoon.components.store.MRUMemoryStore">
      <parameter name="freememory" value="1000000"/>
@@ -114,22 +115,22 @@
     <jdbc name="personnel">
       <!--
           If you have an Oracle database, and are using the the
-	  pool-controller below, you should add the attribute
-	  "oradb" and set it to true.
+      pool-controller below, you should add the attribute
+      "oradb" and set it to true.
 
-	  <pool-controller min="5" max="10" oradb="true"/>
+      <pool-controller min="5" max="10" oradb="true"/>
 
-	  That way the test to see if the server has disconnected
-	  the JdbcConnection will function properly.
+      That way the test to see if the server has disconnected
+      the JdbcConnection will function properly.
       -->
       <pool-controller min="5" max="10"/>
       <!--
           If you need to ensure an autocommit is set to true or
-	  false, then create the "auto-commit" element below.
+      false, then create the "auto-commit" element below.
 
-	  <auto-commit>false</auto-commit>
+      <auto-commit>false</auto-commit>
 
-	  The default is true.
+      The default is true.
       -->
       <dburl>@database-url@</dburl>
       <user>@database-user@</user>
@@ -145,19 +146,20 @@
   <stream-pipeline class="org.apache.cocoon.components.pipeline.CachingStreamPipeline"/>
 
   <!-- Caching of stream pipeline:
-       freememory: Indicates how much memory should be left free in the 
+       freememory: Indicates how much memory should be left free in the
                    JVM for normal operation.
-       heapsize: Indicates how big the heap size can grow to before the 
+       heapsize: Indicates how big the heap size can grow to before the
                  cleanup thread kicks in.
-       objectlifetime: Indicates how long (seconds) a cache object will 
-                       be hold in memory. The object will be thrown out, 
-                       when the time is over. 
+       objectlifetime: Indicates how long (seconds) a cache object will
+                       be hold in memory. The object will be thrown out,
+                       when the time is over.
        interval: Indicates the interval of the cleanup thread in seconds.
        maxobjects: Indicates how many objects will be hold in the cache.
                    When the number of maxobjects has been reached. The
                    last object in the cache will be thrown out.
        usethread: Indicates whether we use a cleanup thread or not.
        threadpriority: Indicates the priority of the cleanup thread.
+                       (1 is the lowest priority and 10 is the highest).
   -->
   <stream-cache class="org.apache.cocoon.caching.StreamMemoryCache">
      <parameter name="freememory" value="1000000"/>
@@ -172,19 +174,20 @@
   <event-pipeline class="org.apache.cocoon.components.pipeline.CachingEventPipeline"/>
 
   <!-- Caching of event pipeline:
-       freememory: Indicates how much memory should be left free in the 
+       freememory: Indicates how much memory should be left free in the
                    JVM for normal operation.
-       heapsize: Indicates how big the heap size can grow to before the 
+       heapsize: Indicates how big the heap size can grow to before the
                  cleanup thread kicks in.
-       objectlifetime: Indicates how long (seconds) a cache object will 
-                       be hold in memory. The object will be thrown out, 
-                       when the time is over. 
+       objectlifetime: Indicates how long (seconds) a cache object will
+                       be hold in memory. The object will be thrown out,
+                       when the time is over.
        interval: Indicates the interval of the cleanup thread in seconds.
        maxobjects: Indicates how many objects will be hold in the cache.
                    When the number of maxobjects has been reached. The
                    last object in the cache will be thrown out.
        usethread: Indicates whether we use a cleanup thread or not.
        threadpriority: Indicates the priority of the cleanup thread.
+                       (1 is the lowest priority and 10 is the highest).
   -->
   <event-cache class="org.apache.cocoon.caching.EventMemoryCache">
      <parameter name="freememory" value="1000000"/>
