@@ -21,22 +21,38 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 17:49:41 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-28 18:43:21 $
  */
 public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
 
-    private LinkResolver linkResolver=null;
-    private String prepath=null;
+    private LinkResolver local=null;
+    private LinkResolver global=null;
+    private String partition=null;
+    private String source=null;
+    private String basepath=null;
+    private String rootpath="";
 
-    public LinkTranslator(LinkResolver resolver, String baseUri) {
+    public LinkTranslator(LinkResolver local, LinkResolver global,
+                          String partition, String source) {
         super();
-        this.linkResolver=resolver;
-
-        String relative="";
-        for (int k=0; k<baseUri.length(); k++)
-            if (baseUri.charAt(k)=='/') relative=relative+"../";
-        if (relative.length()==0) this.prepath="./";
-        else this.prepath=relative;
+        this.local=local;
+        this.global=global;
+        this.partition=partition;
+        this.source=source;
+        if (local==null) throw new IllegalArgumentException("loc");
+        if (global==null) throw new IllegalArgumentException("global");
+        if (partition==null) throw new IllegalArgumentException("partition");
+        if (source==null) throw new IllegalArgumentException("loc");
+        
+        int pos=-1;
+        for (int x=0; x<source.length(); x++) {
+            if (source.charAt(x)=='/') {
+                pos=x;
+                this.rootpath=this.rootpath+"../";
+            }
+        }
+        if (pos>0) this.basepath=source.substring(0,pos+1);
+        else this.basepath="";
     }
     
 
@@ -124,8 +140,13 @@ public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
         if (tran!=null) {
             int x=a2.getIndex(tran);
             if (x>-1) {
-                String resolved=this.linkResolver.resolve(a2.getValue(x),part);
-                if (resolved!=null) a2.setValue(x,this.prepath+resolved);
+                if (part==null) part=this.partition;
+                String name=this.basepath+a2.getValue(x);
+
+                String resolved=this.local.resolve(name,part);
+                if (resolved==null) resolved=this.global.resolve(name,part);
+                
+                if (resolved!=null) a2.setValue(x,rootpath+resolved);
             }
         }
         super.contentHandler.startElement(uri,loc,raw,a2);

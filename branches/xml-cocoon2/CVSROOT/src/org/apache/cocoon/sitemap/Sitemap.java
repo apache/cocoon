@@ -27,9 +27,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-02-27 14:57:26 $
+ * @version CVS $Revision: 1.1.4.5 $ $Date: 2000-02-28 18:43:21 $
  */
-public class Sitemap implements Composer, Configurable, Processor {
+public class Sitemap
+implements Composer, Configurable, Processor, LinkResolver {
     
     /** The default partition */
     private SitemapPartition partition=null;
@@ -101,17 +102,12 @@ public class Sitemap implements Composer, Configurable, Processor {
         return(false);
     }
 
-    public String resolve(String source, String part, SitemapPartition caller) {
-        if ((part==null)||("default".equals(part))) {
-            if (caller!=this.partition)
-                return(this.partition.resolve(source,part,null));
-            return(null);
-        }
-        
+    public String resolve(String source, String part) {
+        if (part==null) return(null);
+        if ("default".equals(part)) return(this.partition.resolve(source,part));
+
         SitemapPartition p=(SitemapPartition)this.partitions.get(part);
-        if ((p!=null)&&(p!=caller)) {
-            return(p.resolve(source,part,null));
-        }
+        if (p!=null) return(p.resolve(source,part));
 
         return(null);
     }

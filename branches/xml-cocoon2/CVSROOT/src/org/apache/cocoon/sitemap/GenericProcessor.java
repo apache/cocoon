@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-02-27 17:49:41 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-02-28 18:43:21 $
  */
 public class GenericProcessor
 implements Composer, Configurable, Processor, LinkResolver {
@@ -136,8 +136,12 @@ implements Composer, Configurable, Processor, LinkResolver {
         Serializer s=(Serializer)this.manager.getComponent(this.serializer);
         s.setup(req,res,src,this.serializerParam);
         s.setOutputStream(out);
-        LinkTranslator t=new LinkTranslator(this,req.getUri());
+
+        LinkResolver resolver=this.partition.sitemap;
+        String partname=this.partition.name;
+        LinkTranslator t=new LinkTranslator(this,resolver,partname,src);
         t.setConsumer(s);
+
         XMLConsumer current=t;
         for (int x=0; x<this.filters.size(); x++) {
             String k=(String)this.filters.elementAt(x);
@@ -145,6 +149,10 @@ implements Composer, Configurable, Processor, LinkResolver {
             f.setup(req,res,src,(Parameters)this.filtersParam.elementAt(x));
             f.setConsumer(current);
             current=f;
+
+            t=new LinkTranslator(this,resolver,partname,src);
+            t.setConsumer(current);
+            current=t;
         }
 
         Generator g=(Generator)this.manager.getComponent(this.generator);
@@ -158,12 +166,10 @@ implements Composer, Configurable, Processor, LinkResolver {
      * Resolve a link against a source into the target URI space.
      */
     public String resolve(String source, String partition) {
-        if ((partition==null)||(this.partition.name.equals(partition))) {
-            //if (source!=null) {
-                String translated=this.sourceTranslator.translate(source);
-                if (translated!=null) return(translated);
-            //}
+        if (source==null) return(null);
+        if (this.partition.name.equals(partition)) {
+            return(this.sourceTranslator.translate(source));
         }
-        return(this.partition.resolve(source,partition,this));
+        return(null);
     }
 }
