@@ -255,7 +255,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.5 2003/07/28 11:28:20 gianugo Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.6 2003/09/04 14:51:27 cziegeler Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer {
@@ -563,10 +563,6 @@ public class SourceWritingTransformer
             systemID, 
             RESULT_SUCCESS,
             ACTION_DELETE);
-    }
-
-    public void recycle() {
-        super.recycle();
     }
 
     /**

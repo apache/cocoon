@@ -91,7 +91,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.2 2003/03/19 15:42:13 cziegeler Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.3 2003/09/04 14:53:51 cziegeler Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -470,6 +470,7 @@ public class ServerPagesGenerator extends ServletGenerator
 
         public void recycle() {
             this.eventStack.clear();
+            super.recycle();
         }
     }
 }

@@ -86,7 +86,7 @@ import java.util.StringTokenizer;
  * will work as expected.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: RoleFilterTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: RoleFilterTransformer.java,v 1.3 2003/09/04 14:51:27 cziegeler Exp $
  */
 public class RoleFilterTransformer extends FilterTransformer {
     private final static String URI = "http://apache.org/cocoon/role-filter/1.0";
@@ -182,5 +182,6 @@ public class RoleFilterTransformer extends FilterTransformer {
 
     public void recycle() {
         this.request = null;
+        super.recycle();
     }
 }
