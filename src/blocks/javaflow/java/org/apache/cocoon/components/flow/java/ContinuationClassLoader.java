@@ -79,7 +79,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.14 2004/06/29 15:07:14 joerg Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.15 2004/06/29 16:11:29 joerg Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -374,7 +374,37 @@ public class ContinuationClassLoader extends ClassLoader {
             }
         }
     }
-    
+
+    private void printFrameInfo(MethodGen method, ControlFlowGraph cfg) {
+        InstructionHandle handle = method.getInstructionList().getStart();
+        do {
+            System.out.println(handle);
+            try {
+                InstructionContext context = cfg.contextOf(handle);
+
+                Frame f = context.getOutFrame(new ArrayList());
+
+                LocalVariables lvs = f.getLocals();
+                System.out.print("Locales: ");
+                for (int i = 0; i < lvs.maxLocals(); i++) {
+                    System.out.print(lvs.get(i) + ",");
+                }
+                System.out.println();
+
+                OperandStack os = f.getStack();
+                System.out.print(" Stack: ");
+                for (int i = 0; i < os.size(); i++) {
+                    System.out.print(os.peek(i) + ",");
+                }
+                System.out.println();
+            }
+            catch (AssertionViolatedException ave) {
+                System.out.println("no frame information");
+            }
+        }
+        while ((handle = handle.getNext()) != null);
+    }
+
     private void rewrite(MethodGen method, ControlFlowGraph cfg)
             throws ClassNotFoundException {
         InstructionFactory insFactory = new InstructionFactory(method.getConstantPool());
