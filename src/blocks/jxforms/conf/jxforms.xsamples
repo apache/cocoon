@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='JXForms']">
+
+  <group name="JXForms">
+    <sample name="JXForms" href="jxforms/">
+      Form Handling
+    </sample>
+  </group>
+</xsamples>
