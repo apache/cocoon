@@ -30,9 +30,9 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This Transformer deals with tags containing links to external applications that need to be converted so
@@ -102,27 +102,31 @@ public class LinkTransformer
         this.manager = manager;
     }
 
+    /** The prefix */
+    protected String prefix;
+
     /**
      * @see AbstractTransformer#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters par)
+                      Map objectModel,
+                      String src,
+                      Parameters par)
     throws ProcessingException, SAXException, IOException {
-        copletInstanceData =
+        this.copletInstanceData =
             ProxyTransformer.getInstanceData(
                 this.manager,
                 objectModel,
                 par);
-        copletIdParamString =
+        this.copletIdParamString =
             ProxyTransformer.COPLETID + "=" + copletInstanceData.getId();
 
         Map context = (Map) objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-        portalNameParamString =
+        this.portalNameParamString =
             ProxyTransformer.PORTALNAME
                 + "="
                 + (String) context.get(Constants.PORTAL_NAME_KEY);
+        this.prefix = par.getParameter("prefix", ProxyTransformer.PROXY_PREFIX);
     }
 
     /**
@@ -131,10 +135,10 @@ public class LinkTransformer
      */
     public void recycle() {
         super.recycle();
-        copletInstanceData = null;
-        elementStack.clear();
-        copletIdParamString = null;
-        portalNameParamString = null;
+        this.copletInstanceData = null;
+        this.elementStack.clear();
+        this.copletIdParamString = null;
+        this.portalNameParamString = null;
     }
 
     /**
@@ -337,19 +341,10 @@ public class LinkTransformer
         } else {
             eventAttributes = new AttributesImpl(attributes);
         }
+        eventAttributes.addCDATAAttribute(NewEventLinkTransformer.ATTRIBUTE_ATTR, attribute);
+        eventAttributes.addCDATAAttribute(NewEventLinkTransformer.ELEMENT_ATTR, element);
+        eventAttributes.addCDATAAttribute("coplet", this.copletInstanceData.getId());
 
-        eventAttributes.addAttribute(
-            "",
-            NewEventLinkTransformer.ATTRIBUTE_ATTR,
-            NewEventLinkTransformer.ATTRIBUTE_ATTR,
-            "CDATA",
-            attribute);
-        eventAttributes.addAttribute(
-            "",
-            NewEventLinkTransformer.ELEMENT_ATTR,
-            NewEventLinkTransformer.ELEMENT_ATTR,
-            "CDATA",
-            element);
         super.startElement(
             NewEventLinkTransformer.NAMESPACE_URI,
             NewEventLinkTransformer.EVENT_ELEM,
@@ -382,7 +377,7 @@ public class LinkTransformer
         }
 
         if (applyPrefixAndPortalParams) {
-            uriBuffer.append(ProxyTransformer.PROXY_PREFIX);
+            uriBuffer.append(this.prefix);
         }
 
         uriBuffer.append(uri);

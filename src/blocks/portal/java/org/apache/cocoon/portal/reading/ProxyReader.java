@@ -64,6 +64,9 @@ public class ProxyReader extends ServiceableReader {
      */
     protected Request request;
 
+    /** The prefix */
+    protected String prefix;
+    
     /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
@@ -85,7 +88,7 @@ public class ProxyReader extends ServiceableReader {
                 this.manager,
                 copletID,
                 portalName);
-
+        this.prefix = par.getParameter("prefix", ProxyTransformer.PROXY_PREFIX);
     }
 
     /**
@@ -104,10 +107,7 @@ public class ProxyReader extends ServiceableReader {
      */
     public void generate() throws IOException {
         String link = request.getRequestURI();
-        link =
-            link.substring(
-                link.indexOf(ProxyTransformer.PROXY_PREFIX)
-                    + ProxyTransformer.PROXY_PREFIX.length());
+        link = link.substring(link.indexOf(this.prefix) + this.prefix.length());
 
         String documentBase =
             (String) copletInstanceData.getAttribute(

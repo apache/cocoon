@@ -167,7 +167,7 @@ extends AbstractCopletTransformer {
 
                     // if attribute found that contains a link
                     if (link != null) {
-                        CopletInstanceData cid = this.getCopletInstanceData();                       
+                        CopletInstanceData cid = this.getCopletInstanceData(attr.getValue("coplet"));                       
                         LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
         
                         // create event link
