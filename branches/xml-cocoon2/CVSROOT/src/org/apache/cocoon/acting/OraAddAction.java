@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-13 17:01:34 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-13 18:12:17 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -131,7 +131,6 @@ public class OraAddAction extends DatabaseAddAction {
             statement.close();
 
             query = this.getSelectLOBQuery(conf);
-            getLogger().info(query);
 
             // Process the large objects if they exist
             if (query != null) {
@@ -142,7 +141,7 @@ public class OraAddAction extends DatabaseAddAction {
                     currentIndex = 1;
 
                     for (int i = 0; i < keys.length; i++) {
-                        this.setColumn(statement, currentIndex, request, keys[i]);
+                        this.setColumn(LOBstatement, currentIndex, request, keys[i]);
                         currentIndex++;
                     }
                 }
@@ -310,6 +309,8 @@ public class OraAddAction extends DatabaseAddAction {
             }
         }
 
+        if ("".equals(query)) return null;
+
         return query;
     }
 
@@ -346,11 +347,12 @@ public class OraAddAction extends DatabaseAddAction {
                     }
                 }
 
-                if (numLobs == 0) {
+                if (numLobs < 1) {
+                    // if query is set to "", then the Action won't
+                    // try to process it again.
                     query = "";
-                    // if query is set to "", then it won't try to process it again.
                     OraAddAction.selectLOBStatements.put(conf, query);
-                    return query;
+                    return null;
                 }
 
                 queryBuffer.append(" FROM ").append(table.getAttribute("name"));
@@ -370,7 +372,7 @@ public class OraAddAction extends DatabaseAddAction {
                     }
                 }
 
-                query = queryBuffer.toString();
+                query = queryBuffer.toString().trim();
                 OraAddAction.selectLOBStatements.put(conf, query);
             }
         }
