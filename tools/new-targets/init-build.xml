@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="init">
+
+  <description>
+    Initialization Targets
+  </description>
+
+  <target name="init">
+
+    <!-- Set the timestamps -->
+    <tstamp/>
+
+    <!-- Get the (constant) cocoon properties -->
+    <property file="src/java/org/apache/cocoon/cocoon.properties"/>
+
+    <!-- Detecting the current jvm -->
+    <condition property="target.vm" value="1.5">
+      <equals arg1="1.5" arg2="${ant.java.version}"/>
+    </condition>
+    <condition property="target.vm" value="1.4">
+      <equals arg1="1.4" arg2="${ant.java.version}"/>
+    </condition>
+    <condition property="target.vm" value="1.3">
+      <not>
+        <or>
+          <equals arg1="1.4" arg2="${ant.java.version}"/>
+          <equals arg1="1.5" arg2="${ant.java.version}"/>
+        </or>
+      </not>
+    </condition>
+
+    <!-- The location of tools.jar, relative to the JAVA_HOME home. -->
+    <property name="tools.jar" value="${java.home}/../lib/tools.jar"/>
+    <available file="${tools.jar}" property="tools.jar.present"/>
+
+    <!-- Allow users a chance to override without editing the main file -->
+    <property file="${user.home}/cocoon.build.properties"/>
+    <property file="local.build.properties"/>
+
+    <!-- Get the build properties from an external file -->
+    <property file="build.properties"/>
+
+    <!-- Allow users a chance to override without editing the main file -->
+    <property file="${user.home}/cocoon.blocks.properties"/>
+    <property file="local.blocks.properties"/>
+
+    <!-- Get the block properties from an external file -->
+    <property file="blocks.properties"/>
+
+    <!-- Use internal.exclude.XXX shadow props used in the
+      unless target attributes -->
+    <condition property="internal.exclude.webapp.documentation">
+      <istrue value="${exclude.webapp.documentation}"/>
+    </condition>
+    <condition property="internal.exclude.webapp.javadocs">
+      <or>
+        <istrue value="${exclude.javadocs}"/>
+        <istrue value="${exclude.webapp.javadocs}"/>
+      </or>
+    </condition>
+    <condition property="internal.exclude.webapp.samples">
+      <istrue value="${exclude.webapp.samples}"/>
+    </condition>
+
+    <condition property="internal.exclude.deprecated">
+      <istrue value="${exclude.deprecated}"/>
+    </condition>
+    <condition property="internal.exclude.javadocs">
+      <istrue value="${exclude.javadocs}"/>
+    </condition>
+    <condition property="internal.exclude.validate.jars">
+      <istrue value="${exclude.validate.jars}"/>
+    </condition>
+    <condition property="internal.exclude.validate.config">
+      <istrue value="${exclude.validate.config}"/>
+    </condition>
+    <condition property="internal.exclude.validate.xdocs">
+      <or>
+        <istrue value="${exclude.validate.xdocs}"/>
+        <istrue value="${exclude.documentation}"/>
+      </or>
+    </condition>
+
+    <filter token="Name"                value="${fullname}"/>
+    <filter token="name"                value="${fullname}"/>
+    <filter token="year"                value="${year}"/>
+    <filter token="version"             value="${version}"/>
+    <filter token="date"                value="${TODAY}"/>
+    <filter token="released.version"    value="${released.version}"/>
+    <filter token="loglevel"            value="${build.webapp.loglevel}"/>
+
+    <!-- Alias for the loglevel -->
+    <property name="loglevel" value="${build.webapp.loglevel}"/>
+    
+    <!-- Set classpath -->
+    <path id="classpath">
+      <fileset dir="${lib.local}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.endorsed}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.core}">
+        <include name="*.jar"/>
+      </fileset>
+      <!-- Currently, we have no JVM dependent libraries 
+        <fileset dir="${lib.core}/jvm${target.vm}">
+          <include name="*.jar"/>
+        </fileset>
+      -->
+      <fileset dir="${lib.optional}">
+        <include name="*.jar"/>
+      </fileset>
+      <path location="${build.mocks}"/>
+      <path location="${build.dest}"/>
+    </path>
+
+  </target>
+
+  <target name="init-tasks" depends="init">
+
+    <!-- Set classpath for building ant tasks -->
+    <path id="tasks.classpath">
+      <path refid="classpath"/>
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <path location="${tools.tasks.dest}"/>
+    </path>
+
+    <!-- compile the ant tasks -->
+    <mkdir dir="${tools.tasks.dest}"/>
+    <javac srcdir="${tools.tasks.src}"
+           destdir="${tools.tasks.dest}"
+           debug="off"
+           optimize="on"
+           deprecation="on"
+           target="1.3"
+           nowarn="on"
+           compiler="${compiler}"
+           classpathref="tasks.classpath"/>
+
+    <!-- A task to patch xml files -->
+    <taskdef name="xpatch" classname="XConfToolTask"
+           classpath="${tools.tasks.dest}"/>
+
+    <!-- A task for sitemap components -->
+    <taskdef name="sitemap-components" 
+            classname="SitemapTask"
+            classpathref="tasks.classpath"/>
+
+    <!-- Jing is used in various targets for XML validation with RELAX NG -->
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"
+           classpathref="tasks.classpath"/>
+
+    <!-- A task for generating javadocs only for published classes/interfaces -->
+    <taskdef name="pubapidocs" classname="doclets.QdoxJavadocTask" classpathref="tasks.classpath"/>
+
+    <!-- compile the loader, used to change classpath especially for
+           the CLI and Jetty -->
+    <mkdir dir="${tools.loader.dest}"/>
+    <javac srcdir="${tools.loader.src}"
+           destdir="${tools.loader.dest}"
+           debug="off"
+           optimize="on"
+           deprecation="on"
+           target="1.3"
+           nowarn="on"
+           compiler="${compiler}"/>
+
+    <!-- Ant-Contrib tasks -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+  </target>
+
+<!-- === Preparation Targets ============================================= -->
+
+  <!-- Prepare the build directory -->
+  <target name="prepare" depends="init-tasks">
+    <echo>======================================================================
+                 ${fullname} ${version} [${year}]
+======================================================================
+ Building with ${ant.version}
+----------------------------------------------------------------------
+ Using build file ${ant.file}
+----------------------------------------------------------------------
+ Compiler options:
+   - debug ......... [${compiler.debug}]
+   - optimize ...... [${compiler.optimize}]
+   - deprecation ... [${compiler.deprecation}]
+======================================================================</echo>
+    <mkdir dir="${build}"/>
+  </target>
+
+<!-- === Clean Targets =================================================== -->
+
+  <!-- Clean -->
+  <target name="clean"
+         depends="clean-cocoon,clean-webapp,clean-standalone-demo"
+         description="Cleans the cocoon build, webapp and standalone-demo"/>
+
+  <!-- Clean the cocoon build directory -->
+  <target name="clean-cocoon" depends="init" description="Cleans the cocoon build">
+    <delete dir="${build}"/>
+  </target>
+
+  <!-- Clean the webapp -->
+  <target name="clean-webapp" depends="init" description="Cleans the webapp">
+    <delete dir="${build.webapp}"/>
+  </target>
+
+  <!-- Clean the standalone demo -->
+  <target name="clean-standalone-demo" depends="init" description="Cleans the standalone-demo">
+    <delete dir="${build.standalone.demo}"/>
+  </target>
+</project>
