@@ -154,7 +154,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
             new TraversableCachingSource(super.protocol,
                                          uri,
                                          (TraversableSource) wrapped,
-                                         super.parameters,
+                                         new Parameters().merge(super.parameters),
                                          super.expires,
                                          super.async);
         source.cache = super.cache;
