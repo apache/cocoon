@@ -85,7 +85,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.3 2003/03/19 17:37:12 sylvain Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.4 2003/04/11 08:38:26 bruno Exp $
  */
 public abstract class AbstractTextSerializer
 extends AbstractSerializer
@@ -529,6 +529,20 @@ implements Configurable, CacheableProcessingComponent {
             if(this.prefixToUriMap.containsKey(prefix)) {
               this.uriToPrefixMap.remove((String) this.prefixToUriMap.get(prefix));
               this.prefixToUriMap.remove(prefix);
+            }
+
+            if (hasMappings) {
+                // most of the time, start/endPrefixMapping calls have an element event between them,
+                // which will clear the hasMapping flag and so this code will only be executed in the
+                // rather rare occasion when there are start/endPrefixMapping calls with no element
+                // event in between. If we wouldn't remove the items from the prefixList and uriList here,
+                // the namespace would be incorrectly declared on the next element following the
+                // endPrefixMapping call.
+                int pos = prefixList.lastIndexOf(prefix);
+                if (pos != -1) {
+                    prefixList.remove(pos);
+                    uriList.remove(pos);
+                }
             }
 
             super.endPrefixMapping(prefix);
