@@ -23,9 +23,7 @@ import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.bcel.verifier.exc.AssertionViolatedException;
 import org.apache.bcel.verifier.structurals.*;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -37,7 +35,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.2 2004/03/29 19:02:23 unico Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -304,34 +302,34 @@ public class ContinuationClassLoader extends ClassLoader {
         }
     }
 
-    private void printFrameInfo(MethodGen method, ControlFlowGraph cfg) {
-        InstructionHandle handle = method.getInstructionList().getStart();
-        do {
-            System.out.println(handle);
-            try {
-                InstructionContext context = cfg.contextOf(handle);
-
-                Frame f = context.getOutFrame(new ArrayList());
-
-                LocalVariables lvs = f.getLocals();
-                System.out.print("Locales: ");
-                for (int i = 0; i < lvs.maxLocals(); i++) {
-                    System.out.print(lvs.get(i) + ",");
-                }
-
-                OperandStack os = f.getStack();
-                System.out.print(" Stack: ");
-                for (int i = 0; i < os.size(); i++) {
-                    System.out.print(os.peek(i) + ",");
-                }
-                System.out.println();
-            }
-            catch (AssertionViolatedException ave) {
-                System.out.println("no frame information");
-            }
-        }
-        while ((handle = handle.getNext()) != null);
-    }
+//    private void printFrameInfo(MethodGen method, ControlFlowGraph cfg) {
+//        InstructionHandle handle = method.getInstructionList().getStart();
+//        do {
+//            System.out.println(handle);
+//            try {
+//                InstructionContext context = cfg.contextOf(handle);
+//
+//                Frame f = context.getOutFrame(new ArrayList());
+//
+//                LocalVariables lvs = f.getLocals();
+//                System.out.print("Locales: ");
+//                for (int i = 0; i < lvs.maxLocals(); i++) {
+//                    System.out.print(lvs.get(i) + ",");
+//                }
+//
+//                OperandStack os = f.getStack();
+//                System.out.print(" Stack: ");
+//                for (int i = 0; i < os.size(); i++) {
+//                    System.out.print(os.peek(i) + ",");
+//                }
+//                System.out.println();
+//            }
+//            catch (AssertionViolatedException ave) {
+//                System.out.println("no frame information");
+//            }
+//        }
+//        while ((handle = handle.getNext()) != null);
+//    }
 
     private void rewrite(MethodGen method, ControlFlowGraph cfg) throws ClassNotFoundException {
 
@@ -432,35 +430,35 @@ public class ContinuationClassLoader extends ClassLoader {
             // select frame restorer
             insList.insert(new TABLESWITCH(match, tableTargets, firstIns));
             insList.insert(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.INT), Type.INT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-            insList.insert(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+            insList.insert(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
 
             //insList.insert(insFactory.createPrintln("--- restoring invocation "+method)); 
 
             // test if the continuation should be restored
             insList.insert(new IFEQ(firstIns));
             insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, RESTORING_METHOD, Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-            insList.insert(insFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+            insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
         }
 
         // get stack from current continuation and store in the last local variable
-        insList.insert(insFactory.createStore(STACK_TYPE, method.getMaxLocals()+1));
+        insList.insert(InstructionFactory.createStore(STACK_TYPE, method.getMaxLocals()+1));
         insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, STACK_METHOD, STACK_TYPE,
                        Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-        InstructionHandle restore_handle = insList.insert(insFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+        InstructionHandle restore_handle = insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
 
         // if not continuation exists, create empty stack
         insList.insert(new GOTO(firstIns));
-        insList.insert(insFactory.createStore(STACK_TYPE, method.getMaxLocals()+1));
+        insList.insert(InstructionFactory.createStore(STACK_TYPE, method.getMaxLocals()+1));
         insList.insert(insFactory.createInvoke(STACK_CLASS, Constants.CONSTRUCTOR_NAME, Type.VOID, Type.NO_ARGS, Constants. INVOKESPECIAL));
-        insList.insert(insFactory.createDup(STACK_TYPE.getSize()));
+        insList.insert(InstructionFactory.createDup(STACK_TYPE.getSize()));
         insList.insert(insFactory.createNew(STACK_TYPE));
 
         // test if no current continuation exists
         insList.insert(new IFNONNULL(restore_handle));
-        insList.insert(insFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+        insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
 
         // get current continuation and store in the next to last local variable
-        insList.insert(insFactory.createStore(CONTINUATION_TYPE, method.getMaxLocals()));
+        insList.insert(InstructionFactory.createStore(CONTINUATION_TYPE, method.getMaxLocals()));
         insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, CONTINUATION_METHOD, CONTINUATION_TYPE,
                        Type.NO_ARGS, Constants.INVOKESTATIC));
 
@@ -482,11 +480,11 @@ public class ContinuationClassLoader extends ClassLoader {
             if (type instanceof BasicType) {
                 if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
                     type = Type.INT;
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(new SWAP());
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
             } else if (type instanceof ReferenceType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(new SWAP());
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
@@ -494,7 +492,7 @@ public class ContinuationClassLoader extends ClassLoader {
         
         // create uninitialzed object
         insList.append(insFactory.createNew(objecttype));
-        insList.append(insFactory.createDup(objecttype.getSize()));
+        insList.append(InstructionFactory.createDup(objecttype.getSize()));
           
         // return the arguments into the stack
         for (int i = 0; i<arguments.length; i++) {
@@ -502,10 +500,10 @@ public class ContinuationClassLoader extends ClassLoader {
             if (type instanceof BasicType) {
                 if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
                     type = Type.INT;
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             } else if (type instanceof ReferenceType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.OBJECT), Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
                 if (!type.equals(Type.OBJECT))
                     insList.append(insFactory.createCast(Type.OBJECT, type));
@@ -548,7 +546,7 @@ public class ContinuationClassLoader extends ClassLoader {
         InvokeInstruction inv = (InvokeInstruction) handle.getInstruction();
         Type returnType = getReturnType(method.getConstantPool().getConstantPool(), inv.getIndex());
         if (returnType.getSize() > 0)
-            insList.insert(insFactory.createPop(returnType.getSize()));
+            insList.insert(InstructionFactory.createPop(returnType.getSize()));
         boolean skipFirst = returnType.getSize() > 0;
 
         //insList.append(insFactory.createPrintln("save stack"));
@@ -560,7 +558,7 @@ public class ContinuationClassLoader extends ClassLoader {
             if (type instanceof BasicType) {
                 if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
                     type = Type.INT;
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(new SWAP()); // TODO: check for types with two words on stack
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
             } else if (type == null) {
@@ -569,7 +567,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 // After the remove of new, there shouldn't be a
                 // uninitialized object on the stack
             } else if (type instanceof ReferenceType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(new SWAP());
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
@@ -582,11 +580,11 @@ public class ContinuationClassLoader extends ClassLoader {
 
         // test if the continuation should be captured after the invocation
         insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, CAPURING_METHOD, Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-        insList.insert(insFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+        insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
 
         // test if continuation exists
         insList.insert(new IFNULL(handle.getNext()));
-        insList.insert(insFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+        insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
   
         //insList.append(insFactory.createPrintln("save local variables"));
 
@@ -595,7 +593,7 @@ public class ContinuationClassLoader extends ClassLoader {
         for (int i = 0; i < lvs.maxLocals(); i++) {
             Type type = lvs.get(i);
             if (type instanceof BasicType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(InstructionFactory.createLoad(type, i));
                 if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
                     type = Type.INT;
@@ -607,18 +605,18 @@ public class ContinuationClassLoader extends ClassLoader {
             } else if (type instanceof ReferenceType) {
                 if (i == 0 && !currentMethodStatic) {
                     // remember current object
-                    insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                    insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                     insList.append(InstructionFactory.createLoad(type, i));
                     insList.append(insFactory.createInvoke(STACK_CLASS, PUSH_METHOD + "Reference", Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
                 }
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(InstructionFactory.createLoad(type, i));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
         }
 
         // save programcounter
-        insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+        insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
         insList.append(new PUSH(method.getConstantPool(), pc));
         insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.INT), Type.VOID, new Type[]{Type.INT}, Constants.INVOKEVIRTUAL));
 
@@ -639,7 +637,7 @@ public class ContinuationClassLoader extends ClassLoader {
         for (int i = lvs.maxLocals()-1; i >= 0; i--) {
             Type type = lvs.get(i);
             if (type instanceof BasicType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
                     type = Type.INT;
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
@@ -654,7 +652,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 // in the local variables.
             }
             else if (type instanceof ReferenceType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.OBJECT), Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
                 if (!type.equals(Type.OBJECT) && (!type.equals(Type.NULL))) {
                     insList.append(insFactory.createCast(Type.OBJECT, type));
@@ -676,7 +674,7 @@ public class ContinuationClassLoader extends ClassLoader {
             if (type instanceof BasicType) {
                 if ((type.getSize() < 2) && (!type.equals(Type.FLOAT)))
                     type = Type.INT;
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(type), type, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             } else if (type == null) {
                 insList.append(new ACONST_NULL());
@@ -684,7 +682,7 @@ public class ContinuationClassLoader extends ClassLoader {
                 // After the remove of new, there shouldn't be a
                 // uninitialized object on the stack
             } else if (type instanceof ReferenceType) {
-                insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPopMethod(Type.OBJECT), Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
                 if (!type.equals(Type.OBJECT))
                     insList.append(insFactory.createCast(Type.OBJECT, type));
@@ -693,7 +691,7 @@ public class ContinuationClassLoader extends ClassLoader {
 
         // retrieve current object
         if (!(inv instanceof INVOKESTATIC)) {
-            insList.append(insFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+            insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
             insList.append(insFactory.createInvoke(STACK_CLASS, POP_METHOD + "Reference", Type.OBJECT, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             insList.append(insFactory.createCast(Type.OBJECT, objecttype));
         }
