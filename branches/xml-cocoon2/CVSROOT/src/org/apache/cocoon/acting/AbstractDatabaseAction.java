@@ -148,27 +148,30 @@ import org.apache.cocoon.components.parser.Parser;
  *     <td>image-width</td>
  *     <td>
  *       the width attribute of the cached file attribute.  NOTE:
- *       param attribute must equal the same param for image.
+ *       param attribute must equal the param for image with a
+ *       "-width" suffix.
  *     </td>
  *   </tr>
  *   <tr>
  *     <td>image-height</td>
  *     <td>
  *     the width attribute of the cached file attribute  NOTE:
- *       param attribute must equal the same param for image.
+ *       param attribute must equal the param for image with a
+ *       "-height" suffix.
  *     </td>
  *   </tr>
  *   <tr>
  *     <td>image-size</td>
  *     <td>
  *       the size attribute of the cached file attribute  NOTE:
- *       param attribute must equal the same param for image.
+ *       param attribute must equal the param for image with a
+ *       "-size" suffix.
  *     </td>
  *   </tr>
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-07 22:18:32 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-08 18:51:05 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -332,7 +335,8 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 break;
             case Types.ARRAY:
                 // Grab the image-width attribute from the cached attributes
-                imageFile = (File) request.get(attribute);
+                String imageAttr = attribute.substring(0, (attribute.length() - "-width".length()));
+                imageFile = (File) request.get(imageAttr);
                 synchronized (this.files) {
                     param = (Parameters) this.files.get(imageFile);
                     statement.setInt(position, param.getParameterAsInteger("image-width", -1));
@@ -340,7 +344,8 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 break;
             case Types.BIT:
                 // Grab the image-height attribute from the cached attributes
-                imageFile = (File) request.get(attribute);
+                imageAttr = attribute.substring(0, (attribute.length() - "-height".length()));
+                imageFile = (File) request.get(imageAttr);
                 synchronized (this.files) {
                     param = (Parameters) this.files.get(imageFile);
                     statement.setInt(position, param.getParameterAsInteger("image-height", -1));
@@ -348,7 +353,8 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 break;
             case Types.CHAR:
                 // Grab the image-size attribute from the cached attributes
-                imageFile = (File) request.get(attribute);
+                imageAttr = attribute.substring(0, (attribute.length() - "-size".length()));
+                imageFile = (File) request.get(imageAttr);
                 synchronized (this.files) {
                     param = (Parameters) this.files.get(imageFile);
                     statement.setInt(position, param.getParameterAsInteger("image-size", -1));
