@@ -39,7 +39,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.5 2004/04/04 06:40:33 antonio Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.6 2004/06/03 12:43:27 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -53,7 +53,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
      */
     public static final String USER_GLOBAL_SCOPE = "JAVA GLOBAL SCOPE";
 
-    private ClassLoader classloader;
+    private ContinuationClassLoader classloader;
     private HashMap methods = new HashMap();
 
     static {
@@ -62,6 +62,12 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
+        
+        classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
+        
+        Configuration[] includes = config.getChildren("include");
+        for(int i=0; i<includes.length; i++)
+            classloader.addIncludeClass(includes[i].getAttribute("class"));
     }
 
     private static String removePrefix(String name) {
@@ -76,8 +82,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             getLogger().debug("initialize java flow interpreter");
 
         initialized = true;
-
-        classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
 
         for (Iterator scripts = needResolve.iterator(); scripts.hasNext();) {
 

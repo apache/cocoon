@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.flow.java.test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import junit.framework.TestCase;
 
 import org.apache.cocoon.components.flow.java.Continuation;

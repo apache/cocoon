@@ -44,7 +44,7 @@ public class FlowTest extends TestCase {
         JXPathIntrospector.registerDynamicClass(VarMap.class, VarMapHandler.class);
     }
 
-    private static ClassLoader loader = new ContinuationClassLoader(FlowTest.class.getClassLoader());
+    private static ContinuationClassLoader loader = new ContinuationClassLoader(FlowTest.class.getClassLoader());
     private ContinuationContext context;
     private MockRequest request;
     private MockRedirector redirector;
@@ -65,6 +65,8 @@ public class FlowTest extends TestCase {
 
         context.setAvalonContext(avalonContext);
         context.setRedirector(redirector);
+        
+        loader.addIncludeClass("org.apache.cocoon.components.flow.java.test.*");
     }
 
     public void testSimple() throws Exception {

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ public class SimpleFlow extends AbstractSimpleFlow {
         //sendPageAndWait("should not stop");
     }
 
-    public boolean run() {
+    /*public boolean run() {
         System.out.println("start of flow");
         float a = 1;
         sendPageAndWait("getNumberA");
@@ -36,8 +36,8 @@ public class SimpleFlow extends AbstractSimpleFlow {
         sendPage("result", new VarMap().add("result", a + 1));
         System.out.println("end of flow");
         return true;
-    }
-
+    }*/
+				
     public void testNew(Locale locale) {
         FormContext formContext = new FormContext(getRequest(), locale);
     }
@@ -72,5 +72,29 @@ public class SimpleFlow extends AbstractSimpleFlow {
     public void testDelegate() {
         CalculatorFlow flow = new CalculatorFlow();
         flow.run();
+    }
+
+    public boolean run() {
+        System.out.println("start of flow");
+        Object res = foo();
+        System.out.println("Result of foo is " + res);
+        return true;
+    }
+
+    public FooInner foo() {
+        float a = 1;
+        sendPageAndWait("getNumberA");
+        System.out.println("old a=" + a);
+        a = Float.parseFloat(getRequest().getParameter("a"));
+        System.out.println("a=" + a);
+        sendPage("result", new VarMap().add("result", a + 1));
+        System.out.println("end of flow");
+        return new FooInner(12,12);
+    }
+}
+
+class FooInner /*extends AbstractSimpleFlow*/ {
+    public FooInner(int i, int j) {
+
     }
 }
