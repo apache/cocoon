@@ -71,7 +71,7 @@ import org.apache.excalibur.source.SourceFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
+ * @version CVS $Id: CopletSourceFactory.java,v 1.3 2003/06/10 06:15:42 cziegeler Exp $
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
@@ -99,8 +99,8 @@ public class CopletSourceFactory
         // remove the protocol
         int position = location.indexOf(':') + 1;
         if (position != 0) {
-            location = location.substring(position+2);
             protocol = location.substring(0, position);
+            location = location.substring(position+2);
         }
         ProfileManager profileManager = null;
         CopletInstanceData coplet = null;
