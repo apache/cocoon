@@ -268,14 +268,22 @@
     </xsl:variable>
     <act-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:if test="not(@type)">
-        <!-- set the default type -->
-        <xsl:if test="/map:sitemap/map:components/map:actions/@default">
+      <xsl:choose>
+        <xsl:when test="@type">
           <xsl:attribute name="type">
-            <xsl:value-of select="/map:sitemap/map:components/map:actions/@default" />
+            <xsl:value-of select="@type"/>
+            <xsl:text>-action</xsl:text>
           </xsl:attribute>
-        </xsl:if>
-      </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="/map:sitemap/map:components/map:actions/@default">
+            <xsl:attribute name="type">
+              <xsl:value-of select="/map:sitemap/map:components/map:actions/@default" />
+              <xsl:text>-action</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:for-each select="map:match|map:select|map:act|map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
         <xsl:element name="{local-name()}">
           <xsl:attribute name="id-ref">

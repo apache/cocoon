@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ErrorHandlerHelper.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.3 2004/01/27 13:27:44 unico Exp $
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceable {
 
@@ -84,7 +84,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceabl
     public boolean invokeErrorHandler(ProcessingNode node, Exception ex, Environment env)
     throws Exception {
 		Map objectModel = env.getObjectModel();
-  	
+        
         InvokeContext errorContext = null;
 		boolean nodeSuccessful = false;
 		

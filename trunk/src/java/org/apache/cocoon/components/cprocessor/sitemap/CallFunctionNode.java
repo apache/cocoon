@@ -64,6 +64,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -74,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.4 2004/01/27 13:27:40 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -151,7 +152,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
     }
 
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        Redirector redirector = PipelinesNode.getRedirector(env);
+        Redirector redirector = EnvironmentHelper.getRedirector();
         
         List params = null;
 

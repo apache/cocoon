@@ -60,13 +60,14 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.PermanentRedirector;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: RedirectToURINode.java,v 1.3 2004/01/27 13:27:37 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -104,7 +105,7 @@ public class RedirectToURINode extends AbstractProcessingNode implements Process
             getLogger().info("Redirecting to '" + resolvedURI + "' at " + getLocation());
         }
 
-        final Redirector redirector = PipelinesNode.getRedirector(env);
+        final Redirector redirector = EnvironmentHelper.getRedirector();
 
         if (m_global) {
             redirector.globalRedirect(m_createSession, resolvedURI);

@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -68,6 +69,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -75,7 +77,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActNode.java,v 1.1 2003/12/29 17:13:15 unico Exp $
+ * @version CVS $Id: ActNode.java,v 1.2 2004/01/27 13:27:43 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -83,7 +85,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @x-avalon.info name=act-node
  */
 public class ActNode extends SimpleParentProcessingNode
-implements ProcessingNode, Disposable {
+implements ProcessingNode, Initializable, Disposable {
     
     /** The 'name' for the variable anchor */
     private String m_name;
@@ -161,39 +163,39 @@ implements ProcessingNode, Disposable {
     
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
       
-      if (m_actionSetNode != null) {
-          // Perform any common invoke functionality 
-          super.invoke(env, context);
+        if (m_actionSetNode != null) {
+            // Perform any common invoke functionality 
+            super.invoke(env, context);
 
-          Parameters resolvedParams = VariableResolver.buildParameters(
-              super.m_parameters,
-              context,
-              env.getObjectModel()
-          );
+            Parameters resolvedParams = VariableResolver.buildParameters(
+                super.m_parameters,
+                context,
+                env.getObjectModel()
+            );
 
-          Map result = m_actionSetNode.call(env, context, resolvedParams);
+            Map result = m_actionSetNode.call(env, context, resolvedParams);
 
-          if (PipelinesNode.getRedirector(env).hasRedirected()) {
-              return true;
+            if (EnvironmentHelper.getRedirector().hasRedirected()) {
+                return true;
 
-          } else if (result == null) {
-              return false;
+            } else if (result == null) {
+                return false;
 
-          } else if (getChildNodes() == null) {
-              return true;
+            } else if (getChildNodes() == null) {
+                return true;
 
-          } else {
-              return this.invokeNodes(getChildNodes(), env, context, null, result);
-          }
-      }
+            } else {
+                return this.invokeNodes(getChildNodes(), env, context, null, result);
+            }
+        }
         
-      // Perform any common invoke functionality 
-      super.invoke(env, context);
+        // Perform any common invoke functionality 
+        super.invoke(env, context);
 
         // Prepare data needed by the action
         Map            objectModel    = env.getObjectModel();
-        Redirector     redirector     = PipelinesNode.getRedirector(env);
-        SourceResolver resolver       = getSourceResolver(objectModel);
+        Redirector     redirector     = EnvironmentHelper.getRedirector();
+        SourceResolver resolver       = EnvironmentHelper.getSourceResolver();
         String         resolvedSource = m_source.resolve(context, objectModel);
         Parameters     resolvedParams = VariableResolver.buildParameters(super.m_parameters, context, objectModel);
 

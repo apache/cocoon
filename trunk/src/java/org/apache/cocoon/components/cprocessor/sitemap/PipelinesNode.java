@@ -51,7 +51,6 @@
 package org.apache.cocoon.components.cprocessor.sitemap;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -63,8 +62,6 @@ import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ForwardRedirector;
-import org.apache.cocoon.environment.Redirector;
 
 /**
  * Handles &lt;map:pipelines&gt;
@@ -74,7 +71,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: PipelinesNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.3 2004/01/27 13:27:44 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -82,8 +79,6 @@ import org.apache.cocoon.environment.Redirector;
  * @x-avalon.info name=pipelines-node
  */
 public final class PipelinesNode extends SimpleParentProcessingNode implements Initializable {
-
-    private static final String REDIRECTOR_ATTR = "sitemap:redirector";
     
     private ErrorHandlerHelper m_errorHandlerHelper = new ErrorHandlerHelper();
 
@@ -126,10 +121,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode implements I
         m_pipelines = (ProcessingNode[]) pipelines.toArray(new ProcessingNode[pipelines.size()]);
     }
 
-    public static Redirector getRedirector(Environment env) {
-        return (Redirector) env.getAttribute(REDIRECTOR_ATTR);
-    }
-
     /**
      * Process the environment. Also adds a <code>SourceResolver</code>
      * and a <code>Redirector</code> in the object model. The previous resolver and
@@ -143,18 +134,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode implements I
 
         // Recompose context (and pipelines) to the local component manager
         context.reservice(super.m_manager);
-
-        // Build a redirector
-        ForwardRedirector redirector = new ForwardRedirector(env);
-        setupLogger(redirector);
-
-        Map objectModel = env.getObjectModel();
-        
-        Object oldResolver = objectModel.get(OBJECT_SOURCE_RESOLVER);
-        Object oldRedirector = env.getAttribute(REDIRECTOR_ATTR);
-
-        objectModel.put(OBJECT_SOURCE_RESOLVER, env);
-        env.setAttribute(REDIRECTOR_ATTR, redirector);
 
         try {
             // FIXME : is there any useful information that can be passed as top-level parameters,
@@ -173,10 +152,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode implements I
                 // No handler : propagate
                 throw ex;
             }
-        } finally {
-            // Restore old redirector and resolver
-            env.setAttribute(REDIRECTOR_ATTR, oldRedirector);
-            objectModel.put(OBJECT_SOURCE_RESOLVER, oldResolver);
         }
     }
 

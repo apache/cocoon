@@ -58,14 +58,11 @@ import org.apache.cocoon.environment.Environment;
  * executed for the particular request.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.2 2004/01/05 08:16:00 cziegeler Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.3 2004/01/27 13:27:47 unico Exp $
  */
 public interface ProcessingNode {
 
     public static final String ROLE = ProcessingNode.class.getName();
-
-    /** The key used for the <code>SourceResolver</code> in the object model. */
-    static final String OBJECT_SOURCE_RESOLVER = "source-resolver";
 
     /**
      * Process this node with the suppled environment information.  Will recursively

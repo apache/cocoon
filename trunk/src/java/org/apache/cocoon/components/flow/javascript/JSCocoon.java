@@ -70,7 +70,6 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.components.cprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.acting.Action;
@@ -84,7 +83,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.16 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.17 2004/01/27 13:27:49 unico Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -264,7 +263,7 @@ public class JSCocoon extends ScriptableObject
         try {
             // Cannot use environment directly as TreeProcessor uses own version of redirector
             // environment.redirect(false, uri);
-            PipelinesNode.getRedirector(environment).redirect(false, uri);
+            EnvironmentHelper.getRedirector().redirect(false, uri);
         } catch (Exception e) {
             throw new JavaScriptException(e);
         }

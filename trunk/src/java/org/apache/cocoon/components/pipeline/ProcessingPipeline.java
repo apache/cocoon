@@ -73,13 +73,13 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * <p>
  * A <code>ProcessingPipeline</code> is <code>Recomposable</code> since the
- * <code>ComponentManager</code> used to get the generato, transformers etc.
+ * <code>ComponentManager</code> used to get the generators, transformers etc.
  * depends on the pipeline assembly engine where they are defined (i.e. a given
  * sitemap file).
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.6 2004/01/08 11:13:07 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.7 2004/01/27 13:27:47 unico Exp $
  */
 public interface ProcessingPipeline {
 

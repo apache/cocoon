@@ -61,7 +61,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.xml.LocationAugmentationPipe;
 
@@ -69,7 +68,7 @@ import org.apache.cocoon.xml.LocationAugmentationPipe;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: AbstractProcessingNode.java,v 1.2 2004/01/27 13:27:47 unico Exp $
  */
 public abstract class AbstractProcessingNode extends AbstractLogEnabled 
 implements ProcessingNode, Serviceable, Configurable {
@@ -162,13 +161,6 @@ implements ProcessingNode, Serviceable, Configurable {
     protected final String getConfigLocation(Configuration config) {
         return config.getAttribute(LocationAugmentationPipe.LOCATION_ATTR,
             LocationAugmentationPipe.UNKNOWN_LOCATION);
-    }
-    
-    /**
-     * Get the <code>SourceResolver</code> in an object model.
-     */
-    protected static final SourceResolver getSourceResolver(Map objectModel) {
-        return (SourceResolver) objectModel.get(OBJECT_SOURCE_RESOLVER);
     }
 
 }
