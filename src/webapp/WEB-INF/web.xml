@@ -37,13 +37,6 @@
     <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
 
     <!--
-      In cases you're facing class loading problems, you can alternatively
-      use the following servlet-class instead of the above one
-
-      <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
-    -->
-
-    <!--
       This parameter tells cocoon to set the thread's context classloader to
       its own classloader. If you experience strange classloader issues,
       try setting this parameter to "true" or using ParanoidCocoonServlet.
