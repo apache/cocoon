@@ -213,7 +213,8 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        if (((uri == null && this.extractURI.equals("")) || this.extractURI.equals(uri)) && this.extractElement.equals(loc)) {
+        if (uri == null) uri = "";
+        if (this.extractURI.equals(uri) && this.extractElement.equals(loc)) {
             extractLevel++;
             fragmentID++;
             if (getLogger().isDebugEnabled()) {
@@ -264,7 +265,8 @@ public class FragmentExtractorTransformer extends AbstractTransformer
             super.endElement(uri, loc, raw);
         } else {
             this.serializer.endElement(uri, loc, raw);
-            if (((uri == null && this.extractURI.equals("")) || this.extractURI.equals(uri)) && this.extractElement.equals(loc)) {
+            if (uri == null) uri = "";
+            if (this.extractURI.equals(uri) && this.extractElement.equals(loc)) {
                 extractLevel--;
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("extractLevel now " + extractLevel + ".");
