@@ -136,12 +136,12 @@
          target="roles"/>
   </target>
 
-  <!-- compiles and packages a single block -->
+  <!-- compiles and packages a single block, used by Gump -->
   <target name="block" depends="compile, prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="${block-name}-compile"/>
+         target="cocoon-block-${block-name}-compile"/>
   </target>
   
   <!-- compiles and packages all blocks -->
