@@ -5,6 +5,7 @@
   <map:components> 
     <map:transformers default="xslt">
       <map:transformer name="xmlform" src="org.apache.cocoon.transformation.XMLFormTransformer" logger="xmlform.sitemap.transformer"/>
+      <map:transformer name="jx" src="org.apache.cocoon.transformation.JXTemplateTransformer" logger="jx.sitemap.transformer"/>
     </map:transformers>
     <map:generators default="file">
         <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
@@ -110,7 +111,8 @@
         <map:serialize type="html"/>
      </map:match>
      <map:match pattern="view/*.jxpath">
-        <map:generate src="view/jxpath/{1}.xml" type="jx" />
+        <map:generate src="view/jxpath/{1}.xml" type="file" />
+        <map:transform type="jx" />
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
      </map:match>

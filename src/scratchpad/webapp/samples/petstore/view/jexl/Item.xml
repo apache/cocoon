@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
+<page xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="${product.name}" do="viewProduct.do?productId=${product.productId}"/>
         <item id="${item.itemId}">

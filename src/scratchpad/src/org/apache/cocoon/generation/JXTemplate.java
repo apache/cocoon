@@ -67,6 +67,7 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
@@ -114,6 +115,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
 /**
  *  <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>)</p>
+ *  <p>Uses the namespace <code>http://cocoon.apache.org/templates/jx/1.0</code></p>
  *  <p>Provides a generic page template with embedded JSTL and XPath expression substitution
  *  to access data sent by Cocoon Flowscripts.</p>
  *  The embedded expression language allows a page author to access an 
@@ -674,7 +676,7 @@ public class JXTemplate extends AbstractGenerator {
 
 
     final static String NS = 
-        "http://cocoon.apache.org/generation/jx/1.0";
+        "http://cocoon.apache.org/templates/jx/1.0";
 
     final static String TEMPLATE = "template";
     final static String FOR_EACH = "forEach";
@@ -805,7 +807,7 @@ public class JXTemplate extends AbstractGenerator {
         }
     }
 
-    class Event {
+    static class Event {
         final Locator location;
         Event next;
         Event(Locator location) {
@@ -828,7 +830,7 @@ public class JXTemplate extends AbstractGenerator {
         
     }
 
-    class TextEvent extends Event {
+    static class TextEvent extends Event {
         TextEvent(Locator location, 
                   char[] chars, int start, int length) 
             throws SAXException {
@@ -925,7 +927,7 @@ public class JXTemplate extends AbstractGenerator {
         final List substitutions = new LinkedList();
     }
 
-    class Characters extends TextEvent {
+    static class Characters extends TextEvent {
         Characters(Locator location, 
                    char[] chars, int start, int length) 
             throws SAXException {
@@ -934,7 +936,7 @@ public class JXTemplate extends AbstractGenerator {
 
     }
 
-    class StartDocument extends Event {
+    static class StartDocument extends Event {
         StartDocument(Locator location) {
             super(location);
         }
@@ -942,13 +944,13 @@ public class JXTemplate extends AbstractGenerator {
         EndDocument endDocument; // null if document fragment
     }
 
-    class EndDocument extends Event {
+    static class EndDocument extends Event {
         EndDocument(Locator location) {
             super(location);
         }
     }
 
-    class EndElement extends Event {
+    static class EndElement extends Event {
         EndElement(Locator location, 
                    StartElement startElement) {
             super(location);
@@ -957,7 +959,7 @@ public class JXTemplate extends AbstractGenerator {
         final StartElement startElement;
     }
 
-    class EndPrefixMapping extends Event {
+    static class EndPrefixMapping extends Event {
         EndPrefixMapping(Locator location, String prefix) {
             super(location);
             this.prefix = prefix;
@@ -965,7 +967,7 @@ public class JXTemplate extends AbstractGenerator {
         final String prefix;
     }
     
-    class IgnorableWhitespace extends TextEvent {
+    static class IgnorableWhitespace extends TextEvent {
         IgnorableWhitespace(Locator location, 
                             char[] chars, int start, int length) 
             throws SAXException {
@@ -973,7 +975,7 @@ public class JXTemplate extends AbstractGenerator {
         }
     }
 
-    class ProcessingInstruction extends Event {
+    static class ProcessingInstruction extends Event {
         ProcessingInstruction(Locator location,
                               String target, String data) {
             super(location);
@@ -984,7 +986,7 @@ public class JXTemplate extends AbstractGenerator {
         final String data;
     }
 
-    class SkippedEntity extends Event {
+    static class SkippedEntity extends Event {
         SkippedEntity(Locator location, String name) {
             super(location);
             this.name = name;
@@ -992,7 +994,7 @@ public class JXTemplate extends AbstractGenerator {
         final String name;
     }
 
-    abstract class AttributeEvent {
+    abstract static class AttributeEvent {
         AttributeEvent(String namespaceURI, String localName, String raw,
                        String type) {
             this.namespaceURI = namespaceURI;
@@ -1006,7 +1008,7 @@ public class JXTemplate extends AbstractGenerator {
         final String type;
     }
     
-    class CopyAttribute extends AttributeEvent {
+    static class CopyAttribute extends AttributeEvent {
         CopyAttribute(String namespaceURI, 
                       String localName,
                       String raw,
@@ -1017,24 +1019,24 @@ public class JXTemplate extends AbstractGenerator {
         final String value;
     }
     
-    class Subst {
+    static class Subst {
     }
     
-    class Literal extends Subst {
+    static class Literal extends Subst {
         Literal(String val) {
             this.value = val;
         }
         final String value;
     }
     
-    class Expression extends Subst {
+    static class Expression extends Subst {
         Expression(Object expr) {
             this.compiledExpression = expr;
         }
         final Object compiledExpression;
     }
 
-    class SubstituteAttribute extends AttributeEvent {
+    static class SubstituteAttribute extends AttributeEvent {
         SubstituteAttribute(String namespaceURI,
                             String localName,
                             String raw,
@@ -1045,8 +1047,9 @@ public class JXTemplate extends AbstractGenerator {
         final List substitutions;
     }
 
-    class StartElement extends Event {
-        StartElement(Locator location, String namespaceURI,
+    static class StartElement extends Event {
+        StartElement(JXTemplate template,
+                     Locator location, String namespaceURI,
                      String localName, String raw,
                      Attributes attrs) 
             throws SAXException {
@@ -1085,7 +1088,7 @@ public class JXTemplate extends AbstractGenerator {
                                     Object compiledExpression;
                                     try {
                                         compiledExpression =
-                                            compile(str, xpath);
+                                            template.compile(str, xpath);
                                     } catch (Exception exc) {
                                         throw new SAXParseException(exc.getMessage(),
                                                                     location,
@@ -1177,7 +1180,7 @@ public class JXTemplate extends AbstractGenerator {
         EndElement endElement;
     }
 
-    class StartForEach extends Event {
+    static class StartForEach extends Event {
         StartForEach(Locator location, Object items, String var,
                      int begin, int end, int step) {
             super(location);
@@ -1195,13 +1198,13 @@ public class JXTemplate extends AbstractGenerator {
         EndForEach endForEach;
     }
     
-    class EndForEach extends Event {
+    static class EndForEach extends Event {
         EndForEach(Locator location) {
             super(location);
         }
     }
 
-    class StartIf extends Event {
+    static class StartIf extends Event {
         StartIf(Locator location, Object test) {
             super(location);
             this.test = test;
@@ -1210,13 +1213,13 @@ public class JXTemplate extends AbstractGenerator {
         EndIf endIf;
     }
 
-    class EndIf extends Event {
+    static class EndIf extends Event {
         EndIf(Locator location) {
             super(location);
         }
     }
 
-    class StartChoose extends Event {
+    static class StartChoose extends Event {
         StartChoose(Locator location) {
             super(location);
         }
@@ -1225,13 +1228,13 @@ public class JXTemplate extends AbstractGenerator {
         EndChoose endChoose;
     }
 
-    class EndChoose extends Event {
+    static class EndChoose extends Event {
         EndChoose(Locator location) {
             super(location);
         }
     }
 
-    class StartWhen extends Event {
+    static class StartWhen extends Event {
         StartWhen(Locator location, Object test) {
             super(location);
             this.test = test;
@@ -1241,26 +1244,26 @@ public class JXTemplate extends AbstractGenerator {
         EndWhen endWhen;
     }
 
-    class EndWhen extends Event {
+    static class EndWhen extends Event {
         EndWhen(Locator location) {
             super(location);
         }
     }
 
-    class StartOtherwise extends Event {
+    static class StartOtherwise extends Event {
         StartOtherwise(Locator location) {
             super(location);
         }
         EndOtherwise endOtherwise;
     }
 
-    class EndOtherwise extends Event {
+    static class EndOtherwise extends Event {
         EndOtherwise(Locator location) {
             super(location);
         }
     }
 
-    class StartPrefixMapping extends Event {
+    static class StartPrefixMapping extends Event {
         StartPrefixMapping(Locator location, String prefix,
                            String uri) {
             super(location);
@@ -1271,7 +1274,7 @@ public class JXTemplate extends AbstractGenerator {
         final String uri;
     }
 
-    class Comment extends TextEvent {
+    static class Comment extends TextEvent {
         Comment(Locator location, char[] chars,
                 int start, int length)
             throws SAXException {
@@ -1279,19 +1282,19 @@ public class JXTemplate extends AbstractGenerator {
         }
     }
 
-    class EndCDATA extends Event {
+    static class EndCDATA extends Event {
         EndCDATA(Locator location) {
             super(location);
         }
     }
 
-    class EndDTD extends Event {
+    static class EndDTD extends Event {
         EndDTD(Locator location) {
             super(location);
         }
     }
 
-    class EndEntity extends Event {
+    static class EndEntity extends Event {
         EndEntity(Locator location, String name) {
             super(location);
             this.name = name;
@@ -1299,13 +1302,13 @@ public class JXTemplate extends AbstractGenerator {
         final String name;
     }
 
-    class StartCDATA extends Event {
+    static class StartCDATA extends Event {
         StartCDATA(Locator location) {
             super(location);
         }
     }
 
-    class StartDTD extends Event {
+    static class StartDTD extends Event {
         StartDTD(Locator location, String name, 
                  String publicId, String systemId) {
             super(location);
@@ -1318,7 +1321,7 @@ public class JXTemplate extends AbstractGenerator {
         final String systemId;
     }
     
-    class StartEntity extends Event {
+    static class StartEntity extends Event {
         public StartEntity(Locator location, String name) {
             super(location);
             this.name = name;
@@ -1326,7 +1329,7 @@ public class JXTemplate extends AbstractGenerator {
         final String name;
     }
 
-    class StartOut extends Event {
+    static class StartOut extends Event {
         StartOut(Locator location, Object expr) {
             super(location);
             this.compiledExpression = expr;
@@ -1334,13 +1337,13 @@ public class JXTemplate extends AbstractGenerator {
         final Object compiledExpression;
     }
 
-    class EndOut extends Event {
+    static class EndOut extends Event {
         EndOut(Locator location) {
             super(location);
         }
     }
 
-    class StartImport extends Event {
+    static class StartImport extends Event {
         StartImport(Locator location, AttributeEvent uri, 
                     Object select) {
             super(location);
@@ -1352,26 +1355,26 @@ public class JXTemplate extends AbstractGenerator {
         EndImport endImport;
     }
 
-    class EndImport extends Event {
+    static class EndImport extends Event {
         EndImport(Locator location) {
             super(location);
         }
     }
 
-    class StartTemplate extends Event {
+    static class StartTemplate extends Event {
         StartTemplate(Locator location) {
             super(location);
         }
         EndTemplate endTemplate;
     }
 
-    class EndTemplate extends Event {
+    static class EndTemplate extends Event {
         EndTemplate(Locator location) {
             super(location);
         }
     }
 
-    class StartDefine extends Event {
+    static class StartDefine extends Event {
         StartDefine(Locator location, String namespace, String name) {
             super(location);
             this.namespace = namespace;
@@ -1418,13 +1421,13 @@ public class JXTemplate extends AbstractGenerator {
         }
     }
 
-    class EndDefine extends Event {
+    static class EndDefine extends Event {
         EndDefine(Locator location) {
             super(location);
         }
     }
 
-    class StartParameter extends Event {
+    static class StartParameter extends Event {
         StartParameter(Locator location, String name, String optional,
                        String default_) {
             super(location);
@@ -1438,13 +1441,13 @@ public class JXTemplate extends AbstractGenerator {
         EndParameter endParameter;
     }
 
-    class EndParameter extends Event {
+    static class EndParameter extends Event {
         EndParameter(Locator location) {
             super(location);
         }
     }
 
-    class StartSet extends Event {
+    static class StartSet extends Event {
         StartSet(Locator location, String var, Object value) {
             super(location);
             this.var = var;
@@ -1455,20 +1458,25 @@ public class JXTemplate extends AbstractGenerator {
         EndSet endSet;
     }
 
-    class EndSet extends Event {
+    static class EndSet extends Event {
         EndSet(Locator location) {
             super(location);
         }
     }
 
-    class Parser implements ContentHandler, LexicalHandler {
+    static class Parser implements ContentHandler, LexicalHandler {
 
+        JXTemplate template;
         StartDocument startEvent;
         Event lastEvent;
         Stack stack = new Stack();
         Locator locator;
         Locator charLocation;
         StringBuffer charBuf;
+        
+        public Parser(JXTemplate template) {
+            this.template = template;
+        }
 
         StartDocument getStartEvent() {
             return startEvent;
@@ -1649,8 +1657,8 @@ public class JXTemplate extends AbstractGenerator {
                     begin = begin == -1 ? 0 : begin;
                     end = end == -1 ? Integer.MAX_VALUE: end;
                     Object expr;
-                    expr = compileExpr(items == null ? select : items,
-                                       null, locator);
+                    expr = template.compileExpr(items == null ? select : items,
+                                                null, locator);
                     StartForEach startForEach = 
                         new StartForEach(locator, expr, 
                                          var, begin, end, step);
@@ -1668,7 +1676,7 @@ public class JXTemplate extends AbstractGenerator {
                         throw new SAXParseException("when: \"test\" is required", locator, null);
                     }
                     Object expr;
-                    expr = compileExpr(test, "when: \"test\": ", locator);
+                    expr = template.compileExpr(test, "when: \"test\": ", locator);
                     StartWhen startWhen = new StartWhen(locator, expr);
                     newEvent = startWhen;
                 } else if (localName.equals(OUT)) {
@@ -1676,9 +1684,9 @@ public class JXTemplate extends AbstractGenerator {
                     if (value == null) {
                         throw new SAXParseException("out: \"value\" is required", locator, null);
                     }
-                    Object expr = compileExpr(value, 
-                                              "out: \"value\": ", 
-                                              locator);
+                    Object expr = template.compileExpr(value, 
+                                                       "out: \"value\": ", 
+                                                       locator);
                     newEvent = new StartOut(locator, expr);
                 } else if (localName.equals(OTHERWISE)) {
                     if (stack.size() == 0 ||
@@ -1693,7 +1701,8 @@ public class JXTemplate extends AbstractGenerator {
                     if (test == null) {
                         throw new SAXParseException("if: \"test\" is required", locator, null);
                     }
-                    Object expr = compileExpr(test, "if: \"test\": ", locator);
+                    Object expr = 
+                        template.compileExpr(test, "if: \"test\": ", locator);
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
@@ -1739,8 +1748,9 @@ public class JXTemplate extends AbstractGenerator {
                     String value = attrs.getValue("value");
                     Object valueExpr = null;
                     if (value != null) {
-                        valueExpr = compileExpr(value, "set: \"value\":",
-                                                locator);
+                        valueExpr = 
+                            template.compileExpr(value, "set: \"value\":",
+                                                 locator);
                     } 
                     StartSet startSet = new StartSet(locator, var, valueExpr);
                     newEvent = startSet;
@@ -1749,7 +1759,7 @@ public class JXTemplate extends AbstractGenerator {
                     // Allow expression substitution in "uri" attribute
                     AttributeEvent uri = null;
                     StartElement startElement = 
-                        new StartElement(locator, namespaceURI,
+                        new StartElement(template, locator, namespaceURI,
                                          localName, raw, attrs);
                     Iterator iter = startElement.attributeEvents.iterator();
                     while (iter.hasNext()) {
@@ -1767,8 +1777,9 @@ public class JXTemplate extends AbstractGenerator {
                     String select = attrs.getValue("context");
                     Object expr = null;
                     if (select != null) {
-                        expr = compileExpr(select, "import: \"context\": ",
-                                           locator);
+                        expr = 
+                            template.compileExpr(select, "import: \"context\": ",
+                                                 locator);
                     }
                     StartImport startImport = 
                         new StartImport(locator, uri, expr);
@@ -1782,7 +1793,7 @@ public class JXTemplate extends AbstractGenerator {
                 }
             } else {
                 StartElement startElem = 
-                    new StartElement(locator, namespaceURI,
+                    new StartElement(template, locator, namespaceURI,
                                      localName, raw, attrs);
                 newEvent = startElem;
             }
@@ -1826,6 +1837,57 @@ public class JXTemplate extends AbstractGenerator {
         }
     }
 
+    /**
+     * Adapter that makes this generator usable as a transformer
+     * (Note there is a performance penalty for this however: 
+     * you effectively recompile the template for every instance document)
+     */
+
+    public static class TransformerAdapter extends AbstractTransformer {
+
+        static class TemplateConsumer extends Parser implements XMLConsumer {
+
+            public TemplateConsumer(SourceResolver resolver, Map objectModel,
+                                    String src, Parameters parameters) 
+                throws ProcessingException, SAXException, IOException {
+                super(new JXTemplate());
+                this.template.setup(resolver, objectModel, null, parameters);
+            }
+
+            public void endDocument() throws SAXException {
+                super.endDocument();
+                template.execute(template.getConsumer(),
+                                 template.getJexlContext(),
+                                 template.getJXPathContext(),
+                                 getStartEvent(), null);
+            }
+
+            void setConsumer(XMLConsumer consumer) {
+                template.setConsumer(consumer);
+            }
+        }
+
+        TemplateConsumer templateConsumer;
+
+        public void recycle() {
+            super.recycle();
+            templateConsumer = null;
+        }
+
+        public void setup(SourceResolver resolver, Map objectModel,
+                          String src, Parameters parameters)
+            throws ProcessingException, SAXException, IOException {
+            templateConsumer = new TemplateConsumer(resolver, objectModel,
+                                                    src,
+                                                    parameters);
+        }
+
+        public void setConsumer(XMLConsumer xmlConsumer) {
+            super.setConsumer(templateConsumer);
+            templateConsumer.setConsumer(xmlConsumer);
+        }
+    }
+
     private XMLConsumer consumer;
     private JXPathContext jxpathContext;
     private MyJexlContext globalJexlContext;
@@ -1833,6 +1895,18 @@ public class JXTemplate extends AbstractGenerator {
     private static Map cache = new HashMap();
     private Source inputSource;
     private Map definitions;
+
+    private JXPathContext getJXPathContext() {
+        return jxpathContext;
+    }
+
+    private MyJexlContext getJexlContext() {
+        return globalJexlContext;
+    }
+
+    private XMLConsumer getConsumer() {
+        return consumer;
+    }
 
     public void recycle() {
         super.recycle();
@@ -1855,14 +1929,14 @@ public class JXTemplate extends AbstractGenerator {
             } catch (SourceException se) {
                 throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
-        }
-        long lastMod = inputSource.getLastModified();
-        String uri = inputSource.getURI();
-        synchronized (cache) {
-            StartDocument startEvent = (StartDocument)cache.get(uri);
-            if (startEvent != null &&
-                lastMod > startEvent.compileTime) {
-                cache.remove(uri);
+            long lastMod = inputSource.getLastModified();
+            String uri = inputSource.getURI();
+            synchronized (cache) {
+                StartDocument startEvent = (StartDocument)cache.get(uri);
+                if (startEvent != null &&
+                    lastMod > startEvent.compileTime) {
+                    cache.remove(uri);
+                }
             }
         }
         // FIX ME: When we decide proper way to pass "bean" and "kont"
@@ -1959,7 +2033,7 @@ public class JXTemplate extends AbstractGenerator {
         }
         if (startEvent == null) {
             long compileTime = inputSource.getLastModified();
-            Parser parser = new Parser();
+            Parser parser = new Parser(this);
             this.resolver.toSAX(this.inputSource, parser);
             startEvent = parser.getStartEvent();
             startEvent.compileTime = compileTime;
@@ -2036,7 +2110,7 @@ public class JXTemplate extends AbstractGenerator {
                                     new DOMStreamer(consumer);
                                 streamer.stream((Node)val);
                                 continue;
-                            }
+                            } 
                             if (val != null) {
                                 chars = val.toString().toCharArray();
                             } else {
@@ -2581,7 +2655,7 @@ public class JXTemplate extends AbstractGenerator {
                 }
                 if (doc == null) {
                     try {
-                        Parser parser = new Parser();
+                        Parser parser = new Parser(this);
                         this.resolver.toSAX(input, parser);
                         doc = parser.getStartEvent();
                         doc.compileTime = lastMod;

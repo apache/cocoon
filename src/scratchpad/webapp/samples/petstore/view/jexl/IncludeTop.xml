@@ -1,4 +1,4 @@
-<t:template xmlns:t="http://cocoon.apache.org/generation/jx/1.0">
+<t:template xmlns:t="http://cocoon.apache.org/templates/jx/1.0">
 
 <table background="images/bkg-topbar.gif" border="0" cellspacing="0" cellpadding="5" width="100%">
   <tbody>

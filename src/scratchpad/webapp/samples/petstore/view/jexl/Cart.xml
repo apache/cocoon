@@ -1,4 +1,4 @@
-<html xmlns:t="http://cocoon.apache.org/generation/jx/1.0">
+<html xmlns:t="http://cocoon.apache.org/templates/jx/1.0">
 <body>
 <t:import uri="view/jexl/IncludeTop.xml"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -37,7 +37,7 @@
   <td align="center">
   <input type="text" size="3" name="${cartItem.item.ItemId}" value="${cartItem.quantity}" />
   </td>
-  <td align="right">${fmt.formatNumber(item.listPrice, '$#,##0.00')}</td>
+  <td align="right">${fmt.formatNumber(cartItem.item.listPrice, '$#,##0.00')}</td>
   <td><a href="removeItemFromCart.do?workingItemId=${cartItem.item.itemId}">
   <img border="0" src="images/button_remove.gif" /></a></td>
   </tr>
@@ -53,7 +53,7 @@
 </table>
 </form>
 
-<t:if test="${cartForm.cart.numberOfItems > 0}">
+<t:if test="${cartForm.cart.numberOfItems.intValue() > 0}">
   <br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
 </t:if>
 
