@@ -35,7 +35,7 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-23 14:48:46 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-23 14:56:59 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
 
@@ -75,6 +75,10 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
 
     public static String store(Document doc) {
         String id = (new UID()).toString();
+
+        // Cannot create File names with a ':' (in command-line generation)
+        // So replace ':' with '-'
+        id = id.replace(':','-');
 
         synchronized (FragmentExtractorGenerator.fragmentStore) {
             fragmentStore.put(id,doc);
