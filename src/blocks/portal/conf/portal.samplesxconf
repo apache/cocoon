@@ -47,6 +47,20 @@
              </aspect>
          </aspects>
      </renderer>
+     <renderer name="linktab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{global:skin}styles/linktab.xsl"/>
+             </aspect>
+             <aspect type="parameter">
+                 <parameter name="tag-name" value="linktab-layout"/>
+             </aspect>
+             <aspect type="tab-content">
+                 <parameter name="root-tag" value="false"/>
+                 <parameter name="store" value="session"/>
+             </aspect>
+         </aspects>
+     </renderer>
      <renderer name="window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
@@ -112,6 +126,12 @@
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
             <renderers default="tab">
                 <renderer name="tab"/>
+            </renderers>
+        </layout>
+        <layout name="linktab"
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" >
+            <renderers default="linktab">
+                <renderer name="linktab"/>
             </renderers>
         </layout>
         <layout name="frame" 

@@ -8,11 +8,16 @@
   <body> 
 	 <s1 title="The Apache Cocoon Portal"> 
 		<p>This is a demo of the Cocoon Portal Engine.</p>
-            <p>The Cocoon portal page you currently view displays some so called
-              <em>Coplets</em> (= Cocoon Portlets). Each coplet displays
-              a select content.</p> 
-       <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
-   </s1> 
+        <p>The Cocoon portal page you currently view displays some so called
+          <em>Coplets</em> (= Cocoon Portlets). Each coplet displays
+          a select content.</p> 
+        <p>The different tabs display/demonstrate different aspects of the portal.</p>
+        <ul>
+          <li>The TabDemo1 shows a tab inside a tab, which is useful for structuring content.</li>
+          <li>The TabDemo2 shows the same content as TabDemo2 but with just a different stylesheet for the tab.</li>
+        </ul>
+        <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
+     </s1> 
 
   </body>
 </document>

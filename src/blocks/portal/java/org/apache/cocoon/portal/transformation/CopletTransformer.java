@@ -52,13 +52,19 @@ package org.apache.cocoon.portal.transformation;
 
 import java.io.IOException;
 
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
+ * This transformer offers various functions for developing pipeline based coplets.
+ * 
  * Includes coplet instance data by using JXPath expressions.
  * The transformer searches for tags &lt;coplet:coplet xmlns:coplet="http://apache.org/cocoon/portal/coplet/1.0"&gt;.
  * They must have an attribute "select" that contains a valid JXPath expression applying to the coplet instance data.<br><br>
@@ -74,8 +80,9 @@ import org.xml.sax.SAXException;
  * Please see also the documentation of superclass AbstractCopletTransformer for how
  * the coplet instance data are acquired.
  *
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.4 2003/07/10 13:17:04 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.5 2003/12/09 10:21:56 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -96,6 +103,11 @@ extends AbstractCopletTransformer {
     public static final String SELECT_ATTR = "select";
 
         
+    /**
+     * The XML element name to listen for.
+     */
+    public static final String LINK_ELEM = "link";
+
     /**
      * Creates new CopletTransformer.
      */
@@ -123,6 +135,30 @@ extends AbstractCopletTransformer {
                 throw new ProcessingException("Could not find value for expression "+expression);
             }
                 
+        } else if (name.equals(LINK_ELEM)) {
+            AttributesImpl newAttrs = new AttributesImpl();
+            
+            PortalService portalService = null;
+            try {
+                final CopletInstanceData cid = this.getCopletInstanceData();
+                ChangeCopletInstanceAspectDataEvent event = new ChangeCopletInstanceAspectDataEvent(cid, null, null);
+                
+                portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+                String value = portalService.getComponentManager().getLinkService().getLinkURI(event);
+                if (value.indexOf('?') == -1) {
+                    value = value + '?' + attr.getValue("href");
+                } else {
+                    value = value + '&' + attr.getValue("href");
+                }
+                newAttrs.addCDATAAttribute("href", value);
+            } catch (ServiceException e) {
+                throw new SAXException("Error getting portal service.", e);
+            } finally {
+                this.manager.release( portalService );
+            }
+            
+            
+            super.startElement("", "a", "a", newAttrs);
         } else {
             super.startTransformingElement(uri, name, raw, attr);
         }
@@ -133,9 +169,11 @@ extends AbstractCopletTransformer {
      */
     public void endTransformingElement(String uri, String name, String raw) 
     throws ProcessingException, IOException, SAXException {
-        if (!name.equals(COPLET_ELEM)) {
+        if ( name.equals(LINK_ELEM) ) {
+            super.endElement("", "a", "a");
+        } else if (!name.equals(COPLET_ELEM)) {
             super.endTransformingElement(uri, name, raw);
-        }
+        }  
     }
-
+    
 }

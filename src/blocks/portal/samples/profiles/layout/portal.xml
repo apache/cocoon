@@ -168,4 +168,52 @@
             </item>
         </composite-layout>
     </named-item>
+    <named-item name="TabDemo1">
+        <composite-layout static="true" name="tab">
+		    <named-item name="One">
+                <coplet-layout name="coplet">
+                    <parameter name="title" value="ML's Weblog" />
+                    <parameter name="bgcolor" value="#ffff00" />
+                    <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+                </coplet-layout>
+		    </named-item>
+		    <named-item name="Two">
+                <coplet-layout name="coplet">
+                    <parameter name="title" value="CZ's Weblog" />
+                    <parameter name="bgcolor" value="#ffff00" />
+                    <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+                </coplet-layout>
+		    </named-item>
+		    <named-item name="Three">
+	            <coplet-layout name="coplet">
+	                <parameter name="title" value="Cocoon Overview" />
+	                <coplet-instance-data>Overview-1</coplet-instance-data>
+	            </coplet-layout>
+		    </named-item>
+        </composite-layout>
+    </named-item>
+    <named-item name="TabDemo2">
+        <composite-layout static="true" name="linktab">
+            <named-item name="One">
+	            <coplet-layout name="coplet">
+	                <parameter name="title" value="ML's Weblog" />
+	                <parameter name="bgcolor" value="#ffff00" />
+	                <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+	            </coplet-layout>
+		    </named-item>
+		    <named-item name="Two">
+                <coplet-layout name="coplet">
+                    <parameter name="title" value="CZ's Weblog" />
+                    <parameter name="bgcolor" value="#ffff00" />
+                    <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+                </coplet-layout>
+		    </named-item>
+		    <named-item name="Three">
+                <coplet-layout name="coplet">
+                    <parameter name="title" value="Cocoon Overview" />
+                    <coplet-instance-data>Overview-1</coplet-instance-data>
+                </coplet-layout>
+		    </named-item>
+		</composite-layout>
+    </named-item>
 </composite-layout>

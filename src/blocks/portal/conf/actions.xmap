@@ -9,4 +9,6 @@
                 src="org.apache.cocoon.portal.acting.LogoutAction"/>
     <map:action name="portal-object-model"
                 src="org.apache.cocoon.portal.acting.ObjectModelAction"/>
+    <map:action name="portal-set-data"
+                src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
 </xmap>
