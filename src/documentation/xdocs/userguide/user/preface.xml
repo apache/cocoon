@@ -14,12 +14,12 @@
          want to do with Cocoon. If you are a usual user, then you can use Cocoon
          without ever coding Java or knowing how exactly servlet containers work.
          If you become an experienced user of Cocoon you might want to tweak
-         and tune your application. Therefore it is helpfull to know Java and
+         and tune your application. Therefore it is helpful to know Java and
          some basics of servlet containers.
       </p>
       <p>  
          However, if you want to develop with Cocoon (building own components
-         to extend Cocoon for example), then you need to programm Java. So, we
+         to extend Cocoon for example), then you need to program Java. So, we
          split up this description into two sections: one for users and one for
          developers.
       </p>
