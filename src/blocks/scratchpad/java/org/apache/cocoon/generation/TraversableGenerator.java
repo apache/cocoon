@@ -127,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.3 2003/10/03 11:45:33 gianugo Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.4 2003/10/10 17:48:10 gcasper Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -453,7 +453,9 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
                         }
                     });
                 }
-
+                
+                addContent(source);
+                
                 for (int i = 0; i < contents.size(); i++) {
                     if (isIncluded((TraversableSource) contents.toArray()[i]) && !isExcluded((TraversableSource) contents.toArray()[i])) {
                         addPath((TraversableSource) contents.toArray()[i], depth - 1);
@@ -464,11 +466,21 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         } else {
             if (isIncluded(source) && !isExcluded(source)) {
                 startNode(RESOURCE_NODE_NAME, source);
+                addContent(source);
                 endNode(RESOURCE_NODE_NAME);
             }
         }
     }
-
+    
+    /**
+     * Allow subclasses a chance to generate additional elements within collection and resource
+     * elements.
+     * 
+     * @param source  the source to generate additional data for.
+     */
+    protected void addContent(TraversableSource source) throws SAXException, ProcessingException {
+    }
+    
     /**
      * Begins a named node and calls setNodeAttributes to set its attributes.
      *
@@ -478,7 +490,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      * @throws SAXException  if an error occurs while creating the node
      */
     protected void startNode(String nodeName, TraversableSource source)
-            throws SAXException {
+            throws SAXException, ProcessingException {
         if (this.validity != null) {
             this.validity.addSource(source);
         }
@@ -492,7 +504,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *
      * @param source  the source attributes are added for
      */
-    protected void setNodeAttributes(TraversableSource source) {
+    protected void setNodeAttributes(TraversableSource source) throws SAXException, ProcessingException {
         long lastModified = source.getLastModified();
         attributes.clear();
         attributes.addAttribute("", RES_NAME_ATTR_NAME,RES_NAME_ATTR_NAME,

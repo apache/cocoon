@@ -51,9 +51,6 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +62,6 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
@@ -134,7 +130,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.2 2003/10/03 11:45:33 gianugo Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.3 2003/10/10 17:48:09 gcasper Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -233,102 +229,11 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         super.dispose();
     }
     
-    /**
-     * Adds a single node to the generated document. If the path is a
-     * directory, and depth is greater than zero, then recursive calls
-     * are made to add nodes for the directory's children. Moreover,
-     * if the file is an XML file (ends with .xml), the XPath query
-     * is performed and results returned.
-     *
-     * @param   path
-     *      the (Traversable) source to process
-     * @param   depth
-     *      how deep to scan the collection
-     *
-     * @throws  SAXException
-     *      if an error occurs while constructing nodes
-     */
-    protected void addPath(TraversableSource path, int depth)
-    throws SAXException {
-		if (path.isCollection()) {
-			startNode(COL_NODE_NAME, path);
-			if (depth > 0) {
-                
-				Collection contents;
-				try {
-					contents = path.getChildren();
-				} catch (SourceException e) {
-					throw new SAXException("Error adding paths", e);
-				}
-
-				if (sort.equals("name")) {
-					Arrays.sort(contents.toArray(), new Comparator() {
-						public int compare(Object o1, Object o2) {
-							if (reverse) {
-								return ((TraversableSource)o2).getName().compareTo(((TraversableSource)o1).getName());
-							}
-							return ((TraversableSource)o1).getName().compareTo(((TraversableSource)o2).getName());
-						}
-					});
-				} else if (sort.equals("size")) {
-					Arrays.sort(contents.toArray(), new Comparator() {
-						public int compare(Object o1, Object o2) {
-							if (reverse) {
-								return new Long(((TraversableSource)o2).getContentLength()).compareTo(
-									new Long(((TraversableSource)o1).getContentLength()));
-							}
-							return new Long(((TraversableSource)o1).getContentLength()).compareTo(
-								new Long(((TraversableSource)o2).getContentLength()));
-						}
-					});
-				} else if (sort.equals("lastmodified")) {
-					Arrays.sort(contents.toArray(), new Comparator() {
-						public int compare(Object o1, Object o2) {
-							if (reverse) {
-								return new Long(((TraversableSource)o2).getLastModified()).compareTo(
-									new Long(((TraversableSource)o1).getLastModified()));
-							}
-							return new Long(((TraversableSource)o1).getLastModified()).compareTo(
-								new Long(((TraversableSource)o2).getLastModified()));
-						}
-					});
-				} else if (sort.equals("collection")) {
-					Arrays.sort(contents.toArray(), new Comparator() {
-						public int compare(Object o1, Object o2) {
-							TraversableSource ts1 = (TraversableSource)o1;
-							TraversableSource ts2 = (TraversableSource)o2;
-
-							if (reverse) {
-								if (ts2.isCollection() && !ts1.isCollection())
-									return -1;
-								if (!ts2.isCollection() && ts1.isCollection())
-									return 1;
-								return ts2.getName().compareTo(ts1.getName());
-							}
-							if (ts2.isCollection() && !ts1.isCollection())
-								return 1;
-							if (!ts2.isCollection() && ts1.isCollection())
-								return -1;
-							return ts1.getName().compareTo(ts2.getName());
-						}
-					});
-				}
-
-				for (int i = 0; i < contents.size(); i++) {
-					if (isIncluded((TraversableSource) contents.toArray()[i]) && !isExcluded((TraversableSource) contents.toArray()[i])) {
-						addPath((TraversableSource) contents.toArray()[i], depth - 1);
-					}
-				}
-			}
-			endNode(COL_NODE_NAME);
-		} else {
-			if (isIncluded(path) && !isExcluded(path)) {
-				startNode(RESOURCE_NODE_NAME, path);
-				if (isXML(path)  && xpath != null)
-				  performXPathQuery(path);
-				endNode(RESOURCE_NODE_NAME);
-			}
-		}
+    protected void addContent(TraversableSource source) throws SAXException, ProcessingException {
+        super.addContent(source);
+        if (!source.isCollection() && isXML(source) && xpath != null) {
+            performXPathQuery(source);
+        }
     }
     
 	/**
