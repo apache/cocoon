@@ -36,14 +36,14 @@
   </file>
 
   <file>
-    <title>Avalon Excalibur DataSource</title>
+    <title>Excalibur DataSource</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development. 
     </description>
     <used-by>Cocoon</used-by>
     <lib>optional/excalibur-datasource-1.1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
@@ -58,18 +58,18 @@
   </file>
 
   <file>
-    <title>Avalon Excalibur Component</title>
+    <title>Excalibur Component</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-component-1.2.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Event</title>
+    <title>Excalibur Event</title>
     <description>
       This is the Excalibur Event package which includes event queues,
       asynchronous command processing, and the interfaces to support
@@ -77,10 +77,10 @@
     </description>
     <used-by>Cocoon Flow</used-by>
     <lib>core/excalibur-event-api-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
   <file>
-    <title>Avalon Excalibur Event</title>
+    <title>Excalibur Event</title>
     <description>
       This is the Excalibur Event package which includes event queues,
       asynchronous command processing, and the interfaces to support
@@ -88,128 +88,128 @@
     </description>
     <used-by>Cocoon Flow</used-by>
     <lib>core/excalibur-event-impl-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur I18n</title>
+    <title>Excalibur I18n</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-i18n-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/i18n/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Instrument</title>
+    <title>Excalibur Instrument</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-instrument-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Instrument Manager</title>
+    <title>Excalibur Instrument Manager</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-instrument-manager-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Instrument Manager Interfaces</title>
+    <title>Excalibur Instrument Manager Interfaces</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-instrument-manager-interfaces-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur IO</title>
+    <title>Excalibur IO</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-io-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Logger</title>
+    <title>Excalibur Logger</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-logger-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Naming</title>
+    <title>Excalibur Naming</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-naming-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Pool</title>
+    <title>Excalibur Pool</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-pool-1.2.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur SourceResolve</title>
+    <title>Excalibur SourceResolve</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-sourceresolve-1.1.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur Store</title>
+    <title>Excalibur Store</title>
     <description>
       Part of avalon, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-store-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
-    <title>Avalon Excalibur XMLUtil</title>
+    <title>Excalibur XMLUtil</title>
     <description>
-      Part of avalon, it is a set of classes and patterns that
+      Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-xmlutil-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
@@ -829,11 +829,11 @@
   </file>
 
   <file>
-    <title>Avalon Excalibur Util</title>
+    <title>Excalibur Util</title>
     <description>???</description>
     <used-by>Axis block</used-by>
-    <lib>optional/excalibur-util-1.0.jar</lib>
-    <homepage>http://avalon.apache.org/excalibur/</homepage>
+    <lib>axis/lib/excalibur-util-1.0.jar</lib>
+    <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file>
