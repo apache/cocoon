@@ -333,7 +333,7 @@ implements ServiceSelector, Serviceable, Configurable {
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void addComponent( final String key,
+    public void doAddComponent( final String key,
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {

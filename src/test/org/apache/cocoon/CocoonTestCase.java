@@ -50,12 +50,12 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             factory.setAttribute("class", URLSourceFactory.class.getName());
             factory.setAttribute("name", "*");
             df.addChild(factory);
-            manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
+            manager.doAddComponent("org.apache.excalibur.source.SourceFactorySelector", 
                                  CocoonServiceSelector.class, 
                                  df);
         }
         if ( this.addSourceResolver() ) {
-            manager.addComponent(SourceResolver.ROLE, 
+            manager.doAddComponent(SourceResolver.ROLE, 
                     SourceResolverImpl.class, 
                     new DefaultConfiguration("", "-"));
         }

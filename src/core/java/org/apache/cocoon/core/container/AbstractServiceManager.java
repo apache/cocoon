@@ -121,9 +121,9 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Adding component (" + role + " = " + className + ")" );
             }
-
+            // FIXME - use different classloader
             final Class clazz = this.getClass().getClassLoader().loadClass( className );
-            this.addComponent( role, clazz, configuration );
+            this.doAddComponent( role, clazz, configuration );
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
                                  + role + " at " + configuration.getLocation();
@@ -151,7 +151,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
         }        
     }
     
-    protected abstract void addComponent(String role, Class clazz, Configuration config)
+    protected abstract void doAddComponent(String role, Class clazz, Configuration config)
     throws ServiceException;
     
     

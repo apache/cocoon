@@ -144,7 +144,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             factory.setAttribute("class", componentClassName);
             factory.setAttribute("name", key);
             df.addChild(factory);
-            manager.addComponent(typeClassName + "Selector", 
+            manager.doAddComponent(typeClassName + "Selector", 
                                  CocoonServiceSelector.class, 
                                  df);
         }

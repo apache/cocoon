@@ -221,7 +221,7 @@ public class Cocoon
         startupManager.setLoggerManager(this.loggerManager);
 
         try {
-            startupManager.addComponent(SAXParser.ROLE,
+            startupManager.doAddComponent(SAXParser.ROLE,
                                         ClassUtils.loadClass(parser),
                                         new DefaultConfiguration("", "empty"));
         } catch (Exception e) {
