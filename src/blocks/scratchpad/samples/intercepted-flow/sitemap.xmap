@@ -2,6 +2,23 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+<!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="intercepted-javascript">
     <map:script src="basescript.js"/>
@@ -9,6 +26,11 @@
 
   <map:pipelines>
     <map:pipeline>
+
+      <map:match pattern="*.js">
+        <map:read src="{0}" mime-type="text/plain"/>
+      </map:match>
+
       <!--+
           | produces the screens called by the flowscript
           +-->     

@@ -61,6 +61,11 @@
 
   <map:pipeline>
 
+   <map:match pattern="employee.xml">
+     <map:generate src="{0}"/>
+     <map:serialize type="xml"/>
+   </map:match>
+
    <map:match pattern="employee">
      <map:act set="employee">
        <map:parameter name="descriptor" value="employee.xml"/>

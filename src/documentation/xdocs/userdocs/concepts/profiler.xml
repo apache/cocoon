@@ -99,7 +99,7 @@
 
         <source><![CDATA[<map:views>
   <map:view name="pretty-content" from-label="data">
-    <map:transform src="simple-xml2html.xsl"/>
+    <map:transform src="simple-xml2html.xslt"/>
     <map:serialize type="html"/>
   </map:view>
 </map:views>]]></source>

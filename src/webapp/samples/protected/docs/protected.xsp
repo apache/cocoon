@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: protected.xsp,v 1.2 2003/05/22 13:37:46 vgritsenko Exp $ -->
+<!-- CVS: $Id: protected.xsp,v 1.3 2003/10/22 16:56:22 joerg Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
           xmlns:session="http://apache.org/xsp/session/2.0">
   <page>
     <resources>
-      <resource type="file" href="descriptors/auth.xml">Authenticator</resource>
-      <resource type="file" href="descriptors/params.xml">Validator</resource>
+      <resource type="file" href="descriptors/auth.xml?cocoon-view=pretty-content">Authenticator</resource>
+      <resource type="file" href="descriptors/params.xml?cocoon-view=pretty-content">Validator</resource>
       <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
     </resources>
     <title>Protected area</title>

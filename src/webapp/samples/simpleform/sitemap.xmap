@@ -10,7 +10,7 @@
   </map:view>
 
   <map:view from-label="content" name="pretty-content">
-    <map:transform src="context://stylesheets/system/xml2html.xsl"/>
+    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
     <map:serialize type="html"/>
   </map:view>
   

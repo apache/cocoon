@@ -14,7 +14,7 @@
   
   <page>
     <resources>
-       <resource type="file" href="database.xml">Descriptor</resource>
+       <resource type="file" href="database.xml?cocoon-view=pretty-content">Descriptor</resource>
        <resource type="file" href="schema.sql">Schema</resource>
        <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
        <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>

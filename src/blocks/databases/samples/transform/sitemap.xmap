@@ -13,12 +13,32 @@
 
  </map:components>
 
+<!-- ============================ Views ==================================== -->
+
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view from-label="content" name="pretty-content">
+    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+    <map:serialize type="html"/>
+  </map:view>
+  
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+
+ </map:views>
 
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
 
   <map:pipeline>
+   <map:match pattern="sql-page.xml.sql">
+    <map:read src="sql-page.xml.sql" mime-type="text/plain"/>
+   </map:match>
 
    <map:match pattern="*">
     <map:generate src="{1}.xml"/>

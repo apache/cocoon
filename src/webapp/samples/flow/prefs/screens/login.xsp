@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--+
-    | CVS: $Id: login.xsp,v 1.4 2003/07/14 09:30:46 reinhard Exp $
+    | CVS: $Id: login.xsp,v 1.5 2003/10/22 16:56:22 joerg Exp $
     | Author: Ovidiu Predescu "ovidiu@apache.org"
     | Date: August 30, 2002
     +-->
@@ -11,7 +11,7 @@
           xmlns:jpath="http://apache.org/xsp/jpath/1.0">
   <page>
     <resources>
-      <resource type="file" href="/samples/flow/prefs/prefs.js">Flowscript</resource>
+      <resource type="file" href="prefs.js">Flowscript</resource>
     </resources>
     <title>Login</title>
     <content>
