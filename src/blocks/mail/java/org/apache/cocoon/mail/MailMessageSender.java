@@ -20,6 +20,13 @@ import org.apache.cocoon.mail.datasource.FilePartDataSource;
 import org.apache.cocoon.mail.datasource.SourceDataSource;
 import org.apache.cocoon.servlet.multipart.Part;
 
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.excalibur.source.Source;
 
 import java.io.IOException;
@@ -47,13 +54,19 @@ import javax.mail.internet.MimeMultipart;
 
 /** A helper class used by the {@link org.apache.cocoon.acting.Sendmail}
  * and the <CODE>sendmail.xsl</CODE> logicsheet for sending an email message.
+ * 
+ * <h3>Parameters</h3>
+ * <table><tbody>
+ * <tr><th>smtp-host</th><td>SMTP server to use sending mail.</td><td>opt</td><td>String</td><td><code>localhost</code></td></tr>
+ * </tbody></table>
  *
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.11 2004/05/09 18:10:33 haul Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.12 2004/05/09 20:05:59 haul Exp $
  */
-public class MailMessageSender {
+public class MailMessageSender extends AbstractLogEnabled 
+    implements MailSender, Parameterizable, Initializable, Component {
 
     private MimeMessage message;
     private String from;
@@ -67,6 +80,7 @@ public class MailMessageSender {
     private String body;
     private List attachmentList;
     private Exception exception = null;
+	private String smtpHost;
 
     /**
      * Helper class for attachment data. 
@@ -158,9 +172,15 @@ public class MailMessageSender {
         }
     }
 
+    public MailMessageSender() {
+        
+    }
+    
     /** Creates a new instance of MailMessageSender
+     * Keep constructor for backwards compatibility.
      * @param smtpHost The host name or ip-address of a host to accept
      * the email for delivery.
+     * @deprecated Please use {@link MailSender} component instead.
      */
     public MailMessageSender(String smtpHost) {
         smtpHost = smtpHost.trim();
@@ -534,5 +554,36 @@ public class MailMessageSender {
             attachmentList.add(new Attachment(url, type, name, true));
         }
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+	 */
+	public void parameterize(Parameters parameters) throws ParameterException {
+        this.smtpHost = parameters.getParameter("smtp-host", null);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Initializable#initialize()
+	 */
+	public void initialize() throws Exception {
+        Properties properties = new Properties();
+        Session session = Session.getDefaultInstance(properties);
+
+        if (smtpHost == null || "null".equals(smtpHost)) {
+            properties.put("mail.smtp.host", "127.0.0.1");
+        } else {
+            properties.put("mail.smtp.host", smtpHost);
+        }
+
+        this.message = new MimeMessage(session);
+        this.attachmentList = new ArrayList();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.mail.MailSender#setSmtpHost(java.lang.String)
+	 */
+	public void setSmtpHost(String hostname) {
+		this.smtpHost = hostname;
+	}
 
 }
