@@ -24,6 +24,7 @@
 <separator/>
   <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
   <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
+  <page id="xmlfragment" label="XMLFragments" source="xmlfragment.xml"/>  
   <page id="esql" label="ESQL Taglib" source="esql.xml"/>
   <page id="connection-pool" label="SQL Conn Pool" source="connection-pool.xml"/>
   <page id="fp" label="FP Taglib" source="fptaglib.xml"/>

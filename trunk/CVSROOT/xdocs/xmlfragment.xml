@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document><header><title>ESQL Taglib</title>
+<authors>
+<person name="Sylvain Wallez" email="sylvain.wallez@anyware-tech.com"/>
+<person name="Robin Green" email="greenrd@hotmail.com"/>
+</authors></header><body>
+
+<s1 title="Implementing the org.apache.cocoon.xml.XMLFragment interface">
+
+<p>An <code>XMLFragment</code> is an object that can be represented as a XML document
+fragment. The main purpose of this standard interface is to provide a
+uniform way of inserting dynamically-generated XML into XSP pages. See
+the <link href="faqs.html#faq-xspinsertxml">relevant FAQ</link> for more
+details and alternatives.</p>
+
+<p>As described in the Javadoc documentation, the <code>toDOM()</code> method (used by Cocoon 
+1) should append the XML
+representation of the object as children of the given node, and the
+<code>toSAX()</code> method (used by Cocoon 2) should generate the XML representation as
+SAX events.</p>
+
+<p>A typical XMLFragment implementation might look like this:</p>
+
+<source>
+  public class FragmentTest implements XMLFragment
+  {
+    public void toDOM(Node node)
+    {
+      Document doc = node.getOwnerDocument();
+      Element e = doc.createElement("foo");
+      e.appendChild(doc.createTextNode("bar"));
+      node.appendChild(e);
+    }
+
+    public void toSAX(ContentHandler handler)
+    {
+      AttributesImpl attr = new AttributesImpl();
+      handler.startElement("","foo","foo",attr);
+
+      String content = "bar";
+      handler.characters(content.toCharArray(), 0, content.length());
+
+      handler.endElement("","foo","foo");
+    }
+  }
+</source>
+
+<p>Both methods result in <code>&lt;foo&gt;bar&lt;/foo&gt;</code> being inserted in the resulting
+document.</p>
+
+<p>Of course, it is very wasteful to write two methods to do exactly the same thing! 
+That is why we suggest people implement only toSAX directly, and then form a DOM tree from the SAX
+events in the toDOM method. An XMLFragmentBase 
+class is in development to simplify this.</p>
+
+</s1>
+</body></document>

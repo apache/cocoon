@@ -249,7 +249,8 @@
      of this documentation (except insofar as it documents the specification of 
      <code>&lt;xsp:expr&gt;</code>) - see the DOM link above, and also the question on
      <jump anchor="faq-goodbooks">"good books"</jump>. You can also generate
-     <code>org.apache.cocoon.xml.XMLFragment</code>s, and return both DOM and SAX,
+     <connect href="xmlfragment.xml">     
+     <code>org.apache.cocoon.xml.XMLFragment</code>s</connect>, and return both DOM and SAX,
      thus making your code (hopefully) more forward-compatible with Cocoon 2, which will be
      SAX-based. (Actually using SAX is not strictly necessary, since DOM can always be 
      converted to SAX and vice-versa, but you will pay a performance penalty in Cocoon 2
