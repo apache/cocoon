@@ -357,10 +357,16 @@ function searchProducts() {
 // Checkout
 
 function checkout() {
+    var cartItems = [];
+    for (var i in cartForm.cart.cartItems) {
+        var cartItem = cartForm.cart.cartItems[i];
+        cartItems.push(cartItem);
+    }
     sendPageAndWait("/view/Checkout.html", {
                     accountForm: accountForm,
                     cartForm: cartForm, 
-                    yoshi: yoshi
+		    yoshi: yoshi,
+		    cartItems: cartItems
     });
     if (accountForm.signOn) {
         signOn();

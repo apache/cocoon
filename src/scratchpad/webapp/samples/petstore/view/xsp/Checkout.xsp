@@ -8,8 +8,8 @@
 
     <site>
         <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
-        <cart name="Shopping Cart" >
-            <backpointer name="Main Menu" do="index.do" />
+        <cart name="Checkout Summary">
+            <backpointer name="Shopping Cart" do="viewCart.do" />
             <jpath:for-each select="cartItems" >
                 <item>
                     <xsp:attribute name="product-id"><jpath:value-of select="item/productId"/></xsp:attribute>
@@ -27,7 +27,9 @@
                 </item>
             </jpath:for-each>
             <total><jpath:value-of select="cartForm/cart/subTotal"/></total>
-            <nextpointer do="checkout.do" img="images/button_checkout.gif" />
+            <nextpointer img="images/button_continue.gif">
+                <xsp:attribute name="do"><jpath:continuation/>.kont</xsp:attribute>
+            </nextpointer>
         </cart>
     </site>
 
