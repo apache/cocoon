@@ -17,6 +17,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.CacheValidity;
@@ -42,10 +43,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-30 14:17:45 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-05-09 18:34:17 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
-    implements Composable, Disposable, Cacheable {
+    implements Composable, Disposable, Cacheable, Poolable {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
     private static String EXTRACT_ELEMENT="svg";
 

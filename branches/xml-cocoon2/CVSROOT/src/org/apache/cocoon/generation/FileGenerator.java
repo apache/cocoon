@@ -14,6 +14,7 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
@@ -37,10 +38,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-05-03 12:16:36 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-05-09 18:33:41 $
  */
 public class FileGenerator extends ComposerGenerator
-implements Cacheable {
+implements Cacheable, Poolable {
 
     /** The input source */
     private InputSource inputSource;

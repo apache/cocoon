@@ -17,6 +17,7 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
@@ -31,9 +32,9 @@ import org.xml.sax.SAXException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-05-04 11:02:14 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-05-09 18:34:10 $
  */
-public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable, Cacheable {
+public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable, Cacheable, Poolable {
 
     /**
      * The trax <code>TransformerFactory</code> used by this serializer.
@@ -44,17 +45,17 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
      * The <code>Properties</code> used by this serializer.
      */
     protected Properties format = new Properties();
-    
+
     /**
      * The prefixes of startPreficMapping() declarations for the coming element.
      */
     private List prefixList = new ArrayList();
-    
+
     /**
      * The URIs of startPrefixMapping() declarations for the coming element.
      */
     private List uriList = new ArrayList();
-    
+
     /**
      * True if there has been some startPrefixMapping() for the coming element.
      */
@@ -152,7 +153,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
         clearMappings();
         super.recycle();
     }
-    
+
     /**
      *
      */
@@ -162,7 +163,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
         clearMappings();
         super.startDocument();
     }
-    
+
     /**
      * Add tracking of mappings to be able to add <code>xmlns:</code> attributes
      * in <code>startElement()</code>.
@@ -173,10 +174,10 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
         this.hasMappings = true;
         this.prefixList.add(prefix);
         this.uriList.add(uri);
-        
+
         super.startPrefixMapping(prefix, uri);
     }
-    
+
     /**
      * Ensure all namespace declarations are present as <code>xmlns:</code> attributes
      * and add those needed before calling superclass. This is a workaround for a Xalan bug
@@ -185,18 +186,18 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
      */
     public void startElement(String eltUri, String eltLocalName, String eltQName, Attributes attrs)
       throws SAXException {
-      
+
         if (this.hasMappings) {
             // Add xmlns* attributes where needed
-            
+
             // New Attributes if we have to add some.
             AttributesImpl newAttrs = null;
-            
+
             int mappingCount = this.prefixList.size();
             int attrCount = attrs.getLength();
-            
+
             for(int mapping = 0; mapping < mappingCount; mapping++) {
-                
+
                 // Build infos for this namespace
                 String uri = (String)this.uriList.get(mapping);
                 String prefix = (String)this.prefixList.get(mapping);
@@ -215,7 +216,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
                         break find;
                     }
                 }
-                
+
                 if (!found) {
                     // Need to add this namespace
                     if (newAttrs == null) {
@@ -226,7 +227,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
                         else
                             newAttrs = new AttributesImpl(attrs);
                     }
-                    
+
                     if (prefix.equals("")) {
                         newAttrs.addAttribute(Constants.XML_NAMESPACE_URI, "xmlns", "xmlns", "CDATA", uri);
                     } else {
@@ -234,10 +235,10 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
                     }
                 }
             } // end for mapping
-            
+
             // Cleanup for the next element
             clearMappings();
-            
+
             // Start element with new attributes, if any
             super.startElement(eltUri, eltLocalName, eltQName, newAttrs == null ? attrs : newAttrs);
         }
@@ -246,7 +247,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             super.startElement(eltUri, eltLocalName, eltQName, attrs);
         }
     }
-        
+
     private void clearMappings()
     {
         this.hasMappings = false;

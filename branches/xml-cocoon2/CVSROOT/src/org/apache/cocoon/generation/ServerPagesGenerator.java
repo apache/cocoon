@@ -19,6 +19,7 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
@@ -46,11 +47,11 @@ import org.xml.sax.ext.LexicalHandler;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-05-07 09:38:56 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-05-09 18:33:46 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler, Recyclable, Disposable, Cacheable
+  implements ContentHandler, LexicalHandler, Recyclable, Disposable, Cacheable, Poolable
 {
   /**
    * The sitemap-defined server pages program generator
@@ -96,7 +97,7 @@ public class ServerPagesGenerator
 
   /**
    * Generate the validity object.
-   * 
+   *
    * @return The generated validity object or <code>null</code> if the
    *         component is currently not cachable.
    */

@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
@@ -36,9 +37,9 @@ import org.xml.sax.SAXException;
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-05-09 15:25:08 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-05-09 18:33:44 $
  */
-public class HTMLGenerator extends ComposerGenerator implements Cacheable {
+public class HTMLGenerator extends ComposerGenerator implements Cacheable, Poolable {
 
     /** The system ID of the input source */
     private String      systemID;

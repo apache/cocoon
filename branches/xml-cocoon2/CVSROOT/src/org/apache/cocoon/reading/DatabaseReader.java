@@ -29,6 +29,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -50,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="bloritsch@apache.org">Berin Loritsch</a>
  */
-public class DatabaseReader extends AbstractReader implements Composable, Configurable, Disposable, Cacheable {
+public class DatabaseReader extends AbstractReader implements Composable, Configurable, Disposable, Cacheable, Poolable {
     private ComponentSelector dbselector;
     private String dsn;
     private long lastModified = 0;

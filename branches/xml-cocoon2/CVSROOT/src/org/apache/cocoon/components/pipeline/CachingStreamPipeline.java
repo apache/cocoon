@@ -9,6 +9,7 @@ package org.apache.cocoon.components.pipeline;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
@@ -44,7 +46,7 @@ import org.xml.sax.SAXException;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-05-08 16:32:32 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-05-09 18:33:35 $
  */
 public class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -182,8 +184,8 @@ public class CachingStreamPipeline extends AbstractStreamPipeline {
                             environment.setContentLength(response.length);
                             outputStream.write(response);
                         }
-                    } 
-                    
+                    }
+
                     if(usedCache == false) {
                         getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
 
@@ -213,7 +215,17 @@ public class CachingStreamPipeline extends AbstractStreamPipeline {
                               ((CachingOutputStream)outputStream).getContent()));
                 }
             }
+        } catch ( SocketException se ) {
+            if (se.getMessage().indexOf("reset") > 0) {
+                throw new ConnectionResetException("Connection reset by peer", se);
+            } else {
+                getLogger().debug("IOException in ProcessReader", se);
 
+                throw new ProcessingException(
+                    "Failed to execute pipeline.",
+                    se
+                );
+            }
         } catch ( Exception e ) {
             getLogger().debug("IOException in ProcessReader", e);
 
@@ -301,8 +313,8 @@ public class CachingStreamPipeline extends AbstractStreamPipeline {
                                 environment.setContentLength(bytes.length);
                                 outputStream.write(bytes);
                             }
-                        } 
-                        
+                        }
+
                         if (usedCache == false) {
 
                             getLogger().debug("Cached content is invalid for '" + environment.getURI() + "'.");
@@ -330,7 +342,7 @@ public class CachingStreamPipeline extends AbstractStreamPipeline {
                     if (pcKey != null) {
                         byte[] bytes = ((CachingOutputStream)outputStream).getContent();
                         environment.setContentLength(bytes.length);
-                        
+
                         this.streamCache.store(pcKey,
                             new CachedStreamObject(validityObjects, bytes));
                     }

@@ -24,6 +24,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -42,7 +43,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-30 14:17:33 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-05-09 18:34:03 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -59,7 +60,7 @@ import org.xml.sax.SAXException;
  *   </dl>
  */
 public class ResourceReader extends AbstractReader
-            implements Composable, Cacheable {
+            implements Composable, Cacheable, Poolable {
 
     private ComponentManager manager;
 
