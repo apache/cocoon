@@ -96,7 +96,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.7 2004/02/09 01:54:10 ghoward Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.8 2004/02/10 01:08:15 crossley Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
@@ -162,7 +162,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
             	String rootCause = e.getRootCause().getClass().getName();
             	String message = e.getRootCause().getMessage();
             	if (rootCause.equals("java.lang.ClassNotFoundException")) {
-            		String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" +            			"- For the jms block to work you must install and start a JMS server and " +            			"place the client jar in WEB-INF/lib.";
+            		String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" +            			"- For the jms block to work you must install and start a JMS server and " +            			"place the client jar in WEB-INF/lib.";
             			if (message.indexOf("exolab") > 0 ) {
             				info += "\n- The default server, OpenJMS is configured in cocoon.xconf but is not bundled with Cocoon.";
             			}
