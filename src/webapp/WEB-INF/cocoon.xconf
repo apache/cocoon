@@ -170,6 +170,7 @@
     </component-instance>
     <component-instance logger="core.modules.input" name="nullinput"    class="org.apache.cocoon.components.modules.input.NullInputModule"/>
     <component-instance logger="core.modules.input" name="realpath"     class="org.apache.cocoon.components.modules.input.RealPathModule"/>
+    <component-instance logger="core.modules.input" name="contextpath"  class="org.apache.cocoon.components.modules.input.ContextPathModule"/>
     <component-instance logger="core.modules.input" name="naming"       class="org.apache.cocoon.components.modules.input.NamingInputModule">
     </component-instance>
     <component-instance logger="core.modules.input" name="cocoon-properties" class="org.apache.cocoon.components.modules.input.PropertiesFileModule">
