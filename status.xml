@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.302 2004/04/15 03:03:24 crossley Exp $:-->
+<!-- CVS $Id: status.xml,v 1.303 2004/04/17 05:06:29 antonio Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated Velocity to 1.4
+   </action>
    <action dev="DC" type="add">
      Added standalone build target "validate-sitemaps".
      Added standalone build target "validate-stylesheets".
