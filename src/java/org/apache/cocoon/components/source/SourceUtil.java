@@ -27,13 +27,13 @@ import javax.xml.transform.OutputKeys;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -64,7 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.17 2004/03/29 13:52:39 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.18 2004/05/25 07:28:26 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -93,7 +93,7 @@ public final class SourceUtil {
     static public void toSAX( Source source,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+        toSAX(EnvironmentHelper.getSitemapServiceManager(), 
               source, null, handler);
     }
 
@@ -109,7 +109,7 @@ public final class SourceUtil {
                                 String mimeTypeHint,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+        toSAX(EnvironmentHelper.getSitemapServiceManager(), 
               source, mimeTypeHint, handler);
     }
 
@@ -559,13 +559,13 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if ( null != serializerName) {
-					ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+					ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
 
-	                ComponentSelector selector = null;
+	                ServiceSelector selector = null;
 	                Serializer serializer = null;
 	                OutputStream oStream = null;
 	                try {
-	                     selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+	                     selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
 	                     serializer = (Serializer)selector.select(serializerName);
 	                     oStream = ws.getOutputStream();
 	                     serializer.setOutputStream(oStream);
@@ -573,7 +573,7 @@ public final class SourceUtil {
 	                     DOMStreamer streamer = new DOMStreamer(serializer);
 	                     streamer.stream(frag);
                          serializer.endDocument();
-	                } catch (ComponentException e) {
+	                } catch (ServiceException e) {
 	                	throw new ProcessingException("Unable to lookup serializer.", e);
 					} finally {
 	                    if (oStream != null) {
@@ -601,20 +601,20 @@ public final class SourceUtil {
             } else {
             	String content;
 				if ( null != serializerName) {
-					ComponentManager  manager = CocoonComponentManager.getSitemapComponentManager();
+					ServiceManager  manager = EnvironmentHelper.getSitemapServiceManager();
                     
-                    ComponentSelector selector = null;
+                    ServiceSelector selector = null;
                     Serializer serializer = null;
                     ByteArrayOutputStream oStream = new ByteArrayOutputStream();
                     try {
-                        selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+                        selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
                         serializer = (Serializer)selector.select(serializerName);
                         serializer.setOutputStream(oStream);
                         serializer.startDocument();
                         DOMStreamer streamer = new DOMStreamer(serializer);
                         streamer.stream(frag);
                         serializer.endDocument();
-					} catch (ComponentException e) {
+					} catch (ServiceException e) {
 						throw new ProcessingException("Unable to lookup serializer.", e);
                     } finally {
                         if (oStream != null) {

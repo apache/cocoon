@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -33,24 +34,27 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.excalibur.source.Source;
@@ -60,7 +64,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.26 2004/05/05 06:36:58 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.27 2004/05/25 07:28:25 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -71,7 +75,8 @@ public class TreeProcessor
                Configurable,
                RoleManageable,
                Contextualizable,
-               Disposable {
+               Disposable,
+               Initializable {
 
     public static final String REDIRECTOR_ATTR = "sitemap:redirector";
     public static final String COCOON_REDIRECT_ATTR = "sitemap:cocoon-redirect";
@@ -130,9 +135,15 @@ public class TreeProcessor
     /** The component manager for the sitemap */
     protected ComponentManager sitemapComponentManager;
     
+    /** A service manager wrapper */
+    protected ServiceManager serviceManager;
+    
     /** The source resolver */
     protected SourceResolver resolver;
     
+    /** The environment helper */
+    private EnvironmentHelper environmentHelper;
+
     /**
      * Create a TreeProcessor.
      */
@@ -147,7 +158,11 @@ public class TreeProcessor
     /**
      * Create a child processor for a given language
      */
-    protected TreeProcessor(TreeProcessor parent, ComponentManager manager, String language) {
+    protected TreeProcessor(TreeProcessor parent, 
+                            DelayedRefreshSourceWrapper sitemapSource, 
+                            boolean checkReload, 
+                            String prefix) 
+    throws Exception {
         this.parent = parent;
         this.language = (language == null) ? parent.language : language;
 
@@ -155,14 +170,19 @@ public class TreeProcessor
         this.enableLogging(parent.getLogger());
         this.context = parent.context;
         this.roleManager = parent.roleManager;
+        this.source = sitemapSource;
         this.builderSelector = parent.builderSelector;
-        this.checkReload = parent.checkReload;
+        this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
-
-        // We have our own CM
-        this.manager = manager;
         
-        // Other fields are setup in initialize()
+        // We have our own CM
+        this.manager = parent.sitemapComponentManager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
+        // Setup environment helper
+        ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
+        ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(this.manager));
+        this.environmentHelper.changeContext(sitemapSource, prefix);
     }
 
     /**
@@ -172,32 +192,49 @@ public class TreeProcessor
      * @param language the language to be used by the child processor.
      * @return a new child processor.
      */
-    public TreeProcessor createChildProcessor(
-        ComponentManager manager,
-        String language,
-        Source source)
-      throws Exception {
-
-        // Note: lifecycle methods aren't called, since this constructors copies all
-        // that can be copied from the parent (see above)
-        TreeProcessor child = new TreeProcessor(this, manager, language);
-        child.source = new DelayedRefreshSourceWrapper(source, lastModifiedDelay);
-        return child;
+    public TreeProcessor createChildProcessor(String src, 
+                                              boolean checkReload,
+                                              String  prefix) 
+    throws Exception {
+        DelayedRefreshSourceWrapper delayedSource = new DelayedRefreshSourceWrapper(
+            this.resolver.resolveURI(src), this.lastModifiedDelay);
+        return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
+     */
     public void setRoleManager(RoleManager rm) {
         this.roleManager = rm;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        // setup the environment helper
+        if (this.environmentHelper == null ) {
+            this.environmentHelper = new EnvironmentHelper(
+                (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
+        }
+        ContainerUtil.enableLogging(this.environmentHelper,getLogger());
+        ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(manager));
+    }
 
 /*
   <processor>
@@ -237,8 +274,6 @@ public class TreeProcessor
         } catch(Exception e) {
             String msg = "Error while reading " + xconfURL + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
-        } finally {
-            this.manager.release( resolver );
         }
 
         // Create a selector for tree builders of all languages
@@ -281,28 +316,6 @@ public class TreeProcessor
     }
 
     /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
-     */
-    public ProcessingPipeline buildPipeline(Environment environment)
-    throws Exception {
-        InvokeContext context = new InvokeContext( true );
-
-        context.enableLogging(getLogger());
-
-        try {
-            if ( process(environment, context) ) {
-                return context.getProcessingPipeline();
-            } else {
-                return null;
-            }
-        } finally {
-            context.dispose();
-        }
-    }
-
-    /**
      * Do the actual processing, be it producing the response or just building the pipeline
      * @param environment
      * @param context
@@ -319,7 +332,7 @@ public class TreeProcessor
         }
 
         // and now process
-        CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
+        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
 
         Map objectModel = environment.getObjectModel();
 
@@ -338,7 +351,7 @@ public class TreeProcessor
             return success;
 
         } finally {
-            CocoonComponentManager.leaveEnvironment();
+            EnvironmentHelper.leaveProcessor();
             // Restore old redirector and resolver
             environment.setAttribute(REDIRECTOR_ATTR, oldRedirector);
             objectModel.put(PipelinesNode.OBJECT_SOURCE_RESOLVER, oldResolver);
@@ -361,7 +374,7 @@ public class TreeProcessor
         
         // test if this is a call from flow
         boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
-        Environment newEnv = new ForwardEnvironmentWrapper(environment, this.manager, uri, getLogger());
+        Environment newEnv = new ForwardEnvironmentWrapper(environment, uri, getLogger());
         if ( isRedirect ) {
             ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
         }
@@ -374,7 +387,7 @@ public class TreeProcessor
         
         // Get the processor that should process this request
         TreeProcessor processor;
-        if (newEnv.getRootContext() == newEnv.getContext()) {
+        if (getRootProcessor().getContext().equals(this.getContext())) {
             processor = (TreeProcessor)getRootProcessor();
         } else {
             processor = this;
@@ -387,8 +400,29 @@ public class TreeProcessor
     }
     
     /**
-     * Get the root parent of this processor
-     * @since 2.1.1
+     * Process the given <code>Environment</code> to assemble
+     * a <code>ProcessingPipeline</code>.
+     * @since 2.1
+     */
+    public InternalPipelineDescription buildPipeline(Environment environment)
+    throws Exception {
+        InvokeContext context = new InvokeContext( true );
+
+        context.enableLogging(getLogger());
+        context.setLastProcessor(this);
+        try {
+            if ( process(environment, context) ) {
+                return context.getInternalPipelineDescription(environment);
+            } else {
+                return null;
+            }
+        } finally {
+            context.dispose();
+        }
+    }
+      
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getRootProcessor()
      */
     public Processor getRootProcessor() {
         TreeProcessor result = this;
@@ -407,9 +441,8 @@ public class TreeProcessor
         this.sitemapComponentConfigurations = null;
     }
 
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
     public Map getComponentConfigurations() {
         // do we have the sitemap configurations prepared for this processor?
@@ -454,6 +487,24 @@ public class TreeProcessor
         return this.sitemapComponentConfigurations;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getContext()
+     */
+    public String getContext() {
+        return this.environmentHelper.getContext();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
+     */
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+        return this.environmentHelper;
+    }
+
+    public EnvironmentHelper getEnvironmentHelper() {
+        return this.environmentHelper;   
+    }
+
     protected synchronized void setupRootNode(Environment env) throws Exception {
 
         // Now that we entered the synchronized area, recheck what's already
@@ -486,6 +537,7 @@ public class TreeProcessor
             root = builder.build(this.source);
 
             this.sitemapComponentManager = builder.getSitemapComponentManager();
+            this.serviceManager = new ComponentManagerWrapper(this.sitemapComponentManager);
             
             this.disposableNodes = builder.getDisposableNodes();
         } finally {
@@ -564,8 +616,8 @@ public class TreeProcessor
     private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
 
         public ForwardEnvironmentWrapper(Environment env,
-            ComponentManager manager, String uri, Logger logger) throws MalformedURLException {
-            super(env, manager, uri, logger);
+            String uri, Logger logger) throws MalformedURLException {
+            super(env, uri, logger);
         }
 
         public void setStatus(int statusCode) {

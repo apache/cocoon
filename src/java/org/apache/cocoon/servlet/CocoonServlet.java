@@ -63,6 +63,7 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
@@ -97,7 +98,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.28 2004/05/11 17:20:40 joerg Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.29 2004/05/25 07:28:26 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -359,7 +360,8 @@ public class CocoonServlet extends HttpServlet {
             }
         }
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
-
+        this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.servletContextURL);
+        
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
             if (this.servletContextPath == null) {

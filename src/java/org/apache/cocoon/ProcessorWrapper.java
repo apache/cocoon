@@ -20,60 +20,72 @@ import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.5 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.6 2004/05/25 07:28:24 cziegeler Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Component, Disposable, ThreadSafe {
 
     private Processor processor;
 
-    public void dispose() {
-        this.processor = null;
-    }
-
     public ProcessorWrapper(Processor processor) {
         this.processor = processor;
     }
 
-    /**
-     * Process the given <code>Environment</code> producing the output
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        this.processor = null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#process(org.apache.cocoon.environment.Environment)
      */
     public boolean process(Environment environment)
     throws Exception {
         return this.processor.process(environment);
     }
 
-    /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
-    public ProcessingPipeline buildPipeline(Environment environment)
+    public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
         return this.processor.buildPipeline(environment);
     }
 
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
     public Map getComponentConfigurations() {
         return this.processor.getComponentConfigurations();
     }
     
-    /**
-     * Get the root parent processor of this processor
-     * @since 2.1.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getRootProcessor()
      */
     public Processor getRootProcessor() {
         return this.processor.getRootProcessor();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
+     */
+    public SourceResolver getSourceResolver() {
+        return this.processor.getSourceResolver();
+    }
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.Processor#getContext()
+	 */
+	public String getContext() {
+		return this.processor.getContext();
+	}
 }

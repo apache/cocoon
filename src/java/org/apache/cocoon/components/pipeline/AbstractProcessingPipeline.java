@@ -26,10 +26,11 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
@@ -54,7 +55,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.22 2004/05/24 11:04:55 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.23 2004/05/25 07:28:25 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -117,6 +118,9 @@ public abstract class AbstractProcessingPipeline
     /** Output Buffer Size */
     protected int  outputBufferSize;
 
+    /** The current Processor */
+    protected Processor processor;
+    
     /**
      * Composable Interface
      */
@@ -160,21 +164,6 @@ public abstract class AbstractProcessingPipeline
         }
         this.outputBufferSize = params.getParameterAsInteger("outputBufferSize",
                                                               this.configuredOutputBufferSize);
-    }
-
-    /**
-     * Release this component
-     * If you get an instance not by a component manager but for example
-     * by a processor, you have to release this component by calling
-     * this method and NOT by using a component manager!
-     */
-    public void release() {
-        try {
-            CocoonComponentManager.removeFromAutomaticRelease(this);
-        } catch (ProcessingException pe) {
-            // ignore this
-            getLogger().error("Unabled to release processing component.", pe);
-        }
     }
 
     /**
@@ -360,7 +349,7 @@ public abstract class AbstractProcessingPipeline
         try {
             // setup the generator
             this.generator.setup(
-                environment,
+                this.processor.getSourceResolver(),
                 environment.getObjectModel(),
                 generatorSource,
                 generatorParam
@@ -372,7 +361,7 @@ public abstract class AbstractProcessingPipeline
 
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer)transformerItt.next();
-                trans.setup(environment,
+                trans.setup(this.processor.getSourceResolver(),
                             environment.getObjectModel(),
                             (String)transformerSourceItt.next(),
                             (Parameters)transformerParamItt.next()
@@ -381,7 +370,7 @@ public abstract class AbstractProcessingPipeline
 
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
-                    environment,
+                    this.processor.getSourceResolver(),
                     environment.getObjectModel(),
                     this.serializerSource,
                     this.serializerParam
@@ -496,6 +485,8 @@ public abstract class AbstractProcessingPipeline
      */
     protected void preparePipeline(Environment environment)
     throws ProcessingException {
+        // TODO (CZ) Get the processor set via IoC
+        this.processor = EnvironmentHelper.getCurrentProcessor();
         if ( !checkPipeline() ) {
             throw new ProcessingException("Attempted to process incomplete pipeline.");
         }
@@ -560,7 +551,7 @@ public abstract class AbstractProcessingPipeline
     protected void setupReader(Environment environment)
     throws ProcessingException {
         try {
-            this.reader.setup(environment,environment.getObjectModel(),readerSource,readerParam);
+            this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
             // Set the mime-type
             // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
             // MIME type declared on the reader instance
@@ -675,6 +666,7 @@ public abstract class AbstractProcessingPipeline
         }
         this.serializer = null;
         this.parameters = null;
+        this.processor = null;
         this.lastConsumer = null;
     }
 

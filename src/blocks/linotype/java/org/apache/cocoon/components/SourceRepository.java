@@ -24,9 +24,10 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.ModifiableTraversableSource;
@@ -38,7 +39,7 @@ import org.apache.excalibur.source.TraversableSource;
 
 /**
  * @author stefano
- * @version CVS $Id: SourceRepository.java,v 1.4 2004/04/19 13:21:29 cziegeler Exp $
+ * @version CVS $Id: SourceRepository.java,v 1.5 2004/05/25 07:28:25 cziegeler Exp $
  */
 public class SourceRepository {
     
@@ -46,10 +47,10 @@ public class SourceRepository {
     
     private static SourceRepository instance;
     
-    private static ComponentManager manager;
+    private static ServiceManager manager;
     
     private SourceRepository() {
-    	manager = CocoonComponentManager.getSitemapComponentManager();
+    	manager = EnvironmentHelper.getSitemapServiceManager();
     }
     
     public static SourceRepository getInstance() {
@@ -66,7 +67,7 @@ public class SourceRepository {
         try {
             resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
             source = (TraversableSource) resolver.resolveURI(uri);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new IOException("ComponentException");
         } finally {
             manager.release(resolver);

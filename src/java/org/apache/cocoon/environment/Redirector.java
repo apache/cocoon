@@ -22,7 +22,7 @@ import java.io.IOException;
  * Interface for an redirector abstraction
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: Redirector.java,v 1.3 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id: Redirector.java,v 1.4 2004/05/25 07:28:24 cziegeler Exp $
  */
 
 public interface Redirector {
@@ -39,7 +39,7 @@ public interface Redirector {
     boolean hasRedirected();
     
     /**
-     * Send an content-less response with the given status code.
+     * Send a content-less response with the given status code.
      * 
      * @param sc  an http status code.
      */

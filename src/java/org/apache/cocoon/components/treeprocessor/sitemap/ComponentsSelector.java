@@ -27,8 +27,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.ComponentLocator;
+import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.pipeline.OutputComponentSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.generation.Generator;
@@ -44,7 +44,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.9 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.10 2004/05/25 07:28:25 cziegeler Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector

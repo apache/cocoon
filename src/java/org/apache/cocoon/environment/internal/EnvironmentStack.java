@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components;
+package org.apache.cocoon.environment.internal;
 
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.collections.ArrayStack;
@@ -23,11 +23,15 @@ import org.xml.sax.SAXException;
 
 /**
  * The stack for the processing environment.
+ * This is an internal class, and it might change in an incompatible way over time.
+ * For developing your own components/applications based on Cocoon, you shouldn't 
+ * really need it.
  * This is a special implementation of a stack for the handling of the
- * cocoon protocol.
+ * cocoon protocol and the sitemap source resolving.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.3 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: EnvironmentStack.java,v 1.1 2004/05/25 07:28:25 cziegeler Exp $
+ * @since 2.2
  */
 final class EnvironmentStack 
     extends ArrayStack 
@@ -35,9 +39,20 @@ final class EnvironmentStack
     
     int offset;
     
-    Object getCurrent() {
-        return this.get(offset);
-        //return this.peek(this.offset);
+    EnvironmentInfo getCurrentInfo() {
+        return (EnvironmentInfo)this.get(offset);
+    }
+    
+    void pushInfo(EnvironmentInfo info) {
+        this.push(info);
+    }
+    
+    EnvironmentInfo popInfo() {
+        return (EnvironmentInfo)this.pop();
+    }
+    
+    EnvironmentInfo peekInfo() {
+        return (EnvironmentInfo)this.peek();
     }
     
     int getOffset() {

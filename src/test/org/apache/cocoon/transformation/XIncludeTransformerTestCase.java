@@ -22,14 +22,15 @@ import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.container.ComponentManagerWrapper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 
 /**
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: XIncludeTransformerTestCase.java,v 1.2 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id: XIncludeTransformerTestCase.java,v 1.3 2004/05/25 07:28:26 cziegeler Exp $
  */
 public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     
@@ -73,17 +74,15 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
-        MockEnvironment env = new
-        MockEnvironment(null);
+        MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        CocoonComponentManager.enterEnvironment(
-        env, this.manager, processor);
+        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
         
         assertEqual( load(result),
         transform("xinclude", src, parameters, load(input)));
         
-        CocoonComponentManager.leaveEnvironment();
+        EnvironmentHelper.leaveProcessor();
     }
     /** Testcase for xinclude simple text include
      *
@@ -100,17 +99,15 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
-        MockEnvironment env = new
-        MockEnvironment(null);
+        MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        CocoonComponentManager.enterEnvironment(
-        env, this.manager, processor);
+        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
         
         assertEqual( load(result),
         transform("xinclude", src, parameters, load(input)));
         
-        CocoonComponentManager.leaveEnvironment();
+        EnvironmentHelper.leaveProcessor();
     }
     
 }

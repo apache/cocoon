@@ -25,33 +25,30 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.PermanentRedirector;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.NetUtils;
 
 /**
  * 
  * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
- * @version CVS $Id: HttpEnvironment.java,v 1.15 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.16 2004/05/25 07:28:25 cziegeler Exp $
  */
-public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
+public class HttpEnvironment extends AbstractEnvironment {
 
     public static final String HTTP_REQUEST_OBJECT = "httprequest";
     public static final String HTTP_RESPONSE_OBJECT= "httpresponse";
     public static final String HTTP_SERVLET_CONTEXT= "httpservletcontext";
 
     /** The HttpRequest */
-    private HttpRequest request = null;
+    private HttpRequest request;
 
     /** The HttpResponse */
-    private HttpResponse response = null;
+    private HttpResponse response;
 
     /** The HttpContext */
-    private HttpContext webcontext = null;
+    private HttpContext webcontext;
 
     /** Cache content type as there is no getContentType() in reponse object */
-    private String contentType = null;
+    private String contentType;
 
     /** Did we redirect ? */
     private boolean hasRedirected = false;
@@ -69,7 +66,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
                            String containerEncoding,
                            String defaultFormEncoding)
      throws MalformedURLException, IOException {
-        super(uri, null, root, null);
+        super(uri, null, null);
 
         this.request = new HttpRequest(req, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
@@ -92,52 +89,13 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         this.objectModel.put(HTTP_SERVLET_CONTEXT, servletContext);
     }
 
-    public void redirect(boolean sessionmode, String newURL) throws IOException {
-        doRedirect(sessionmode, newURL, false);
-    }
-
-    public void permanentRedirect(boolean sessionmode, String newURL) throws IOException {
-        doRedirect(sessionmode, newURL, true);
-    }
-
-    public void sendStatus(int sc) {
-        setStatus(sc);
-        this.hasRedirected = true;
-    }
-
-   /**
-    *  Redirect the client to new URL with session mode
-    */
-    private void doRedirect(boolean sessionmode, String newURL, boolean permanent) throws IOException {
-        this.hasRedirected = true;
-
-        // check if session mode shall be activated
-        if (sessionmode) {
-            // The session
-            Session session = null;
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("redirect: entering session mode");
-            }
-            String s = request.getRequestedSessionId();
-            if (s != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Old session ID found in request, id = " + s);
-                    if ( request.isRequestedSessionIdValid() ) {
-                        getLogger().debug("And this old session ID is valid");
-                    }
-                }
-            }
-            // get session from request, or create new session
-            session = request.getSession(true);
-            if (session == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("redirect session mode: unable to get session object!");
-                }
-            }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
-            }
-        }
+    /**
+     *  Redirect the client to new URL 
+     */
+    public void redirect(String newURL, 
+                         boolean global, 
+                         boolean permanent) 
+    throws IOException {
         // redirect
         String redirect = this.response.encodeRedirectURL(newURL);
 
@@ -156,15 +114,12 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Sending redirect to '" + redirect + "'");
         }
+
         if (permanent) {
             this.response.sendPermanentRedirect(redirect);
         } else {
             this.response.sendRedirect (redirect);
         }
-    }
-
-    public boolean hasRedirected() {
-        return this.hasRedirected;
     }
 
     /**

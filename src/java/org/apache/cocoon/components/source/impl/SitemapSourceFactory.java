@@ -19,9 +19,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.excalibur.source.Source;
@@ -35,25 +36,25 @@ import org.apache.excalibur.source.SourceUtil;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.3 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.4 2004/05/25 07:28:24 cziegeler Exp $
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Composable, URIAbsolutizer
+    implements SourceFactory, ThreadSafe, Serviceable, URIAbsolutizer
 {
-    /** The <code>ComponentManager</code> */
-    private ComponentManager manager;
+    
+    /** The <code>ServiceManager</code> */
+    private ServiceManager manager;
 
-    /**
-     * Composable
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
-    /**
-     * Get a <code>Source</code> object.
-     * @param parameters This is optional.
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
     public Source getSource( String location, Map parameters )
         throws MalformedURLException, IOException {
@@ -67,8 +68,8 @@ public final class SitemapSourceFactory
                                   getLogger());
     }
     
-    /**
-     * Release a {@link Source} object.
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
      */
     public void release( Source source ) {
         if ( null != source ) {
@@ -79,6 +80,9 @@ public final class SitemapSourceFactory
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.URIAbsolutizer#absolutize(java.lang.String, java.lang.String)
+     */
     public String absolutize(String baseURI, String location) {
         return SourceUtil.absolutize(baseURI, location, true);
     }

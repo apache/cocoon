@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.components.ComponentLocator;
+import org.apache.cocoon.components.ParentAware;
 
 /**
  * This object is set to a {@link ParentAware} component and allows
  * access to the parent component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocatorImpl.java,v 1.2 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: ComponentLocatorImpl.java,v 1.1 2004/05/25 07:28:24 cziegeler Exp $
  */
 public class ComponentLocatorImpl 
     implements ComponentLocator {

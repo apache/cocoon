@@ -16,14 +16,13 @@
 package org.apache.cocoon.components.cron;
 
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.NullOutputStream;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -35,7 +34,7 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java,v 1.7 2004/03/22 12:45:32 unico Exp $
+ * @version CVS $Id: QuartzJobExecutor.java,v 1.8 2004/05/25 07:28:24 cziegeler Exp $
  *
  * @since 2.1.1
  */
@@ -82,15 +81,11 @@ implements Job {
 		org.apache.cocoon.environment.Context envContext =
 			(org.apache.cocoon.environment.Context)data.get(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT);
         BackgroundEnvironment env;
-		try {
-			env = new BackgroundEnvironment(logger, envContext, manager);
-		} catch (MalformedURLException mue) {
-			// Unlikely to happen
-			throw new JobExecutionException(mue);
-		}
-        CocoonComponentManager.enterEnvironment(env, env.getManager(), env.getProcessor());
+        env = new BackgroundEnvironment(logger, envContext, manager);
         boolean release = false;
         try {
+            EnvironmentHelper.enterProcessor(env.getProcessor(), manager, env);
+
             jobrole = (String)data.get(QuartzJobScheduler.DATA_MAP_ROLE);
 
             if (null == jobrole) {
@@ -126,7 +121,7 @@ implements Job {
         } finally {
             data.put(DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
             
-            CocoonComponentManager.leaveEnvironment();
+            EnvironmentHelper.leaveProcessor();
 
             if (release && null != manager) {
                 manager.release(job);

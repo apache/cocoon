@@ -34,12 +34,8 @@ import org.xml.sax.SAXException;
 
 public class MockEnvironment implements Environment {
 
-    private SourceResolver resolver;
-
     private String uri;
     private String uriprefix;
-    private String rootcontext;
-    private String context;
     private String view;
     private String action;
     private String contenttype;
@@ -49,8 +45,7 @@ public class MockEnvironment implements Environment {
     private HashMap objectmodel;
     private Hashtable attributes = new Hashtable();
 
-    public MockEnvironment(SourceResolver resolver) {
-        this.resolver = resolver;
+    public MockEnvironment() {
     }
 
     public String getURI() {
@@ -61,14 +56,6 @@ public class MockEnvironment implements Environment {
         return uriprefix;
     }
 
-    public String getRootContext() {
-        return rootcontext;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
     public String getView() {
         return view;
     }
@@ -77,15 +64,11 @@ public class MockEnvironment implements Environment {
         return action;
     }
 
-    public void setContext(String prefix, String uri, String context) {
+    public void setURI(String prefix, String uri) {
         throw new AssertionFailedError("Not implemented");
     }
 
-    public void changeContext(String uriprefix, String context) throws Exception {
-        throw new AssertionFailedError("Not implemented");
-    }
-
-    public void redirect(boolean sessionmode, String url) throws IOException {
+    public void redirect(String url, boolean global, boolean permanent) throws IOException {
         throw new AssertionFailedError("Use Redirector.redirect instead!");
     }
 
@@ -166,43 +149,6 @@ public class MockEnvironment implements Environment {
         throw new AssertionFailedError("Not implemented");
     }
 
-
-    public void toSAX(org.apache.excalibur.source.Source source,
-                ContentHandler handler)
-      throws SAXException, IOException, ProcessingException {
-
-        throw new AssertionFailedError("Not not use deprecated methods!");
-    }
-
-    public void toSAX(org.apache.excalibur.source.Source source,
-               String         mimeTypeHint,
-               ContentHandler handler)
-      throws SAXException, IOException, ProcessingException {
-
-        throw new AssertionFailedError("Not not use deprecated methods!");
-    }
-
-    public org.apache.excalibur.source.Source resolveURI(String location)
-        throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
-
-        return resolver.resolveURI(location);
-    }
-
-    public org.apache.excalibur.source.Source resolveURI(String location,
-                                                         String base,
-                                                         Map parameters)
-        throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
-
-        return resolver.resolveURI(location, base, parameters);
-    }
-
-    /**
-     * Releases a resolved resource
-     */
-    public void release(org.apache.excalibur.source.Source source) {
-        resolver.release(source);
-    }
-    
     /**
      * Always return <code>true</code>.
      */
@@ -211,7 +157,7 @@ public class MockEnvironment implements Environment {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#isInternRedirect()
+     * @see org.apache.cocoon.environment.Environment#isInternalRedirect()
      */
     public boolean isInternalRedirect() {
         return false;

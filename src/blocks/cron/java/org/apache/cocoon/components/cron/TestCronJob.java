@@ -34,7 +34,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: TestCronJob.java,v 1.7 2004/04/29 08:23:23 cziegeler Exp $
+ * @version CVS $Id: TestCronJob.java,v 1.8 2004/05/25 07:28:24 cziegeler Exp $
  *
  * @since 2.1.1
  */
@@ -57,7 +57,7 @@ public class TestCronJob extends ServiceableCronJob
     private int m_sleep;
     
     /** The pipeline to be called */
-    private String pipeline;
+    private String pipeline = null;
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)

@@ -44,7 +44,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.4 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.5 2004/05/25 07:28:25 cziegeler Exp $
  */
 public interface ProcessingPipeline
        extends   Component, Recomposable {
@@ -55,14 +55,6 @@ public interface ProcessingPipeline
      * Setup this component
      */
     void setup(Parameters params);
-
-    /**
-     * Release this component
-     * If you get an instance not by a component manager but for example
-     * by a processor, you have to release this component by calling
-     * this method and NOT by using a component manager!
-     */
-    void release();
 
     /**
      * Set the generator that will be used as the initial step in the pipeline.

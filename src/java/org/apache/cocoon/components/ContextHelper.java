@@ -29,7 +29,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.6 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.7 2004/05/25 07:28:25 cziegeler Exp $
  */
 
 public final class ContextHelper {
@@ -45,6 +45,9 @@ public final class ContextHelper {
 
     /** Application <code>Context</code> Key for the current sitemap service manager */
     public static final String CONTEXT_SITEMAP_SERVICE_MANAGER = "sitemap-service-manager";
+    
+    /** Application root directory @since 2.2 */
+    public static final String CONTEXT_ROOT_URL = "root-url";
     
     private ContextHelper() {
         // Forbid instantiation

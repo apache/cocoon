@@ -19,54 +19,45 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 
 /**
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.12 2004/03/10 14:18:01 stephan Exp $
+ * @version CVS $Id: MountNode.java,v 1.13 2004/05/25 07:28:25 cziegeler Exp $
  */
-public class MountNode extends AbstractProcessingNode implements Composable {
+public class MountNode extends AbstractProcessingNode {
 
     /** The 'uri-prefix' attribute */
-    private VariableResolver prefix;
+    private final VariableResolver prefix;
 
     /** The 'src' attribute */
-    private VariableResolver source;
+    private final VariableResolver source;
 
     /** Processors for sources */
     private Map processors = new HashMap();
 
     /** The processor for this node */
-    private TreeProcessor parentProcessor;
+    private final TreeProcessor parentProcessor;
 
-    /** The language for the mounted processor */
-    private String language;
+    /** The value of the 'check-reload' attribute */
+    private final boolean checkReload;
 
-    /** The component manager to be used by the mounted processor */
-    private ComponentManager manager;
-
-    public MountNode(VariableResolver prefix, VariableResolver source, String language, TreeProcessor parentProcessor) {
+    public MountNode(VariableResolver prefix, 
+                     VariableResolver source, 
+                     TreeProcessor parentProcessor,
+                     boolean checkReload) {
         this.prefix = prefix;
         this.source = source;
-        this.language = language;
         this.parentProcessor = parentProcessor;
-    }
-
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
+        this.checkReload = checkReload;
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
@@ -77,23 +68,22 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         String resolvedSource = this.source.resolve(context, objectModel);
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
 
-        if (resolvedSource.length()==0)
+        if (resolvedSource.length()==0) {
             throw new ProcessingException("Source of mount statement is empty"); 
-
-        TreeProcessor processor = getProcessor(resolvedSource);
+        }
+        TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
-        String oldContext   = env.getContext();
 				
         try {
-            env.changeContext(resolvedPrefix, resolvedSource);
+            processor.getEnvironmentHelper().changeContext(env);
 
             if (context.isBuildingPipelineOnly()) {
                 // Propagate pipelines
-                ProcessingPipeline pp = processor.buildPipeline(env);
+                Processor.InternalPipelineDescription pp = processor.buildPipeline(env);
                 if ( pp != null ) {
-                    context.setProcessingPipeline( pp );
+                    context.setInternalPipelineDescription(pp);
                     return true;
                 } else {
                     return false;
@@ -104,7 +94,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             }
         } finally {
             // Restore context
-            env.setContext(oldPrefix, oldURI, oldContext);
+            env.setURI(oldPrefix, oldURI);
 
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
@@ -113,7 +103,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         }
     }
 
-    private synchronized TreeProcessor getProcessor(String source) throws Exception {
+    private synchronized TreeProcessor getProcessor(String source, String prefix) throws Exception {
 
         TreeProcessor processor = (TreeProcessor)processors.get(source);
 
@@ -126,17 +116,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
                 actualSource = source;
             }
             
-            SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            try {
-                Source src = resolver.resolveURI(actualSource);
-                try {
-                    processor = this.parentProcessor.createChildProcessor(this.manager, this.language, src);
-                } finally {
-                    resolver.release(src);
-                }
-            } finally {
-                this.manager.release(resolver);
-            }
+            processor = this.parentProcessor.createChildProcessor(actualSource, this.checkReload, prefix);
 
             // Associate to the original source
             processors.put(source, processor);

@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components;
+package org.apache.cocoon.components.container;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.components.ChainedConfiguration;
+import org.apache.cocoon.components.SitemapConfigurationHolder;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
+
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.4 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.1 2004/05/25 07:28:24 cziegeler Exp $
  */
 public final class DefaultSitemapConfigurationHolder 
     implements SitemapConfigurationHolder {
@@ -40,7 +44,7 @@ public final class DefaultSitemapConfigurationHolder
      * @see SitemapConfigurationHolder#getConfiguration()
      */
     public ChainedConfiguration getConfiguration() {
-        Map confs = CocoonComponentManager.getCurrentProcessor().getComponentConfigurations();
+        Map confs = EnvironmentHelper.getCurrentProcessor().getComponentConfigurations();
         return (ChainedConfiguration) (confs == null ? null : confs.get(this.role));
     }
 

@@ -17,7 +17,6 @@ package org.apache.cocoon.environment.wrapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -35,15 +34,11 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.9 2004/05/24 11:26:39 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.10 2004/05/25 07:28:25 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
-    
-    // Track the first values set for prefix and uri
-    private String prefix = null;
-    private String uri = null;
     
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
@@ -57,42 +52,19 @@ public class MutableEnvironmentFacade implements Environment {
         this.env = env;
     }
     
-    //----------------------------------
-    // EnvironmentWrapper-specific method (SW:still have to understand why SitemapSource needs them)
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
-        
-        if (this.uri == null) {
-            // First call : keep the values to restore them on the wrapped
-            // enviromnent in reset()
-            this.prefix = prefix;
-            this.uri = uri;
-        }
     }
 
     public void setOutputStream(OutputStream os) {
         this.env.setOutputStream(os);
     }
 
-    public void changeToLastContext() {
-        this.env.changeToLastContext();
-    }
-    
     // Move this to the Environment interface ?
     public String getRedirectURL() {
         return this.env.getRedirectURL();
     }
     
-    public void reset() {
-        this.env.reset();
-        // TODO - If we remove the line below, do we break something
-        //        else again? If we leave it in, the SitemapSource
-        //        object is unusable after a call to getInputStream()
-        //        or toSAX() :(
-        //this.env.setURI(this.uri, this.prefix);
-    }
-    //----------------------------------
-
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#getURI()
      */
@@ -108,20 +80,6 @@ public class MutableEnvironmentFacade implements Environment {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#getRootContext()
-     */
-    public String getRootContext() {
-        return env.getRootContext();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#getContext()
-     */
-    public String getContext() {
-        return env.getContext();
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#getView()
      */
     public String getView() {
@@ -132,28 +90,16 @@ public class MutableEnvironmentFacade implements Environment {
      * @see org.apache.cocoon.environment.Environment#getAction()
      */
     public String getAction() {
-            return env.getAction();
+        return env.getAction();
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setContext(java.lang.String, java.lang.String, java.lang.String)
+     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
      */
-    public void setContext(String prefix, String uri, String context) {
-        env.setContext(prefix, uri, context);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#changeContext(java.lang.String, java.lang.String)
-     */
-    public void changeContext(String uriprefix, String context) throws Exception {
-        env.changeContext(uriprefix, context);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#redirect(boolean, java.lang.String)
-     */
-    public void redirect(boolean sessionmode, String url) throws IOException {
-        env.redirect(sessionmode, url);
+    public void redirect(String url, 
+                         boolean global, 
+                         boolean permanent) throws IOException {
+        env.redirect(url, global, permanent);
     }
 
     /* (non-Javadoc)
@@ -274,6 +220,10 @@ public class MutableEnvironmentFacade implements Environment {
     public boolean isExternal() {
         return env.isExternal();
     }
+    
+    public void reset() {
+        this.env.reset();
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#isInternRedirect()
@@ -282,24 +232,4 @@ public class MutableEnvironmentFacade implements Environment {
         return env.isInternalRedirect();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
-     */
-    public org.apache.excalibur.source.Source resolveURI(String arg0) throws MalformedURLException, IOException {
-        return env.resolveURI(arg0);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
-     */
-    public org.apache.excalibur.source.Source resolveURI(String arg0, String arg1, Map arg2) throws MalformedURLException, IOException {
-        return env.resolveURI(arg0, arg1, arg2);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceResolver#release(org.apache.excalibur.source.Source)
-     */
-    public void release(org.apache.excalibur.source.Source arg0) {
-        env.release(arg0);
-    }
 }
