@@ -85,7 +85,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
  * @author <a href="mailto:rolf.schumacher@hamburg.de">Rolf Schumacher</a>
- * @version CVS $Id: TextGenerator.java,v 1.5 2004/01/20 15:23:57 stephan Exp $
+ * @version CVS $Id: TextGenerator.java,v 1.6 2004/01/21 06:43:54 antonio Exp $
  */
 public class TextGenerator extends ServiceableGenerator implements Parameterizable,
                                                                    CacheableProcessingComponent
@@ -281,7 +281,7 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
 
     for (int i = 0; i<sc.length; i++)
     {
-      nv = (int)(sc[i]);
+      nv = sc[i];
 
       if ((nv>=0) && (nv<nonXmlChars.length))
       {
