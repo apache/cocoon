@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-22 08:12:25 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-22 11:20:46 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -34,22 +34,31 @@
   <xsl:template match="xsp:page">
     package <xsl:value-of select="translate(@file-path, '/', '.')"/>;
 
-    import java.io.*;
-    import java.net.*;
-    import java.util.*;
+    import java.io.File;
+    import java.io.StringReader;
+    //import java.net.*;
+    import java.util.Date;
+    import java.util.Stack;
 
-    import org.w3c.dom.*;
-    import org.xml.sax.*;
-    import org.xml.sax.helpers.*;
+    //import org.w3c.dom.*;
+    import org.xml.sax.InputSource;
+    import org.xml.sax.SAXException;
+    import org.xml.sax.helpers.AttributesImpl;
 
-    import org.apache.avalon.*;
-    import org.apache.avalon.component.*;
-    import org.apache.avalon.util.*;
+    //import org.apache.avalon.*;
+    import org.apache.avalon.component.Component;
+    import org.apache.avalon.component.ComponentException;
+    import org.apache.avalon.component.ComponentManager;
+    import org.apache.avalon.component.ComponentSelector;
+    import org.apache.avalon.context.Context;
+    import org.apache.excalibur.datasource.DataSourceComponent;
+    //import org.apache.avalon.util.*;
 
-    import org.apache.cocoon.*;
-    import org.apache.cocoon.generation.*;
-    import org.apache.cocoon.components.parser.*;
-    import org.apache.cocoon.util.*;
+    import org.apache.cocoon.Constants;
+    import org.apache.cocoon.Roles;
+    import org.apache.cocoon.components.parser.Parser;
+    import org.apache.cocoon.generation.Generator;
+    //import org.apache.cocoon.util.*;
 
     import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;
     import org.apache.cocoon.components.language.markup.xsp.XSPObjectHelper;
