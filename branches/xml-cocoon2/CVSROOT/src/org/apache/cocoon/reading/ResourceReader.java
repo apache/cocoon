@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-22 19:08:07 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-23 14:01:27 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -73,7 +73,7 @@ public class ResourceReader extends AbstractReader implements Composer {
             urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
         } catch (Exception e) {
             getLogger().error("cannot obtain the URLFactory", e);
-            throw new ProcessingException ("cannot obtain the URLFactory");
+            throw new ProcessingException ("cannot obtain the URLFactory", e);
         }
 
         if (res == null) {

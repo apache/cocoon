@@ -35,7 +35,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-22 19:08:12 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-02-23 14:01:27 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;
@@ -200,7 +200,7 @@ public class ResourcePipeline implements Composer {
                 producer.setConsumer (this.serializer);
                 this.generator.generate();
             } catch (Exception e) {
-                throw new ProcessingException("Error generating the resource");
+                throw new ProcessingException("Error generating the resource", e);
             } finally {
                 ((ComponentSelector) this.manager.lookup(Roles.GENERATORS)).release((Component) generator);
 

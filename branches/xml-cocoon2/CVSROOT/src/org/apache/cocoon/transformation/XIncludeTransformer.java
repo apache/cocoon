@@ -49,7 +49,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 19:08:19 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-23 14:01:28 $ $Author: dims $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
 
@@ -93,7 +93,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             getLogger().debug("SOURCE URI: "+base_xmlbase_uri.toString());
         } catch (MalformedURLException e) {
             getLogger().debug("XincludeTransformer", e);
-            throw new ProcessingException(e.getMessage());
+            throw new ProcessingException(e.getMessage(), e);
         }
     }
     */

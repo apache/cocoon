@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-22 17:10:56 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-23 14:01:27 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Recyclable, Configurable {
@@ -174,7 +174,7 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
             transformerHandler = getTransformerHandler(resolver,xsluri);
         } catch (TransformerConfigurationException e){
             log.error("Problem in getTransformer:", e);
-            throw new ProcessingException("Problem in getTransformer:" + e.getMessage());
+            throw new ProcessingException("Problem in getTransformer:" + e.getMessage(), e);
         }
 
         if (request != null) {

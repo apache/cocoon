@@ -27,6 +27,8 @@ import org.apache.avalon.AbstractLoggable;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.apache.log.LogKit;
+
 public abstract class AbstractEnvironment extends AbstractLoggable implements Environment {
 
     /** The current uri in progress */
@@ -97,9 +99,9 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
      */
     public void changeContext(String prefix, String context)
     throws MalformedURLException {
-        getLogger().debug("Changing Cocoon context(" + context + ") to prefix(" + prefix + ")");
-        getLogger().debug("\tfrom context(" + this.context.toExternalForm() + ") and prefix(" + this.prefix + ")");
-        getLogger().debug("\tat URI " + uri);
+        LogKit.getLoggerFor("cocoon").debug("Changing Cocoon context(" + context + ") to prefix(" + prefix + ")");
+        LogKit.getLoggerFor("cocoon").debug("\tfrom context(" + this.context.toExternalForm() + ") and prefix(" + this.prefix + ")");
+        LogKit.getLoggerFor("cocoon").debug("\tat URI " + uri);
         if (uri.startsWith(prefix)) {
             this.prefix.append(prefix);
             uri = uri.substring(prefix.length());
@@ -128,7 +130,7 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
                 + prefix + ")"
             );
         }
-        getLogger().debug("New context is " + this.context.toExternalForm());
+        LogKit.getLoggerFor("cocoon").debug("New context is " + this.context.toExternalForm());
     }
 
     /**

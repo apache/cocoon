@@ -20,11 +20,13 @@ import java.net.MalformedURLException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
+import org.apache.log.LogKit;
+
 /**
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-15 20:29:23 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-23 14:01:26 $
  */
 
 public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
@@ -32,7 +34,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
     public FileSavingEnvironment(String uri, File context, Map attributes, Map parameters, Map links, OutputStream stream)
     throws MalformedURLException {
         super(uri, null, context, stream);
-        getLogger().debug("FileSavingEnvironment: uri=" + uri);
+        LogKit.getLoggerFor("cocoon").debug("FileSavingEnvironment: uri=" + uri);
         this.objectModel.put(Constants.LINK_OBJECT, links);
         this.objectModel.put(Constants.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
         this.objectModel.put(Constants.RESPONSE_OBJECT, new CommandLineResponse());

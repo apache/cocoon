@@ -29,7 +29,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-22 19:08:04 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-23 14:01:27 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
 
@@ -60,7 +60,7 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
             throw(e);
         } catch (Exception e){
             getLogger().error("Could not get parser", e);
-            throw new ProcessingException(e.getMessage());
+            throw new ProcessingException("Exception in HTMLGenerator.generate()",e);
         }
     }
 }

@@ -29,12 +29,13 @@ import org.apache.cocoon.Main;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
+import org.apache.log.LogKit;
 
 /**
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-15 20:29:25 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-23 14:01:26 $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
@@ -44,7 +45,7 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
     public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters)
     throws MalformedURLException, IOException {
         super(uri, Constants.LINK_VIEW, contextFile, new ByteArrayOutputStream());
-        getLogger().debug("LinkSamplingEnvironment: uri=" + uri);
+        LogKit.getLoggerFor("cocoon").debug("LinkSamplingEnvironment: uri=" + uri);
         this.objectModel.put(Constants.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
         this.objectModel.put(Constants.RESPONSE_OBJECT, new CommandLineResponse());
     }

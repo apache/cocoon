@@ -59,7 +59,7 @@ import org.apache.avalon.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-22 19:08:02 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-23 14:01:26 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -181,7 +181,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
             throw(e);
         } catch (Exception e){
             getLogger().error("Could not get parser", e);
-            throw new ProcessingException(e.getMessage());
+            throw new ProcessingException("Exception in FileGenerator.generate()",e);
         }
     }
 }

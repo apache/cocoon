@@ -7,6 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 import org.apache.avalon.CascadingException;
 
 /**
@@ -15,7 +18,7 @@ import org.apache.avalon.CascadingException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-05 16:23:03 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-23 14:01:25 $
  */
 public class ProcessingException extends CascadingException {
 
@@ -32,5 +35,28 @@ public class ProcessingException extends CascadingException {
      */
     public ProcessingException(String message, Throwable t) {
         super(message, t);
+    }
+
+    public String toString() {
+        StringBuffer s = new StringBuffer();
+        s.append(super.toString());
+        s.append(':');
+        s.append(getCause().toString());
+        return s.toString();
+    }
+
+    public void printStackTrace() {
+        super.printStackTrace();
+        getCause().printStackTrace();
+    }
+
+    public void printStackTrace( PrintStream s ) {
+        super.printStackTrace(s);
+        getCause().printStackTrace(s);
+    }
+
+    public void printStackTrace( PrintWriter s ) {
+        super.printStackTrace(s);
+        getCause().printStackTrace(s);
     }
 }
