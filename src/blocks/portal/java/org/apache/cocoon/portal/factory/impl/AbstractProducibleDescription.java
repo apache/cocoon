@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.factory.ProducibleDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProducibleDescription.java,v 1.1 2003/05/20 14:06:42 cziegeler Exp $
+ * @version CVS $Id: AbstractProducibleDescription.java,v 1.2 2003/06/06 11:33:39 cziegeler Exp $
  */
 public abstract class AbstractProducibleDescription
     extends AbstractAspectalizableDescription
@@ -68,6 +68,8 @@ public abstract class AbstractProducibleDescription
     
     protected String name;
 
+    protected boolean createId = true;
+    
     /**
      * @return
      */
@@ -96,4 +98,14 @@ public abstract class AbstractProducibleDescription
         name = string;
     }
 
+    /**
+     * Create a unique id for objects of this type
+     */
+    public boolean createId() {
+        return this.createId;
+    }
+
+    public void setCreateId(boolean value) {
+        this.createId = value;
+    }
 }

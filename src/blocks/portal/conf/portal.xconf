@@ -152,7 +152,8 @@
         </layout>
         <layout name="frame" 
                 class="org.apache.cocoon.portal.layout.impl.FrameLayout" 
-                renderer="frame">
+                renderer="frame"
+                create-id="true">
             <aspects>
                 <aspect name="frame" class="java.lang.String" store="request" auto-create="false"/>
             </aspects>
