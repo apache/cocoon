@@ -64,53 +64,54 @@ import java.util.Map;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public abstract class CocoonContainer extends DefaultContainer
+public abstract class CocoonContainer
+        extends DefaultContainer
 {
     /**
      * Provide some validation for the core Cocoon components
      *
-     * @param conf  The configuration
-     *
-     * @throws ConfigurationException  if the coniguration is invalid
+     * @param conf The configuration
+     * @throws ConfigurationException if the coniguration is invalid
      */
-    public void configure(Configuration conf) throws ConfigurationException
+    public void configure( Configuration conf ) throws ConfigurationException
     {
-        if ( ! "cocoon".equals(conf.getName()) ) throw new ConfigurationException("Invalid configuration format", conf);
-        String confVersion = conf.getAttribute("version");
+        if ( !"cocoon".equals( conf.getName() ) ) throw new ConfigurationException( "Invalid configuration format",
+                conf );
+        String confVersion = conf.getAttribute( "version" );
 
-        if ( ! Constants.CONF_VERSION.equals(confVersion) ) throw new ConfigurationException("Uncompatible configuration format", conf);
+        if ( !Constants.CONF_VERSION.equals( confVersion ) ) throw new ConfigurationException(
+                "Uncompatible configuration format", conf );
 
-        super.configure(conf);
+        super.configure( conf );
     }
 
     /**
      * Ensure that we return the latest and greatest component for the role/hint combo if possible.
      * Otherwise default to normal behavior.
      *
-     * @param role  The role of the component we are looking up.
-     * @param hint  The hint for the component we are looking up.
-     *
-     * @return  The component for the role/hint combo
+     * @param role The role of the component we are looking up.
+     * @param hint The hint for the component we are looking up.
+     * @return The component for the role/hint combo
      * @throws ServiceException if the role/hint combo cannot be resolved.
      */
-    public Object get(final String role, final Object hint) throws ServiceException
+    public Object get( final String role, final Object hint ) throws ServiceException
     {
         Object component = null;
 
-        if (null != hint
-            && !AbstractContainer.DEFAULT_ENTRY.equals(hint)
-            && !AbstractContainer.SELECTOR_ENTRY.equals(hint))
+        if ( null != hint
+             && !AbstractContainer.DEFAULT_ENTRY.equals( hint )
+             && !AbstractContainer.SELECTOR_ENTRY.equals( hint ) )
         {
-            Map implementations = (Map)m_mapper.get(role);
-            if (null != implementations)
+            Map implementations = (Map) m_mapper.get( role );
+            if ( null != implementations )
             {
-                component = implementations.get(hint);
+                component = implementations.get( hint );
             }
         }
 
-        if (null == component)
+        if ( null == component )
         {
-            component = super.get(role, hint);
+            component = super.get( role, hint );
         }
 
         return component;
