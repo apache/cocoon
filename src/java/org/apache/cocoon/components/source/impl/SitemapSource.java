@@ -364,7 +364,7 @@ implements Source, XMLizable {
                 if (redirectURL.indexOf(":") == -1) {
                     redirectURL = this.protocol + ":/" + redirectURL;
                 }
-                if ( this.sourceResolver == null ) {
+                if (this.sourceResolver == null) {
                     this.sourceResolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
                 }
                 this.redirectSource = this.sourceResolver.resolveURI(redirectURL);
@@ -376,8 +376,7 @@ implements Source, XMLizable {
             this.exception = e;
         } catch (Exception e) {
             reset();
-            this.exception = new SAXException("Could not get sitemap source "
-                                                     + this.systemId, e);
+            this.exception = new SAXException("Could not get sitemap source " + this.systemId, e);
         }
         this.needsRefresh = false;
     }
@@ -412,7 +411,7 @@ implements Source, XMLizable {
                                                         this.pipelineProcessor);
                 try {
                     this.processingPipeline.process(this.environment,
-                                       CocoonComponentManager.createEnvironmentAwareConsumer(consumer));
+                                                    CocoonComponentManager.createEnvironmentAwareConsumer(consumer));
                 } finally {
                     CocoonComponentManager.leaveEnvironment();
                 }
@@ -421,8 +420,7 @@ implements Source, XMLizable {
             // Preserve original exception
             throw e;
         } catch (Exception e) {
-            throw new SAXException("Exception during processing of "
-                                          + this.systemId, e);
+            throw new SAXException("Exception during processing of " + this.systemId, e);
         } finally {
             this.needsRefresh = true;
         }
