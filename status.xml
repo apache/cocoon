@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.210 2003/12/11 11:33:45 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.211 2003/12/11 21:25:12 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,22 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="SW" type="update">
+   	 Fixed and updated the stores and made them instrumentable to follow their size and
+   	 the number of hits and missed.
+   </action>
+   <action dev="SW" type="add">
+   	 New PipelineUtil class that extends the features or <code>cocoon.processPipelineTo()</code>
+   	 to SAX and DOM outputs.
+   </action>
+   <action dev="SW" type="add">
+     The "cocoon" object in flowscript has two new methods that allow Java classes
+     instanciated by a flowscript to access e.g. request, response and components
+     without requiring a dependency on the "FOM_Cocoon" class.<br/>
+     <code>cocoon.createObject(Class)</code> creates an object and honors the various
+     Avalon lifecycle interfaces implemented by an object.<br/>
+     <code>cocoon.disposeObject(Object)</code> disposes an object if needed.
+   </action>
    <action dev="VG" type="update">
      Reworked I18nTransformer implementation to use new version of XMLResourceBundle.
    </action>
