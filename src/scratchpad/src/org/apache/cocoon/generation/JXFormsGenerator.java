@@ -496,7 +496,6 @@ public class JXFormsGenerator extends AbstractGenerator {
             this.startElement = startElement;
         }
         final XPathExpr ref;
-        boolean absolute;
         final StartElement startElement;
         EndInputControl endInputControl;
     }

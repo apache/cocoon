@@ -341,7 +341,7 @@ function newAccountForm() {
 }
 
 //
-// Edit Account page: example of using XMLForm in a flow script
+// Edit Account page: example of using JXForms in a flow script
 //
 
 
@@ -368,6 +368,13 @@ function validateEmail(value) {
     return reg.test(value);
 }
 
+function empty(str) {
+    return str == null || 
+      (str instanceof java.lang.String ?  
+           str.length() == 0 :
+                  str.length == 0);
+}
+
 function editAccountForm(form) {
     var model = {accountForm: accountForm,
                  account: accountForm.account,
@@ -378,22 +385,22 @@ function editAccountForm(form) {
     form.setModel(model);
     form.sendView("view/jxforms/EditUserInformation.xml", 
                   function(form) {
-        if (model.userName == "") {
+        if (empty(model.username)) {
             form.addViolation("/userName", "User ID is required");
         } else {
-	    if (model.password == null || model.password.length == 0) {
-		form.addViolation("/password", "Password is required");
-	    } else if (model.password != model.password2) {
-                form.addViolation("/password2", "Passwords don't match");
-            }
+          if (empty(model.password)) {
+                form.addViolation("/password", "Password is required");
+          } else if (model.password != model.password2) {
+            form.addViolation("/password2", "Passwords don't match");
+          }
         }
     });
     form.sendView("view/jxforms/EditAccountInformation.xml", 
                   function(form) {
-        if (account.firstName == "") {
+        if (empty(account.firstName)) {
             form.addViolation("/account/firstName", "First name is required");
         }
-        if (account.lastName == "") {
+        if (empty(account.lastName)) {
             form.addViolation("/account/lastName", "Last name is required");
         }
         if (!validateEmail(account.email)) {
@@ -415,7 +422,7 @@ function editAccountForm(form) {
 
 function searchProducts() {
     var keyword = cocoon.request.get("keyword");
-    if (keyword == null || keyword == "") {
+    if (empty(keyword)) {
         sendPage("/view/Error" + EXT, {
            view: VIEW,
            message: "Please enter a keyword to search for, then press the search button"
@@ -471,7 +478,7 @@ function checkout() {
     var valid = false;
     while (!valid) {
         sendPageAndWait("/view/NewOrderForm" + EXT, { 
-	                accountForm: accountForm,
+                        accountForm: accountForm,
                         view: VIEW,
                         fmt: fmt,
                         creditCardTypes: ["Visa", "MasterCard", "American Express"],
@@ -485,14 +492,14 @@ function checkout() {
         valid = true;
     }
     sendPageAndWait("/view/ConfirmOrder" + EXT,
-	            {accountForm: accountForm,
+                    {accountForm: accountForm,
                      view: VIEW, order: order, fmt: fmt});
     
     var oldCartForm = cartForm;
     cartForm = new CartForm();
     sendPage("/view/ViewOrder" + EXT,
              {view: VIEW, order: order, 
-	      accountForm: accountForm,
+              accountForm: accountForm,
               itemList: order.lineItems, 
               fmt: fmt});
 }
