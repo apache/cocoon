@@ -42,6 +42,7 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.xml.XIncludeContentHandler;
 import org.apache.xpath.XPathAPI;
 import javax.xml.transform.TransformerException;
 
@@ -53,7 +54,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-23 02:06:18 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-24 14:12:41 $ $Author: dims $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
 
@@ -279,102 +280,6 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
             } finally {
                 if(parser != null) this.manager.release((Component) parser);
             }
-        }
-    }
-
-    class XIncludeContentHandler extends AbstractLoggable implements ContentHandler, LexicalHandler {
-
-        private ContentHandler content_handler;
-        LexicalHandler lexical_handler;
-
-        XIncludeContentHandler(ContentHandler content_handler, LexicalHandler lexical_handler) {
-            this.content_handler = content_handler;
-            this.lexical_handler = lexical_handler;
-        }
-
-        public void setDocumentLocator(Locator locator) {
-            content_handler.setDocumentLocator(locator);
-        }
-
-        public void startDocument() {
-            super.getLogger().debug("Internal start document received");
-            /** We don't pass start document on to the "real" handler **/
-        }
-
-        public void endDocument() {
-            super.getLogger().debug("Internal end document received");
-            /** We don't pass end document on to the "real" handler **/
-        }
-
-        public void startPrefixMapping(String prefix, String uri)
-            throws SAXException {
-            content_handler.startPrefixMapping(prefix,uri);
-        }
-
-        public void endPrefixMapping(String prefix)
-            throws SAXException {
-            content_handler.endPrefixMapping(prefix);
-        }
-
-        public void startElement(String namespace, String name, String raw,
-            Attributes attr) throws SAXException {
-            super.getLogger().debug("Internal element received: "+name);
-            content_handler.startElement(namespace,name,raw,attr);
-        }
-
-        public void endElement(String namespace, String name, String raw)
-            throws SAXException {
-            content_handler.endElement(namespace,name,raw);
-        }
-
-        public void characters(char ary[], int start, int length)
-            throws SAXException {
-            content_handler.characters(ary,start,length);
-        }
-
-        public void ignorableWhitespace(char ary[], int start, int length)
-            throws SAXException {
-            content_handler.ignorableWhitespace(ary,start,length);
-        }
-
-        public void processingInstruction(String target, String data)
-            throws SAXException {
-            content_handler.processingInstruction(target,data);
-        }
-
-        public void skippedEntity(String name)
-            throws SAXException {
-            content_handler.skippedEntity(name);
-        }
-
-        public void startDTD(String name, String public_id, String system_id)
-            throws SAXException {
-            lexical_handler.startDTD(name,public_id,system_id);
-        }
-
-        public void endDTD() throws SAXException {
-            lexical_handler.endDTD();
-        }
-
-        public void startEntity(String name) throws SAXException {
-            lexical_handler.startEntity(name);
-        }
-
-        public void endEntity(String name) throws SAXException {
-            lexical_handler.endEntity(name);
-        }
-
-        public void startCDATA() throws SAXException {
-            lexical_handler.startCDATA();
-        }
-
-        public void endCDATA() throws SAXException {
-            lexical_handler.endCDATA();
-        }
-
-        public void comment(char ary[], int start, int length)
-            throws SAXException {
-            lexical_handler.comment(ary,start,length);
         }
     }
 
