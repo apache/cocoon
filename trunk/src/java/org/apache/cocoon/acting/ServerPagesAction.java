@@ -104,7 +104,7 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
  */
 public class ServerPagesAction
         extends ConfigurableComposerAction
@@ -125,7 +125,9 @@ public class ServerPagesAction
                 this.manager,
                 null, // Context
                 null,  // RoleManager
-                null  // LogKitManager
+                null,  // LogkitLoggerManager
+                null, // InstrumentManager
+                "N/A" // instrumentableName
             );
 
             this.generatorHandler.enableLogging(getLogger());
