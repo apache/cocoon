@@ -1,29 +1,27 @@
-<html>
+<?xml version="1.0" encoding="utf-8"?>
 
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Cocoon - History of Changes</title>
-</head>
+<!---          STILL TO FINISH XML-IZING, PLEASE HELP             -->
 
-<body>
+<!DOCTYPE changes SYSTEM "./docs/dtd/changes.dtd">
 
-<p><img src="images/logo.gif" border="0"></p>
+<changes title="Cocoon History of Changes">
 
-<h1 align="center">History of Changes</h1>
-<p align="center"><b>Changes are chronologically ordered from top (most recent) to
-bottom (least recent)</b></p>
-<p><b>Cocoon 1.6-dev </b>- &lt;not yet released, found under CVS&gt;<br>
-(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>)
-<ul>
-  <li>Removed all old PI formats from docs and properties file. Thanks to <a href="mailto:Simon@BALR.com">Simon
-    McClenahan</a> for the report (SM)</li>
-  <li>Added a public method to FormatterFactory to allow more direct formatting.
-    Thanks to <a href="mailto:zvia@netmanage.co.il">               Zvi Avraham</a>
-    for the suggestion (SM)</li>
-  <li>Patched EngineWrapper to allow FileProducer to work when called from
-    command line. Thanks to <a href="mailto:hiddinkg@cs.utwente.nl">Gerrit Hiddink</a>
-    for the bug report (SM)</li>
-</ul>
+<release version="1.6-dev" date="not yet released, found under CVS">
+ <devs>
+  <dev name="Stefano Mazzocchi" email="stefano@apache.org" id="SM">
+ </devs>
+ 
+ <action dev="SM" type="removed" due-to="Simon McClenahan" due-to-email="simon@balr.com">
+  Removed all old PI formats from docs and properties file
+ </action>
+ <action dev="SM" type="added" due-to="Zvi Avraham" due-to-email="zvia@netmanage.co.il">
+  Added a public method to FormatterFactory to allow more direct formatting
+ </action>
+ <action dev="SM" type="fixed" due-to="Gerrit Hiddink" due-to-email="hiddinkg@cs.utwente.nl">
+  Patched EngineWrapper to allow FileProducer to work when called from command line.
+ </action>
+</release>
+
 <p><b>Cocoon 1.5 </b>- October 29, 1999<br>
 (<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> [SM], <a href="mailto:balld@webslingerZ.com">Donald
 Ball</a>, <a href="mailto:murphyk@umsystem.edu">Kenneth Murphy</a>, <a href="mailto:malimpen@dei.unipd.it">Stefano
@@ -208,31 +206,56 @@ Durkin</a>, <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>)
     the Java1 platform (SM, thanks to AD)</li>
   <li>Added DoNothingCache to avoid caching during document debugging (GR)</li>
 </ul>
-<p><b>Cocoon 1.1</b> - Mar 25 1999<br>
-(<a href="mailto:patrick@cre8tivegroup.com">Patrick Gardella</a>, <a href="mailto:stefano@apache.org">Stefano
-Mazzocchi</a>, <a href="mailto:ritter@wt.net">Greg Ritter</a>, <a href="mailto:kvisco@ziplink.net">Keith
-Visco</a>)
-<ul>
-  <li>Changed the stylesheet mapping processing instruction from illegal &quot;xml:stylesheet&quot;
-    to standard &quot;xml-stylesheet&quot; (SM)</li>
-  <li>Created Cocoon logo (SM)</li>
-  <li>Added support for XSL:P processor (SM and KV)</li>
-  <li>Removed support for Koala XSL parser (SM)</li>
-  <li>Added LRU caching (both memory and disk) (GR)</li>
-  <li>Redesigned internal framework (SM)</li>
-  <li>Fixed some typos and English bugs in docs (PG)</li>
-</ul>
-<p><b>Cocoon 1.0</b> - Mar 10 1999<br>
-(<a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>)
-<ul>
-  <li>Initial version. (SM)</li>
-</ul>
 
-<p align="center"><font size="-1">Copyright (c) <a href="http://xml.apache.org">The Apache XML Project</a>.<br>
-$Id: changes.html,v 1.1.1.1 1999-11-09 01:51:29 stefano Exp $<br>
-All rights reserved.</font></p>
+<release version="1.1" date="Mar 25 1999">
+ <devs>
+  <dev name="Stefano Mazzocchi" email="stefano@apache.org" id="SM">
+  <dev name="Greg Ritter" email="ritter@wt.net" id="GR">
+ </devs>
+ 
+ <action dev="SM" type="update">
+  Changed the stylesheet mapping processing instruction from illegal &quot;xml:stylesheet&quot;
+  to standard &quot;xml-stylesheet&quot; 
+ </action>
+ <action dev="SM" type="add">
+  Created Cocoon logo
+ </action>
+ <action dev="GR" type="add">
+  Added LRU caching (both memory and disk)
+ </action>
+ <action dev="SM" type="add" due-to="Keith Visco" due-to-email="kvisco@ziplink.net">
+  Added support for XSL:P processor
+ </action>
+ <action dev="SM" type="remove">
+  Removed support for Koala XSL parser
+ </action>
+ <action dev="SM" type="update">
+  Redesigned internal framework
+ </action>
+ <action dev="SM" type="fix" due-to="Patrick Gardella" due-to-email="patrick@cre8tivegroup.com">
+  Fixed some typos and English bugs in docs
+ </action>
+</release>
 
-</body>
+<release version="1.0" date="Mar 10 1999">
+ <devs>
+  <dev name="Stefano Mazzocchi" email="stefano@apache.org" id="SM">
+ </devs>
+ 
+ <action dev="SM" type="add">
+  Initial version
+ </action>
+</release>
 
-</html>
+<release version="" date="">
+ <devs>
+  <dev name="Stefano Mazzocchi" email="stefano@apache.org" id="SM">
+  <dev name="" email="" id="">
+ </devs>
+ 
+ <action dev="SM" type="" due-to="" due-to-email="">
+ </action>
+</release>
+
+</changes>
 

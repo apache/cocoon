@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!ENTITY % charEntity SYSTEM "characters.ent">%charEntity;
+
+<!ENTITY % links "link">
+
+<!ELEMENT link (#PCDATA)*>
+<!ATTLIST link href CDATA #REQUIRED>
+
+<!ENTITY % markup "em|ref|code">
+
+<!ELEMENT em (#PCDATA)>
+<!ELEMENT ref (#PCDATA)>
+<!ELEMENT code (#PCDATA)>
+
+<!ENTITY % content "#PCDATA|%markup;|%links;">
+
+<!ENTITY % blocks "p|note|table|source|list|image">
+
+<!ELEMENT p (%content;)*>
+
+<!ELEMENT note (%content;)*>
+
+<!ELEMENT table (row)+>
+<!ELEMENT row (element)+>
+<!ELEMENT element (%content;)*>
+<!ATTLIST element colspan CDATA #IMPLIED
+                  rowspan CDATA #IMPLIED>
+
+<!ELEMENT source (#PCDATA|highlight)*>
+<!ATTLIST source xml:space (default|preserve) "preserve">
+<!ELEMENT highlight (#PCDATA)>
+<!ATTLIST highlight type CDATA #REQUIRED>
+
+<!ELEMENT list (item)+>
+<!ELEMENT item (%content;|list)*>
+<!ATTLIST item name CDATA #IMPLIED>
+
+<!ELEMENT image EMPTY>
+<!ATTLIST image src CDATA #REQUIRED
+                title CDATA #IMPLIED>

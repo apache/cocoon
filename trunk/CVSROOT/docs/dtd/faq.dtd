@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!ENTITY % blocksEntity SYSTEM "blocks.ent">
+%blocksEntity;
+
+<!ELEMENT faqs (faq)+>
+<!ATTLIST faqs title CDATA #REQUIRED>
+
+<!ELEMENT faq (q,a)>
+<!ATTLIST faq title CDATA #IMPLIED>
+
+<!ELEMENT q (#PCDATA)>
+<!ELEMENT a (%blocks;)+>
+<!ATTLIST a author CDATA #IMPLIED>
+

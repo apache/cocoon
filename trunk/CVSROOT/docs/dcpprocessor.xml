@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE page SYSTEM "./dtd/page.dtd">
+
+<page title="DCPProcessor User Guide">
+ <authors>
+  <author name="Ricardo Rocha" email="ricardo@apache.org"/>
+ </authors>
+
+ <section title="Introduction">
+  <p>Yet to be XML-ized!</p>
+ </section>
+</page>

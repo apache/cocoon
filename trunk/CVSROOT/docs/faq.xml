@@ -1,20 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+<?xml version="1.0" encoding="utf-8"?>
 
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<meta name="Author" content="Stefano Mazzocchi">
-<title>Cocoon - FAQ</title>
-</head>
+<!DOCTYPE faq SYSTEM "./dtd/faq.dtd">
 
-<body BGCOLOR="#FFFFFF">
+<faqs title="Cocoon Frequently Asked Questions">
 
-<p><img src="images/logo.gif" border="0"></p>
-
-<h1 align="center">Frequently Asked Questions</h1>
-
-<b>I don't find my question answered here, what do I do?</b>
-<blockquote>
+<faq>
+<q>I don't find my question answered here, what do I do?</q>
+<a author="Stefano">
   <p>First, checkout the Java Apache <a href="http://java.apache.org/faq/?file=54">FAQ-O-Matic</a>
   that contains a Cocoon section. You may find what you're looking for there. If
   not, you may consult the <a href="http://java.apache.org/main/mail.html#cocoon">mail
@@ -30,14 +22,15 @@
   <p>At the end, if you come up with a solution for your problem, please, don't
   throw away your effort, share it with us by directly adding it to the FAQ-O-Matic
   and post it to the mail list. Thanks.</p>
-</blockquote>
-<p><strong>How do I pipe my servlet output into Cocoon?</strong></p>
-<blockquote>
+</answer>
+
+<question>How do I pipe my servlet output into Cocoon?</strong></p>
+<answer>
   <p>
-    Simple answer: <b>you don't!!!</b> read <a href="dynamic.html">this</a>
-    instead to find out equivalent ways to do what you need.<b><br>
+    Simple answer: <em>you don't!!!</em> read <a href="dynamic.html">this</a>
+    instead to find out equivalent ways to do what you need.<em><br>
     <br>
-    </b>Complex answer: the Servlet API <b>was not</b> designed with servlet
+    </em>Complex answer: the Servlet API <em>was not</em> designed with servlet
     chaining capabilities in mind. Servlet chaining was a night hack of the
     original Java web server authors that allowed to pipe one servlet output
     into the request of another. Currently (version 2.2) the Servlet API spec
@@ -51,9 +44,9 @@
     work in progress, please, don't fill up the mail list with questions about
     this: Cocoon will reflect the API changes as soon as they are publicly
     available.</p>
-</blockquote>
+</answer>
 <strong>Where do I get more information on XSL and XML?</strong>
-<blockquote>
+<answer>
   <p>
     The web community is very exited about XML and XSL and many sources of
     information are coming up even if these languages are fairly new. Here is a list of
@@ -83,11 +76,11 @@
     <li><a href="http://www.schema.net">http://www.schema.net</a> - Repository
       of standard DTDs</li>
   </ul>
-</blockquote>
+</answer>
 <strong>The XSL book I found says the correct way of indicating the XSL stylesheet is by
     using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
     using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?</strong>
-<blockquote>
+<answer>
   <p>The PI <code>&lt;?xml:stylesheet type=&quot;text/xsl&quot; href=&quot;&quot;?&gt;</code>
   is the old method of associating a stylesheet with an XML document. Unfortunately, this
   technology is rapidly changing and your books should warn you that the topic they are
@@ -97,12 +90,12 @@
   The current and proper way to associate a stylesheet with an XML document can be found at <a
   href="http://www.w3.org/TR/xml-stylesheet">http://www.w3.org/TR/xml-stylesheet</a> and
   clearly indicates that <code>&lt;?xml-stylesheet ...?&gt;</code> is the proper way.</p>
-</blockquote>
+</answer>
 <strong>I think that using Processing Instructions to &quot;chain&quot;
     document layers somehow violates the context separation since I would like
     to be able to place style sensible information in sessions or request
     parameters. What do you think about this?</strong>
-<blockquote>
+<answer>
   <p>You are right, PI reaction breaks the context separation and it's, at the
     very end, the wrong approach. To follow a complete &quot;model, view,
     controller&quot; design pattern, one should be able to associate a different
@@ -119,17 +112,17 @@
     <br>
     So, you've been warned: the PIs will go away, current functionality will
     remain but the processing management will be abstracted one layer up.</p>
-</blockquote>
+</answer>
 <strong>What is WAP and I do I browse WML?</strong>
-<blockquote>
+<answer>
   <p>
     WAP stands for Wireless Application Protocol and WML stands for Wireless
     Markup Language. For more information about these two, please refer to the <a href="http://www.wapforum.org">WAP
     Forum</a>. For a client able to browse WML 1.1 look for the <a href="http://www.nokia.com">Nokia
     WAP Toolkit</a>.</p>
-</blockquote>
+</answer>
 <strong>When I compile Cocoon on my system, I get all a bunch of errors. What's wrong?</strong>
-<blockquote>
+<answer>
   <p>You probably didn't add all the needed packages to your compiler's
     classpath or used the wrong version of the servlet classes (Cocoon is
     compiled with the Servlet 2.1 classes).
@@ -144,21 +137,21 @@
   only way to compile it is to manually indicate all the files to compile or to use the
   makefiles after removing the unwanted wrapper classes for the packages you don't have or
   you don't want.</p>
-</blockquote>
-  <p><b>External XML entities don't get included in my documents. What's wrong?</b></p>
-<blockquote>
+</answer>
+  <p><em>External XML entities don't get included in my documents. What's wrong?</em></p>
+<answer>
   <p>This is a well known bug in Cocoon. External entities don't work if not
   used in an absolute URL format, so you should either use an http:// or file://
   URL with absolution location.</p>
-</blockquote>
-<p><b>My stylesheet doesn't sense the presence of my request parameters. How do
-I pass them to it?</b></p>
-<blockquote>
+</answer>
+<p><em>My stylesheet doesn't sense the presence of my request parameters. How do
+I pass them to it?</em></p>
+<answer>
   <p>&nbsp;Another well known bug. Cocoon is not yet able to pass request
   parameters to the stylesheets. It will be fixed in future releases.</p>
-</blockquote>
+</answer>
 <strong>Why the name &quot;Cocoon&quot;?</strong>
-<blockquote>
+<answer>
   <p>
   (Cocoon's creator Stefano Mazzocchi answers): It's a pretty stupid reason and a funny
   story: I spent my 1998 Xmas vacation with my girlfriend up on the Alps at her cottage. One
@@ -171,11 +164,6 @@ I pass them to it?</b></p>
   for the thing, meaning to be a way to bring new life to old ideas as well as to create <em>cocoons</em>
   for such new ideas to become beautiful butterflies. :-)<br>
   </p>
-</blockquote>
-<font SIZE="-1">
+</answer>
 
-<p align="center"><font size="-1">Copyright (c) <a href="http://xml.apache.org">The Apache XML Project</a>.<br>
-$Id: faq.html,v 1.1.1.1 1999-11-09 01:51:29 stefano Exp $<br>
-All rights reserved.</font></p>
-</body>
-</html>
+</faqs>

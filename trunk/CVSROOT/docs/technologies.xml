@@ -1,36 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+<?xml version="1.0" encoding="utf-8"?>
 
-<head>
-<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<meta NAME="Author" CONTENT="Stefano Mazzocchi">
-<meta NAME="Author" CONTENT="Keith Visco">
-<title>Cocoon - Introduction on Cocoon Technologies</title>
-</head>
+<!DOCTYPE page SYSTEM "./dtd/page.dtd">
 
-<body BGCOLOR="#FFFFFF">
+<page title="Introduction on Cocoon Technologies">
 
-<p><img src="images/logo.gif" border="0"></p>
-
-<h1 align="center">Introduction on Cocoon Technologies</h1>
-
-<p align="center">by Stefano Mazzocchi and Keith Visco</p>
-
-<h2>Introduction</h2>
-
-<blockquote>
+ <authors>
+  <author name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  <author name="Keith Visco" email="visco@exoffice.com"/>
+ </authors>
+ 
+ <section title="Introduction">
 
 <p>Many people do not seem to understand the global picture about the
 technologies used by Cocoon, I will try to explain my vision of these
 technologies as well as some information that might be useful to you to jump in,
 help with its development or show your boss how much money he can save.</p>
 
-</blockquote>
+ </section>
 
-<h2>What is this XML?</h2>
+<section title="What is this XML?">
 
-<blockquote>
-  <p>XML (<a href="http://www.w3.org/markup/">eXtended Markup Language</a>) is an SGML subset. SGML is the father of all
+  <p>XML (<link href="http://www.w3.org/markup/">eXtended Markup Language</link>) is an SGML subset. SGML is the father of all
   markup languages and its a 15-years old ISO standard for creating languages.
   XML is a lighter version of SGML.</p>
 
@@ -56,9 +46,8 @@ not present and the parser does not encounter syntax errors parsing the file,
 the XML document is said &quot;well-formed&quot;. If errors are found, the
 document is not XML compliant.</p>
 
-<p>So, any valid XML document is <b>well-formed</b> and an XML document <b>valid
-</b>for one particular DTD may not necessary be valid for another DTD.<br>
-<br>
+<p>So, any valid XML document is <em>well-formed</em> and an XML document <em>valid
+</em>for one particular DTD may not necessary be valid for another DTD.
 For example, HTML is not an XML language because the <code>&lt;br&gt;</code> tag
 is not XML compliant. XHTML (where <code>&lt;br&gt;</code> is replaced by <code>&lt;br/&gt;</code>)
 is XML compliant. While HTML pages are not always XML documents (some pages
@@ -68,19 +57,19 @@ XHTML DTD.</p>
   <p>So far for the technical differences, but why HTML was not good enough?
   Let's make an example.</p>
 
-</blockquote>
-<h2>XML shows its power</h2>
-<blockquote>
+</section>
+
+<section title="XML shows its power">
   <p>Consider why the need for XML came about:</p>
-  <ul>
-    <li>Everyone starts publishing HTML documents on the web.</li>
-    <li>Search engines spring up across the net to help find documents.</li>
-    <li>Search engines have a difficult time searching specific pieces of a
+  <list>
+    <item>Everyone starts pubitemshing HTML documents on the web.</item>
+    <item>Search engines spring up across the net to help find documents.</item>
+    <item>Search engines have a difficult time searching specific pieces of a
       document since HTML was designed to hierarchically represent how data
-      should be presented, but not what the data being presented is.</li>
-    <li>Web applications spring up across the net to provide information and
-      &quot;services&quot;.</li>
-  </ul>
+      should be presented, but not what the data being presented is.</item>
+    <item>Web appitemcations spring up across the net to provide information and
+      &quot;services&quot;.</item>
+  </list>
   <p>These services could be web pages that serve up important information about
   an organization or the structure of the organization. They could be weather
   information, or travel advisories. They could be contact information for
@@ -89,7 +78,7 @@ XHTML DTD.</p>
   all these web pages for specific content, like Author or Subject. Find me all
   abstracts of any documents published that have a subject of &quot;Big Tomatoes&quot;,
   since I only want to view abstracts to find out which document is best for me.
-  An HTML page is not designed for this. It was designed for <i>how to present</i>
+  An HTML page is not designed for this. It was designed for <em>how to present</em>
   the data.</p>
   <p>When I look at a web page I might see that an author choose to make every
   paragraph heading bold with <code>&lt;font size+1&gt;</code>. Yet if I look at
@@ -122,43 +111,40 @@ XHTML DTD.</p>
   automatically generated from XML and you see a link that says XML DTD for
   weather information. And another link that says XML stream for weather
   information available. Yikes, would you look at that:</p>
-  <blockquote>
-    <div align="left">
-      <pre><font color="#0000FF">&lt;weather-information&gt;
- &lt;location&gt;
-  &lt;city&gt;</font><font color="#008000">Boston</font><font color="#0000FF">&lt;/city&gt;
-  &lt;state&gt;</font><font color="#008000">MA</font><font color="#0000FF">&lt;/state&gt;
- &lt;/location&gt;
- &lt;summary&gt;
-  </font><font color="#008000">Beautiful and Sunny, lows 50, highs 65, with the
-  chance of a blizzard and gail force winds.</font><font color="#0000FF">
- &lt;/summary&gt;
-&lt;/weather-information&gt;</font></pre>
-    </div>
-  </blockquote>
-  <p>So you download Cocoon, simply write an XSL stylesheet that looks the the
-  following:</p>
-  <blockquote>
-    <div align="left">
-      <pre><font color="#0000FF">&lt;xsl:stylesheet&gt;
- &lt;xsl:template match=&quot;/&quot;&gt;
-  ... presentation info here ...
- &lt;/xsl:template&gt;
- &lt;xsl:tempate match=&quot;weather-information[location/city = 'Boston']&quot;&gt;
-  &lt;xsl:apply-templates select=&quot;summary&quot;/&gt;
- &lt;/xsl:template&gt;
-&lt;/xsl:stylesheet&gt;</font></pre>
-    </div>
-  </blockquote>
+  
+  <source><![CDATA[
+   <weather-information>
+    <location>
+     <city>Boston</city>
+     <state>MA</state>
+    </location>
+    <summary>
+     Beautiful and Sunny, lows 50, highs 65, with the
+     chance of a blizzard and gail force winds.
+    </summary>
+   </weather-information>
+  ]]></source>
+          
+  <p>So you download Cocoon, simply write an XSL stylesheet that looks the the following:</p>
+  
+  <source><![CDATA[
+   <xsl:stylesheet>
+    <xsl:template match="/">
+     ... presentation info here ...
+    </xsl:template>
+    <xsl:tempate match="weather-information[location/city = 'Boston']">
+     <xsl:apply-templates select="summary"/>
+    </xsl:template>
+   </xsl:stylesheet>  
+  ]]></source>
+  
   <p>And your boss gives you your job back! ;-)</p>
-</blockquote>
+ </section>
 
-<h2>The HTML Model</h2>
-
-<blockquote>
+<section title="The HTML Model">
 
 <p>As the above example explains very well, HTML is a language for describing
-graphics, behavior and hyperlinks on web pages. HTML is NOT able to <i>contextualize</i>
+graphics, behavior and hyperlinks on web pages. HTML is NOT able to <em>contextualize</em>
 (means &quot;give meaning to some text&quot;) in the sense that if you look for
 the &quot;title&quot; of your page, a nice HTML tag gives you that, but if you
 look at the author or version or something more specific like the author mail
@@ -167,76 +153,63 @@ address, even if this information is present in the text you don't have a way to
 
 <p>In some HTML like this</p>
 
-  <blockquote>
-
-<pre><font color="#0000FF">&lt;html&gt;
- &lt;head&gt;
-  &lt;title&gt;</font><font color="#008000">This is my article</font><font color="#0000FF">&lt;/title&gt;
- &lt;/head&gt;
- &lt;body&gt;
-  &lt;h1 align=&quot;center&quot;&gt;</font><font color="#008000">This is my article</font><font color="#0000FF">&lt;/h1&gt;
-  &lt;h3 align=&quot;center&gt;</font><font color="#008000">by </font><font color="#0000FF">&lt;a href=&quot;mailto:</font><font color="#008000">stefano@apache.org</font><font color="#0000FF">&quot;&gt;</font><font color="#008000">Stefano Mazzocchi</font><font color="#0000FF">&lt;/a&gt;&lt;/h3&gt;
-  ...
- &lt;/body&gt;
-&lt;/html&gt; </font></pre>
-
-  </blockquote>
+<source><![CDATA[
+  <html>
+   <head>
+    <title>This is my article</title>
+   </head>
+   <body>
+    <h1 align="center">This is my article</h1>
+    <h3 align="center>by <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a></h3>
+    ...
+   </body>
+  </html> 
+]]></source>
 
 <p>you don't have a guaranteed way to extract the mail address, while in the
 following XML document</p>
 
-  <blockquote>
-    <pre><font color="#0000FF">&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;page&gt;
- &lt;title&gt;</font><font color="#008000">This is my article</font><font color="#0000FF">&lt;/title&gt;
- &lt;author&gt;
-  &lt;name&gt;</font><font color="#008000">Stefano Mazzocchi</font><font color="#0000FF">&lt;/name&gt;
-  &lt;mail&gt;</font><font color="#008000">stefano@apache.org</font><font color="#0000FF">&lt;/mail&gt;
- &lt;/author&gt;
- ...
-&lt;/page&gt;</font></pre>
+<source><![CDATA[
+ <?xml version="1.0"?>
+  <page>
+   <title>This is my article</title>
+   <author>
+    <name>Stefano Mazzocchi</name>
+    <mail>stefano@apache.org</mail>
+   </author>
+   ...
+  </page>
+]]></source> 
 
-  </blockquote>
+<p>it's trivial and algorithmically certain.</p>
 
-<p>it's trivial and algorithmically certain.<br>
-<br>
-I don't picture XML take over HTML in web publishing since HTML is great for
+<p>We don't picture XML take over HTML in web publishing since HTML is great for
 small needs. HTML was born as an SGML-based DTD for scientists homepages. HTML
 was NOT designed for publishing and treatment of large quantity of data and
 complex dynamic information systems, but only to parallelize and simplify the
-deployment and management of personal information.<br>
-<br>
-The <code>&lt;img&gt;</code> tag created all this mess we are (very modestly)
-trying to clean up :)</p>
+deployment and management of personal information.</p>
 
-</blockquote>
+</section>
 
-<h2>The XSL Language</h2>
-
-<blockquote>
+<section title="The XSL Language">
 
 <p>As you see, XML alone is useless without some defined semantics: even if an
-application is able to parse a document in memory, it must be able to <i>understand</i>
+application is able to parse a document in memory, it must be able to <em>understand</em>
 that the markup means. This is why XML-only browsers are meaningless and not
-more useful than text editors from an usability point of view.<br>
-<br>
-This is one of the reasons why the XSL language (<a href="http://www.w3.org/style/xsl/">eXtensible Stylesheet
-Language</a>)
-was proposed and designed.<br>
-<br>
-XSL, as of the latest working draft (this technology is not yet stable so
-beware!), is divided in two parts: transformation (XSLT) and<br>
+more useful than text editors from an usability point of view.</p>
+
+<p>This is one of the reasons why the XSL language (<link href="http://www.w3.org/style/xsl/">eXtensible Stylesheet
+Language</link>) was proposed and designed. XSL is divided in two parts: transformation (XSLT) and
 formatting objects (sometimes referred to FO, XSL:FO or simply XSL). Both are
 XML DTDs that define a particular XML syntax. So every XSL and XSLT document is
 a well-formed XML document.</p>
 
-</blockquote>
-<h3>XSL Transformations (XSLT)</h3>
+</section>
 
-<blockquote>
+<section title="XSL Transformations (XSLT)">
 
 <p>XSLT is a language for transforming one well-formed XML document into
-another. This means that you may go from one DTD to another in an procedural way
+something else. This means that you may use it to go from one DTD to another in an procedural way
 that is defined inside your XSLT document. Even if the name tells the opposite,
 this language can be used for document styling as well as for many other useful
 transformations: in fact, transformations may be applied to one particular XML
@@ -254,21 +227,16 @@ memory.</p>
 reason may be used in chain: transformA goes from DTD1 to DTD2 and transformB
 from DTD2 to DTD3 or graphically</p>
 
-  <blockquote>
+<source>DTD1 ---(transformA)--&gt; DTD2 ---(transformB)---&gt; DTD3</source>
 
-<pre><font color="#0000FF">DTD1 ---(transformA)--&gt; DTD2 ---(transformB)---&gt; DTD3</font></pre>
-
-  </blockquote>
-
-<p>We'll call DTD1 the <i>original DTD</i> (because its the origin), DTD2 some <i>intermediate
-DTD</i>, DTD3 the <i>final DTD</i>. It can be shown that a transformation can
+<p>We'll call DTD1 the <em>original DTD</em> (because its the origin), DTD2 some <em>intermediate
+DTD</em>, DTD3 the <em>final DTD</em>. It can be shown that a transformation can
 always be created to go directly from DTD1 to DTD3, but this might be more
 complicated and less human readable/manageable.</p>
 
-</blockquote>
-<h3>XSL Formatting Objects (XSLFO)</h3>
+</section>
 
-<blockquote>
+<section title="XSL Formatting Objects (XSL:FO)">
 
 <p>XSLFO is a language (an XML DTD) for describing 2D graphics of text in both
 printed and digital media. I will not concentrate on the graphical abilities
@@ -277,28 +245,30 @@ time used as a &quot;final DTD&quot;, meaning that a transformation is used to
 generate a formatting object description of a document starting from a general
 XML file.</p>
 
-  <p>The example above would lead:</p>
+<p>The example above would lead:</p>
 
-  <blockquote>
-    <pre><font color="#0000FF">&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;fo:root xmlns:fo=&quot;http://www.w3.org/XSL/Format/1.0&quot;&gt;
-  ...
-  &lt;fo:flow font-size=&quot;14pt&quot; line-height=&quot;14pt&quot;&gt;
-   &lt;fo:block text-align=&quot;centered&quot; font-size=&quot;24pt&quot; line-height=&quot;28pt&quot;&gt;</font><font color="#008000">This is my article</font><font color="#0000FF">&lt;/fo:block&gt;
-   &lt;fo:block space-before.optimum=&quot;12pt&quot; text-align=&quot;centered&quot;&gt;</font><font color="#008000">by Stefano Mazzocchi</font><font color="#0000FF">&lt;/fo:block&gt;
-  &lt;/fo:flow&gt;
-&lt;/fo:root&gt;</font></pre>
+<source><![CDATA[
+ <?xml version="1.0"?>
+  <fo:root xmlns:fo="http://www.w3.org/XSL/Format/1.0">
+    ...
+    <fo:flow font-size="14pt" line-height="14pt">
+     <fo:block text-align="centered" font-size="24pt" line-height="28pt">This is my article</fo:block>
+     <fo:block space-before.optimum="12pt" text-align="centered">by Stefano Mazzocchi</fo:block>
+    </fo:flow>
+  </fo:root>
+]]></source> 
 
-  </blockquote>
   <p>which tells the formatting object formatter (the rendering engine), how to
   &quot;draw&quot; and place the text on the screen or on paper. Formatting
   objects and transformations are created by the same working group and show
   very high synergies even if the XSLT specification also includes way to create
   HTML and text out of XML files as well.</p>
 
-</blockquote>
-<h2>The XSP Language</h2>
-<blockquote>
+</section>
+
+
+<section title="The XSP Language">
+
   <p>The Cocoon publishing model is heavily based on the XSLT transformation
   capabilities that allow complete separation of content and style (something
   that is much harder to obtain with HTML even using CSS2 or other styling
@@ -306,16 +276,15 @@ XML file.</p>
   document tags from the programming logic that drive their server side
   behavior.</p>
 
-  <p>The XSP language (<a href="xsp/WD-xsp.html">eXtensible Server Pages</a>) languages defines an XML DTD for
-  separating content and logic for compiled server pages.<br>
-  <br>
+  <p>The XSP language (<link href="xsp/WD-xsp.html">eXtensible Server Pages</link>) languages defines an XML DTD for
+  separating content and logic for compiled server pages. 
   XSP (eXtensible Server Pages) is, like XSLFO, supposed to be a &quot;final
   DTD&quot; in the sense that is the result of one or more transformation steps
   and must be rendered by some formatter into pure source code that can then be
   compiled into binary code.</p>
 
   <p>In every dynamic page, there is a mix of static content and logic that work
-  together to create the final result, usually using run-time or<br>
+  together to create the final result, usually using run-time or
   time-dependent input. In dynamic content generation technology, content and
   logic are mixed in the same page. XSP is no exception since it defines a
   syntax to mix static content and programmatic logic in a way that is independent
@@ -329,12 +298,6 @@ XML file.</p>
   transformation layers and guaranteeing complete separation and easier
   maintenance.</p>
 
-</blockquote>
-
-<p align="center"><font size="-1">Copyright (c) <a href="http://xml.apache.org">The Apache XML Project</a>.<br>
-$Id: technologies.html,v 1.1.1.1 1999-11-09 01:51:30 stefano Exp $<br>
-All rights reserved.</font></p>
-</body>
-</html>
-
+</section>
+</page>
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE todo SYSTEM "./docs/dtd/todo.dtd">
+
+<todo title="Cocoon Things To Do">
+
+ <action priority="high" assigned-to="Stefano">
+  Finish XML-ize the docs (changes.xml and faq.xml).
+ </action>
+
+ <action priority="high" assigned-to="Stefano">
+  Write the stylesheets for the docs.
+ </action>
+ 
+ <action priority="high" assigned-to="Stefano">
+  Add support for Xalan e Xerces and new FOP.
+ </action>
+
+ <action priority="high">
+  support external entities with relative URIs
+ </action>
+
+ <action priority="high">
+  pass request/session parameters to the XSLT processors for dynamic
+  stylesheet operation
+ </action>
+
+ <action priority="medium" assigned-to="Stefano">
+  Make sure you removed all the java.apache.org instances around.
+ </action>
+
+ <action priority="medium" assigned-to="Stefano">
+  Play around with Tomcat.
+ </action>
+
+ <action priority="medium" assigned-to="Stefano|Pier">
+  Add the Cocoon2 branch with the Kali sources.
+ </action>
+
+ <action priority="medium" assigned-to="Stefano|Ricardo">
+  Add the XSP compiler.
+ </action>
+
+ <action priority="medium" assigned-to="Pier|Stefano">
+  Write the NRG DTD WD and try to implement a formatter for this. (should we
+  create its own project? include with FOP?)
+ </action>
+ 
+ <action priority="medium">
+  make the error page formatted with the wanted mime type and not only HTML
+  (probably impossible in Cocoon1 model)
+ </action>
+ 
+ <action priority="low" assigned-to="Stefano">
+  Use Ant to build instead of makefile.
+ </action>
+   
+</todo>

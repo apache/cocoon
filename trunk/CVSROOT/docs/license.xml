@@ -1,22 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+<?xml version="1.0" encoding="utf-8"?>
 
-<head>
-<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<meta NAME="Author" CONTENT="Stefano Mazzocchi">
-<title>Cocoon - Public Licence</title>
-</head>
+<!DOCTYPE page SYSTEM "./dtd/page.dtd">
 
-<body BGCOLOR="#FFFFFF">
+<page title="Installing Cocoon">
 
-<p><img src="images/logo.gif" border="0"></p>
-
-<h1 align="center">Cocoon Public License</h1>
-<div align="center"><center>
-
-<table border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="100%"><pre>
+ <authors>
+  <author name="Stefano Mazzocchi" email="stefano@apache.org"/>
+ </authors>
+ 
+<section title="Cocoon Public License">
+<source><![CDATA[
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
@@ -34,18 +27,18 @@
     and/or other materials provided with the distribution.
  
  3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:  &quot;This product includes  software
-    developed  by the  Apache Software Foundation  (http://www.apache.org/).&quot;
+    include  the following  acknowledgment:  "This product includes  software
+    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
  
- 4. The names &quot;Cocoon&quot; and  &quot;Apache Software Foundation&quot;  must not be used to
+ 4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
     endorse  or promote  products derived  from this  software without  prior
     written permission. For written permission, please contact
     apache@apache.org.
  
- 5. Products  derived from this software may not  be called &quot;Apache&quot;, nor may
-    &quot;Apache&quot; appear  in their name,  without prior written permission  of the
+ 5. Products  derived from this software may not  be called "Apache", nor may
+    "Apache" appear  in their name,  without prior written permission  of the
     Apache Software Foundation.
  
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
@@ -61,16 +54,9 @@
  
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  &lt;stefano@apache.org&gt;. For more  information on the Apache 
- Software Foundation, please see &lt;http://www.apache.org/&gt;.
- </pre>
-    </td>
-  </tr>
-</table>
-</center></div><font SIZE="-1">
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
+ Software Foundation, please see <http://www.apache.org/>.
 
-<p align="center"><font size="-1">Copyright (c) <a href="http://xml.apache.org">The Apache XML Project</a>.<br>
-$Id: license.html,v 1.1.1.1 1999-11-09 01:51:29 stefano Exp $<br>
-All rights reserved.</font></p>
-</body>
-</html>
+]]></source>
+</section>
+</page>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!ENTITY % blocksEntity SYSTEM "blocks.ent">
+%blocksEntity;
+
+<!ELEMENT page (authors?,section*)>
+<!ATTLIST page title CDATA #IMPLIED>
+
+<!ELEMENT authors (author)+>
+<!ELEMENT author EMPTY>
+<!ATTLIST author name CDATA #REQUIRED
+                 email CDATA #IMPLIED>
+
+<!ELEMENT section (section|%blocks;)*>
+<!ATTLIST section title CDATA #REQUIRED>
