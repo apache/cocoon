@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.63 2003/06/26 08:28:13 crossley Exp $:-->
+<!-- CVS $Id: status.xml,v 1.64 2003/06/26 12:10:15 vgritsenko Exp $:-->
 <status>
 
   <developers>
@@ -190,6 +190,9 @@
     WEB-INF/entities/catalog or catalog.xcat file. If your editor cannot
     utilise an entity resolver, then get a better editor.
   </action>
+  <action dev="UV" type="add">
+    Added support for permanent redirects in &lt;map:redirect-to&gt;
+  </action>
   <action dev="JH" type="fix">
     Fixed some caching (added missing parameters and changed algorithm for cache key generation)
     and logging issues in the DirectoryGenerator. Fixed the root pattern handling (if not matching
@@ -207,7 +210,7 @@
     hardcoded to UTF-16. It's obviously only a hack, but so it is at least usable for more people.
   </action>
   <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
-    Fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/>
+    Fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/&gt;
   </action>
   <action dev="JH" type="fix" fixes-bug="14977" due-to="Tony Culshaw" due-to-email="tony@cultech.com.au">
     Fixed NPE in SQLTransformer.serializeData()
@@ -269,9 +272,6 @@
   <action dev="BRD" type="update" fixes-bug="15312" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
     Dispose the parent Component Manager if it implements Disposable. Happens when the
     Cocoon servlet shuts down or when Cocoon is reloaded.
-  </action>
-  <action dev="UV" type="add">
-    Added support for permanent redirects in &lt;map:redirect-to&gt;
   </action>
  </release>
  <release version="2.1m2" date="May 20 2003">
