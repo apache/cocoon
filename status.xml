@@ -136,7 +136,7 @@
 
     <action context="code" assigned-to="SW">
       For 2.2: Views must start not from the first encountered label, but from the last one
-      (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172&amp;w=2)
+      (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172)
     </action>
 
     <action context="code" assigned-to="NKB">
@@ -181,12 +181,6 @@
     </action>
 
     <action context="code">
-      Remove all useless blank strings in XSP-generated code that hinder performances.
-      This should be configurable (through an attribute?) to be able to keep them when
-      needed.
-    </action>
-
-    <action context="code">
       Lucene is writing info to stdout when searching.
     </action>
 
@@ -205,6 +199,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix" fixes-bug="27176" due-to="Guillaume Deflache" due-to-email="guillaume@anyware-tech.com">
+     XSP Block: Add space="strip" attribute support for &lt;xsp:page&gt;
+     element. When present, all extra whitespace from XSP source is stripped.
+   </action>
    <action dev="VG" type="fix" fixes-bug="30849">
      XMLDB Block: Fix NullPointerException in XMLDBTransformer if specified
      collection does not exist.
