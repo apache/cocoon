@@ -46,4 +46,7 @@
   <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-1/"/>
   <page id="mail-lists" label="Mail Lists" source="mail-lists.xml"/>
   <page id="mail-archives" label="Mail Archives" source="mail-archives.xml"/>
+<separator/>
+  <external label="Cocoon 2.0 Site" href="http://cocoon.apache.org/2.0/"/>
+  <external label="Cocoon 2.1 Site" href="http://cocoon.apache.org/2.1/"/>
 </book>
