@@ -57,7 +57,6 @@ public class Block {
     }
     
     public void setDynamicEclipseReference(boolean dynamicEclipseReference) {
-        System.out.println("dynamic reference: " + dynamicEclipseReference);
         this.dynamicEclipseReference = dynamicEclipseReference;
     }
     
@@ -81,7 +80,6 @@ public class Block {
     private String getProjectName(File eclipseProjectFile) throws Exception {
         String projectName = "";
         try {
-            System.out.println("eclipseProjectfile: " + eclipseProjectFile);
             String EL_PROJECTDESCRIPTION = "projectDescription";
             String EL_NAME = "name";
             
