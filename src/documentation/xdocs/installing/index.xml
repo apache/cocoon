@@ -45,20 +45,20 @@
          for starting tips.
         </p>
         <ol>
-          <li>Download
-            <link href="http://telia.dl.sourceforge.net/cvsgui/WinCvs120.zip">WinCVS
-              (v1.2)</link> (homepage is <link href="http://www.wincvs.org/">http://www.wincvs.org/</link>);
+          <li>Download a recent
+            <link href="http://sourceforge.net/projects/cvsgui/">WinCVS</link>
+            (1.2 or above);
           </li>
           <li>Install it;</li>
           <li>Start it;</li>
           <li>Click on admin-&gt;preferences;</li>
-          <li> In "Enter the CVSROOT:" enter
+          <li>In "Enter the CVSROOT:" enter
             ":pserver:anoncvs@cvs.apache.org:/home/cvspublic" (without quotes);</li>
-          <li>In "Authentication:" choose ""passwd" file on the cvs server";</li>
+          <li>In "Authentication:" choose "'passwd' file on the cvs server";</li>
           <li>Click "Ok";</li>
           <li>Click admin-&gt;login;</li>
-          <li> When asked for the password: answer "anoncvs" (without quotes);</li>
-          <li> Click "create-&gt;checkout module";</li>
+          <li>When asked for the password: answer "anoncvs" (without quotes);</li>
+          <li>Click "create-&gt;checkout module";</li>
           <li>Module name and path on the server is "cocoon-2.1" (no quotes);</li>
           <li>Choose a dir to put the source code in;</li>
           <li>Go to the "Checkout-options" tab and select "By revision/tag/branch"
