@@ -27,7 +27,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.54 2004/07/11 18:50:07 upayavira Exp $
+    | CVS $Id$
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -244,7 +244,7 @@
       <map:parameter name="ignore-missing-tables" value="true"/>
     </map:matcher>
     <map:matcher name="i18n" src="org.apache.cocoon.matching.I18nMatcher">
-      <request-param-name>lang</request-param-name>
+      <locale-attribute>lang</locale-attribute>
       <use-locale>true</use-locale>
       <use-locales>true</use-locales>
       <default-locale lang="en" country="US"/>
@@ -339,7 +339,18 @@
     <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
     <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
     <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
-    <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction"/>
+    <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction">
+      <!-- Default configuration:
+      <create-session>false</create-session>
+      <store-in-request>false</store-in-request>
+      <store-in-session>false</store-in-session>
+      <store-in-cookie>false</store-in-cookie>
+      <locale-attribute>locale</locale-attribute>
+      <language-attribute>lang</language-attribute>
+      <country-attribute>country</country-attribute>
+      <variant-attribute>variant</variant-attribute>
+      -->
+    </map:action>
   </map:actions>
 
 
