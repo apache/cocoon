@@ -62,14 +62,14 @@ public abstract class AbstractProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles(String)
      */
     public void saveUserProfiles(String layoutKey) {
-        saveUserCopletInstance(layoutKey);
-        saveUserLayout(layoutKey);
+        this.saveUserCopletInstanceDatas(layoutKey);
+        this.saveUserLayout(layoutKey);
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserCopletInstance(String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserCopletInstanceDatas(java.lang.String)
      */
-    public void saveUserCopletInstance(String layoutKey) {
+    public void saveUserCopletInstanceDatas(String layoutKey) {
         // override in subclass
     }
 
