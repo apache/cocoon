@@ -72,6 +72,8 @@ import org.xml.sax.SAXException;
 
 /**
  * WoodyPipeLineConfig
+ * 
+ * @version CVS $Id: WoodyPipelineConfig.java,v 1.3 2003/12/31 04:23:09 antonio Exp $
  */
 public class WoodyPipelineConfig {
 
@@ -79,19 +81,19 @@ public class WoodyPipelineConfig {
      * Default key under which the woody form is stored in the JXPath context.
      */
     public static final String WOODY_FORM = "woody-form";
-    
+
     /** 
      * Name of the request attribute under which the Woody form is stored (optional). */
     private final String attributeName;
-    
+
     /**
      * Pointer to the current request object.     */
     private final Request request;
-    
+
     /**
      * Initialized jxpathcontext to evaluate passed expressions with.     */
     private final JXPathContext jxpathContext;
-    
+
     /** 
      * Containts locale specified as a parameter to the transformer, if any. */
     private final Locale localeParameter;
@@ -110,9 +112,6 @@ public class WoodyPipelineConfig {
      */
     private String formMethod;
 
-
-
-    
     private WoodyPipelineConfig(JXPathContext jxpc, Request req, Locale localeParam, 
             String attName, String actionExpression, String method) {
         this.attributeName = attName;
@@ -122,8 +121,7 @@ public class WoodyPipelineConfig {
         this.formAction = translateText(actionExpression);
         this.formMethod = method;
     }
-    
-   
+
     /**
      * Creates and initializes a WoodyPipelineConfig object based on the passed
      * arguments of the setup() of the specific Pipeline-component.
@@ -158,12 +156,11 @@ public class WoodyPipelineConfig {
         //TODO (20031223 mpo)think about adding form-encoding for the Generator.
         // Note generator will also need some text to go on the submit-button? 
         // Alternative to adding more here is to apply xinclude ?
-        
+
         return new WoodyPipelineConfig(jxpc, request, localeParameter, 
                 attributeName, actionExpression, formMethod);
     }
-    
-    
+
     /**
      * Overloads {@see #findForm(String)} by setting the jxpath-expression to null
      */
@@ -174,61 +171,53 @@ public class WoodyPipelineConfig {
     /**
      * Finds the form from the current request-context based on the settings of 
      * this configuration object.  The fall-back search-procedure is as follows:
-     * <ol><li>Use the provided jxpathEpression (if not null)</li>
+     * <ol><li>Use the provided jxpathExpression (if not null)</li>
      * <li>Use the setting of the 'attribute-name' parameter on the request</li>
-     * <li>Obtainn the form from it's default location in the flow context</li>
+     * <li>Obtain the form from it's default location in the flow context</li>
      * </ol> 
      * 
      * @param jxpathExpression that should be pointing to the form
      * @return the found form if found
-     * @throws SAXException in any of the folowing cases:
-     * <ul><li>The provided jxpathExpression (if not null) is not pointing to 
-     * a {@see Form} instance.</li>
+     * @throws SAXException in any of the following cases:
+     * <ul><li>The provided jxpathExpression (if not null) not point to a
+     * {@see Form} instance.</li>
      * <li>The request is not holding a {@see Form} instance under the key 
      * specified by 'attribute-name' (if specified)</li>
-     * <li>Both jxpathExpresiion and 'attribute-name' were not specified AND
+     * <li>Both jxpathExpression and 'attribute-name' were not specified AND
      * also the default location was not holding a valid {@see Form} instance.</li>
      * </ol> 
      */
     public Form findForm(String jxpathExpression) throws SAXException {
-
+        Object form = null;
         if (jxpathExpression != null) {
-            
-            Object form = this.jxpathContext.getValue(jxpathExpression);
+            form = this.jxpathContext.getValue(jxpathExpression);
             if (form == null) {
                 throw new SAXException("No form found at location \"" + jxpathExpression + "\".");
-            }
-            if (!(form instanceof Form)) {
+            } else if (!(form instanceof Form)) {
                 throw new SAXException("Object returned by expression \"" + jxpathExpression + "\" is not a Woody Form.");
             }
-            return (Form)form;
         } else if (this.attributeName != null) { // then see if an attribute-name was specified
-            Object form = this.request.getAttribute(this.attributeName);
-            
+            form = this.request.getAttribute(this.attributeName);
             if (form == null) {
                 throw new SAXException("No form found in request attribute with name \"" + this.attributeName + "\"");
-            }
-            if (!(form instanceof Form)) {
+            } else if (!(form instanceof Form)) {
                 throw new SAXException("Object found in request (attribute = '" + this.attributeName + "') is not a Woody Form.");
             }
-            return (Form)form;
         } else { // and then see if we got a form from the flow
             jxpathExpression = "/" + WoodyPipelineConfig.WOODY_FORM;
-            Object form = null;
             try {
                 form = this.jxpathContext.getValue(jxpathExpression);
             } catch (JXPathException e) { /* do nothing */ }
-            if (form != null) {
-                return (Form)form;
-            } else {
+            if (form == null) {
                 throw new SAXException("No Woody form found.");
             }
         }
+        return (Form)form;
     }
 
     /**
      * Replaces JXPath expressions embedded inside #{ and } by their value.
-     * This will parse the passed String looking for #{} occurances and then
+     * This will parse the passed String looking for #{} occurences and then
      * uses the {@see #evaluateExpression(String)} to evaluate the found expression.
      * 
      * @return the original String with it's #{}-parts replaced by the evaulated results.
@@ -237,7 +226,7 @@ public class WoodyPipelineConfig {
         if (original==null) {
             return null;
         }
-        
+
         StringBuffer expression;
         StringBuffer translated = new StringBuffer();
         StringReader in = new StringReader(original);
@@ -295,7 +284,6 @@ public class WoodyPipelineConfig {
         return this.jxpathContext.getValue(expression);
     }    
 
-    
     public Locale getLocale() {
         return locale;
     }
@@ -329,7 +317,7 @@ public class WoodyPipelineConfig {
     public String getFormMethod() {
         return formMethod;
     }
-    
+
     /**
      * The grouped attributes to set on the wi:form-generated element.
      * Note: wi:form-template copies this from its wt:form-template counterpart.
@@ -345,5 +333,4 @@ public class WoodyPipelineConfig {
         formAtts.addCDATAAttribute("method", getFormMethod());
         return formAtts;
     }
-
 }
