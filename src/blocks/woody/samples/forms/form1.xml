@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--+
-    | CVS $Id: form1.xml,v 1.19 2004/02/04 17:25:58 sylvain Exp $
+    | CVS $Id: form1.xml,v 1.20 2004/02/04 23:30:34 joerg Exp $
     +-->
 
 <wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
@@ -232,7 +232,7 @@
       	    var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
       	    if (list.contains(key)) {
       	      // already in the list
-      	      row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.woody.datatype.ValidationError("Duplicate contact name", false));
+      	      row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.woody.validation.ValidationError("Duplicate contact name", false));
       	      success = false;
       	      break; // no need to continue
       	    }
