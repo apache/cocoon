@@ -83,6 +83,7 @@
     <depend project="jing"/>
     <depend project="pizza"/>
     <depend project="junit"/>
+    <depend project="jmock"/>
     <depend project="eclipse" id="jdtcore"/>
 
     <depend project="xmlunit"/><!-- used by the testcases -->
@@ -1242,13 +1243,23 @@
   </project>
 
   <project name="jing">
-    <package>com/thaiopensource</package>
+    <package>com.thaiopensource</package>
     <url href="http://www.thaiopensource.com/relaxng/jing.html"/>
     <description>
       Jing performs XML Validation using RelaxNG schemas
     </description>
     <home nested="tools/lib"/>
     <jar name="jing-20030619.jar"/>
+  </project>
+
+  <project name="jmock">
+    <package>org.jmock</package>
+    <url href="http://jmock.codehaus.org/"/>
+    <description>
+      jMock is a library for testing Java code using mock objects
+    </description>
+    <home nested="tools/lib"/>
+    <jar name="jmock-1.0.1.jar"/>
   </project>
 
   <project name="chaperon">
