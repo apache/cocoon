@@ -77,7 +77,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.7 2003/12/08 18:06:43 unico Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.8 2003/12/09 17:55:13 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type="SourceFactory"
@@ -137,29 +137,18 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
         final String query = parts[SourceUtil.QUERY];
         String path = parts[SourceUtil.PATH];
         
-        String user;
-        String password;
+        String principal;
         String namespace;
         
         // parse the authority string for [usr][:pwd]@ns
         int index = authority.indexOf('@');
         if (index == -1) {
-            user = "guest";
-            password = null;
+            principal = "guest";
             namespace = authority;
         }
         else {
-            String userinfo = authority.substring(0,index);
+            principal = authority.substring(0,index);
             namespace = authority.substring(index+1);
-            index = userinfo.indexOf(':');
-            if (index != -1) {
-                user = userinfo.substring(0,index);
-                password = userinfo.substring(index+1);
-            }
-            else {
-                user = userinfo;
-                password = null;
-            }
         }
         
         
@@ -180,20 +169,14 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("scheme: " + scheme);
-            getLogger().debug("user: " + user);
-            getLogger().debug("password: " + password);
+            getLogger().debug("principal: " + principal);
             getLogger().debug("namespace: " + namespace);
             getLogger().debug("path: " + path);
             getLogger().debug("version: " + version);
         }
 
         SourceCredential credential;
-
-        if (password!=null) {
-            credential = new SourceCredential(user,password);
-        } else {
-            credential = new SourceCredential(user);
-        }
+        credential = new SourceCredential(principal);
 
         NamespaceAccessToken nat = m_repository.getNamespaceToken(namespace);
         if (nat == null) {
