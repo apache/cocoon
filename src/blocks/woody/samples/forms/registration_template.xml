@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+  xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
   <title>Registration</title>
   <content>
     <wt:form-template action="registration" method="POST">
@@ -13,10 +14,14 @@
       <wt:widget id="age"/>
       <br/>
       <wt:widget-label id="password"/>
-      <wt:widget id="password"/>
+      <wt:widget id="password">
+        <wi:styling type="password"/>
+      </wt:widget>
       <br/>
       <wt:widget-label id="confirmPassword"/>
-      <wt:widget id="confirmPassword"/>
+      <wt:widget id="confirmPassword">
+        <wi:styling type="password"/>
+      </wt:widget>
       <br/>
       <wt:widget id="spam"/>
       <wt:widget-label id="spam"/>
