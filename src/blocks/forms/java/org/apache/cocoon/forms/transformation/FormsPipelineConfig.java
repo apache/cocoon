@@ -127,6 +127,7 @@ public class FormsPipelineConfig {
         vars.addDeprecatedVariable("request");
         vars.addDeprecatedVariable("session");
         vars.addDeprecatedVariable("parameters");
+        jxpc.setVariables(vars);
 
         Locale localeParameter = null;
         String localeStr = parameters.getParameter("locale", null);
@@ -351,9 +352,9 @@ public class FormsPipelineConfig {
          */
         public Object getVariable(String name) {
             Object value = this.vars.get(name);
-            if ( value != null && deprecatedNames.contains(name) ) {
+            if ( deprecatedNames.contains(name) ) {
                 DeprecationLogger.log("CForms: usage of the variable '" + name + "' is deprecated."+ 
-                                      "Please use 'cocoon." + name + "' instead. The usage of just '"+
+                                      "Please use 'cocoon/" + name + "' instead. The usage of just '"+
                                       name+"' will be removed in Cocoon 2.2.");
             }
             return value;
