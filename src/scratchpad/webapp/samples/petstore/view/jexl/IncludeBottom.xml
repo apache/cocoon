@@ -1,4 +1,4 @@
-<c:template xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
+<c:template xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
 <br />
 <c:if test="${accountForm.account != null}">
   <c:if test="${accountForm.account.username != null}">
