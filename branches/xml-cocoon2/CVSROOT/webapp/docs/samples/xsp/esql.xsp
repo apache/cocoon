@@ -13,10 +13,10 @@
    <content>
 
    <esql:connection>
-     <esql:driver>org.postgresql.Driver</esql:driver>
-     <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
-     <esql:username>test</esql:username>
-     <esql:password>test</esql:password>
+     <esql:driver>@database-driver@</esql:driver>
+     <esql:dburl>@database-url@</esql:dburl>
+     <esql:username>@database-user@</esql:username>
+     <esql:password>@database-password@</esql:password>
      <esql:execute-query>
        <esql:query>select * from department_table</esql:query>
        <esql:results>

@@ -116,7 +116,7 @@ by the main ones.
     <property name="debug"          value="on"/>
     <property name="optimize"       value="off"/>
     <property name="deprecation"    value="off"/>
-   <property name="build.compiler" value="classic"/>
+    <property name="build.compiler" value="classic"/>
     <property name="target.vm"      value="1.2"/>
 
     <property name="src.dir"      value="./src"/>
@@ -148,13 +148,20 @@ by the main ones.
     <property name="dist.target" value="${dist.root}"/>
 
     <property name="site" value="../xml-site/targets/${name}"/>
-    
+
     <filter token="name"    value="${fullname}"/>
     <filter token="year"    value="${year}"/>
     <filter token="version" value="${version}"/>
     <filter token="date"    value="${TODAY}"/>
     <filter token="log"     value="true"/>
     <filter token="verbose" value="true"/>
+
+    <!-- Add filters for loading database information from database.properties file -->
+    <property file="database.properties"/>
+    <filter token="database-driver" value="${database-driver}"/>
+    <filter token="database-url" value="${database-url}"/>
+    <filter token="database-user" value="${database-user}"/>
+    <filter token="database-password" value="${database-password}"/>
 
     <available property="servlet.present" classname="javax.servlet.http.HttpServlet">
       <classpath refid="classpath"/>

@@ -82,9 +82,9 @@
 
     <jdbc name="personnel">
       <pool-controller min="5" max="10"/>
-      <dburl>jdbc:postgresql://localhost/test</dburl>
-      <user>test</user>
-      <password>test</password>
+      <dburl>@database-url@</dburl>
+      <user>@database-user@</user>
+      <password>@database-password@</password>
     </jdbc>
   </datasources>
 
