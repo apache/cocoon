@@ -338,6 +338,41 @@ public class AdminHelper {
             throw e;
         }
     }
+    
+    public static void changePassword(NamespaceAccessToken nat,
+                                      String caller,
+                                      String username,
+                                      String password) throws Exception {
+        
+        String usersPath = nat.getNamespaceConfig().getUsersPath();
+        String userUri = usersPath + "/" + username;
+        
+        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
+        Structure structure = nat.getStructureHelper();
+        Content content = nat.getContentHelper();
+        
+        try {
+            
+            nat.begin();
+
+            NodeRevisionDescriptors revisions = content.retrieve(slideToken,userUri);
+            NodeRevisionDescriptor revision = content.retrieve(slideToken,revisions);
+            revision.setLastModified(new Date());
+            revision.setProperty(new NodeProperty("password", password, NodeProperty.SLIDE_NAMESPACE));
+            content.store(slideToken, userUri, revision, null);
+            
+            nat.commit();
+        }
+        catch (Exception e) {
+            try {
+                nat.rollback();
+            }
+            catch (Exception f) {
+                f.printStackTrace();
+            }
+            throw e;
+        }
+    }
         
     public static List listPermissions(NamespaceAccessToken nat,
                                        String caller,

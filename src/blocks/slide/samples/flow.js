@@ -244,6 +244,12 @@ function protected_removemember() {
   cocoon.redirectTo("users");
 }
 
+function protected_changepwd() {
+  var username = cocoon.request.getParameter("username");
+  var password = cocoon.request.getParameter("password");
+  
+  AdminHelper.changePassword(nat, principal, username, password);
+}
 
 // ---------------------------------------------- screens
 
