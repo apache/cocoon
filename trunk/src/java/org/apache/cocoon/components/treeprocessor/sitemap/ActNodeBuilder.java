@@ -51,8 +51,10 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -61,7 +63,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActNodeBuilder.java,v 1.1 2003/03/09 00:09:20 pier Exp $
+ * @version CVS $Id: ActNodeBuilder.java,v 1.2 2003/07/29 14:29:10 stephan Exp $
  */
 
 public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
@@ -110,10 +112,14 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
 
         if (this.actSetNode != null) {
             // Link action-set call to the action set
-            this.actSetNode.setActionSet(
-                (ActionSetNode)CategoryNodeBuilder.getNamedNode(
-                    this.treeBuilder, "action-sets", this.actSetName)
-            );
+            CategoryNode actionSets = CategoryNodeBuilder.getCategoryNode(this.treeBuilder, "action-sets");
+
+            if (actionSets == null)
+                throw new ConfigurationException("This sitemap contains no action sets. Cannot call at " + actSetNode.getLocation());
+
+            ActionSetNode actionSetNode = (ActionSetNode)actionSets.getNodeByName(this.actSetName);
+
+            this.actSetNode.setActionSet(actionSetNode);
         }
     }
 }
