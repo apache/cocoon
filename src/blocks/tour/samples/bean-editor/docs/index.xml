@@ -34,7 +34,7 @@
         </p>
         <p>
             Our Java beans are trivial and uninteresting: what we're looking for is an understanding of
-            how Cocoon Pipelines, Forms and Flow play together with java code, and for this a very simple
+            how Cocoon Pipelines, Forms and Flow play together with Java code, and for this a very simple
             application is certainly good.
         </p>
         <p>
@@ -60,7 +60,7 @@
         </p>
         <h2>Running the application</h2>
         <p>
-            To run the bean editor application, Cocoon must be able to load the required java classes.
+            To run the bean editor application, Cocoon must be able to load the required Java classes.
         </p>
         <p>
             If you're running this tutorial from the standard Cocoon distribution this should be

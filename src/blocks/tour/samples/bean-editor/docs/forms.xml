@@ -124,7 +124,7 @@
         <p>
             This model is independent from the way the form
             is going to look in HTML (or WML, or XUL, or whatever), and
-            also independent of the internal structure of our java beans.
+            also independent of the internal structure of our Java beans.
         </p>
         <p>
             Here we use constants for the widget labels (field names),
@@ -137,7 +137,7 @@
         <p>
             Here's the <em>binding</em> definition, which allows the Forms
             subsystem to automatically move data from our Form's internal model
-            to our java beans.
+            to our Java beans.
         </p>
         <p>
             This looks simple enough: for example, we tell the Forms
@@ -180,7 +180,7 @@
         </p>
         <p>
             Another important feature of the Cocoon Forms subsystem is its extensibility:
-            a clean design makes it fairly easy to add custom java classes for custom formatting,
+            a clean design makes it fairly easy to add custom Java classes for custom formatting,
             validation and bindings.
         </p>
     </content>
