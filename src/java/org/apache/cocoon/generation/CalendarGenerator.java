@@ -39,6 +39,13 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @cocoon.sitemap.component.documentation
  * Generates an XML document representing a calendar for a given month and year.
+ * 
+ * @cocoon.sitemap.component.documentation.caching TBD
+ * @cocoon.sitemap.component.name   calendar
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.calendar
+ * 
+ * 
  * <p>
  * Here is a sample output:
  * </p>
@@ -79,11 +86,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *        of the following month.</dd>
  *  </dl>
  * </p>
- * 
- * @cocoon.sitemap.component.name   calendar
- * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.calendar
- * @cocoon.sitemap.component.documentation.caching TBD
  *               
  * @version CVS $Id$
  */
