@@ -4,37 +4,43 @@
   <!-- =========================== Components ================================ -->
   <map:components> 
     <map:transformers default="xslt">
-      <map:transformer name="xmlform" src="org.apache.cocoon.transformation.XMLFormTransformer" logger="xmlform.sitemap.transformer"/>
+      <map:transformer name="xmlform" logger="xmlform.sitemap.transformer"
+                       src="org.apache.cocoon.transformation.XMLFormTransformer"/>
     </map:transformers>
+
     <map:actions>
-      <map:action name="WizardAction" src="org.apache.cocoon.samples.xmlform.WizardAction"  logger="xmlform.sitemap.action.wizard"/>
-      <map:action name="UsageFeedbackAction" src="org.apache.cocoon.samples.xmlform.UsageFeedbackAction"  logger="xmlform.sitemap.action.UsageFeedback"/>
+      <map:action name="WizardAction" logger="xmlform.sitemap.action.wizard"
+                  src="org.apache.cocoon.samples.xmlform.WizardAction"/>
+      <map:action name="UsageFeedbackAction" logger="xmlform.sitemap.action.UsageFeedback"
+                  src="org.apache.cocoon.samples.xmlform.UsageFeedbackAction"/>
     </map:actions>
+
     <map:flow-interpreters default="JavaScript"/>
+
     <map:serializers default="html"/>
+
     <map:matchers default="wildcard"/>
   </map:components>
 
+  <!-- =========================== Views =================================== -->
 
-<!-- =========================== Views =================================== -->
-
-<!--
-  The debug view can be used to output an intermediate 
-  snapshot of the pipeline.
-  Pass cocoon-view=debug as a URL parameter to see
-  the pipeline output produced by the transofrmer
-  labeled "debug". You can move the label to different
-  transformers to understand each processing
-  stage better.
--->
-<map:views>
-  <map:view name="debug" from-label="debug">
-    <map:serialize type="xml"/>
-  </map:view>
-  <map:view name="xml" from-label="xml">
-    <map:serialize type="xml"/>
-  </map:view>
-</map:views>
+  <!--
+    The debug view can be used to output an intermediate 
+    snapshot of the pipeline.
+    Pass cocoon-view=debug as a URL parameter to see
+    the pipeline output produced by the transofrmer
+    labeled "debug". You can move the label to different
+    transformers to understand each processing
+    stage better.
+  -->
+  <map:views>
+    <map:view name="debug" from-label="debug">
+      <map:serialize type="xml"/>
+    </map:view>
+    <map:view name="xml" from-label="xml">
+      <map:serialize type="xml"/>
+    </map:view>
+  </map:views>
 
   <!-- =========================== Resources ================================= -->
 
@@ -42,9 +48,9 @@
   </map:resources>
 
   <!-- =========================== Pipelines ================================= -->
-    <map:flow language="JavaScript">
-      <map:script src="flow/feedbackWizard.js"/>
-    </map:flow>
+  <map:flow language="JavaScript">
+    <map:script src="flow/feedbackWizard.js"/>
+  </map:flow>
 
   <map:pipelines> 
   
@@ -75,35 +81,38 @@
           <map:parameter name="xmlform-model" value="org.apache.cocoon.samples.xmlform.UserBean"/>
 
        
-	      <!-- original XMLForm document -->
-	      <map:generate src="wizard/{page}.xml"/>
+          <!-- original XMLForm document -->
+          <map:generate src="wizard/{page}.xml"/>
 	      
-	      <!-- populating the document with model instance data -->
-	      <map:transform type="xmlform"  label="xml"/>
+          <!-- populating the document with model instance data -->
+          <map:transform type="xmlform"  label="xml"/>
 	
-	      <!-- personalizing the look and feel of the form controls  -->
-	      <map:transform type="xalan" src="stylesheets/wizard2html.xsl" />
+          <!-- personalizing the look and feel of the form controls  -->
+          <map:transform type="xalan" src="stylesheets/wizard2page.xsl"/>
+          <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+          </map:transform>
 	
-	      <!-- Transforming the XMLForm controls to HTML controls -->
-	      <map:transform src="context://stylesheets/system/xmlform2html.xslt" />
+          <!-- Transforming the XMLForm controls to HTML controls -->
+          <map:transform src="context://stylesheets/system/xmlform2html.xslt"/>
 	      
-	      <!-- sending the HTML back to the browser -->
-	      <map:serialize type="html" label="debug"/>
+          <!-- sending the HTML back to the browser -->
+          <map:serialize type="html" label="debug"/>
 	      
         </map:act>
       </map:match>  
     </map:pipeline>
+
     
     <map:pipeline>
 
       <!-- The same application, exposed as a Web Service (REST style) -->
       
-      
       <!-- WSDL descriptor -->
       <map:match pattern="UsageFeedbackService/WSDL">
           <map:generate src="webservice/usagefeedback.wsdl"/>
           <map:serialize type="xml"/>
-	  </map:match>
+      </map:match>
       
       
       <!-- The REST resource (or Web Service) -->
@@ -125,7 +134,6 @@
       </map:match>  
     </map:pipeline>
     
-    
   
     <map:pipeline>
 
@@ -134,7 +142,7 @@
       <map:match pattern="flow">
         <map:call function="xmlForm">
           <map:parameter name="xmlform-function" value="feedbackWizard"/>
-	  <map:parameter name="xmlform-id" value="form-feedback"/>
+	        <map:parameter name="xmlform-id" value="form-feedback"/>
           <map:parameter name="xmlform-validator-schema-ns" value="http://www.ascc.net/xml/schematron"/>
           <map:parameter name="xmlform-validator-schema" value="schematron/wizard-xmlform-sch-report.xml"/>
           <map:parameter name="xmlform-scope" value="session"/>
@@ -149,15 +157,19 @@
 	      <map:transform type="xmlform"  label="xml"/>
 	
 	      <!-- personalizing the look and feel of the form controls  -->
-	      <map:transform type="xalan" src="stylesheets/wizard2html.xsl" />
+	      <map:transform type="xalan" src="stylesheets/wizard2page.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
 	
 	      <!-- Transforming the XMLForm controls to HTML controls -->
-	      <map:transform src="context://stylesheets/system/xmlform2html.xslt" />
+	      <map:transform src="context://stylesheets/system/xmlform2html.xslt"/>
 	      
 	      <!-- sending the HTML back to the browser -->
 	      <map:serialize type="html" label="debug"/>
-	</map:match>	      
+      </map:match>	      
     </map:pipeline>
+
   </map:pipelines> 
   
 </map:sitemap>
