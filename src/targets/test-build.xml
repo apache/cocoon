@@ -26,13 +26,6 @@
       </fileset>
     </path>
 
-    <property name="test.classpath.value"
-              refid="test.classpath"/>
-
-    <echo message="------------ test.classpath ------------"/>
-    <echo message="test.classpath=${test.classpath.value}"/>
-    <echo message="----------------------------------------"/>
-
     <!-- Compile tests -->
     <javac srcdir="${test}"
            destdir="${build.test}"
