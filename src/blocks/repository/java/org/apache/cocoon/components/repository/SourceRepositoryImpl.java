@@ -97,10 +97,10 @@ implements Serviceable, ThreadSafe, SourceRepository {
     
     // ---------------------------------------------------- repository operations
     
-    public int save(String in, String out) throws IOException {
+    public int save(String in, String out) throws IOException, SourceException {
         
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("save: " + in + "/" + out);
+            getLogger().debug("save: "+in+"/"+out);
         }
         
         Source source = null;
@@ -163,7 +163,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
         
     }
     
-    public int makeCollection(String location) throws IOException {
+    public int makeCollection(String location) throws IOException, SourceException {
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("makeCollection: " + location);
@@ -219,7 +219,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
      * @return  a http status code describing the exit status.
      * @throws IOException
      */
-    public int remove(String location) throws IOException {
+    public int remove(String location) throws IOException, SourceException {
         
         Source source = null;
         try {
@@ -281,73 +281,86 @@ implements Serviceable, ThreadSafe, SourceRepository {
         return STATUS_OK;
     }
     
-    public int move(String from, String to) throws IOException {
+    public int move(String from, String to, boolean recurse, boolean overwrite) 
+    throws IOException, SourceException {
+        
+        int status = doCopy(from,to,recurse,overwrite);
+        if (status == STATUS_CREATED || status == STATUS_NO_CONTENT) {
+            // TODO: handle partially successful copies
+            remove(from);
+            // TODO: remove properties
+        }
+        return status;
+    }
+    
+    public int copy(String from, String to, boolean recurse, boolean overwrite) 
+    throws IOException, SourceException {
+        
+        return doCopy(from,to,recurse,overwrite);
+        
+    }
+    
+    private int doCopy(String from, String to, boolean recurse, boolean overwrite) 
+    throws IOException {
         
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("move: " + from + " -> " + to);
+            getLogger().debug("copy: " + from + " -> " + to 
+                + " (recurse=" + recurse + ", overwrite=" + overwrite + ")");
         }
         
         if (from != null && from.equals(to)) {
             final String message = 
-                "move() is not allowed: " +
-                "The source and destination URIs are the same";
+                "copy() is forbidden: " +
+                "The source and destination URIs are the same.";
             getLogger().warn(message);
-            return STATUS_NOT_ALLOWED;
+            return STATUS_FORBIDDEN;
         }
         Source source = null;
         Source destination = null;
         try {
             source = m_resolver.resolveURI(from);
             destination = m_resolver.resolveURI(to);
-            return move(source, destination);
-        }
-        catch (IOException e) {
-            getLogger().error("Unexpected exception during move().",e);
-            throw e;
-        }
-        finally {
-            if (source != null) {
-                m_resolver.release(source);
+            if (!source.exists()) {
+                final String message =
+                    "Trying to copy a non-existing source.";
+                getLogger().warn(message);
+                return STATUS_NOT_FOUND;
             }
-            if (destination != null) {
-                m_resolver.release(destination);
+            int status;
+            if (destination.exists()) {
+                if (!overwrite) {
+                    final String message =
+                        "Failed precondition in copy(): " +
+                        "Destination resource already exists.";
+                    getLogger().warn(message);
+                    return STATUS_PRECONDITION_FAILED;
+                }
+                remove(destination);
+                status = STATUS_NO_CONTENT;
+            } 
+            else {
+                Source parent = null;
+                try {
+                    parent = getParent(destination);
+                    if (!parent.exists()) {
+                        final String message = 
+                            "Conflict in copy(): " +
+                            "A resource cannot be created at the destination " +
+                            "until one or more intermediate collections have been " +
+                            "created.";
+                        getLogger().warn(message);
+                        return STATUS_CONFLICT;
+                    }
+                }
+                finally {
+                    if (parent != null) {
+                        m_resolver.release(parent);
+                    }
+                }
+                status = STATUS_CREATED;
             }
-        }
-    }
-    
-    private int move(Source source, Source destination) throws IOException {
-        if (!source.exists()) {
-            final String message =
-                "Trying to move a non-existing source.";
-            getLogger().warn(message);
-            return STATUS_NOT_FOUND;
-        }
-        if (destination.exists()) {
-            remove((ModifiableSource) destination);
-        }
-        SourceUtil.move(source, destination);
-        return STATUS_CREATED;
-    }
-    
-    public int copy(String from, String to) throws IOException {
-        
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("copy: " + from + " -> " + to);
-        }
-        
-        if (from != null && from.equals(to)) {
-            final String message = 
-                "copy() is not allowed: " +
-                "The source and destination URIs are the same";
-            getLogger().warn(message);
-            return STATUS_NOT_ALLOWED;
-        }
-        Source source = null;
-        Source destination = null;
-        try {
-            source = m_resolver.resolveURI(from);
-            destination = m_resolver.resolveURI(to);
-            return copy(source, destination);
+            copy(source,destination,recurse);
+            return status;
         }
         catch (IOException e) {
             getLogger().error("Unexpected exception during copy().",e);
@@ -363,18 +376,63 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
     }
     
-    private int copy(Source source, Source destination) throws IOException {
-        if (!source.exists()) {
-            final String message =
-                "Trying to copy a non-existing source";
+    private int copy(Source source, Source destination, boolean recurse)
+    throws IOException {
+        
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("copy: " + source.getURI() + " -> " + destination.getURI());
+        }
+        
+        if (source instanceof TraversableSource) {
+            final TraversableSource origin = (TraversableSource) source;
+            ModifiableTraversableSource target = null;
+            if (origin.isCollection()) {
+                if (!(destination instanceof ModifiableTraversableSource)) {
+                    final String message = "copy() is forbidden: " +
+                        "Cannot create a collection at the indicated destination.";
+                    getLogger().warn(message);
+                    return STATUS_FORBIDDEN;
+                }
+                // TODO: copy properties
+                target = ((ModifiableTraversableSource) destination);
+                target.makeCollection();
+                if (recurse) {
+                    Iterator children = origin.getChildren().iterator();
+                    while (children.hasNext()) {
+                        TraversableSource child = (TraversableSource) children.next();
+                        int status = copy(child,target.getChild(child.getName()),recurse);
+                        // TODO: record this status
+                        // according to the spec we must continue moving files even though
+                        // a part of the move has not succeeded
+                    }
+                }
+                return STATUS_CREATED;
+            }
+        }
+        if (destination instanceof ModifiableSource) {
+            // TODO: copy properties
+            SourceUtil.copy(source, destination);
+        }
+        else {
+            final String message = "copy() is forbidden: " +
+                "Cannot create a resource at the indicated destination.";
             getLogger().warn(message);
-            return STATUS_NOT_FOUND;
+            return STATUS_FORBIDDEN;
         }
-        if (destination.exists()) {
-            remove((ModifiableSource) destination);
-        }
-        SourceUtil.copy(source, destination);
         return STATUS_CREATED;
-    }    
+    }
     
+    private Source getParent(Source source) throws IOException {
+        if (source instanceof TraversableSource) {
+            return ((TraversableSource) source).getParent();
+        }
+        else {
+            String uri = source.getURI();
+            int index = uri.lastIndexOf('/');
+            if (index != -1) {
+                return m_resolver.resolveURI(uri.substring(index+1));
+            }
+        }
+        return null;
+    }
 }
