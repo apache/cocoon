@@ -70,7 +70,7 @@ import java.util.Locale;
 
 /**
  * An action that will create a form instance, let it handle the current request (and
- * do validation), and will return null if validation was successfully or not-null when
+ * do validation), and will return not-null if validation was successfully or null when
  * validation failed. In both cases, the created form instance is stored in a request attribute,
  * so that it can be picked up later on by other components.
  *
