@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: calendar2html.xslt,v 1.1 2004/04/09 07:23:45 ugo Exp $ -->
+<!-- CVS $Id: calendar2html.xslt,v 1.2 2004/04/09 07:45:43 ugo Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -136,13 +136,13 @@ html>body .largecalendar li {
         </caption>
         <thead>
           <tr>
-            <th class="mon">Monday</th>
-            <th class="tue">Tuesday</th>
-            <th class="wed">Wednesday</th>
-            <th class="thu">Thursday</th>
-            <th class="fri">Friday</th>
-            <th class="sat">Saturday</th>
-            <th class="sun">Sunday</th>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
           </tr>
         </thead>
         <tbody>
