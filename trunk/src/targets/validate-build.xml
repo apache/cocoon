@@ -1,7 +1,7 @@
 <!-- === Validation targets ==================================================== -->
 
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
-  <target name="validate-jars" depends="prepare">
+  <target name="validate-jars" depends="prepare" unless="exclude.validate.jars">
     <path id="all.jars">
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
