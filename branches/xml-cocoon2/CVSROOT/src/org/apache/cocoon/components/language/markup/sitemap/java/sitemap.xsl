@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.83 2001-02-26 23:01:40 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.84 2001-02-27 13:47:13 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -346,7 +346,7 @@
         throws Exception {
           Map map;
           Map allMap = new HashMap();
-          Parameters nparam;
+          Parameters nparam = null;
           <xsl:for-each select="map:act">
             map = null;
             <xsl:choose>
