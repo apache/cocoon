@@ -50,31 +50,73 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.w3c.dom.Element;
+import org.apache.cocoon.woody.event.ActionEvent;
+import org.apache.cocoon.woody.event.ActionListener;
 
 /**
- * Builds {@link RepeaterDefinition}s.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: RowActionDefinition.java,v 1.1 2003/11/03 17:05:32 sylvain Exp $
  */
-public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-
-    public WidgetDefinition buildWidgetDefinition(Element repeaterElement) throws Exception {
-        
-        int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
-        
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize);
-        setId(repeaterElement, repeaterDefinition);
-        setDisplayData(repeaterElement, repeaterDefinition);
-
-        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.WD_NS, "widgets", true);
-        // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
-        for (int i = 0; i < widgetElements.length; i++) {
-            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
-            repeaterDefinition.addWidget(widgetDefinition);
-        }
-
-        return repeaterDefinition;
+public class RowActionDefinition extends ActionDefinition {
+    
+    public Widget createInstance() {
+        return new RowAction(this);
     }
+    
+    public static class DeleteRowDefinition extends RowActionDefinition {
+        public DeleteRowDefinition() {
+            super.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent event) {
+                    Repeater.RepeaterRow row = Repeater.getParentRow(event.getSourceWidget());
+                    Repeater repeater = (Repeater)row.getParent();
+                    repeater.removeRow(repeater.indexOf(row));
+                }
+            });
+        }
+    }
+    
+    public static class MoveUpDefinition extends RowActionDefinition {
+        public MoveUpDefinition() {
+            super.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent event) {
+                    Repeater.RepeaterRow row = Repeater.getParentRow(event.getSourceWidget());
+                    Repeater repeater = (Repeater)row.getParent();
+                    // Rotation: up in a table is left in a list!
+                    repeater.moveRowLeft(repeater.indexOf(row));
+                }
+            });
+        }
+    }
+    
+    public static class MoveDownDefinition extends RowActionDefinition {
+        public MoveDownDefinition() {
+            super.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent event) {
+                    Repeater.RepeaterRow row = Repeater.getParentRow(event.getSourceWidget());
+                    Repeater repeater = (Repeater)row.getParent();
+                    // Rotation : down in a table is right in a list!
+                    repeater.moveRowRight(repeater.indexOf(row));
+                }
+            });
+        }
+    }
+    
+    public static class AddAfterDefinition extends RowActionDefinition {
+        public AddAfterDefinition() {
+            super.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent event) {
+                    Repeater.RepeaterRow row = Repeater.getParentRow(event.getSourceWidget());
+                    Repeater repeater = (Repeater)row.getParent();
+                    repeater.addRow(repeater.indexOf(row)+1);
+                }
+            });
+        }
+    }
+
+
 }

@@ -91,9 +91,48 @@ public class Repeater extends AbstractWidget {
         rows.add(repeaterRow);
         return repeaterRow;
     }
+    
+    public RepeaterRow addRow(int index) {
+        RepeaterRow repeaterRow = new RepeaterRow();
+        if (index >= this.rows.size()) {
+            rows.add(repeaterRow);
+        } else {
+            rows.add(index, repeaterRow);
+        }
+        return repeaterRow;
+    }
 
     public RepeaterRow getRow(int index) {
         return (RepeaterRow)rows.get(index);
+    }
+    
+    /**
+     * Crawls up the parents of a widget up to finding a repeater row.
+     * 
+     * @param widget the widget whose row is to be found
+     * @return the repeater row
+     */
+    public static RepeaterRow getParentRow(Widget widget) {
+        Widget result = widget;
+        while(result != null && ! (result instanceof Repeater.RepeaterRow)) {
+            result = result.getParent();
+        }
+        
+        if (result == null) {
+            throw new RuntimeException("Could not find a parent row for widget " + widget);
+
+        } else {
+            return (Repeater.RepeaterRow)result;
+        }
+    }
+    
+    /**
+     * Get the position of a row in this repeater.
+     * @param row the row which we search the index for
+     * @return the row position or -1 if this row is not in this repeater
+     */
+    public int indexOf(RepeaterRow row) {
+        return this.rows.indexOf(row);
     }
 
     /**
@@ -101,6 +140,26 @@ public class Repeater extends AbstractWidget {
      */
     public void removeRow(int index) {
         rows.remove(index);
+    }
+    
+    public void moveRowLeft(int index) {
+        if (index == 0 || index >= this.rows.size()) {
+            // do nothing
+        } else {
+            Object temp = this.rows.get(index-1);
+            this.rows.set(index-1, this.rows.get(index));
+            this.rows.set(index, temp);
+        }
+    }
+
+    public void moveRowRight(int index) {
+        if (index < 0 || index >= this.rows.size() - 1) {
+            // do nothing
+        } else {
+            Object temp = this.rows.get(index+1);
+            this.rows.set(index+1, this.rows.get(index));
+            this.rows.set(index, temp);
+        }
     }
 
     /**
