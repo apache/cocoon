@@ -47,7 +47,7 @@ public class Jikes extends AbstractJavaCompiler implements Serviceable {
 
     private ServiceManager m_serviceManager;
     
-    private class StreamPumper implements Runnable {
+    private static class StreamPumper implements Runnable {
 
         private BufferedInputStream stream;
         private boolean endOfStream = false;
