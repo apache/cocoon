@@ -9,6 +9,8 @@
   <page id="index" label="Index" source="index.xml"/>
   <page id="license" label="License" source="license.xml"/>
   <page id="install" label="Install" source="installing.xml"/>
+  <page id="xsp-internals" label="XSP Internals" source="xsp-internals.xml"/>
+  <page id="logicsheet-concepts" label="XSP Logicsheets" source="logicsheet-concepts.xml"/>
 <separator/>
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
@@ -17,6 +19,6 @@
   <external label="Code Repository" href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
   <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
-  <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
+  <!-- <external label="Bug Database" href="http://xml.apache.org/bugs/"/> -->
 
 </book>
