@@ -53,8 +53,9 @@
     <menu-item label="Cocoon Hosting" href="link/hosting.html"/>
   </menu>
 
-  <menu label="Cocoon 1.x">
-    <external label="Old Generation" href="http://xml.apache.org/cocoon1/"/> 
+  <menu label="Previous Releases">
+    <external label="Cocoon 1.x" href="http://cocoon.apache.org/1.x/"/> 
+    <external label="Cocoon 2.0" href="http://cocoon.apache.org/2.0/"/> 
   </menu>
 
 </book>
