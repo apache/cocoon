@@ -11,3 +11,4 @@ cocoon.sampledata
 *.ipr
 *.iws
 mount-table.xml
+db
