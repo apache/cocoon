@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.131 2003/12/02 21:36:05 unico Exp $
+    | CVS $Id: jars.xml,v 1.132 2003/12/03 13:09:34 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -873,105 +873,117 @@
   <!-- OJB interface (6-Aug-2003) -->
   <file>
     <title>Antlr - ANother Tool for Language Recognition</title>
-	<description>
-	  language tool that provides a framework for constructing recognizers, compilers, and
-	  translators from grammatical descriptions containing Java, C#, or C++ actions
-	</description>
-	<used-by>OJB</used-by>
-	<lib>ojb/lib/antlr-2.7.1.jar</lib>
-	<homepage>http://www.antlr.org/</homepage>
+    <description>
+      language tool that provides a framework for constructing recognizers, compilers, and
+      translators from grammatical descriptions containing Java, C#, or C++ actions
+    </description>
+    <used-by>OJB</used-by>
+    <lib>ojb/lib/antlr-2.7.1.jar</lib>
+    <homepage>http://www.antlr.org/</homepage>
   </file>
 
   <file>
     <title>Jakarta Commons DBCP</title>
-	<description>
-	   Database Connection Pool API
-	</description>
-	<used-by>OJB</used-by>
-	<lib>ojb/lib/commons-dbcp-1.1.jar</lib>
-	<homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
+    <description>
+       Database Connection Pool API
+    </description>
+    <used-by>OJB</used-by>
+    <lib>ojb/lib/commons-dbcp-1.1.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
   </file>
 
   <file>
     <title>Jakarta Commons Pool</title>
-	<description>
-	   defines a handful of pooling interfaces and some base classes that
-	   may be useful when creating new pool implementations.
-	</description>
-	<used-by>OJB</used-by>
-	<lib>ojb/lib/commons-pool-1.1.jar</lib>
-	<homepage>http://jakarta.apache.org/commons/pool/</homepage>
+    <description>
+       defines a handful of pooling interfaces and some base classes that
+       may be useful when creating new pool implementations.
+    </description>
+    <used-by>OJB</used-by>
+    <lib>ojb/lib/commons-pool-1.1.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/pool/</homepage>
   </file>
 
   <file>
     <title>Apache ObJectRelationalBridge</title>
-	<description>
-	    OJB is an Object/Relational mapping tool that allows transparent persistence
-	    for Java Objects against relational databases.
-	</description>
-	<used-by>OJB</used-by>
-	<lib>ojb/lib/db-ojb-1.0.rc4-20031120.jar</lib>
-	<homepage>http://db.apache.org/ojb/</homepage>
+    <description>
+        OJB is an Object/Relational mapping tool that allows transparent persistence
+        for Java Objects against relational databases.
+    </description>
+    <used-by>OJB</used-by>
+    <lib>ojb/lib/db-ojb-1.0.rc4-20031120.jar</lib>
+    <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
   <!-- JMS block begin -->
-    <file>
-        <title>JMS Spec</title>
-        <description>J2EE Java Message Service Specification.  This implentation
-        developed by the (currently incubating) Apache Geronimo project is an 
-        open source implementation from the original spec.  As such it is licensed 
-        under the Apache license and therefore freely distributable.
-        </description>
-        <used-by>JMS</used-by>
-        <lib>jms/lib/geronimo-spec-jms-DEV-20031120.jar</lib>
-        <homepage>http://incubator.apache.org/projects/geronimo/index.html</homepage>
+  <file>
+    <title>JMS Spec</title>
+    <description>
+      J2EE Java Message Service Specification.  This implentation
+      developed by the (currently incubating) Apache Geronimo project is an 
+      open source implementation from the original spec.  As such it is licensed 
+      under the Apache license and therefore freely distributable.
+    </description>
+    <used-by>JMS</used-by>
+    <lib>jms/lib/geronimo-spec-jms-DEV-20031120.jar</lib>
+    <homepage>http://incubator.apache.org/projects/geronimo/index.html</homepage>
   </file>
   <!--
   <file>
-        <title>OpenJMS</title>
-        <description>OpenJMS core libraries. OpenJMS is a OpenSource JMS, Java Messaging
-        Service, implementation.</description>
-        <used-by>JMS</used-by>
-        <lib>jms/lib/exolabcore-0.3.6.jar</lib>
-        <homepage>http://openjms.sf.net</homepage>
+    <title>OpenJMS</title>
+    <description>OpenJMS core libraries. OpenJMS is a OpenSource JMS, Java Messaging
+    Service, implementation.</description>
+    <used-by>JMS</used-by>
+    <lib>jms/lib/exolabcore-0.3.6.jar</lib>
+    <homepage>http://openjms.sf.net</homepage>
   </file>
   <file>
-        <title>OpenJMS</title>
-        <description>OpenJMS client libraries. OpenJMS is a OpenSource JMS, Java Messaging
-        Service, implementation.</description>
-        <used-by>JMS</used-by>
-        <lib>jms/lib/openjms-client-0.7.6-rc2.jar</lib>
-        <homepage>http://openjms.sf.net</homepage>
+    <title>OpenJMS</title>
+    <description>OpenJMS client libraries. OpenJMS is a OpenSource JMS, Java Messaging
+    Service, implementation.</description>
+    <used-by>JMS</used-by>
+    <lib>jms/lib/openjms-client-0.7.6-rc2.jar</lib>
+    <homepage>http://openjms.sf.net</homepage>
   </file>
   <file>
-        <title>Sun JMS API</title>
-        <description>Sun's Java Messaging Service APIs. From the website:
-           Enterprise messaging provides a reliable,
-           flexible service for the asynchronous
-           exchange of critical business data and events
-           throughout an enterprise. The JMS API adds to
-           this a common API and provider framework that
-           enables the development of portable, message
-           based applications in the Java programming
-           language.
-        </description>
-        <used-by>JMS</used-by>
-        <lib>jms/lib/jms-1.0.2a.jar</lib>
-        <homepage>http://java.sun.com/jms</homepage>
+    <title>Sun JMS API</title>
+    <description>Sun's Java Messaging Service APIs. From the website:
+       Enterprise messaging provides a reliable,
+       flexible service for the asynchronous
+       exchange of critical business data and events
+       throughout an enterprise. The JMS API adds to
+       this a common API and provider framework that
+       enables the development of portable, message
+       based applications in the Java programming
+       language.
+    </description>
+    <used-by>JMS</used-by>
+    <lib>jms/lib/jms-1.0.2a.jar</lib>
+    <homepage>http://java.sun.com/jms</homepage>
   </file>
   <file>
-        <title>Sun JNDI</title>
-        <description>Sun's Java Naming and Directory Interface. From the website:
-           The Java Naming and Directory Interface (JNDI) is a standard extension to
-           the Java platform, providing Java technology-enabled applications with a
-           unified interface to multiple naming and directory services in the
-           enterprise. As part of the Java Enterprise API set, JNDI enables seamless
-           connectivity to heterogeneous enterprise naming and directory services.
-           Developers can now build powerful and portable directory-enabled
-           applications using this industry standard.</description>
-        <used-by>JMS</used-by>
-        <lib>jms/lib/jndi-1.2.1.jar</lib>
-        <homepage>http://java.sun.com/jndi</homepage>
+    <title>Sun JNDI</title>
+    <description>Sun's Java Naming and Directory Interface. From the website:
+       The Java Naming and Directory Interface (JNDI) is a standard extension to
+       the Java platform, providing Java technology-enabled applications with a
+       unified interface to multiple naming and directory services in the
+       enterprise. As part of the Java Enterprise API set, JNDI enables seamless
+       connectivity to heterogeneous enterprise naming and directory services.
+       Developers can now build powerful and portable directory-enabled
+       applications using this industry standard.</description>
+    <used-by>JMS</used-by>
+    <lib>jms/lib/jndi-1.2.1.jar</lib>
+    <homepage>http://java.sun.com/jndi</homepage>
   </file>
   JMS block end -->
+  <file>
+    <title>JSR-168 Portlet Spec</title>
+    <description>
+      JSR-168 Portlet Specification. This implentation developed by the
+      Jakarta Pluto project is an open source implementation from the
+      original spec.
+    </description>
+    <used-by>Scratchpad (JSR-168 Portlet Environment)</used-by>
+    <lib>scratchpad/lib/portlet-api-20031202.jar</lib>
+    <homepage>http://jakarta.apache.org/pluto/</homepage>
+  </file>
 </jars>
