@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-import org.apache.cocoon.components.treeprocessor.sitemap.MountNode;
 import org.apache.cocoon.environment.Environment;
+
+import java.util.Map;
 
 /**
  * Handles &lt;map:pipeline&gt;
@@ -37,34 +37,27 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class PipelineNode
-        extends AbstractParentProcessingNode
-        implements Serviceable, ParameterizableProcessingNode {
+public class PipelineNode extends AbstractParentProcessingNode
+                          implements Serviceable, ParameterizableProcessingNode {
 
-    // TODO : handle a 'fail-hard' environment attribute
-    // can be useful to stop off-line generation when there's an error
+    // TODO: handle a 'fail-hard' environment attribute
+    //       can be useful to stop off-line generation when there's an error
 
     private ProcessingNode[] children;
 
-    private ProcessingNode error404;
+    private ErrorHandlerHelper errorHandlerHelper;
 
-    private ProcessingNode error500;
-
-    private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
-
-    protected Logger handledErrorsLogger;
-
-    private boolean internalOnly = false;
+    private boolean internalOnly;
 
     /** Is it the last <pipeline> in the enclosing <pipelines> ? */
-    private boolean isLast = false;
+    private boolean isLast;
 
     /** The component name of the processing pipeline */
     protected String processingPipeline;
 
-    /** Optional Sitemap parameters */
+    /** Optional sitemap parameters */
     protected Map parameters;
 
     /**
@@ -73,6 +66,7 @@ public class PipelineNode
      */
     public PipelineNode(String name) {
         this.processingPipeline = name;
+        this.errorHandlerHelper = new ErrorHandlerHelper();
     }
 
     /**
@@ -85,7 +79,6 @@ public class PipelineNode
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.errorHandlerHelper.enableLogging(logger);
-        handledErrorsLogger = logger.getChildLogger("handled-errors");
     }
 
     public void setChildren(ProcessingNode[] nodes) {
@@ -101,11 +94,11 @@ public class PipelineNode
     }
 
     public void set404Handler(ProcessingNode node) {
-        this.error404 = node;
+        this.errorHandlerHelper.set404Handler(node);
     }
 
     public void set500Handler(ProcessingNode node) {
-        this.error500 = node;
+        this.errorHandlerHelper.set500Handler(node);
     }
 
     public void setInternalOnly(boolean internalOnly) {
@@ -114,54 +107,37 @@ public class PipelineNode
 
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
-
         boolean passThrough;
-
         Object passThroughRaw = env.getAttribute(MountNode.COCOON_PASS_THROUGH);
-       
-        if(passThroughRaw == null){
-            //use legacy default value
+        if (passThroughRaw == null) {
+            // Use default value
             passThrough = false;
-        }else{
-            passThrough = ((Boolean)passThroughRaw).booleanValue() ;
+        } else {
+            passThrough = ((Boolean) passThroughRaw).booleanValue();
         }
-        
-        boolean externalRequest = env.isExternal();
 
         // Always fail on external request if pipeline is internal only.
-        if (this.internalOnly && externalRequest) {
+        if (this.internalOnly && env.isExternal()) {
             return false;
         }
-        context.inform(this.processingPipeline, this.parameters,
-                       env.getObjectModel());
+
+        context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
         try {
             if (invokeNodes(children, env, context)) {
                 return true;
             } else if (!this.isLast || passThrough) {
                 return false;
-            } else {
-                throw new ResourceNotFoundException("No pipeline matched request: " +
-                                                    env.getURIPrefix() + env.getURI());
             }
-        } catch (ConnectionResetException cre) {
+
+            throw new ResourceNotFoundException("No pipeline matched request: " +
+                                                env.getURIPrefix() + env.getURI());
+
+        } catch (ConnectionResetException e) {
             // Will be reported by CocoonServlet, rethrowing
-            throw cre;
-        } catch (Exception ex) {
-            if (!externalRequest && !env.isInternalRedirect()) {
-                // Propagate exception on internal requests
-                throw ex;
-            } else if (error404 != null && ex instanceof ResourceNotFoundException) {
-                // Invoke 404-specific handler
-                handledErrorsLogger.error(ex.getMessage(), ex);
-                return errorHandlerHelper.invokeErrorHandler(error404, ex, env, context);
-            } else if (error500 != null) {
-                // Invoke global handler
-                handledErrorsLogger.error(ex.getMessage(), ex);
-                return errorHandlerHelper.invokeErrorHandler(error500, ex, env, context);
-            } else {
-                // No handler : propagate
-                throw ex;
-            }
+            throw e;
+        } catch (Exception e) {
+            // Invoke error handler
+            return this.errorHandlerHelper.invokeErrorHandler(e, env, context);
         }
     }
 }

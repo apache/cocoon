@@ -19,6 +19,8 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
+import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
@@ -31,22 +33,21 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class PipelinesNode extends SimpleParentProcessingNode
                                  implements Serviceable, Disposable {
 
     private ServiceManager manager;
 
-    private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
-
-    private ProcessingNode errorHandler;
+    private ErrorHandlerHelper errorHandlerHelper;
 
     /**
      * Constructor
      */
     public PipelinesNode() {
         super(null);
+        this.errorHandlerHelper = new ErrorHandlerHelper();
     }
 
     /**
@@ -64,13 +65,12 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     }
 
     public void setErrorHandler(ProcessingNode node) {
-        this.errorHandler = node;
+        this.errorHandlerHelper.set500Handler(node);
     }
 
     public void setChildren(ProcessingNode[] nodes) {
         // Mark the last pipeline so that it can throw a ResourceNotFoundException
-        ((PipelineNode)nodes[nodes.length - 1]).setLast(true);
-
+        ((PipelineNode) nodes[nodes.length - 1]).setLast(true);
         super.setChildren(nodes);
     }
 
@@ -89,17 +89,17 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         context.service(this.manager);
 
         try {
-            // FIXME : is there any useful information that can be passed as top-level parameters,
-            //         such as the URI of the mount point ?
+            // FIXME: Is there any useful information that can be passed as top-level parameters,
+            //        such as the URI of the mount point ?
 
             return invokeNodes(this.children, env, context);
+
+        } catch (ConnectionResetException e) {
+            // Will be reported by CocoonServlet, rethrowing
+            throw e;
         } catch (Exception ex) {
-            if (this.errorHandler != null) {
-                // Invoke pipelines handler
-                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env, context);
-            }
-            // No handler : propagate
-            throw ex;
+            // Invoke pipelines handler
+            return this.errorHandlerHelper.invokeErrorHandler(ex, env, context);
         }
     }
 
@@ -108,7 +108,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      */
     public void dispose() {
         if (this.manager instanceof Disposable) {
-            ((Disposable)this.manager).dispose();
+            ((Disposable) this.manager).dispose();
         }
         this.manager = null;
     }
