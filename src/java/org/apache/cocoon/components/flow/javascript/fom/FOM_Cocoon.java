@@ -15,12 +15,19 @@
  */
 package org.apache.cocoon.components.flow.javascript.fom;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.WrapperComponentManager;
@@ -427,9 +434,34 @@ public class FOM_Cocoon extends ScriptableObject {
      * attributes can be accessed as properties. Do we want to keep this?
      */
     private static abstract class AttributeHolderJavaObject extends NativeJavaObject {
+        
+        private static Map classProps = new HashMap();
+        private Set propNames;
+
         public AttributeHolderJavaObject(Scriptable scope, Object object, Class clazz) {
             super(scope, object, clazz);
+            this.propNames = getProperties(object.getClass());
         }
+        
+        /** Compute the names of JavaBean properties so that we can filter them our in get() */
+        private static Set getProperties(Class clazz) {
+            Set result = (Set)classProps.get(clazz);
+            if (result == null) {
+                try {
+                    PropertyDescriptor[] descriptors = Introspector.getBeanInfo(clazz).getPropertyDescriptors();
+                    result = new HashSet();
+                    for (int i = 0; i < descriptors.length; i++) {
+                        result.add(descriptors[i].getName());
+                    }
+                } catch (IntrospectionException e) {
+                    // Cannot introspect: just consider there are no properties
+                    result = Collections.EMPTY_SET;
+                }
+                classProps.put(clazz, result);
+            }
+            return result;
+        }
+        
         
         protected abstract Enumeration getAttributeNames();
         protected abstract Object getAttribute(String name);
@@ -451,14 +483,17 @@ public class FOM_Cocoon extends ScriptableObject {
             return super.has(name, start) || getAttribute(name) != null;
         }
         
-        protected abstract String getAttributeDescription();
-        
         public Object get(String name, Scriptable start) {
-            Object result = super.get(name, start);
+            Object result;
+            // Filter out JavaBean properties. We only want methods of the underlying object.
+            if (this.propNames.contains(name)) {
+                result = NOT_FOUND;
+            } else {
+                result = super.get(name, start);
+            }
             if (result == NOT_FOUND) {
                 result = getAttribute(name);
                 if (result != null) {
-                    DeprecationLogger.log("Accessing " + getAttributeDescription() + " will be removed in Cocoon 2.2");
                     result = wrap(start, result, null);
                 } else {
                     result = NOT_FOUND;
@@ -490,10 +525,6 @@ public class FOM_Cocoon extends ScriptableObject {
         protected Object getAttribute(String name) {
             return this.request.getParameter(name);
         }
-
-        protected String getAttributeDescription() {
-            return "request parameters as JS properties of cocoon.request";
-        }       
     }
 
     /**
@@ -516,10 +547,6 @@ public class FOM_Cocoon extends ScriptableObject {
         protected Object getAttribute(String name) {
             return this.session.getAttribute(name);
         }
-
-        protected String getAttributeDescription() {
-            return "session attributes as JS properties of cocoon.session";
-        }       
     }
 
     /**
@@ -542,10 +569,6 @@ public class FOM_Cocoon extends ScriptableObject {
         protected Object getAttribute(String name) {
             return this.context.getAttribute(name);
         }
-
-        protected String getAttributeDescription() {
-            return "context attributes as JS properties of cocoon.context";
-        }       
     }
 
     public Scriptable jsGet_request() {
