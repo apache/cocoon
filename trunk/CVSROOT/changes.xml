@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.106 2000-09-14 18:56:21 balld Exp $
+  $Id: changes.xml,v 1.107 2000-09-14 20:45:36 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add">
+   added error handling to esql logicsheet and documented its use in esql sample
+  </action>
   <action dev="DB" type="fix" due-to="Tagunov Anthony" due-to-email="atagunov@nnt.ru">
    Fixed encoding problem with xinclude processor
   </action>
