@@ -69,7 +69,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * getLogger().
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.2 2003/03/12 14:30:59 jefft Exp $
+ * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
+ * @version CVS $Id: AbstractMetaModule.java,v 1.3 2003/03/12 14:51:51 jefft Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -230,71 +231,93 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         }
     }
 
-
-    protected Iterator getNames(Map objectModel, 
-                                InputModule modA, String modAName, Configuration modAConf) {
-
-        return (Iterator) this.get(OP_NAMES, null, objectModel, modA, modAName, modAConf, null, null, null);
-    }
-
     /**
-     * If two modules are specified, the second one is used if the name is not null.
+     * Get names of available attributes in the specified (usually statically
+     * assigned) Input Module.
+     * @see InputModule#getAttributeNames
      */
     protected Iterator getNames(Map objectModel, 
-                                InputModule modA, String modAName, Configuration modAConf,
-                                InputModule modB, String modBName, Configuration modBConf) {
+                                InputModule staticMod, String staticModName, Configuration staticModConf) {
 
-        return (Iterator) this.get(OP_NAMES, null, objectModel, modA, modAName, modAConf, modB, modBName, modBConf);
+        return (Iterator) this.get(OP_NAMES, null, objectModel, staticMod, staticModName, staticModConf, null, null, null);
     }
-
-
-    protected Object getValue(String attr, Map objectModel, 
-                              InputModule modA, String modAName, Configuration modAConf) {
-
-        return this.get(OP_GET, attr, objectModel, modA, modAName, modAConf, null, null, null);
-    }
-
 
     /**
-     * If two modules are specified, the second one is used if the name is not null.
+     * Get names of available attributes in one of the specified Input Modules
+     * (static or dynamic, dynamic preferred).  Dynamic IM may be
+     * <code>null</code>.
+     * @see InputModule#getAttributeNames
      */
-    protected Object getValue(String attr, Map objectModel, 
-                              InputModule modA, String modAName, Configuration modAConf,
-                              InputModule modB, String modBName, Configuration modBConf) {
+     protected Iterator getNames(Map objectModel, 
+                                InputModule staticMod, String staticModName, Configuration staticModConf,
+                                InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
 
-        return this.get(OP_GET, attr, objectModel, modA, modAName, modAConf, modB, modBName, modBConf);
-    }
-
-
-    protected Object[] getValues(String attr, Map objectModel, 
-                                 InputModule modA, String modAName, Configuration modAConf) {
-
-        return (Object[]) this.get(OP_VALUES, attr, objectModel, modA, modAName, modAConf, null, null, null);
+        return (Iterator) this.get(OP_NAMES, null, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
     }
 
 
     /**
-     * If two modules are specified, the second one is used if the name is not null.
+     * Get an attribute's value from a (usually statically assigned) Input
+     * Module.
+     * @see InputModule#getAttribute
      */
-    protected Object[] getValues(String attr, Map objectModel, 
-                                 InputModule modA, String modAName, Configuration modAConf,
-                                 InputModule modB, String modBName, Configuration modBConf) {
+     protected Object getValue(String attr, Map objectModel, 
+                              InputModule staticMod, String staticModName, Configuration staticModConf) {
 
-        return (Object[]) this.get(OP_VALUES, attr, objectModel, modA, modAName, modAConf, modB, modBName, modBConf);
+        return this.get(OP_GET, attr, objectModel, staticMod, staticModName, staticModConf, null, null, null);
     }
 
 
     /**
-     * Capsules use of an InputModule. Does all the lookups and so
-     * on. Returns either an Object, an Object[], or an Iterator,
-     * depending on the method called i.e. the op specified. The
-     * second module is preferred and has an non null name. If an
-     * exception is encountered, a warn message is printed and null is
+     * Get attribute's value in one of the specified Input Modules 
+     * (static or dynamic, dynamic preferred).  Dynamic IM may be
+     * <code>null</code>.
+     * @see InputModule#getAttribute
+     */
+     protected Object getValue(String attr, Map objectModel, 
+                              InputModule staticMod, String staticModName, Configuration staticModConf,
+                              InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
+
+        return this.get(OP_GET, attr, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
+    }
+
+    /**
+     * Get an attribute's values from a (usually statically assigned) Input
+     * Module.
+     * @see InputModule#getAttributeValues
+     */
+     protected Object[] getValues(String attr, Map objectModel, 
+                                 InputModule staticMod, String staticModName, Configuration staticModConf) {
+
+        return (Object[]) this.get(OP_VALUES, attr, objectModel, staticMod, staticModName, staticModConf, null, null, null);
+    }
+
+    /**
+     * Get attribute's values in one of the specified Input Modules 
+     * (static or dynamic, dynamic preferred).  Dynamic IM may be
+     * <code>null</code>.
+     * @see InputModule#getAttributeValues
+     */
+     protected Object[] getValues(String attr, Map objectModel, 
+                                 InputModule staticMod, String staticModName, Configuration staticModConf,
+                                 InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
+
+        return (Object[]) this.get(OP_VALUES, attr, objectModel, staticMod, staticModName, staticModConf, dynamicMod, dynamicModName, dynamicModConf);
+    }
+
+
+    /**
+     * Encapsulates use of an InputModule. Does all the lookups and so on.  
+     * The second module (dynamic) is preferred if it has an non null name. If
+     * an exception is encountered, a warn message is printed and null is
      * returned.
-     */
+     * @param op Operation to perform ({@link OP_GET}, {@link OP_NAMES}, {@link OP_VALUES}).
+     *
+     * @return Either an Object, an Object[], or an Iterator, depending on <code>op</code> param.
+     */ 
     private Object get(int op, String attr, Map objectModel,
-                         InputModule modA, String modAName, Configuration modAConf,
-                         InputModule modB, String modBName, Configuration modBConf) {
+                         InputModule staticMod, String staticModName, Configuration staticModConf,
+                         InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf) {
 
         ComponentSelector cs = this.inputSelector;
         Object value = null;
@@ -309,23 +332,23 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                 cs = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
 
             boolean useDynamic;
-            if (modB == null && modBName == null) {
+            if (dynamicMod == null && dynamicModName == null) {
                 useDynamic = false;
-                input = modA;
-                name = modAName;
-                conf = modAConf;
+                input = staticMod;
+                name = staticModName;
+                conf = staticModConf;
             } else {
                 useDynamic = true;
-                input = modB;
-                name = modBName;
-                conf = modBConf;
+                input = dynamicMod;
+                name = dynamicModName;
+                conf = dynamicModConf;
             }
         
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("MetaModule performing op "+OPNAME[op]+" on " + 
                         (useDynamic?"dynamically":"statically") + " " +
                         (input==null?"created":"assigned") +
-                        " module '"+name+"', using config "+modBConf);
+                        " module '"+name+"', using config "+dynamicModConf);
             }
 
             if (input == null) {
