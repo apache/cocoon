@@ -81,7 +81,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.25 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.26 2004/04/24 17:38:32 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -116,7 +116,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     Global scope;
 
     CompilingClassLoader classLoader;
+
     MyClassRepository javaClassRepository = new MyClassRepository();
+
     String[] javaSourcePath;
 
     /**
@@ -467,6 +469,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 }
             }
         }
+
+        public ClassLoader getClassLoader() {
+            return classLoader;
+        }
     }
 
     private ThreadScope createThreadScope() throws Exception {
@@ -511,8 +517,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @exception Exception if an error occurs
      */
     private void setupContext(Redirector redirector, Context context,
-                  ThreadScope thrScope, CompilingClassLoader classLoader)
-                  throws Exception {
+                              ThreadScope thrScope)
+        throws Exception {
         // Try to retrieve the scope object from the session instance. If
         // no scope is found, we create a new one, but don't place it in
         // the session.
@@ -536,7 +542,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        thrScope.setupPackages(getClassLoader(needsRefresh));
+        ClassLoader classLoader = getClassLoader(needsRefresh);
+        Thread.currentThread().setContextClassLoader(classLoader);
+        thrScope.setupPackages(classLoader);
         cocoon.pushCallContext(this, redirector, manager,
                                avalonContext, getLogger(), null);
 
@@ -653,64 +661,69 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         FOM_Cocoon cocoon = null;
         ThreadScope thrScope = getSessionScope();
         synchronized (thrScope) {
+            ClassLoader savedClassLoader = 
+                Thread.currentThread().getContextClassLoader();
             try {
-                setupContext(redirector, context, thrScope, classLoader);
-                cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
-
-                // Register the current scope for scripts indirectly called from this function
-                cocoon.getRequest().setAttribute(
-                        FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
-                if (enableDebugger) {
-                    if (!getDebugger().isVisible()) {
-                        // only raise the debugger window if it isn't already visible
-                        getDebugger().setVisible(true);
+                try {
+                    setupContext(redirector, context, thrScope);
+                    cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
+                    
+                    // Register the current scope for scripts indirectly called from this function
+                    cocoon.getRequest().setAttribute(
+                                                     FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
+                    if (enableDebugger) {
+                        if (!getDebugger().isVisible()) {
+                            // only raise the debugger window if it isn't already visible
+                            getDebugger().setVisible(true);
+                        }
                     }
-                }
-                int size = (params != null ? params.size() : 0);
-                Object[] funArgs = new Object[size];
-                Scriptable parameters = context.newObject(thrScope);
-                for (int i = 0; i < size; i++) {
-                    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-                    funArgs[i] = arg.value;
-                    if (arg.name == null) {
-                        arg.name = "";
+                    int size = (params != null ? params.size() : 0);
+                    Object[] funArgs = new Object[size];
+                    Scriptable parameters = context.newObject(thrScope);
+                    for (int i = 0; i < size; i++) {
+                        Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+                        funArgs[i] = arg.value;
+                        if (arg.name == null) {
+                            arg.name = "";
+                        }
+                        parameters.put(arg.name, parameters, arg.value);
                     }
-                    parameters.put(arg.name, parameters, arg.value);
+                    cocoon.setParameters(parameters);
+                    Object fun = ScriptableObject.getProperty(thrScope, funName);
+                    if (fun == Scriptable.NOT_FOUND) {
+                        throw new ResourceNotFoundException(
+                                                            "Function \"javascript:" + funName + "()\" not found");
+                    }
+                    ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
+                } catch (JavaScriptException ex) {
+                    EvaluatorException ee = Context.reportRuntimeError(
+                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                                                                                    ex.getMessage()));
+                    Throwable unwrapped = unwrap(ex);
+                    if (unwrapped instanceof ProcessingException) {
+                        throw (ProcessingException)unwrapped;
+                    }
+                    throw new CascadingRuntimeException(ee.getMessage(),
+                                                        unwrapped);
+                } catch (EcmaError ee) {
+                    String msg = ToolErrorReporter.getMessage(
+                                                              "msg.uncaughtJSException", ee.toString());
+                    if (ee.getSourceName() != null) {
+                        Context.reportRuntimeError(msg, ee.getSourceName(),
+                                                   ee.getLineNumber(), ee.getLineSource(),
+                                                   ee.getColumnNumber());
+                    } else {
+                        Context.reportRuntimeError(msg);
+                    }
+                    throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
-                cocoon.setParameters(parameters);
-                Object fun = ScriptableObject.getProperty(thrScope, funName);
-                if (fun == Scriptable.NOT_FOUND) {
-                    throw new ResourceNotFoundException(
-                            "Function \"javascript:" + funName + "()\" not found");
-                }
-                ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
-            } catch (JavaScriptException ex) {
-                EvaluatorException ee = Context.reportRuntimeError(
-                        ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                ex.getMessage()));
-                Throwable unwrapped = unwrap(ex);
-                if (unwrapped instanceof ProcessingException) {
-                    throw (ProcessingException)unwrapped;
-                }
-                throw new CascadingRuntimeException(ee.getMessage(),
-                        unwrapped);
-            } catch (EcmaError ee) {
-                String msg = ToolErrorReporter.getMessage(
-                        "msg.uncaughtJSException", ee.toString());
-                if (ee.getSourceName() != null) {
-                    Context.reportRuntimeError(msg, ee.getSourceName(),
-                           ee.getLineNumber(), ee.getLineSource(),
-                           ee.getColumnNumber());
-                } else {
-                    Context.reportRuntimeError(msg);
-                }
-                throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
                 updateSession(thrScope);
                 if (cocoon != null) {
                     cocoon.popCallContext();
                 }
                 Context.exit();
+                Thread.currentThread().setContextClassLoader(savedClassLoader);
             }
         }
     }
@@ -737,59 +750,66 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // FOM_Cocoon object associated in the dynamic scope of the saved
         // continuation with the environment and context objects.
         Continuation k = (Continuation)wk.getContinuation();
-        Scriptable kScope = k.getParentScope();
+        ThreadScope kScope = (ThreadScope)k.getParentScope();
         synchronized (kScope) {
-            FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.pushCallContext(this, redirector, manager,
-                                   avalonContext,
-                                   getLogger(), wk);
-            // Register the current scope for scripts indirectly called from this function
-            cocoon.getRequest().setAttribute(
-                    FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
-
-            if (enableDebugger) {
-                getDebugger().setVisible(true);
-            }
-            Scriptable parameters = context.newObject(kScope);
-            int size = params != null ? params.size() : 0;
-            for (int i = 0; i < size; i++) {
-                Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-                parameters.put(arg.name, parameters, arg.value);
-            }
-            cocoon.setParameters(parameters);
-            FOM_WebContinuation fom_wk = new FOM_WebContinuation(wk);
-            fom_wk.setParentScope(kScope);
-            fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
-                                                                   fom_wk.getClassName()));
-            Object[] args = new Object[] {k, fom_wk};
+            ClassLoader savedClassLoader = 
+                Thread.currentThread().getContextClassLoader();
+            FOM_Cocoon cocoon = null;
             try {
-                ScriptableObject.callMethod(cocoon,
-                        "handleContinuation", args);
-            } catch (JavaScriptException ex) {
-                EvaluatorException ee = Context.reportRuntimeError(
-                        ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                ex.getMessage()));
-                Throwable unwrapped = unwrap(ex);
-                if (unwrapped instanceof ProcessingException) {
-                    throw (ProcessingException)unwrapped;
+                Thread.currentThread().setContextClassLoader(kScope.getClassLoader());
+                cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
+                cocoon.pushCallContext(this, redirector, manager,
+                                       avalonContext,
+                                       getLogger(), wk);
+                // Register the current scope for scripts indirectly called from this function
+                cocoon.getRequest().setAttribute(
+                                                 FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
+                
+                if (enableDebugger) {
+                    getDebugger().setVisible(true);
                 }
-                throw new CascadingRuntimeException(ee.getMessage(),
-                        unwrapped);
-            } catch (EcmaError ee) {
-                String msg = ToolErrorReporter.getMessage(
-                        "msg.uncaughtJSException", ee.toString());
-                if (ee.getSourceName() != null) {
-                    Context.reportRuntimeError(msg, ee.getSourceName(),
-                               ee.getLineNumber(), ee.getLineSource(),
-                               ee.getColumnNumber());
-                } else {
-                    Context.reportRuntimeError(msg);
+                Scriptable parameters = context.newObject(kScope);
+                int size = params != null ? params.size() : 0;
+                for (int i = 0; i < size; i++) {
+                    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+                    parameters.put(arg.name, parameters, arg.value);
                 }
-                throw new CascadingRuntimeException(ee.getMessage(), ee);
+                cocoon.setParameters(parameters);
+                FOM_WebContinuation fom_wk = new FOM_WebContinuation(wk);
+                fom_wk.setParentScope(kScope);
+                fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
+                                                                       fom_wk.getClassName()));
+                Object[] args = new Object[] {k, fom_wk};
+                try {
+                    ScriptableObject.callMethod(cocoon,
+                                                "handleContinuation", args);
+                } catch (JavaScriptException ex) {
+                    EvaluatorException ee = Context.reportRuntimeError(
+                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                                                                                    ex.getMessage()));
+                    Throwable unwrapped = unwrap(ex);
+                    if (unwrapped instanceof ProcessingException) {
+                        throw (ProcessingException)unwrapped;
+                    }
+                    throw new CascadingRuntimeException(ee.getMessage(),
+                                                        unwrapped);
+                } catch (EcmaError ee) {
+                    String msg = ToolErrorReporter.getMessage(
+                                                              "msg.uncaughtJSException", ee.toString());
+                    if (ee.getSourceName() != null) {
+                        Context.reportRuntimeError(msg, ee.getSourceName(),
+                                                   ee.getLineNumber(), ee.getLineSource(),
+                                                   ee.getColumnNumber());
+                    } else {
+                        Context.reportRuntimeError(msg);
+                    }
+                    throw new CascadingRuntimeException(ee.getMessage(), ee);
+                }
             } finally {
                 updateSession(kScope);
-                cocoon.popCallContext();
+                if (cocoon != null) cocoon.popCallContext();
                 Context.exit();
+                Thread.currentThread().setContextClassLoader(savedClassLoader);
             }
         }
     }
@@ -846,5 +866,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         if (kont != null) {
             FOM_JavaScriptFlowHelper.setFOM_WebContinuation(objectModel, kont);
         }
+
     }
 }
