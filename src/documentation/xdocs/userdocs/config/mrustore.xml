@@ -58,8 +58,7 @@
   </s1>
   <s1 title="Configuration of the MRUMemoryStore in the cocoon.xconf">
   <source><![CDATA[
-<store class="org.apache.cocoon.components.store.MRUMemoryStore"
-       logger="core.store">
+<store logger="core.store">
   <parameter name="maxobjects" value="100"/>
   <parameter name="use-persistent-cache" value="true"/>
 </store>]]>

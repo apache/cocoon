@@ -21,9 +21,7 @@
   </s1>
   <s1 title="Configuration">
   <source><![CDATA[
-<store-janitor
-    class="org.apache.cocoon.components.store.StoreJanitorImpl"
-    logger="root.store">
+<store-janitor logger="root.store">
   <parameter name="freememory" value="1000000"/>
   <parameter name="heapsize" value="60000000"/>
   <parameter name="cleanupthreadinterval" value="10"/>
@@ -42,9 +40,7 @@
     <p>The freememory and heapsize paramter always depends on the Xmx 
     parameter.</p>
     <source><![CDATA[
-<store-janitor
-    class="org.apache.cocoon.components.store.StoreJanitorImpl"
-    logger="root.store">
+<store-janitor logger="root.store">
   <parameter name="freememory" value="50000000"/>
   <parameter name="heapsize" value="150000000"/>
   <parameter name="cleanupthreadinterval" value="10"/>
