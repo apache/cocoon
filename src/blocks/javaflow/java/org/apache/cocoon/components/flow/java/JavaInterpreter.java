@@ -24,12 +24,14 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.javascript.JavaScriptCompilingClassLoader;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -39,11 +41,12 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.6 2004/06/03 12:43:27 stephan Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.7 2004/06/04 14:02:38 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
     private boolean initialized = false;
+
     private int timeToLive = 600000;
 
     private static final String ACTION_METHOD_PREFIX = "do";
@@ -53,8 +56,11 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
      */
     public static final String USER_GLOBAL_SCOPE = "JAVA GLOBAL SCOPE";
 
-    private ContinuationClassLoader classloader;
+    private ContinuationClassLoader continuationclassloader;
+
     private HashMap methods = new HashMap();
+
+    private JavaScriptCompilingClassLoader javascriptclassloader;
 
     static {
         JXPathIntrospector.registerDynamicClass(VarMap.class, VarMapHandler.class);
@@ -62,39 +68,52 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        
-        classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
-        
+
+        javascriptclassloader = new JavaScriptCompilingClassLoader(Thread.currentThread().getContextClassLoader());
+        try {
+            javascriptclassloader.service(this.manager);
+        } catch (ServiceException e) {
+            throw new ConfigurationException(e.getMessage());
+        }
+        continuationclassloader = new ContinuationClassLoader(javascriptclassloader);
+
         Configuration[] includes = config.getChildren("include");
-        for(int i=0; i<includes.length; i++)
-            classloader.addIncludeClass(includes[i].getAttribute("class"));
+        for (int i = 0; i < includes.length; i++)
+            continuationclassloader.addIncludeClass(includes[i].getAttribute("class"));
     }
 
     private static String removePrefix(String name) {
         int prefixLen = ACTION_METHOD_PREFIX.length();
-        return name.substring(prefixLen, prefixLen + 1).toLowerCase()
-                + name.substring(prefixLen + 1);
+        return name.substring(prefixLen, prefixLen + 1).toLowerCase() + name.substring(prefixLen + 1);
     }
 
     public void initialize() throws Exception {
 
-        if (getLogger().isDebugEnabled()) 
+        if (getLogger().isDebugEnabled())
             getLogger().debug("initialize java flow interpreter");
 
         initialized = true;
 
         for (Iterator scripts = needResolve.iterator(); scripts.hasNext();) {
 
-            String classname = (String) scripts.next();
-            if (getLogger().isDebugEnabled()) 
-                getLogger().debug("registered java class \"" + classname + "\" for flow");
+            String name = (String) scripts.next();
 
-            if (!Continuable.class.isAssignableFrom(Class.forName(classname))) {
-                getLogger().error("java class \"" + classname + "\" doesn't implement Continuable");
+            if (name.endsWith(".js")) {
+                javascriptclassloader.addSource(name);
+                name = JavaScriptCompilingClassLoader.getClassName(name);
+            }
+
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("registered java class \"" + name + "\" for flow");
+            
+            Class clazz = continuationclassloader.loadClass(name);
+
+            if (!Continuable.class.isAssignableFrom(clazz)) {
+                getLogger().error("java class \"" + name + "\" doesn't implement Continuable");
                 continue;
-            }            
+            }
 
-            Class clazz = classloader.loadClass(classname);
+            //Class clazz = continuationclassloader.loadClass(name);
 
             try {
                 Method[] methods = clazz.getMethods();
@@ -105,14 +124,15 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
                         String function = removePrefix(methodName);
                         this.methods.put(function, methods[i]);
 
-                        if (getLogger().isDebugEnabled()) 
-                            getLogger().debug("registered method \"" + methodName +
-                                              "\" as function \"" + function + "\"");
+                        if (getLogger().isDebugEnabled())
+                            getLogger().debug(
+                                    "registered method \"" + methodName + "\" as function \"" + function + "\"");
                     }
                 }
             } catch (Exception e) {
                 throw new ConfigurationException("cannot get methods by reflection", e);
             }
+
         }
     }
 
@@ -127,8 +147,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
      * @param redirector
      * @exception Exception if an error occurs
      */
-    public void callFunction(String function, List params, Redirector redirector)
-            throws Exception {
+    public void callFunction(String function, List params, Redirector redirector) throws Exception {
 
         if (!initialized)
             initialize();
@@ -138,7 +157,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         if (method == null)
             throw new ProcessingException("No method found for '" + function + "'");
 
-        if (getLogger().isDebugEnabled()) 
+        if (getLogger().isDebugEnabled())
             getLogger().debug("calling method \"" + method + "\"");
 
         Request request = ContextHelper.getRequest(this.avalonContext);
@@ -159,15 +178,14 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         Continuation continuation = new Continuation(context);
 
-        WebContinuation wk =
-                continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
         try {
             if (flow == null) {
                 if (getLogger().isDebugEnabled())
-                    getLogger().debug("create new instance of \""+method.getDeclaringClass()+"\"");
+                    getLogger().debug("create new instance of \"" + method.getDeclaringClass() + "\"");
 
                 flow = (Continuable) method.getDeclaringClass().newInstance();
                 context.setObject(flow);
@@ -177,7 +195,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         } catch (InvocationTargetException ite) {
             if (ite.getTargetException() != null) {
-                if (ite.getTargetException() instanceof Exception) 
+                if (ite.getTargetException() instanceof Exception)
                     throw (Exception) ite.getTargetException();
                 else if (ite.getTargetException() instanceof Error)
                     throw new ProcessingException("An internal error occured", ite.getTargetException());
@@ -199,20 +217,18 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
     }
 
-    public void handleContinuation(String id, List params, Redirector redirector)
-            throws Exception {
+    public void handleContinuation(String id, List params, Redirector redirector) throws Exception {
         if (!initialized)
             initialize();
 
         WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id);
 
         if (parentwk == null) {
-            /*
-             * Throw an InvalidContinuationException to be handled inside the
-             * <map:handle-errors> sitemap element.
-             */
-            throw new InvalidContinuationException("The continuation ID " + id + " is invalid.");
-        }
+        /*
+         * Throw an InvalidContinuationException to be handled inside the
+         * <map:handle-errors> sitemap element.
+         */
+        throw new InvalidContinuationException("The continuation ID " + id + " is invalid."); }
 
         Continuation parentContinuation = (Continuation) parentwk.getContinuation();
         ContinuationContext parentContext = (ContinuationContext) parentContinuation.getContext();
@@ -232,8 +248,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         Continuable flow = (Continuable) context.getObject();
         Method method = context.getMethod();
 
-        WebContinuation wk =
-                continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
@@ -258,7 +273,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             // remove last object reference, which is not needed to reconstruct
             // the invocation path
             if (continuation.isCapturing())
-              continuation.getStack().popReference();
+                continuation.getStack().popReference();
             continuation.deregisterThread();
         }
 
