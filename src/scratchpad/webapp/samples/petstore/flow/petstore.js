@@ -70,7 +70,7 @@ function main(funName) {
     var fun = this[funName];
     var args = new Array(arguments.length -1);
     for (var i = 1; i < arguments.length; i++) {
-	args[i-1] = arguments[i];
+        args[i-1] = arguments[i];
     }
     getPetStore();
     fun.apply(args);
@@ -83,7 +83,7 @@ function getPetStore() {
         this.petStore = new PetStore("hsql");
         this.cartForm = new CartForm();
         this.accountForm = new AccountForm();
-	this.categoryList = getPetStore().getCategoryList();
+        this.categoryList = getPetStore().getCategoryList();
     }
     return petStore;
 }
@@ -210,6 +210,7 @@ function viewItem() {
              accountForm: accountForm, 
              cartForm: cartForm, 
              item: item, 
+             quantity: getPetStore().getItemRowCountByProduct(item.productId),
              product: item.product, 
              yoshi: yoshi
     });
