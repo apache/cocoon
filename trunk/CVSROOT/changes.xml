@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.99 2000-08-17 22:34:57 stefano Exp $
+  $Id: changes.xml,v 1.100 2000-08-18 22:35:08 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add" due-to="Juergen Sonnauer" due-to-email="juergen.sonnauer@t-online.de">
+   Added java compiler abstraction for XSP compilation (now we can use Jikes to improve XSP compilation speed).
+  </action>
+  <action dev="SM" type="fix" due-to="Kevin Sonney" due-to-email="kevin@webslingerz.com">
+   Patched the cookie XSP taglib and the LDAP processor.
+  </action>
   <action dev="SM" type="fix" due-to="Mark Washeim" due-to-email="esalon@canuck.com">
    Make Cocoon running better under heavy load.
   </action>

@@ -2,19 +2,20 @@
 
 if "%JAVA_HOME%" == "" goto error
 
+if not "%LIB_HOME%" == "" goto skip
+
+set LIB_HOME=.\lib
+
+:skip
+
 echo.
 echo Cocoon Build System
 echo -------------------
 
 set ANT_HOME=.\lib
-set ANT=.\lib\ant_1_1.jar
-set JAVAC=%JAVA_HOME%\lib\tools.jar
-set XERCES=.\lib\xerces_1_1_2.jar
-set XALAN=.\lib\xalan_1_1_D01.jar
-set FOP=.\lib\fop_0_12_1.jar
-set SERVLETS=.\lib\servlet_2_2.jar
-set TURBINE=.\lib\turbine-pool.jar
-set LOCALCLASSPATH=%ANT%;%JAVAC%;%XERCES%;%XALAN%;%FOP%;%SERVLETS%;%TURBINE%;%CLASSPATH%
+
+set LOCALCLASSPATH=%JAVA_HOME%\lib\tools.jar
+for %%i in (%LIB_HOME%\*.jar) do call lcp.bat %%i
 
 echo.
 echo Building with classpath %LOCALCLASSPATH%
@@ -36,10 +37,5 @@ echo "location of the Java Virtual Machine you want to use."
 :end
 
 set LOCALCLASSPATH=
-set XERCES=
-set XALAN=
-set FOP=
-set SERVLETS=
-set ANT=
 set ANT_HOME=
-set JAVAC=
+set LIB_HOME=

@@ -13,14 +13,7 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 ANT_HOME=./lib
-ANT=./lib/ant_1_1.jar
-JAVAC=$JAVA_HOME/lib/tools.jar
-XERCES=./lib/xerces_1_1_2.jar
-XALAN=./lib/xalan_1_1_D01.jar
-FOP=./lib/fop_0_12_1.jar
-SERVLETS=./lib/servlet_2_2.jar
-TURBINE=./lib/turbine-pool.jar
-LOCALCLASSPATH=$ANT:$JAVAC:$XERCES:$XALAN:$FOP:$SERVLETS:$TURBINE:$CLASSPATH
+LOCALCLASSPATH=`echo lib/*.jar | tr ' ' ':'`:$JAVA_HOME/lib/tools.jar:$CLASSPATH
 
 echo
 echo Building with classpath $LOCALCLASSPATH
