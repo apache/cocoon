@@ -608,15 +608,16 @@ public class QuartzJobScheduler extends AbstractLogEnabled
 
         final int shutdownWaitTimeMs = poolConfig.getChild("shutdown-wait-time-ms").getValueAsInteger(-1);
         final RunnableManager runnableManager = (RunnableManager)this.manager.lookup(RunnableManager.ROLE);
-        final QuartzThreadPool pool = new QuartzThreadPool(runnableManager.createPool(queueSize,
-                                                                                      maxPoolSize,
-                                                                                      minPoolSize,
-                                                                                      Thread.NORM_PRIORITY,
-                                                                                      false, // no daemon
-                                                                                      keepAliveTimeMs,
-                                                                                      blockPolicy,
-                                                                                      m_shutdownGraceful,
-                                                                                      shutdownWaitTimeMs));
+        this.executor = runnableManager.createPool(queueSize,
+                                                   maxPoolSize,
+                                                   minPoolSize,
+                                                   Thread.NORM_PRIORITY,
+                                                   false, // no daemon
+                                                   keepAliveTimeMs,
+                                                   blockPolicy,
+                                                   m_shutdownGraceful,
+                                                   shutdownWaitTimeMs);
+        final QuartzThreadPool pool = new QuartzThreadPool(this.executor);
         return pool;
     }
 
