@@ -70,7 +70,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.2 2003/05/11 01:49:54 vgritsenko Exp $
  */
 
 public class PreparableMatchNode extends SimpleSelectorProcessingNode implements ParameterizableProcessingNode, Composable {
@@ -155,8 +155,8 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode implements
         }
 
         if (result != null) {
-            if (getLogger().isInfoEnabled()) {
-                getLogger().info("Matcher '" + this.componentName + "' matched prepared pattern '" +
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Matcher '" + this.componentName + "' matched prepared pattern '" +
                     this.pattern + "' at " + this.getLocation());
             }
 
