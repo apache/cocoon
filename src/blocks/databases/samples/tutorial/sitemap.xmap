@@ -82,18 +82,8 @@
     <map:serialize/>
   </map:act>
   <map:generate type="serverpages" src="docs/{1}-dept.xsp"/>
-  <map:transform src="stylesheets/apache.xsl"/>
+  <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
   <map:serialize/>
-</map:match>
-
-<map:match pattern="*-dept.xml">
-  <map:act set="process">
-    <map:parameter name="descriptor" value="context://samples/databases/tutorial/docs/department-form.xml"/>
-    <map:generate type="serverpages" src="docs/confirm-dept.xsp"/>
-    <map:serialize type="xml"/>
-  </map:act>
-  <map:generate type="serverpages" src="docs/{1}-dept.xsp"/>
-  <map:serialize type="xml"/>
 </map:match>
 
 <map:match pattern="*-empl.html">
@@ -104,60 +94,18 @@
     <map:serialize/>
   </map:act>
   <map:generate type="serverpages" src="docs/{1}-empl.xsp"/>
-  <map:transform src="stylesheets/apache.xsl"/>
+  <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
   <map:serialize/>
 </map:match>
 
-<map:match pattern="*-empl.xml">
-  <map:act set="process">
-    <map:parameter name="descriptor" value="context://samples/databases/tutorial/docs/employee-form.xml"/>
-    <map:generate type="serverpages" src="docs/confirm-empl.xsp"/>
-    <map:serialize type="xml"/>
-  </map:act>
-  <map:generate type="serverpages" src="docs/{1}-empl.xsp"/>
-  <map:serialize type="xml"/>
-</map:match>
-
-  <map:match pattern="**.xml">
-    <map:generate src="docs/{1}.xml"/>
-    <map:serialize type="xml"/>
-  </map:match>
-
   <map:match pattern="**.html">
     <map:generate src="docs/{1}.xml"/>
-    <map:transform src="stylesheets/apache.xsl"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
     <map:serialize/>
   </map:match>
 
-   <map:match pattern="images/**.gif">
-    <map:read src="resources/images/{1}.gif" mime-type="image/gif"/>
-   </map:match>
-
-   <map:match pattern="images/**.jpg">
-    <map:read src="resources/images/{1}.jpg" mime-type="image/jpg"/>
-   </map:match>
-
-   <map:match pattern="images/**.png">
-    <map:read src="resources/images/{1}.png" mime-type="image/png"/>
-   </map:match>
-
-   <map:match pattern="resources/**.css">
-     <map:read src="resources/styles/{1}.css" mime-type="text/css"/>
-   </map:match>
-
-   <map:match pattern="resources/**.js">
-     <map:read src="resources/styles/{1}.js" mime-type="application/x-javascript"/>
-   </map:match>
-
-   <map:handle-errors>
-    <map:transform src="stylesheets/system/error2document.xsl"/>
-    <map:transform src="stylesheets/apache.xsl"/>
-    <map:serialize status-code="500"/>
-   </map:handle-errors>
-
   </map:pipeline>
+
  </map:pipelines>
 
 </map:sitemap>
-
-<!-- end of file -->

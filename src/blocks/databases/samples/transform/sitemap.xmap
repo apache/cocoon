@@ -31,7 +31,7 @@
     database and translate the result to XML. [...]" 
     -->
     </map:transform>
-    <map:transform src="context://samples/stylesheets/simple-sql2html.xsl">
+    <map:transform src="../stylesheets/sql2html.xsl">
        <map:parameter name="servletPath" value="{request:servletPath}"/>
        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
        <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -45,6 +45,7 @@
    </map:match>
 
   </map:pipeline>
+  
  </map:pipelines>
 
 </map:sitemap>

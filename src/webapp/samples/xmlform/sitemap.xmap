@@ -85,7 +85,7 @@
 	      <map:transform type="xalan" src="stylesheets/wizard2html.xsl" />
 	
 	      <!-- Transforming the XMLForm controls to HTML controls -->
-	      <map:transform src="context://samples/stylesheets/xmlform/xmlform2html.xsl" />
+	      <map:transform src="context://stylesheets/system/xmlform2html.xslt" />
 	      
 	      <!-- sending the HTML back to the browser -->
 	      <map:serialize type="html" label="debug"/>
@@ -152,7 +152,7 @@
 	      <map:transform type="xalan" src="stylesheets/wizard2html.xsl" />
 	
 	      <!-- Transforming the XMLForm controls to HTML controls -->
-	      <map:transform src="context://samples/stylesheets/xmlform/xmlform2html.xsl" />
+	      <map:transform src="context://stylesheets/system/xmlform2html.xslt" />
 	      
 	      <!-- sending the HTML back to the browser -->
 	      <map:serialize type="html" label="debug"/>

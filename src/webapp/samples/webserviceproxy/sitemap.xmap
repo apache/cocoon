@@ -25,7 +25,7 @@
 				<!-- src="http://{header:host}/cocoon/samples/xmlform/wizard?cocoon-view=xml" -->
 				<map:transform src="stylesheets/newWizard2html.xsl" />
 				<map:transform
-					src="context://samples/stylesheets/xmlform/xmlform2html.xsl"
+					src="context://stylesheets/system/xmlform2html.xslt"
 					/>
 				<map:serialize type="html"/>
 			</map:match>

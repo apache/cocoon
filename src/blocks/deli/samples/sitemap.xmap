@@ -20,5 +20,7 @@
      <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
      <map:serialize type="wml"/>
    </map:match>
+   
+</map:sitemap>
 
 <!-- end of file -->

@@ -11,9 +11,8 @@
     <meta name="Author" content="{author}"/>
     <meta name="Version" content="{version}"/>
     <title>The Sitemap</title>
-    <link rel="stylesheet" type="text/css" href="sitemap-style" title="Style"/>
    </head>
-   <body bgcolor="white">
+   <body>
     <xsl:apply-templates/>
    </body>
   </html>
