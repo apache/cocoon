@@ -34,7 +34,7 @@
         <nextpointer img="images/button_continue.gif" do="{$continuation/id}.kont?confirmed=true"/>
     </site>
 
-</xsp:page>
+</page>
 
 
 

@@ -7,12 +7,12 @@
             <jxpath:for-each select="{cartItems}" >
                 <item productId="{item/productId}" id="{item/itemid}"> 
                     <desc>
-                        <jxpath:value-of select="item/attr1"/> 
-                        <jxpath:value-of select="item/attr2"/> 
-                        <jxpath:value-of select="item/attr3"/> 
-                        <jxpath:value-of select="item/attr4"/> 
-                        <jxpath:value-of select="item/attr5"/> 
-                        <jxpath:value-of select="item/product/name"/> 
+                        <jxpath:value-of select="{item/attr1}"/> 
+                        <jxpath:value-of select="{item/attr2}"/> 
+                        <jxpath:value-of select="{item/attr3}"/> 
+                        <jxpath:value-of select="{item/attr4}"/> 
+                        <jxpath:value-of select="{item/attr5}"/> 
+                        <jxpath:value-of select="{item/product/name}"/> 
                     </desc>
                     <price><jxpath:value-of select="{item/listPrice}"/></price>
                     <quantity><jxpath:value-of select="{quantity}"/></quantity>
