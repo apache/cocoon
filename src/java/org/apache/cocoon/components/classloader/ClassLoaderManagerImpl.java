@@ -34,7 +34,7 @@ public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**
    * The single class loader instance
    */
-  protected static RepositoryClassLoader instance = null;
+  private static RepositoryClassLoader instance = null;
 
   protected final static Set fileSet = Collections.synchronizedSet(new HashSet());
 
