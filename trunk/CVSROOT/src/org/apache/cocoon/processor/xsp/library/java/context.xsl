@@ -84,8 +84,7 @@
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          XSPContextLibrary.getAttribute(
-            servletContext,
+          servletContext.getAttribute(
             String.valueOf(<xsl:copy-of select="$name"/>)
           )
         </xsl:when>
@@ -133,8 +132,7 @@
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          XSPContextLibrary.getInitParameter(
-            servletContext,
+          servletContext.getInitParameter(
             String.valueOf(<xsl:copy-of select="$name"/>)
           )
         </xsl:when>

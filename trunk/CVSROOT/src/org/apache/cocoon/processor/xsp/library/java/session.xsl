@@ -63,7 +63,8 @@
   <!-- Import Global XSP Templates -->
   <!-- <xsl:import href="base-library.xsl"/> -->
 
-  <xsl:template match="session:get-attribute">
+  <!-- Deprecated methods -->
+  <xsl:template match="session:get-value">
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
@@ -77,15 +78,82 @@
     <xsp:expr>
       <xsl:choose>
         <xsl:when test="$as = 'node'">
-          XSPSessionLibrary.getAttribute(
+          XSPSessionLibrary.getValue(
             session,
             String.valueOf(<xsl:copy-of select="$name"/>),
             document
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
+          session.getValue(
+            String.valueOf(<xsl:copy-of select="$name"/>)
+          )
+        </xsl:when>
+      </xsl:choose>
+    </xsp:expr>
+  </xsl:template>
+
+  <xsl:template match="session:get-value-names">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'array'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsp:expr>
+      <xsl:choose>
+        <xsl:when test="$as = 'node'">
+          XSPSessionLibrary.getValueNames(session, document)
+        </xsl:when>
+        <xsl:when test="$as = 'array'">
+          session.getValueNames()
+        </xsl:when>
+      </xsl:choose>
+    </xsp:expr>
+  </xsl:template>
+
+  <xsl:template match="session:put-value">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsl:variable name="content">
+      <xsl:call-template name="get-nested-content">
+        <xsl:with-param name="content" select="."/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsp:logic>
+      session.putValue(
+        String.valueOf(<xsl:copy-of select="$name"/>),
+        <xsl:copy-of select="$content"/>
+      );
+    </xsp:logic>
+  </xsl:template>
+  <!-- End deprecated methods -->
+
+  <xsl:template match="session:get-attribute">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'object'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsp:expr>
+      <xsl:choose>
+        <xsl:when test="$as = 'node'">
           XSPSessionLibrary.getAttribute(
             session,
+            String.valueOf(<xsl:copy-of select="$name"/>),
+            document
+          )
+        </xsl:when>
+        <xsl:when test="$as = 'object'">
+          session.getAttribute(
             String.valueOf(<xsl:copy-of select="$name"/>)
           )
         </xsl:when>
@@ -128,7 +196,7 @@
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          String.valueOf(session.getCreationTime())
+          String.valueOf(new Date(session.getCreationTime()))
         </xsl:when>
         <xsl:when test="$as = 'long'">
           session.getCreationTime()
@@ -175,7 +243,7 @@
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          String.valueOf(session.getLastAccessedTime())
+          String.valueOf(new Date(session.getLastAccessedTime()))
         </xsl:when>
         <xsl:when test="$as = 'long'">
           session.getLastAccessedTime()
@@ -264,7 +332,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      session.putValue(
+      session.setAttribute(
         String.valueOf(<xsl:copy-of select="$name"/>),
         <xsl:copy-of select="$content"/>
       );
