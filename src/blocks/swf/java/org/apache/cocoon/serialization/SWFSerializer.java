@@ -27,7 +27,7 @@ import de.tivano.flash.swf.publisher.SWFWriter;
  * uses the project http://developer.berlios.de/projects/spark-xml/
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: SWFSerializer.java,v 1.4 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id: SWFSerializer.java,v 1.5 2004/05/24 08:09:29 cziegeler Exp $
  */
 public class SWFSerializer extends AbstractSerializer  {
     
@@ -36,23 +36,11 @@ public class SWFSerializer extends AbstractSerializer  {
     private SWFWriter handler;
 
     public String getMimeType() {
-      return(mimeType);
+        return mimeType;
     }
 
     public void setOutputStream(OutputStream out) {
         handler = new SWFWriter(out);
         this.contentHandler = handler;
-    }
-
-    public void startDocument()
-            throws SAXException {
-        getLogger().debug("starting SWF document");
-        super.startDocument();
-    }
-
-    public void startElement(String uri, String loc, String raw, Attributes a)
-            throws SAXException {
-        getLogger().debug("starting SWF element " + String.valueOf(raw));
-        super.startElement(uri, loc, raw, a);
     }
 }
