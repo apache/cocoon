@@ -226,17 +226,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
                 int status = STATUS_OK;
                 final Iterator iter = ((TraversableSource) source).getChildren().iterator();
                 while (iter.hasNext()) {
-                    Source child = null;
-                    try {
-                        status = remove((Source) iter.next());
-                        if (status != STATUS_OK) {
-                            return status;
-                        }
-                    }
-                    finally {
-                        if (child != null) {
-                            m_resolver.release(child);
-                        }
+                    status = remove((Source) iter.next());
+                    if (status != STATUS_OK) {
+                        return status;
                     }
                 }
             }
