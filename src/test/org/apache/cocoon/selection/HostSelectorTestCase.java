@@ -24,7 +24,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class HostSelectorTestCase extends SitemapComponentTestCase {
 
-    private final String HOST_SELECTOR = "host";
+    private static final String HOST_SELECTOR = "host";
 
     /**
      * Run this test suite from commandline

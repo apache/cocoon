@@ -36,8 +36,8 @@ public class MIMEUtilsTestCase extends TestCase
     final String NL = SystemUtils.LINE_SEPARATOR;
     Map mimeMap;
     Map extMap;
-    final String M2E = "MIME to extension mappings";
-    final String E2M = "Extension to MIME mappings";
+    static final String M2E = "MIME to extension mappings";
+    static final String E2M = "Extension to MIME mappings";
 
     public MIMEUtilsTestCase(String name) {
         super(name);

@@ -25,7 +25,7 @@ import org.apache.cocoon.environment.mock.MockCookie;
 
 public class CookieSelectorTestCase extends SitemapComponentTestCase {
 
-    private final String COOKIE_SELECTOR = "cookie";
+    private static final String COOKIE_SELECTOR = "cookie";
     
     /**
      * Run this test suite from commandline

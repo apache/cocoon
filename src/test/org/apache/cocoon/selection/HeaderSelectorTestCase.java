@@ -24,7 +24,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class HeaderSelectorTestCase extends SitemapComponentTestCase {
 
-    private final String HEADER_SELECTOR = "header";
+    private static final String HEADER_SELECTOR = "header";
 
     /**
      * Run this test suite from commandline
