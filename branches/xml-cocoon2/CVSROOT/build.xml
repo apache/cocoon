@@ -405,6 +405,9 @@ by the main ones.
         <exclude name="*.gif"/>
         <exclude name="*.png"/>
         <exclude name="*.jpg"/>
+        <exclude name="**/*.gif"/>
+        <exclude name="**/*.png"/>
+        <exclude name="**/*.jpg"/>
       </fileset>
     </copy>
 
@@ -413,11 +416,10 @@ by the main ones.
         <include name="*.gif"/>
         <include name="*.png"/>
         <include name="*.jpg"/>
+        <exclude name="**/*.gif"/>
+        <exclude name="**/*.png"/>
+        <exclude name="**/*.jpg"/>
       </fileset>
-    </copy>
-
-    <copy todir="${build.docs}/images" filtering="off">
-      <fileset dir="${build.xdocs}/images"/>
     </copy>
 
     <copy file="changes.xml" tofile="${build.xdocs}/changes.xml" filtering="on"/>
