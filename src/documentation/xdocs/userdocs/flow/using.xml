@@ -39,9 +39,9 @@
       </li>
       <li>
         To restart the computation of a previously stopped function, you use
-        the <code>&lt;map:continue&nbsp;with="..."/&gt;</code> construction.
+        the <code>&lt;map:call&nbsp;continuation="..."/&gt;</code> construction.
         This restarts the computation saved in a continuation object
-        identified by the string value of the <code>with</code> attribute.
+        identified by the string value of the <code>continuation</code> attribute.
         This value could be extracted in the sitemap from the requested URL,
         from a POST or GET parameter etc. When the computation stored in the
         continuation object is restarted, it appears as if nothing happened,
@@ -69,7 +69,7 @@
   <p>
     Once here, the Control Flow has to decide which page needs to be sent back
     to the client browser. To do this, the script can invoke either the
-    <code>sendPage</code> or the <code>sendPageAndContinue</code> functions.
+    <code>sendPageAndWait</code> or the <code>sendPage</code> functions.
     These functions take two parameters, the relative URL of the page to be
     sent back to the client, and a context object which can be accessed
     inside this page to extract various values and place them in the
@@ -77,8 +77,8 @@
   </p>
  
   <p>
-    The second argument to <code>sendPage</code> and
-    <code>sendPageAndContinue</code> is a context object, which can be a
+    The second argument to <code>sendPageAndWait</code> and
+    <code>sendPage</code> is a context object, which can be a
     simple dictionary with values that need to be displayed by the View. More
     generally any Java or JavaScript object can be passed here, as long as
     the necessary get methods for the important values are provided.
@@ -94,12 +94,12 @@
   </p>
  
   <p>
-    Going back to the <code>sendPage</code> and
-    <code>sendPageAndContinue</code> functions, there is a big difference
+    Going back to the <code>sendPageAndWait</code> and
+    <code>sendPage</code> functions, there is a big difference
     between them. The first function will send the response back to the
     client browser, and will stop the processing of the JavaScript script by
     saving it into a continuation object. The other function,
-    <code>sendPageAndContinue</code> will send the response, but it will not
+    <code>sendPage</code> will send the response, but it will not
     stop the computation. This is useful for example when you need to exit a
     top-level JavaScript function invoked with
     <code>&lt;map:call&nbsp;function="..."/&gt;</code>.
@@ -189,7 +189,7 @@
     Even if you don't need complex control flow in your application, you may
     still choose to use the MVC pattern described above. You can have top-
     level JavaScript functions which obtain the request parameters, invoke
-    the business logic and then call <code>sendPageAndContinue</code> to
+    the business logic and then call <code>sendPage</code> to
     generate a response page and return from the computation. Since there's
     no continuation object being created by this function, and no global
     scope being saved, there's no memory resource being eaten. The approach
