@@ -65,7 +65,7 @@ import java.util.Vector;
  * RequestModule} provides similar functionality based on JXPath.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestURIModule.java,v 1.2 2003/06/09 16:30:19 haul Exp $
+ * @version CVS $Id: RequestURIModule.java,v 1.3 2003/06/09 17:16:09 haul Exp $
  */
 public class RequestURIModule extends AbstractInputModule implements ThreadSafe {
 
@@ -97,11 +97,10 @@ public class RequestURIModule extends AbstractInputModule implements ThreadSafe 
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
         throws ConfigurationException {
 
-            Object[] values = new Object[1];
-            values[0] = this.getAttribute(name, modeConf, objectModel);
+            Object values = new Object[1];
+            values = this.getAttribute(name, modeConf, objectModel);
 
-            return (values[0] == null? null : values);
-            
+            return (values == null? null : new Object[]{values});            
     }
 
 }
