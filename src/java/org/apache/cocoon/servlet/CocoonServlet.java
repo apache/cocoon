@@ -1170,8 +1170,9 @@ public class CocoonServlet extends HttpServlet {
             }
 
             long end = System.currentTimeMillis();
-            String timeString = processTime(end - start);
+            String timeString = null;
             if (getLogger().isInfoEnabled()) {
+                timeString = processTime(end - start);
                 getLogger().info("'" + uri + "' " + timeString);
             }
 
@@ -1182,6 +1183,9 @@ public class CocoonServlet extends HttpServlet {
                     show = !showTime.equalsIgnoreCase("no");
                 }
                 if (show) {
+                    if ( timeString == null ) {
+                        timeString = processTime(end - start);
+                    }
                     boolean hide = this.hiddenShowTime;
                     if (showTime != null) {
                         hide = showTime.equalsIgnoreCase("hide");
