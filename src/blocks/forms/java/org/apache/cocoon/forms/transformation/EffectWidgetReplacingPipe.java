@@ -58,7 +58,7 @@ import java.util.Map;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  *
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.13 2004/05/07 16:43:43 mpo Exp $
+ * @version CVS $Id$
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -812,7 +812,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         super.recycle();
         this.contextWidget = null;
         this.widget = null;
-        widgetId = null;
+        this.widgetId = null;
+        this.pipeContext = null;
         this.namespacePrefix = null;
     }
 }

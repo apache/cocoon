@@ -57,7 +57,7 @@ import java.util.Map;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.12 2004/03/09 13:54:12 reinhard Exp $
+ * @version CVS $Id$
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -802,7 +802,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         super.recycle();
         this.contextWidget = null;
         this.widget = null;
-        widgetId = null;
+        this.widgetId = null;
+        this.pipeContext = null;
         this.namespacePrefix = null;
     }
 }
