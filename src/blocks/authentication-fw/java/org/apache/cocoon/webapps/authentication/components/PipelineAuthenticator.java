@@ -63,6 +63,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.MediaManager;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
@@ -82,7 +83,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.6 2003/10/24 08:26:35 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.7 2003/10/24 08:41:46 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -319,6 +320,13 @@ public class PipelineAuthenticator
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.authentication.components.Authenticator#logout(org.apache.cocoon.webapps.authentication.user.UserHandler)
+     */
+    public void logout(UserHandler handler) {
+        // we simply do nothing here
     }
 
 }

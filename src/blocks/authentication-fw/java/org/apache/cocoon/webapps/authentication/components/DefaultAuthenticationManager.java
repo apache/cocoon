@@ -99,7 +99,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.19 2003/10/24 08:26:35 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.20 2003/10/24 08:41:46 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -396,6 +396,7 @@ implements AuthenticationManager,
         final String redirectURI = config.getRedirectURI();
         return SourceUtil.appendParameters(redirectURI, parameters);
     }
+    
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.webapps.authentication.components.Manager#isAuthenticated(java.lang.String)
 	 */
@@ -417,6 +418,14 @@ implements AuthenticationManager,
         UserHandler handler = this.getUserHandler( handlerName );
         // we don't throw an exception if we are already logged out!
         if ( handler != null ) {
+            
+            // notify the authenticator
+            try {
+                this.lookupAuthenticator(config).logout(handler);
+            } catch (Exception ignore) {
+                // we really ignore any exception!
+            }
+            
             List applicationContexts = handler.getApplicationContexts();
             if ( applicationContexts != null ) {
                 ContextManager contextManager = null;
