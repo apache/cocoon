@@ -60,6 +60,7 @@ import org.apache.cocoon.components.notification.SimpleNotifyingBean;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.matching.helpers.WildcardHelper;
 
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.SourceResolver;
@@ -77,15 +78,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * The Cocoon Bean simplifies usage of the Cocoon object. Allows to create, 
+ * <p>The Cocoon Bean simplifies usage of the Cocoon object. Allows to create, 
  * configure Cocoon instance and process requests, one by one or multiple 
- * with link traversal.
+ * with link traversal.</p>
  *
+ * <p><b>WARNING:</b> This interface is not stable and could be changed in 
+ * backward incompatible way without prior notice.</p> 
+
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.17 2003/08/27 19:18:18 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.18 2003/08/28 19:21:00 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -97,6 +101,8 @@ public class CocoonBean extends CocoonWrapper {
     private List targets = new ArrayList();
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";
+    private List excludePatterns = new ArrayList();
+    private List includePatterns = new ArrayList();
 
     // Internal Objects
     private Map allProcessedLinks;
@@ -105,6 +111,7 @@ public class CocoonBean extends CocoonWrapper {
     private List listeners = new ArrayList();
     private boolean verbose;
     SourceResolver sourceResolver;
+    
     //
     // INITIALISATION METHOD
     //
@@ -199,6 +206,16 @@ public class CocoonBean extends CocoonWrapper {
             Target target = new Target((String) i.next(), destURI);
             targets.add(target);
         }
+    }
+
+    public void addExcludePattern(String pattern) {
+		int preparedPattern[] = WildcardHelper.compilePattern(pattern);
+		excludePatterns.add(preparedPattern);
+    }
+    
+    public void addIncludePattern(String pattern) {
+		int preparedPattern[] = WildcardHelper.compilePattern(pattern);
+        includePatterns.add(preparedPattern);
     }
 
     public void addListener(BeanListener listener) {
@@ -413,6 +430,12 @@ public class CocoonBean extends CocoonWrapper {
 
                 String absoluteLink =
                     NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
+                
+                if (!isIncluded(absoluteLink)) {
+                    //@TODO@ Log/report skipped link
+                    continue;
+                }
+                
                 {
                     final TreeMap p = new TreeMap();
                     absoluteLink =
@@ -482,7 +505,11 @@ public class CocoonBean extends CocoonWrapper {
                                     NetUtils.deparameterize(absoluteLink, p),
                                     p);
                         }
-                        absoluteLinks.add(absoluteLink);
+                        if (isIncluded(absoluteLink)) {
+                            absoluteLinks.add(absoluteLink);
+                        } else {
+                            // @TODO@ Log/report skipped link
+                        }
                     }
                     linkCount = gatheredLinks.size();
                 }
@@ -621,24 +648,53 @@ public class CocoonBean extends CocoonWrapper {
         return uri;
     }
     
-	public ModifiableSource getSource(Target target, String filename)
-		throws IOException, ProcessingException {
-		final String finalDestinationURI = target.getFinalURI(filename);
-		Source src = sourceResolver.resolveURI(finalDestinationURI);
-		if (!(src instanceof ModifiableSource)) {
-			sourceResolver.release(src);
-			throw new ProcessingException(
-				"Source is not Modifiable: " + finalDestinationURI);
-		}
-		return (ModifiableSource) src;
-	}
+    public ModifiableSource getSource(Target target, String filename)
+        throws IOException, ProcessingException {
+        final String finalDestinationURI = target.getFinalURI(filename);
+        Source src = sourceResolver.resolveURI(finalDestinationURI);
+        if (!(src instanceof ModifiableSource)) {
+            sourceResolver.release(src);
+            throw new ProcessingException(
+                "Source is not Modifiable: " + finalDestinationURI);
+        }
+        return (ModifiableSource) src;
+    }
 
-	public long getLastModified(Target target, String filename) throws IOException, ProcessingException {
-		return getSource(target, filename).getLastModified();
-	}
+    public long getLastModified(Target target, String filename) throws IOException, ProcessingException {
+        return getSource(target, filename).getLastModified();
+    }
         
-	public void releaseSource(ModifiableSource source) {
-		sourceResolver.release(source);
-	}
-    
+    public void releaseSource(ModifiableSource source) {
+        sourceResolver.release(source);
+    }
+    private boolean isIncluded(String uri) {
+        boolean included;
+        Iterator i;
+        HashMap map = new HashMap();
+        
+        if (includePatterns.size() == 0) {
+            included = true;
+        } else {
+            included = false;
+            i = includePatterns.iterator();
+            while (i.hasNext()){ 
+                int pattern[] = (int[])i.next();
+                if (WildcardHelper.match(map, uri, pattern)) {
+                    included=true;
+                    break;
+                }
+            }
+        }
+        if (excludePatterns.size() != 0) {
+            i = excludePatterns.iterator();
+            while (i.hasNext()) {
+                int pattern[] = (int[])i.next();
+                if (WildcardHelper.match(map, uri, pattern)) {
+                    included=false;
+                    break;
+                }
+            }
+        }
+        return included;
+    }
 }
