@@ -131,7 +131,7 @@
 
   <component
       role="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
-      class="org.apache.cocoon.core.container.CocoonServiceSelector">
+      class="org.apache.cocoon.core.container.StandaloneServiceSelector">
     <component-instance name="xsp" 
         class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>

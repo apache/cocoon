@@ -45,7 +45,7 @@ implements ServiceSelector, Serviceable, Configurable {
     protected ServiceManager serviceManager;
 
     /** The parent selector, if any */
-    protected CocoonServiceSelector parentSelector;
+    protected StandaloneServiceSelector parentSelector;
 
     /** The parent locator, if any */
     protected ServiceManager parentLocator;
@@ -427,7 +427,7 @@ implements ServiceSelector, Serviceable, Configurable {
      * @param locator
      * @throws ServiceException
      */
-    private void setParentLocator(ServiceManager locator, String role)
+    void setParentLocator(ServiceManager locator, String role)
     throws ServiceException {
         if (this.parentSelector != null) {
             throw new ServiceException(null, "Parent selector is already set");
@@ -438,8 +438,8 @@ implements ServiceSelector, Serviceable, Configurable {
             // Get the parent, unwrapping it as far as needed
             Object parent = locator.lookup(role);
             
-            if (parent instanceof CocoonServiceSelector) {
-                this.parentSelector = (CocoonServiceSelector)parent;
+            if (parent instanceof StandaloneServiceSelector) {
+                this.parentSelector = (StandaloneServiceSelector)parent;
             } else {
                 throw new IllegalArgumentException("Parent selector is not an extended component selector (" + parent + ")");
             }

@@ -22,7 +22,7 @@
       default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
     <role name="org.apache.cocoon.generation.GeneratorSelector"
       shorthand="generators"
-      default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+      default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
   </roles>
  
   <components>

@@ -23,7 +23,7 @@
 
   <role name="org.apache.cocoon.serialization.SerializerSelector"
         shorthand="serializers"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
  </roles>
 
  <components>

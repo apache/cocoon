@@ -25,7 +25,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  * The component enviromnent contains all objects necessary to create
  * a new component; it's just a "container" of objects.
  *
- * @version CVS $Id: CocoonServiceSelector.java 123716 2004-12-30 14:16:00Z vgritsenko $
+ * @version CVS $Id:  123716 2004-12-30 14:16:00Z vgritsenko $
  */
 public class ComponentEnvironment {
 

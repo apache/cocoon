@@ -41,7 +41,7 @@ import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.CocoonServiceSelector;
+import org.apache.cocoon.core.container.StandaloneServiceSelector;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -146,7 +146,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             factory.setAttribute("name", key);
             df.addChild(factory);
             manager.addComponent(typeClassName + "Selector", 
-                                 CocoonServiceSelector.class.getName(), 
+                                 StandaloneServiceSelector.class.getName(), 
                                  df);
         }
     }

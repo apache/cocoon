@@ -20,7 +20,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.CocoonServiceSelector;
+import org.apache.cocoon.core.container.StandaloneServiceSelector;
 import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSourceFactory;
@@ -52,7 +52,7 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             factory.setAttribute("name", "*");
             df.addChild(factory);
             manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
-                                 CocoonServiceSelector.class.getName(), 
+                                 StandaloneServiceSelector.class.getName(), 
                                  df);
         }
         if ( this.addSourceResolver() ) {
