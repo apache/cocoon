@@ -28,6 +28,7 @@ import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 
 import java.io.OutputStream;
@@ -52,7 +53,6 @@ public class CachingPointProcessingPipeline
     protected String autoCachingPointSwitch;
     protected boolean autoCachingPoint = true;
 
-
    /**
     * The <code>CachingPointProcessingPipeline</code> is configurable.
     * The autoCachingPoint algorithm can be switced on/off
@@ -67,15 +67,10 @@ public class CachingPointProcessingPipeline
         }
 
         // Default is that auto caching-point is on
-        if (this.autoCachingPointSwitch == null){
-            this.autoCachingPoint=true;
-            return;
-        }
-
-        if (this.autoCachingPointSwitch.toLowerCase().equals("on")) {
+        if (this.autoCachingPointSwitch == null) {
             this.autoCachingPoint=true;
         } else {
-            this.autoCachingPoint=false;
+            this.autoCachingPoint = BooleanUtils.toBoolean(this.autoCachingPointSwitch);
         }
     }
 
@@ -102,11 +97,8 @@ public class CachingPointProcessingPipeline
 
         // if this generator is manually set to "caching-point" (via pipeline-hint)
         // then ensure the next component is caching.
-        if ( "true".equals(pipelinehint)) {
-            this.nextIsCachePoint=true;
-        }
+        this.nextIsCachePoint = BooleanUtils.toBoolean(pipelinehint);
     }
-
 
     /**
      * Add a transformer.
@@ -131,16 +123,12 @@ public class CachingPointProcessingPipeline
 
         // add caching point flag
         // default value is false
-        this.isCachePoint.add(new Boolean(this.nextIsCachePoint));
-        this.nextIsCachePoint = false;
+        this.isCachePoint.add(BooleanUtils.toBooleanObject(this.nextIsCachePoint));
 
         // if this transformer is manually set to "caching-point" (via pipeline-hint)
         // then ensure the next component is caching.
-        if ( "true".equals(pipelinehint)) {
-            this.nextIsCachePoint=true;
-        }
+        this.nextIsCachePoint = BooleanUtils.toBoolean(pipelinehint);
     }
-
 
     /**
      * Determine if the given branch-point
@@ -150,27 +138,21 @@ public class CachingPointProcessingPipeline
      * and is of no consequence when auto caching-point is switched off
      */
     public void informBranchPoint() {
-
-        if (this.generator == null) {
-            return;
-        }
-        if (!this.autoCachingPoint) {
-            return;
-        }
-
-        this.nextIsCachePoint = true;
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Informed Pipeline of branch point");
+        if (this.autoCachingPoint && this.generator != null) {
+            this.nextIsCachePoint = true;
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Informed Pipeline of branch point");
+            }
         }
     }
 
     /**
      * Cache longest cacheable path plus cache points.
      */
-    protected void cacheResults(Environment environment, OutputStream os)  throws Exception {
+    protected void cacheResults(Environment environment, OutputStream os) throws Exception {
 
         if (this.toCacheKey != null) {
-            if ( this.cacheCompleteResponse ) {
+            if (this.cacheCompleteResponse) {
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug("Cached: caching complete response; pSisze"
                                            + this.toCacheKey.size() + " Key " + this.toCacheKey);
@@ -178,8 +160,7 @@ public class CachingPointProcessingPipeline
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           ((CachingOutputStream)os).getContent());
                 response.setContentType(environment.getContentType());
-                this.cache.store(this.toCacheKey.copy(),
-                                 response);
+                this.cache.store(this.toCacheKey.copy(), response);
                 //
                 // Scan back along the pipelineCacheKey for
                 // for any cachepoint(s)
@@ -192,22 +173,20 @@ public class CachingPointProcessingPipeline
                 //
                 // REVISIT: Is it enough to simply reduce the length of the validities array?
                 //
-                if (this.toCacheKey.size()>0) {
+                if (this.toCacheKey.size() > 0) {
                     SourceValidity[] copy = new SourceValidity[this.toCacheKey.size()];
-                    System.arraycopy(this.toCacheSourceValidities, 0,
-                                     copy, 0, copy.length);
+                    System.arraycopy(this.toCacheSourceValidities, 0, copy, 0, copy.length);
                     this.toCacheSourceValidities = copy;
                 }
             }
 
-            if (this.toCacheKey.size()>0) {
+            if (this.toCacheKey.size() > 0) {
                 ListIterator itt = this.xmlSerializerArray.listIterator(this.xmlSerializerArray.size());
                 while (itt.hasPrevious()) {
                     XMLSerializer serializer = (XMLSerializer) itt.previous();
                     CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                               (byte[])serializer.getSAXFragment());
-                    this.cache.store(this.toCacheKey.copy(),
-                                     response);
+                    this.cache.store(this.toCacheKey.copy(), response);
 
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("Caching results for the following key: "
@@ -226,11 +205,9 @@ public class CachingPointProcessingPipeline
                     // re-calculate validities array
                     //
                     SourceValidity[] copy = new SourceValidity[this.toCacheKey.size()];
-                    System.arraycopy(this.toCacheSourceValidities, 0,
-                                     copy, 0, copy.length);
+                    System.arraycopy(this.toCacheSourceValidities, 0, copy, 0, copy.length);
                     this.toCacheSourceValidities = copy;
                 } //end serializer loop
-
             }
         }
     }
@@ -248,10 +225,8 @@ public class CachingPointProcessingPipeline
         } else if (type == ComponentCacheKey.ComponentType_Serializer) {
             cachePoint = this.nextIsCachePoint;
         }
-
         return new ComponentCacheKey(type, role, key, cachePoint);
     }
-
 
     /**
      * Connect the caching point pipeline.
@@ -274,13 +249,13 @@ public class CachingPointProcessingPipeline
                     int currentTransformerIndex = 0; //start with the first transformer
 
                     Iterator itt = this.transformers.iterator();
-                    while ( itt.hasNext() ) {
+                    while (itt.hasNext()) {
                         next = (XMLConsumer) itt.next();
 
                         // if we have cacheable transformers,
                         // check the tranformers for cachepoints
                         if (cacheableTransformerCount > 0) {
-                            if ( (this.isCachePoint.get(currentTransformerIndex) != null)  &&
+                            if ((this.isCachePoint.get(currentTransformerIndex) != null)  &&
                                     ((Boolean)this.isCachePoint.get(currentTransformerIndex)).booleanValue()) {
 
                                 cachePointXMLSerializer = ((XMLSerializer)
@@ -289,7 +264,6 @@ public class CachingPointProcessingPipeline
                                 this.xmlSerializerArray.add(cachePointXMLSerializer);
                             }
                         }
-
 
                         // Serializer is not cacheable,
                         // but we  have the longest cacheable key. Do default longest key caching
@@ -309,7 +283,6 @@ public class CachingPointProcessingPipeline
                     }
                     next = super.lastConsumer;
 
-
                     // if the serializer is not cacheable, but all the transformers are:
                     // (this is default longest key caching)
                     if (localXMLSerializer != null) {
@@ -326,8 +299,6 @@ public class CachingPointProcessingPipeline
                         this.xmlSerializerArray.add(cachePointXMLSerializer);
                     }
                     this.connect(environment, prev, next);
-
-
                 } else {
                     // Here the first part of the pipeline has been retrived from cache
                     // we now check if any part of the rest of the pipeline can be cached
@@ -337,7 +308,7 @@ public class CachingPointProcessingPipeline
                     XMLConsumer next;
                     int cacheableTransformerCount = 0;
                     Iterator itt = this.transformers.iterator();
-                    while ( itt.hasNext() ) {
+                    while (itt.hasNext()) {
                         next = (XMLConsumer) itt.next();
 
                         if (cacheableTransformerCount >= this.firstProcessedTransformerIndex) {
@@ -345,7 +316,7 @@ public class CachingPointProcessingPipeline
                             // if we have cacheable transformers left,
                             // then check the tranformers for cachepoints
                             if (cacheableTransformerCount < this.firstNotCacheableTransformerIndex) {
-                                if ( !(prev instanceof XMLDeserializer) &&
+                                if (!(prev instanceof XMLDeserializer) &&
                                         (this.isCachePoint.get(cacheableTransformerCount) != null)  &&
                                         ((Boolean)this.isCachePoint.get(cacheableTransformerCount)).booleanValue()) {
                                     cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
@@ -374,7 +345,6 @@ public class CachingPointProcessingPipeline
                         next = new XMLTeePipe(next, localXMLSerializer);
                         this.xmlSerializerArray.add(localXMLSerializer);
                         localXMLSerializer = null;
-
             }
             //	else the serializer is cacheable but has views
             else if (this.nextIsCachePoint && !(prev instanceof XMLDeserializer) &&
@@ -386,11 +356,10 @@ public class CachingPointProcessingPipeline
                     this.connect(environment, prev, next);
                 }
 
-            } catch ( ComponentException e ) {
+            } catch (ComponentException e) {
                 throw new ProcessingException("Could not connect pipeline.", e);
             }
     }
-
 
     /**
      * Recyclable Interface
@@ -407,5 +376,4 @@ public class CachingPointProcessingPipeline
         this.nextIsCachePoint = false;
         this.autoCachingPointSwitch=null;
     }
-
 }
