@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.39 $ $Date: 2001-03-02 12:21:00 $
+ * @version CVS $Revision: 1.1.2.40 $ $Date: 2001-03-02 12:42:59 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -172,9 +172,6 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                 programInstance = (CompiledComponent) select(normalizedName);
             } catch (Exception cme) {
                 getLogger().debug("Can't load ServerPage", cme);
-            } finally {
-                this.markupSelector.release((Component) markupLanguage);
-                this.languageSelector.release((Component) programmingLanguage);
             }
         }
 
