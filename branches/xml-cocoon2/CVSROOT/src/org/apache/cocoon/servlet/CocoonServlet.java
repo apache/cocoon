@@ -40,19 +40,18 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.19 $ $Date: 2000-09-19 00:28:49 $
+ * @version CVS $Revision: 1.1.4.20 $ $Date: 2000-09-22 12:19:36 $
  */
  
 public class CocoonServlet extends HttpServlet {
 
-    public static final String SERVLET_CLASSPATH = "org.apache.catalina.jsp_classpath";
-    
-    private long           creationTime      = 0;
-    private Cocoon         cocoon            = null;
-    private String         configurationFile = null;
-    private Exception      exception         = null;
-    private ServletContext context           = null;
-    private String         classpath         = null;
+    private long creationTime = 0;
+    private Cocoon cocoon;
+    private File configFile;
+    private Exception exception;
+    private ServletContext context;
+    private String classpath;
+    private File workpath;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.
@@ -75,13 +74,15 @@ public class CocoonServlet extends HttpServlet {
         // write our own compiler.
         // For now we tie ourselves to Tomcat but at least we can work without
         // placing everything in the system classpath.
-        this.classpath = (String) context.getAttribute(SERVLET_CLASSPATH);
+        this.classpath = (String) context.getAttribute(Cocoon.CATALINA_SERVLET_CLASSPATH);
+        if (this.classpath == null) {
+            this.classpath = (String) context.getAttribute(Cocoon.TOMCAT_SERVLET_CLASSPATH);
+        }
 
-        String configFile = conf.getInitParameter("configurations");
-
-        this.context.log("this.configurationFile: " + configFile);
-
-        if (configFile == null) {
+        this.workpath = (File) this.context.getAttribute("javax.servlet.context.tempdir");
+        
+        String configFileName = conf.getInitParameter("configurations");
+        if (configFileName == null) {
             ServletException fatalException =
                 new ServletException("Servlet initialization argument "
                                      + "'configurations' not specified");
@@ -96,24 +97,22 @@ public class CocoonServlet extends HttpServlet {
             Notifier.notify(n, System.out);
 
             throw fatalException;
+        } else {
+            this.context.log("Using configuration file: " + configFileName);
         }
 
         try {
-            this.configurationFile =
-                this.context.getResource(configFile).getFile();
-
-            this.context.log("this.configurationFile: "
-                             + this.configurationFile);
+            this.configFile = new File(this.context.getResource(configFileName).getFile());
         } catch (java.net.MalformedURLException mue) {
             ServletException fatalException =
                 new ServletException("Servlet initialization argument "
                                      + "'configurations' not found at "
-                                     + this.configurationFile);
+                                     + configFileName);
             Notification n = new Notification(this, fatalException);
             n.setType("cocoon-init-error");
             n.setTitle("Cocoon error upon init.");
             n.addExtraDescription("requested-configuration-file",
-                                  this.configurationFile);
+                                  this.configFile.toString());
             // FIXME (SM) see above
             Notifier.notify(n, System.out);
 
@@ -121,11 +120,6 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.cocoon = this.create();
-
-        System.setProperty(Cocoon.TEMPDIR_PROPERTY,
-                           ((File) this.context
-                               .getAttribute("javax.servlet.context.tempdir"))
-                                   .toString());
     }
 
     /**
@@ -182,12 +176,9 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // We got it... Process the request
-        // We should use getRequestURI(), minus the Context path otherwise
-        // we break compatability with Tomcat and other Servlet 2.2 engines
-        // (like Gefion LWS and Orion)
-        //-----> FIXME (SM) Check what this means now that we support only Servlet 2.2 and above!
-        String uri =
-            req.getRequestURI().substring(req.getContextPath().length());
+        String uri =  req.getServletPath();
+        String pathInfo = req.getPathInfo();
+        if (pathInfo != null) uri += "/" + pathInfo;
 
         if (!uri.equals("")) {
             try {
@@ -293,9 +284,9 @@ public class CocoonServlet extends HttpServlet {
     private Cocoon create() {
 
         try {
-            this.context.log("Reloading from: " + this.configurationFile);
+            this.context.log("Reloading from: " + this.configFile);
 
-            Cocoon c = new Cocoon(this.configurationFile, this.classpath);
+            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workpath);
 
             this.creationTime = System.currentTimeMillis();
 
