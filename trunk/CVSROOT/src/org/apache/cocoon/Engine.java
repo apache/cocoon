@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.31 2000-06-21 22:09:56 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.32 2000-06-22 19:08:28 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.31 $ $Date: 2000-06-21 22:09:56 $
+ * @version $Revision: 1.32 $ $Date: 2000-06-22 19:08:28 $
  */
 
 public class Engine implements Defaults {
@@ -367,7 +367,7 @@ public class Engine implements Defaults {
             // if verbose mode is on the the output type allows it
 			         // and the HTTP request isn't a HEAD
             // print some processing info as a comment
-            if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod()) {
+            if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
                 time = System.currentTimeMillis() - time;
                 out.println("<!-- This page was served "
                     + (page.isCached() ? "from cache " : "")
