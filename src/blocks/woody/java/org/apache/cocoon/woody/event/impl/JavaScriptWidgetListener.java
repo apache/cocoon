@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.event.impl;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.woody.event.ActionEvent;
@@ -93,12 +95,9 @@ public abstract class JavaScriptWidgetListener {
         
     }
     
-    public static Scriptable getParentScope() {
+    public static Scriptable getParentScope(Request request) {
         // Try to get the flowscript scope
-        // FIXME: remove this ugly hack and get the request from the Avalon context once
-        // listener builder are real components
-        Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
-        Scriptable parentScope = (Scriptable)request.getAttribute("flow-script-scope");
+        Scriptable parentScope = (Scriptable)request.getAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
 
         if (parentScope != null) {
             return parentScope;
@@ -114,15 +113,23 @@ public abstract class JavaScriptWidgetListener {
         Context ctx = Context.enter();
         try {
             
-            Scriptable parentScope = getParentScope();
+            // FIXME: remove this ugly hack and get the request from the Avalon context once
+            // listener builder are real components
+            Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+
+            Scriptable parentScope = getParentScope(request);
             
             // Create a new local scope for the event listener variables
             Scriptable scope = ctx.newObject(parentScope);
+            scope.setPrototype(parentScope);
             scope.put("event", scope, Context.toObject(event, scope));
             
-            // FIXME: I would also put the widget as "this", but there seems to be another "this" in the way...
-            //scope.put("this", scope, Context.toObject(event.getSource(), scope));
-
+            // Add the biz data that was passed to showForm()
+            Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
+            if (viewData != null) {
+                scope.put("viewData", scope, viewData);
+            }
+            
             script.exec(ctx, scope);
             
         } catch(RuntimeException re) {
@@ -133,6 +140,11 @@ public abstract class JavaScriptWidgetListener {
         } finally {
             Context.exit();
         }
+    }
+    
+    public static final void traceHack(Object obj) {
+        System.err.println("trace of " + obj.getClass().getName());
+        System.err.println(obj);
     }
     
     public static class JSActionListener extends JavaScriptWidgetListener implements ActionListener {

@@ -79,6 +79,11 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         "cocoon.flow.js.fom.FOM_Context";
     public static final String FOM_WEB_CONTINUATION = 
         "cocoon.flow.js.fom.FOM_WebContinuation";
+    /**
+     * The parent scope to be used by nested scripts (e.g. Woody event handlers)
+     */
+    public static final String FOM_SCOPE =
+        "cocoon.flow.js.fom.FOM_Scope";
 
     /** 
      * Return the JS "Packages" property (that gives access to Java
