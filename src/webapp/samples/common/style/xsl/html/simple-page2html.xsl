@@ -2,24 +2,10 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:param name="contextPath" select="string('/cocoon')"/>
   <xsl:param name="servletPath" select="string('/samples')"/>
   <xsl:param name="sitemapURI"/>
-  <xsl:param name="file"/><!-- relative path to file or file suffix -->
-  <xsl:param name="remove"/><!-- path to remove from servletPath -->
-  <xsl:param name="contextPath" select="string('/cocoon')"/>
 
-  <xsl:variable name="realpath">
-    <xsl:choose>
-      <xsl:when test="$remove=''">
-        <xsl:value-of select="$servletPath"/>        
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="substring-before($servletPath,$remove)"/>        
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <xsl:variable name="path" select="concat($contextPath,'/samples/view-source?filename=')"/>
-  <xsl:variable name="view-source" select="concat($realpath,$file)"/>
   <xsl:variable name="directory" select="substring-before($servletPath,$sitemapURI)"/>
   <!-- assume that sitemapURIs don't occur in servletPath more than once -->
   <xsl:variable name="sitemap" select="concat($directory,'sitemap.xmap')"/>
@@ -44,29 +30,31 @@
           <tr>
             <td width="90%">&#160;</td>
             <td nowrap="nowrap">
-              <a target="_blank" href="{concat($contextPath,$servletPath,'?cocoon-view=content')}">Content View</a>
+              <a href="?cocoon-view=content">Content View</a>
             </td>
             <td nowrap="nowrap">
-              <a target="_blank" href="{concat($path,$view-source)}">Source</a>
+              <a href="?cocoon-view=pretty-content">Source</a>
             </td>
             <td nowrap="nowrap">
-              <a target="_blank" href="{concat($path,$sitemap)}">Sitemap</a>
+              <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
             </td>
             <xsl:for-each select="resources/resource">
               <td class="{@type}">
                 <xsl:choose>
                   <xsl:when test="@type='file'">
-                    <a target="_blank" href="{concat($path,$directory,@href)}">
+                    <a href="{@href}">
+                      <!-- we need an explicite match in the sitemap showing
+                           the source of these resources -->
                       <xsl:apply-templates/>
                     </a>
                   </xsl:when>
                   <xsl:when test="@type='doc'">
-                    <a target="_blank" href="{concat($contextPath,'/docs/',@href)}">
+                    <a href="{concat($contextPath,'/docs/',@href)}">
                       <xsl:apply-templates/>
                     </a>
                   </xsl:when>
                   <xsl:otherwise>
-                    <a target="_blank" href="{concat($contextPath,'/',@href)}">
+                    <a href="{concat($contextPath,'/',@href)}">
                       <xsl:apply-templates/>
                     </a>
                   </xsl:otherwise>

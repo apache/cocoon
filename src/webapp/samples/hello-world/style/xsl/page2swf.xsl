@@ -11,12 +11,10 @@
     Most probably, the font definition below is not correct over the
     whole character set.
 
-    CVS $Id: page2swf.xsl,v 1.5 2003/05/08 00:22:38 vgritsenko Exp $
+    CVS $Id: page2swf.xsl,v 1.6 2003/10/22 11:42:05 joerg Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-<xsl:param name="view-source"/>
 
 <xsl:template match="page">
 <SWF version="5" framerate="12.0" width="320.0" height="240.0">
