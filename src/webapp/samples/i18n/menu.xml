@@ -28,7 +28,7 @@
     <menu-item label="Français (Suisse)" href="?locale=fr_CH" icon="images/f-ch.gif" />        
     <menu-item label="Português (Portugal)" href="?locale=pt_PT" icon="images/f-pt.gif" />            
     <menu-item label="Polski" href="?locale=pl_PL" icon="images/f-pl.gif"/>            
-    <menu-item label="Հայերեն (Հայաստան)" href="?locale=hy_HY" icon="images/f-am.gif"/>
+    <menu-item label="Հայերեն (Հայաստան)" href="?locale=hy_AM" icon="images/f-am.gif"/>
     <menu-item label="Türkçe" href="?locale=tr_TR" icon="images/f-tr.gif"/>
     <menu-item label="한글(대한민국)" href="?locale=ko_KR" icon="images/f-ko.gif"/>
     <menu-item label="日本語" href="?locale=ja_JP" icon="images/f-ja.gif"/>
