@@ -103,7 +103,7 @@ of objects:</p><p>
 </source>
 <p>Example:
 <source>
-&lt;xsp:attribute name="action"&gt;"kont/"+&lt;jpath:continuation/&gt;&lt;xsp:attribute&gt;
+&lt;xsp:attribute name="action"&gt;&lt;xsp:expr&gt;&lt;jpath:continuation/&gt;+".form"&lt;/xsp:expr&gt;&lt;/xsp:attribute&gt;
 </source>
 </p>
 </s2>
