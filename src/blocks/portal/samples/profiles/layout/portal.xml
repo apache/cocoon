@@ -312,4 +312,9 @@
       </item>
     </composite-layout>
   </named-item>
+  <named-item name="AppCoplet">
+    <coplet-layout name="coplet">
+      <coplet-instance-data>Google-1</coplet-instance-data>
+    </coplet-layout>
+  </named-item>
 </composite-layout>

@@ -393,4 +393,18 @@
          <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/flow/jxcalc/</value>
       </attribute>
    </coplet-data>
+
+   <!-- Example for the application coplet -->
+   <coplet-data id="Google" name="standard">
+      <title>Application</title>
+      <coplet-base-data>Application</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/html/app-coplet</value>
+      </attribute>
+      <attribute>
+         <name>start-uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://www.google.com/index.html</value>
+      </attribute>
+   </coplet-data>
 </coplets>
