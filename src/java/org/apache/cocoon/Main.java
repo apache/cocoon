@@ -42,7 +42,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.25 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: Main.java,v 1.26 2004/04/30 12:55:55 upayavira Exp $
  */
 public class Main {
 
@@ -311,6 +311,11 @@ public class Main {
         cocoon.addTargets(line.getArgList(), destDir);
 
         listener.messageGenerated(CocoonBean.getProlog());
+
+        if (cocoon.getTargetCount() ==0 && cocoon.isPrecompileOnly()) {
+            listener.messageGenerated("Please, specify at least one starting URI.");
+            System.exit(1);
+        }
 
         cocoon.initialize();
         cocoon.process();
