@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.i18n.I18nUtils;
@@ -43,7 +44,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.5 2004/03/18 21:04:39 joerg Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.6 2004/04/23 13:02:31 mpo Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -249,7 +250,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         if (widgetId == null || widgetId.equals("")) {
             throw new SAXException("FormsTemplateTransformer: missing id attribute on a Cocoon Forms element.");
         }
-        Widget widget = contextWidget.getWidget(widgetId);
+        Widget widget = ((ContainerWidget)contextWidget).getWidget(widgetId);
         if (widget == null) {
             throw new SAXException("FormsTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getFullyQualifiedId());
         }

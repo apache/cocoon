@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.flow.javascript;
 import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.BooleanField;
+import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Field;
 import org.apache.cocoon.forms.formmodel.MultiValueField;
 import org.apache.cocoon.forms.formmodel.Output;
@@ -30,7 +31,7 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version $Id: ScriptableWidget.java,v 1.3 2004/04/23 13:02:31 mpo Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -75,7 +76,7 @@ public class ScriptableWidget extends ScriptableObject {
                 return true;
             }
         } else if (delegate != null) {
-            Widget sub = delegate.getWidget(id);
+            Widget sub = ((ContainerWidget)delegate).getWidget(id);
             if (sub != null) {
                 return true;
             }
@@ -107,7 +108,7 @@ public class ScriptableWidget extends ScriptableObject {
                 return new Integer(values.length);
             }
         } else if (delegate != null) {
-            Widget sub = delegate.getWidget(id);
+            Widget sub = ((ContainerWidget)delegate).getWidget(id);
             if (sub != null) {
                 if (sub instanceof Field ||
                     sub instanceof BooleanField ||
@@ -190,7 +191,7 @@ public class ScriptableWidget extends ScriptableObject {
                 }
             }
         } else if (delegate != null) {
-            Widget sub = delegate.getWidget(id);
+            Widget sub = ((ContainerWidget)delegate).getWidget(id);
             if (sub instanceof Field) {
                 Field field = (Field)sub;
                 value = unwrap(value);

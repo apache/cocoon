@@ -19,7 +19,7 @@ import java.util.Iterator;
 /**
  * Interface to be implemented by Widgets which contain other widgets.
  *
- * @version $Id: ContainerWidget.java,v 1.2 2004/04/12 14:05:09 tim Exp $
+ * @version $Id: ContainerWidget.java,v 1.3 2004/04/23 13:02:31 mpo Exp $
  */
 public interface ContainerWidget extends Widget {
     
@@ -35,12 +35,12 @@ public interface ContainerWidget extends Widget {
 
     /**
      * Gets the child widget with the given id.
-     * Returns null if there is no child with the given id.
+     * @return null if there is no child with the given id.
      */
     public Widget getWidget(String id);
 
     /**
-     * Returns an iterator over the widgets this object contains
+     * @return an iterator over the widgets this object contains
      */
     public Iterator getChildren();
 

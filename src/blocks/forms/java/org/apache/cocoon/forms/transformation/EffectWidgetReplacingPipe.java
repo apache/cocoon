@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.transformation;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.AggregateField;
+import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Struct;
 import org.apache.cocoon.forms.formmodel.Union;
@@ -57,7 +58,7 @@ import java.util.Map;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  *
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.10 2004/04/12 21:43:39 mpo Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.11 2004/04/23 13:02:31 mpo Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -167,7 +168,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     }
 
     protected Widget getWidget(String widgetId) throws SAXException {
-        Widget widget = contextWidget.getWidget(widgetId);
+        Widget widget = ((ContainerWidget)contextWidget).getWidget(widgetId);
         if (widget == null) {
             if (contextWidget.getFullyQualifiedId().equals("")) {
                 throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the form container.");
