@@ -54,7 +54,7 @@
  * InputModule Logicsheet, access methods of InputModule.
  *
  * @author <a href="mailto:haul@apache.org>Christian Haul</a>
- * @version CVS $Id: input.xsl,v 1.1 2003/03/09 00:08:56 pier Exp $
+ * @version CVS $Id: input.xsl,v 1.2 2004/02/07 16:07:31 ghoward Exp $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -79,8 +79,8 @@
         // create module cache
         if (this._xsp_module_helper == null) {
            this._xsp_module_helper = new XSPModuleHelper();
-           this._xsp_module_helper.setup(manager);
         }
+        this._xsp_module_helper.setup(manager);
       </xsp:init-page>
 
       <xsp:exit-page>
