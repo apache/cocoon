@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.289 2004/03/28 00:09:02 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.290 2004/03/28 20:07:59 antonio Exp $:-->
 
 <status>
  <developers>
@@ -213,7 +213,13 @@
 
  <release version="@version@" date="@date@">
     <action dev="AG" type="update">
-     Updated batik to 1.5.1
+     Deprecated Tokenizer and the methods count(), matchStrings(),
+     repleaceTokens() and both split() in StringUtils. The functionality of all this
+     was replaced in favor of Apache commons.lang lib.
+     They will be removed in Cocoon 2.2
+   </action>
+    <action dev="AG" type="update">
+     Updated batik to 1.5.1, db-ojb to 1.0RC6
    </action>
    <action dev="TC" type="remove">
      Removed xmlform and jxforms blocks as confirmed by a users poll.
