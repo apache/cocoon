@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.8 2003/06/22 18:48:20 coliver Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.9 2003/06/27 20:10:43 stefano Exp $ -->
 
 <samples>
 
@@ -29,27 +29,6 @@
   <group name="Castor">
     <sample name="CastorTransformer" href="castor/">
       Show the usage of the Castor Transformer.
-    </sample>
-  </group>
-
-  <group name="Paginator">
-    <sample name="List Pagination" href="paginator/list(1)">
-      Show the usage of the Paginator Transformer to paginate document based on items count limit.
-    </sample>
-    <sample name="Text Pagination" href="paginator/text(1)">
-      Show the usage of the Paginator Transformer to paginate document based on characters count limit.
-    </sample>
-  </group>
-  
-  <group name="ImageReader">
-    <sample name="Image" href="imagereader/image-0">
-      Image of original size
-    </sample>
-    <sample name="Image 250x250" href="imagereader/image-250">
-      Image scaled up to the size 250 x 250
-    </sample>
-    <sample name="Image 50x50" href="imagereader/image-50">
-      Image scaled down to the size 50 x 50
     </sample>
   </group>
 

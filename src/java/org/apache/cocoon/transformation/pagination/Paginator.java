@@ -83,7 +83,7 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.5 2003/05/17 16:12:23 stephan Exp $
+ * @version    CVS $Id: Paginator.java,v 1.1 2003/06/27 20:10:42 stefano Exp $
  */
 public class Paginator extends AbstractTransformer
   implements Composable, Disposable, CacheableProcessingComponent {

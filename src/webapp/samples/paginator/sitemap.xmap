@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: sitemap.xmap,v 1.1 2003/03/09 00:10:31 pier Exp $ -->
+<!-- CVS: $Id: sitemap.xmap,v 1.1 2003/06/27 20:10:42 stefano Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:components>

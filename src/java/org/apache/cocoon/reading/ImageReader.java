@@ -92,7 +92,7 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.3 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: ImageReader.java,v 1.1 2003/06/27 20:10:43 stefano Exp $
  */
 final public class ImageReader extends ResourceReader {
 
