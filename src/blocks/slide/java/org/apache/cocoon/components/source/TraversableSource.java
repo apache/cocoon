@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceException;
  *
  * @deprecated use the one from excalibur sourceresolve instead 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: TraversableSource.java,v 1.5 2003/10/23 10:37:27 unico Exp $
+ * @version CVS $Id: TraversableSource.java,v 1.6 2003/10/29 14:15:21 vgritsenko Exp $
  */
 public interface TraversableSource extends Source {
 
@@ -79,8 +79,8 @@ public interface TraversableSource extends Source {
     public String getChildSource(int index)  throws SourceException;
 
     /**
-     * Return the system if of the parent source. The method should return
-     * null if the source hasn't a parent. 
+     * Return the system id of the parent source. The method should return
+     * null if the source has no parent.
      */
     public String getParentSource();
 }
