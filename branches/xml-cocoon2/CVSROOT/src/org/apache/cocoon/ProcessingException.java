@@ -18,7 +18,7 @@ import org.apache.avalon.CascadingException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-23 14:01:25 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-23 14:47:32 $
  */
 public class ProcessingException extends CascadingException {
 
@@ -40,23 +40,28 @@ public class ProcessingException extends CascadingException {
     public String toString() {
         StringBuffer s = new StringBuffer();
         s.append(super.toString());
-        s.append(':');
-        s.append(getCause().toString());
+        if(getCause()!=null) {
+            s.append(':');
+            s.append(getCause().toString());
+        }
         return s.toString();
     }
 
     public void printStackTrace() {
         super.printStackTrace();
-        getCause().printStackTrace();
+        if(getCause()!=null)
+            getCause().printStackTrace();
     }
 
     public void printStackTrace( PrintStream s ) {
         super.printStackTrace(s);
-        getCause().printStackTrace(s);
+        if(getCause()!=null)
+            getCause().printStackTrace(s);
     }
 
     public void printStackTrace( PrintWriter s ) {
         super.printStackTrace(s);
-        getCause().printStackTrace(s);
+        if(getCause()!=null)
+            getCause().printStackTrace(s);
     }
 }
