@@ -84,9 +84,6 @@
       <!-- tools libs -->
       <fileset dir="${tools}/lib">
         <include name="*.jar"/>
-        <exclude name="xalan*.jar"/>
-        <exclude name="xml-api*.jar"/>
-        <exclude name="xerces*.jar"/>
       </fileset>      
     </path>
 
