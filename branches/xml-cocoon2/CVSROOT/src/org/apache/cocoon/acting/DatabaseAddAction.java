@@ -40,14 +40,14 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-12 04:38:31 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-12 15:52:43 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
-    private static final Map addStatements = new HashMap();
+    protected static final Map addStatements = new HashMap();
     private static final Map selectStatements = new HashMap();
 
     /**
-     * Delete a record from the database.  This action assumes that
+     * Add a record to the database.  This action assumes that
      * the file referenced by the "form-descriptor" parameter conforms
      * to the AbstractDatabaseAction specifications.
      */
@@ -126,7 +126,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
      * mapped to the Configuration object itself, so if it doesn't exist,
      * it will be created.
      */
-    private final String getAddQuery(Configuration conf) throws ConfigurationException {
+    protected String getAddQuery(Configuration conf) throws ConfigurationException {
         String query = null;
 
         synchronized (DatabaseAddAction.addStatements) {
@@ -194,7 +194,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
      * mapped to the Configuration object itself, so if it doesn't exist,
      * it will be created.
      */
-    private final synchronized void setSelectQuery(String tableName, Configuration entry) throws ConfigurationException {
+    protected final synchronized void setSelectQuery(String tableName, Configuration entry) throws ConfigurationException {
         StringBuffer queryBuffer = new StringBuffer("SELECT max(");
         queryBuffer.append(entry.getAttribute("dbcol"));
         queryBuffer.append(") AS maxid FROM ");
@@ -203,7 +203,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
         DatabaseAddAction.selectStatements.put(entry, queryBuffer.toString());
     }
 
-    private final synchronized String getSelectQuery(Configuration entry) throws ConfigurationException {
+    protected final synchronized String getSelectQuery(Configuration entry) throws ConfigurationException {
         return (String) DatabaseAddAction.selectStatements.get(entry);
     }
 }

@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 04:38:32 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-12 15:52:43 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -109,7 +109,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
      * mapped to the Configuration object itself, so if it doesn't exist,
      * it will be created.
      */
-    private final String getUpdateQuery(Configuration conf) throws ConfigurationException {
+    protected String getUpdateQuery(Configuration conf) throws ConfigurationException {
         String query = null;
 
         synchronized (DatabaseUpdateAction.updateStatements) {

@@ -20,7 +20,7 @@ import java.net.URL;
 import java.io.File;
 import java.io.InputStream;
 import java.io.FileInputStream;
-import java.io.StringBufferInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.BufferedInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -172,7 +172,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-03-12 05:55:19 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-12 15:52:42 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -219,6 +219,17 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
         Configuration dsn = conf.getChild("connection");
 
         return (DataSourceComponent) this.dbselector.select(dsn.getValue(""));
+    }
+
+    /**
+     * Return whether a type is a Large Object (BLOB/CLOB).
+     */
+    protected final boolean isLargeObject (String type) {
+        if ("ascii".equals(type)) return true;
+        if ("binary".equals(type)) return true;
+        if ("image".equals(type)) return true;
+
+        return false;
     }
 
     /**
@@ -270,7 +281,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                     length = (int) asciiFile.length();
                 } else {
                     String asciiText = (String) attr;
-                    asciiStream = new BufferedInputStream(new StringBufferInputStream(asciiText));
+                    asciiStream = new BufferedInputStream(new ByteArrayInputStream(asciiText.getBytes()));
                     length = asciiText.length();
                 }
 
