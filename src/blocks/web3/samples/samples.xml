@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: samples.xml,v 1.1 2003/03/09 00:06:41 pier Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.2 2003/03/12 12:55:51 haul Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="web3 block">
 
   <group name="web3">
-     <sample name="Documentation" href="/documentation/developing/web3.html">
+     <sample name="Documentation" href="/docs/developing/web3.html">
        Documentation for this component.
      </sample>
     <sample name="Connect to SAP R/3" href="info.html">

@@ -43,13 +43,13 @@
 
  <group name="Documentation">
   <sample name="Lexical Transformer"
-          href="../../documents/userdocs/transformers/lexer-transformer.html">
+          href="/docs/userdocs/transformers/lexer-transformer.html">
   </sample>
   <sample name="Parser Transformer"
-          href="../../documents/userdocs/transformers/parser-transformer.html">
+          href="/docs/userdocs/transformers/parser-transformer.html">
   </sample>
   <sample name="Pattern Transformer"
-          href="../../documents/userdocs/transformers/pattern-transformer.html">
+          href="/docs/userdocs/transformers/pattern-transformer.html">
   </sample>
   <sample name="Full Chaperon documentation"
           href="http://chaperon.sourceforge.net/">
