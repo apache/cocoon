@@ -24,8 +24,8 @@
   </menu>
 
   <menu label="Documentation">
-    <external label="Input Modules Docs" href="../../documents/userdocs/concepts/modules.html"/>   
-    <external label="API Docs" href="../../documents/apidocs/org/apache/cocoon/components/modules/input/package-summary.html"/>   
+    <external label="Input Modules Docs" href="../../docs/userdocs/concepts/modules.html"/>   
+    <external label="API Docs" href="../../docs/apidocs/org/apache/cocoon/components/modules/input/package-summary.html"/>   
   </menu>
   
   <menu label="Credits">

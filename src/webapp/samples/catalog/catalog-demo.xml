@@ -18,7 +18,7 @@
  <section>
   <para>This sample application demonstrates the use of catalogs for
    entity resolution. &note; see the Apache Cocoon documentation
-   <link href="../../documents/userdocs/concepts/catalog.html">Entity resolution with
+   <link href="../../docs/userdocs/concepts/catalog.html">Entity resolution with
    catalogs</link> for the full background and explanation, and the XML
    source of this document (catalog-demo.xml).
   </para>
