@@ -44,10 +44,6 @@ public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
 
-    // Track the first values set for prefix and uri
-    private String prefix;
-    private String uri;
-
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
     }
@@ -64,21 +60,10 @@ public class MutableEnvironmentFacade implements Environment {
     // EnvironmentWrapper-specific method (SW:still have to understand why SitemapSource needs them)
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
-
-        if (this.uri == null) {
-            // First call : keep the values to restore them on the wrapped
-            // enviromnent in reset()
-            this.prefix = prefix;
-            this.uri = uri;
-        }
     }
 
     public void setOutputStream(OutputStream os) {
         this.env.setOutputStream(os);
-    }
-
-    public void changeToLastContext() {
-        this.env.changeToLastContext();
     }
 
     // Move this to the Environment interface ?
@@ -88,11 +73,6 @@ public class MutableEnvironmentFacade implements Environment {
 
     public void reset() {
         this.env.reset();
-        // TODO - If we remove the line below, do we break something
-        //        else again? If we leave it in, the SitemapSource
-        //        object is unusable after a call to getInputStream()
-        //        or toSAX() :(
-        //this.env.setURI(this.uri, this.prefix);
     }
     //----------------------------------
 

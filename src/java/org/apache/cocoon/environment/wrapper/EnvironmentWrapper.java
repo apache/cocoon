@@ -58,15 +58,6 @@ public class EnvironmentWrapper
     /** The request object */
     protected Request request;
 
-    /** The last context */
-    protected String lastContext;
-
-    /** The last prefix */
-    protected String lastPrefix;
-
-    /** The last uri */
-    protected String lastURI;
-
     /** The stream to output to */
     protected OutputStream outputStream;
     
@@ -422,33 +413,6 @@ public class EnvironmentWrapper
             setURIPrefix(prefix);
         }
         this.uris = uris;
-        this.lastURI = uris;
-        this.lastContext = this.context;
-        this.lastPrefix = this.prefix.toString();
-    }
-
-    public void changeContext(String prefix, String context)
-    throws IOException {
-        super.changeContext(prefix, context);
-        this.lastContext = this.context;
-        this.lastPrefix  = this.prefix.toString();
-        this.lastURI     = this.uris;
-    }
-
-    public void changeLastContextToCurrent() {
-        this.lastContext = this.context;
-        this.lastPrefix  = this.prefix.toString();
-        this.lastURI     = this.uris;
-    }
-
-    /**
-     * Change the current context to the last one set by changeContext()
-     * and return last processor
-     */
-    public void changeToLastContext() {
-        this.setContext(this.lastContext);
-        this.setURIPrefix(this.lastPrefix);
-        this.uris = this.lastURI;
     }
 
     /**
