@@ -327,7 +327,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.39 2004/04/01 16:50:32 coliver Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.40 2004/04/21 21:37:49 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -711,6 +711,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             }
 
                         };
+                } else if (obj instanceof Iterator) {
+                    // support Iterator
+                    return (Iterator)obj;
                 }
                 return super.getIterator(obj, i);
             }
@@ -3284,8 +3287,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                 iter = Introspector.getUberspect().getIterator(
                                         result,
                                         new Info(ev.location.getSystemId(),
-                                                ev.location.getLineNumber(),
-                                                ev.location.getColumnNumber()));
+                                                 ev.location.getLineNumber(),
+                                                 ev.location.getColumnNumber()));
                             }
                             if (iter == null) {
                                 iter = EMPTY_ITER;
