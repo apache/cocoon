@@ -19,6 +19,8 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.Context;
+import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
@@ -40,13 +42,16 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-12 13:30:42 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-15 21:09:28 $
  */
-public class CocoonComponentSelector implements ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
+public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;
     /** Hashmap of all components which this ComponentManager knows about.
      */
     private Map components;
+
+    /** The app Context */
+    private Context context;
 
     /** Static component instances.
      */
@@ -86,6 +91,12 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Con
         if (this.manager == null) {
             this.manager = manager;
         }
+    }
+
+    public void contextualize(Context context) {
+      if (this.context == null) {
+          this.context = context;
+      }
     }
 
     /** Return an instance of a component.
@@ -250,6 +261,11 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Con
      */
     private void setupComponent(Object hint, Component c)
     throws ComponentManagerException {
+
+        if ( c instanceof Contextualizable ) {
+            ((Contextualizable)c).contextualize(this.context);
+        }
+
         if ( c instanceof Loggable ) {
             ((Loggable)c).setLogger(this.log);
         }

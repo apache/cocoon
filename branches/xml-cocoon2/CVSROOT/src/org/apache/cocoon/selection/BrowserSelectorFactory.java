@@ -26,7 +26,7 @@ import org.apache.cocoon.CodeFactory;
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-22 12:40:21 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-15 21:10:01 $
 */
 
 
@@ -70,12 +70,12 @@ public class BrowserSelectorFactory implements CodeFactory {
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
-         sb.append("if (pattern != null && objectModel.get(Cocoon.REQUEST_OBJECT) != null) {")
-          .append("javax.servlet.http.HttpServletRequest request = (javax.servlet.http.HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);")
+         sb.append("if (pattern != null && objectModel.get(Constants.REQUEST_OBJECT) != null) {")
+          .append("javax.servlet.http.HttpServletRequest request = (javax.servlet.http.HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);")
           .append("String userAgent = request.getHeader(\"User-Agent\");")
-          .append("javax.servlet.http.HttpServletResponse response = (javax.servlet.http.HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);")
+          .append("javax.servlet.http.HttpServletResponse response = (javax.servlet.http.HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);")
           .append("response.addHeader(\"Vary\", \"User-Agent\");")
-	      .append("for (int i = 0; i < pattern.length; i++) {")
+          .append("for (int i = 0; i < pattern.length; i++) {")
           .append("if (userAgent.indexOf(pattern[i]) != -1) return true;}");
         return sb.append("} return false;").toString();
     }
