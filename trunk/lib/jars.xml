@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.126 2004/02/16 04:51:28 antonio Exp $
+    | CVS $Id: jars.xml,v 1.127 2004/02/20 18:51:50 sylvain Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -461,6 +461,22 @@
     <used-by>Control flow</used-by>
     <lib>core/rhino1.5r4-continuations-20030906.jar</lib>
     <homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
+  </file>
+
+  <file>
+    <title>JavacAPI</title>
+    <description>Embedded Java Compiler API</description>
+    <used-by>Control flow</used-by>
+    <lib>core/javacApi-0.9.jar</lib>
+    <homepage>ftp://ftp.primaryinterface.com/pub/javacAPI</homepage>
+  </file>
+
+  <file>
+    <title>JavacAPI Eclipse Implementation</title>
+    <description>Embedded Java Compiler API implemented with Eclipse JDT Core</description>
+    <used-by>Control flow</used-by>
+    <lib>core/javacImpl-0.9.jar</lib>
+    <homepage>ftp://ftp.primaryinterface.com/pub/javacAPI</homepage>
   </file>
 
   <file>
