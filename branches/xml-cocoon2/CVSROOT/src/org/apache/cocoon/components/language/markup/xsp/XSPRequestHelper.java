@@ -24,7 +24,7 @@ import org.apache.cocoon.Constants;
  * The <code>HttpServletRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-25 23:01:16 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-26 16:22:58 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -253,13 +253,13 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @param name The parameter name
    * @param defaultValue Value to substitute in absence of a parameter value
    */
-  public static String getSessionAttribute(
+  public static Object getSessionAttribute(
     Map objectModel,
     String name) {
 
     HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
     HttpSession session = request.getSession(false);
-    return (String) session.getAttribute(name);
+    return session.getAttribute(name);
   }
 
   /**
@@ -270,7 +270,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @param name The parameter name
    * @param defaultValue Value to substitute in absence of a parameter value
    */
-  public static String getSessionAttribute(
+  public static Object getSessionAttribute(
     Map objectModel,
     String name,
     String defaultValue) {
@@ -336,7 +336,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
 
     /**
-     * Output the login of the user making the request 
+     * Output the login of the user making the request
      * Could be null if user is not authenticated.
      *
      * @param objectModel The Map objectModel
@@ -350,7 +350,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     }
 
     /**
-     * Output the login of the user making the request 
+     * Output the login of the user making the request
      * Could be null if user is not authenticated.
      *
      * @param objectModel The Map objectModel
@@ -367,9 +367,9 @@ public class XSPRequestHelper extends XSPObjectHelper {
       elementData(contentHandler, "remote-user", request.getRemoteUser());
     }
 
- 
+
     /**
-     * Output the name of the HTTP method with which the request was made, 
+     * Output the name of the HTTP method with which the request was made,
      *
      * @param objectModel The Map objectModel
      */
@@ -382,13 +382,13 @@ public class XSPRequestHelper extends XSPObjectHelper {
     }
 
     /**
-     * Output the name of the HTTP method with which the request was made, 
+     * Output the name of the HTTP method with which the request was made,
      *
      * @param objectModel The Map objectModel
      * @param contentHandler The SAX content handler
      * @exception SAXException If a SAX error occurs
      */
-    public static void getMethod(    
+    public static void getMethod(
     Map objectModel,
     ContentHandler contentHandler
   )
@@ -400,7 +400,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
     /**
      * Output the query string that is contained in the request URL after the path,
-     * 
+     *
      *
      * @param objectModel The Map objectModel
      */
@@ -414,7 +414,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
     /**
      * Output the query string that is contained in the request URL after the path,
-     * 
+     *
      *
      * @param objectModel The Map objectModel
      * @param contentHandler The SAX content handler
@@ -432,7 +432,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
     /**
      * Output the name and version of the protocol the request uses in the form of
-     * protocol/majorVersion.minorVersion, 
+     * protocol/majorVersion.minorVersion,
      *
      * @param objectModel The Map objectModel
      */
@@ -446,7 +446,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
     /**
      * Output the name and version of the protocol the request uses in the form of
-     * protocol/majorVersion.minorVersion, 
+     * protocol/majorVersion.minorVersion,
      *
      * @param objectModel The Map objectModel
      * @param contentHandler The SAX content handler
@@ -497,7 +497,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   }
 
     /**
-     * Output the IP address of the client that sent the request 
+     * Output the IP address of the client that sent the request
      *
      * @param objectModel The Map objectModel
      */
@@ -510,7 +510,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     }
 
     /**
-     * Output the IP address of the client that sent the request 
+     * Output the IP address of the client that sent the request
      *
      * @param objectModel The Map objectModel
      * @param contentHandler The SAX content handler
@@ -525,7 +525,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
     elementData(contentHandler, "remote-address", request.getRemoteAddr());
     }
-    
+
 
   /**
    * Checks the secure flag
@@ -562,7 +562,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getServerPort();
   }
-  
+
 
   /**
    * Get the session attribute names.
@@ -633,7 +633,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * Set the session max inactive interval
    *
    * @param objectModel The Map objectModel
-   * @param interval max inactive interval 
+   * @param interval max inactive interval
    */
   public static void setSessionMaxInactiveInterval (
     Map objectModel,
