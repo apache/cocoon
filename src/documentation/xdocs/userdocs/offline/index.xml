@@ -4,7 +4,7 @@
 <document>
   <header>
     <title>Offline Page Generation</title>
-    <version>0.9</version>
+    <version>1.0</version>
     <type>Technical document</type>
     <authors><person name="Upayavira" email="upayavira@apache.org"/>
     </authors>
@@ -22,7 +22,7 @@
       <p>At present, this can be done in three ways:</p>
       <ul>
         <li><link href="cli.html">Command Line Interface</link></li>
-        <li><link href="ant.html">Using Ant</link></li>
+        <li><link href="ant.html">Using Ant Task</link></li>
         <li><link href="bean.html">Cocoon Bean</link></li>
       </ul>
       <p>This document explains the general concepts that are shared by all of these approaches.
@@ -185,6 +185,19 @@
          page, it is considered 'broken'.</p>
       <p>Exactly what is done when a broken link is found depends upon the method used to evoke 
          Cocoon. See related pages for specific details.</p>
+      <s2 title="Broken Link Handling using xconf Configuration method">
+        <p>The xconf method allows for more sophisticated broken link handling. The
+             user can select to have broken links reported to a file, this file being
+             either text or XML.</p>
+        <p>When this file is plain text, it will have one link URI per line.</p>
+        <p>When this file is in XML, it will detail a message explaining the reason
+           for the broken link, as well as the URI of the link.</p>
+        <p>It is also possible to specify whether an error page should be generated 
+           in the place of the broken page (based upon the configured 
+           <code>&lt;map:handle-errors&gt;</code> code in the sitemap). If required,
+           an extension can be appended to the original file's URI to signify that
+           it is an error page (e.g. <code>.error</code>).</p>
+      </s2>
     </s1>
     <s1 title="Precompiling XSPs">
       <p>When used offline, Cocoon can precompile XSP pages. If no URIs are specified, it will scan all directories
