@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.85 2001-07-07 19:12:03 giacomo Exp $-->
+<!-- $Id: esql.xsl,v 1.86 2001-07-17 18:46:54 dims Exp $-->
 <!--
 
  ============================================================================
@@ -515,7 +515,7 @@
             }
           }
 
-          if (_esql_query.resultset.next()) { /* desire */
+          if (_esql_query.resultset.next()) {
             <xsl:apply-templates select="esql:results"/>
           }
           else {
@@ -805,7 +805,7 @@
           org.apache.cocoon.components.parser.Parser newParser = null;
 
           try {
-              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Parser.ROLE);
+              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(org.apache.cocoon.components.parser.Parser.ROLE);
 
               InputSource __is = new InputSource(
                       new StringReader(
