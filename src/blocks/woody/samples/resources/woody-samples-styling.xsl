@@ -20,9 +20,9 @@
 
   <xsl:template match="body">
     <body>
-      <xsl:apply-templates/>
       <xsl:apply-templates select="." mode="woody-page"/>
       <xsl:apply-templates select="." mode="woody-field"/>
+      <xsl:apply-templates/>
     </body>
   </xsl:template>
 
