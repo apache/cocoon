@@ -22,7 +22,7 @@ import org.apache.commons.lang.BooleanUtils;
  * shields the consumer from the data's XML origins.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Attribute.java,v 1.5 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: Attribute.java,v 1.6 2004/03/28 21:29:37 antonio Exp $
  */
 public class Attribute
 {
@@ -136,12 +136,20 @@ public class Attribute
             return rvalue.booleanValue();
         }
         // Lets try with "t", "f"
-        rvalue = BooleanUtils.toBooleanObject(_value, "t", "f", null);
+        try {
+            rvalue = BooleanUtils.toBooleanObject(_value, "t", "f", null);
+        } catch (IllegalArgumentException iae) {
+            rvalue = null;
+        }
         if (rvalue != null) {
             return rvalue.booleanValue();
         }
         // Try now "y", "n"
-        rvalue = BooleanUtils.toBooleanObject(_value, "y", "n", null);
+        try {
+            rvalue = BooleanUtils.toBooleanObject(_value, "y", "n", null);
+        } catch (IllegalArgumentException iae) {
+            rvalue = null;
+        }
         if (rvalue != null) {
             return rvalue.booleanValue();
         } else {

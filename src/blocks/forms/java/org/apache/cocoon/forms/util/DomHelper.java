@@ -51,7 +51,7 @@ import org.xml.sax.SAXNotSupportedException;
  * able to provide information about the location of elements in their source
  * XML file. See the {@link #getLocation(Element)} method.
  * 
- * @version CVS $Id: DomHelper.java,v 1.3 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: DomHelper.java,v 1.4 2004/03/28 21:29:37 antonio Exp $
  */
 public class DomHelper {
 
@@ -249,15 +249,24 @@ public class DomHelper {
     public static boolean getAttributeAsBoolean(Element element, 
                 String attributeName, boolean defaultValue) {
         String attrValue = element.getAttribute(attributeName);
-        Boolean result = BooleanUtils.toBooleanObject(attrValue, "true", "false", null);
+        Boolean result;
+        try {
+            result = BooleanUtils.toBooleanObject(attrValue, "true", "false", null);
+        } catch (IllegalArgumentException iae) {
+            result = null;
+        }
         if (result != null) {
             return result.booleanValue();
         }
-        result = BooleanUtils.toBooleanObject(attrValue, "yes", "no", null);
+        try {
+            result = BooleanUtils.toBooleanObject(attrValue, "yes", "no", null);
+        } catch (IllegalArgumentException iae) {
+            result = null;
+        }
         if (result != null) {
             return result.booleanValue();
         }
-        return defaultValue;
+        return defaultValue;    
     }
 
     public static String getElementText(Element element) {
