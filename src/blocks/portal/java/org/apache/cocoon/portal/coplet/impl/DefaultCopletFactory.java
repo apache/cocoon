@@ -82,7 +82,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.4 2003/05/27 09:15:07 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.5 2003/06/06 11:33:38 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -151,9 +151,13 @@ public class DefaultCopletFactory
         
         CopletInstanceData instance = new CopletInstanceData();
         
-        // TODO - create unique id
-        String id = name + '-' + System.currentTimeMillis();
+        String id = null;
+        if ( copletDescription.createId() ) {
+            // TODO - create unique id
+            id = name + '-' + System.currentTimeMillis();
+        }
         instance.initialize( name, id );
+        
         instance.setDescription( copletDescription );
         instance.setAspectDataHandler((AspectDataHandler)o[2]);
         instance.setCopletData(copletData);
@@ -226,6 +230,7 @@ public class DefaultCopletFactory
                 }
                 desc.setName(copletsConf[i].getAttribute("name"));
                 instanceDesc.setName(copletsConf[i].getAttribute("name"));
+                instanceDesc.setCreateId(copletsConf[i].getAttributeAsBoolean("create-id", true));
                 
                 // and now the aspects
                 Configuration[] aspectsConf = copletsConf[i].getChild("coplet-data-aspects").getChildren("aspect");

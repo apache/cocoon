@@ -93,7 +93,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.9 2003/05/27 09:15:07 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.10 2003/06/06 11:33:37 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -131,6 +131,7 @@ public class DefaultLayoutFactory
                 }
                 desc.setName(name);
                 desc.setClassName(layoutsConf[i].getAttribute("class"));        
+                desc.setCreateId(layoutsConf[i].getAttributeAsBoolean("create-id", false));
                 desc.setRendererName(layoutsConf[i].getAttribute("renderer")); 
                 
                 // and now the aspects
@@ -200,8 +201,11 @@ public class DefaultLayoutFactory
             throw new ProcessingException("Unable to create new instance", e );
         }
         
-        // TODO - set unique id
-        String id = layoutName + '-' + System.currentTimeMillis();
+        String id = null;
+        if ( layoutDescription.createId() ) {
+            // TODO - set unique id
+            id = layoutName + '-' + System.currentTimeMillis();
+        }
         layout.initialize( layoutName, id ); 
         layout.setDescription( layoutDescription );
         layout.setAspectDataHandler((AspectDataHandler)o[1]);

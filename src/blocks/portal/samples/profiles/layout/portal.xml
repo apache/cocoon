@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<composite-layout static="true" name="tab" id="cl1">
+<composite-layout static="true" name="tab">
     <named-item name="News">
-        <composite-layout name="column" id="c1">
+        <composite-layout name="column">
             <item>
                 <parameter name="width" value="350" />
-                <composite-layout static="true" name="row" id="r1">
+                <composite-layout static="true" name="row">
                     <item>
-		                <coplet-layout static="true" name="coplet" id="1">
+		                <coplet-layout static="true" name="coplet">
 		                    <parameter name="title" value="Newsweek"/>
 		                    <coplet-instance-data>Newsweek-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
-		                <coplet-layout name="coplet" id="2">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="NYT Business"/> 
 		                    <coplet-instance-data>NYTBusiness-1</coplet-instance-data>
 		                </coplet-layout>
@@ -20,22 +20,22 @@
                 </composite-layout>
             </item>
             <item>
-                <composite-layout static="false" name="row" id="r2">
+                <composite-layout static="false" name="row">
                     <item>
-		                <coplet-layout name="coplet" id="3">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="BBC News"/>
 		                    <coplet-instance-data>BBCNews-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
-                        <composite-layout name="column" id="c2">
+                        <composite-layout name="column">
                             <item>
                                 <frame-layout name="frame" id="a">
                                     <source>cocoon://samples/portal/news/NYTSport.rss</source>
                                 </frame-layout>
                             </item>
                             <item>
-                                <coplet-layout name="coplet" id="4">
+                                <coplet-layout name="coplet">
 				                    <parameter name="title" value="CNET News" />
 				                    <coplet-instance-data>CNET News-1</coplet-instance-data>
                                 </coplet-layout>
@@ -43,9 +43,9 @@
                         </composite-layout>
 		            </item>
                     <item>
-                        <composite-layout name="column" id="c3">
+                        <composite-layout name="column">
                             <item>
-                                <coplet-layout name="coplet" id="5">
+                                <coplet-layout name="coplet">
 				                    <parameter name="title" value="CNET Business News" />
 				                    <coplet-instance-data>CNET Business-1</coplet-instance-data>
                                 </coplet-layout>
@@ -61,15 +61,15 @@
                 </composite-layout>
             </item>
             <item>
-                <composite-layout static="false" name="row" id="r5">
+                <composite-layout static="false" name="row">
                     <item>
-		                <coplet-layout name="coplet" id="6">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="Chicago Sunday Times" />
 		                    <coplet-instance-data>CSTNews-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
-		                <coplet-layout name="coplet" id="7">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="CNN Europe" />
 		                    <coplet-instance-data>CNNEurope-1</coplet-instance-data>
 		                </coplet-layout>
@@ -79,18 +79,18 @@
         </composite-layout>
     </named-item>
     <named-item name="Weblogs">
-        <composite-layout name="column" id="c19">
+        <composite-layout name="column">
             <item>
-                <composite-layout name="row" id="r12">
+                <composite-layout name="row">
                     <item>
-		                <coplet-layout name="coplet" id="8">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="ML's Weblog" />
 		                    <parameter name="bgcolor" value="#ffff00" />
 		                    <coplet-instance-data>ML Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
-		                <coplet-layout name="coplet" id="9">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="CZ's Weblog" />
 		                    <parameter name="bgcolor" value="#ffff00" />
 		                    <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
@@ -99,9 +99,9 @@
                 </composite-layout>
             </item>
             <item>
-                <composite-layout name="row" id="r13">
+                <composite-layout name="row">
                     <item>
-		                <coplet-layout name="coplet" id="10">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="Another Weblog" />
 		                    <parameter name="bgcolor" value="#ffff00" />
 		                    <coplet-instance-data>Weblog-1</coplet-instance-data>
@@ -112,17 +112,17 @@
         </composite-layout>
     </named-item>
     <named-item name="Cocoon">
-        <composite-layout name="row" id="r14">
+        <composite-layout name="row">
             <item>
-                <composite-layout name="column" id="c39">
+                <composite-layout name="column">
                     <item>
-		                <coplet-layout name="coplet" id="11">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="Cocoon Introduction" />
 		                    <coplet-instance-data>Introduction-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
-		                <coplet-layout name="coplet" id="12">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="Cocoon Overview" />
 		                    <coplet-instance-data>Overview-1</coplet-instance-data>
 		                </coplet-layout>

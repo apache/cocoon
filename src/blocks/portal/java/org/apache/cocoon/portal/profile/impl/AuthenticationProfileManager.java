@@ -92,7 +92,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.5 2003/05/28 07:23:55 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.6 2003/06/06 11:33:39 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
@@ -281,7 +281,9 @@ public class AuthenticationProfileManager
      */
     private void cacheLayouts(Map layoutMap, Layout layout) {
         if ( layout != null ) {
-            layoutMap.put( layout.getId(), layout );
+            if ( layout.getId() != null ) {
+                layoutMap.put( layout.getId(), layout );
+            }
             if ( layout instanceof CompositeLayout ) {
                 CompositeLayout cl = (CompositeLayout)layout;
                 Iterator i = cl.getItems().iterator();
