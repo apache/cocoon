@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.5 2003/05/08 12:33:56 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.6 2003/05/23 07:11:02 cziegeler Exp $
 */
 public final class AuthenticationContext
 implements SessionContext {
@@ -873,7 +873,7 @@ implements SessionContext {
                                               null, 
                                               parameters, 
                                               resolver);
-                this.setXML("/", fragment);
+                this.setXML("application", fragment);
         
             } // end synchronized
         }
