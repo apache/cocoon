@@ -41,7 +41,7 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.3 2001-04-20 20:50:14 bloritsch Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.4 2001-04-22 08:13:37 giacomo Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
@@ -315,7 +315,6 @@ public class ContentAggregator extends ContentHandlerWrapper
     }
 
     private String pushNS(String ns) {
-        getLogger().debug("pushed '" + ns + "'");
         currentNS.add(ns);
         return ns;
     }
@@ -323,7 +322,6 @@ public class ContentAggregator extends ContentHandlerWrapper
     private String popNS() {
         int last = currentNS.size()-1;
         String ns = (String)currentNS.get(last);
-        getLogger().debug("poped '" + ns + "'");
         currentNS.remove(last);
         return ns;
     }
