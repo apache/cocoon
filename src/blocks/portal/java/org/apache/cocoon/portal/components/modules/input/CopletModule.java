@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
