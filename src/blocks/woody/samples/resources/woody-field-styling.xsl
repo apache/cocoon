@@ -436,7 +436,7 @@
 
   <xsl:template match="wi:messages">
     <xsl:if test="wi:message">
-      <xsl:apply-templates select="wi:label"/>:
+      <xsl:copy-of select="wi:label/node()"/>:
       <ul>
         <xsl:for-each select="wi:message">
           <li><xsl:apply-templates/></li>
