@@ -122,27 +122,27 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: TraversableGenerator.java,v 1.2 2003/07/10 16:33:36 gianugo Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.3 2003/07/10 16:46:09 gianugo Exp $
  */
 public class TraversableGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
     /** The URI of the namespace of this generator. */
-    protected static final String URI = "http://apache.org/cocoon/directory/2.0";
+    protected static final String URI = "http://apache.org/cocoon/collection/1.0";
 
     /** The namespace prefix for this namespace. */
-    protected static final String PREFIX = "dir";
+    protected static final String PREFIX = "collection";
 
     /* Node and attribute names */
-    protected static final String DIR_NODE_NAME = "directory";
-    protected static final String FILE_NODE_NAME = "file";
+    protected static final String COL_NODE_NAME = "collection";
+    protected static final String RESOURCE_NODE_NAME = "resource";
 
-    protected static final String FILENAME_ATTR_NAME = "name";
+    protected static final String RES_NAME_ATTR_NAME = "name";
     protected static final String LASTMOD_ATTR_NAME = "lastModified";
     protected static final String DATE_ATTR_NAME = "date";
     protected static final String SIZE_ATTR_NAME = "size";
 
     /** The validity that is being built */
-    protected DirValidity validity;
+    protected CollectionValidity validity;
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
 
@@ -281,11 +281,11 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      * generation has occured. So the returned object is kept by the generator
      * and filled with each of the files that are traversed.
      * 
-     * @see DirectoryGenerator.DirValidity
+     * @see DirectoryGenerator.CollectionValidity
      */
     public SourceValidity getValidity() {
         if (this.validity == null) {
-            this.validity = new DirValidity(this.refreshDelay);
+            this.validity = new CollectionValidity(this.refreshDelay);
         }
         return this.validity;
     }
@@ -360,9 +360,9 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
             this.isRequestedDirectory = true;
             addPath(path, depth);
         } else {
-            startNode(DIR_NODE_NAME, (TraversableSource) ancestors.pop());
+            startNode(COL_NODE_NAME, (TraversableSource) ancestors.pop());
             addAncestorPath(path, ancestors);
-            endNode(DIR_NODE_NAME);
+            endNode(COL_NODE_NAME);
         }
     }
 
@@ -379,7 +379,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     protected void addPath(TraversableSource path, int depth)
         throws SAXException {
         if (path.isCollection()) {
-            startNode(DIR_NODE_NAME, path);
+            startNode(COL_NODE_NAME, path);
             if (depth > 0) {
 
                 Collection contents;
@@ -444,11 +444,11 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
                     }
                 }
             }
-            endNode(DIR_NODE_NAME);
+            endNode(COL_NODE_NAME);
         } else {
             if (isIncluded(path) && !isExcluded(path)) {
-                startNode(FILE_NODE_NAME, path);
-                endNode(FILE_NODE_NAME);
+                startNode(RESOURCE_NODE_NAME, path);
+                endNode(RESOURCE_NODE_NAME);
             }
         }
     }
@@ -487,7 +487,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         throws SAXException {
         long lastModified = path.getLastModified();
         attributes.clear();
-        attributes.addAttribute("", FILENAME_ATTR_NAME,FILENAME_ATTR_NAME,
+        attributes.addAttribute("", RES_NAME_ATTR_NAME,RES_NAME_ATTR_NAME,
             "CDATA", path.getName());
         attributes.addAttribute("", LASTMOD_ATTR_NAME, LASTMOD_ATTR_NAME,
             "CDATA", Long.toString(path.getLastModified()));
@@ -566,14 +566,14 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     }
 
     /** Specific validity class, that holds all files that have been generated */
-    public static class DirValidity implements SourceValidity {
+    public static class CollectionValidity implements SourceValidity {
 
         private long expiry;
         private long delay;
         List sources = new ArrayList();
         List sourcesDates = new ArrayList();
 
-        public DirValidity(long delay) {
+        public CollectionValidity(long delay) {
             expiry = System.currentTimeMillis() + delay;
             this.delay = delay;
         }
