@@ -6,12 +6,12 @@
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
- ***************************************************************************** 
+ *****************************************************************************
 -->
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-14 13:36:53 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-13 14:00:15 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -36,7 +36,7 @@
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
-	<!-- <xsp-request:uri> -->
+    <!-- <xsp-request:uri> -->
         <xsp:logic>
           XSPRequestHelper.getUri(request, this.contentHandler);
         </xsp:logic>
@@ -49,7 +49,7 @@
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-	<xsl:variable name="as">
+    <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
       </xsl:call-template>
@@ -111,7 +111,7 @@
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
-	<!-- <xsp-request:uri> -->
+    <!-- <xsp-request:uri> -->
         <xsp:logic>
           XSPRequestHelper.getParameter(request, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
         </xsp:logic>
@@ -153,7 +153,7 @@
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
-	<!-- <xsp-request:uri> -->
+    <!-- <xsp-request:uri> -->
         <xsp:logic>
           XSPRequestHelper.getHeader(request, this.contentHandler, <xsl:copy-of select="$name"/>);
         </xsp:logic>
@@ -165,6 +165,48 @@
      <xsp:logic>
         XSPRequestHelper.getHeaderNames(request, this.contentHandler);
      </xsp:logic>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-attribute">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          String.valueOf(request.getAttribute(<xsl:copy-of select="$name"/>))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'object'">
+        <xsp:expr>
+          request.getAttribute(<xsl:copy-of select="$name"/>)
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:element name="xsp-request:attribute">
+          <xsp:expr>
+            request.getAttribute(<xsl:copy-of select="$name"/>)
+          </xsp:expr>
+        </xsp:element>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:remove-attribute">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsp:logic>
+      request.removeAttribute(<xsl:value-of select="$name"/>);
+    </xsp:logic>
   </xsl:template>
 
   <xsl:template name="value-for-as">
@@ -195,7 +237,7 @@
       <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
- 
+
   <xsl:template match="@*|*|text()|processing-instruction()">
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
