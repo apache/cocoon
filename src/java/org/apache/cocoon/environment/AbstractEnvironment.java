@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,7 +82,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.9 2003/04/29 10:45:21 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.10 2003/05/02 06:53:10 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -102,7 +101,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      /** The Context path */
     protected String context = null;
 
-	/** The context path stored temporarily between constructor and startingProcessing */
+	/** The context path stored temporarily between constructor and initComponents */
     private String tempInitContext = null;
 
     /** The root context path */
@@ -287,7 +286,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                 sContext = newContext;
             } else {
                 // context is relative to old one
-                sContext = new URL(new URL(this.context), newContext).toString();
+                sContext = this.context + '/' + newContext;
             }
 
             // Cut the file name part from context (if present)
