@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.1 2004/04/21 09:33:22 pier Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.2 2004/04/27 18:35:21 pier Exp $
  */
 public class XMLSerializer extends EncodingSerializer {
 
@@ -96,6 +96,13 @@ public class XMLSerializer extends EncodingSerializer {
         super(XML_ENCODER);
     }
 
+    /**
+     * Create a new instance of this <code>XMLSerializer</code>
+     */
+    protected XMLSerializer(XMLEncoder encoder) {
+        super(encoder);
+    }
+    
     /**
      * Reset this <code>XMLSerializer</code>.
      */
