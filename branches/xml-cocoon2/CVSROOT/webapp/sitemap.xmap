@@ -80,6 +80,7 @@
     <browser name="netscape" useragent="Mozilla"/>
    </map:selector>
    <map:selector name="coded" factory="org.apache.cocoon.selection.CodedSelectorFactory"/>
+   <map:selector name="parameter" factory="org.apache.cocoon.selection.ParameterSelectorFactory"/>
   </map:selectors>
 
   <map:matchers default="wildcard">

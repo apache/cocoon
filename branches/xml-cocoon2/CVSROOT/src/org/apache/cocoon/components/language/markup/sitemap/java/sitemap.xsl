@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.110 2001-04-30 14:17:08 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.111 2001-05-09 16:42:15 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -170,7 +170,7 @@
           <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
           <xsl:variable name="default" select="@name = ../@default"/>
           <xsl:variable name="config" select="descendant-or-self::*"/>
-          private boolean <xsl:value-of select="$name"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($src),$config)"/> pattern, Map objectModel) {
+          private boolean <xsl:value-of select="$name"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($src),$config)"/> pattern, Map objectModel, Parameters param) {
             <xsl:value-of select="java:getMethodSource($factory-loader, string($src),$config)"/>
           }
           <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant::map:select[@type=$name or (not(@type) and $default)]/map:when">
@@ -565,7 +565,33 @@
         <xsl:with-param name="default"><xsl:value-of select="/map:sitemap/map:components/map:selectors/@default"/></xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
+   
+	<!-- Modified 20010509 L.Sutic Changed to pass sitemap parameters. -->
+   	
+	<!-- test if we have to define parameters for this action -->
+    <xsl:if test="count(parameter)>0">
+      param = new Parameters ();
+    </xsl:if>
 
+    <!-- generate the value used for the parameter argument in the invocation of the act method of this action -->
+    <xsl:variable name="component-param">
+      <xsl:choose>
+        <xsl:when test="count(parameter)>0">
+          param
+        </xsl:when>
+        <xsl:otherwise>
+          emptyParam
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- collect the parameters -->
+    <xsl:apply-templates select="parameter">
+        <xsl:with-param name="param">param</xsl:with-param>
+    </xsl:apply-templates>
+
+	<!-- modification end -->
+		
     <!-- loop through all the when cases -->
     <xsl:for-each select="./map:when">
 
@@ -601,15 +627,17 @@
         </xsl:choose>
       </xsl:variable>
 
+			
+	  <!-- Modified 20010509 L.Sutic Changed to pass sitemap parameters. -->
       <!-- gets the string how the selector is to be invoced in java code -->
       <xsl:variable name="selector-name">
         <!-- check if we have a selector definition in this sitemap otherwise get it from the parent -->
         <xsl:choose>
           <xsl:when test="string($is-factory)='true'">
-            <xsl:value-of select="translate($selector-type, '- ', '__')"/>Select(<xsl:value-of select="$selector-name2"/>_expr, objectModel)
+            <xsl:value-of select="translate($selector-type, '- ', '__')"/>Select(<xsl:value-of select="$selector-name2"/>_expr, objectModel, <xsl:value-of select="$component-param"/>)
           </xsl:when>
           <xsl:otherwise>
-            ((Selector)this.selectors.select("<xsl:value-of select="$selector-type"/>")).select(substitute(listOfMaps,"<xsl:value-of select="$test-value"/>"), objectModel)
+            ((Selector)this.selectors.select("<xsl:value-of select="$selector-type"/>")).select(substitute(listOfMaps,"<xsl:value-of select="$test-value"/>"), objectModel, <xsl:value-of select="$component-param"/>)
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>

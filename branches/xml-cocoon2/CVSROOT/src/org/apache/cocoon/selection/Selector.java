@@ -9,11 +9,13 @@ package org.apache.cocoon.selection;
 
 import java.util.Map;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.Parameters;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-30 14:17:35 $
+ * @author <a href="mailto:leo.sutic">Leo Sutic</a>
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-05-09 16:42:24 $
  */
 public interface Selector extends Component {
     /**
@@ -23,9 +25,10 @@ public interface Selector extends Component {
      * @param objectModel The <code>Map</code> containing object of the
      *                    calling environment which may be used
      *                    to select values to test the expression.
+     * @param parameters  The sitemap parameters, as specified by &lt;parameter/&gt; tags.
      * @return boolean    Signals successfull test.
      */
-    boolean select (String expression, Map objectModel);
+    boolean select (String expression, Map objectModel, Parameters parameters);
 }
 
 
