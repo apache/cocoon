@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
-    <site signOn="${accountForm.signOn}" view="jxpath">
+    <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="Main Menu" do="index.do" />
         <category name="${category.name}">
             <jexl:forEach var="prod" items="${productList}" >
