@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.6 $ $Date: 2000-02-27 14:58:16 $
+ * @version CVS $Revision: 1.1.4.7 $ $Date: 2000-02-27 17:48:50 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;
@@ -133,7 +133,7 @@ public class CocoonServlet extends HttpServlet {
             out.println("<hr></body></html>");
             }
         } catch (Exception e) {
-            res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
+            //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
             res.setContentType("text/html");
             out.println("<html><head>");
             out.println("<title>Cocoon Version 2.0: Exception</title>");
@@ -141,15 +141,16 @@ public class CocoonServlet extends HttpServlet {
             out.println("<center><h1>Cocoon 2.0: Exception</h1></center>");
             out.println("<hr>");
             this.printException(out,e);
-            if (exception instanceof SAXException) {
-                Exception nested=((SAXException)this.exception).getException();
+            if (e instanceof SAXException) {
                 out.println("<hr>");
+                out.println("SAX processing exception<br>");
+                Exception nested=((SAXException)e).getException();
                 this.printException(out,nested);
-            } else if (exception instanceof ComponentNotAccessibleException) {
-                out.println("Component not accessible<br>");
-                Exception nested=this.exception;
-                nested=((ComponentNotAccessibleException)nested).getException();
+            } else if (e instanceof ComponentNotAccessibleException) {
                 out.println("<hr>");
+                out.println("Component not accessible<br>");
+                Exception nested=e;
+                nested=((ComponentNotAccessibleException)nested).getException();
                 this.printException(out,nested);
             }
             out.println("<hr></body></html>");
@@ -185,7 +186,7 @@ public class CocoonServlet extends HttpServlet {
     /** Dump an exception to the specified <code>ServletOutputStream</code> */
     private void printException(ServletOutputStream o, Exception e) {
         PrintWriter out=new PrintWriter(o);
-        out.println("<b>"+e.getClass().getName()+"</b><br>");
+        out.println("Class: <b>"+e.getClass().getName()+"</b><br>");
         out.println("Message: <i>"+e.getMessage()+"</i><br>");
         out.println("<pre>");
         e.printStackTrace(out);
