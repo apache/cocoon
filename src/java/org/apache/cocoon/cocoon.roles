@@ -14,10 +14,19 @@
 
 <role-list>
 
+  <role name="org.apache.excalibur.source.SourceFactorySelector"
+        shorthand="source-factories"
+        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+  </role>
+
+  <role name="org.apache.excalibur.source.SourceResolver"
+        shorthand="source-resolver"
+        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+
   <!-- The entity resolver used by most parsers -->
   <role name="org.apache.excalibur.xml.EntityResolver"
         shorthand="entity-resolver"
-        default-class="org.apache.cocoon.components.resolver.ResolverImpl"/>
+        default-class="org.apache.cocoon.components.resolver.DefaultResolver"/>
 
   <!-- Parser:
   
@@ -111,15 +120,6 @@
     <hint shorthand="j2ee" class="org.apache.avalon.excalibur.datasource.J2eeDataSource"/>
     <hint shorthand="informix" class="org.apache.avalon.excalibur.datasource.InformixDataSource"/>
   </role>
-
-  <role name="org.apache.excalibur.source.SourceFactorySelector"
-        shorthand="source-factories"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
-  </role>
-
-  <role name="org.apache.excalibur.source.SourceResolver"
-        shorthand="source-resolver"
-        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
 
   <role name="org.apache.excalibur.xmlizer.XMLizer"
         shorthand="xmlizer"
