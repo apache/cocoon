@@ -112,7 +112,7 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SlideSource.java,v 1.1 2003/03/09 00:06:20 pier Exp $
+ * @version $Id: SlideSource.java,v 1.2 2003/03/13 18:49:42 stephan Exp $
  */
 public class SlideSource extends AbstractLogEnabled
   implements Contextualizable, Composable, Source, ModifiableSource,
@@ -1680,11 +1680,16 @@ public class SlideSource extends AbstractLogEnabled
         }
 
         final String quote = "\"";
-        NodeProperty np = revisionDescriptor.getProperty(name, namespace);
+        NodeProperty property = revisionDescriptor.getProperty(name, namespace);
+
+        if (property==null) {
+            return null;
+        }
+
         String pre = "<"+name+" xmlns="+quote+namespace+quote+" >";
         String post = "</"+name+" >";
 
-        StringReader reader = new StringReader(pre+np.getValue().toString()+
+        StringReader reader = new StringReader(pre+property.getValue().toString()+
                                                post);
         InputSource src = new InputSource(reader);
 
