@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.3 2003/03/20 06:08:33 crossley Exp $
+  CVS $Id: todo.xml,v 1.4 2003/03/20 06:23:13 crossley Exp $
 -->
 
 <todo title="Things To Do">
@@ -105,6 +105,16 @@
 
   <action context="code" assigned-to="open">
    Finish moving the scratchpad stuff in main trunk.
+  </action>
+
+  <action context="code" assigned-to="open">
+   There are some deprecated classes being used in 'build test'.
+  </action>
+
+  <action context="code" assigned-to="open">
+   Test that the new Catalog Entity Resolver works on all platforms, following
+   its move from Cocoon to Excalibur. See
+   <link href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=104814093018956">email discussion</link>.
   </action>
 
  </actions>
