@@ -24,12 +24,12 @@ import org.w3c.dom.Element;
  * actual {@link AggregateJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:aggregate id="<i>widget-id</i>" path="<i>xpath-expression</i>"&gt;
- *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
- * &lt;/wb:aggregate&gt;
+ * &lt;fb:aggregate id="<i>widget-id</i>" path="<i>xpath-expression</i>"&gt;
+ *   &lt;fb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
+ * &lt;/fb:aggregate&gt;
  * </code></pre>
  *
- * @version CVS $Id: AggregateJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: AggregateJXPathBindingBuilder.java,v 1.2 2004/04/01 13:07:55 mpo Exp $
  */
 public class AggregateJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
