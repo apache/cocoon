@@ -1279,7 +1279,6 @@ public class FOM_Cocoon extends ScriptableObject {
         public InputStream getResourceAsStream(String path) {
             return context.getResourceAsStream(path);
         }
-
     }
 
     public static class FOM_Log extends ScriptableObject {
