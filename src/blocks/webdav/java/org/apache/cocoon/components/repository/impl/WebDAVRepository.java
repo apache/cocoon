@@ -253,7 +253,7 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
         }
 
         try {
-            WebDAVUtil.createResource(uri, content);
+            WebDAVUtil.createResource(this.getAbsoluteURI(uri), content);
             return true;
             
         } catch (HttpException he) {
@@ -312,7 +312,6 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
         try {
             WebDAVUtil.moveResource(this.getAbsoluteURI(uri), this.getAbsoluteURI(dest), recurse, overwrite);
             return true;
-
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error moving: " + this.repoBaseUrl + uri, he);
         } catch (IOException ioe) {
@@ -328,8 +327,7 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
     public boolean remove(String uri) {
 
         try {
-            WebDAVUtil.getWebdavResource(this.getAbsoluteURI(uri)).deleteMethod();
-            return true;
+            return WebDAVUtil.getWebdavResource(this.getAbsoluteURI(uri)).deleteMethod();
 
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error removing: " + this.repoBaseUrl + uri, he);
