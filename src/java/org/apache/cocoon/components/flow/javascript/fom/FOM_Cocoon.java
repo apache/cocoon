@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P\u00F6tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.35 2004/05/07 21:13:50 joerg Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.36 2004/05/28 12:20:20 vgritsenko Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -231,7 +231,7 @@ public class FOM_Cocoon extends ScriptableObject {
 
     void popCallContext() {
         // Clear the scope attribute
-        FOM_JavaScriptFlowHelper.setFOM_FlowScope(this.getObjectModel(), null);
+        FOM_JavaScriptFlowHelper.setFOM_FlowScope(getObjectModel(), null);
 
         this.currentCall = this.currentCall.caller;
         // reset current page locals
@@ -1278,7 +1278,6 @@ public class FOM_Cocoon extends ScriptableObject {
         public InputStream getResourceAsStream(String path) {
             return context.getResourceAsStream(path);
         }
-
     }
 
     public static class FOM_Log extends ScriptableObject {
@@ -1443,11 +1442,11 @@ public class FOM_Cocoon extends ScriptableObject {
         return ContextHelper.getObjectModel(currentCall.avalonContext);
     }
 
-    /**
-     * Get the current Sitemap's component manager
-     * @return The component manager
-     */
-
+//    /**
+//     * Get the current Sitemap's component manager
+//     * @return The component manager
+//     */
+//
 //    public ComponentManager getComponentManager() {
 //        return currentCall.componentManager;
 //    }
