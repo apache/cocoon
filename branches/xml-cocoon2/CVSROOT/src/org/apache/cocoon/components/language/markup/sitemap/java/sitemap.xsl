@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.64 $ $Date: 2000-12-02 11:54:17 $
+     * @version CVS $Revision: 1.1.2.65 $ $Date: 2000-12-04 12:06:58 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -104,7 +104,6 @@
             <xsl:variable name="matcher-name">
               <xsl:call-template name="generate-name">
                 <xsl:with-param name="prefix">matcher_</xsl:with-param>
-                <xsl:with-param name="value" select="@pattern"/>
                 <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
               </xsl:call-template>
             </xsl:variable>
@@ -127,7 +126,6 @@
           <xsl:variable name="matcher-name">
             <xsl:call-template name="generate-name">
               <xsl:with-param name="prefix">matcher_</xsl:with-param>
-              <xsl:with-param name="value" select="@pattern"/>
               <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
             </xsl:call-template>
           </xsl:variable>
@@ -150,8 +148,7 @@
             <xsl:variable name="selector-name">
               <xsl:call-template name="generate-name">
                 <xsl:with-param name="prefix">selector_</xsl:with-param>
-                <xsl:with-param name="value" select="@test"/>
-                <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(..)"/></xsl:with-param>
+                <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
               </xsl:call-template>
             </xsl:variable>
             <xsl:variable name="this-test">
@@ -178,8 +175,7 @@
           <xsl:variable name="selector-name">
             <xsl:call-template name="generate-name">
               <xsl:with-param name="prefix">selector_</xsl:with-param>
-              <xsl:with-param name="value" select="@test"/>
-              <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(..)"/></xsl:with-param>
+              <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
             </xsl:call-template>
           </xsl:variable>
           <xsl:variable name="this-test">
@@ -386,7 +382,6 @@
     <xsl:variable name="matcher-name2">
       <xsl:call-template name="generate-name">
         <xsl:with-param name="prefix">matcher_</xsl:with-param>
-        <xsl:with-param name="value" select="@pattern"/>
         <xsl:with-param name="suffix"><xsl:value-of select="$matcher-type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
@@ -460,8 +455,7 @@
       <xsl:variable name="selector-name2">
         <xsl:call-template name="generate-name">
           <xsl:with-param name="prefix">selector_</xsl:with-param>
-          <xsl:with-param name="value" select="@test"/>
-          <xsl:with-param name="suffix"><xsl:value-of select="$selector-type"/>_<xsl:value-of select="generate-id(..)"/></xsl:with-param>
+          <xsl:with-param name="suffix"><xsl:value-of select="$selector-type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
         </xsl:call-template>
       </xsl:variable>
 
@@ -917,11 +911,9 @@
 
   <!-- replace invalid characters with underscores -->
   <xsl:template name="generate-name">
-    <xsl:param name="value"/>
     <xsl:param name="prefix"/>
     <xsl:param name="suffix"/>
-    <xsl:variable name="value1" select="translate($value,'/- *?@:{}()[].#^\\$|&#33;~\','______________________')"/>
-    <xsl:value-of select="$prefix"/><xsl:value-of select='translate($value1,"&#39;","")'/><xsl:value-of select="$suffix"/>
+    <xsl:value-of select="$prefix"/><xsl:value-of select="$suffix"/>
   </xsl:template>
 
   <!-- These are the usual utility templates for logicsheets -->
