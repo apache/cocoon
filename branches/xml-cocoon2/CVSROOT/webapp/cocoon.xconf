@@ -67,10 +67,13 @@
   <component role="org.apache.cocoon.components.datasource.DataSourceComponentSelector" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="personnel" class="org.apache.cocoon.components.datasource.JdbcDataSource">
       <pool-controller min="5" max="10"/>
-      <driver>postgresql.Driver</driver>
       <dburl>jdbc:postgresql://localhost/test</dburl>
       <user>test</user>
       <password>test</password>
+    </component-instance>
+
+    <component-instance name="j2eePersonnel" class="org.apache.cocoon.components.datasource.J2eeDataSource">
+      <dbname>cocoonPersonnel</dbname>
     </component-instance>
   </component>
 
