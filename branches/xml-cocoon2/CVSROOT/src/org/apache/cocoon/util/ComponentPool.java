@@ -13,6 +13,9 @@ import org.apache.avalon.util.pool.AbstractPool;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.PoolController;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /**
  * This is a implementation of <code>Pool</code> for SitemapComponents
  * that is thread safe.
@@ -22,6 +25,8 @@ import org.apache.avalon.util.pool.PoolController;
 public class ComponentPool extends AbstractPool implements ThreadSafe {
 
     public final static int DEFAULT_POOL_SIZE = 16;
+
+    private Logger log = LogKit.getLoggerFor("cocoon");
 
     public ComponentPool(final ObjectFactory factory,
                          final PoolController controller) throws Exception {
@@ -48,7 +53,13 @@ public class ComponentPool extends AbstractPool implements ThreadSafe {
      */
     public final Poolable get() throws Exception {
         synchronized(m_pool) {
-            return super.get();
+			Poolable component = super.get();
+			log.debug(
+				"ComponentPool retrieved " 
+				+ component.getClass().getName() 
+				+ " (" + component.toString() + ")"
+			);
+            return component;
         }
     }
 
@@ -60,6 +71,11 @@ public class ComponentPool extends AbstractPool implements ThreadSafe {
     public final void put(final Poolable poolable) {
         synchronized(m_pool) {
             super.put(poolable);
+			log.debug(
+				"ComponentPool returned "
+				+ poolable.getClass().getName()
+				+ " (" + poolable.toString() + ")"
+			);
         }
     }
 }
