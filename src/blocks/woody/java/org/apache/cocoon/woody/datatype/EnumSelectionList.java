@@ -60,8 +60,32 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * Builds a EnumSelectionList.
- * @version CVS $Id: EnumSelectionList.java,v 1.4 2003/11/17 16:18:12 ugo Exp $
+ * This type of selection list outputs a list of items
+ * corresponding to the possible instances of an {@link org.apache.cocoon.woody.datatype.typeimpl.EnumType}.
+ * <p>Example usage:</p>
+ * <pre>
+ * &lt;wd:selection-list type="enum" class="com.example.Sex"/>
+ * </pre>
+ * <p>Produces the following output:</p>
+ * <pre>
+ * &lt;wi:selection-list>
+ *   &lt;wi:item value=""/>
+ *   &lt;wi:item value="com.example.Sex.MALE">
+ *     &lt;wi:label>
+ *       &lt;i18n:text>com.example.Sex.MALE</i18n:text>
+ *     &lt;/wi:label>
+ *   &lt;/wi:item>
+ *   &lt;wi:item value="com.example.Sex.FEMALE">
+ *     &lt;wi:label>
+ *       &lt;i18n:text>com.example.Sex.FEMALE</i18n:text>
+ *     &lt;/wi:label>
+ *   &lt;/wi:item>
+ * &lt;/wi:selection-list>
+ * </pre>
+ * <p>If you don't want an initial null value, add a nullable="false"
+ * attribute to the wd:selection-list element.
+ * 
+ * @version CVS $Id: EnumSelectionList.java,v 1.5 2003/11/29 15:37:57 ugo Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";

@@ -56,6 +56,8 @@ package org.apache.cocoon.woody.datatype.typeimpl;
  * typesafe enum</a> pattern.
  * <p>See the following code for an example:</p>
  * <pre>
+ * package com.example;
+ * 
  * public class Sex {
  *
  *   public static final Sex MALE = new Sex("M");
@@ -63,17 +65,18 @@ package org.apache.cocoon.woody.datatype.typeimpl;
  *   private String code;
  *
  *   private Sex(String code) { this.code = code; }
- *
- *   public String toString() {
- *     switch(code.charAt(0)) {
- *         case 'M' : return this.getClass().getName() + ".MALE";
- *         case 'F' : return this.getClass().getName() + ".FEMALE";
- *         default : return "unknown"; // Should never happen
- *     }
- *   }
  * }
  * </pre>
- * @version CVS $Id: EnumType.java,v 1.4 2003/11/16 10:56:30 ugo Exp $
+ * <p>If your enumerated type does not provide a {@link java.lang.Object#toString()}
+ * method, the enum convertor will use the fully qualified class name,
+ * followed by the name of the public static final field referring to
+ * each instance, i.e. "com.example.Sex.MALE", "com.example.Sex.FEMALE"
+ * and so on.</p>
+ * <p>If you provide a toString() method which returns something
+ * different, you should also provide a fromString(String, Locale)
+ * method to convert those strings back to instances.
+ *  
+ * @version CVS $Id: EnumType.java,v 1.5 2003/11/29 15:37:57 ugo Exp $
  */
 public class EnumType extends AbstractDatatype {
     
