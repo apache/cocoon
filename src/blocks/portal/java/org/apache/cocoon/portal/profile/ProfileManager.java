@@ -93,7 +93,19 @@ public interface ProfileManager extends Component {
      * Save the profile
      */
     void saveUserProfiles(String layoutKey);
-    
+
+    /**
+     * Save the layout
+     * @param layoutKey
+     */
+    void saveUserLayout(String layoutKey);
+
+    /**
+     * Save the coplet instance
+     * @param layoutKey
+     */
+    void saveUserCopletInstance(String layoutKey);
+
     /**
      * Get all instances
      */

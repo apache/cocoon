@@ -26,6 +26,7 @@ import org.apache.pluto.om.portlet.PortletDefinitionList;
 import org.apache.pluto.om.servlet.WebApplicationDefinition;
 import org.apache.cocoon.portal.pluto.om.common.AbstractSupportSet;
 import org.apache.cocoon.portal.pluto.om.common.Support;
+import org.apache.cocoon.portal.PortalService;
 
 /**
  * 
@@ -42,8 +43,9 @@ implements PortletApplicationDefinition {
 
     protected String appId;
     protected String version;
+    protected PortletDefinitionRegistryImpl registry;
 
-    
+
     private ArrayList customPortletMode = new ArrayList();
     private ArrayList customPortletState = new ArrayList();
     private ArrayList userAttribute = new ArrayList();
@@ -56,6 +58,22 @@ implements PortletApplicationDefinition {
     private ObjectID objectId;
 
     private String contextPath;
+
+    /*
+     * (non-Javadoc)
+     * @return The PortletDefinitionRegistryImpl.
+     */
+    public PortletDefinitionRegistryImpl getRegistry() {
+        return this.registry;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @param service The PortletDefnitionRegistryImpl.
+     */
+    public void setRegistry(PortletDefinitionRegistryImpl registry) {
+        this.registry = registry;
+    }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.portlet.PortletApplicationDefinition#getId()
