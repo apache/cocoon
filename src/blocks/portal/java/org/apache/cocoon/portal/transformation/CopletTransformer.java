@@ -87,7 +87,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.9 2003/12/11 13:31:55 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.10 2003/12/11 14:41:32 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -141,13 +141,16 @@ extends AbstractCopletTransformer {
             }
                 
         } else if (name.equals(LINK_ELEM)) {
-            AttributesImpl newAttrs = new AttributesImpl();
-            
             PortalService portalService = null;
             try {
                 portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
                 final LinkService linkService = portalService.getComponentManager().getLinkService();
+                final String format = attr.getValue("format");
+                AttributesImpl newAttrs = new AttributesImpl();
+                newAttrs.setAttributes(attr);
+                newAttrs.removeAttribute("format");
+
                 if ( attr.getValue("href") != null ) {
                     final CopletInstanceData cid = this.getCopletInstanceData();
                     ChangeCopletInstanceAspectDataEvent event = new ChangeCopletInstanceAspectDataEvent(cid, null, null);
@@ -158,13 +161,18 @@ extends AbstractCopletTransformer {
                     } else {
                         value = value + '&' + attr.getValue("href");
                     }
-                    newAttrs.addCDATAAttribute("href", value);
+                    newAttrs.removeAttribute("href");
+                    this.output(value, format, newAttrs );
                 } else {
                     final String path = attr.getValue("path");
                     final String value = attr.getValue("value");
                     
+                    newAttrs.removeAttribute("path");
+                    newAttrs.removeAttribute("value");
+                    
                     JXPathEvent event;
                     if ( attr.getValue("layout") != null ) {
+                        newAttrs.removeAttribute("layout");
                         final String layoutId = attr.getValue("layout");
                         Object layout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
                         event = new JXPathEvent(layout, path, value);
@@ -172,7 +180,8 @@ extends AbstractCopletTransformer {
                         final CopletInstanceData cid = this.getCopletInstanceData();
                         event = new CopletJXPathEvent(cid, path, value);
                     }
-                    newAttrs.addCDATAAttribute("href", linkService.getLinkURI(event));
+                    final String href = linkService.getLinkURI(event);
+                    this.output(href, format, newAttrs );
                 }
             } catch (ServiceException e) {
                 throw new SAXException("Error getting portal service.", e);
@@ -180,7 +189,6 @@ extends AbstractCopletTransformer {
                 this.manager.release( portalService );
             }
             
-            super.startElement("", "a", "a", newAttrs);
         } else {
             super.startTransformingElement(uri, name, raw, attr);
         }
@@ -192,10 +200,44 @@ extends AbstractCopletTransformer {
     public void endTransformingElement(String uri, String name, String raw) 
     throws ProcessingException, IOException, SAXException {
         if ( name.equals(LINK_ELEM) ) {
-            super.endElement("", "a", "a");
+            String elem = (String)this.stack.pop();
+            if ( elem.length() > 0 ) {
+                this.sendEndElementEvent(elem);
+            }
         } else if (!name.equals(COPLET_ELEM)) {
             super.endTransformingElement(uri, name, raw);
         }  
     }
     
+    /**
+     * Output the link
+     */
+    protected void output(String uri, String format, AttributesImpl newAttrs) 
+    throws SAXException {
+        if ( format == null ) {
+            // default
+            format = "html-link";
+        }
+        
+        if ( "html-link".equals(format) ) {
+            newAttrs.addCDATAAttribute("href", uri);
+            this.sendStartElementEvent("a", newAttrs);
+            this.stack.push("a");
+        
+        } else if ( "html-form".equals(format) ) {
+            newAttrs.addCDATAAttribute("action", uri);
+            this.sendStartElementEvent("form", newAttrs);
+            this.stack.push("form");
+        } else if ( "text".equals(format) ) {
+            this.sendTextEvent(uri);
+        } else if ( "parameters".equals(format) ) {
+            final String value = uri.substring(uri.indexOf('?')+1);
+            this.sendTextEvent(value);
+        } else {
+            // own format
+            newAttrs.addCDATAAttribute("href", uri);
+            this.sendStartElementEvent("link", newAttrs);
+            this.stack.push("link");
+        }
+    }
 }

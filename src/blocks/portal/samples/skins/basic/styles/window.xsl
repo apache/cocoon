@@ -35,32 +35,32 @@
 		<td align="right" bgColor="{$bgColor}">
 			<xsl:if test="fullscreen-uri and not(maximize-uri)">
 				<a href="{fullscreen-uri}">
-	  			    <img src="customize.gif" border="0" alt="Full Screen"/>
+	  			    <img src="images/customize.gif" border="0" alt="Full Screen"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="maxpage-uri">
 				<a href="{maxpage-uri}">
-	  			    <img src="show.gif" border="0" alt="Max Page"/>
+	  			    <img src="images/show.gif" border="0" alt="Max Page"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="minpage-uri">
 				<a href="{minpage-uri}">
-	  			    <img src="show.gif" border="0" alt="Min Page"/>
+	  			    <img src="images/show.gif" border="0" alt="Min Page"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="maximize-uri">
 				<a href="{maximize-uri}">
-	  			    <img src="maximize.gif" border="0" alt="Maximize"/>
+	  			    <img src="images/maximize.gif" border="0" alt="Maximize"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="minimize-uri">
 				<a href="{minimize-uri}">
-	  			    <img src="minimize.gif" border="0" alt="Minimize"/>
+	  			    <img src="images/minimize.gif" border="0" alt="Minimize"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="remove-uri">
 				<a href="{remove-uri}">
-	  			    <img src="delete.gif" border="0" alt="Delete"/>
+	  			    <img src="images/delete.gif" border="0" alt="Delete"/>
 	  			</a>
 			</xsl:if>
 		</td>
