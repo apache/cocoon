@@ -121,46 +121,80 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.4 2003/04/04 13:19:06 stefano Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.5 2003/04/27 17:00:44 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
+    // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
         + Constants.COMPLETE_NAME + " in ";
 
-    protected Logger log;
-    protected LogKitManager logKitManager;
-
+    // Used by "show-time"
     static final float SECOND = 1000;
     static final float MINUTE = 60 * SECOND;
     static final float HOUR   = 60 * MINUTE;
 
-    /** The time the cocoon instance was created */
+    protected Logger log;
+    protected LogKitManager logKitManager;
+
+    /**
+     * The time the cocoon instance was created
+     */
     protected long creationTime = 0;
 
-    /** The <code>Cocoon</code> instance */
+    /**
+     * The <code>Cocoon</code> instance
+     */
     protected Cocoon cocoon;
 
+    /**
+     * Holds exception happened during initialization (if any)
+     */
     protected Exception exception;
 
+    /**
+     * Avalon application context
+     */
     protected DefaultContext appContext = new DefaultContext();
 
-    /** Allow reloading of cocoon by specifying the cocoon-reload parameter with a request */
+
+    /**
+     * Default value for {@link #allowReload} parameter (false)
+     */
+    protected static final boolean ALLOW_RELOAD = false;
+
+    /**
+     * Allow reloading of cocoon by specifying the <code>cocoon-reload=true</code> parameter with a request
+     */
     protected boolean allowReload;
 
-    /** Allow adding processing time to the response */
+
+    /**
+     * Allow adding processing time to the response
+     */
     protected boolean showTime;
+
+    /**
+     * If true, processing time will be added as an HTML comment
+     */
     protected boolean hiddenShowTime;
 
+
+    /**
+     * Default value for {@link #enableUploads} parameter (false)
+     */
     private static final boolean ENABLE_UPLOADS = false;
     private static final boolean SAVE_UPLOADS_TO_DISK = true;
     private static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
 
-    private int maxUploadSize;
+    /**
+     * Allow processing of upload requests (mime/multipart)
+     */
     private boolean enableUploads;
     private boolean autoSaveUploads;
     private boolean allowOverwrite;
     private boolean silentlyRename;
+    private int maxUploadSize;
 
     private File uploadDir;
     private File workDir;
@@ -452,10 +486,12 @@ public class CocoonServlet extends HttpServlet {
 
         // get allow reload parameter, default is true
         value = conf.getInitParameter("allow-reload");
-        this.allowReload = (value == null || value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true"));
-        if (value == null) {
+        if (value != null) {
+            this.allowReload = value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true");
+        } else {
+            this.allowReload = ALLOW_RELOAD;
             if (log.isDebugEnabled()) {
-                log.debug("allow-reload was not set - defaulting to true");
+                log.debug("allow-reload was not set - defaulting to " + ALLOW_RELOAD);
             }
         }
 
