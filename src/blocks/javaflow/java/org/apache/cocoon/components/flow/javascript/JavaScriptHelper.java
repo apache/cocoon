@@ -45,6 +45,7 @@ import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeGlobal;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.PropertyException;
@@ -62,7 +63,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptHelper.java,v 1.2 2004/06/26 18:29:30 stephan Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.3 2004/06/28 08:28:38 stephan Exp $
  */
 public class JavaScriptHelper extends AbstractContinuable
     implements ScriptHelper {
@@ -197,6 +198,8 @@ public class JavaScriptHelper extends AbstractContinuable
         JXPathContextReferenceImpl.addNodePointerFactory(new ScriptablePointerFactory());
 
         try {
+            NativeGlobal.init(context, scope, false);
+            
             scope = new Global(context);
             // Access to Cocoon internal objects
             errorReporter = new JSErrorReporter(getLogger());

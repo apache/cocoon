@@ -36,7 +36,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.12 2004/06/26 18:29:30 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.13 2004/06/28 08:28:38 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -113,6 +113,9 @@ public class ContinuationClassLoader extends ClassLoader {
 
     protected synchronized Class loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
+
+			  System.out.println("load class "+name);
+							
         // this finds also classes, which are already transformed, via findLoadedClass
     	if (debug)
     		System.out.println("load class "+name);
@@ -141,6 +144,8 @@ public class ContinuationClassLoader extends ClassLoader {
     private byte[] transform(JavaClass javaclazz) throws ClassNotFoundException {
     	
         // make all methods of java class continuable
+				System.out.println("transforming flow class " + javaclazz.getClassName());
+				
         ClassGen clazz = new ClassGen(javaclazz);
         ConstantPoolGen cp = clazz.getConstantPool();
         
@@ -169,6 +174,7 @@ public class ContinuationClassLoader extends ClassLoader {
             if (isValid(method)) {
                 // analyse the code of the method to create the frame
                 // information about every instruction
+								System.out.println("analyse " + methods[i].getName());
                 ControlFlowGraph cfg = new ControlFlowGraph(method);
                 
                 if (debug)
@@ -180,7 +186,6 @@ public class ContinuationClassLoader extends ClassLoader {
                 	System.out.println("rewriting " + methods[i].getName());
                 rewrite(method, cfg);
                 
-                // make last optional check for consistency
                 clazz.replaceMethod(methods[i], method.getMethod());
             }
         }
@@ -206,6 +211,17 @@ public class ContinuationClassLoader extends ClassLoader {
         }
         
         clazz.addInterface(CONTINUATIONCAPABLE_CLASS);
+
+        byte[] changed = clazz.getJavaClass().getBytes();
+        try {
+            java.io.FileOutputStream out = new java.io.FileOutputStream(clazz.getClassName() + ".rewritten");
+		        out.write(changed);
+		        out.flush();
+		        out.close();
+		    } catch (java.io.IOException ioe) {
+		        ioe.printStackTrace();
+		    }
+				
         return clazz.getJavaClass().getBytes();
     }
 

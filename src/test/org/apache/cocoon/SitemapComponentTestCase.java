@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.7 2004/06/23 09:16:31 stephan Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.8 2004/06/28 08:28:38 stephan Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -178,6 +178,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @param parameters Action parameters.
      */
     public final Map act(String type, String source, Parameters parameters) throws Exception {
+        
+        redirector.reset();
 
         ComponentSelector selector = null;
         Action action = null;
@@ -410,6 +412,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
     
     public String callFunction(String type, String source, String function, Map params) throws Exception {
         
+        redirector.reset();
+        
         ComponentSelector selector = null;
         Interpreter interpreter = null;
         SourceResolver resolver = null;
@@ -450,6 +454,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
     }
     
     public String callContinuation(String type, String source, String id, Map params) throws Exception {
+        
+        redirector.reset();
         
         ComponentSelector selector = null;
         Interpreter interpreter = null;

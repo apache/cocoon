@@ -80,6 +80,7 @@
   <flow-interpreters default="java">
     <component-instance class="org.apache.cocoon.components.flow.java.JavaInterpreter" name="java" debug="true">
      <include class="org.apache.cocoon.components.flow.java.test.Inner*"/>
+     <include class="org.apache.cocoon.components.flow.java.test.Linker*"/>
     </component-instance>
   </flow-interpreters>
 
