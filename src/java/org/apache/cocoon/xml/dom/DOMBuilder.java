@@ -15,27 +15,29 @@
  */
 package org.apache.cocoon.xml.dom;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * The <code>DOMBuilder</code> is a utility class that will generate a W3C
  * DOM Document from SAX events.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DOMBuilder.java,v 1.3 2004/05/25 14:24:01 cziegeler Exp $
+ * @version CVS $Id: DOMBuilder.java,v 1.4 2004/05/26 01:55:30 joerg Exp $
  */
 public class DOMBuilder
 extends AbstractXMLPipe {
 
     /** The transformer factory shared by all instances */
-    protected static final SAXTransformerFactory factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
+    protected static final SAXTransformerFactory factory = (SAXTransformerFactory)TransformerFactory.newInstance();
 
     /** The listener */
     protected Listener listener;
