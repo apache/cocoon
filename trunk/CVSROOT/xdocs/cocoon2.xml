@@ -326,7 +326,7 @@
   CVS branch in the Cocoon CVS module, or, if you are not a CVS expert, this means
   typing:</p>
 
-  <source>cvs checkout -r xml-cocoon2 cocoon-xml</source>
+  <source>cvs checkout -r xml-cocoon2 xml-cocoon</source>
 
   <p>For more information on CVS access, refer to the CVS-howtos on this web
   site.</p>
