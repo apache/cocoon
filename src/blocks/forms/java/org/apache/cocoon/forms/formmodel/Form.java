@@ -26,6 +26,7 @@ import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.commons.collections.list.CursorableLinkedList;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A widget that serves as a container for other widgets, the top-level widget in
@@ -273,7 +274,7 @@ public class Form extends AbstractContainerWidget {
      * @param redisplayForm indicates if the form should be redisplayed to the user.
      */
     public void endProcessing(boolean redisplayForm) {
-        this.endProcessing = Boolean.valueOf(!redisplayForm);
+        this.endProcessing = BooleanUtils.toBooleanObject(!redisplayForm);
     }
 
     /**
