@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.155 2004/05/24 08:00:55 cziegeler Exp $
+    | CVS $Id: gump.xml,v 1.156 2004/05/25 14:07:15 cziegeler Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -77,7 +77,6 @@
     <depend project="cocoon-javac"/>
     <depend project="cocoon-javacImpl"/>
     <depend project="rhino-cocoondev"/>
-    <depend project="jisp"/>
     <depend project="jing"/>
     <depend project="pizza"/>
     <depend project="junit"/>
@@ -1200,15 +1199,6 @@
     </description>
     <home nested="src/blocks/deli/lib"/>
     <jar name="deli-0.9.8.jar"/>
-  </project>
-
-  <project name="jisp">
-    <url href="http://www.coyotegulch.com/jisp/"/>
-    <description>
-      Java Indexed Serialization Package
-    </description>
-    <home nested="lib/core"/>
-    <jar name="jisp-2.5.1.jar"/>
   </project>
 
   <project name="jing">
