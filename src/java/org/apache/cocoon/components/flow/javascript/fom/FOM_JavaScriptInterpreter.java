@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.8 2003/09/23 22:46:44 vgritsenko Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.9 2003/09/24 20:38:09 sylvain Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -493,11 +493,15 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         if (is == null) {
             throw new ResourceNotFoundException(src.getURI() + ": not found");
         }
-        Reader reader = new BufferedReader(new InputStreamReader(is));
-        Script compiledScript = cx.compileReader(scope, reader,
-                                                 src.getURI(),
-                                                 1, null);
-        return compiledScript;
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is));
+            Script compiledScript = cx.compileReader(scope, reader,
+                                                     src.getURI(),
+                                                     1, null);
+            return compiledScript;
+        } finally {
+            is.close();
+        }
     }
 
     /**
