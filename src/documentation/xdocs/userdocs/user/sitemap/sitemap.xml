@@ -615,7 +615,7 @@ The name of the parent element which contains the merged XML content from each p
     </p>
     <p>
      See also 
-      <link href="../serializers/serializers.html">
+      <link href="../components/serializers/serializers.html">
         Serializers in Cocoon.
       </link>
     </p>

@@ -24,7 +24,7 @@
 	  <p>
 		This document will not explain how to set up database
 		connectivity with Apache Cocoon. For this, see <link
-		  href="../../developing/datasources.html">here.</link>
+		  href="../developer/datasources.html">here.</link>
 	  </p>
 	  <p>
 		Basically, there are three different approaches available:
@@ -66,7 +66,7 @@
 	  </p>
 	  <p>
 		For more detailed information, read:  <link
-		  href="../actions/database-actions.html">Database Actions</link>.
+		  href="../components/actions/database-actions.html">Database Actions</link>.
 	  </p>
 	</s1>
 

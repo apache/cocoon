@@ -49,7 +49,7 @@
                optimization in custom generators that just do not seem
                reasonable to expect out of the auto-generated code that XSPs
                produce. The current 
-               <link href="../userdocs/confiug/performancetips.html">Performance Tips</link>
+               <link href="../userdocs/config/performancetips.html">Performance Tips</link>
                documentation seems to lead in this direction.</li>
 
                <li>Customized control over the caching behaviour if not

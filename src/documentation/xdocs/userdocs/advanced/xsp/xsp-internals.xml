@@ -118,7 +118,7 @@
 
   <note>
     Despite its particular usage for XSP,
-    <link href="../../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
+    <link href="../../../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
       <code>ProgramGenerator</code>
     </link>
     is not restricted to run in a server pages environment.
@@ -129,7 +129,7 @@
  <s1 title="XSP and Cocoon Generators">
   <p>
     As a rule, XSP pages are translated into Cocoon
-    <link href="../../apidocs/org/apache/cocoon/generation/Generator.html">
+    <link href="../../../apidocs/org/apache/cocoon/generation/Generator.html">
       <code>Generator</code>'s.
     </link>
   </p>
@@ -137,7 +137,7 @@
   <s2 title="Server Pages Generator Proxy">
     <p>
       <code>Generator</code>'s created by XSP are invoked exclusively through
-      <link href="../../apidocs/org/apache/cocoon/generation/ServerPagesGenerator.html">
+      <link href="../../../apidocs/org/apache/cocoon/generation/ServerPagesGenerator.html">
         <code>ServerPagesGenerator</code>,
       </link>
       a proxy that uses Cocoon's
@@ -154,7 +154,7 @@
       <code>ProgramGenerator</code>, on the other hand, refers to a Cocoon
       component responsible for building and executing programs derived from XML
       documents containing dynamic markup:
-      <link href="../../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
+      <link href="../../../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
         <code>org.apache.cocoon.components.language.generator.ProgramGenerator</code>
       </link>
     </note>
@@ -238,11 +238,11 @@
      <link href="http://www.mozilla.org/rhino/"><em>Rhino</em></link>
      Javascript),
      XSP pages are translated into classes extending
-     <link href="../../apidocs/org/apache/cocoon/generation/AbstractServerPage.html">
+     <link href="../../../apidocs/org/apache/cocoon/generation/AbstractServerPage.html">
        <code>AbstractServerPage</code>
      </link>.
      This class, in turn, extends
-     <link href="../../apidocs/org/apache/cocoon/generation/ComposerGenerator.html">
+     <link href="../../../apidocs/org/apache/cocoon/generation/ComposerGenerator.html">
        <code>ComposerGenerator</code>
      </link>,
      which gives it access to commonly used components such as
@@ -266,7 +266,7 @@
      will be based on
      <link href="mailto:balld@webslingerZ.com">Donald Ball</link>'s
      (possibly extended)
-     <link href="../../apidocs/org/apache/cocoon/transformation/XIncludeTransformer.html">
+     <link href="../../../apidocs/org/apache/cocoon/transformation/XIncludeTransformer.html">
        <code>XIncludeTransformer</code>.
      </link>
    </note>
@@ -304,7 +304,7 @@
  <s1 title="The Programming Language Processor">
    <p>
      A Cocoon's
-     <link href="../../apidocs/org/apache/cocoon/components/language/programming/ProgrammingLanguage.html">
+     <link href="../../../apidocs/org/apache/cocoon/components/language/programming/ProgrammingLanguage.html">
        <code>ProgrammingLanguage</code>
      </link>
      processor exposes the
@@ -329,7 +329,7 @@
      </li>
      <li><code>getCodeFormatter</code>
          Return an (optional) instance of
-          <link href="../../apidocs/org/apache/cocoon/components/language/programming/CodeFormatter.html">
+          <link href="../../../apidocs/org/apache/cocoon/components/language/programming/CodeFormatter.html">
            <code>CodeFormatter</code>
          </link>
          used to beautify source code written in this programming language
@@ -340,7 +340,7 @@
    </ul>
 
    <p>
-     A default implementation (<link href="../../apidocs/org/apache/cocoon/components/language/programming/AbstractProgrammingLanguage.html">
+     A default implementation (<link href="../../../apidocs/org/apache/cocoon/components/language/programming/AbstractProgrammingLanguage.html">
        <code>AbstractProgrammingLanguage</code>
      </link>) is
      provided that extends
@@ -507,7 +507,7 @@
    <s2 title="Code Formatting">
      <p>
        Programming languages may provide a
-       <link href="../../apidocs/org/apache/cocoon/components/language/programming/CodeFormatter.html">
+       <link href="../../../apidocs/org/apache/cocoon/components/language/programming/CodeFormatter.html">
          <code>CodeFormatter</code>
        </link>
        instance used by code generators to beautify source code.
@@ -570,7 +570,7 @@
 
    <p>
      A base implementation
-    <link href="../../apidocs/org/apache/cocoon/components/language/programming/CompiledProgrammingLanguage.html">
+    <link href="../../../apidocs/org/apache/cocoon/components/language/programming/CompiledProgrammingLanguage.html">
        (<code>CompiledProgrammingLanguage</code>)
      </link>
      is provided that adds the following protected variables and
@@ -645,7 +645,7 @@
    <s2 title="Compilers">
      <p>
        Interface
-      <link href="../../apidocs/org/apache/cocoon/components/language/programming/LanguageCompiler.html">
+      <link href="../../../apidocs/org/apache/cocoon/components/language/programming/LanguageCompiler.html">
          <code>LanguageCompiler</code>
        </link>
        defines the
@@ -691,7 +691,7 @@
 
        <p>
          Class
-         <link href="../../apidocs/org/apache/cocoon/components/language/programming/CompilerError.html">
+         <link href="../../../apidocs/org/apache/cocoon/components/language/programming/CompilerError.html">
            <code>CompilerError</code>
          </link>
          exposes the following
@@ -737,7 +737,7 @@
 
          <p>
            Both of these compilers are based on
-           <link href="../../apidocs/org/apache/cocoon/components/language/programming/java/AbstractJavaCompiler.html">
+           <link href="../../../apidocs/org/apache/cocoon/components/language/programming/java/AbstractJavaCompiler.html">
              <code>AbstractJavaCompiler</code>.
            </link>
          </p>
@@ -795,7 +795,7 @@
      <p>
        To circumvent standard Java class loaders limitation, Cocoon provides a
        simple customized class loader
-       <link href="../../apidocs/org/apache/cocoon/components/classloader/RepositoryClassLoader.html">
+       <link href="../../../apidocs/org/apache/cocoon/components/classloader/RepositoryClassLoader.html">
        (<code>RepositoryClassLoader</code>)
      </link>
        that features:
@@ -819,7 +819,7 @@
      <p>
        Access to <em>protected</em> <code>RepositoryClassLoader</code> class
        is proxied through interface
-       <link href="../../apidocs/org/apache/cocoon/components/classloader/ClassLoaderManager.html">
+       <link href="../../../apidocs/org/apache/cocoon/components/classloader/ClassLoaderManager.html">
          <code>ClassLoaderManager</code>.
        </link>
        This interface exposes the following methods:
@@ -839,7 +839,7 @@
 
      <p>
        Class
-       <link href="../../apidocs/org/apache/cocoon/components/classloader/ClassLoaderManagerImpl.html">
+       <link href="../../../apidocs/org/apache/cocoon/components/classloader/ClassLoaderManagerImpl.html">
          <code>ClassLoaderManagerImpl</code>
        </link>
        implements
@@ -932,7 +932,7 @@
    <p>
      A Cocoon's
      <link
-     href="../../apidocs/org/apache/cocoon/components/language/markup/MarkupLanguage.html">
+     href="../../../apidocs/org/apache/cocoon/components/language/markup/MarkupLanguage.html">
        <code>MarkupLanguage</code>
      </link>
      processor exposes the
@@ -956,7 +956,7 @@
      A base markup language processor implementation is provided in
      class
      <link
-     href="../../apidocs/org/apache/cocoon/components/language/markup/AbstractMarkupLanguage.html">
+     href="../../../apidocs/org/apache/cocoon/components/language/markup/AbstractMarkupLanguage.html">
        <code>AbstractMarkupLanguage</code>.
      </link>
      This class extends
@@ -1067,7 +1067,7 @@
 
       <p>
         Logicsheets are represented in class
-        <link href="../../apidocs/org/apache/cocoon/components/language/markup/Logicsheet.html">
+        <link href="../../../apidocs/org/apache/cocoon/components/language/markup/Logicsheet.html">
           <code>Logicsheet</code>.
         </link>
         This
@@ -1123,7 +1123,7 @@
 
       <p>
         Class
-        <link href="../../apidocs/org/apache/cocoon/components/language/markup/NamedLogicsheet.html">
+        <link href="../../../apidocs/org/apache/cocoon/components/language/markup/NamedLogicsheet.html">
           <code>NamedLogicsheet</code>
         </link>
         extends <code>Logicsheet</code>
@@ -1183,7 +1183,7 @@
       <p>
         Class
         <link
-        href="../../apidocs/org/apache/cocoon/components/language/markup/LogicsheetCodeGenerator.html">
+        href="../../../apidocs/org/apache/cocoon/components/language/markup/LogicsheetCodeGenerator.html">
           <code>LogicsheetCodeGenerator</code>
         </link>
         exposes the following methods:
@@ -1313,7 +1313,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
    <s2 title="Markup Encoding">
      <p>Method <code>getEncoding</code> is implemented by class
      <link
-     href="../../apidocs/org/apache/cocoon/components/language/markup/xsp/XSPMarkupLanguage.html">
+     href="../../../apidocs/org/apache/cocoon/components/language/markup/xsp/XSPMarkupLanguage.html">
        <code>XSPMarkupLanguage</code>
      </link>
      by retrieving the attribute named
@@ -1435,7 +1435,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
  <s1 title="The Program Generator">
    <p>
      The
-     <link href="../../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
+     <link href="../../../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">
        <code>ProgramGenerator</code>
      </link>
      interface exposes a single
@@ -1475,12 +1475,12 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
    <p>
      A default implementation of <code>ProgramGenerator</code>
      is provided that uses a
-     <link href="../../apidocs/org/apache/cocoon/components/store/FilesystemStore.html">
+     <link href="../../../apidocs/org/apache/cocoon/components/store/FilesystemStore.html">
        <code>FilesystemStore</code>
      </link>
      as
      repository:
-     <link href="../../apidocs/org/apache/cocoon/components/language/generator/ProgramGeneratorImpl.html">
+     <link href="../../../apidocs/org/apache/cocoon/components/language/generator/ProgramGeneratorImpl.html">
        <code>ProgramGeneratorImpl</code>.
      </link>
    </p>

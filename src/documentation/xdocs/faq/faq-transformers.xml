@@ -54,7 +54,7 @@ CIncludeTransformer differences
   </ul>
   
   <p>
-Consult the user documentation for more information about the <link href="../userdocs/transformers/xinclude-transformer.html">XIncludeTransformer</link> and <link href="../userdocs/transformers/cinclude-transformer.html">CIncludeTransformer</link>. Please note that an IncludeTransformer, with support for both cinclude and xinclude as well as a configurable namespace, is planned for a future release.
+Consult the user documentation for more information about the <link href="../userdocs/components/transformers/xinclude-transformer.html">XIncludeTransformer</link> and <link href="../userdocs/transformers/cinclude-transformer.html">CIncludeTransformer</link>. Please note that an IncludeTransformer, with support for both cinclude and xinclude as well as a configurable namespace, is planned for a future release.
   </p>
 </answer>
 
