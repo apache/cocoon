@@ -199,7 +199,7 @@ public class BetwixtTransformer
                         introspector = this.beanWriter.getXMLIntrospector();
                         introspector.setLog(new LogKitLogger("betwixt"));
                         // The following is needed for EJB
-                        introspector.setClassNormalizer(new ClassNormalizer() {
+                        introspector.getConfiguration().setClassNormalizer(new ClassNormalizer() {
                             public Class normalize(Class clazz) {
                                 if (Proxy.isProxyClass(clazz)
                                     && clazz.getInterfaces().length > 0) {
