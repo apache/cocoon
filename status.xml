@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.352 2004/06/05 08:18:50 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.353 2004/06/07 08:18:16 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="28686">
+     Correct redirect handling for internal redirects.
+   </action>
    <action dev="SW" type="fix" fixes-bug="27249">
      Refactor TreeProcessor to avoid constant reloading of sitemap if its modification
      date is in the future and occasional ECM-related exceptions when a sitemap is
