@@ -120,7 +120,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.7 2004/02/20 18:48:23 sylvain Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.8 2004/02/24 10:33:33 joerg Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Serviceable, Configurable, Initializable
@@ -551,7 +551,6 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * Compile filename as JavaScript code
      * 
      * @param cx Rhino context
-     * @param environment source resolver
      * @param fileName resource uri
      * @return compiled script
      */
@@ -615,7 +614,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      *
      * @param funName a <code>String</code> value
      * @param params a <code>List</code> value
-     * @param environment an <code>Environment</code> value
+     * @param redirector
      * @exception Exception if an error occurs
      */
     public void callFunction(String funName, List params,
