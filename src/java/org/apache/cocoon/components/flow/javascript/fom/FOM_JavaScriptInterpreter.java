@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.11 2003/10/15 17:02:05 cziegeler Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.12 2003/10/28 17:21:14 vgritsenko Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable
@@ -517,7 +517,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 cocoon.setParameters(parameters);
                 Object fun = ScriptableObject.getProperty(thrScope, funName);
                 if (fun == Scriptable.NOT_FOUND) {
-                    throw new ResourceNotFoundException("Function \"javascript:"+funName+ "()\" not found");
+                    throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
                 }
                 ScriptRuntime.call(context, fun, thrScope, 
                                    funArgs, thrScope);

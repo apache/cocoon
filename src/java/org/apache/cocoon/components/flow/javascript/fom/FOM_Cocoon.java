@@ -65,6 +65,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
+import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -79,15 +80,15 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+
 /**
  * Implementation of FOM (Flow Object Model).
  *
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.13 2003/10/15 17:02:05 cziegeler Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.14 2003/10/28 17:21:14 vgritsenko Exp $
  */
-
 public class FOM_Cocoon extends ScriptableObject {
 
     private FOM_JavaScriptInterpreter interpreter;
@@ -203,7 +204,9 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     public void jsFunction_redirectTo(String uri) throws Exception {
-        environment.redirect(false, uri);
+        // Cannot use environment directly as TreeProcessor uses own version of redirector
+        // environment.redirect(false, uri);
+        PipelinesNode.getRedirector(environment).redirect(false, uri);
     }
 
 /*
@@ -434,7 +437,9 @@ public class FOM_Cocoon extends ScriptableObject {
         public String jsFunction_getHeader(String name) {
             return request.getHeader(name);
         }
-        
+
+        // TODO: FOM_Header
+
         public Enumeration jsFunction_getHeaders(String name) {
             return request.getHeaders(name);
         }
