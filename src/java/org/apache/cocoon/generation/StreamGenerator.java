@@ -20,6 +20,7 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.util.PostInputStream;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
@@ -28,6 +29,8 @@ import org.xml.sax.SAXException;
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 
 /**
@@ -52,7 +55,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.7 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.8 2004/03/06 14:05:04 joerg Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
@@ -92,8 +95,8 @@ public class StreamGenerator extends ServiceableGenerator
             }
             if (contentType == null) {
                 throw new IOException("both Content-Type header and defaultContentType parameter are not set");
-            } else if (contentType.startsWith("application/x-www-form-urlencoded") ||
-                    contentType.startsWith("multipart/form-data")) {
+            } else if (contentType.startsWith("application/x-www-form-urlencoded")
+                       || contentType.startsWith("multipart/form-data")) {
                 String parameter = parameters.getParameter(FORM_NAME, null);
                 if (parameter == null) {
                     throw new ProcessingException(
@@ -101,8 +104,19 @@ public class StreamGenerator extends ServiceableGenerator
                         FORM_NAME + "' for handling form data"
                     );
                 }
-                String sXml = request.getParameter(parameter);
-                inputSource = new InputSource(new StringReader(sXml));
+                Object xmlObject = request.get(parameter);
+                Reader xmlReader = null;
+                if (xmlObject instanceof String){
+                  xmlReader  = new StringReader((String)xmlObject);
+                }
+                else if (xmlObject instanceof Part){
+                  xmlReader = new InputStreamReader(((Part)xmlObject).getInputStream());
+                }
+                else{
+                  throw new ProcessingException("Unknown request object encountred named " + 
+                parameter + " : " + xmlObject);
+                }
+                inputSource = new InputSource(xmlReader);
             } else if (contentType.startsWith("text/plain") ||
                     contentType.startsWith("text/xml") ||
                     contentType.startsWith("application/xml")) {
