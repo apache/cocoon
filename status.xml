@@ -319,6 +319,9 @@
      sources in the IncludeTransformer.
    </action>
    <action dev="AG" type="update">
+     Updated commons-lang to 2.0-20041007T2305. Now cocoon compiles in java 1.5
+   </action>
+   <action dev="AG" type="update">
      Updated jdt-core to 3.0.1
    </action>
    <action dev="VG" type="add">

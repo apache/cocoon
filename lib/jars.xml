@@ -339,7 +339,7 @@
     </description>
     <ant-target>jar</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xalan-2.6.0.jar</lib>
+    <lib>endorsed/xalan-2.6.1-dev-20041008T0304.jar</lib>
     <homepage>http://xml.apache.org/xalan-j/</homepage>
   </file>
 
@@ -891,7 +891,7 @@
       on base classes of the JDK, such as unrolling exceptions.
     </description>
     <used-by>Cocoon, OJB</used-by>
-    <lib>core/commons-lang-2.0.jar</lib>
+    <lib>core/commons-lang-2.0-20041007T2305.jar</lib>
     <homepage>http://jakarta.apache.org/commons/lang/</homepage>
   </file>
 
