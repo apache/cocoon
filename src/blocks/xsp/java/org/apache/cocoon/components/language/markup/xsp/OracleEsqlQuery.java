@@ -22,7 +22,7 @@ import java.sql.Connection;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: OracleEsqlQuery.java,v 1.5 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 final public class OracleEsqlQuery extends AbstractEsqlQuery {
 

@@ -16,18 +16,19 @@
 
 package org.apache.cocoon.components.language.markup.xsp;
 
+import org.apache.cocoon.components.language.markup.xsp.AbstractEsqlQuery;
+
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Connection;
 
 /**
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: PostgresEsqlQuery.java,v 1.5 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-final public class PostgresEsqlQuery extends AbstractEsqlQuery {
+final public class MysqlEsqlQuery extends AbstractEsqlQuery {
 
-    public PostgresEsqlQuery(Connection connection, String query) {
+    public MysqlEsqlQuery(Connection connection, String query) {
         super(connection, query);
     }
 
@@ -35,7 +36,7 @@ final public class PostgresEsqlQuery extends AbstractEsqlQuery {
      * Only newInstance may use this contructor
      * @param resultSet
      */
-    private PostgresEsqlQuery(ResultSet resultSet) {
+    private MysqlEsqlQuery(final ResultSet resultSet) {
         super(resultSet);
     }
 
@@ -43,15 +44,32 @@ final public class PostgresEsqlQuery extends AbstractEsqlQuery {
      * Create a EsqlQuery of the same type
      * @param resultSet
      */
-    public AbstractEsqlQuery newInstance(final ResultSet resultSet) {
-        return(new PostgresEsqlQuery(resultSet));
+    public AbstractEsqlQuery newInstance(ResultSet resultSet) {
+        return( new MysqlEsqlQuery(resultSet) );
     }
 
     public String getQueryString() throws SQLException {
-        StringBuffer sb = new StringBuffer(super.getQueryString());
-        if (getMaxRows() > -1) sb.append(" LIMIT ").append(getMaxRows()+1);
-        if (getSkipRows() > 0) sb.append(" OFFSET ").append(getSkipRows());
-        return(sb.toString());
+        if (getSkipRows() > 0) {
+            if (getMaxRows() > -1) {
+                return (new StringBuffer(super.getQueryString())
+                        .append(" LIMIT ").append(getSkipRows())
+                        .append(",").append(getMaxRows()+1)
+                        .toString());
+            }
+            else {
+                throw new SQLException("MySQL does not support a skip of rows only. Please also provide the max amount of rows");
+            }
+        }
+        else {
+            if (getMaxRows() > -1) {
+                return (new StringBuffer(super.getQueryString())
+                        .append(" LIMIT ").append(getMaxRows()+1)
+                        .toString());
+            }
+            else {
+                return (super.getQueryString());
+            }
+        }
     }
 
     public void getResultRows() throws SQLException {

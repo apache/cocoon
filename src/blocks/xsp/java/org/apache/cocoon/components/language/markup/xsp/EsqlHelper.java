@@ -33,7 +33,7 @@ import java.sql.Types;
  *
  * based on the orginal esql.xsl
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: EsqlHelper.java,v 1.4 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class EsqlHelper {
