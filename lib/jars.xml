@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.93 2003/09/09 14:00:19 sylvain Exp $
+    | CVS $Id: jars.xml,v 1.94 2003/09/10 15:33:49 reinhard Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -816,4 +816,45 @@
     <lib>scratchpad/lib/apache-garbage-0.0.jar</lib>
     <homepage>http://cocoon.apache.org/</homepage>
    </file>
+
+  <file>
+    <title>Jakarta Commons Betwixt</title>
+    <description>
+       The Betwixt library provides an XML introspection mechanism for
+       mapping beans to XML in a flexible way. It is implemented using
+       an XMLIntrospector and XMLBeanInfo classes which are similar to
+       the standard Introspector and BeanInfo from the Java Beans 
+       specification.
+    </description>
+    <used-by>BetwixtTransformer</used-by>
+    <lib>scratchpad/lib/commons-betwixt-20030910.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/betwixt/</homepage>
+  </file>
+
+  <file>
+    <title>Jakarta Commons Beantuils</title>
+    <description>
+      The Java language provides Reflection and Introspection APIs 
+      (see the java.lang.reflect and java.beans packages in the JDK Javadocs). 
+      However, these APIs can be quite complex to understand and utilize. 
+      The BeanUtils component provides easy-to-use wrappers around these capabilities.
+    </description>
+    <used-by>BetwixtTransformer</used-by>
+    <lib>scratchpad/lib/commons-beanutils-1.5.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/beantuils/</homepage>
+  </file>
+
+  <file>
+    <title>Jakarta Commons Digester</title>
+    <description>
+      The Java language provides Reflection and Introspection APIs 
+      (see the java.lang.reflect and java.beans packages in the JDK Javadocs). 
+      However, these APIs can be quite complex to understand and utilize. 
+      The BeanUtils component provides easy-to-use wrappers around these capabilities.
+    </description>
+    <used-by>BetwixtTransformer</used-by>
+    <lib>scratchpad/lib/commons-digester-1.3.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/digester/</homepage>
+  </file>  
+
 </jars>
