@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManagerImpl.java,v 1.1 2003/05/07 06:22:25 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.2 2003/07/03 07:59:59 cziegeler Exp $
  */
 public final class PortalManagerImpl
 	extends AbstractLogEnabled
@@ -94,7 +94,7 @@ public final class PortalManagerImpl
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.core.PortalManager#showPortal(ContentHandler)
+	 * @see org.apache.cocoon.portal.core.PortalManager#showPortal(ContentHandler, Parameters)
 	 */
 	public void showPortal(ContentHandler contentHandler, Parameters parameters) 
     throws SAXException {

@@ -91,7 +91,7 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  * @see MailContext
  *
  * @author Bernhard Huber
- * @version CVS $Id: MailAction.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @version CVS $Id: MailAction.java,v 1.3 2003/07/03 08:00:00 cziegeler Exp $
  * @since Cocoon 2.1, 16 December 2002
  */
 public class MailAction extends ComposerAction implements ThreadSafe {
@@ -122,7 +122,6 @@ public class MailAction extends ComposerAction implements ThreadSafe {
      *@param  source         the source, e.g.: index.html
      *@param  objectModel    Description of the Parameter
      *@param  par            Description of the Parameter
-     *@return
      *@exception  Exception  Description of the Exception
      */
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters par) throws Exception {

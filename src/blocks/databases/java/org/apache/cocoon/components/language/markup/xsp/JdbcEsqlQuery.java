@@ -65,7 +65,7 @@ import java.sql.Connection;
  * Unfortunately it seems NOT to work with mssql
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: JdbcEsqlQuery.java,v 1.4 2003/06/09 11:02:03 tcurdt Exp $
+ * @version CVS $Id: JdbcEsqlQuery.java,v 1.5 2003/07/03 07:59:59 cziegeler Exp $
  */
 final public class JdbcEsqlQuery extends AbstractEsqlQuery {
 
@@ -84,7 +84,6 @@ final public class JdbcEsqlQuery extends AbstractEsqlQuery {
     /**
      * Create a EsqlQuery of the same type
      * @param resultSet
-     * @return
      */
     public AbstractEsqlQuery newInstance(final ResultSet resultSet) {
         return(new JdbcEsqlQuery(resultSet));

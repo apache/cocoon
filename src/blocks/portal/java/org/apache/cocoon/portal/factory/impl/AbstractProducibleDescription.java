@@ -54,11 +54,11 @@ import org.apache.cocoon.portal.aspect.impl.AbstractAspectalizableDescription;
 import org.apache.cocoon.portal.factory.ProducibleDescription;
 
 /**
- * This is a description of a {@link Producible} object.
+ * This is a description of a {@link org.apache.cocoon.portal.factory.Producible} object.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProducibleDescription.java,v 1.2 2003/06/06 11:33:39 cziegeler Exp $
+ * @version CVS $Id: AbstractProducibleDescription.java,v 1.3 2003/07/03 08:00:00 cziegeler Exp $
  */
 public abstract class AbstractProducibleDescription
     extends AbstractAspectalizableDescription
@@ -71,14 +71,14 @@ public abstract class AbstractProducibleDescription
     protected boolean createId = true;
     
     /**
-     * @return
+     * @return The class name
      */
     public String getClassName() {
         return className;
     }
 
     /**
-     * @return
+     * @return The configured name
      */
     public String getName() {
         return name;

@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.1 2003/04/17 20:35:37 haul Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.2 2003/07/03 08:00:00 cziegeler Exp $
  */
 public class MailMessageSender {
 
@@ -185,7 +185,6 @@ public class MailMessageSender {
 
         /**
          * Returns encapsulated object
-         * @return
          */
         public Object getObject() {
             return this.obj;
@@ -333,7 +332,7 @@ public class MailMessageSender {
     }
 
     /**
-     * Invokes the {@link send} method but catches any exception thrown. This 
+     * Invokes the {@link #send(SourceResolver)} method but catches any exception thrown. This 
      * method is intended to be used from the sendmail logicsheet. 
      * @return true when successful
      */

@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.2 2003/05/22 15:19:38 cziegeler Exp $
+ * @version CVS $Id: CopletSource.java,v 1.3 2003/07/03 08:00:00 cziegeler Exp $
  */
 public class CopletSource 
     implements Source, XMLizable, Composable {
@@ -143,7 +143,7 @@ public class CopletSource
 	}
 
 	/**
-	 * @see org.apache.avalon.excalibur.xml.XMLizable#toSAX(ContentHandler)
+	 * @see org.apache.excalibur.xml.sax.XMLizable#toSAX(ContentHandler)
 	 */
 	public void toSAX(ContentHandler handler) 
     throws SAXException {

@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.3 2003/03/23 11:14:04 stefano Exp $
+ * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.4 2003/07/03 07:59:59 cziegeler Exp $
  */
 public class ProfilingNonCachingProcessingPipeline
   extends NonCachingProcessingPipeline implements Disposable {
@@ -269,7 +269,7 @@ public class ProfilingNonCachingProcessingPipeline
      *
      * @param environment
      *
-     * @return
+     * @return true on success
      */
     public boolean process(Environment environment)
       throws ProcessingException {
