@@ -75,21 +75,18 @@ import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.components.url.ParsedContextURLProtocolHandler;
 import org.apache.cocoon.components.url.ParsedResourceURLProtocolHandler;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.SVGBuilder;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.w3c.dom.Document;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
- * A Batik based Serializer for generating PNG/JPEG images
+ * A <a href="http://xml.apache.org/batik/">Batik</a> based Serializer for generating PNG/JPEG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.4 2003/05/06 23:42:21 vgritsenko Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -104,18 +101,15 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
         ParsedURL.registerHandler(new ParsedResourceURLProtocolHandler());
     }
 
-    /** The <code>ContentHandler</code> receiving SAX events. */
-    private ContentHandler contentHandler=null;
-    /** The <code>LexicalHandler</code> receiving SAX events. */
-    private LexicalHandler lexicalHandler=null;
-    /** The component manager instance */
-    private ComponentManager manager=null;
     /** The current <code>OutputStream</code>. */
-    private OutputStream output=null;
+    private OutputStream output;
+
     /** The current <code>mime-type</code>. */
-    private String mimetype = null;
+    private String mimetype;
+
     /** The current <code>Transcoder</code>.  */
-    Transcoder transcoder = null;
+    Transcoder transcoder;
+
     /** The Transcoder Factory to use */
     TranscoderFactory factory = ExtendableTranscoderFactory.getTranscoderFactoryImplementation();
 
@@ -131,11 +125,14 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.mimetype = conf.getAttribute("mime-type");
-        log.debug("SVGSerializer mime-type:" + mimetype);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("mime-type: " + mimetype);
+        }
 
         // Using the Transcoder Factory, get the default transcoder
         // for this MIME type.
         this.transcoder = factory.createTranscoder(mimetype);
+
         // Iterate through the parameters, looking for a transcoder reference
         Configuration[] parameters = conf.getChildren("parameter");
         for (int i = 0; i < parameters.length; i++) {
@@ -145,7 +142,9 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
                 try {
                     this.transcoder = (Transcoder)ClassUtils.newInstance(transcoderName);
                 } catch (Exception ex) {
-                    log.error("Cannot load  class " + transcoderName, ex);
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Cannot load  class " + transcoderName, ex);
+                    }
                     throw new ConfigurationException("Cannot load class " + transcoderName, ex);
                 }
             }
@@ -164,7 +163,10 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
             String name = parameters[i].getAttribute("name");
             // Skip over the parameters we've dealt with. Ensure this
             // is kept in sync with the above list!
-            if ("transcoder".equals(name)) continue;
+            if ("transcoder".equals(name)) {
+                continue;
+            }
+
             // Now try and get the hints out
             try {
                 // Turn it into a key name (assume the current Batik style continues!
@@ -184,18 +186,18 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
                     // Can throw an exception.
                     value = new Boolean(parameters[i].getAttributeAsBoolean("value"));
                 } else if ("COLOR".equals(keyType)) {
-                  // Can throw an exception
-                  String stringValue = parameters[i].getAttribute("value");
-                  if (stringValue.startsWith("#")) {
-                    stringValue = stringValue.substring(1);
-                  }
-                  value = new Color(Integer.parseInt(stringValue, 16));
+                    // Can throw an exception
+                    String stringValue = parameters[i].getAttribute("value");
+                    if (stringValue.startsWith("#")) {
+                        stringValue = stringValue.substring(1);
+                    }
+                    value = new Color(Integer.parseInt(stringValue, 16));
                 } else {
                     // Assume String, and get the value. Allow an empty string.
                     value = parameters[i].getValue("");
                 }
-                if(log.isDebugEnabled()) {
-                    log.debug("SVG Serializer: adding hint \"" + name + "\" with value \"" + value.toString() + "\"");
+                if(getLogger().isDebugEnabled()) {
+                    getLogger().debug("Adding hint \"" + name + "\" with value \"" + value.toString() + "\"");
                 }
                 transcoder.addTranscodingHint(key, value);
             } catch (ClassCastException ex) {
@@ -216,42 +218,6 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
      * <code>Composable</code>.
      */
     public void compose(ComponentManager manager) {
-        this.manager = manager;
-    }
-
-    /**
-     * Set the <code>XMLConsumer</code> that will receive XML data.
-     * <br>
-     * This method will simply call <code>setContentHandler(consumer)</code>
-     * and <code>setLexicalHandler(consumer)</code>.
-     */
-    public void setConsumer(XMLConsumer consumer) {
-        this.contentHandler=consumer;
-        this.lexicalHandler=consumer;
-    }
-
-    /**
-     * Set the <code>ContentHandler</code> that will receive XML data.
-     * <br>
-     * Subclasses may retrieve this <code>ContentHandler</code> instance
-     * accessing the protected <code>super.contentHandler</code> field.
-     */
-    public void setContentHandler(ContentHandler content) {
-        this.contentHandler=content;
-    }
-
-    /**
-     * Set the <code>LexicalHandler</code> that will receive XML data.
-     * <br>
-     * Subclasses may retrieve this <code>LexicalHandler</code> instance
-     * accessing the protected <code>super.lexicalHandler</code> field.
-     *
-     * @exception IllegalStateException If the <code>LexicalHandler</code> or
-     *                                  the <code>XMLConsumer</code> were
-     *                                  already set.
-     */
-    public void setLexicalHandler(LexicalHandler lexical) {
-        this.lexicalHandler=lexical;
     }
 
     /**
@@ -261,17 +227,14 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
         try {
             TranscoderInput transInput = new TranscoderInput(doc);
  
-            // Batik's PNGTranscoder closes the output stream.
-            // Therefore we cannot pass it this.output directly.
-            // Otherwise we get an exception when Cocoon.process
-            // tries to flush/close the stream again.
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
-            TranscoderOutput transOutput = new TranscoderOutput(baos);
+            // Buffering is done by the pipeline (See shouldSetContentLength)
+            TranscoderOutput transOutput = new TranscoderOutput(this.output);
             transcoder.transcode(transInput, transOutput);
-            baos.writeTo(this.output);
         } catch (Exception ex) {
-            log.error("SVGSerializer: Exception writing image", ex);
-            throw new SAXException("Exception writing image ", ex);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Got exception writing image, rethrowing", ex);
+            }
+            throw new SAXException("Exception writing image", ex);
         }
     }
 
@@ -307,10 +270,15 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
     }
 
     /**
-     * Test if the component wants to set the content length
+     * Returns true so the pipeline implementation will buffer generated
+     * output and write content length to the response.
+     * <p>Batik's PNGTranscoder closes the output stream, therefore we
+     * cannot pass {@link #output} directly to Batik and have to
+     * instruct pipeline to buffer it. If we do not buffer, we would get
+     * an exception when {@link org.apache.cocoon.Cocoon#process}
+     * tries to close the stream.
      */
     public boolean shouldSetContentLength() {
-        return false;
+        return true;
     }
-
 }
