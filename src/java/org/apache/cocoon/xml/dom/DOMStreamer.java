@@ -61,7 +61,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.15 2004/03/28 23:57:41 antonio Exp $
+ * @version CVS $Id$
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -396,7 +396,7 @@ public class DOMStreamer implements XMLProducer {
                                 // if the prefix is null, or the prefix has not been declared, or conflicts with an in-scope binding
                                 if (declaredUri == null || !declaredUri.equals(attrNsURI)) {
                                     String availablePrefix = currentElementInfo.findPrefix(attrNsURI);
-                                    if (availablePrefix != null)
+                                    if (availablePrefix != null && !availablePrefix.equals(""))
                                         assignedAttrPrefix = availablePrefix;
                                     else {
                                         if (attrPrefix != null && declaredUri == null) {
