@@ -6,7 +6,6 @@
                 exclude-result-prefixes="wi">
 
   <xsl:template name="woody-page-head">
-
     <!-- only woody_showTab is needed here. Assume woody-lib.js is loaded by the field-styling -->
   </xsl:template>
 
@@ -189,7 +188,7 @@
     <tr>
       <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
       <td><xsl:apply-templates select="."/></td>
-   </tr>
+    </tr>
   </xsl:template>
 
   <!-- boolean field : checkbox and label on a single line -->
