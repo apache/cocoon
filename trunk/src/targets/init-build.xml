@@ -191,23 +191,4 @@
     <delete dir="${build.webapp}"/>
   </target>
 
-  <!-- Clean the distribution -->
-  <target name="distclean" depends="clean" description="Cleans everything and brings back to original 'CVS checkout' state">
-    <delete dir="${build.root}"/>
-    <delete dir="${tools.tasks.dest}"/>
-    <delete dir="${tools.loader.dest}"/>
-    <delete file="${dist}/${Name}-${version}.tar.gz"/>
-    <delete file="${dist}/${Name}-${version}.tar"/>
-    <delete file="${dist}/${Name}-${version}.zip"/>
-    <delete file="${dist}/${Name}-${version}-src.tar.gz"/>
-    <delete file="${dist}/${Name}-${version}-src.tar"/>
-    <delete file="${dist}/${Name}-${version}-src.zip"/>
-    <delete file="${dist}/${Name}-${version}-bin.tar.gz"/>
-    <delete file="${dist}/${Name}-${version}-bin.tar"/>
-    <delete file="${dist}/${Name}-${version}-bin.zip"/>
-    <delete file="${dist}/${Name}-${version}-samples.tar.gz"/>
-    <delete file="${dist}/${Name}-${version}-samples.tar"/>
-    <delete file="${dist}/${Name}-${version}-samples.zip"/>
-    <delete dir="${dist.root}"/>
-  </target>
 
