@@ -78,7 +78,7 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.5 2003/10/27 08:09:36 cziegeler Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.6 2003/12/06 21:22:09 cziegeler Exp $
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline implements Configurable {
@@ -434,8 +434,8 @@ public class CachingPointProcessingPipeline
     /**
      * Recyclable Interface
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
 
         Iterator itt = this.xmlSerializerArray.iterator();
         while (itt.hasNext()) {

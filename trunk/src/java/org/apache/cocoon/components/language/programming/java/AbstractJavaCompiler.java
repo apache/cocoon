@@ -50,9 +50,9 @@
 */
 package org.apache.cocoon.components.language.programming.java;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
-import org.apache.excalibur.mpool.Resettable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,10 +63,10 @@ import java.util.List;
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractJavaCompiler.java,v 1.2 2003/10/22 18:14:48 bloritsch Exp $
+ * @version CVS $Id: AbstractJavaCompiler.java,v 1.3 2003/12/06 21:22:10 cziegeler Exp $
  * @since 2.0
  */
-public abstract class AbstractJavaCompiler extends AbstractLogEnabled implements LanguageCompiler, Resettable {
+public abstract class AbstractJavaCompiler extends AbstractLogEnabled implements LanguageCompiler, Recyclable {
 
     /**
      * The source program filename
@@ -222,7 +222,7 @@ public abstract class AbstractJavaCompiler extends AbstractLogEnabled implements
      * This method is called by the component manager before this
      * component is return to its pool.
      */
-    public void reset() {
+    public void recycle() {
         file = null;
         srcDir = null;
         destDir = null;

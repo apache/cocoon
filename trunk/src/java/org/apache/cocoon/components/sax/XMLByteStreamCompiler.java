@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.components.sax;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -63,7 +63,7 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.5 2003/11/07 14:33:40 joerg Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.6 2003/12/06 21:22:10 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="XMLSerializer"
@@ -72,7 +72,7 @@ import java.util.HashMap;
  */
 
 public final class XMLByteStreamCompiler
-implements XMLSerializer, Resettable {
+implements XMLSerializer, Recyclable {
 
     private HashMap map;
     private int     count;
@@ -101,7 +101,7 @@ implements XMLSerializer, Resettable {
         this.bufCount = 6;
     }
 
-    public void reset() {
+    public void recycle() {
         this.initOutput();
     }
 

@@ -90,7 +90,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Id: LogTransformer.java,v 1.4 2003/10/24 12:50:08 vgritsenko Exp $
+ * @version CVS $Id: LogTransformer.java,v 1.5 2003/12/06 21:22:07 cziegeler Exp $
  *
  */
 public class LogTransformer
@@ -140,8 +140,8 @@ public class LogTransformer
     /**
      * Recycle
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         try {
             if (this.logfile != null) logfile.close();
         } catch (Exception e) {

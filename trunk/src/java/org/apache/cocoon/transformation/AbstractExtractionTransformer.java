@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractExtractionTransformer.java,v 1.3 2003/10/23 08:09:32 cziegeler Exp $
+ * @version CVS $Id: AbstractExtractionTransformer.java,v 1.4 2003/12/06 21:22:07 cziegeler Exp $
  */
 abstract public class AbstractExtractionTransformer extends AbstractTransformer {
 
@@ -90,8 +90,8 @@ abstract public class AbstractExtractionTransformer extends AbstractTransformer 
         prefixMap = new HashMap();
     }
 
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.extractLevel = 0;
         this.currentBuilder = null;
         this.prefixMap = null;

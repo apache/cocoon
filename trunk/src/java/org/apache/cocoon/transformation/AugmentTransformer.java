@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since October 10, 2001
- * @version CVS $Id: AugmentTransformer.java,v 1.5 2003/10/22 18:07:15 bloritsch Exp $
+ * @version CVS $Id: AugmentTransformer.java,v 1.6 2003/12/06 21:22:07 cziegeler Exp $
  */
 public class AugmentTransformer
     extends AbstractTransformer {
@@ -114,10 +114,10 @@ public class AugmentTransformer
     /**
      * Recyclable
      */
-    public void reset() {
+    public void recycle() {
         this.objectModel = null;
         this.request = null;
         this.baseURI = null;
-        super.reset();
+        super.recycle();
     }
 }

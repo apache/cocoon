@@ -50,7 +50,7 @@
  */
 package org.apache.cocoon.components.crawler;
 
-import org.apache.excalibur.mpool.Resettable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -76,7 +76,7 @@ import java.util.List;
  * A simple cocoon crawler.
  *
  * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.3 2003/10/22 22:04:25 unico Exp $
+ * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.4 2003/12/06 21:22:09 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="CocoonCrawler"
@@ -84,7 +84,7 @@ import java.util.List;
  * @x-avalon.info name="cocoon-crawler"
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
-        implements CocoonCrawler, Configurable, Disposable, Resettable {
+        implements CocoonCrawler, Configurable, Disposable, Recyclable {
 
     /**
      * Config element name specifying expected link content-typ.
@@ -315,7 +315,7 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
     /**
      * recylcle this object, relasing resources
      */
-    public void reset() {
+    public void recycle() {
         crawled = null;
         urlsToProcess = null;
         urlsNextDepth = null;
@@ -607,7 +607,7 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * </p>
      *
      * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.3 2003/10/22 22:04:25 unico Exp $
+     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.4 2003/12/06 21:22:09 cziegeler Exp $
      */
     public static class CocoonCrawlerIterator implements Iterator {
         private SimpleCocoonCrawlerImpl cocoonCrawler;

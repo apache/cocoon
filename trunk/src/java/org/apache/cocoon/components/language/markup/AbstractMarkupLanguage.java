@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components.language.markup;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -71,7 +72,6 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.store.Store;
-import org.apache.excalibur.mpool.Resettable;
 import org.apache.cocoon.util.HashMap;
 
 import org.xml.sax.Attributes;
@@ -93,12 +93,12 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: AbstractMarkupLanguage.java,v 1.3 2003/10/22 18:13:36 bloritsch Exp $
+ * @version CVS $Id: AbstractMarkupLanguage.java,v 1.4 2003/12/06 21:22:10 cziegeler Exp $
  */
 public abstract class AbstractMarkupLanguage
         extends AbstractLogEnabled
         implements MarkupLanguage, Composable, Configurable, Parameterizable,
-                   Resettable, Disposable
+                   Recyclable, Disposable
 {
     /** The 'file' URL protocol. */
     private static final String FILE = "file:";
@@ -233,7 +233,7 @@ public abstract class AbstractMarkupLanguage
     /**
      * Recycle this component: clear logic sheet list and dependencies.
      */
-    public void reset() {
+    public void recycle() {
         this.logicSheetList.clear();
     }
 

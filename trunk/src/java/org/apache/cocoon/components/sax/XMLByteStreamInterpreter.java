@@ -52,8 +52,8 @@ package org.apache.cocoon.components.sax;
 
 import java.util.ArrayList;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLProducer;
-import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -62,7 +62,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.6 2003/10/23 08:37:44 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.7 2003/12/06 21:22:10 cziegeler Exp $
  *
  * @avalon.component
  * @avalon.service type="XMLDeserializer"
@@ -72,7 +72,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public final class XMLByteStreamInterpreter
 extends AbstractXMLProducer
-implements XMLDeserializer, Resettable {
+implements XMLDeserializer, Recyclable {
 
     private static final int START_DOCUMENT         = 0;
     private static final int END_DOCUMENT           = 1;
@@ -97,8 +97,8 @@ implements XMLDeserializer, Resettable {
     private byte[] input;
     private int currentPos;
 
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.list.clear();
         this.input = null;
     }

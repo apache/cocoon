@@ -64,7 +64,7 @@ import javax.xml.transform.sax.TransformerHandler;
  * DOM Document from SAX events.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DOMBuilder.java,v 1.2 2003/10/22 18:04:22 bloritsch Exp $
+ * @version CVS $Id: DOMBuilder.java,v 1.3 2003/12/06 21:22:09 cziegeler Exp $
  */
 public class DOMBuilder
 extends AbstractXMLPipe {
@@ -154,8 +154,8 @@ extends AbstractXMLPipe {
     /**
      * Recycling
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
 
         try {
             TransformerHandler handler = factory.newTransformerHandler();

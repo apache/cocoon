@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.13 2003/10/22 18:04:22 bloritsch Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.14 2003/12/06 21:22:09 cziegeler Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -184,9 +184,9 @@ public class DOMStreamer implements XMLProducer {
         this.normalizeNamespaces = normalizeNamespaces;
     }
 
-    public void reset() {
-        defaultDOMStreamer.reset();
-        namespaceNormalizingDOMStreamer.reset();
+    public void recycle() {
+        defaultDOMStreamer.recycle();
+        namespaceNormalizingDOMStreamer.recycle();
         normalizeNamespaces = DEFAULT_NORMALIZE_NAMESPACES;
     }
 
@@ -220,8 +220,8 @@ public class DOMStreamer implements XMLProducer {
         /** Counter used when generating new namespace prefixes. */
         protected int newPrefixCounter = 0;
 
-        public void reset() {
-            super.reset();
+        public void recycle() {
+            super.recycle();
             currentElementInfo = null;
             newPrefixCounter = 0;
         }

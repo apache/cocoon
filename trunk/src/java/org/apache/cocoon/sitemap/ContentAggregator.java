@@ -80,7 +80,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.6 2003/10/24 13:45:10 vgritsenko Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.7 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
@@ -290,8 +290,8 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     /**
      * Recycle the producer by removing references
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.rootElement = null;
         for(int i=0; i<this.parts.size();i++) {
             final Part current = (Part)this.parts.get(i);

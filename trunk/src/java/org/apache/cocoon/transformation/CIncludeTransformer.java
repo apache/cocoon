@@ -146,7 +146,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.10 2003/10/23 08:27:46 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.11 2003/12/06 21:22:07 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Transformer"
@@ -262,7 +262,7 @@ implements Disposable, CacheableProcessingComponent {
     /**
      * Recycle the component
      */
-    public void reset() {
+    public void recycle() {
         if ( null != this.cachingSession ) {
             this.cacheManager.terminateSession( this.cachingSession );
         }
@@ -271,7 +271,7 @@ implements Disposable, CacheableProcessingComponent {
             this.manager.release( this.recorder );
             this.recorder = null;
         }
-        super.reset();
+        super.recycle();
         this.configurationParameters = null;
         this.resourceParameters = null;
         if (this.getLogger().isErrorEnabled()) {

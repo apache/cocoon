@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.5 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: ServletGenerator.java,v 1.6 2003/12/06 21:22:08 cziegeler Exp $
  */
 public abstract class ServletGenerator extends ServiceableGenerator {
 
@@ -85,8 +85,8 @@ public abstract class ServletGenerator extends ServiceableGenerator {
     /**
      * Recycle the generator by removing references
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.request = null;
         this.response = null;
         this.context = null;

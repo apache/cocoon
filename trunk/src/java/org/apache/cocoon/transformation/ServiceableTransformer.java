@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: ServiceableTransformer.java,v 1.2 2003/10/22 18:07:15 bloritsch Exp $
+ * @version CVS $Id: ServiceableTransformer.java,v 1.3 2003/12/06 21:22:07 cziegeler Exp $
  */
 
 public abstract class ServiceableTransformer
@@ -101,8 +101,8 @@ public abstract class ServiceableTransformer
     /**
      * Recycle the generator by removing references
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.resolver = null;
         this.objectModel = null;
         this.source = null;

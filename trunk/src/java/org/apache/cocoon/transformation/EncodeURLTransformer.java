@@ -110,7 +110,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.6 2003/10/22 18:07:15 bloritsch Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.7 2003/12/06 21:22:07 cziegeler Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -235,8 +235,8 @@ public class EncodeURLTransformer
     /**
      * Recycle resources of this transformer
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.response = null;
         this.session = null;
         this.elementAttributeMatching = null;
@@ -347,7 +347,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.6 2003/10/22 18:07:15 bloritsch Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.7 2003/12/06 21:22:07 cziegeler Exp $
      */
     public class ElementAttributeMatching {
         /**

@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: NotifyingGenerator.java,v 1.3 2003/10/22 18:08:10 bloritsch Exp $
+ * @version CVS $Id: NotifyingGenerator.java,v 1.4 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class NotifyingGenerator extends AbstractGenerator {
 
@@ -103,8 +103,8 @@ public class NotifyingGenerator extends AbstractGenerator {
     /**
      * Recycle
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.notification = null;
     }
 }

@@ -163,7 +163,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.10 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.11 2003/12/06 21:22:07 cziegeler Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -538,7 +538,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     /**
      * Recyclable
      */
-    public void reset() {
+    public void recycle() {
         this.objectModel = null;
         if (this.inputSource != null) {
             this.resolver.release(this.inputSource);
@@ -568,7 +568,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         this.transformerHandler = null;
         this.transformerValidity = null;
         this.exceptionDuringSetConsumer = null;
-        super.reset();
+        super.recycle();
     }
 
     /**

@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -81,7 +82,6 @@ import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.excalibur.mpool.Resettable;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
@@ -90,11 +90,11 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.16 2003/11/07 08:54:44 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.17 2003/12/06 21:22:10 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Resettable, Serviceable {
+  implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable {
 
     // Generator stuff
     protected Generator generator;
@@ -653,7 +653,7 @@ public abstract class AbstractProcessingPipeline
         return true;
     }
 
-    public void reset() {
+    public void recycle() {
         // release reader.
         if ( this.readerSelector != null) {
             this.readerSelector.release(this.reader);

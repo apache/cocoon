@@ -87,7 +87,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.6 2003/10/22 18:03:07 bloritsch Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.7 2003/12/06 21:22:09 cziegeler Exp $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
         implements Configurable, CacheableProcessingComponent {
@@ -275,11 +275,11 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         }
     }
 
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
 
         if (this.namespacePipe != null) {
-            this.namespacePipe.reset();
+            this.namespacePipe.recycle();
         }
     }
 

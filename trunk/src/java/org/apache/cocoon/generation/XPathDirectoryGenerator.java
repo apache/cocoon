@@ -117,7 +117,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.5 2003/10/22 18:02:29 bloritsch Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.6 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class XPathDirectoryGenerator extends DirectoryGenerator {
 
@@ -243,11 +243,11 @@ public class XPathDirectoryGenerator extends DirectoryGenerator {
     /**
      * Recycle resources
      */
-    public void reset() {
+    public void recycle() {
         this.xpath = null;
         this.doc = null;
         //this.parser = null;
         //this.processor = null;
-        super.reset();
+        super.recycle();
     }
 }

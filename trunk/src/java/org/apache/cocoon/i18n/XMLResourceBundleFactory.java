@@ -51,7 +51,6 @@
 package org.apache.cocoon.i18n;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -81,7 +80,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.5 2003/11/27 02:55:50 vgritsenko Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.6 2003/12/06 21:22:09 cziegeler Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Composable, Configurable, Disposable, ThreadSafe, LogEnabled {

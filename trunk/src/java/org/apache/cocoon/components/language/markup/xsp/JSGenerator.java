@@ -83,7 +83,7 @@ import java.util.Map;
  * written in Javascript language
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JSGenerator.java,v 1.2 2003/10/22 18:13:36 bloritsch Exp $
+ * @version CVS $Id: JSGenerator.java,v 1.3 2003/12/06 21:22:09 cziegeler Exp $
  */
 public class JSGenerator extends XSPGenerator
         implements Configurable, Initializable {
@@ -194,7 +194,7 @@ public class JSGenerator extends XSPGenerator
         }
     }
 
-    public void reset() {
+    public void recycle() {
         global.delete("contentHandler");
 
         global.delete("objectModel");
@@ -204,7 +204,7 @@ public class JSGenerator extends XSPGenerator
         global.delete("resolver");
         global.delete("parameters");
 
-        super.reset();
+        super.recycle();
     }
 
     public void dispose() {

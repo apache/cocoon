@@ -60,15 +60,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.PermanentRedirector;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.NetUtils;
 
 /**
  * 
  * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
- * @version CVS $Id: HttpEnvironment.java,v 1.16 2003/10/30 16:50:47 vgritsenko Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.17 2003/12/06 21:22:10 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment {
 

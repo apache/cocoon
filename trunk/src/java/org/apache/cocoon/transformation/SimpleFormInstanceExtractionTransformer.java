@@ -53,6 +53,7 @@ package org.apache.cocoon.transformation;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -66,7 +67,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DocumentWrapper;
-import org.apache.excalibur.mpool.Resettable;
 
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
@@ -85,10 +85,10 @@ import org.xml.sax.SAXException;
  * request parameter exists.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.3 2003/10/27 21:36:50 joerg Exp $
+ * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.4 2003/12/06 21:22:07 cziegeler Exp $
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer
-    implements Configurable, Serviceable, Resettable {
+    implements Configurable, Serviceable, Recyclable {
 
     protected class ElementData {
         public String uri = null;
@@ -161,8 +161,8 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
         this.objectModel = objectModel;
     }
 
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.instanceName = null;
     }
 

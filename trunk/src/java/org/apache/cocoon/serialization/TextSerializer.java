@@ -73,7 +73,7 @@ import java.io.OutputStream;
  * should wrap all the text inside it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TextSerializer.java,v 1.3 2003/10/22 18:03:07 bloritsch Exp $
+ * @version CVS $Id: TextSerializer.java,v 1.4 2003/12/06 21:22:09 cziegeler Exp $
  */
 public class TextSerializer extends AbstractTextSerializer {
 
@@ -136,8 +136,8 @@ public class TextSerializer extends AbstractTextSerializer {
         super.endDocument();
     }
 
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.hasRootElement = false;
         this.hadNoRootElement = false;
     }

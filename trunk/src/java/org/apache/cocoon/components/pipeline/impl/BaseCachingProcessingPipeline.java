@@ -66,7 +66,7 @@ import org.apache.cocoon.components.sax.XMLSerializer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.2 2003/10/27 08:09:36 cziegeler Exp $
+ * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.3 2003/12/06 21:22:10 cziegeler Exp $
  */
 public abstract class BaseCachingProcessingPipeline
     extends AbstractProcessingPipeline
@@ -102,14 +102,14 @@ public abstract class BaseCachingProcessingPipeline
     /**
      * Recyclable Interface
      */
-    public void reset() {
+    public void recycle() {
         this.manager.release( this.xmlDeserializer );
         this.xmlDeserializer = null;
 
         this.manager.release( this.xmlSerializer );
         this.xmlSerializer = null;
 
-        super.reset();
+        super.recycle();
     }
 
     /**

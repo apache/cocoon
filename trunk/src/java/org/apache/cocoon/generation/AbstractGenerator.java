@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.4 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: AbstractGenerator.java,v 1.5 2003/12/06 21:22:08 cziegeler Exp $
  */
 public abstract class AbstractGenerator
     extends AbstractXMLProducer
@@ -96,8 +96,8 @@ public abstract class AbstractGenerator
     /**
      * Recycle the generator by removing references
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.resolver = null;
         this.objectModel = null;
         this.source = null;

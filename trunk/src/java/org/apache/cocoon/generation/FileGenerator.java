@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.7 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.8 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
@@ -84,12 +84,12 @@ implements CacheableProcessingComponent {
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
      */
-    public void reset() {
+    public void recycle() {
         if (null != this.inputSource) {
             super.resolver.release(this.inputSource);
             this.inputSource = null;
         }
-        super.reset();
+        super.recycle();
     }
 
     /**

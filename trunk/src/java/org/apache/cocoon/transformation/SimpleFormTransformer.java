@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.transformation;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -63,7 +64,6 @@ import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.excalibur.mpool.Resettable;
 
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
@@ -173,9 +173,9 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.7 2003/10/22 18:07:15 bloritsch Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.8 2003/12/06 21:22:07 cziegeler Exp $
  */
-public class SimpleFormTransformer extends AbstractSAXTransformer implements Resettable {
+public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
     /** strip numbers from repeated element name attributes */
     private boolean stripNumber = true;
@@ -352,8 +352,8 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Res
     }
 
     /** set per instance variables to defaults */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.skipChildrenOnly = false;
         this.values = null;
         this.validationResults = null;
@@ -421,7 +421,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Res
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
 
-        this.reset();
+        this.recycle();
 
         super.setup(resolver, objectModel, src, par);
 

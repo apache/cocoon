@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.7 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.8 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -287,7 +287,7 @@ public class ServerPagesGenerator extends ServletGenerator
     /**
      * Recycle the generator by removing references
      */
-    public void reset() {
+    public void recycle() {
         if (this.generator != null) {
             this.programGenerator.release(this.generator);
             this.generator = null;
@@ -297,10 +297,10 @@ public class ServerPagesGenerator extends ServletGenerator
             this.inputSource = null;
         }
         if (this.completionPipe != null) {
-            this.completionPipe.reset();
+            this.completionPipe.recycle();
             this.completionPipe = null;
         }
-        super.reset();
+        super.recycle();
     }
 
     /**
@@ -472,9 +472,9 @@ public class ServerPagesGenerator extends ServletGenerator
             }
         }
 
-        public void reset() {
+        public void recycle() {
             this.eventStack.clear();
-            super.reset();
+            super.recycle();
         }
     }
 }

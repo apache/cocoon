@@ -61,7 +61,7 @@ import java.io.PrintStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSerializer.java,v 1.4 2003/10/22 18:03:07 bloritsch Exp $
+ * @version CVS $Id: LinkSerializer.java,v 1.5 2003/12/06 21:22:09 cziegeler Exp $
  */
 
 public class LinkSerializer
@@ -131,8 +131,8 @@ public class LinkSerializer
     /**
      * Recyclable
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.out = null;
     }
 }

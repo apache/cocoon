@@ -120,7 +120,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.8 2003/10/23 07:49:58 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.9 2003/12/06 21:22:07 cziegeler Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -259,8 +259,8 @@ implements Serviceable, Configurable {
     /**
      *  Recycle this component.
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.objectModel = null;
         this.request = null;
         this.response = null;

@@ -50,11 +50,11 @@
 */
 package org.apache.cocoon.reading;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.SAXException;
 
 import java.io.BufferedOutputStream;
@@ -67,11 +67,11 @@ import java.util.Map;
  * abstract class helps in implementing a custom reader.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: AbstractReader.java,v 1.2 2003/10/22 18:03:08 bloritsch Exp $
+ * @version CVS $Id: AbstractReader.java,v 1.3 2003/12/06 21:22:10 cziegeler Exp $
  */
 public abstract class AbstractReader
   extends AbstractLogEnabled
-  implements Reader, Resettable {
+  implements Reader, Recyclable {
 
     /** The current <code>SourceResolver</code>. */
     protected SourceResolver resolver;
@@ -123,7 +123,7 @@ public abstract class AbstractReader
     /**
      * Recycle the component
      */
-    public void reset() {
+    public void recycle() {
         this.out = null;
         this.resolver = null;
         this.source = null;

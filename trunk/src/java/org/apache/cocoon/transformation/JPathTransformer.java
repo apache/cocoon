@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: JPathTransformer.java,v 1.5 2003/10/22 18:07:15 bloritsch Exp $
+ * @version CVS $Id: JPathTransformer.java,v 1.6 2003/12/06 21:22:07 cziegeler Exp $
  */
 public class JPathTransformer
 extends AbstractSAXTransformer implements Initializable {
@@ -395,8 +395,8 @@ extends AbstractSAXTransformer implements Initializable {
     /**
      * Release all held resources.
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
 
         m_cache.clear();
         m_kont = null;

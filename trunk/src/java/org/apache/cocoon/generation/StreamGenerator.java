@@ -87,7 +87,7 @@ import org.xml.sax.SAXException;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.7 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.8 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
@@ -103,8 +103,8 @@ public class StreamGenerator extends ServiceableGenerator
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
      */
-    public void reset() {
-        super.reset();
+    public void recycle() {
+        super.recycle();
         this.inputSource = null;
     }
 

@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.17 2003/11/09 19:55:51 cziegeler Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.18 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -2590,8 +2590,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
         TemplateConsumer templateConsumer;
 
-        public void reset() {
-            super.reset();
+        public void recycle() {
+            super.recycle();
             templateConsumer = null;
         }
 
@@ -2627,7 +2627,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     /* (non-Javadoc)
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
-    public void reset() {
+    public void recycle() {
         if ( this.resolver != null) {
             this.resolver.release(this.inputSource);            
         }
@@ -2636,7 +2636,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         this.globalJexlContext = null;
         this.variables = null;
         this.definitions = null;
-        super.reset();
+        super.recycle();
     }
 
     /* (non-Javadoc)

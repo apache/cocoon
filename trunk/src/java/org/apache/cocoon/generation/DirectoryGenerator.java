@@ -123,7 +123,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.12 2003/10/27 07:38:10 cziegeler Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.13 2003/12/06 21:22:08 cziegeler Exp $
  */
 public class DirectoryGenerator
     extends ServiceableGenerator
@@ -548,7 +548,7 @@ public class DirectoryGenerator
     /**
      * Recycle resources
      */
-    public void reset() {
+    public void recycle() {
         this.cacheKeyParList = null;
         this.attributes = null;
         this.dateFormatter = null;
@@ -556,7 +556,7 @@ public class DirectoryGenerator
         this.includeRE = null;
         this.excludeRE = null;
         this.validity = null;
-        super.reset();
+        super.recycle();
     }
 
     /** Specific validity class, that holds all files that have been generated */
