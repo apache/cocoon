@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.51 2001-01-26 21:07:41 balld Exp $ --
+/*-- $Id: Engine.java,v 1.52 2001-01-27 17:26:08 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,6 @@ import org.apache.cocoon.producer.*;
 import org.apache.cocoon.formatter.*;
 import org.apache.cocoon.processor.*;
 import org.apache.cocoon.framework.*;
-import org.apache.cocoon.interpreter.*;
 import org.apache.cocoon.response.HttpServletResponseFacade;
 import org.apache.cocoon.response.RedirectException;
 
@@ -77,7 +76,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.51 $ $Date: 2001-01-26 21:07:41 $
+ * @version $Revision: 1.52 $ $Date: 2001-01-27 17:26:08 $
  */
 
 public class Engine implements Defaults {
@@ -100,7 +99,6 @@ public class Engine implements Defaults {
     ProducerFactory producers;
     ProcessorFactory processors;
     FormatterFactory formatters;
-    InterpreterFactory interpreters;
 
     Manager manager;
     Browsers browsers;
@@ -161,12 +159,6 @@ public class Engine implements Defaults {
         transformer = (Transformer) manager.create(getConfigTr(TRANSFORMER_PROP,
             TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
         manager.setRole("transformer", transformer);
-
-        // Create the interpreter factory and register it
-        interpreters = (InterpreterFactory) manager.create(
-            "org.apache.cocoon.interpreter.InterpreterFactory",
-            configurations.getConfigurations(INTERPRETER_PROP));
-        manager.setRole("interpreters", interpreters);
 
         // Create the producer factory and register it
         producers = (ProducerFactory) manager.create(
