@@ -208,8 +208,8 @@
     Default columns layout : label left and input right
   -->
   <xsl:template match="wi:*" mode="group-columns-content">
-    <tr>
-      <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+    <tr valign="baseline">
+      <td><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
       <td><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
