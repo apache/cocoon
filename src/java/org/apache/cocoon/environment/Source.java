@@ -68,7 +68,7 @@ import java.io.InputStream;
  * @deprecated Use the {@link org.apache.excalibur.source.Source} interface instead
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: Source.java,v 1.1 2003/03/09 00:07:13 pier Exp $
+ * @version CVS $Id: Source.java,v 1.1 2003/03/12 07:38:42 cziegeler Exp $
  */
 
 public interface Source extends Recyclable, XMLizable {
