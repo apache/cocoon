@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.25 2001-01-16 23:06:24 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.26 2001-01-16 23:35:28 balld Exp $-->
 <!--
 
  ============================================================================
@@ -188,13 +188,13 @@
     <xsp:logic>
       <xsl:choose>
         <xsl:when test="$environment = 'cocoon2'">
-          private static ComponentSelector esqlSelector = null;
+          private static ComponentSelector _esql_selector = null;
 
           public void compose(ComponentManager manager) {
             super.compose(manager);
-            if (esqlSelector == null) {
+            if (_esql_selector == null) {
               try {
-                esqlSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+                _esql_selector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
               } catch (ComponentManagerException cme) {
                 log.error("Could not look up the datasource component", cme);
               }
@@ -267,7 +267,7 @@
           _esql_connection.connection = _esql_connection.db_connection.getConnection();
         </xsl:when>
         <xsl:when test="esql:pool and $environment = 'cocoon2'">
-          _esql_connection.datasource = (DataSourceComponent) esqlSelector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
+          _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
           _esql_connection.connection = _esql_connection.datasource.getConnection();
         </xsl:when>
         <xsl:otherwise>
@@ -621,6 +621,15 @@
   <xsl:choose>
     <xsl:when test="$environment = 'cocoon1'">
       <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsp:logic>
+        try {
+          XSPUtil.include(new InputSource(new StringReader(<xsl:copy-of select="$content"/>)),this.contentHandler,parser);
+        } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+          throw new RuntimeException("error parsing xml: "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage()+": "+String.valueOf(<xsl:copy-of select="$content"/>));
+        }
+      </xsp:logic>
     </xsl:when>
     <xsl:otherwise>
       <xsp:logic>
