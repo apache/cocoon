@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-function xml2html.toggle(event) {
+function xml2htmlToggle(event) {
 
     var mark;
     if (event.srcElement) {
