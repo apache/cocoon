@@ -79,6 +79,7 @@ public class QuartzJobExecutor implements Job {
         String jobrole = null;
 
         boolean release = false;
+        boolean dispose = false;
         try {
             env.startingProcessing();
             EnvironmentHelper.enterProcessor(env.getProcessor(), manager, env);
@@ -90,6 +91,7 @@ public class QuartzJobExecutor implements Job {
                 ContainerUtil.enableLogging(job, logger);
                 ContainerUtil.contextualize(job, appContext);
                 ContainerUtil.service(job, manager);
+                dispose = true;
             } else {
                 job = manager.lookup(jobrole);
                 release = true;
@@ -127,7 +129,7 @@ public class QuartzJobExecutor implements Job {
             if (release && manager != null) {
                 manager.release(job);
             }
-            else if (job != null) {
+            if (dispose) {
             	ContainerUtil.dispose(job);
             }
         }
