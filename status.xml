@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.402 2004/07/23 05:19:37 antonio Exp $:-->
+<!-- CVS $Id$ -->
 
 <status>
  <developers>
