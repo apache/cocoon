@@ -111,7 +111,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  *
- * @version CVS $Id: AxisRPCReader.java,v 1.4 2003/07/11 18:32:25 joerg Exp $
+ * @version CVS $Id: AxisRPCReader.java,v 1.5 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class AxisRPCReader extends ServiceableReader
     implements Configurable, Disposable
@@ -468,7 +468,7 @@ public class AxisRPCReader extends ServiceableReader
     private String getSoapAction(HttpServletRequest req)
         throws AxisFault
     {
-        String soapAction = (String)req.getHeader(HTTPConstants.HEADER_SOAP_ACTION);
+        String soapAction = req.getHeader(HTTPConstants.HEADER_SOAP_ACTION);
 
         if (getLogger().isDebugEnabled())
         {

@@ -62,7 +62,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.3 2003/07/09 17:59:43 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.4 2003/09/24 21:26:51 cziegeler Exp $
  */
 
 public final class XMLByteStreamInterpreter
@@ -273,7 +273,7 @@ implements XMLDeserializer, Recyclable {
         this.readBytes(bytearr);
 
         while (count < len) {
-            c = (int) bytearr[count] & 0xff;
+            c = bytearr[count] & 0xff;
             switch (c >> 4) {
                 case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
                     // 0xxxxxxx
@@ -283,14 +283,14 @@ implements XMLDeserializer, Recyclable {
                 case 12: case 13:
                     // 110x xxxx   10xx xxxx
                     count += 2;
-                    char2 = (int) bytearr[count-1];
+                    char2 = bytearr[count-1];
                     str[i++] = (char) (((c & 0x1F) << 6) | (char2 & 0x3F));
                     break;
                 case 14:
                     // 1110 xxxx  10xx xxxx  10xx xxxx
                     count += 3;
-                    char2 = (int) bytearr[count-2];
-                    char3 = (int) bytearr[count-1];
+                    char2 = bytearr[count-2];
+                    char3 = bytearr[count-1];
                     str[i++] = ((char)(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0)));
                     break;
                 default:

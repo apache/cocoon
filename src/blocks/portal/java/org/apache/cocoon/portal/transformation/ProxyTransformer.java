@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.2 2003/09/09 18:52:33 joerg Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -221,7 +221,7 @@ public class ProxyTransformer
         PortalApplicationConfig pac =
             (PortalApplicationConfig) copletInstanceData.getAttribute(CONFIG);
 
-        String startURI = (String) pac.getAttribute(START_URI);
+        String startURI = pac.getAttribute(START_URI);
 
         link = (String) copletInstanceData.getAttribute(LINK);
 
@@ -232,13 +232,13 @@ public class ProxyTransformer
         }
 
         if (documentBase == null) {
-            documentBase = link.substring(0, link.lastIndexOf((int) '/') + 1);
+            documentBase = link.substring(0, link.lastIndexOf('/') + 1);
             copletInstanceData.setAttribute(DOCUMENT_BASE, documentBase);
         }
 
-        String encodingString = (String) pac.getAttribute("encoding");
+        String encodingString = pac.getAttribute("encoding");
         configuredEncoding = encodingConstantFromString(encodingString);
-        userAgent = (String) pac.getAttribute("user-agent");
+        userAgent = pac.getAttribute("user-agent");
         envelopeTag = parameters.getParameter("envelope-tag", envelopeTag);
 
         if (envelopeTag == null) {
@@ -414,7 +414,7 @@ public class ProxyTransformer
                 String content = metaElement.getAttribute("content");
                 if (content != null) {
                     String time =
-                        content.substring(0, content.indexOf((int) ';'));
+                        content.substring(0, content.indexOf(';'));
                     try {
                         if (Integer.parseInt(time) > 10) {
                             getLogger().warn(
@@ -432,7 +432,7 @@ public class ProxyTransformer
                     }
 
                     String newURI =
-                        content.substring(content.indexOf((int) '=') + 1);
+                        content.substring(content.indexOf('=') + 1);
 
                     int index_semikolon = newURI.indexOf(";");
                     int index_question = newURI.indexOf("?");
@@ -475,7 +475,7 @@ public class ProxyTransformer
             int end = -1;
             if (begin > -1) {
                 begin += "charset=".length();
-                end = contentType.indexOf((int) ';', begin);
+                end = contentType.indexOf(';', begin);
                 if (end == -1) {
                     end = contentType.length();
                 }
@@ -594,7 +594,7 @@ public class ProxyTransformer
         copletInstanceData.setAttribute(
             COOKIE,
             connection.getHeaderField(COOKIE));
-        documentBase = uri.substring(0, uri.lastIndexOf((int) '/') + 1);
+        documentBase = uri.substring(0, uri.lastIndexOf('/') + 1);
         copletInstanceData.setAttribute(DOCUMENT_BASE, documentBase);
         return connection;
     }

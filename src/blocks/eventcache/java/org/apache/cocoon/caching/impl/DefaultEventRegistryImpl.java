@@ -82,7 +82,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.5 2003/09/05 04:02:51 ghoward Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.6 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -168,7 +168,7 @@ public class DefaultEventRegistryImpl
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Removing from event mapping: " + o.toString());
                     }
-                    m_eventMMap.remove((Event)o,key);            
+                    m_eventMMap.remove(o,key);            
                 }
             }
     

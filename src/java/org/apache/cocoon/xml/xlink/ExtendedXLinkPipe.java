@@ -73,11 +73,11 @@ import java.util.Set;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:torstenknodt@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: ExtendedXLinkPipe.java,v 1.3 2003/05/17 15:32:48 vgritsenko Exp $
+ * @version CVS $Id: ExtendedXLinkPipe.java,v 1.4 2003/09/24 21:26:51 cziegeler Exp $
  */
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
-    private static Set arrayToSet(Object[] array) {
+    protected static Set arrayToSet(Object[] array) {
         final Set set = new HashSet(array.length);
 
         for (int i = 0; i<array.length; i++)

@@ -60,7 +60,7 @@ import java.util.*;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 14, 2002
- * @version CVS $Id: PreceptorImpl.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: PreceptorImpl.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
  */
 public class PreceptorImpl extends AbstractPreceptor {
     HashMap index = new HashMap();
@@ -68,7 +68,7 @@ public class PreceptorImpl extends AbstractPreceptor {
 
     public Collection validate(Instance instance, String xpath, Context context) throws InvalidXPathSyntaxException, NoSuchNodeException {
         Collection violations = null;
-        Collection constraints = (Collection) getConstraintsFor(xpath);
+        Collection constraints = getConstraintsFor(xpath);
         if (constraints != null) {
             Object value = instance.getValue(xpath);
             for (Iterator it = constraints.iterator(); it.hasNext();) {

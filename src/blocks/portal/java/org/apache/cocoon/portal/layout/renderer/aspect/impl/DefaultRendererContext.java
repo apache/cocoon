@@ -66,19 +66,16 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultRendererContext.java,v 1.2 2003/06/15 16:56:09 cziegeler Exp $
+ * @version CVS $Id: DefaultRendererContext.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
  */
 public final class DefaultRendererContext implements RendererAspectContext {
 
-    private RendererAspectChain chain;
-    
     private Iterator iterator;
     private Iterator configIterator;
     private Object config;
     private Map attributes;
     
     public DefaultRendererContext(RendererAspectChain chain) {
-        this.chain = chain;
         this.iterator = chain.getIterator();
         this.configIterator = chain.getConfigIterator();
     }

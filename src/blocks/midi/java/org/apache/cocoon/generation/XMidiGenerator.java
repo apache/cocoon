@@ -199,7 +199,6 @@ public class XMidiGenerator
     }
 
     private int midiFormat;
-    private int ppnq;
     private Hashtable ffHash;
     private String[] chanArray;
     private String[] fArray;
@@ -263,7 +262,6 @@ public class XMidiGenerator
 
                 midiFormat = Utils.baToInt(dta, 0, 1);
                 numTracks = Utils.baToInt(dta, 2, 3);
-                ppnq = Utils.baToInt(dta, 4, 5);
                 String pnq = Utils.baToHex(dta, 4, 5);
 
                 attr.clear();
@@ -925,7 +923,7 @@ public class XMidiGenerator
                 this.getLogger().debug(
                     "doTrack: status FF" + nmData + ", edata = " + edata);
             } else if (status == 241 || status == 243) {
-                int tcv = (int) dta[offset];
+                int tcv = dta[offset];
                 Integer tc = new Integer(tcv);
                 edata = tc.toString();
                 slen = 1;

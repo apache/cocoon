@@ -81,7 +81,7 @@ import org.xml.sax.SAXException;
  *  This is the default implementation of the session manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSessionManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: DefaultSessionManager.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
 */
 public final class DefaultSessionManager
 extends AbstractLogEnabled
@@ -498,7 +498,7 @@ implements Composable, Component, ThreadSafe, SessionManager, Disposable, Contex
                             currentDelta.normalize();
                             currentProfile.normalize();
                             // do a recursive call for sub elements
-                            this.importNode((Element)currentProfile, (Element)currentDelta, preserve);
+                            this.importNode(currentProfile, currentDelta, preserve);
                             // and now the text nodes: Remove all from the profile and add all
                             // of the delta
                             NodeList childs = currentProfile.getChildNodes();

@@ -123,7 +123,7 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
         this.state.processRequest(req, res);
     }
 
-    private void processInitialization(AppleRequest req, AppleResponse res) throws ProcessingException {
+    protected void processInitialization(AppleRequest req, AppleResponse res) throws ProcessingException {
 
         String formURI = req.getSitemapParameter("form-src");
         String bindURI = req.getSitemapParameter("binding-src");
@@ -186,7 +186,7 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
         }
     }
 
-    private void processValidation(AppleRequest req, AppleResponse res) throws ProcessingException {
+    protected void processValidation(AppleRequest req, AppleResponse res) throws ProcessingException {
 
         Source documentTarget = null;
         SourceResolver resolver = null;

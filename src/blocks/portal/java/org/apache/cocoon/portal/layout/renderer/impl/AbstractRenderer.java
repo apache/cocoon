@@ -70,7 +70,6 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
-import org.apache.excalibur.xml.xslt.XSLTProcessorImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -80,7 +79,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractRenderer.java,v 1.4 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: AbstractRenderer.java,v 1.5 2003/09/24 21:22:33 cziegeler Exp $
  */
 public abstract class AbstractRenderer
     extends AbstractLogEnabled
@@ -126,7 +125,7 @@ public abstract class AbstractRenderer
             try {
                 resolver = (SourceResolver) this.componentManager.lookup(SourceResolver.ROLE);
                 stylesheet = resolver.resolveURI(this.getStylesheetURI(layout));
-                processor = (XSLTProcessor) this.componentManager.lookup(XSLTProcessorImpl.ROLE);
+                processor = (XSLTProcessor) this.componentManager.lookup(XSLTProcessor.ROLE);
                 TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
                 SAXResult result = new SAXResult(new IncludeXMLConsumer((handler)));
                 if (handler instanceof LexicalHandler) {

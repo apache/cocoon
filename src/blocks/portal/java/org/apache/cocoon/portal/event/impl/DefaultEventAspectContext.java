@@ -65,13 +65,11 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventAspectContext.java,v 1.1 2003/05/22 15:19:43 cziegeler Exp $
+ * @version CVS $Id: DefaultEventAspectContext.java,v 1.2 2003/09/24 21:22:33 cziegeler Exp $
  */
 public final class DefaultEventAspectContext 
     implements EventAspectContext {
 
-    private EventAspectChain chain;
-    
     private Iterator iterator;
     private Iterator configIterator;
     private Parameters config;
@@ -81,7 +79,6 @@ public final class DefaultEventAspectContext
     private EventConverter converter;
 
     public DefaultEventAspectContext(EventAspectChain chain) {
-        this.chain = chain;
         this.iterator = chain.getIterator();
         this.configIterator = chain.getConfigIterator();
     }
