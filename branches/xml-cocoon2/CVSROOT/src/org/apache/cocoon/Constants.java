@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-14 03:58:37 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-21 14:56:01 $
  */
 
 public interface Constants {
@@ -62,4 +62,5 @@ public interface Constants {
     String CONTEXT_WORK_DIR        = "work-directory";
     String CONTEXT_CLASSPATH       = "classpath";
     String CONTEXT_CONFIG_URL      = "config-url";
+    String CONTEXT_LOG_DIR         = "log-directory";
 }
