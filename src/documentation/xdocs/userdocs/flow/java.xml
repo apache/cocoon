@@ -12,7 +12,7 @@
   <body>
     <anchor id="Java"/><s1 title="Calling Java">
     <p>
-    You can easily call any Java code from your Flowscripts, for example:
+    You can easily call Java code from your Flowscripts, for example:
     </p>
     <source>
     var map = new java.util.HashMap();
@@ -25,7 +25,7 @@
 
     <source>var n = new java.lang.Integer(3);</source>
 
-    <p>All other java packages and classes available to are accessible under the property <code>Packages</code>:</p>
+    <p>All other java packages and classes are accessible under the property <code>Packages</code>:</p>
 
     <source>var tree = new Packages.javax.swing.JTree();</source>
 
@@ -105,7 +105,7 @@
        reload-scripts
        </td>
        <td>
-       Determines whether Cocoon should attempt to detect changes to source files and reload them. This applies to both JavaScript and Java source files.
+       Determines whether Cocoon should attempt to detect changes to source files and reload them. This applies to both JavaScript and Java source files
        </td>
      </tr>
      <tr>
@@ -113,7 +113,7 @@
        check-time
        </td>
        <td>
-       Specifies an interval in milliseconds after Cocoon will check for changes to source files (ignored if reload-scripts is false or unspecified)
+       Specifies an interval in milliseconds after which Cocoon will check for changes to source files (ignored if reload-scripts is false or unspecified)
        </td>
      </tr>
      <tr>
@@ -121,7 +121,7 @@
        classpath
        </td>
        <td>
-       A semicolon separated list of URL's that will be searched for Java source files.
+       A semicolon separated list of URL's that will be searched for Java source files
        </td>
      </tr>
     </table>
