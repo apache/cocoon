@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

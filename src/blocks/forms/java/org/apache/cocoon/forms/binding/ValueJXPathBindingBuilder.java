@@ -37,7 +37,7 @@ import java.util.Locale;
  * &lt;/fb:value&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

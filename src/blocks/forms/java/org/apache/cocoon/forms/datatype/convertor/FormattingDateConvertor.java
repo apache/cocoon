@@ -44,7 +44,7 @@ import java.text.ParseException;
  * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */

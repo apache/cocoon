@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.Pointer;
  * Simple binding for multi fields: on save, first deletes the target data
  * before recreating it from scratch.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 

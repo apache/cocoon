@@ -25,7 +25,7 @@ import org.outerj.expression.Expression;
  * values, such as numbers.
  *
  * @author <a href="http://cocoon.apache.org/">The Apache Cocoon Team</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StringFunction extends AbstractExpression {
 

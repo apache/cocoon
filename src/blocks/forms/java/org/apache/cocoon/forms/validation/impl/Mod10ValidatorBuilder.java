@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * Adapter for {@link org.apache.cocoon.forms.datatype.validationruleimpl.Mod10ValidationRuleBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Mod10ValidatorBuilder extends Mod10ValidationRuleBuilder implements WidgetValidatorBuilder {
 

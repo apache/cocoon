@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class UploadDefinition extends AbstractWidgetDefinition {
     private boolean required;

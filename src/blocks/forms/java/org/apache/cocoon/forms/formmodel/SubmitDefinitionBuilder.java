@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * (defaults to true).</p>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SubmitDefinitionBuilder  extends ActionDefinitionBuilder {
 

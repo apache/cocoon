@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  *     which means: "continue in same leniency-mode as parent" </li>
  * </ul>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 

@@ -26,7 +26,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SetAttributeJXPathBinding extends JXPathBindingBase {
 

@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.samples;
 
 /**
  * Description of Sex.
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Sex {
 

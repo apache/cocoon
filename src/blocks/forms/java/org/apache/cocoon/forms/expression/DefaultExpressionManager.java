@@ -36,7 +36,7 @@ import org.outerj.expression.ParseException;
  *   &lt;function name="MyFunction" class="net.foo.MyFunction"/&gt;
  * </pre>
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DefaultExpressionManager
         implements ExpressionManager, Component, Configurable, ThreadSafe {

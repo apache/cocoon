@@ -21,7 +21,7 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @see RepeaterActionDefinitionBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class RepeaterActionDefinition extends ActionDefinition {
 
