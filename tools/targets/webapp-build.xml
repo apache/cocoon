@@ -93,7 +93,7 @@
             includes="**/*.xwelcome"/>    
   </target>
     
-  <target name="prepare-webapp-docs" depends="validate-xdocs" unless="unless.exclude.webapp.documentation">
+  <target name="prepare-webapp-docs" depends="validate-xdocs,validate-jars" unless="unless.exclude.webapp.documentation">
     <mkdir dir="${build.webapp.docs}"/>
     
     <copy todir="${build.webapp.docs}" filtering="on">
@@ -108,6 +108,10 @@
     <!-- Add some other documents -->
     <copy file="status.xml"
       tofile="${build.webapp.docs}/xdocs/status.xml" filtering="on"/>
+    <!-- Copy the docs about all jar files (this requires a dependency to validate-jars) -->
+    <copy file="${build.temp}/jars.xml"
+      tofile="${build.webapp.docs}/xdocs/installing/jars.xml" 
+      filtering="off" failonerror="false" overwrite="true"/>
 
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
     overwrite it with the old Cocoon-specific sitemap here -->
@@ -129,10 +133,6 @@
   </target>
   
   <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
-    <!-- Add some other documents -->
-    <copy file="${build.temp}/jars.xml"
-      tofile="${build.webapp.docs}/xdocs/installing/jars.xml" 
-      filtering="off" failonerror="false"/>
   </target>
 
   <target name="war" depends="webapp" description="Builds web application archive">
