@@ -18,17 +18,15 @@ package org.apache.cocoon.components.container;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.components.ComponentLocator;
 
 /**
  * This object is set to a {@link ParentAware} component and allows
  * access to the parent component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocatorImpl.java,v 1.2 2004/07/12 01:57:49 antonio Exp $
+ * @version CVS $Id: ComponentLocatorImpl.java,v 1.3 2004/07/14 19:39:10 cziegeler Exp $
  */
-public class ComponentLocatorImpl 
-    implements ComponentLocator {
+public class ComponentLocatorImpl  {
 
     protected ComponentManager manager;
     protected String           role;
