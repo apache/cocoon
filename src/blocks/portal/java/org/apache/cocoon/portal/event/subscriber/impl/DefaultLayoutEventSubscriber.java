@@ -50,24 +50,20 @@
 */
 package org.apache.cocoon.portal.event.subscriber.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.aspect.TabLayoutStatus;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.3 2003/05/19 13:06:06 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.4 2003/05/19 14:10:12 cziegeler Exp $
  */
 public final class DefaultLayoutEventSubscriber 
     implements Subscriber {
@@ -100,27 +96,6 @@ public final class DefaultLayoutEventSubscriber
             LayoutRemoveEvent removeEvent = (LayoutRemoveEvent)event;
             Layout layout = (Layout)removeEvent.getTarget();
             layout.getParent().getParent().removeItem(layout.getParent());
-        } else {
-            LayoutEvent statusEvent = (LayoutEvent)event;
-            Layout layout = (Layout)statusEvent.getTarget();
-            // TODO should not depend on special Layout 
-            if (layout instanceof CompositeLayout) {
-                ProfileManager profileManager = null;
-                try {
-                    profileManager = (ProfileManager) this.componentManager.lookup(ProfileManager.ROLE);
-                    TabLayoutStatus status = (TabLayoutStatus) profileManager.getAspectStatus(TabLayoutStatus.class, ProfileManager.SESSION_STATUS, layout.getId());
-                    if ( status == null ) {
-                        // FIXME
-                        status = new TabLayoutStatus();
-                        profileManager.setAspectStatus(ProfileManager.SESSION_STATUS, layout.getId(), status);
-                    }
-                    status.setSelectedItem(statusEvent.getAction());
-                } catch (ComponentException ce) {
-                    // ignore
-                } finally {
-                    this.componentManager.release(profileManager);
-                }
-            }
         }
     }
 

@@ -55,14 +55,12 @@ import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.impl.LayoutEventImpl;
+import org.apache.cocoon.portal.event.impl.LayoutAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
-import org.apache.cocoon.portal.layout.aspect.TabLayoutStatus;
 import org.apache.cocoon.portal.layout.impl.Parameter;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
@@ -73,7 +71,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.3 2003/05/19 13:06:06 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.4 2003/05/19 14:10:13 cziegeler Exp $
  */
 public class TabContentAspect extends CompositeContentAspect {
 
@@ -101,9 +99,9 @@ public class TabContentAspect extends CompositeContentAspect {
                 CompositeLayout tabLayout = (CompositeLayout) layout;
 
                 // selected tab
-                TabLayoutStatus status = (TabLayoutStatus) this.getStatus( TabLayoutStatus.class, ProfileManager.SESSION_STATUS, tabLayout.getId() ); 
-                int selected = (status == null ? 0 : status.getSelectedItem());
-
+                Integer data = (Integer) layout.getAspectData("tab");
+                int selected = data.intValue();
+                
                 // loop over all tabs
                 for (int j = 0; j < tabLayout.getSize(); j++) {
                     NamedItem tab = (NamedItem) tabLayout.getItem(j);
@@ -114,7 +112,7 @@ public class TabContentAspect extends CompositeContentAspect {
                     if (j == selected) {
                         attributes.addCDATAAttribute("selected", "true");
                     } else {
-                        LayoutEventImpl event = new LayoutEventImpl(tabLayout, j);
+                        LayoutAspectDataEvent event = new LayoutAspectDataEvent(tabLayout, "tab", new Integer(j));
                         attributes.addCDATAAttribute("parameter", portalService.getLinkService().getLinkURI(event));
                     }
                     XMLUtils.startElement(handler, "named-item", attributes);
