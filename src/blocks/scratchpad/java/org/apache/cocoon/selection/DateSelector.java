@@ -275,20 +275,22 @@ implements Configurable, ThreadSafe {
         /** the configured date value
          */
         private Date date;
+
         /** indicator if after comparison should be performed
          */
         private boolean isCompareAfter;
+
         /** indicator if before comparison shoulde be performed
          */
         private boolean isCompareBefore;
+
+        final static String AFTER_COMPARATOR_MODE = "after";
+        final static String BEFORE_COMPARATOR_MODE = "before";
         
-        final String AFTER_COMPARATOR_MODE = "after";
-        final String BEFORE_COMPARATOR_MODE = "before";
-        
-        public DateComparator( Date d, String comparator ) {
+        public DateComparator(Date d, String comparator) {
             this.date = d;
-            this.isCompareAfter = AFTER_COMPARATOR_MODE.equalsIgnoreCase( comparator );
-            this.isCompareBefore = BEFORE_COMPARATOR_MODE.equalsIgnoreCase( comparator );
+            this.isCompareAfter = AFTER_COMPARATOR_MODE.equalsIgnoreCase(comparator);
+            this.isCompareBefore = BEFORE_COMPARATOR_MODE.equalsIgnoreCase(comparator);
         }
         public Date getDate() {
             return this.date;
@@ -312,13 +314,13 @@ implements Configurable, ThreadSafe {
          *   <code>now.after( date)</code>, or <code>now.before( date )</code>
          *   yield true
          */
-        public boolean compareTo( Date now ) {
+        public boolean compareTo(Date now) {
             if (isCompareAfter) {
-                return now.after( date );
+                return now.after(date);
             } else if (isCompareBefore) {
-                return now.before( date );
+                return now.before(date);
             } else {
-                return now.compareTo( date) == 0;
+                return now.compareTo(date) == 0;
             }
         }
     }
@@ -331,7 +333,7 @@ implements Configurable, ThreadSafe {
      *  reducing the comparsion effort.
      * </p>
      */
-    private class DateSelectorContext {
+    private static class DateSelectorContext {
         Date now;
         HashSet set;
         Logger logger;

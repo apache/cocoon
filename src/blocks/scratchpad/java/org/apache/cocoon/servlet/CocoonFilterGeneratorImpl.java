@@ -115,7 +115,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonFilterGeneratorImpl.java,v 1.4 2004/05/07 17:32:58 joerg Exp $
+ * @version CVS $Id$
  *
  */
 public class CocoonFilterGeneratorImpl implements Filter {
@@ -141,13 +141,13 @@ public class CocoonFilterGeneratorImpl implements Filter {
      *
      * @since 1.0
      */
-    final String VERBOSE_PARAM = "verbose";
+    final static String VERBOSE_PARAM = "verbose";
     /**
      * Default verbose mode, ie <code>true</code>.
      *
      * @since 1.0
      */
-    final boolean VERBOSE_DEFAULT = true;
+    final static boolean VERBOSE_DEFAULT = true;
 
     /**
      * Currently active verbose mode
@@ -401,7 +401,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
      * @author     HuberB1
      * @version
      */
-    class CocoonFilterGeneratorRequestWrapper extends HttpServletRequestWrapper {
+    static class CocoonFilterGeneratorRequestWrapper extends HttpServletRequestWrapper {
         /**
          * put xml-data into request-attribute under this name, ie. org.apache.cocoon.xml-data
          *
@@ -450,7 +450,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
      * @author     HuberB1
      * @version
      */
-    class CocoonFilterGeneratorConfig implements ServletConfig {
+    static class CocoonFilterGeneratorConfig implements ServletConfig {
         ServletContext c;
 
 
@@ -610,7 +610,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
      * @author     HuberB1
      * @version
      */
-    class CocoonFilterGeneratorOutputStream extends ServletOutputStream {
+    static class CocoonFilterGeneratorOutputStream extends ServletOutputStream {
 
         private DataOutputStream stream;
 
