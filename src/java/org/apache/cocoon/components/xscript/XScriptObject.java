@@ -51,18 +51,19 @@
 package org.apache.cocoon.components.xscript;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Source;
 import org.apache.cocoon.xml.EmbeddedXMLPipe;
 import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -79,10 +80,11 @@ import java.util.Date;
  * Source object.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptObject.java,v 1.1 2003/03/09 00:09:27 pier Exp $
+ * @version CVS $Id: XScriptObject.java,v 1.2 2003/03/11 14:42:54 vgritsenko Exp $
  * @since August  4, 2001
  */
 public abstract class XScriptObject implements Source, Composable {
+
     /**
      * The creation date of this <code>XScriptObject</code>.
      */
@@ -106,8 +108,7 @@ public abstract class XScriptObject implements Source, Composable {
         ((XScriptManagerImpl) this.xscriptManager).register(this);
     }
 
-    public void compose(ComponentManager manager)
-            throws ComponentException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.componentManager = manager;
     }
 
@@ -134,10 +135,7 @@ public abstract class XScriptObject implements Source, Composable {
                     = (XSLTProcessor) componentManager.lookup(XSLTProcessor.ROLE);
 
             try {
-                transformer.transform(new org.apache.cocoon.components.source.impl.CocoonToAvalonSource(this.getSystemId(), this),
-                        new org.apache.cocoon.components.source.impl.CocoonToAvalonSource(stylesheet.getSystemId(), stylesheet),
-                        params,
-                        result);
+                transformer.transform(this, stylesheet, params, result);
             } finally {
                 componentManager.release(transformer);
             }
@@ -145,7 +143,7 @@ public abstract class XScriptObject implements Source, Composable {
             return new XScriptObjectResult(xscriptManager, writer.toString());
         } catch (XSLTProcessorException ex) {
             throw new ProcessingException(ex);
-        } catch (ComponentException ex) {
+        } catch (Exception ex) {
             throw new ProcessingException(ex);
         }
     }
@@ -180,13 +178,31 @@ public abstract class XScriptObject implements Source, Composable {
 
     public abstract long getContentLength();
 
-    public InputSource getInputSource()
-            throws ProcessingException, IOException {
+    public InputSource getInputSource() throws ProcessingException, IOException {
         InputSource is = new InputSource(getInputStream());
-        is.setSystemId(getSystemId());
+        is.setSystemId(getURI());
         return is;
     }
 
     public void recycle() {
+    }
+
+    public String getScheme() {
+        return "xscript";
+    }
+
+    public void refresh() {
+    }
+
+    public String getMimeType() {
+       return "text/xml";
+    }
+
+    public SourceValidity getValidity() {
+        return null;
+    }
+
+    public boolean exists() {
+        return true;
     }
 }
