@@ -66,14 +66,31 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: GIFSourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
+ * @version CVS $Id: GIFSourceInspector.java,v 1.2 2003/10/23 16:56:51 unico Exp $
  */
 public class GIFSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {
-
-    private String PROPERTY_NS = "http://apache.org/cocoon/inspector/gif/1.0";
-    private static String IMAGE_WIDTH_PROPERTY_NAME = "width";
-    private static String IMAGE_HEIGHT_PROPERTY_NAME = "height";
+    
+    /** 
+     * The namespace uri of the properties exposed by this SourceInspector.
+     * The value is <code>http://apache.org/cocoon/inspector/gif/1.0</code> .
+     */
+    public static final String PROPERTY_NS = "http://apache.org/cocoon/inspector/gif/1.0";
+    
+    /**
+     * <code>width</code> property name.
+     */
+    public static final String IMAGE_WIDTH_PROPERTY_NAME = "width";
+    
+    /**
+     * <code>height</code> property name.
+     */
+    public static final String IMAGE_HEIGHT_PROPERTY_NAME = "height";
+    
+    private static String[] EXPOSED_PROPERTIES = new String[] {
+        PROPERTY_NS + "#" + IMAGE_HEIGHT_PROPERTY_NAME,
+        PROPERTY_NS + "#" + IMAGE_WIDTH_PROPERTY_NAME
+    };
 
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException {
@@ -162,5 +179,10 @@ public class GIFSourceInspector extends AbstractLogEnabled implements
                 } catch (Exception e) {}
         }
     }
+
+    public String[] getExposedSourcePropertyTypes() {
+        return EXPOSED_PROPERTIES;
+    }
+
 }
 
