@@ -23,8 +23,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 /**
  * Extension to the Avalon Parameters
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapParameters.java,v 1.2 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id: SitemapParameters.java,v 1.3 2004/03/09 11:24:43 cziegeler Exp $
  */
 public class SitemapParameters extends Parameters {
     
