@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.1 2003/05/07 04:57:15 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.2 2003/10/02 04:30:06 ghoward Exp $ -->
 
 <samples name="Using Sources" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -30,8 +30,7 @@
    </sample>
 
    <sample name="External XSP" href="xsp-http">
-    Source is obtained via http://localhost:8080/cocoon/sub/xsp-source
-    (Note: if you run Cocoon on another host/port, you have to edit sub-sitemap)
+    Source is obtained via http://&lt;serverName&gt;[:&lt;serverPort&gt;][/&lt;contextPath&gt;]/samples/sources/xsp-source
    </sample>
 
    <sample name="Dynamic XSP" href="xsp-dynamic">
@@ -53,8 +52,7 @@
    </sample>
 
    <sample name="External XSL" href="xsl-http">
-    XSL is obtained via http://localhost:8080/cocoon/sub/xsl-source
-    (Note: if you run Cocoon on another host/port, you have to edit sub-sitemap)
+    XSL is obtained via http://&lt;serverName&gt;[:&lt;serverPort&gt;][/&lt;contextPath&gt;]/samples/sources/xsl-source
    </sample>
 
    <sample name="Dynamic XSL" href="xsl-dynamic">
