@@ -27,7 +27,8 @@
         </map:flow>
       ]]></source>
       </s2>
-      <s2 title="call">
+      <p/>
+      <anchor id="call"/><s2 title="call">
      <p>The <code>call</code> element allows you to call a top-level function in your Flowscript or to invoke an existing continuation.</p>
       <s3 title="function"><anchor id="callFunction"/>
       <p>If the <code>function</code> attribute is present, then the Sitemap will invoke a top-level function defined in your Flowscript. The <code>function</code> attribute specifies the name of the function. Zero or more nested <code>parameter</code> elements may be provided to pass arguments to the function.</p>
@@ -56,6 +57,7 @@
             sendPage("private/index.html", {param: param});
         }
       ]]></source>
+      <p/>
       </s3>
       <s3 title="continuation"><anchor id="callContinuation"/>
       <p>If the <code>continuation</code> attribute is present, then the Sitemap will invoke an existing continuation of your Flowscript. The <code>continuation</code> attribute specifies the unique id of the continuation.</p>
@@ -71,7 +73,6 @@
       </s3>
       </s2>
     </s1>
-
   </body>
 </document>
 
