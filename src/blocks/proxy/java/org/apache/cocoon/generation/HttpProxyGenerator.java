@@ -86,9 +86,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * over HTTP.
  * 
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 2002
- * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2002
+ * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2002
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HttpProxyGenerator.java,v 1.4 2003/09/04 09:38:37 cziegeler Exp $
+ * @version CVS $Id: HttpProxyGenerator.java,v 1.5 2003/09/25 20:07:15 tony Exp $
  */
 public class HttpProxyGenerator extends ServiceableGenerator implements Configurable {
 
