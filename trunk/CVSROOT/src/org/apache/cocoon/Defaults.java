@@ -1,4 +1,4 @@
-/*-- $Id: Defaults.java,v 1.12 2000-05-01 23:53:16 stefano Exp $ --
+/*-- $Id: Defaults.java,v 1.13 2000-09-16 16:04:29 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,7 +54,7 @@ package org.apache.cocoon;
  * The Cocoon strings.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.12 $ $Date: 2000-05-01 23:53:16 $
+ * @version $Revision: 1.13 $ $Date: 2000-09-16 16:04:29 $
  */
 
 public interface Defaults {
@@ -66,7 +66,6 @@ public interface Defaults {
     public static final String INIT_ARG = "properties";
 
     public static final String PROPERTIES = "cocoon.properties";
-    public static final String INTERNAL_PROPERTIES = "org/apache/cocoon/" + PROPERTIES;
 
     public static final String HOME = "document.root";
     public static final String SHOW_STATUS = "selfservlet.enabled";
@@ -83,6 +82,8 @@ public interface Defaults {
     public static final String CACHE_DEFAULT = "org.apache.cocoon.cache.CocoonCache";
     public static final String STORE_PROP = "store";
     public static final String STORE_DEFAULT = "org.apache.cocoon.store.CocoonStore";
+    public static final String PROFILER_PROP = "profiler";
+    public static final String PROFILER_DEFAULT = "org.apache.cocoon.Profiler";
 
     public static final String PRODUCER_PROP = "producer";
     public static final String PROCESSOR_PROP = "processor";
@@ -98,7 +99,9 @@ public interface Defaults {
 
     public static final int LOOPS = 10;
 
-    public static final boolean VERBOSE = @verbose@;
     public static final boolean LOG = @log@;
 
+    // Profiler event types. These need to be valid XML names - no spaces.
+    public static final String WHOLE_REQUEST = "Whole-request",
+      OUTPUTTING = "Outputting";
 }

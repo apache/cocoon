@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.108 2000-09-15 04:38:13 balld Exp $
+  $Id: changes.xml,v 1.109 2000-09-16 16:04:28 greenrd Exp $
 -->
 
 <changes title="History of Changes">
@@ -13,14 +13,23 @@
     <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
     <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
     <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+    <person name="Robin Green" email="greenrd@hotmail.com" id="RDG"/>
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="DB" type="add">
-   added xspdoc comments to esql logicsheet and added xspdoc to document convertor in the xml.apache.org site skin directory. god only knows how i'm supposed to add it to the build procedure... help?
+  <action dev="RDG" type="add">
+   Added very primitive profiler (see cocoon.properties)
+  </action>
+  <action dev="RDG" type="fix">
+   Fixed some synchronization errors in Engine. You can now call a Cocoon
+   page from a Cocoon page, if you really want (this is inefficient and a
+   bad architecture, but it's possible.)
   </action>
   <action dev="DB" type="add">
-   added error handling to esql logicsheet and documented its use in esql sample
+   Added xspdoc comments to esql logicsheet and added xspdoc to document convertor in the xml.apache.org site skin directory. god only knows how i'm supposed to add it to the build procedure... help?
+  </action>
+  <action dev="DB" type="add">
+   Added error handling to esql logicsheet and documented its use in esql sample.
   </action>
   <action dev="DB" type="fix" due-to="Tagunov Anthony" due-to-email="atagunov@nnt.ru">
    Fixed encoding problem with xinclude processor
@@ -28,11 +37,15 @@
   <action dev="SM" type="fix" due-to="Kevin Sonney" due-to-email="kevin@webslingerz.com">
    Fixed problem with XSP and namespaces (now follows the correct name="xml-stylesheet" syntax)
   </action>
+  <action dev="SM" type="update">
+   Upgraded Xerces to 1.2 because previous version had a bug which meant it couldn't build
+   the Cocoon documentation.
+  </action>
   <action dev="DB" type="add">
    Added esql logicsheet
   </action>
-  <action dev="DB" type="add">
-   Upgraded xalan to 1_2_D01
+  <action dev="DB" type="update">
+   Upgraded xalan to 1_2_D02
   </action>
   <action dev="SM" type="add" due-to="Paul Terray" due-to-email="terray@4dconcept.fr">
    Added installation instructions for iPlanet.
@@ -53,7 +66,7 @@
    Patched the cookie XSP taglib and the LDAP processor.
   </action>
   <action dev="SM" type="fix" due-to="Mark Washeim" due-to-email="esalon@canuck.com">
-   Make Cocoon running better under heavy load.
+   Make Cocoon run better under heavy load.
   </action>
   <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
    Added Solaris8 and improved Win2k installation case documentation.

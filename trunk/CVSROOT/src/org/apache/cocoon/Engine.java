@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.33 2000-08-17 22:34:13 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.34 2000-09-16 16:04:30 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
  */
- 
+
 package org.apache.cocoon;
 
 import java.io.*;
@@ -74,14 +74,16 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.33 $ $Date: 2000-08-17 22:34:13 $
+ * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
+ * @version $Revision: 1.34 $ $Date: 2000-09-16 16:04:30 $
  */
 
 public class Engine implements Defaults {
 
     private Block blocker = new Block();
-    
-    private static Hashtable engineInstances = new Hashtable(1, 0.90f);
+    private boolean VERBOSE, PROFILE;
+
+    private static Hashtable engineInstances = new Hashtable(2, 0.90f);
 
     Configurations configurations;
 
@@ -99,6 +101,7 @@ public class Engine implements Defaults {
     Cache cache;
     Store store;
     Logger logger;
+    Profiler profiler;
 
     ServletContext servletContext;
 
@@ -181,6 +184,16 @@ public class Engine implements Defaults {
             "org.apache.cocoon.Browsers",
             configurations.getConfigurations(BROWSERS_PROP));
         manager.setRole("browsers", browsers);
+
+        VERBOSE = configurations.get ("verbosity", "false").equals ("true");
+
+        // If enabled, create the profiler and register it
+        PROFILE = configurations.get ("profiler.enabled", "false").equals ("true");
+        if (PROFILE) {
+          profiler = (Profiler) manager.create((String) configurations.get(PROFILER_PROP,
+              PROFILER_DEFAULT), configurations.getConfigurations(PROFILER_PROP));
+          manager.setRole("profiler", profiler);
+        }
     }
 
     /**
@@ -199,7 +212,7 @@ public class Engine implements Defaults {
     public static Engine getInstance(Configurations confs, Object context) throws Exception {
 
         Engine engine = (Engine) engineInstances.get(context);
-        
+
         if (engine == null) {
            synchronized (Engine.class) {
               engine = new Engine(confs, context);
@@ -224,7 +237,7 @@ public class Engine implements Defaults {
             // return the first engine instance found
             return (Engine) engineInstances.elements().nextElement();
         }
- 
+
         throw new Exception("The Cocoon engine has not been initialized!");
     }
 
@@ -234,6 +247,20 @@ public class Engine implements Defaults {
      */
     public void handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        // get the request flags
+        boolean CACHE = getFlag(request, "cache", true);
+        boolean DEBUG = getFlag(request, "debug", false);
+        boolean VERBOSE = getFlag(request, "verbose", this.VERBOSE);
+        boolean PROFILE = getFlag(request, "profile", this.PROFILE);
+
+        Profiler.RequestMarker requestMarker = null;
+        if (PROFILE) {
+            // We cannot guarantee that the request object will not be recycled by the
+            // servlet runner, so use requestMarker instead.
+            requestMarker = new Profiler.RequestMarker (request);
+            profiler.startEvent (requestMarker, WHOLE_REQUEST);
+        }
+
         if (LOG) logger.log(this, "Starting request", Logger.INFO);
 
         // if verbose mode is on, take a time snapshot for later evaluation
@@ -242,10 +269,6 @@ public class Engine implements Defaults {
 
         // this may be needed if debug is turned on
         ByteArrayOutputStream debugStream = null;
-
-        // get the request flags
-        boolean CACHE = getFlag(request, "cache", true);
-        boolean DEBUG = getFlag(request, "debug", false);
 
         // get the request user agent
         String agent = request.getParameter("user-Agent");
@@ -264,11 +287,11 @@ public class Engine implements Defaults {
         }
 
         Page page = null;
-        
+
         boolean lock = false;
-        
+
         String encodedRequest = Utils.encode( request );
-        
+
         try {
             if ( CACHE ) {
                 // ask if the cache contains the page requested and if it's
@@ -278,10 +301,10 @@ public class Engine implements Defaults {
                 // if the page isn't in cache block any furhter access to this page
                 // until it get's put into cache
                 if ( page == null ) {
-                    
+
                     // lock this page while we build it and put it in cache
                     lock = this.blocker.lock( encodedRequest );
-                    
+
                     if ( ! lock ) {
                         // we were blocked so by another thread processing this page
                         // so maybe it's in cache now
@@ -289,95 +312,101 @@ public class Engine implements Defaults {
                     }
                 }
             }
-  
+
             // the page was not found in the cache or the cache was
             // disabled, we need to process it
-            
-            
+
+
             if (page == null) {
-                
-                synchronized( this ) {
-    
-                    if (LOG) logger.log(this, "Creating page", Logger.DEBUG);
-        
-                    // continue until the page is done.
-                    for (int i = 0; i < LOOPS; i++) {
-                        // catch if any OutOfMemoryError is thrown
-                        try {
-                            // create the Page wrapper
-                            page = new Page();
-        
-                            // get the document producer
-                            Producer producer = producers.getProducer(request);
-        
-                            // set the producer as a page changeable point
-                            page.setChangeable(producer);
-        
-                            // pass the produced stream to the parser
-                            Document document = producer.getDocument(request);
-        
-                            if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
-        
-                            // pass needed parameters to the processor pipeline
-                            Hashtable environment = new Hashtable();
-                            environment.put("path", producer.getPath(request));
-                            environment.put("browser", browsers.map(agent));
-                            environment.put("request", request);
-                            environment.put("response", response);
-                            if (servletContext != null) environment.put("context", servletContext);
-        
-                            // process the document through the document processors
-                            while (true) {
-                                Processor processor = processors.getProcessor(document);
-                                if (processor == null) break;
-                                document = processor.process(document, environment);
-                                page.setChangeable(processor);
-                                if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
-                            }
-        
-                            // get the right formatter for the page
-                            Formatter formatter = formatters.getFormatter(document);
-        
-                            // FIXME: I know it sucks to encapsulate a nice stream into
-                            // a long String to push it into the cache. In the future,
-                            // we'll find a smarter way to do it.
-        
-                            // format the page
-                            StringWriter writer = new StringWriter();
-                            formatter.format(document, writer, environment);
-        
-                            if (LOG) logger.log(this, "Document formatted", Logger.DEBUG);
-        
-                            // fill the page bean with content
-                            page.setContent(writer.toString());
-        
-                            // set content type together with encoding if appropriate
-                            String encoding = formatter.getEncoding();
-                            if (encoding != null) {
-                                page.setContentType(formatter.getMIMEType() + "; charset=" + encoding);
-                            } else {
-                                page.setContentType(formatter.getMIMEType());
-                            }                    
-        
-                            // page is done without memory errors so exit the loop
-                            break;
-                        } catch (OutOfMemoryError e) {
-                            if (LOG) logger.log(this, "Triggered OutOfMemory", Logger.WARNING);
-                            // force the cache to free some of its content.
-                            cache.flush();
-                            // reset the page to signal the error
-                            page = null;
+
+                if (LOG) logger.log(this, "Creating page", Logger.DEBUG);
+
+                // continue until the page is done.
+                for (int i = 0; i < LOOPS; i++) {
+                    // catch if any OutOfMemoryError is thrown
+                    try {
+                        // create the Page wrapper
+                        page = new Page();
+
+                        // get the document producer
+                        Producer producer = producers.getProducer(request);
+
+                        // set the producer as a page changeable point
+                        page.setChangeable(producer);
+
+                        // pass the request object to the producer and produce the initial
+                        // Document
+                        if (PROFILE) profiler.startEvent (requestMarker, producer.getClass ());
+                        Document document = producer.getDocument(request);
+                        if (PROFILE) profiler.finishEvent (requestMarker, producer.getClass ());
+
+                        if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
+
+                        // pass needed parameters to the processor pipeline
+                        Hashtable environment = new Hashtable();
+                        environment.put("path", producer.getPath(request));
+                        environment.put("browser", browsers.map(agent));
+                        environment.put("request", request);
+                        environment.put("response", response);
+                        if (servletContext != null) environment.put("context", servletContext);
+
+                        // process the document through the document processors
+                        for (int processNum = 0; true; processNum++) {
+                            Processor processor = processors.getProcessor(document);
+                            if (processor == null) break;
+                            String processDesc = processor.getClass ().getName () + "-" + processNum;
+                            if (PROFILE) profiler.startEvent (requestMarker, processDesc);
+                            document = processor.process(document, environment);
+                            page.setChangeable(processor);
+                            if (PROFILE) profiler.finishEvent (requestMarker, processDesc);
+                            if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
                         }
+
+                        // get the right formatter for the page
+                        Formatter formatter = formatters.getFormatter(document);
+
+                        // FIXME: I know it sucks to encapsulate a nice stream into
+                        // a long String to push it into the cache. In the future,
+                        // we'll find a smarter way to do it.
+
+                        // format the page
+                        if (PROFILE) profiler.startEvent (requestMarker, formatter.getClass ());
+                        StringWriter writer = new StringWriter();
+                        formatter.format(document, writer, environment);
+                        if (PROFILE) profiler.finishEvent (requestMarker, formatter.getClass ());
+
+                        if (LOG) logger.log(this, "Document formatted", Logger.DEBUG);
+
+                        // fill the page bean with content
+                        if (PROFILE) profiler.startEvent (requestMarker, OUTPUTTING);
+                        page.setContent(writer.toString());
+
+                        // set content type together with encoding if appropriate
+                        String encoding = formatter.getEncoding();
+                        if (encoding != null) {
+                            page.setContentType(formatter.getMIMEType() + "; charset=" + encoding);
+                        } else {
+                            page.setContentType(formatter.getMIMEType());
+                        }
+
+                        // page is done without memory errors so exit the loop
+                        break;
+                    } catch (OutOfMemoryError e) {
+                        if (LOG) logger.log(this, "Triggered OutOfMemory", Logger.WARNING);
+                        // force the cache to free some of its content.
+                        cache.flush();
+                        // reset the page to signal the error
+                        page = null;
                     }
                 }
             }
-    
+
             if (page == null) {
                 if (LOG) logger.log(this, "System is out of memory", Logger.EMERGENCY);
                 throw new Exception("FATAL ERROR: the system ran out of memory when"
                     + " processing the request. Increase your JVM memory.");
             }
-    
+
             if (DEBUG) {
                 // send the debug message and restore the streams
                 Frontend.print(response, "Debugging " + request.getRequestURI(), debugStream.toString());
@@ -386,15 +415,15 @@ public class Engine implements Defaults {
             } else {
                 // set the response content type
                 response.setContentType(page.getContentType());
-    
+
                 // get the output writer
                 PrintWriter out = response.getWriter();
-    
+
                 // send the page
                 out.println(page.getContent());
-    
+
                 // if verbose mode is on the the output type allows it
-                         // and the HTTP request isn't a HEAD
+                // and the HTTP request isn't a HEAD
                 // print some processing info as a comment
                 if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
                     time = System.currentTimeMillis() - time;
@@ -404,16 +433,18 @@ public class Engine implements Defaults {
                         + Cocoon.version() + " -->");
                     //out.println("<!-- free memory: " + Runtime.getRuntime().freeMemory() + " -->");
                 }
-    
+
                 // send all content so that client doesn't wait while caching.
                 out.flush();
+                if (PROFILE) profiler.finishEvent (requestMarker, OUTPUTTING);
             }
-    
+
             if (LOG) logger.log(this, "response sent to client", Logger.WARNING);
-    
+            if (PROFILE) profiler.finishEvent (requestMarker, WHOLE_REQUEST);
+
             // cache the created page.
             cache.setPage(page, request);
-        
+
         } finally {
             // if there is a lock make sure it is released,
             // otherwise this page could never be served
@@ -421,7 +452,7 @@ public class Engine implements Defaults {
                 this.blocker.unlock( encodedRequest );
             }
         }
-        
+
     }
 
     /**
@@ -456,7 +487,7 @@ public class Engine implements Defaults {
         }
         return table;
     }
-    
+
     /**
      * LAF: August 2, 2000
      *
@@ -468,72 +499,68 @@ public class Engine implements Defaults {
      * Solution: If caching is on block requests to build a page if another request
      * is currently building that same page, i.e. subsequent requests wait until the
      * page gets put into cache.  Also, if the first attempt to build the page fails
-     * to put the page in cache allow the next queued request to build the page.
-     * See PersistantCache and PersistantStore for further enhancments to large pages.
+     * to put the page in cache, allow the next queued request to build the page.
+     * See PersistantCache and PersistantStore (not currently included in Cocoon)
+     * for further enhancments to large pages.
      */
     private class Block
     {
         // holds the locked objects
         private Hashtable blocks = new Hashtable();
-    
-        
-        
+
+
+
         /**
          * Checks if a key is being blocked, and if so blocks this request until notified.
          * If the key is not locked then it becomes locked, so any subsequent calls will block.
          *
          * @param key - The object to be locked.
-         * @return boolean - ture = a lock was obtained, false = the caller was blocked.
+         * @return boolean - true = a lock was obtained, false = the caller was blocked.
          */
-        public boolean lock( Object key )
+        public synchronized boolean lock( Object key )
         {
             boolean locked = false;
-            
+
             if ( ! this.blocks.containsKey(key) ) {
                 // flag the key as locked
-                System.err.println( "Locking: " + key );
+                if (LOG) logger.log(this, "Locking: " + key, Logger.INFO);
                 this.blocks.put( key, key );
                 locked = true;
-                
+
             } else {
                 // block the call
-                System.err.println( "Blocking: " + key );
+                if (LOG) logger.log(this, "Blocking: " + key, Logger.INFO);
 
                 try {
-                    // synchronization is required to be an owner of this objects monitor
-                    synchronized( this ) {
-                        // wait until the block is released by the blocking thread
-                        while( this.blocks.containsKey(key) ) {
-                            wait();
-                        }
+                    // wait until the block is released by the blocking thread
+                    while( this.blocks.containsKey(key) ) {
+                        wait();
                     }
                 } catch( InterruptedException ie ) {
-                    System.err.println( "Wait for '" + key + "' was interrupted" );
+                    if (LOG) logger.log(this,
+                      "Wait for '" + key + "' was interrupted", Logger.WARNING);
                 }
             }
-            
-            System.err.println( "Total locks for all pages: " + this.blocks.size() );
+
+            if (LOG) logger.log(this,
+                      "Total locks for all pages: " + this.blocks.size(), Logger.INFO);
             return locked;
-            
         } // lock(Object)
-        
-        
+
+
         /**
-         * @param key - The object who's lock is to be removed, all waiting threads are notified.
+         * All waiting threads are notified.
+         * @param key - The object whose lock is to be removed.
          */
-        public void unlock( Object key )
+        public synchronized void unlock( Object key )
         {
             // notify all waiting threads if there was a lock on this key
             if ( this.blocks.remove(key) != null ) {
-                System.err.println( "Releasing lock on: " + key );
-
-                // synchronization is required to be an owner of this objects monitor
-                synchronized( this ) {
-                    notifyAll();
-                }
+                if (LOG) logger.log(this, "Releasing lock on: " + key, Logger.INFO);
+                notifyAll();
             }
         } // unlock(Object)
-        
+
     } // inner class Block
 
 } // class Engine
