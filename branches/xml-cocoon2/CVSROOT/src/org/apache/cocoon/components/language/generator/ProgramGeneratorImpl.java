@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-02-19 15:58:08 $
+ * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-02-20 20:34:15 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -70,22 +70,15 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     /** The working directory */
     protected File workDir;
 
-    public ProgramGeneratorImpl() {
-        this.cache = new GeneratorSelector();
-    }
-
     /** Set the Cache's logger */
     public void setLogger(Logger log) {
         super.setLogger(log);
-
-        this.cache.setLogger(log);
     }
 
     /** Contextualize this class */
     public void contextualize(Context context) {
        if (this.workDir == null) {
            this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
-           this.cache.contextualize(context);
        }
     }
 
@@ -97,8 +90,8 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     public void compose(ComponentManager manager) throws ComponentManagerException {
         if ((this.manager == null) && (manager != null)) {
             this.manager = manager;
-            this.cache.compose(manager);
             try {
+                this.cache = (GeneratorSelector) this.manager.lookup(Roles.SERVERPAGES);
                 this.repository = (Store) this.manager.lookup(Roles.REPOSITORY);
                 this.markupSelector = (ComponentSelector)this.manager.lookup(Roles.MARKUP_LANGUAGE);
                 this.languageSelector = (ComponentSelector)this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);

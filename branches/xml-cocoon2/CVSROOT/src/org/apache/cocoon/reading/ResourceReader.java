@@ -27,18 +27,16 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.url.URLFactory;
-import org.apache.cocoon.PoolClient;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
-import org.apache.avalon.util.pool.Pool;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-19 21:12:42 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-20 20:34:18 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -54,19 +52,9 @@ import org.xml.sax.SAXException;
  *       </dd>
  *   </dl>
  */
-public class ResourceReader extends AbstractReader implements Composer, PoolClient {
+public class ResourceReader extends AbstractReader implements Composer {
 
     private ComponentManager manager;
-
-    private Pool pool;
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
-    public void returnToPool() {
-        this.pool.put(this);
-    }
 
     public void compose (ComponentManager manager) {
         this.manager = manager;

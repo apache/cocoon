@@ -25,7 +25,7 @@ import org.apache.log.Logger;
  */
 public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable {
 
-    public final static int DEFAULT_POOL_SIZE = 16;
+    public final static int DEFAULT_POOL_SIZE = 8;
 
     private Logger log;
 

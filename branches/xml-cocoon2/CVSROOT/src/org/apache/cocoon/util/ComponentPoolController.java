@@ -23,12 +23,12 @@ import org.apache.cocoon.util.ClassUtils;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-22 21:56:53 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-20 20:34:22 $
  */
 public class ComponentPoolController implements PoolController, ThreadSafe, Component {
 
     /** Initial increase/decrease amount */
-    public final static int DEFAULT_AMOUNT = 16;
+    public final static int DEFAULT_AMOUNT = 8;
 
     /** Current increase/decrease amount */
     protected int amount = DEFAULT_AMOUNT;
