@@ -87,7 +87,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.7 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.8 2003/12/29 14:19:27 unico Exp $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
         implements Configurable, CacheableProcessingComponent {
@@ -203,46 +203,46 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //    outputBufferSize = bsc.getValueAsInteger(DEFAULT_BUFFER_SIZE);
 
         // configure xalan
-        Configuration cdataSectionElements = conf.getChild("cdata-section-elements");
-        Configuration dtPublic = conf.getChild("doctype-public");
-        Configuration dtSystem = conf.getChild("doctype-system");
-        Configuration encoding = conf.getChild("encoding");
-        Configuration indent = conf.getChild("indent");
-        Configuration mediaType = conf.getChild("media-type");
-        Configuration method = conf.getChild("method");
-        Configuration omitXMLDeclaration = conf.getChild("omit-xml-declaration");
-        Configuration standAlone = conf.getChild("standalone");
-        Configuration version = conf.getChild("version");
+        String cdataSectionElements = conf.getChild("cdata-section-elements").getValue(null);
+        String dtPublic = conf.getChild("doctype-public").getValue(null);
+        String dtSystem = conf.getChild("doctype-system").getValue(null);
+        String encoding = conf.getChild("encoding").getValue(null);
+        String indent = conf.getChild("indent").getValue(null);
+        String mediaType = conf.getChild("media-type").getValue(null);
+        String method = conf.getChild("method").getValue(null);
+        String omitXMLDeclaration = conf.getChild("omit-xml-declaration").getValue(null);
+        String standAlone = conf.getChild("standalone").getValue(null);
+        String version = conf.getChild("version").getValue(null);
 
-        if (!cdataSectionElements.getLocation().equals("-")) {
-            format.put(OutputKeys.CDATA_SECTION_ELEMENTS, cdataSectionElements.getValue());
+        if (cdataSectionElements != null) {
+            format.put(OutputKeys.CDATA_SECTION_ELEMENTS, cdataSectionElements);
         }
-        if (!dtPublic.getLocation().equals("-")) {
-            format.put(OutputKeys.DOCTYPE_PUBLIC, dtPublic.getValue());
+        if (dtPublic != null) {
+            format.put(OutputKeys.DOCTYPE_PUBLIC, dtPublic);
         }
-        if (!dtSystem.getLocation().equals("-")) {
-            format.put(OutputKeys.DOCTYPE_SYSTEM, dtSystem.getValue());
+        if (dtSystem != null) {
+            format.put(OutputKeys.DOCTYPE_SYSTEM, dtSystem);
         }
-        if (!encoding.getLocation().equals("-")) {
-            format.put(OutputKeys.ENCODING, encoding.getValue());
+        if (encoding != null) {
+            format.put(OutputKeys.ENCODING, null);
         }
-        if (!indent.getLocation().equals("-")) {
-            format.put(OutputKeys.INDENT, indent.getValue());
+        if (indent != null) {
+            format.put(OutputKeys.INDENT, indent);
         }
-        if (!mediaType.getLocation().equals("-")) {
-            format.put(OutputKeys.MEDIA_TYPE, mediaType.getValue());
+        if (mediaType != null) {
+            format.put(OutputKeys.MEDIA_TYPE, mediaType);
         }
-        if (!method.getLocation().equals("-")) {
-            format.put(OutputKeys.METHOD, method.getValue());
+        if (method != null) {
+            format.put(OutputKeys.METHOD, method);
         }
-        if (!omitXMLDeclaration.getLocation().equals("-")) {
-            format.put(OutputKeys.OMIT_XML_DECLARATION, omitXMLDeclaration.getValue());
+        if (omitXMLDeclaration != null) {
+            format.put(OutputKeys.OMIT_XML_DECLARATION, omitXMLDeclaration);
         }
-        if (!standAlone.getLocation().equals("-")) {
-            format.put(OutputKeys.STANDALONE, standAlone.getValue());
+        if (standAlone != null) {
+            format.put(OutputKeys.STANDALONE, standAlone);
         }
-        if (!version.getLocation().equals("-")) {
-            format.put(OutputKeys.VERSION, version.getValue());
+        if (version != null) {
+            format.put(OutputKeys.VERSION, version);
         }
 
         Configuration tFactoryConf = conf.getChild("transformer-factory", false);
