@@ -37,7 +37,6 @@
     <menu-item label="Persistence" href="persistence.html"/>
     <menu-item label="StoreJanitor" href="storejanitor.html"/>
     <menu-item label="XMLSearching" href="xmlsearching.html"/>
-    <menu-item label="XMLForm" href="xmlform.html"/>
     <menu-item label="XML Validation" href="validation.html"/>
     <menu-item label="Databases" href="databases.html"/>
     <menu-item label="Modules" href="modules.html"/>
