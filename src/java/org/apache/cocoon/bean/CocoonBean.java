@@ -103,7 +103,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: CocoonBean.java,v 1.2 2003/03/18 15:23:28 nicolaken Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.3 2003/03/28 12:55:42 nicolaken Exp $
  */
 public class CocoonBean {
 
@@ -645,43 +645,43 @@ public class CocoonBean {
         final HashMap translatedLinks = new HashMap();
         final ArrayList gatheredLinks = new ArrayList();
 
-        if (followLinks && confirmExtension) {        
-        final Iterator i = this.getLinks(deparameterizedURI, parameters).iterator();
+        if (followLinks && confirmExtension) {
+            final Iterator i = this.getLinks(deparameterizedURI, parameters).iterator();
 
-        while (i.hasNext()) {
-            String link = (String) i.next();
-            // Fix relative links starting with "?"
-            String relativeLink = link;
-            if (relativeLink.startsWith("?")) {
-                relativeLink = pageURI + relativeLink;
-            }
-
-            String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
-            {
-                final TreeMap p = new TreeMap();
-                absoluteLink = NetUtils.parameterize(NetUtils.deparameterize(absoluteLink, p), p);
-            }
-            String translatedAbsoluteLink = (String)allTranslatedLinks.get(absoluteLink);
-            if (translatedAbsoluteLink == null) {
-                try {
-                    translatedAbsoluteLink = this.translateURI(absoluteLink);
-                    log.info("  Link translated: " + absoluteLink);
-                    allTranslatedLinks.put(absoluteLink, translatedAbsoluteLink);
-                    absoluteLinks.add(absoluteLink);
-                } catch (ProcessingException pe) {
-                    printBroken(absoluteLink, pe.getMessage());
+            while (i.hasNext()) {
+                String link = (String) i.next();
+                // Fix relative links starting with "?"
+                String relativeLink = link;
+                if (relativeLink.startsWith("?")) {
+                    relativeLink = pageURI + relativeLink;
                 }
+
+                String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
+                {
+                    final TreeMap p = new TreeMap();
+                    absoluteLink = NetUtils.parameterize(NetUtils.deparameterize(absoluteLink, p), p);
+                }
+                String translatedAbsoluteLink = (String)allTranslatedLinks.get(absoluteLink);
+                if (translatedAbsoluteLink == null) {
+                    try {
+                        translatedAbsoluteLink = this.translateURI(absoluteLink);
+                        log.info("  Link translated: " + absoluteLink);
+                        allTranslatedLinks.put(absoluteLink, translatedAbsoluteLink);
+                        absoluteLinks.add(absoluteLink);
+                    } catch (ProcessingException pe) {
+                        printBroken(absoluteLink, pe.getMessage());
+                    }
+                }
+
+                // I have to add also broken links to the absolute links
+                // to be able to generate the "broken link" page
+                absoluteLinks.add(absoluteLink);
+                final String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
+                translatedLinks.put(link, translatedRelativeLink);
             }
 
-            // I have to add also broken links to the absolute links
-            // to be able to generate the "broken link" page
-            absoluteLinks.add(absoluteLink);
-            final String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
-            translatedLinks.put(link, translatedRelativeLink);
+            printInfo("["+translatedLinks.size()+"] ");
         }
-
-        printInfo("["+translatedLinks.size()+"] ");
-      }
 
         try {
             // Process URI
@@ -704,6 +704,7 @@ public class CocoonBean {
                         }
                         absoluteLinks.add(absoluteLink);
                     }
+                    printInfo("["+gatheredLinks.size()+"] ");
                 }
 
                 printlnInfo(uri); // (can also output type returned by getPage)
