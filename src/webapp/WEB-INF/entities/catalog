@@ -65,3 +65,5 @@ SYSTEM "urn:x-arbortext:test-system-identifier"
 PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
        "catalog-demo/catalog-demo-v10.dtd"
 -- end of entries for the catalog-demo sample application --
+
+PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "open-office/dummy.dtd"
