@@ -2,7 +2,6 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:collection="http://apache.org/cocoon/collection/1.0"
-  xmlns:ci="http://apache.org/cocoon/include/1.0"
   xmlns:D="DAV:">
   
   <xsl:param name="requestURI"></xsl:param>
@@ -57,7 +56,11 @@
         <D:prop>
           <D:displayname><xsl:value-of select="@name"/></D:displayname>
           <D:getlastmodified><xsl:value-of select="@date"/></D:getlastmodified>
-          <D:resourcetype><D:collection /></D:resourcetype>
+          <D:creationdate />
+          <D:resourcetype><D:collection/></D:resourcetype>
+          <D:getcontenttype>httpd/unix-directory</D:getcontenttype>
+          <D:contentlength>0</D:contentlength>
+          <xsl:copy-of select="collection:properties/child::node()" />
         </D:prop>
         <D:status>HTTP/1.1 200 OK</D:status>
       </D:propstat>
@@ -75,9 +78,11 @@
         <D:prop>
           <D:displayname><xsl:value-of select="@name"/></D:displayname>
           <D:getlastmodified><xsl:value-of select="@date"/></D:getlastmodified>
-          <D:getcontenttype>text/xml</D:getcontenttype>
+          <D:creationdate />
+          <D:getcontenttype><xsl:value-of select="@mimeType"/></D:getcontenttype>
           <D:getcontentlength><xsl:value-of select="@size" /></D:getcontentlength>
           <D:resourcetype />
+          <xsl:copy-of select="collection:properties/child::node()" />
         </D:prop>
         <D:status>HTTP/1.1 200 OK</D:status>
       </D:propstat>
