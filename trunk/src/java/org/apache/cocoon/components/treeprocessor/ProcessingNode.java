@@ -51,29 +51,39 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.environment.Environment;
 
 /**
+ * The ProcessingNode is used to represent the interface for using a processing tree.
+ * Each node will recursively call its child nodes until the entire processing tree is
+ * executed for the particular request.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.1 2003/03/09 00:09:16 pier Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.2 2003/10/24 20:37:56 bloritsch Exp $
  */
 
-public interface ProcessingNode extends ThreadSafe {
+public interface ProcessingNode
+        extends ThreadSafe
+{
 
-    /**
-     * The key of the <code>SourceResolver</code> in the object model.
-     */
+    /** The key used for the <code>SourceResolver</code> in the object model. */
     String OBJECT_SOURCE_RESOLVER = "source-resolver";
 
     /**
-     * Process environment.
+     * Process this node with the suppled environment information.  Will recursively
+     * process child nodes.
+     *
+     * @param env     The Environment object used to process a request.
+     * @param context The runtime context information for this request.
+     * @return <code>true</code> if a redirect has been issued.
+     * @throws Exception if the processing was not successful.
      */
-    boolean invoke(Environment env, InvokeContext context) throws Exception;
+    boolean invoke( Environment env, InvokeContext context ) throws Exception;
 
     /**
-     * Get the location of this node.
+     * Get the location of this node.  ?? Is this the XML locator text ??
+     *
+     * @return
      */
     String getLocation();
 }
