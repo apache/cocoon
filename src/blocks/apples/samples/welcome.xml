@@ -29,10 +29,10 @@
  </group>
 
  <group name="Apples Samples">
-  <sample name="Woody XML Binding."     href="form2xml.flow">An Apple controlling a form for just editing an XML file.</sample>
-  <sample name="Calculation."           href="calc.flow">Simplistic calculator implementation.</sample>
-  <sample name="Number Guessing."       href="guess.flow">Number Guessing game.</sample>
-  <sample name="Tower of Hanoi puzzle." href="hanoi.flow">The popular mind puzzle.</sample>
+  <sample name="Cocoon Forms XML Binding." href="form2xml.flow">An Apple controlling a form for just editing an XML file.</sample>
+  <sample name="Calculation."              href="calc.flow">Simplistic calculator implementation.</sample>
+  <sample name="Number Guessing."          href="guess.flow">Number Guessing game.</sample>
+  <sample name="Tower of Hanoi puzzle."    href="hanoi.flow">The popular mind puzzle.</sample>
  </group>
 
 </samples>

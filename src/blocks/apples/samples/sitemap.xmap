@@ -18,21 +18,17 @@
 <!--+
     | Apples block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.7 2004/03/11 16:25:46 stephan Exp $
+    | CVS $Id: sitemap.xmap,v 1.8 2004/03/11 17:12:14 stephan Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   
   <map:components>
-    <map:generators default="file">
-      <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator" logger="woody"/>
-    </map:generators>
     <map:transformers default="xalan">
-      <map:transformer name="woody" src="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer" logger="woody"/>
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-        <catalogues default="other">
-          <catalogue id="other" name="OtherMessages" location="context://samples/woody/messages"/>
-          <catalogue id="woody" name="WoodyMessages" location="context://samples/woody/messages"/>
+        <catalogues default="forms">
+          <catalogue id="other" name="OtherMessages" location="messages"/>
+          <catalogue id="forms" name="FormMessages" location="messages"/>
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
@@ -91,16 +87,16 @@
 
 
       <!--+
-          |   Binding form sample, reuses pipelines stolen from woody
+          |   Binding form sample, reuses pipelines stolen from Cocoon Forms
           +-->
 
       <map:match pattern="form2xml.flow">
         <map:call function="org.apache.cocoon.components.flow.apples.samples.BindingWoodyApple">
-          <map:parameter name="form-src" value="context://samples/woody/forms/form2_model.xml"/>
-          <map:parameter name="binding-src" value="context://samples/woody/forms/form2_bind_xml.xml"/>
-          <map:parameter name="documentURI" value="context://samples/woody/forms/form2_data.xml"/>
-          <map:parameter name="form-pipe" value="/samples/woody/form2-display-pipeline"/>
-          <map:parameter name="valid-pipe" value="/samples/woody/form2-success-pipeline"/>
+          <map:parameter name="form-src" value="context://samples/forms/forms/form2_model.xml"/>
+          <map:parameter name="binding-src" value="context://samples/forms/forms/form2_bind_xml.xml"/>
+          <map:parameter name="documentURI" value="context://samples/forms/forms/form2_data.xml"/>
+          <map:parameter name="form-pipe" value="/samples/forms/form2-display-pipeline"/>
+          <map:parameter name="valid-pipe" value="/samples/forms/form2-success-pipeline"/>
         </map:call>
       </map:match>
 
