@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.40 2001-02-05 21:26:00 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.41 2001-02-05 22:02:37 balld Exp $-->
 <!--
 
  ============================================================================
@@ -551,11 +551,24 @@
 
 <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-columns">
+  <xsl:variable name="tagcase"><xsl:value-of select="@tag-case"/></xsl:variable>
   <xsl:choose>
     <xsl:when test="$environment = 'cocoon1'">
       <xsp:logic>
         for (int _esql_i=1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
-          Node _esql_node = document.createElement(_esql_query.resultset_metadata.getColumnName(_esql_i));
+          Node _esql_node = document.createElement(
+            <xsl:choose>
+              <xsl:when test="$tagcase='lower'">
+                _esql_query.resultset_metadata.getColumnName(_esql_i).toLowerCase();
+              </xsl:when>
+              <xsl:when test="$tagcase='upper'">
+                _esql_query.resultset_metadata.getColumnName(_esql_i).toUpperCase();
+              </xsl:when>
+              <xsl:otherwise>
+                _esql_query.resultset_metadata.getColumnName(_esql_i)
+              </xsl:otherwise>
+            </xsl:choose>
+          );
           _esql_node.appendChild(document.createTextNode(
             <xsl:call-template name="get-string-encoded">
               <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
@@ -571,7 +584,19 @@
         for (int _esql_i = 1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
           String _esql_tagname = _esql_query.resultset_metadata.getColumnName(_esql_i);
           <xsp:element>
-            <xsp:param name="name"><xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+            <xsp:param name="name">
+              <xsl:choose>
+                <xsl:when test="$tagcase='lower'">
+                  <xsp:expr>_esql_tagname.toLowerCase()</xsp:expr>
+                </xsl:when>
+                <xsl:when test="$tagcase='upper'">
+                  <xsp:expr>_esql_tagname.toUpperCase()</xsp:expr>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsp:param>
             <xsp:expr>
               <xsl:call-template name="get-string-encoded">
                 <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
