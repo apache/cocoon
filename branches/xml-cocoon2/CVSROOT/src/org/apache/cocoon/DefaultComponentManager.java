@@ -42,7 +42,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-03 16:00:35 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-03 23:35:23 $
  */
 public class DefaultComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
@@ -296,20 +296,20 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
     }
 
     public void release(Component component) {
-        if (component instanceof Disposable) {
-            try { 
+         if (
+            component instanceof Disposable
+            && ! ( component instanceof Poolable )
+            && ! ( component instanceof ThreadSafe)
+        ) {
+            try {
                 ((Disposable) component).dispose();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 this.log.warn(
-                    "Exception while disposing of an instance of " + component.getClass().getName() + ".",
+                    "Could not dispose of instance of component " + component.getClass().getName() + ".",
                     e
                 );
             }
-        }
-        
-        if (component instanceof Recyclable) {
-            ((Recyclable) component).recycle();
-        }
+         }
         
         if (component instanceof Poolable) {
             ComponentPool pool = (ComponentPool) pools.get(component.getClass());
