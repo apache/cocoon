@@ -288,6 +288,8 @@ public class ScriptableWidget extends ScriptableObject {
             Repeater repeater = (Repeater)delegate;
             return repeater.getSize();
         }
+        //TODO - added for making this compile
+        return 0;
     }
 
     public void jsSet_value(Object value) throws JavaScriptException {
