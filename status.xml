@@ -206,7 +206,8 @@
   <release version="@version@" date="@date@">
   <action dev="AG" type="update">
      Update ant to 1.6.2, commons-jxpath to 1.2, commons-beanutils to 1.7,
-     POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1 and nekohtml to 0.9.3.
+     POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1, nekohtml to 0.9.3,
+     and hsqldb to 1.7.2.
    </action>
    <action dev="CZ" type="fix">
      Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
