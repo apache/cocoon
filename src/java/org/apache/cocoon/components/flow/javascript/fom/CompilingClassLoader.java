@@ -42,7 +42,7 @@ import org.tempuri.javacImpl.eclipse.JavaCompilerImpl;
 
 /*
  * CompilingClassLoader
- * CVS $Id: CompilingClassLoader.java,v 1.8 2004/03/05 13:02:46 bdelacretaz Exp $
+ * CVS $Id: CompilingClassLoader.java,v 1.9 2004/03/23 20:03:15 stephan Exp $
  */
 public class CompilingClassLoader extends ClassLoader {
 
@@ -192,6 +192,7 @@ public class CompilingClassLoader extends ClassLoader {
                 baos.flush();
                 final Reader reader = 
                     new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
+
                 return new JavaSourceReader() {
                         public Reader getReader() {
                             return reader;
@@ -220,141 +221,138 @@ public class CompilingClassLoader extends ClassLoader {
     class ClassReaderFactory 
         implements JavaClassReaderFactory {
         
-        public JavaClassReader 
-            getClassReader(final String className) 
-		throws IOException {
-		final byte[] bytes = classRepository.getCompiledClass(className);
-		if (bytes != null) {
-		    return new JavaClassReader() {
-			    public String getClassName() {
-				return className;
-			    }
-			    
-			    public InputStream getInputStream() {
-				
-				return new ByteArrayInputStream(bytes);
-			    }
-			};
-		}
-                String classFile = className.replace('.', '/') + ".class";
-                final InputStream is = getResourceAsStream(classFile);
-                if (is == null) {
-                    return null;
-                }
+        public JavaClassReader getClassReader(final String className) 
+                throws IOException {
+            final byte[] bytes = classRepository.getCompiledClass(className);
+            if (bytes != null) {
                 return new JavaClassReader() {
-                        public String getClassName() {
-                            return className;
-                        }
-                        
-                        public InputStream getInputStream() {
-                            return is;
-                        }
-                    };
-	    }
-	}
-
-	class ClassWriterFactory 
-	    implements JavaClassWriterFactory {
-
-	    public JavaClassWriter 
-		getClassWriter(final String className) {
-		return new JavaClassWriter() {
-			public String 
-			    getClassName() {
-			    return className;
-			}
-			public void writeClass(InputStream contents) 
-			    throws IOException {
-			    byte[] buf = new byte[2048];
-			    ByteArrayOutputStream s =
-				new ByteArrayOutputStream();
-			    int count;
-			    while ((count = 
-				    contents.read(buf, 0, 
-						  buf.length)) > 0) {
-				s.write(buf, 0, count);
-			    }
-			    s.flush();
-			    System.out.println("Compiled: " + className);
-                            Source src = getSource(className);
-			    classRepository.addCompiledClass(className,
-                                                             src,
-                                                             s.toByteArray());
-                            notifyListeners(src, null);
-                            releaseSource(src);
-			}
-		    };
-	    }
-	}
-	
-	class ErrorHandler implements JavaCompilerErrorHandler {
-
-            List errList = new LinkedList();
-            
-	    public void handleError(String className,
-				    int line,
-				    int column,
-				    Object errorMessage) {
-		String msg = className;
-		try {
-		    // try to it convert to a file name
-		    msg =
-			makeFileName(className);
-		} catch (Exception ignored) {
-		    // oh well, I tried
-		}
-		if (line > 0) {
-		    msg += ": Line " + line;
-		}
-		if (column >= 0) {
-		    msg += "." + column;
-		}
-		msg += ": ";
-		msg += errorMessage;
-                errList.add(msg);
-	    }
-
-            public List getErrorList() {
-                return errList;
-            }
-	}
-
-
-	private byte[] compile(String className) 
-            throws ClassNotFoundException {
-	    byte[] result = classRepository.getCompiledClass(className);
-	    if (result != null) {
-		return result;
-	    }
-            Source src = getSource(className);
-            if (src == null) {
-                throw new ClassNotFoundException(className);
-            }
-            try {
-                // try to compile it
-                ErrorHandler errorHandler = new ErrorHandler();
-                compiler.compile(new String[] {className},
-                                 new SourceReaderFactory(),
-                                 new ClassReaderFactory(),
-                                 new ClassWriterFactory(),
-                                 errorHandler);
-                List errorList = errorHandler.getErrorList();
-                if (errorList.size() > 0) {
-                    String msg = "Failed to compile Java class " + className +": ";
-                    Iterator iter = errorList.iterator();
-                    while (iter.hasNext()) {
-                        msg += "\n";
-                        msg += (String)iter.next();
+                    public String getClassName() {
+                        return className;
                     }
-                    notifyListeners(src, msg);
-                    throw new ClassCompilationException(msg);
-                    
-                }
-                return classRepository.getCompiledClass(className);
-            } finally {
-                releaseSource(src);
+                
+                    public InputStream getInputStream() {
+                        return new ByteArrayInputStream(bytes);
+                    }
+                };
             }
-	}
+            String classFile = className.replace('.', '/') + ".class";
+            final InputStream is = getResourceAsStream(classFile);
+            if (is == null) {
+                return null;
+            }
+            return new JavaClassReader() {
+                public String getClassName() {
+                    return className;
+                }
+                        
+                public InputStream getInputStream() {
+                    return is;
+                }
+            };
+        }
+    }
+
+    class ClassWriterFactory 
+        implements JavaClassWriterFactory {
+
+        public JavaClassWriter getClassWriter(final String className) {
+            return new JavaClassWriter() {
+                public String getClassName() {
+                    return className;
+                }
+
+                public void writeClass(InputStream contents) 
+                        throws IOException {
+                    byte[] buf = new byte[2048];
+                    ByteArrayOutputStream s =
+                        new ByteArrayOutputStream();
+                    int count;
+                    while ((count = 
+                        contents.read(buf, 0, 
+                              buf.length)) > 0) {
+                        s.write(buf, 0, count);
+                    }
+                    s.flush();
+                    System.out.println("Compiled: " + className);
+                    Source src = getSource(className);
+                    classRepository.addCompiledClass(className,
+                                                     src,
+                                                     s.toByteArray());
+                    notifyListeners(src, null);
+                    releaseSource(src);
+                }
+            };
+        }
+    }
+    
+    class ErrorHandler implements JavaCompilerErrorHandler {
+
+        List errList = new LinkedList();
+            
+        public void handleError(String className,
+                                int line,
+                                int column,
+                                Object errorMessage) {
+            String msg = className;
+            try {
+                // try to it convert to a file name
+                msg = makeFileName(className);
+            } catch (Exception ignored) {
+                // oh well, I tried
+            }
+            if (line > 0) {
+                msg += ": Line " + line;
+            }
+            if (column >= 0) {
+                msg += "." + column;
+            }
+            msg += ": ";
+            msg += errorMessage;
+            errList.add(msg);
+        }
+
+        public List getErrorList() {
+            return errList;
+        }
+    }
+
+
+    private byte[] compile(String className) 
+            throws ClassNotFoundException {
+        byte[] result = classRepository.getCompiledClass(className);
+        if (result != null) {
+            return result;
+        }
+
+        Source src = getSource(className);
+        if (src == null) {
+            throw new ClassNotFoundException(className);
+        }
+        try {
+            // try to compile it
+            ErrorHandler errorHandler = new ErrorHandler();
+            compiler.compile(new String[] {className},
+                             new SourceReaderFactory(),
+                             new ClassReaderFactory(),
+                             new ClassWriterFactory(),
+                             errorHandler);
+            List errorList = errorHandler.getErrorList();
+            if (errorList.size() > 0) {
+                String msg = "Failed to compile Java class " + className +": ";
+                Iterator iter = errorList.iterator();
+                while (iter.hasNext()) {
+                    msg += "\n";
+                    msg += (String)iter.next();
+                }
+                notifyListeners(src, msg);
+                throw new ClassCompilationException(msg);
+                    
+            }
+            return classRepository.getCompiledClass(className);
+        } finally {
+            releaseSource(src);
+        }
+    }
 }
 
 
