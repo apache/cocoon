@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.5 2003/09/05 13:01:01 haul Exp $-->
+<!-- $Id: esql.xsl,v 1.6 2003/09/08 14:26:50 haul Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.5 $ $Date: 2003/09/05 13:01:01 $
+ * @version CVS $Revision: 1.6 $ $Date: 2003/09/08 14:26:50 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -1004,7 +1004,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
       _esql_queries.push(_esql_query);
     }
 
-    _esql_query = _esql_query.newInstance((ResultSet) <xsl:apply-templates select="esql:result/*"/>));
+    _esql_query = _esql_query.newInstance((ResultSet) <xsl:apply-templates select="esql:result/*"/>);
 
     <xsl:if test="esql:max-rows">
       try {
