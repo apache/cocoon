@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-02 20:26:31 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-08 15:37:06 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();
@@ -56,6 +56,7 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     public final Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
+        int currentIndex = 0;
 
         try {
             Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
@@ -69,9 +70,9 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
 
             Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
 
-            for (int i = 1; keys.hasNext(); i++) {
+            for (currentIndex = 1; keys.hasNext(); currentIndex++) {
                 Configuration itemConf = (Configuration) keys.next();
-                this.setColumn(statement, i, request, itemConf);
+                this.setColumn(statement, currentIndex, request, itemConf);
             }
 
             statement.execute();
@@ -81,7 +82,8 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new ProcessingException("Could not delete record", e);
+
+            throw new ProcessingException("Could not delete record :position = " + currentIndex, e);
         } finally {
             if (conn != null) {
                 try {

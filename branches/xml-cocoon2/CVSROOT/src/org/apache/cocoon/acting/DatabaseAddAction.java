@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-07 22:18:34 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-08 15:37:08 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -54,6 +54,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
     public Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
+        int currentIndex = 0;
 
         try {
             Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
@@ -67,7 +68,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
             Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
             Iterator values = conf.getChild("table").getChild("values").getChildren("value");
-            int currentIndex = 1;
+            currentIndex = 1;
 
             while (keys.hasNext()) {
                 Configuration key = (Configuration) keys.next();
@@ -99,7 +100,8 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new ProcessingException("Could not add record", e);
+
+            throw new ProcessingException("Could not add record :position = " + currentIndex, e);
         } finally {
             if (conn != null) {
                 try {

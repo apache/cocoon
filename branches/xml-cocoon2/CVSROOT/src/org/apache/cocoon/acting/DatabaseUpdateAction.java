@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-02 20:26:34 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-08 15:37:04 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -53,6 +53,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
     public Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
+        int currentIndex = 0;
 
         try {
             Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
@@ -66,7 +67,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
 
             Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
             Iterator values = conf.getChild("table").getChild("values").getChildren("value");
-            int currentIndex = 1;
+            currentIndex = 1;
 
             for (int i = currentIndex; values.hasNext(); i++) {
                 Configuration itemConf = (Configuration) values.next();
@@ -77,6 +78,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
             for (int i = currentIndex + 1; keys.hasNext(); i++) {
                 Configuration itemConf = (Configuration) keys.next();
                 this.setColumn(statement, i, request, itemConf);
+                currentIndex = i;
             }
 
             statement.execute();
@@ -87,7 +89,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
                 conn.rollback();
             }
 
-            throw new ProcessingException("Could not update record", e);
+            throw new ProcessingException("Could not update record :position = " + currentIndex, e);
         } finally {
             if (conn != null) {
                 try {
