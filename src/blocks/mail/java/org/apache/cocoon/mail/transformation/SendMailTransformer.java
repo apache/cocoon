@@ -170,7 +170,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.15 2004/07/22 23:21:56 joerg Exp $
+ * @version CVS $Id$
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
@@ -191,7 +191,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     public static final String ELEMENT_ERROR              = "error";
     public static final String ELEMENT_SUCCESS            = "success";
     public static final String ELEMENT_FAILURE            = "failure";
-    public static final String ELEMENT_RESULT              = "result";
+    public static final String ELEMENT_RESULT             = "result";
+    
+    public static final String DEFAULT_BODY_MIMETYPE      = "text/html";
 
     /*
      * mode-constants
@@ -225,6 +227,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected String               subject;
     protected String               body;
     protected String               bodyURI;
+    protected String               bodyMimeType;
     protected String               mailHost;
     protected String               fromAddress;
     protected AttachmentDescriptor attachmentDescriptor;
@@ -306,11 +309,18 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             this.mode = MODE_SUBJECT;
         } else if (name.equals(ELEMENT_MAILBODY)) {
             String strBody = attr.getValue("src");
-
+            
             if (strBody != null) {
                 this.bodyURI = strBody;
             }
-
+            
+            String mType = attr.getValue("mime-type");
+            if (mType != null) {
+                this.bodyMimeType = new String(mType);
+            } else {
+                this.bodyMimeType = DEFAULT_BODY_MIMETYPE;
+            }
+            
             this.startTextRecording();
             this.mode = MODE_BODY;
         } else if (name.equals(ELEMENT_ATTACHMENT)) {
@@ -527,9 +537,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             inStr.read(byteArr);
 
             String mailBody = new String(byteArr);
-            messageBodyPart.setContent(mailBody, "text/html");
+            messageBodyPart.setContent(mailBody, this.bodyMimeType);
         } else {
-            messageBodyPart.setContent(this.body, "text/html");
+            messageBodyPart.setContent(this.body.toString(), this.bodyMimeType);
         }
 
         Multipart multipart = new MimeMultipart();

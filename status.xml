@@ -204,6 +204,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add" fixes-bug="30688" due-to="John Lianoglou" due-to-email="john@arachnedesign.net">
+     Mail block: Add ability to specify mime-type for email body text parameter in the mail transformer.
+   </action>
+   <action dev="CZ" type="fix">
+     Fix potential memory leaks in CForms/Woody Template Transformer and JXTemplateGenerator.
+   </action>
    <action dev="VG" type="fix" fixes-bug="29765" due-to="Rui Alberto L. Gon&ccedil;alves" due-to-email="rui-l-goncalves@ptinovacao.pt">
      XMLDB Block: Add ability to delete collections with XMLDBTransformer.
    </action>
