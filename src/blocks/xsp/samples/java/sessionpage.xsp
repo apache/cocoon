@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sessionpage.xsp,v 1.1 2004/03/10 12:58:08 stephan Exp $ -->
+<!-- CVS $Id: sessionpage.xsp,v 1.2 2004/04/05 12:25:30 antonio Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
@@ -23,7 +23,7 @@
           xmlns:xsp-request="http://apache.org/xsp/request/2.0"
           create-session="yes">
   
-  <!-- a simple session page by Jörg Prante <joerg@7val.com> -->
+  <!-- a simple session page by Jï¿½rg Prante <joerg@7val.com> -->
   
   <page>
     <title>A Simple URI-based Session Example</title>

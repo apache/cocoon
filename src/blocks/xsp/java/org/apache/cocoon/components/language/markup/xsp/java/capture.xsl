@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: capture.xsl,v 1.2 2004/03/17 11:28:21 crossley Exp $-->
+<!-- $Id: capture.xsl,v 1.3 2004/04/05 12:25:31 antonio Exp $-->
 
 <!--
  * Logicsheet for capturing parts of the generated XML as SAX XML fragments or
@@ -25,7 +25,7 @@
  * content production.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/17 11:28:21 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/04/05 12:25:31 $
 -->
 
 <xsl:stylesheet version="1.0"

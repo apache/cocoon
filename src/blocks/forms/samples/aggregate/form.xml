@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -18,7 +18,7 @@
 <!--+
     | CForms aggegate sample form definition file.
     |
-    | CVS $Id: form.xml,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+    | CVS $Id: form.xml,v 1.2 2004/04/05 12:25:35 antonio Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">

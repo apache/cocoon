@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-import groovy.xml.MarkupBuilder;
+import groovy.xml.MarkupBuilder
 
 // Step 1 -- Retrieve helper "beans" from the BSF framework
 source = bsf.lookupBean("source")
