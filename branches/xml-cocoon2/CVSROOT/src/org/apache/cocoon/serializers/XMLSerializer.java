@@ -11,6 +11,8 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.util.NamespacesTable;
 import org.xml.sax.Attributes;
@@ -21,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-27 05:45:18 $
+ * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-02-27 07:13:55 $
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -36,6 +38,8 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     private boolean dtd=false;
     /** A flag telling wether we're processing a CDATA section */
     private boolean cdata=false;
+    /** The table of the namespaces to declare */
+    private Hashtable nstd=new Hashtable();
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.
@@ -60,7 +64,8 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startDocument()
     throws SAXException {
-        super.response.setContentType("text/xml");
+        String c=super.parameters.getParameter("contentType","text/xml");
+        super.response.setContentType(c);
         this.print("<?xml version=\"1.0\"?>\n");
     }
 
@@ -83,6 +88,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
         this.ns.addDeclaration(prefix,uri);
+        this.nstd.put(prefix,uri);
     }
 
     /**
@@ -111,6 +117,23 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
             this.printSafe(a.getValue(x));
             this.print('\"');
         }
+
+        Enumeration e=this.nstd.keys();
+        while (e.hasMoreElements()) {
+            this.print(' ');
+            String nsname=(String)e.nextElement();
+            String nsuri=(String)this.nstd.get(nsname);
+            if (nsname.length()>0) {
+                this.print("xmlns:");
+                this.print(nsname);
+            } else this.print("xmlns");
+            this.print('=');
+            this.print('\"');
+            this.printSafe(nsuri);
+            this.print('\"');
+        }
+        this.nstd.clear();
+
         this.openElement=true;
     }
         
