@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
@@ -70,10 +71,10 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.3 2003/08/04 03:19:22 joerg Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.4 2004/01/03 12:42:39 vgritsenko Exp $
  */
-
-public class PreparableMatchNode extends SimpleSelectorProcessingNode implements ParameterizableProcessingNode, Composable {
+public class PreparableMatchNode extends SimpleSelectorProcessingNode
+                                 implements ParameterizableProcessingNode, Composable, Disposable {
 
     /** The 'pattern' attribute */
     private String pattern;
@@ -127,7 +128,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode implements
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
       
       	// Perform any common invoke functionality 
       	super.invoke(env, context);
@@ -173,6 +174,14 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode implements
      * Disposable Interface
      */
     public void dispose() {
-        this.manager.release(this.selector);
+        if (this.threadSafeMatcher != null) {
+            selector.release(this.threadSafeMatcher);
+            this.threadSafeMatcher = null;
+        }
+        if (this.selector != null) {
+            this.manager.release(this.selector);
+            this.selector = null;
+        }
+        this.manager = null;
     }
 }

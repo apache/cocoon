@@ -71,11 +71,10 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelectNode.java,v 1.3 2003/07/29 08:46:00 cziegeler Exp $
+ * @version CVS $Id: SwitchSelectNode.java,v 1.4 2004/01/03 12:42:39 vgritsenko Exp $
  */
-
 public class SwitchSelectNode extends SimpleSelectorProcessingNode
-  implements ParameterizableProcessingNode, Composable, Disposable {
+                              implements ParameterizableProcessingNode, Composable, Disposable {
 
     /** The parameters of this node */
     private Map parameters;
@@ -115,7 +114,7 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 	
       	// Perform any common invoke functionality 
         super.invoke(env, context);
@@ -167,8 +166,12 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
     public void dispose() {
         if (this.threadSafeSelector != null) {
             this.selector.release(this.threadSafeSelector);
+            this.threadSafeSelector = null;
         }
-        this.manager.release(this.selector);
-        this.selector = null;
+        if (this.selector == null) {
+            this.manager.release(this.selector);
+            this.selector = null;
+        }
+        this.manager = null;
     }
 }

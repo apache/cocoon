@@ -63,11 +63,10 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActNodeBuilder.java,v 1.3 2003/08/07 08:42:20 sylvain Exp $
+ * @version CVS $Id: ActNodeBuilder.java,v 1.4 2004/01/03 12:42:39 vgritsenko Exp $
  */
-
 public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
-  implements LinkedProcessingNodeBuilder {
+                            implements LinkedProcessingNodeBuilder {
 
     private ActSetNode  actSetNode;
     private String      actSetName;
