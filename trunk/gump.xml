@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.58 2003/05/07 06:24:40 cziegeler Exp $
+  CVS $Id: gump.xml,v 1.59 2003/05/07 11:31:58 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -769,6 +769,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="qdox"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -924,6 +925,16 @@
     </description>
     <home nested="src/blocks/woody/lib"/>
     <jar name="xreporter-expression-20030428.jar"/>
+  </project>
+
+  <project name="qdox">
+    <url href="http://qdox.codehaus.org/"/>
+    <description>
+      Small footprint parser for extracting class/interface/method 
+      definitions from java source files.
+    </description>
+    <home nested="src/blocks/qdox/lib"/>
+    <jar name="qdox-1.1.jar"/>
   </project>
   
 </module>
