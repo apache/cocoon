@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-03-28 22:18:24 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-07-05 20:20:53 $
  */
 public class GenericProcessor
 implements Composer, Configurable, Processor, LinkResolver {
@@ -139,20 +139,14 @@ implements Composer, Configurable, Processor, LinkResolver {
 
         LinkResolver resolver=this.partition.sitemap;
         String partname=this.partition.name;
-        LinkTranslator t=new LinkTranslator(this,resolver,partname,src);
-        t.setConsumer(s);
 
-        XMLConsumer current=t;
+        XMLConsumer current=s;
         for (int x=(this.filters.size()-1); x>=0; x--) {
             String k=(String)this.filters.elementAt(x);
             Filter f=(Filter)this.manager.getComponent(k);
             f.setup(req,res,src,(Parameters)this.filtersParam.elementAt(x));
             f.setConsumer(current);
             current=f;
-
-            t=new LinkTranslator(this,resolver,partname,src);
-            t.setConsumer(current);
-            current=t;
         }
 
         Generator g=(Generator)this.manager.getComponent(this.generator);
