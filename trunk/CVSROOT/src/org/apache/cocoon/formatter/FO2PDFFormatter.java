@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.3 2000-04-04 11:11:16 stefano Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.4 2000-08-18 22:42:27 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,14 +60,14 @@ import org.apache.cocoon.framework.*;
  * This class wraps around FOP to perform XSL:FO to PDF formatting.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 2000-04-04 11:11:16 $
+ * @version $Revision: 1.4 $ $Date: 2000-08-18 22:42:27 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter {
  
     public FO2PDFFormatter() {
         super.MIMEtype = "application/pdf";
-        super.statusMessage = org.apache.fop.apps.Version.getVersion() + " formatter";
+        super.statusMessage = Version.getVersion() + " formatter";
     }
         
     public void init(Configurations conf) {
@@ -75,13 +75,15 @@ public class FO2PDFFormatter extends AbstractFormatter {
     }
 
     public void format(Document document, Writer writer, Dictionary parameters) throws Exception {
-        Driver driver = new Driver();
-        driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", org.apache.fop.apps.Version.getVersion());
-        driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
-        driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-        driver.setWriter(new PrintWriter(writer));
-        driver.buildFOTree(document);
-        driver.format();
-        driver.render();
+	    Driver driver = new Driver();
+	    driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
+	    driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
+	    driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
+	    //driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
+	    //driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
+	    driver.setWriter(new PrintWriter(writer));
+	    driver.buildFOTree(document);
+	    driver.format();
+	    driver.render();
     }
 }
