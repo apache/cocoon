@@ -35,8 +35,6 @@ import org.apache.excalibur.source.SourceParameters;
 */
 public final class HandlerConfiguration implements Serializable {
 
-    static final long serialVersionUID = 3398145971890504305L;
-
     /** The unique name of the handler */
     private final String name;
 

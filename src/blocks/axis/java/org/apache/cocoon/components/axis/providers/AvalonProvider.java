@@ -88,7 +88,6 @@ import javax.xml.rpc.server.ServiceLifecycle;
  */
 public class AvalonProvider extends RPCProvider
 {
-    static final long serialVersionUID = -4960705523303980990L;
     /**
      * Constant used to retrieve the ComponentManager reference
      * from the MessageContext object.

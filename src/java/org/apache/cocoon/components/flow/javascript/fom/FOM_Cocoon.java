@@ -63,8 +63,6 @@ import org.mozilla.javascript.continuations.Continuation;
  */
 public class FOM_Cocoon extends ScriptableObject {
 
-    static final long serialVersionUID = -2059815314171821852L;
-
     class CallContext {
         CallContext caller;
         Context avalonContext;
