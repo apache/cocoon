@@ -10,20 +10,22 @@ package org.apache.cocoon.util;
 
 import org.apache.cocoon.Roles;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
+import java.util.Collections;
 
 /**
  * Created this class to assist the translation from easy to understand
  * role aliases and the real Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-16 17:03:19 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-18 16:17:02 $
  */
 
 public class RoleUtils {
 
-    private static final HashMap shorthand;
-    private static final HashMap classname;
+    private static final Map shorthand;
+    private static final Map classname;
 
     static {
         HashMap setup = new HashMap();
@@ -40,7 +42,7 @@ public class RoleUtils {
         setup.put("image-encoder", Roles.IMAGE_ENCODER);
         setup.put("datasources", Roles.DB_CONNECTION);
 
-        shorthand = setup;
+        shorthand = Collections.unmodifiableMap(setup);
 
         setup = new HashMap();
 
@@ -53,7 +55,7 @@ public class RoleUtils {
         setup.put(Roles.DB_CONNECTION, "org.apache.cocoon.CocoonComponentSelector");
         setup.put(Roles.POOL_CONTROLLER, "org.apache.cocoon.util.ComponentPoolController");
 
-        classname = setup;
+        classname = Collections.unmodifiableMap(setup);
     }
 
     public static String lookup(String shorthandName) {

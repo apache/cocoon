@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-12 15:31:34 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-18 16:17:02 $
  */
 public class ClassUtils {
 
@@ -103,7 +103,16 @@ public class ClassUtils {
     public static boolean implementsInterface(String className, String iface) throws Exception {
         Class class1 = ClassUtils.loadClass (className);
         Class class2 = ClassUtils.loadClass (iface);
-        if (class2.isAssignableFrom (class1)) {
+        return ClassUtils.implementsInterface(class1, class2);
+    }
+
+    /**
+     * Tests if a class implements a given interface
+     *
+     * @return true if class implements given interface.
+     */
+    public static boolean implementsInterface(Class class1, Class iface) {
+        if (iface.isAssignableFrom (class1)) {
             return true;
         }
         return false;
