@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.4 2000-08-18 22:42:27 stefano Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.5 2000-12-01 18:00:13 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,36 +53,105 @@ package org.apache.cocoon.formatter;
 import java.io.*;
 import java.util.*;
 import org.w3c.dom.*;
-import org.apache.fop.apps.*;
+import org.xml.sax.InputSource;
+import org.apache.fop.apps.Driver;
 import org.apache.cocoon.framework.*;
+import org.apache.cocoon.parser.Parser;
+import org.apache.xerces.parsers.SAXParser;
 
 /**
  * This class wraps around FOP to perform XSL:FO to PDF formatting.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-08-18 22:42:27 $
+ * @version $Revision: 1.5 $ $Date: 2000-12-01 18:00:13 $
  */
 
-public class FO2PDFFormatter extends AbstractFormatter {
+public class FO2PDFFormatter extends AbstractFormatter implements Actor {
+
+
+    /* 
+     * If FOP version >= 0.14 we may need to reparse the result to enforce the namespace
+     * compliance that FOP now requires but Xalan does not provide. (This only affects
+     * FO documents that have been styled by a stylesheet but for simplicitly we apply
+     * it to all incoming documents if the FOP version is >= 0.14.
+     */
+    private static final String FOP_VERSION = org.apache.fop.apps.Version.getVersion ();
+    private static final Hashtable NO_PARAMETERS = new Hashtable ();
+    private static final double UNKNOWN_VERSION = -1.0;
+    private static double FOP_VERSION_NO;
+    static {
+        try {
+           // This is a real mess! Why couldn't they just do a getVersionNumber() method!?
+           int i = FOP_VERSION.indexOf (' ', 4);
+           if (i == -1) i = FOP_VERSION.length ();
+           String vn = FOP_VERSION.substring (4, i).replace ('_', '.');
+           // only interested in first dot, if any
+           i = vn.indexOf ('.');
+           if (i != -1) i = vn.indexOf ('.', i + 1);
+           if (i != -1) vn = vn.substring (0, i);
+           FOP_VERSION_NO = Double.parseDouble (vn);
+        }
+        catch (Exception ex) {
+           FOP_VERSION_NO = UNKNOWN_VERSION;
+        }
+        System.err.println ("FOP_VERSION = " + FOP_VERSION);
+        System.err.println ("FOP_VERSION_NO = " + FOP_VERSION_NO);
+    }
+
+    protected Director director;
+    protected Formatter xmlFormatter;
+    protected Parser parser;
  
     public FO2PDFFormatter() {
         super.MIMEtype = "application/pdf";
-        super.statusMessage = Version.getVersion() + " formatter";
+        super.statusMessage = FOP_VERSION + " formatter (note: version number is often wildly inaccurate)";
     }
         
     public void init(Configurations conf) {
         super.init(conf);
     }
 
+    public void init(Director director) {
+        // other components might not have been setup yet, so defer this
+        this.director = director;
+    }
+
+    protected void deferredInit () throws Exception {
+        if (xmlFormatter == null) { // don't bother initting multiple times
+            FormatterFactory formatters = (FormatterFactory) director.getActor ("formatters");
+            xmlFormatter = formatters.getFormatterForType ("text/xml");
+            parser = (Parser) director.getActor ("parser");
+        }
+    }
+
     public void format(Document document, Writer writer, Dictionary parameters) throws Exception {
 	    Driver driver = new Driver();
-	    driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", Version.getVersion());
+	    driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", FOP_VERSION);
 	    driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
 	    driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
-	    //driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
-	    //driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
-	    driver.setWriter(new PrintWriter(writer));
-	    driver.buildFOTree(document);
+            driver.setWriter(new PrintWriter(writer));
+
+	    if (FOP_VERSION_NO > 0.13) {
+  	        driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
+	        driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
+
+                // To workaround the problem that Xalan 1.x does not output DOM2-compliant namespaces,
+                // we use a major hack - output xml as a string and read it in again. 
+                // With a DOM2-compliant parser such as Xerces, this should work fine.
+                deferredInit ();
+                StringWriter tempWriter = new StringWriter ();
+                xmlFormatter.format (document, tempWriter, NO_PARAMETERS);
+                String tempXml = tempWriter.toString ();
+
+                // For now, we just use Xerces - it would be more complicated to support
+                // other parsers here.
+                SAXParser parser = new SAXParser ();
+                parser.setFeature("http://xml.org/sax/features/namespaces", true);
+                driver.buildFOTree(parser, new InputSource (new StringReader (tempXml)));
+            }
+            else {
+	        driver.buildFOTree(document);
+            }
 	    driver.format();
 	    driver.render();
     }
