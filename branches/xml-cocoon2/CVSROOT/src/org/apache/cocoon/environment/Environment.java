@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-31 15:56:34 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-31 16:44:11 $
  */
 
 public interface Environment extends EntityResolver {
@@ -53,7 +53,7 @@ public interface Environment extends EntityResolver {
     /**
      * Set the response status code
      */
-    public void setStatus (int statusCode); 
+    public void setStatus(int statusCode); 
 
     /**
      * Get the output stream where to write the generated resource.
