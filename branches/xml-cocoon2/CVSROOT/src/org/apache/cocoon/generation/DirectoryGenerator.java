@@ -55,7 +55,7 @@ import org.apache.avalon.utils.Parameters;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-21 17:37:47 $ */
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-29 22:17:51 $ */
  
 public class DirectoryGenerator extends ComposerGenerator {
 
@@ -82,7 +82,6 @@ public class DirectoryGenerator extends ComposerGenerator {
     protected int depth;
     protected AttributesImpl attributes = new AttributesImpl();
     protected SimpleDateFormat dateFormatter;
-    protected EntityResolver resolver;
 
     /**
      * Set the request parameters. Must be called before the generate
@@ -131,6 +130,7 @@ public class DirectoryGenerator extends ComposerGenerator {
         File path;
     
         input = resolver.resolveEntity(null,super.source);
+System.out.println("directory: "+input.getSystemId());
             url = new URL(input.getSystemId());
             path = new File(url.getFile());
     
@@ -167,6 +167,7 @@ public class DirectoryGenerator extends ComposerGenerator {
             if (depth>0) {
                 File contents[] = path.listFiles();
                 for (int i=0; i<contents.length; i++) {
+System.out.println("directory.file: "+contents[i]);
                     addPath(contents[i], depth-1);
                 }
             }
