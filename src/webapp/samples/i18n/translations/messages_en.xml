@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- English message catalogue file for Cocoon 2 i18n sample -->
-<!-- CVS $Id: messages_en.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+
+<!--+
+    | English message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_en.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="en">
     <message key="a_key">This is a key value.</message>
     <message key="language">English</message>

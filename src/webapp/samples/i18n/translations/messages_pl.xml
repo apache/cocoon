@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Polish message catalogue file for Cocoon 2 i18n sample -->
-<!-- CVS $Id: messages_pl.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+
+<!--+
+    | Polish message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_pl.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="pl">
     <message key="count_title">Ta strona była pobierana {0} razy. Ostatnio {1}</message>
     <message key="a_key">To jest klucz.</message>

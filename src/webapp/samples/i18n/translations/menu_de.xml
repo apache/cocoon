@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- German message catalogue file for menu in Cocoon 2 i18n sample -->
-<!-- $Id: menu_de.xml,v 1.1 2003/03/26 07:32:20 kpiroumian Exp $ -->
+
+<!--+
+    | German message catalogue file for menu in Cocoon 2 i18n sample
+    |
+    | CVS $Id: menu_de.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
 
 <catalogue xml:lang="de">
     <message key="Apache Cocoon i18n Samples">Apache Cocoon i18n Beispiele</message>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Indonesian message catalogue file for Cocoon 2 i18n sample -->
-<!-- $Id: messages_in.xml,v 1.3 2003/03/28 07:20:59 kpiroumian Exp $ -->
+
+<!--+
+    | Indonesian message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_in.xml,v 1.4 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="in">
     <message key="count_title">Halaman ini sudah dipanggil {0} kali. Panggilan terakhir: {1}.</message>
     <message key="a_key">Ini nilai sebuah kode.</message>

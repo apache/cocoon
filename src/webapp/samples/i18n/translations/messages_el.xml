@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v5 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
-<!-- Greek message catalogue file for Cocoon 2 i18n sample -->
-<!-- $Id: messages_el.xml,v 1.1 2003/03/09 00:11:11 pier Exp $ -->
+
+<!--+
+    | Greek message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_el.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="el">
 	<message key="a_key">Αυτή είναι μία τιμή κλειδί.</message>
 	<message key="language">Ελληνικά</message>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Portuguese message catalogue file for Cocoon 2 i18n sample -->
-<!-- $Id: messages_pt.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+
+<!--+
+    | Portuguese message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_pt.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="pt">
     <message key="count_title">Esta página foi acessada {0} vezes. Último acesso: {1}.</message>
     <message key="a_key">Isto é o valor de uma chave.</message>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Korean message catalogue file for menu in Cocoon 2 i18n sample -->
-<!-- $Id: menu_ko.xml,v 1.1 2003/03/09 00:11:11 pier Exp $ -->
+
+<!--+
+    | Korean message catalogue file for menu in Cocoon 2 i18n sample
+    |
+    | CVS $Id: menu_ko.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="ko">
     <message key="Apache Cocoon i18n Samples">아파치 코쿤 국제화 예제</message>
     <message key="Samples">예제</message>

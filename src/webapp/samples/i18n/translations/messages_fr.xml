@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- French message catalogue file for Cocoon 2 i18n sample -->
-<!-- $Id: messages_fr.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+
+<!--+
+    | French message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_fr.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="fr">
     <message key="count_title">Cette page a été invoquée {0} fois. Dernière invocation: {1}.</message>
     <message key="a_key">Ceci est la valeur d'une clé.</message>
