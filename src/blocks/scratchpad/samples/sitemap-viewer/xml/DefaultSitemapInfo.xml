@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemap2schema>
+    <match ref="index.xhtml" pattern="*.html"/>
+</sitemap2schema>

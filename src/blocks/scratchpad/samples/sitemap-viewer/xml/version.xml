@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<version major="0" minor="6">
+    <description version="0.5">
+        First time I use a version number for SitemapViewer. Little changes.
+    </description>
+    <description version="0.6">    
+        Improved images, added support for 'act', 'mount' and 'parameter'.
+        Faster transformation.
+        Preparation for security. 
+    </description>
+</version>
