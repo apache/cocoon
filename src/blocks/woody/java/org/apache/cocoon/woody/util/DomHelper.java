@@ -107,10 +107,26 @@ public class DomHelper {
     }
 
     /**
+     * Returns all Element children of an Element that belong to the given namespace and have the given local name.
+     */
+    public static Element[] getChildElements(Element element, String namespace, String localName) {
+        ArrayList elements = new ArrayList();
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element && namespace.equals(node.getNamespaceURI()) && localName.equals(node.getLocalName()))
+                elements.add(node);
+        }
+        return (Element[])elements.toArray(new Element[0]);
+    }
+
+    /**
      * Returns the first child element with the given namespace and localName, or null
      * if there is no such element.
      */
     public static Element getChildElement(Element element, String namespace, String localName) {
+        // note: instead of calling getChildElement(element, namespace, localName, false),
+        // the code is duplicated here because this method does not throw an exception
         NodeList nodeList = element.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -118,6 +134,19 @@ public class DomHelper {
                 return (Element)node;
         }
         return null;
+    }
+
+    public static Element getChildElement(Element element, String namespace, String localName, boolean required) throws Exception {
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element && namespace.equals(node.getNamespaceURI()) && localName.equals(node.getLocalName()))
+                return (Element)node;
+        }
+        if (required)
+            throw new Exception("Missing element \"" + localName + "\" as child of element \"" + element.getTagName() + "\" at " + DomHelper.getLocation(element));
+        else
+            return null;
     }
 
     /**
