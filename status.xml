@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.327 2004/05/17 15:12:40 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.328 2004/05/18 15:11:48 bdelacretaz Exp $:-->
 
 <status>
  <developers>
@@ -220,7 +220,7 @@
      to be used.
    </action>
    <action dev="MPO" type="update">
-     Deprectated getWidget from the Widget interface in cforms.
+     Deprecated getWidget from the Widget interface in cforms.
      People should consider using getChild(id) or lookupWidget(path) instead.
      On the level of the flowscript 'Form' API a semantical distinct getWidget()
      (notice: no arguments!) is still avalaible to return the actual wrapped 
