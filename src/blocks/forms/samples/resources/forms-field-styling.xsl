@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.2 2004/03/10 21:52:00 reinhard Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -32,7 +32,7 @@
   </xsl:template>
 
   <xsl:template match="body" mode="woody-field">
-    <xsl:attribute name="onload">woody_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
+    <xsl:attribute name="onload">forms_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
   </xsl:template>
 
   <!--+
@@ -87,7 +87,7 @@
 
   <xsl:template match="fi:styling/@submit-on-change" mode="styling">
     <xsl:if test=". = 'true'">
-      <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+      <xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
     </xsl:if>
   </xsl:template>
 
@@ -393,9 +393,9 @@
   <xsl:template match="fi:form-template|fi:form-generated">
     <form>
       <xsl:copy-of select="@*"/>
-      <xsl:attribute name="onsubmit">woody_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
+      <xsl:attribute name="onsubmit">forms_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       <!-- hidden field to store the submit id -->
-      <input type="hidden" name="woody_submit_id"/>
+      <input type="hidden" name="forms_submit_id"/>
       <xsl:apply-templates/>
       
       <!-- TODO: consider putting this in the xml stream from the generator? -->
