@@ -86,10 +86,7 @@
           <wd:enum>org.apache.cocoon.woody.samples.Sex</wd:enum>
       	</wd:convertor>
       </wd:datatype>
-      <wd:selection-list>
-        <wd:item value="male"/>
-        <wd:item value="female"/>
-      </wd:selection-list>
+      <wd:selection-list type="enum" class="org.apache.cocoon.woody.samples.Sex"/>
     </wd:field>
   
     <wd:repeater id="contacts">
