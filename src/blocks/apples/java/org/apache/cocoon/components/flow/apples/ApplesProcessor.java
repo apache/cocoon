@@ -84,9 +84,10 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, TIMETOLIVE, this);
 
-        getLogger().debug("Pulling fresh apple through the lifecycle...");
         DefaultContext appleContext = new DefaultContext();
         appleContext.put("continuation-id", wk.getId());
+
+        getLogger().debug("Pulling fresh apple through the lifecycle... | continuationid=" + wk.getId());
         
         //TODO: also add the componentManager for Apples that took the other approach
         LifecycleHelper.setupComponent(app, getLogger(), appleContext, this.serviceManager, null, null, null);
@@ -151,7 +152,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
             env.redirect(false, res.getURI());
         } else {
             String uri = res.getURI();
-            getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData());
+            getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData() + " and continuationid= " + wk.getId());
             this.forwardTo(uri, res.getData(), wk, env);
         }
 
