@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.8 2003/03/13 13:24:28 crossley Exp $:
+       CVS: $Id: build.xml,v 1.9 2003/03/14 20:46:59 stefano Exp $:
 
 ============================================================================ -->
 
@@ -14,12 +14,6 @@
 
   <target name="init">
 
-    <echo>----------------------------- WARNING!!! -------------------------------</echo>
-    <echo>The build system is undergoing major redesign. Parts of the system might</echo>
-    <echo>not work as expected. We apologize for the inconvenience but we are     </echo>
-    <echo>working to make things easier for you. Thank you for your patience.     </echo>
-    <echo>------------------------------------------------------------------------</echo>
-    
     <!-- Set the timestamps -->
     <tstamp/>
 
@@ -218,20 +212,16 @@
            classpathref="classpath"/>
 
     <!-- compile core source files -->
-    <javac destdir="${build.dest}"
+    <javac srcdir="${java}"
+           destdir="${build.dest}"
            debug="${compiler.debug}"
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
-           classpathref="classpath">
-         <src>
-          <!-- [FIXME] THE DEPENDENCY ON DEPRECATED SHOULD GO AWAY!!!! -->
-          <path location="${deprecated.src}"/> 
-          <path location="${java}"/>
-         </src>
-    </javac>
+           classpathref="classpath"/>
+ 
   </target>
 
   <!-- compiles the scratchpad -->
@@ -1059,7 +1049,7 @@
 <!-- Gump targets ========================================================== -->
 
   <!-- Builds Core -->
-  <target name="gump-core" depends="package"/>
+  <target name="gump-core" depends="compile"/>
 
   <!-- Builds Blocks -->
   <target name="gump-blocks" depends="blocks"/>
