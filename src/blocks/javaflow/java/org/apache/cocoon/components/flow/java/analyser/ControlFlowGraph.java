@@ -37,7 +37,7 @@ import org.apache.bcel.verifier.exc.StructuralCodeConstraintException;
  * 
  * WARNING! These classes are a fork of the bcel verifier. 
  *
- * @version $Id: ControlFlowGraph.java,v 1.2 2004/06/26 18:29:30 stephan Exp $
+ * @version $Id: ControlFlowGraph.java,v 1.3 2004/06/29 15:07:14 joerg Exp $
  * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
  */
 public class ControlFlowGraph{
@@ -372,9 +372,6 @@ throw new AssertionViolatedException("DID YOU REALLY WANT TO ASK FOR RET'S SUCCS
 
 	} // End Inner InstructionContextImpl Class.
 
-	/** The MethofGen object we're working on. */
-	private final MethodGen method_gen;
-
 	/** The Subroutines object for the method whose control flow is represented by this ControlFlowGraph. */
 	private final Subroutines subroutines;
 
@@ -395,8 +392,6 @@ throw new AssertionViolatedException("DID YOU REALLY WANT TO ASK FOR RET'S SUCCS
 		for (int i=0; i<instructionhandles.length; i++){
 			instructionContexts.put(instructionhandles[i], new InstructionContextImpl(instructionhandles[i]));
 		}
-		
-		this.method_gen = method_gen;
 	}
 
 	/**

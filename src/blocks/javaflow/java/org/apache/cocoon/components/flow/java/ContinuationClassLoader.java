@@ -17,14 +17,57 @@ package org.apache.cocoon.components.flow.java;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
-import org.apache.bcel.*;
-import org.apache.bcel.classfile.*;
-import org.apache.bcel.generic.*;
+import org.apache.bcel.Constants;
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.ConstantCP;
+import org.apache.bcel.classfile.ConstantNameAndType;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ACONST_NULL;
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.DUP2_X2;
+import org.apache.bcel.generic.GOTO;
+import org.apache.bcel.generic.IFEQ;
+import org.apache.bcel.generic.IFNONNULL;
+import org.apache.bcel.generic.IFNULL;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.InstructionConstants;
+import org.apache.bcel.generic.InstructionFactory;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionTargeter;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.POP;
+import org.apache.bcel.generic.POP2;
+import org.apache.bcel.generic.PUSH;
+import org.apache.bcel.generic.RET;
+import org.apache.bcel.generic.ReferenceType;
+import org.apache.bcel.generic.ReturnaddressType;
+import org.apache.bcel.generic.SWAP;
+import org.apache.bcel.generic.TABLESWITCH;
+import org.apache.bcel.generic.TargetLostException;
+import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.bcel.verifier.exc.AssertionViolatedException;
-import org.apache.cocoon.components.flow.java.analyser.*;
+import org.apache.cocoon.components.flow.java.analyser.ControlFlowGraph;
+import org.apache.cocoon.components.flow.java.analyser.ExceptionHandler;
+import org.apache.cocoon.components.flow.java.analyser.ExecutionVisitor;
+import org.apache.cocoon.components.flow.java.analyser.Frame;
+import org.apache.cocoon.components.flow.java.analyser.InstructionContext;
+import org.apache.cocoon.components.flow.java.analyser.LocalVariables;
+import org.apache.cocoon.components.flow.java.analyser.OperandStack;
+import org.apache.cocoon.components.flow.java.analyser.UninitializedObjectType;
 import org.apache.regexp.RE;
 
 /**
@@ -36,7 +79,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.13 2004/06/28 08:28:38 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.14 2004/06/29 15:07:14 joerg Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -332,36 +375,6 @@ public class ContinuationClassLoader extends ClassLoader {
         }
     }
     
-    private void printFrameInfo(MethodGen method, ControlFlowGraph cfg) {
-        InstructionHandle handle = method.getInstructionList().getStart();
-        do {
-            System.out.println(handle);
-            try {
-                InstructionContext context = cfg.contextOf(handle);
-
-                Frame f = context.getOutFrame(new ArrayList());
-                
-                LocalVariables lvs = f.getLocals();
-                System.out.print("Locales: ");
-                for (int i = 0; i < lvs.maxLocals(); i++) {
-                    System.out.print(lvs.get(i) + ",");
-                }
-                System.out.println();
-
-                OperandStack os = f.getStack();
-                System.out.print(" Stack: ");
-                for (int i = 0; i < os.size(); i++) {
-                    System.out.print(os.peek(i) + ",");
-                }
-                System.out.println();
-            }
-            catch (AssertionViolatedException ave) {
-                System.out.println("no frame information");
-            }
-        }
-        while ((handle = handle.getNext()) != null);
-    }
-
     private void rewrite(MethodGen method, ControlFlowGraph cfg)
             throws ClassNotFoundException {
         InstructionFactory insFactory = new InstructionFactory(method.getConstantPool());

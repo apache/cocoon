@@ -41,11 +41,9 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.2 2004/06/26 18:29:30 stephan Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.3 2004/06/29 15:07:14 joerg Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter implements Configurable {
-
-    private boolean initialized = false;
 
     private int timeToLive = 600000;
 
