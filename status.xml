@@ -202,6 +202,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="BD" type="fix">
+     Tour block: fix "shapes" sample using if/else in flowscript
+     instead of switch.
+   </action>
    <action dev="VG" type="update">
      Build: Added exclude.all.blocks and include.all.blocks properties
      to quickly toggle all blocks on or off.
