@@ -64,11 +64,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -81,7 +78,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.9 2004/02/20 18:58:59 sylvain Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.10 2004/02/20 19:06:21 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -476,7 +473,6 @@ implements SourceResolver, Serviceable, Disposable {
     public static void endProcessing(Environment env, Object key) {
         env.finishingProcessing();
         final EnvironmentContext desc = (EnvironmentContext)key;
-        desc.dispose();
         env.getObjectModel().remove(PROCESS_KEY);
     }
 

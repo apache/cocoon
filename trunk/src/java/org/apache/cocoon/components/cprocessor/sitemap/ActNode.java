@@ -73,7 +73,6 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -81,7 +80,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActNode.java,v 1.5 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: ActNode.java,v 1.6 2004/02/20 19:06:21 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

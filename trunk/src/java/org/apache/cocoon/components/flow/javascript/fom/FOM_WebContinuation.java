@@ -53,7 +53,6 @@ package org.apache.cocoon.components.flow.javascript.fom;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
@@ -68,7 +67,7 @@ import org.mozilla.javascript.continuations.Continuation;
 
 /**
  *
- * @version CVS $Id: FOM_WebContinuation.java,v 1.4 2004/02/20 18:53:46 sylvain Exp $
+ * @version CVS $Id: FOM_WebContinuation.java,v 1.5 2004/02/20 19:06:21 cziegeler Exp $
  */
 public class FOM_WebContinuation extends ScriptableObject {
 

@@ -64,7 +64,6 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -75,7 +74,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.6 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.7 2004/02/20 19:06:21 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

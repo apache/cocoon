@@ -50,12 +50,6 @@
 */
 package org.apache.cocoon.environment.internal;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -75,23 +69,18 @@ import org.apache.cocoon.environment.Environment;
  * TODO: THIS WILL BE REMOVED SOON
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentContext.java,v 1.2 2004/02/20 09:40:15 cziegeler Exp $
+ * @version CVS $Id: EnvironmentContext.java,v 1.3 2004/02/20 19:06:21 cziegeler Exp $
  * @since 2.2
  */
-public class EnvironmentContext 
-implements Disposable {
+public class EnvironmentContext {
     
     /** The corresponding environment */
     protected Environment environment;
-    
-    /** The attributes */
-    protected Map attributes;
     
     /**
      * Constructor
      */
     public EnvironmentContext(Environment environment) {
-        this.attributes = new HashMap();
         this.environment = environment;
     }
     
@@ -103,50 +92,5 @@ implements Disposable {
         return this.environment;
     }
     
-    /**
-     * Add an object to the environment.
-     * If an object with the same key is already stored, this is overwritten.
-     * Each object is disposed when the environment is finished. However,
-     * if you add an object with a key that starts with "global:", then
-     * the object is not disposed!
-     * 
-     * @param key   The key for the object
-     * @param value The object itself
-     */
-    public void addAttribute(String key, Object value) {
-        this.attributes.put(key, value);
-    }
-    
-    /**
-     * Return the object associated with the key
-     * @param key The unique key
-     * @return The object or null
-     */
-    public Object getAttribute(String key) {
-        return this.attributes.get(key);
-    }
-    
-    /**
-     * Remove the object associated with the key
-     * @param key The unique key
-     */
-    public void removeAttribute(String key) {
-        this.attributes.remove(key);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        final Iterator iter = this.attributes.entrySet().iterator();
-        while ( iter.hasNext() ) {
-            Map.Entry entry = (Map.Entry)iter.next();
-            if ( !((String) entry.getKey()).startsWith("global:") ) {
-                ContainerUtil.dispose(entry.getValue());
-            }
-        }
-        this.attributes.clear();
-    }
-
 }
 
