@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.impl;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
@@ -42,7 +44,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.13 2004/04/28 13:58:16 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.14 2004/06/07 09:53:34 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -247,6 +249,36 @@ public class DefaultLinkService
         info.hasParameters = true;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.LinkService#addUniqueParameterToLink(java.lang.String, java.lang.String)
+     */
+    public void addUniqueParameterToLink(String name, String value) {
+        final Info info = this.getInfo();
+        if ( info.hasParameters ) {
+            final int pos = info.linkBase.indexOf("?");
+            final String queryString = info.linkBase.substring(pos + 1);
+            final RequestParameters params = new RequestParameters(queryString);
+            if ( params.getParameter(name) != null ) {
+                // the parameter is available, so remove it
+                info.linkBase.delete(pos, info.linkBase.length() + 1);
+                info.hasParameters = false;
+                
+                Enumeration enum = params.getParameterNames();
+                while ( enum.hasMoreElements() ) {
+                    final String paramName = (String)enum.nextElement();
+                    if ( !paramName.equals(name) ) {
+                        String[] values = params.getParameterValues(paramName);
+                        for( int i = 0; i < values.length; i++ ) {
+                            this.addParameterToLink(paramName, values[i]);
+                        }
+                    }
+                }
+            }
+        }
+        // the parameter is not available, so just add it
+        this.addParameterToLink(name, value);
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.LinkService#getRefreshLinkURI()
      */
