@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.41 2003/11/17 15:40:33 upayavira Exp $
+    | CVS $Id: sitemap.xmap,v 1.42 2003/12/12 14:48:43 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -251,7 +251,7 @@
      <exception class="java.lang.Throwable" unroll="true"/>
    </map:selector>
 
-
+   <map:selector logger="sitemap.selector.resource-exists" name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"/>
    <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
     <!-- Define now which request parameter to use; or do it later,
          when using this selector, via "parameter-name" parameter.
