@@ -74,7 +74,7 @@ import org.apache.pluto.services.title.DynamicTitleService;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletContainerEnvironmentImpl.java,v 1.1 2004/01/22 14:01:21 cziegeler Exp $
+ * @version CVS $Id: PortletContainerEnvironmentImpl.java,v 1.2 2004/02/02 10:03:18 reinhard Exp $
  */
 public class PortletContainerEnvironmentImpl 
 extends AbstractLogEnabled
@@ -164,7 +164,7 @@ implements PortletContainerEnvironment, Serviceable, Disposable, Initializable, 
                     service = (ContainerService)this.manager.lookup(key);
                     this.services.put(key, service);
                 } catch (ServiceException se) {
-                    throw new RuntimeException("Unable to lookup service " + key, se);
+                    throw new RuntimeException("Unable to lookup service " + key + ": " + se);
                 }
             }
         }
