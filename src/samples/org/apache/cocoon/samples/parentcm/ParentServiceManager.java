@@ -23,7 +23,7 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.core.container.CocoonServiceManager;
+import org.apache.cocoon.core.container.CoreServiceManager;
 
 import javax.naming.Context;
 import java.util.Hashtable;
@@ -52,13 +52,13 @@ public class ParentServiceManager implements ServiceManager, LogEnabled, Initial
      * The delegate that will be configured and provide the
      * functionality for this component manager.
      */
-    private final CocoonServiceManager delegate;
+    private final CoreServiceManager delegate;
 
     public ParentServiceManager(final String jndiName) {
         this.jndiName = jndiName;
 
         // Initialize it here so we can let it be final.
-        this.delegate = new CocoonServiceManager(null);
+        this.delegate = new CoreServiceManager(null);
     }
 
     /* (non-Javadoc)

@@ -39,7 +39,7 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.core.container.CocoonServiceManager;
+import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -129,7 +129,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
     /* (non-Javadoc)
      * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
      */
-    protected void addComponents(CocoonServiceManager manager) 
+    protected void addComponents(CoreServiceManager manager) 
     throws ServiceException {
         super.addComponents(manager);
         final String[] o = this.getSitemapComponentInfo();
@@ -144,7 +144,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             factory.setAttribute("class", componentClassName);
             factory.setAttribute("name", key);
             df.addChild(factory);
-            manager.doAddComponent(typeClassName + "Selector", 
+            manager.addComponent(typeClassName + "Selector", 
                                  CocoonServiceSelector.class, 
                                  df);
         }

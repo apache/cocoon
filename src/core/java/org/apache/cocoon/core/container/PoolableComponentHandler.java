@@ -53,7 +53,7 @@ import org.apache.cocoon.components.ServiceInfo;
  * @version CVS $Id$
  */
 public class PoolableComponentHandler
-extends AbstractComponentHandler {
+extends AbstractFactoryHandler {
     
     /** The default max size of the pool */
     public static final int DEFAULT_MAX_POOL_SIZE = 8;
@@ -223,6 +223,4 @@ extends AbstractComponentHandler {
             }
         }
     }
-
-    
 }

@@ -28,7 +28,7 @@ import org.apache.cocoon.serialization.Serializer;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SerializeNodeBuilder.java,v 1.5 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
@@ -47,14 +47,16 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
         String type = this.treeBuilder.getTypeForStatement(config, Serializer.ROLE);
+        
+        SitemapLanguage sitemapBuilder = (SitemapLanguage)this.treeBuilder;
 
         String mimeType = config.getAttribute("mime-type", null);
         if (mimeType == null) {
-            mimeType = this.treeBuilder.getProcessor().getComponentInfo().getMimeType(Serializer.ROLE, type);
+            mimeType = sitemapBuilder.getMimeType(Serializer.ROLE, type);
         }
 
-        this.views = ((SitemapLanguage)this.treeBuilder).getViewsForStatement(Serializer.ROLE, type, config);
-        this.pipelineHints = ((SitemapLanguage)this.treeBuilder).getHintsForStatement(Serializer.ROLE, type, config);
+        this.views = sitemapBuilder.getViewsForStatement(Serializer.ROLE, type, config);
+        this.pipelineHints = sitemapBuilder.getHintsForStatement(Serializer.ROLE, type, config);
 
         this.node = new SerializeNode(
             type,

@@ -258,7 +258,7 @@ public class ContainerTestCase extends TestCase {
      * This method may be overwritten by subclasses to add aditional
      * components.
      */
-    protected void addComponents( CocoonServiceManager manager) 
+    protected void addComponents( CoreServiceManager manager) 
     throws ServiceException {
         // subclasses can add components here
     }
@@ -272,7 +272,7 @@ public class ContainerTestCase extends TestCase {
         roleManager.configure( confRM );
 
         // Set up the ComponentLocator
-        CocoonServiceManager ecManager = new CocoonServiceManager(null);
+        CoreServiceManager ecManager = new CoreServiceManager(null);
         ecManager.enableLogging( this.getLogger() );
         ecManager.contextualize( this.context );
         ecManager.setRoleManager( roleManager );

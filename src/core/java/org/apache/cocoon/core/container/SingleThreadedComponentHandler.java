@@ -26,7 +26,7 @@ import org.apache.cocoon.components.ServiceInfo;
  * @version CVS $Id$
  */
 public class SingleThreadedComponentHandler
-extends AbstractComponentHandler {
+extends AbstractFactoryHandler {
 
     /**
      * Create a SingleThreadedComponentHandler which manages a pool of Components

@@ -15,34 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.container.CocoonServiceManager;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.CategoryNode;
-import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
-import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
-import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.reading.Reader;
-import org.apache.cocoon.selection.Selector;
-import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.util.StringUtils;
-
-import org.apache.regexp.RE;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +23,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.container.CocoonServiceManager;
+import org.apache.cocoon.components.treeprocessor.CategoryNode;
+import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.util.StringUtils;
+import org.apache.regexp.RE;
 
 /**
  * The tree builder for the sitemap language.
@@ -64,7 +54,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
-
+    
     /**
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
@@ -90,30 +80,6 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         newManager.configure(config);
         newManager.initialize();
 
-        // Extract additional component info
-        // Default component types
-        setupDefaultType(config, Action.ROLE, "actions");
-        setupDefaultType(config, Matcher.ROLE, "matchers");
-        setupDefaultType(config, Selector.ROLE, "selectors");
-        setupDefaultType(config, Generator.ROLE, "generators");
-        setupDefaultType(config, Transformer.ROLE, "transformers");
-        setupDefaultType(config, Serializer.ROLE, "serializers");
-        setupDefaultType(config, Reader.ROLE, "readers");
-        setupDefaultType(config, ProcessingPipeline.ROLE, "pipes");
-
-        // Labels and pipeline hints
-        setupLabelsAndPipelineHints(config, Generator.ROLE, "generators");
-        setupLabelsAndPipelineHints(config, Transformer.ROLE, "transformers");
-        setupLabelsAndPipelineHints(config, Serializer.ROLE, "serializers");
-
-        // Mime types
-        setupMimeTypes(config, Serializer.ROLE, "serializers");
-        setupMimeTypes(config, Reader.ROLE, "readers");
-
-        // Register manager and prevent further modifications
-        getProcessor().getComponentInfo().setServiceManager(newManager);
-        getProcessor().getComponentInfo().lock();
-
         return newManager;
     }
 
@@ -126,76 +92,6 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         // FIXME How to get rif of EnvironmentHelper?
         newContext.put(Constants.CONTEXT_ENV_HELPER, getProcessor().getWrappingProcessor().getEnvironmentHelper());
         return newContext;
-    }
-
-    /**
-     * Setup the default compnent type for a given role.
-     *
-     * @param componentsConfig the &lt;map:components&gt; configuration
-     * @param role the compomonent role
-     * @param childName the name of the configuration element defining <code>role</code>'s selector
-     */
-    private void setupDefaultType(Configuration componentsConfig, String role, String childName) {
-        Configuration selectorConfig = componentsConfig.getChild(childName, false);
-        if (selectorConfig != null) {
-            getProcessor().getComponentInfo().setDefaultType(role, selectorConfig.getAttribute("default", null));
-        }
-    }
-
-    /**
-     * Setup view labels and pipeline hints for the components of a given role
-     */
-    private void setupLabelsAndPipelineHints(Configuration componentsConfig, String role, String childName)
-        throws ConfigurationException {
-
-        Configuration selectorConfig = componentsConfig.getChild(childName, false);
-        ProcessorComponentInfo info = getProcessor().getComponentInfo();
-        if (selectorConfig != null) {
-            Configuration[] configs = selectorConfig.getChildren();
-            for (int configIdx = 0; configIdx < configs.length; configIdx++) {
-                Configuration config = configs[configIdx];
-                String name = config.getAttribute("name");
-
-                // Labels
-                String label = config.getAttribute("label", null);
-                if (label != null) {
-                    StringTokenizer st = new StringTokenizer(label, " ,", false);
-                    String[] labels = new String[st.countTokens()];
-                    for (int tokenIdx = 0; tokenIdx < labels.length; tokenIdx++) {
-                        labels[tokenIdx] = st.nextToken();
-                    }
-                    info.setLabels(role, name, labels);
-                } else {
-                    // Set no labels, overriding those defined in the parent sitemap, if any
-                    info.setLabels(role, name, null);
-                }
-
-                // Pipeline hints
-                String pipelineHint = config.getAttribute("hint", null);
-                info.setPipelineHint(role, name, pipelineHint);
-            }
-        }
-    }
-
-    /**
-     * Setup mime types for components of a given role
-     */
-    private void setupMimeTypes(Configuration componentsConfig, String role, String childName)
-        throws ConfigurationException {
-
-        Configuration selectorConfig = componentsConfig.getChild(childName, false);
-        ProcessorComponentInfo info = getProcessor().getComponentInfo();
-        if (selectorConfig != null) {
-            Configuration[] configs = selectorConfig.getChildren();
-            for (int i = 0; i < configs.length; i++) {
-                Configuration config = configs[i];
-                info.setMimeType(
-                    role,
-                    config.getAttribute("name"),
-                    config.getAttribute("mime-type", null)
-                );
-            }
-        }
     }
 
     //---- Views management
@@ -312,7 +208,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         // 1 - labels defined on the component
         if (role != null && role.length() > 0) {
-            String[] compLabels = getProcessor().getComponentInfo().getLabels(role, hint);
+            String[] compLabels = this.itsComponentInfo.getLabels(role, hint);
             if (compLabels != null) {
                 for (int i = 0; i < compLabels.length; i++) {
                     labels.add(compLabels[i]);
@@ -439,7 +335,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         // firstly, determine if any pipeline-hints are defined at the component level
         // if so, inherit these pipeline-hints (these hints can be overriden by local pipeline-hints)
-        componentHintParams = getProcessor().getComponentInfo().getPipelineHint(role, hint);
+        componentHintParams = this.itsComponentInfo.getPipelineHint(role, hint);
 
         if (componentHintParams != null) {
             hintParams = componentHintParams;
@@ -495,6 +391,17 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         }
 
         return params;
+    }
+    
+    /**
+     * Get the mime-type for a component (either a serializer or a reader)
+     *
+     * @param role the component role (e.g. <code>Serializer.ROLE</code>)
+     * @param hint the component hint, i.e. the 'type' attribute
+     * @return the mime-type, or <code>null</code> if none was set
+     */
+    public String getMimeType(String role, String hint) {
+        return this.itsComponentInfo.getMimeType(role, hint);
     }
 
     /**

@@ -45,9 +45,15 @@ import org.apache.excalibur.source.TraversableSource;
  *
  * @version SVN $Revision: 1.6 $Id$
  */
-public class CocoonServiceManager
+public class CoreServiceManager
 extends AbstractServiceManager
 implements ServiceManager, Configurable {
+    
+    /**
+     * An empty configuration object, that can be used when no configuration is known but one
+     * is needed.
+     */
+    public static final Configuration EMPTY_CONFIGURATION = new DefaultConfiguration("-", "unknown location");
     
     /** The location where this manager is defined */
     protected String location;
@@ -68,27 +74,205 @@ implements ServiceManager, Configurable {
     private SourceResolver cachedSourceResolver;
 
     /** Create the ServiceManager with a parent ServiceManager */
-    public CocoonServiceManager( final ServiceManager parent ) {
+    public CoreServiceManager( final ServiceManager parent ) {
         this.parentManager = parent;
         
         RoleManager parentRoleManager = null;
         // get role manager and logger manager
-        if ( parent instanceof CocoonServiceManager ) {
-            parentRoleManager = ((CocoonServiceManager)parent).roleManager;
-            this.loggerManager = ((CocoonServiceManager)parent).loggerManager;
+        if ( parent instanceof CoreServiceManager ) {
+            parentRoleManager = ((CoreServiceManager)parent).roleManager;
+            this.loggerManager = ((CoreServiceManager)parent).loggerManager;
         }
         
         // Always create a role manager, it can be filled several times either through
         // the root "roles" attribute or through loading of includes
         this.roleManager = new RoleManager(parentRoleManager);
     }
-    
+
+    //=============================================================================================
+    // Avalon lifecycle
+    //=============================================================================================
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
      */
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.roleManager.enableLogging(logger);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize( final Context context ) {
+        this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration configuration) throws ConfigurationException {
+        // Setup location
+        this.location = configuration.getLocation();
+        
+        // Find the current URI
+        String currentURI;
+        int pos = this.location.lastIndexOf(':');
+        if (pos == -1) {
+            // No available location: start at the context
+            currentURI = "context://";
+        } else {
+            pos = this.location.lastIndexOf(':', pos);
+            currentURI = this.location.substring(0, pos-1);
+        }
+        
+        try {
+            // and load configuration with a empty list of loaded configurations
+            parseConfiguration(configuration, currentURI, new HashSet());
+        } finally {
+            // Release any source resolver that may have been created to load includes
+            releaseCachedSourceResolver();
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize()
+    throws Exception {
+        super.initialize();
+
+        for( int i = 0; i < this.newComponentHandlers.size(); i++ ) {
+            final ComponentHandler handler =
+                (ComponentHandler)this.newComponentHandlers.get( i );
+            try {
+                handler.initialize();
+            } catch( Exception e ) {
+                if( this.getLogger().isErrorEnabled() )
+                {
+                    this.getLogger().error( "Caught an exception trying to initialize "
+                                       + "the component handler.", e );
+                }
+
+                // Rethrow the exception
+                throw e;
+            }
+        }
+
+        List keys = new ArrayList( this.componentHandlers.keySet() );
+
+        for( int i = 0; i < keys.size(); i++ ) {
+            final Object key = keys.get( i );
+            final ComponentHandler handler =
+                (ComponentHandler)this.componentHandlers.get( key );
+
+            if( !this.newComponentHandlers.contains( handler ) ) {
+                try {
+                    handler.initialize();
+
+                } catch( Exception e ) {
+                    if( this.getLogger().isErrorEnabled() ) {
+                        this.getLogger().error( "Caught an exception trying to initialize "
+                                           + "the component handler.", e );
+
+                    }
+                    // Rethrow the exception
+                    throw e;
+                }
+            }
+        }
+        this.newComponentHandlers.clear();
+        
+        // Initialize parent aware components
+        if (this.parentAwareComponents == null) {
+            throw new ServiceException(null, "CoreServiceManager already initialized");
+        }
+
+        // Set parents for parentAware components
+        Iterator iter = this.parentAwareComponents.iterator();
+        while (iter.hasNext()) {
+            String role = (String)iter.next();
+            if ( this.parentManager != null && this.parentManager.hasService( role ) ) {
+                // lookup new component
+                Object component = null;
+                try {
+                    component = this.lookup( role );
+                    ((CocoonServiceSelector)component).setParentLocator( this.parentManager, role );
+                } catch (ServiceException ignore) {
+                    // we don't set the parent then
+                } finally {
+                    this.release( component );
+                }
+            }
+        }
+        this.parentAwareComponents = null;  // null to save memory, and catch logic bugs.
+        
+//        Object[] keyArray = this.componentHandlers.keySet().toArray();
+//        java.util.Arrays.sort(keyArray);
+//        for (int i = 0; i < keyArray.length; i++) {
+//            System.err.println("Component key = " + keyArray[i]);
+//        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        boolean forceDisposal = false;
+
+        final List disposed = new ArrayList();
+
+        while( componentHandlers.size() > 0 ) {
+            for( Iterator iterator = componentHandlers.keySet().iterator();
+                 iterator.hasNext(); ) {
+                final Object role = iterator.next();
+
+                final ComponentHandler handler =
+                    (ComponentHandler)componentHandlers.get( role );
+
+                if( forceDisposal || handler.canBeDisposed() ) {
+                    if( forceDisposal && getLogger().isWarnEnabled() ) {
+                        this.getLogger().warn
+                            ( "disposing of handler for unreleased component."
+                              + " role [" + role + "]" );
+                    }
+
+                    handler.dispose();
+                    disposed.add( role );
+                }
+            }
+
+            if( disposed.size() > 0 ) {
+                final Iterator i = disposed.iterator();
+                while ( i.hasNext() ) {
+                    this.componentHandlers.remove( i.next() );
+                }
+                disposed.clear();
+            } else {   
+                // no more disposable handlers!
+                forceDisposal = true;
+            }
+        }
+        super.dispose();
+    }
+
+    //=============================================================================================
+    // ServiceManager implementation
+    //=============================================================================================
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
+     */
+    public boolean hasService( final String role ) {
+        if( !this.initialized || this.disposed ) return false;
+
+        boolean exists = this.componentHandlers.containsKey( role );
+
+        if( !exists && null != this.parentManager ) {
+            exists = this.parentManager.hasService( role );
+        }
+
+        return exists;
     }
 
     /* (non-Javadoc)
@@ -99,18 +283,18 @@ implements ServiceManager, Configurable {
         if( !this.initialized ) {
             if( this.getLogger().isWarnEnabled() ) {
                 this.getLogger().warn(
-                    "Looking up component on an uninitialized CocoonServiceManager [" + role + "]" );
+                    "Looking up component on an uninitialized CoreServiceManager [" + role + "]" );
             }
         }
 
         if( this.disposed ) {
             throw new IllegalStateException(
-                "You cannot lookup components on a disposed CocoonServiceManager" );
+                "You cannot lookup components on a disposed CoreServiceManager" );
         }
 
         if( role == null ) {
             final String message =
-                "CocoonServiceManager attempted to retrieve service with null role.";
+                "CoreServiceManager attempted to retrieve service with null role.";
 
             if( this.getLogger().isErrorEnabled() ) {
                 this.getLogger().error( message );
@@ -225,31 +409,6 @@ implements ServiceManager, Configurable {
         return component;
     }
 
-    /**
-     * Initialize the component
-     * @throws ServiceException
-     */
-    protected void initialize(String role, Object component) 
-    throws ServiceException {
-        // we do nothing here, can be used in subclasses
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
-     */
-    public boolean hasService( final String role ) {
-        if( !this.initialized ) return false;
-        if( this.disposed ) return false;
-
-        boolean exists = this.componentHandlers.containsKey( role );
-
-        if( !exists && null != this.parentManager ) {
-            exists = this.parentManager.hasService( role );
-        }
-
-        return exists;
-    }
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
      */
@@ -294,34 +453,135 @@ implements ServiceManager, Configurable {
         }
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+    //=============================================================================================
+    // Additional public & protected contract
+    //=============================================================================================
+    
+    /**
+     * Add a new component to the manager.
+     *
+     * @param role the role name for the new component.
+     * @param component the class of this component.
+     * @param configuration the configuration for this component.
      */
-    public void configure(Configuration configuration) throws ConfigurationException {
-        // Setup location
-        this.location = configuration.getLocation();
-        
-        // Find the current URI
-        String currentURI;
-        int pos = this.location.lastIndexOf(':');
-        if (pos == -1) {
-            // No available location: start at the context
-            currentURI = "context://";
-        } else {
-            pos = this.location.lastIndexOf(':', pos);
-            currentURI = this.location.substring(0, pos-1);
+    public void addComponent( final String role,
+                              final Class component,
+                              final Configuration configuration )
+    throws ServiceException {
+        if( this.initialized ) {
+            throw new ServiceException( role,
+                "Cannot add components to an initialized CoreServiceManager." );
+        }
+
+        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
+        if (handler != null) {
+            // Overloaded component: we only allow selectors to be overloaded
+            ServiceInfo info = handler.getInfo();
+            // FIXME - info should not contain the class, we need to get it from somewhere else
+            if (!DefaultServiceSelector.class.isAssignableFrom(component) ||
+                !DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
+                throw new ServiceException(role, "Component declared at " + info.getLocation() + " is redefined at " +
+                        configuration.getLocation());
+            }
+        }
+        try {
+            handler = this.getComponentHandler(role, component, configuration, this);
+
+            if( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug( "Handler type = " + handler.getClass().getName() );
+            }
+
+            this.componentHandlers.put( role, handler );
+            this.newComponentHandlers.add( handler );
+        } catch ( final ServiceException se ) {
+            throw se;
+        } catch( final Exception e ) {
+            throw new ServiceException( role, "Could not set up component handler.", e );
         }
         
-        try {
-            // and load configuration with a empty list of loaded configurations
-            doConfigure(configuration, currentURI, new HashSet());
-        } finally {
-            // Release any source resolver that may have been created to load includes
-            releaseCachedSourceResolver();
+        if ( CocoonServiceSelector.class.isAssignableFrom( component ) ) {
+            this.parentAwareComponents.add(role);
+        }
+        // Initialize shadow selector now, it will feed this service manager
+        if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
+            try {
+                handler.initialize();
+            } catch(ServiceException se) {
+                throw se;
+            } catch(Exception e) {
+                throw new ServiceException(role, "Could not initialize selector", e);
+            }
         }
     }
-
-    private void doConfigure(final Configuration configuration, String contextURI, Set loadedURIs) 
+    
+    /**
+     * Add an existing object to the manager. The object should be fully configured as no
+     * setup lifecycle methods are called. On manager disposal, the <code>Disposable</code>
+     * method is considered.
+     * 
+     * @param role the role under which the object will be known
+     * @param instance the component instance
+     * @throws ServiceException
+     */
+    public void addInstance(String role, Object instance) throws ServiceException {
+        if( this.initialized ) {
+            throw new ServiceException(role,
+                "Cannot add components to an initialized CoreServiceManager.");
+        }
+        
+        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
+        if (handler != null) {
+            ServiceInfo info = handler.getInfo();
+            throw new ServiceException(role, "Component already defined at " + info.getLocation()); 
+        }
+        
+        this.componentHandlers.put(role, new InstanceComponentHandler(getLogger(), instance));
+    }
+    
+    /**
+     * Add an alias to a role, i.e. define a synonym for the role.
+     * 
+     * @param existingRole the existing role that will be aliased
+     * @param newRole the new role
+     * @throws ServiceException if the existing role could not be found in the current
+     *         manager and its ancestors
+     */
+    public void addRoleAlias(String existingRole, String newRole) throws ServiceException {
+        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(existingRole);
+        if (handler == null) {
+            // Aliased component not found here, but can be defined by an ancestor
+            CoreServiceManager current = this;
+            while(handler == null && current.parentManager != null) {
+                if (!(current.parentManager instanceof CoreServiceManager)) {
+                    throw new ServiceException(newRole, "Cannot alias to components not managed by CoreServiceManager");
+                } else {
+                    current = (CoreServiceManager)current.parentManager;
+                    handler = (ComponentHandler)current.componentHandlers.get(existingRole);
+                }
+            }
+        }
+        
+        if (handler == null) {
+            throw new ServiceException(newRole, "Cannot alias non-existing role " + existingRole);
+        }
+ 
+        this.componentHandlers.put(newRole, new AliasComponentHandler(this.getLogger(), handler));
+    }
+    
+    /**
+     * Initialize the component
+     * @throws ServiceException
+     */
+    protected void initialize(String role, Object component) 
+    throws ServiceException {
+        // we do nothing here, can be used in subclasses
+    }
+    
+    //=============================================================================================
+    // Private methods
+    //=============================================================================================
+    
+    private void parseConfiguration(final Configuration configuration, String contextURI, Set loadedURIs) 
         throws ConfigurationException {
 
         final Configuration[] configurations = configuration.getChildren();
@@ -372,7 +632,7 @@ implements ServiceManager, Configurable {
         }
     }
     
-    protected void handleInclude(String contextURI, Set loadedURIs, Configuration includeStatement)
+    private void handleInclude(String contextURI, Set loadedURIs, Configuration includeStatement)
             throws ConfigurationException {
         String includeURI = includeStatement.getAttribute("src", null);
         String directoryURI = null;
@@ -418,7 +678,7 @@ implements ServiceManager, Configurable {
         }
     }
 
-    protected void loadURI(Source src, Set loadedURIs, Configuration includeStatement) 
+    private void loadURI(Source src, Set loadedURIs, Configuration includeStatement) 
     throws ConfigurationException {
         // If already loaded: do nothing
         try {
@@ -442,7 +702,7 @@ implements ServiceManager, Configurable {
                 String includeKind = includeConfig.getName();
                 if (includeKind.equals("components")) {
                     // more components
-                    doConfigure(includeConfig, uri, loadedURIs);
+                    parseConfiguration(includeConfig, uri, loadedURIs);
                 } else if (includeKind.equals("role-list")) {
                     // more roles
                     this.roleManager.configure(includeConfig);
@@ -456,200 +716,11 @@ implements ServiceManager, Configurable {
         }
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize( final Context context ) {
-        this.context = context;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize()
-    throws Exception {
-        super.initialize();
-
-        for( int i = 0; i < this.newComponentHandlers.size(); i++ ) {
-            final ComponentHandler handler =
-                (ComponentHandler)this.newComponentHandlers.get( i );
-            try {
-                handler.initialize();
-            } catch( Exception e ) {
-                if( this.getLogger().isErrorEnabled() )
-                {
-                    this.getLogger().error( "Caught an exception trying to initialize "
-                                       + "the component handler.", e );
-                }
-
-                // Rethrow the exception
-                throw e;
-            }
-        }
-
-        List keys = new ArrayList( this.componentHandlers.keySet() );
-
-        for( int i = 0; i < keys.size(); i++ ) {
-            final Object key = keys.get( i );
-            final ComponentHandler handler =
-                (ComponentHandler)this.componentHandlers.get( key );
-
-            if( !this.newComponentHandlers.contains( handler ) ) {
-                try {
-                    handler.initialize();
-
-                } catch( Exception e ) {
-                    if( this.getLogger().isErrorEnabled() ) {
-                        this.getLogger().error( "Caught an exception trying to initialize "
-                                           + "the component handler.", e );
-
-                    }
-                    // Rethrow the exception
-                    throw e;
-                }
-            }
-        }
-        this.newComponentHandlers.clear();
-        
-        // Initialize parent aware components
-        if (this.parentAwareComponents == null) {
-            throw new ServiceException(null, "CocoonServiceManager already initialized");
-        }
-
-        // Set parents for parentAware components
-        Iterator iter = this.parentAwareComponents.iterator();
-        while (iter.hasNext()) {
-            String role = (String)iter.next();
-            if ( this.parentManager != null && this.parentManager.hasService( role ) ) {
-                // lookup new component
-                Object component = null;
-                try {
-                    component = this.lookup( role );
-                    ((CocoonServiceSelector)component).setParentLocator( this.parentManager, role );
-                } catch (ServiceException ignore) {
-                    // we don't set the parent then
-                } finally {
-                    this.release( component );
-                }
-            }
-        }
-        this.parentAwareComponents = null;  // null to save memory, and catch logic bugs.
-        
-//        Object[] keyArray = this.componentHandlers.keySet().toArray();
-//        Arrays.sort(keyArray);
-//        for (int i = 0; i < keyArray.length; i++) {
-//            System.err.println("Component key = " + keyArray[i]);
-//        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        boolean forceDisposal = false;
-
-        final List disposed = new ArrayList();
-
-        while( componentHandlers.size() > 0 ) {
-            for( Iterator iterator = componentHandlers.keySet().iterator();
-                 iterator.hasNext(); ) {
-                final Object role = iterator.next();
-
-                final ComponentHandler handler =
-                    (ComponentHandler)componentHandlers.get( role );
-
-                if( forceDisposal || handler.canBeDisposed() ) {
-                    if( forceDisposal && getLogger().isWarnEnabled() ) {
-                        this.getLogger().warn
-                            ( "disposing of handler for unreleased component."
-                              + " role [" + role + "]" );
-                    }
-
-                    handler.dispose();
-                    disposed.add( role );
-                }
-            }
-
-            if( disposed.size() > 0 ) {
-                final Iterator i = disposed.iterator();
-                while ( i.hasNext() ) {
-                    this.componentHandlers.remove( i.next() );
-                }
-                disposed.clear();
-            } else {   
-                // no more disposable handlers!
-                forceDisposal = true;
-            }
-        }
-        super.dispose();
-    }
-
-    /**
-     * Add a new component to the manager.
-     *
-     * @param role the role name for the new component.
-     * @param component the class of this component.
-     * @param configuration the configuration for this component.
-     */
-    public void doAddComponent( final String role,
-                              final Class component,
-                              final Configuration configuration )
-    throws ServiceException {
-        if( this.initialized ) {
-            throw new ServiceException( role,
-                "Cannot add components to an initialized CocoonServiceManager." );
-        }
-
-        if( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug( "Attempting to get handler for role [" + role + "]" );
-        }
-
-        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
-        if (handler != null) {
-            // Overloaded component: we only allow selectors to be overloaded
-            ServiceInfo info = handler.getInfo();
-            // FIXME - info should not contain the class, we need to get it from somewhere else
-            if (!DefaultServiceSelector.class.isAssignableFrom(component) ||
-                !DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
-                throw new ServiceException(role, "Component declared at " + info.getLocation() + " is redefined at " +
-                        configuration.getLocation());
-            }
-        }
-        try {
-            handler = this.getComponentHandler(role, component, configuration, this);
-
-            if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( "Handler type = " + handler.getClass().getName() );
-            }
-
-            this.componentHandlers.put( role, handler );
-            this.newComponentHandlers.add( handler );
-        } catch ( final ServiceException se ) {
-            throw se;
-        } catch( final Exception e ) {
-            throw new ServiceException( role, "Could not set up component handler.", e );
-        }
-        
-        if ( CocoonServiceSelector.class.isAssignableFrom( component ) ) {
-            this.parentAwareComponents.add(role);
-        }
-        // Initialize shadow selector now, it will feed this service manager
-        if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
-            try {
-                handler.initialize();
-            } catch(ServiceException se) {
-                throw se;
-            } catch(Exception e) {
-                throw new ServiceException(role, "Could not initialize selector", e);
-            }
-        }
-    }
-    
     /**
      * If the parent manager does not exist or does not
      * provide a source resolver, a simple one is created here to load the file.
      */
-    protected void setupSourceResolver() {
+    private void setupSourceResolver() {
         if (this.cachedSourceResolver == null) {
             
             if (this.parentManager != null && this.parentManager.hasService(SourceResolver.ROLE)) {

@@ -32,6 +32,8 @@ public interface TreeBuilder {
 
 
     void setParentProcessorManager(ServiceManager manager);
+    
+    ServiceManager getBuiltProcessorManager();
 
     ConcreteTreeProcessor getProcessor();
 

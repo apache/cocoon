@@ -18,7 +18,7 @@ package org.apache.cocoon;
 
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.core.container.CocoonServiceManager;
+import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.excalibur.source.SourceResolver;
@@ -36,7 +36,7 @@ public abstract class CocoonTestCase extends ContainerTestCase {
     /* (non-Javadoc)
      * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
      */
-    protected void addComponents(CocoonServiceManager manager) 
+    protected void addComponents(CoreServiceManager manager) 
     throws ServiceException {
         super.addComponents(manager);
         if ( this.addSourceFactories() ) {
@@ -50,12 +50,12 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             factory.setAttribute("class", URLSourceFactory.class.getName());
             factory.setAttribute("name", "*");
             df.addChild(factory);
-            manager.doAddComponent("org.apache.excalibur.source.SourceFactorySelector", 
+            manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
                                  CocoonServiceSelector.class, 
                                  df);
         }
         if ( this.addSourceResolver() ) {
-            manager.doAddComponent(SourceResolver.ROLE, 
+            manager.addComponent(SourceResolver.ROLE, 
                     SourceResolverImpl.class, 
                     new DefaultConfiguration("", "-"));
         }

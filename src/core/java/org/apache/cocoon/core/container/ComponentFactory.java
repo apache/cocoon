@@ -105,10 +105,20 @@ public class ComponentFactory {
     /**
      * Create a new instance
      */
-    public Object newInstance()
+    public final Object newInstance()
     throws Exception {
         final Object component = this.serviceClass.newInstance();
 
+        setupInstance(component);
+        return component;
+    }
+    
+    /**
+     * Invoke the various lifecycle interfaces to setup a newly created component
+     * @param component
+     * @throws Exception
+     */
+    protected void setupInstance(Object component) throws Exception {
         if( this.environment.logger.isDebugEnabled() ) {
             this.environment.logger.debug( "ComponentFactory creating new instance of " +
                     this.serviceClass.getName() + "." );
@@ -133,8 +143,6 @@ public class ComponentFactory {
         }
 
         ContainerUtil.start( component );
-
-        return component;
     }
 
     public Class getCreatedClass() {

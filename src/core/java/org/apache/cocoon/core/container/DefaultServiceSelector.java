@@ -38,19 +38,20 @@ import org.apache.cocoon.components.ServiceInfo;
  */
 public class DefaultServiceSelector extends AbstractLogEnabled implements ThreadSafe, Serviceable, Configurable, ServiceSelector {
 
-    private CocoonServiceManager manager;
+    /** Synthetic hint to alias the default component */
+    public static final String DEFAULT_HINT = "$default$";
+
+    private CoreServiceManager manager;
     private RoleManager roleManager;
     private String roleName;
     private String rolePrefix;
-    private String defaultKey;
-    private String location;
     
     public void service(ServiceManager manager) throws ServiceException {
         try {
-            this.manager = (CocoonServiceManager)manager;
+            this.manager = (CoreServiceManager)manager;
         } catch (ClassCastException cce) {
             throw new ServiceException ("DefaultServiceSelector", 
-                                        "A FlatServiceSelector can only be hosted by a CocoonServiceManager");
+                                        "A DefaultServiceSelector can only be hosted by a CoreServiceManager");
         }
     }
     
@@ -63,12 +64,9 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
     }
 
     public void configure(Configuration config) throws ConfigurationException {
-        // Get the role for this selector
-        
-        this.location = config.getLocation();
-        
+
         if (roleName == null) {
-            throw new ConfigurationException("No role given for DefaultServiceSelector at " + this.location);
+            throw new ConfigurationException("No role given for DefaultServiceSelector at " + config.getLocation());
         }
         
         // Remove "Selector" suffix, if any and add a trailing "/"
@@ -77,9 +75,6 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
         } else {
             this.rolePrefix = roleName + "/";
         }
-
-        // Get default key
-        this.defaultKey = config.getAttribute(this.getDefaultKeyAttributeName(), null);
 
         // Add components
         String compInstanceName = getComponentInstanceName();
@@ -125,20 +120,26 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             // Add this component in the manager
             this.manager.addComponent(className, this.rolePrefix + key, instance);
         }
+        
+        // Register default key, if any
+        String defaultKey = config.getAttribute(this.getDefaultKeyAttributeName(), null);
+        if (defaultKey != null) {
+            try {
+                this.manager.addRoleAlias(this.rolePrefix + defaultKey, this.rolePrefix + DEFAULT_HINT);
+            } catch (ServiceException e) {
+                throw new ConfigurationException("Cannot set default to " + defaultKey + " at " + config.getLocation(), e);
+            }
+        }
     }
     
     public Object select(Object hint) throws ServiceException {
-        String key = (hint == null) ? this.defaultKey : hint.toString();
-        
-        if (key == null) {
-            throw new ServiceException(roleName, "Hint is null and no default hint provided for selector at " + this.location);
-        }
+        String key = (hint == null) ? DEFAULT_HINT : hint.toString();
 
         return this.manager.lookup(this.rolePrefix + key);
     }
 
     public boolean isSelectable(Object hint) {
-        String key = hint == null ? this.defaultKey : hint.toString();
+        String key = hint == null ? DEFAULT_HINT : hint.toString();
         
         return key != null && this.manager.hasService(this.rolePrefix + key);
     }
@@ -199,10 +200,10 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             this.roleManager = manager;
         }
         
-        public Object newInstance()
+        protected void setupInstance(Object object)
         throws Exception {
-            final DefaultServiceSelector component = (DefaultServiceSelector)this.serviceClass.newInstance();
-
+            DefaultServiceSelector component = (DefaultServiceSelector)object;
+            
             ContainerUtil.enableLogging(component, this.environment.logger);
             ContainerUtil.contextualize(component, this.environment.context);
             ContainerUtil.service(component, this.environment.serviceManager);
@@ -213,8 +214,6 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             ContainerUtil.configure(component, this.serviceInfo.getConfiguration());
             ContainerUtil.initialize(component);
             ContainerUtil.start(component);
-
-            return component;
         }
     }
 }

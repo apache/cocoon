@@ -41,9 +41,6 @@ implements ComponentHandler {
 
     protected final Logger logger;
     
-    /** This factory is used to created new objects */
-    protected final ComponentFactory factory;
-    
     /** State management boolean stating whether the Handler is disposed or not */
     protected boolean disposed = false;
 
@@ -136,7 +133,7 @@ implements ComponentHandler {
             factory = new ComponentFactory(env, info);
         }
 
-        AbstractComponentHandler handler;
+        ComponentHandler handler;
         
         if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
             handler = new PoolableComponentHandler( info, logger, factory, configuration );
@@ -153,10 +150,9 @@ implements ComponentHandler {
     /**
      * Creates a new ComponentHandler.
      */
-    public AbstractComponentHandler(ServiceInfo info, Logger logger, ComponentFactory factory) {
-        this.info = info;
+    public AbstractComponentHandler(ServiceInfo info, Logger logger) {
         this.logger = logger;
-        this.factory = factory;
+        this.info = info;
     }
     
     public ServiceInfo getInfo() {
@@ -275,24 +271,5 @@ implements ComponentHandler {
             return;
         }
         this.initialized = true;
-        if( this.logger.isDebugEnabled() ) {
-            this.logger.debug( "ThreadSafeComponentHandler initialized for: " + this.factory.getCreatedClass().getName() );
-        }
     }
-    
-    /**
-     * Decommission a component
-     * @param component Object to be decommissioned
-     */
-    protected void decommission( final Object component ) {
-        try {
-            this.factory.decommission( component );
-        } catch( final Exception e ) {
-            if( this.logger.isWarnEnabled() ) {
-                this.logger.warn( "Error decommissioning component: "
-                    + this.factory.getCreatedClass().getName(), e );
-            }
-        }
-    }
-    
 }

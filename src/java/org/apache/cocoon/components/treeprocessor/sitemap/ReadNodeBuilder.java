@@ -25,7 +25,7 @@ import org.apache.cocoon.reading.Reader;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ReadNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public class ReadNodeBuilder extends AbstractProcessingNodeBuilder implements ThreadSafe {
@@ -36,7 +36,7 @@ public class ReadNodeBuilder extends AbstractProcessingNodeBuilder implements Th
         
         String mimeType = config.getAttribute("mime-type", null);
         if (mimeType == null) {
-            mimeType = this.treeBuilder.getProcessor().getComponentInfo().getMimeType(Reader.ROLE, type);
+            mimeType = ((SitemapLanguage)this.treeBuilder).getMimeType(Reader.ROLE, type);
         }
 
         ReadNode node = new ReadNode(
