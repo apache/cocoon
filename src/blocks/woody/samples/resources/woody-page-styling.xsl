@@ -58,7 +58,7 @@
             </xsl:attribute>
             <xsl:copy-of select="wi:label/node()"/>
             <xsl:if test="wi:items/*//wi:validation-message">
-              <span style="color:red; font-weight: bold">&#160;!&#160;</span>
+              <span class="woody-validation-message">&#160;!&#160;</span>
             </xsl:if>
           </span>
         </xsl:for-each>
@@ -122,7 +122,7 @@
           </xsl:for-each>
         </select>
         <xsl:if test="wi:items/*//wi:validation-message">
-          <span style="color:red; font-weight: bold">&#160;!&#160;</span>
+          <span class="woody-validation-message">&#160;!&#160;</span>
         </xsl:if>
       </legend>
       <!-- a div for each of the items -->
