@@ -133,7 +133,8 @@
                new FileReader(
                  XSPUtil.relativeFilename(
                    <xsl:copy-of select="$name"/>,
-                   request
+                   request,
+                   (ServletContext) context
                  )
                )
 	     )
