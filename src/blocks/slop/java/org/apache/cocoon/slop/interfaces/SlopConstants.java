@@ -54,7 +54,7 @@ package org.apache.cocoon.slop.interfaces;
 /** General constants for the SLOP block
  *
  * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
- * @version CVS $Id: SlopConstants.java,v 1.1 2003/08/06 12:59:13 bdelacretaz Exp $
+ * @version CVS $Id: SlopConstants.java,v 1.2 2003/10/14 11:53:18 bdelacretaz Exp $
  */
 
 public interface SlopConstants {
@@ -64,4 +64,7 @@ public interface SlopConstants {
     String SLOP_ROOT_ELEMENT = "parsed-text";
     String SLOP_LINE_ELEMENT = "line";
     String SLOP_EMPTY_LINE_ELEMENT = "empty-line";
+
+    // attribute names
+    String SLOP_ATTR_LINENUMBER = "line-number";
 }

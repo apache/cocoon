@@ -71,14 +71,25 @@ import org.apache.cocoon.slop.interfaces.SlopConstants;
  *  with different rules.
  *
  * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
- * @version CVS $Id: SimpleSlopParser.java,v 1.1 2003/08/06 12:59:13 bdelacretaz Exp $
+ * @version CVS $Id: SimpleSlopParser.java,v 1.2 2003/10/14 11:53:18 bdelacretaz Exp $
  */
 
 public class SimpleSlopParser implements SlopParser,SlopConstants {
     private ContentHandler contentHandler;
 
     /** chars that can be part of a field name (other than letters) */
-    private final static String FIELD_CHARS = "-_";
+    private final static String DEFAULT_TAGNAME_CHARS = "-_";
+    private String tagnameChars = DEFAULT_TAGNAME_CHARS;
+
+    /** valid characters in an XML element name (in addition to letters and digits) */
+    final static String VALID_TAGNAME_CHARS = "_-";
+    final static String TAGNAME_REPLACEMENT_CHAR = "_";
+
+    /** optionally preserve whitespace in input */
+    private boolean preserveSpace = false;
+
+    /** count lines */
+    private int lineCounter;
 
     /** result of parsing a line */
     static class ParsedLine {
@@ -86,9 +97,37 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
         final String contents;
 
         ParsedLine(String elementName, String elementContents) {
-            name = elementName;
+            name = filterElementName(elementName);
             contents = elementContents;
         }
+    }
+
+    /** make sure element names are valid XML */
+    static String filterElementName(String str) {
+        final StringBuffer sb = new StringBuffer();
+        for(int i=0; i < str.length(); i++) {
+            final char c = str.charAt(i);
+            if(Character.isLetter(c)) {
+                sb.append(c);
+            } else if(Character.isDigit(c) && i > 0) {
+                sb.append(c);
+            } else if(VALID_TAGNAME_CHARS.indexOf(c) >= 0) {
+                sb.append(c);
+            } else {
+                sb.append(TAGNAME_REPLACEMENT_CHAR);
+            }
+        }
+        return sb.toString();
+    }
+
+    /** set the list of valid chars for tag names (in addition to letters) */
+    public void setValidTagnameChars(String str) {
+        tagnameChars = (str == null ? DEFAULT_TAGNAME_CHARS : str.trim());
+    }
+
+    /** optionally preserve whitespace in input */
+    public void setPreserveWhitespace(boolean b) {
+        preserveSpace = b;
     }
 
     /** must be called before any call to processLine() */
@@ -110,6 +149,12 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
         contentHandler = null;
     }
 
+    /** add simple name-value attribute to attr */
+    private void setAttribute(AttributesImpl attr,String name,String value) {
+        final String ATTR_TYPE = "NMTOKEN";
+        attr.addAttribute("",name,name,ATTR_TYPE,value);
+    }
+
     /** call this to process input lines, does the actual parsing */
     public void processLine(String line)
         throws SAXException, ProcessingException {
@@ -121,7 +166,9 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
         final ParsedLine p = parseLine(line);
 
         // generate the element and its contents
+        lineCounter++;
         final AttributesImpl atts = new AttributesImpl();
+        setAttribute(atts,SLOP_ATTR_LINENUMBER,String.valueOf(lineCounter));
         contentHandler.startElement(SLOP_NAMESPACE_URI, p.name, p.name, atts);
         contentHandler.characters(p.contents.toCharArray(),0,p.contents.length());
         contentHandler.endElement(SLOP_NAMESPACE_URI, p.name, p.name);
@@ -149,7 +196,7 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
                 boolean fieldFound = true;
                 for(int i=0; i < colonPos; i++) {
                     final char c = line.charAt(i);
-                    final boolean isFieldChar = Character.isLetter(c) || FIELD_CHARS.indexOf(c) >= 0;
+                    final boolean isFieldChar = Character.isLetter(c) || tagnameChars.indexOf(c) >= 0;
                     if(!isFieldChar) {
                         fieldFound = false;
                         break;
@@ -159,7 +206,8 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
                 if(fieldFound) {
                     String contents = "";
                     if(line.length() > colonPos + 1) {
-                        contents = line.substring(colonPos+1).trim();
+                        final String str = line.substring(colonPos+1);
+                        contents = (preserveSpace ? str : str.trim());
                     }
                     result = new ParsedLine(line.substring(0,colonPos),contents);
                 }
@@ -168,7 +216,8 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
 
         // default: output a line element
         if(result == null) {
-            result = new ParsedLine(SLOP_LINE_ELEMENT,line.trim());
+            final String str = (preserveSpace ? line : line.trim());
+            result = new ParsedLine(SLOP_LINE_ELEMENT,str);
         }
 
         return result;
