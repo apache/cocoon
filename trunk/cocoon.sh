@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.8 2003/10/19 00:58:07 crossley Exp $
+# $Id: cocoon.sh,v 1.9 2003/12/25 15:26:55 unico Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -101,6 +101,13 @@ if [ "$JAVA_PROFILE_ARGS" = "" ] ; then
   JAVA_PROFILE_ARGS='-Xrunhprof:heap=all,cpu=samples,thread=y,depth=3'
 fi
 
+# ----- Set platform specific variables
+
+PATHSEP=":";
+case "`uname`" in
+   CYGWIN*) PATHSEP=";" ;;
+esac
+
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
 JAVA="$JAVA_HOME/bin/java"
@@ -108,7 +115,7 @@ ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
 ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
-LOADER_LIB="$COCOON_HOME/tools/loader:$COCOON_WEBAPP_HOME/WEB-INF/classes"
+LOADER_LIB="${COCOON_HOME}/tools/loader${PATHSEP}${COCOON_WEBAPP_HOME}/WEB-INF/classes"
 
 CLI=-Dloader.main.class=org.apache.cocoon.Main
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
