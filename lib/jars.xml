@@ -1147,7 +1147,7 @@
       specification.
     </description>
     <used-by>Faces block</used-by>
-    <lib>faces/lib/myfaces-20040920m.jar</lib>
+    <lib>faces/lib/myfaces-20041005m.jar</lib>
     <homepage>http://www.myfaces.org/</homepage>
   </file>
 
@@ -1158,7 +1158,7 @@
       specification.
     </description>
     <used-by>Faces block</used-by>
-    <lib>faces/lib/myfaces-jsf-api-20040920m.jar</lib>
+    <lib>faces/lib/myfaces-jsf-api-20041005.jar</lib>
     <homepage>http://www.myfaces.org/</homepage>
   </file>
 
