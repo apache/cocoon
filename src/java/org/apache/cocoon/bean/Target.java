@@ -52,6 +52,8 @@ package org.apache.cocoon.bean;
 
 import java.util.TreeMap;
 
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.MIMEUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.ProcessingException;
 
@@ -62,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.3 2003/09/13 10:20:09 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.4 2003/09/15 11:26:04 upayavira Exp $
  */
 public class Target {
     // Defult type is append
@@ -77,8 +79,12 @@ public class Target {
     private final String deparameterizedSourceURI;
     private final TreeMap parameters;
     
-    private String originalURI; 
-    
+    private String originalURI = null;
+    private String mimeType = null; 
+    private String defaultFilename = Constants.INDEX_URI;
+    private String finalDestinationURI = null;
+    private String extension = null;    
+            
     private transient int _hashCode;
     private transient String _toString;
 
@@ -147,6 +153,50 @@ public class Target {
     }
     
     /**
+     * Sets the mime type for the resource referenced by this target.
+     * If a mime type is specified, the file extension of the 
+     * destination URI will be checked to see that it matches the
+     * default extension for the specified mime type. If it doesn't,
+     * the default extension will be appended to the destination URI.
+     *
+     * This URI change will be taken into account in pages that link
+     * to the current page.
+     * 
+     * If the mime type is not specified (and thus null), no extension
+     * checking will take place. 
+     */
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+        this.finalDestinationURI = null;
+    }
+    
+    /**
+     * Sets a file extension to be appended to the end of the destination
+     * URI. The main use of this is to create broken link error files that
+     * stand out, within the file structure of the generated site, by, for
+     * example, adding '.error' to the end of the filename.
+     */
+    public void setExtension(String extension) {
+        this.extension = extension;
+        this.finalDestinationURI = null;
+    }
+    /**
+     * Sets the default filename. This filename is appended to URIs
+     * that refer to a directory, i.e. end with a slash, as resources
+     * referred to by such a URI cannot be written to a file system
+     * without a filename. 
+     *
+     * This URI change will be taken into account in pages that link
+     * to the current page.
+     * 
+     * If no default is specified, the Cocoon constants value will 
+     * be used.
+     */
+    public void setDefaultFilename(String filename) {
+        this.defaultFilename = filename;
+    }
+    
+    /**
      * Gets the filename from the source URI, without the path.
      * This is used to fill out relative URIs that have
      * parameters but no filename such as ?page=123
@@ -174,35 +224,86 @@ public class Target {
      * Calculates the destination URI - the URI to which the generated
      * page should be written. This will be a URI that, when resolved
      * by a SourceResolver, will return a modifiableSource.
+     * 
+     * This calculation is only done once per target. It is therefore
+     * necessary to ensure that the mime type has been set (if required)
+     * before this method is called.
      */
-    public String getDestinationURI(String actualSourceURI)
+    public String getDestinationURI()
         throws ProcessingException {
-        if (!actualSourceURI.startsWith(root)) {
-            throw new ProcessingException(
-                "Derived target does not share same root: "
-                    + actualSourceURI);
-        }
-        actualSourceURI = actualSourceURI.substring(root.length());
-
-        if (APPEND_TYPE.equals(this.type)) {
-            return destURI + actualSourceURI;
-        } else if (REPLACE_TYPE.equals(this.type)) {
-            return destURI;
-        } else if (INSERT_TYPE.equals(this.type)) {
-            int starPos = destURI.indexOf("*");
-            if (starPos == -1) {
-                throw new ProcessingException("Missing * in replace mapper uri");
-            } else if (starPos == destURI.length() - 1) {
-                return destURI.substring(0, starPos) + actualSourceURI;
-            } else {
-                return destURI.substring(0, starPos)
-                    + actualSourceURI
-                    + destURI.substring(starPos + 1);
+        
+        if (this.finalDestinationURI == null) {
+            
+            String actualSourceURI = this.sourceURI;
+            if (!actualSourceURI.startsWith(root)) {
+                throw new ProcessingException(
+                    "Derived target does not share same root: "
+                        + actualSourceURI);
             }
-        } else {
-            throw new ProcessingException(
-                "Unknown mapper type: " + this.type);
+            actualSourceURI = actualSourceURI.substring(root.length());
+            actualSourceURI = mangle(actualSourceURI);
+            
+            String destinationURI;
+            if (APPEND_TYPE.equals(this.type)) {
+                destinationURI = destURI + actualSourceURI;
+            } else if (REPLACE_TYPE.equals(this.type)) {
+                destinationURI = destURI;
+            } else if (INSERT_TYPE.equals(this.type)) {
+                int starPos = destURI.indexOf("*");
+                if (starPos == -1) {
+                    throw new ProcessingException("Missing * in replace mapper uri");
+                } else if (starPos == destURI.length() - 1) {
+                    destinationURI = destURI.substring(0, starPos) + actualSourceURI;
+                } else {
+                    destinationURI = destURI.substring(0, starPos)
+                        + actualSourceURI
+                        + destURI.substring(starPos + 1);
+                }
+            } else {
+                throw new ProcessingException(
+                    "Unknown mapper type: " + this.type);
+            }
+            if (mimeType != null) {
+                final String ext = NetUtils.getExtension(destinationURI);
+                final String defaultExt = MIMEUtils.getDefaultExtension(mimeType);
+                if (defaultExt != null) {
+                    if ((ext == null) || (!ext.equals(defaultExt))) {
+                        destinationURI += defaultExt;
+                    }
+                }
+            }
+            if (this.extension != null) {
+                destinationURI += this.extension; 
+            }
+            this.finalDestinationURI = destinationURI;
         }
+        return this.finalDestinationURI;
+    }
+
+    /**
+     * Gets a translated version of a link, ready for insertion
+     * into another page as a link. This link needs to be
+     * relative to the original page.
+     */
+    public String getTranslatedURI(String path)
+        throws ProcessingException {
+                    
+        String actualSourceURI = this.sourceURI;
+        if (!actualSourceURI.startsWith(root)) {
+            return actualSourceURI;
+        }
+        actualSourceURI = mangle(actualSourceURI);
+        
+        if (mimeType != null) {
+            final String ext = NetUtils.getExtension(actualSourceURI);
+            final String defaultExt = MIMEUtils.getDefaultExtension(mimeType);
+            if (defaultExt != null) {
+                if ((ext == null) || (!ext.equals(defaultExt))) {
+                    actualSourceURI += defaultExt;
+                }
+            }
+        }
+        return NetUtils.relativize(path, actualSourceURI);
     }
 
     /**
@@ -243,6 +344,23 @@ public class Target {
      */
     public TreeMap getParameters() {
         return this.parameters;
+    }
+
+    /**
+     * Mangle a URI.
+     *
+     * @param uri a URI to mangle
+     * @return a mangled URI
+     */
+    private String mangle(String uri) {
+        if (uri.charAt(uri.length() - 1) == '/') {
+            uri += defaultFilename;
+        }
+        uri = uri.replace('"', '\'');
+        uri = uri.replace('?', '_');
+        uri = uri.replace(':', '_');
+
+        return uri;
     }
 
     public boolean equals(Object o) {
