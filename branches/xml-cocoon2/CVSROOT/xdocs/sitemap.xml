@@ -463,216 +463,111 @@
  
   <s1 title="Pipelines">
     <s2 title="Mounting sitemaps">
+     <s3 title="Introduction">
     <p>
-     The following is taken from a mail thread in the cocoon developer mailing list between
-     Giacomo Pati and Colin Britton:
-    </p>
-<source>
-<![CDATA[
-Giacomo Pati wrote:
-> Colin Britton wrote:
-> >
-> > > > Can a map:mount be inside a map:select like this...
-> > <snip/>
-> > > From the sitemap.xsl logicsheet there is no limitation on where a
-> > > map:mount should be and thus are free to place it where you want.
-> >  <snip/>
-> > > Well, haven't thought about replacing the root URI with different
-> > > sitemaps but I'd like you to test it and report your experience on this
-> > > list :)
-> > 
-> >  So here goes. The aim of my tests was to see how the sitemap mount function
-> >  could be used to simplfy the creation and management of cocoon2 based sites
-> > and applications. We have a good size server (quad processor PIII server
-> > with plenty of ram and HD) and wish to deploy multiple clents work and
-> > multiple applications on the same box. Now we could (and will) setup
-> > multiple http servers and therefore multiple servlet environments and
-> > multiple Cocoon applications. But this creates a lot of admin and
-> multiple
-> > versions of items and all the heartache that comes with it.
-> > 
-> > I wanted to see if we could solve the following problems within the
-> cocoon
-> > environment.
-> > 
-> > 1) Simplify site construction
-> > 2) Reduce risk of "bad' sitemap entries killing whole site
-> > 3) Ease deployment of pre-built applications
-> > 4) Keep sitemap files an understandable and manageable size
-> > 
-> >  The short answer is that the sitemap and in particular the mount function
-> > does a good job of meeting my goals.
-> 
-> What we allways thought of it should be but never were able to test it
-> so far :)
-> 
-> > My test was such.
-> > 
-> > I build a main sitemap, for C2 to load This sitemap is the minimum it
-> > needs.
-> > A matcher and a selector. These two components allow me to select and
-> > direct
-> > to mount two other site maps.
-> > 
-> > These sub-sitemaps load the componants they need (which includes
-> > generators
-> > and transformers etc...) and have the map elements for that
-> > site/application.
-> 
-> Take into account that sitemap components (generators, transformers,
-> etc.) in a sitemap are accessible by a sub-sitemap by their names. This
-> is due to the fact that each sitemap has its own SitemapComponentManager
-> and they are arranged in the same hierarchical structure as the sitemaps
-> are and thus knows which are their parent SitemapComponentManager and
-> can ask it for a SitemapComponent it doesn't know about.
-> 
-> > The benefit is that each sitemap is completely independant of each other
-> > and
-> > any error in that sitemap does not kill any other sitemap. This seems to
-> > work pretty well. I ran this up and deliberatly broke a sitemap and the
-> > other one still ran.
-> 
-> But usually you use the same SitemapComponents over and over again in
-> your sub-sitemaps. And because you have a contract between the parent
-> and sub sitemaps (the uri-prefix) you can deliver common
-> SitemapComponents from the parent sitemap to your sub-sitemaps as well.
-> 
-> Also note that if you break a sitemap all its sub-sitemaps are broken as
-> well (because of the hierarchical arragement).
-> 
-> > The benefit is I can build a seperate app or site on another machine,
-> > test
-> > it offline and deploy it on the main server with minimal risk and
-> > distruption. A huge win.
-> 
-> This is why sub sitemaps were introduced: scalability.
-> 
-> SIDENOTE: This is why there is an EntityResolver argument in the
-> signature of the SitemapModelComponent interface. When a subsitemap is
-> mounted the sitemap engine reports the uri-prefix and the context (src)
-> to the calling Environment (changeContext method) so that
-> SitemapComponent (i.e. URIMatcher) requesting a URI don't see the prefix
-> and if for example a generator needs to resolve an src resource the
-> EntityResolver (implemented by the calling Environment) is responsible
-> to resolve that to the changed context the subsitep is in.
-> 
-> > Here is my main sitemap. You will notice that I am using a selector that
-> > matches on host name of the request, but any matcher or selector would
-> > work
-> > at this point. I am mounting both sub-sitemaps at the root level.
-> > 
-> > <?xml version="1.0"?>
-> > <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-> > <!-- =========================== Components
-> > ================================ -->
-> >  <map:components>
-> >   <map:matchers default="wildcard">
-> >      <map:matcher name="wildcard"
-> > factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
-> >   </map:matchers>
-> > 
-> >   <map:selectors default="host">
-> >    <map:selector name="host"
-> > factory="org.apache.cocoon.selection.HostSelectorFactory">
-> >        <host name="fee" value=www.foo.com/>
-> >    </map:selector>
-> >   </map:selectors>
-> > 
-> >  </map:components>
-> > <!-- =========================== Pipelines
-> > ================================= -->
-> >  <map:pipelines>
-> >    <map:pipeline>
-> > 
-> >    <map:select type="host">
-> >       <map:when test="fee">
-> >            <map:mount uri-prefix="" src="fee.xmap"/>
-> >       </map:when>
-> >       <map:otherwise>
-> >            <map:mount uri-prefix="" src="foo.xmap"/>
-> >        </map:otherwise>
-> >     </map:select>
-> > 
-> >     </map:pipeline>
-> >   </map:pipelines>
-> > </map:sitemap>
-> >  <!-- end of file -->
-> 
-> This is cool. Mounting different sitemaps on to the root URI :)
-> 
-> > So this is a cool way to build out a cocoon2 app/site.
-> > 
-]]>
-    </source>
-    <p>   
-    The following is taken from a mail thread in the cocoon developer mailing list between
-     Giacomo Pati and Carsten Ziegeler:
+       Mount points allow sitemaps to be cascaded and site management
+       workload to be parallelized. This creates a tree of sitemaps with
+       the main sitemap at the root and possibly several subsitemaps
+       as nodes and leaves.
+     </p>
+     <p>The subsitemaps serve two important goals: scalability and
+      simplification of maintainance. The different subsitemaps are indepent
+      and don't affect each other.
     </p>
      <source>
 <![CDATA[
-Giacomo Pati wrote:
->  Carsten Ziegeler wrote:
-> > I am currently playing a little bit with mounting subsitemaps.
-> > After a while I got it working now, but I am still wondering
-> > what the exact purpose of the attributes uri-prefix and src is.
-> > 
-> > I used the following mount-example from the sitemap draft:
-> > 
-> >         <map:match pattern="dist/*">
-> >                 <map:mount uri-prefix="dist/" src="dist/{1}"/>
-> >         </map:match>
-> >
-> > This generates the following source:
-> >
-> >       return sitemapManager.invoke (environment,
-> >                          substitute(listOfLists, "dist/"),
-> >                          substitute(listOfLists, "dist/{1}"), true);
-> 
-> The uri-prefix is the part that should be removed from the request URI.
-> The engine will correctly check for a trailing slash (which you may
-> write, of course)
-> 
-> The src attribute is where the subsitemap is located. If it ends in a
-> slash "sitemap.xmap" is appended to find the sitemap otherwise the src
-> value is used. A check-reload attribute can be used to determine if the
-> modification date of the subsitemap file should be checked. A mount
-> element I use looks like:
-> 
->      <map:mount uri-prefix="sub" src="sub/" check-reload="yes"/>
-> or
->      <map:mount uri-prefix="sub/" src="sub/subsitemap.xmap"
-> check-reload="no"/>
-> 
-> > The third argument ("substitute(listOfLists, "dist/{1}")") is the
-> > source argument for the sitemap handler to load the new sitemap.
-> > So if I try to load the resource "dist/hello" the sitemap
-> > "dist/hello/sitemap.xmap" is tried to loaded. When I try to load
-> > "dist/welcome" the sitemap "dist/welcome/sitemap.xmap" is tried
-> > to loaded. And so on.
-> > 
-> > So I assume from this, that the "src" attribute indicates the location of
-> > the subsitemap.
-> > This would lead to:
-> > 
-> >        <map:match pattern="dist/*">
-> >                <map:mount uri-prefix="dist/" src
-> > ="dist/subsitemap.xmap"/>
-> >         </map:match>
-> > 
-> > The "uri-prefix" seems to be the part which has to be removed from the
-> > uri,
-> > this means sending the request "dist/welcome" will remove "dist/" from
-> > the
-> > uri and only "welcome" is passed to the subsitemap.
-> > So I could use
-> >                         <map:match pattern="hallo">
-> >                                 <map:generate src="test.xml"/>
-> >                                 <map:serialize type="xml"/>
-> >                         </map:match>
-> > in the "dist/subsitemap.xmap" to match the request.
+   <map:match pattern="faq/*"> 
+    <map:mount uri-prefix="faq/" check-reload="no" src="faq/sitemap.xmap"/> 
+   </map:match> 
 ]]>
-     </source>
-
+    </source>
+    <p>
+     The src attribute is where the subsitemap is located. If it ends in a slash
+     "sitemap.xmap" is appended to find the sitemap otherwise the src
+     value is used. A check-reload attribute can be used to determine if the
+     modification date of the subsitemap file should be checked. 
+     The uri-prefix is the part that should be removed from the request URI.
+     The engine will correctly check for a trailing slash (which you may
+     write, of course).
+     If in the example above "faq/cocoon" is requested, "faq/" is removed from
+     the URI and "cocoon" is passed to the subsitemap which is loaded
+     from "faq/sitemap.xmap".
+     </p>
+     <p>
+     Sitemap components (generators, transformers, etc.) in a sitemap are accessible 
+     by a sub-sitemap by their names. This is due to the fact that each sitemap has its 
+     own SitemapComponentManager and they are arranged in the same hierarchical 
+     structure as the sitemaps are and thus knows which are their parent 
+     SitemapComponentManager and can ask it for a SitemapComponent it doesn't know about.
+     </p>
+    </s3>
+    <s3 title="Usage Cases">
+    <p>
+     Usually you use the same SitemapComponents over and over again in your sub-sitemaps. 
+     And because you have a contract between the parent and sub sitemaps (the uri-prefix) you 
+     can deliver common SitemapComponents from the parent sitemap to your sub-sitemaps as well.
+     If you break a sitemap all its sub-sitemaps are broken as well (because of the hierarchical arragement).
+     </p>
+     <p>
+     However you can create independant subsitemaps, which meet the following goals:
+     </p>
+     <ol>
+      <li>Simplify site construction</li>
+      <li>Reduce risk of "bad' sitemap entries killing whole site</li>
+      <li>Ease deployment of pre-built applications</li>
+      <li>Keep sitemap files an understandable and manageable size</li>
+     </ol>
+     <p>
+     Just build a main sitemap with the minimum needs: A matcher and a selector. 
+     These two components allow to select and direct to mount two other sitemaps.
+     These sub-sitemaps load the componants they need (which includes generators
+     and transformers etc...) and have the map elements for that site/application.
+     The benefit is that each sitemap is completely independant of each other and
+     any error in that sitemap does not kill any other sitemap. 
+     </p>
+     <p>
+     Here is an example of a main sitemap. You will notice that it  is using a selector that
+     matches on host name of the request, but any matcher or selector would work
+     at this point. Both sub-sitemaps are mounted at the root level.
+     </p>
+<source>
+<![CDATA[
+     <?xml version="1.0"?> 
+      <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+      <!-- =========================== Components
+       ================================ -->
+    <map:components>
+     <map:matchers default="wildcard">
+      <map:matcher name="wildcard" factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+     </map:matchers>
+ 
+    <map:selectors default="host">
+     <map:selector name="host" factory="org.apache.cocoon.selection.HostSelectorFactory">
+        <host name="fee" value="www.foo.com"/>
+     </map:selector>
+   </map:selectors>
+ 
+   </map:components>
+   <!-- =========================== Pipelines
+    ================================= -->
+    <map:pipelines>
+     <map:pipeline>
+ 
+      <map:select type="host">
+         <map:when test="fee">
+            <map:mount uri-prefix="" src="fee.xmap"/>
+        </map:when>
+        <map:otherwise>
+            <map:mount uri-prefix="" src="foo.xmap"/>
+        </map:otherwise>
+     </map:select>
+ 
+     </map:pipeline>
+   </map:pipelines>
+ </map:sitemap>
+]]>
+    </source>
+     </s3>
     </s2>
   </s1>
 
