@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.53 2001-01-10 23:24:01 greenrd Exp $
+  $Id: todo.xml,v 1.54 2001-01-11 01:14:32 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,9 +16,6 @@
  </devs>
 
  <actions priority="high">
-  <action context="docs" assigned-to="RDG" bugid="7">
-   Correct install instructions
-  </action>
   <action context="code" assigned-to="RDG" bugid="19">
    Track down cause of multiple PDF problems.
   </action>

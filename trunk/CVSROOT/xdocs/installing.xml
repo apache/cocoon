@@ -212,6 +212,10 @@ AddHandler cocoon xml</source>
   </s2>
 
   <s2 title="Installing Cocoon on Apache Tomcat">
+
+   <p>We highly recommend using Tomcat 3.2.1 or higher, since it is more secure and supports
+    virtual hosting with <strong>or</strong> without using separate JVMs.</p>
+
    <p>
     To make Cocoon work with Tomcat, you must add a context to Tomcat that describes
     to Tomcat how to load Cocoon files. Then you must tell Apache to send 
@@ -252,10 +256,19 @@ AddHandler cocoon xml</source>
 
      <p>
       Next, if using Apache with Tomcat (which is recommended on a production server, since Tomcat standalone
-      is not yet as efficient or robust - Apache is far more mature!)
+      is not yet as efficient or robust - Apache is more mature!)
       we need to tell Apache to forward the same partial pathnames to Tomcat. This is done
       by editing the tomcat <code>.conf</code> file (it's called <code>tomcat-apache.conf</code> if you're 
-      using Tomcat 3.1 and Apache 1.3.12) in your Apache setup. Add the following lines:
+      using Tomcat 3.1, but with Tomcat 3.2 you have a choice between tomcat-apache and the more
+      advanced <code>mod_jk.conf-auto</code>) and associating it with your Apache setup, as described below.</p>
+
+     <p>
+      <strong>Very Important Note!</strong> Both of these files are now <strong>regenerated and overwritten</strong>
+      whenever you run Tomcat, so don't edit them directly, but instead <strong>save them as something else!</strong>
+     </p>
+
+     <p>If you're using mod_jserv, 
+      add the following lines to your copy of <code>tomcat-apache.conf</code>:
      </p>
 
  <source><![CDATA[
@@ -274,8 +287,36 @@ AddHandler cocoon xml</source>
 
       <p>
       This tells Apache to direct .xml requests that come in under that partial path "/cocoon" to
-      the directory under Tomcat (<code>$TOMCAT_HOME/webapps/cocoon</code>).
+      the directory under Tomcat (<code>$TOMCAT_HOME/webapps/cocoon</code>). The equivalent setup for
+      mod_jk with a worker called "ajp13" is simpler (see also the mod_jk HOWTO for more details):
       </p>
+
+ <source><![CDATA[
+ Alias /cocoon $TOMCAT_HOME/webapps/cocoon
+ <Directory "$TOMCAT_HOME/webapps/cocoon">
+     Options Indexes FollowSymLinks
+ </Directory>
+ JkMount /cocoon/*.xml ajp13
+ AddType text/xml .xml
+ <Location /cocoon/WEB-INF/ >
+     AllowOverride None
+     deny from all
+ </Location>
+ ]]></source>
+
+     <note>Don't mix mod_jserv directives with mod_jk directives. It won't work.</note>
+
+     <p>
+      These files don't actually do anything by themselves. To be activated, they need to be included
+      into the main Apache configuration file. To do this, add this to <code>httpd.conf</code>.
+     </p>
+
+     <source>
+       include /your-dir/your-filename-here
+     </source>
+
+     <p>(of course, substituting <code>/your-dir/your-filename-here</code> for the location of your
+       configuration file)</p>
 
      <p>
       Finally, we need to set up the actual context that we have defined and pointed requests
@@ -307,13 +348,15 @@ AddHandler cocoon xml</source>
       file to point to the
       Cocoon properties file in the same directory. Do this by changing the text
       <code>conf/cocoon.properties</code> to <code>WEB-INF/cocoon-properties</code>. Note that this path is a relative
-      path must be so. Don't try to use an absolute path here. It won't work. Also note that
+      path, and must be so. Don't try to use an absolute path here. It won't work. Also note that
       the web.xml file describes how to map .xml requests to the Cocoon servlet.
      </p>
  
      <p>
       Next you need to populate the cocoon context with source <code>.xml</code> files. For testing purposes
       you can just use the samples that come along with Cocoon.
+      <strong>Note that some of these are insecure and SHOULD NOT be available on a production server, because
+       they allow access to arbitrary .xml source code</strong>
      </p>
  
   <source><![CDATA[
@@ -328,18 +371,24 @@ AddHandler cocoon xml</source>
  
  
    <note>
-    Make sure that <code>xerces.jar</code> is located <strong>before</strong> 
-    <code>xml.jar</code> in the CLASSPATH, otherwise XSP won't work. Tomcat
+    If you get a NoSuchMethodError when starting up, 
+    make sure that <code>xerces.jar</code> is located 
+    <strong>before</strong> 
+    other XML jars in the CLASSPATH, otherwise XSP won't work.
+    On UNIX at least,
     constructs its own CLASSPATH automatically and then adds the environment 
     CLASSPATH, so manually setting the CLASSPATH before running Tomcat won't work.
-    Instead, a hack which some people have found to work is renaming
-    <code>xml.jar</code> as <code>zxml.jar</code>.
+    Instead, a hack which some people have found to work is (in the case of Tomcat 3.1) renaming
+    <code>xml.jar</code> as <code>zxml.jar</code>. For other versions try renaming crimson.jar 
+    or parser.jar.
    </note>
 
    <note>
-    If you have any problems, please look at the 
-    <connect href="faq.xml">FAQ</connect> before submitting a bug
-    report or a request for help on the mailing lists. Thank you.
+    If you have any other problems, <em>please, please</em> look at the 
+    <connect href="faq.xml">FAQ</connect> and the Tomcat documentation
+    <em>before</em> submitting a bug report or a request for help on the mailing lists. 
+    Please also consider that Tomcat has its own mailing lists for more Tomcat-related
+    problems. Thank you.
    </note>
   </s2>
 
@@ -420,21 +469,23 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
      Enterprise 5.1 J-Engine.)</p>
 
     <ul>
-     <li>Add the xerces, xalan, fop, servlet, and cocoon JAR files (from the
+     <li>Add the xerces, xalan, fop, turbine-pool, servlet, and cocoon JAR files (from the
       distribution) to your CLASSPATH. (See below). If you're using Java
       2, you should also add the tools.jar file from the JDK distribution
       to your CLASSPATH.</li>
      <li>Create a new subdirectory tree of your WLS run time directory
       "cocoonwar/WEB-INF" and copy the default web.xml file (from the
-      src directory of the distribution) there.</li>
+      src/WEB-INF directory of the distribution) there.</li>
      <li>Copy the cocoon.properties from the conf directory of the
-      distribution to cocoonwar/WEB-INF and updated the web.xml file to 
-      refer to it.</li>
+      distribution to cocoonwar/WEB-INF and update the web.xml file to 
+      refer to it. You should use a relative path:
+      <code>/WEB-INF/cocoon.properties</code></li>
      <li>Copy the samples directory from the distribution to cocoonwar</li>
      <li>Map the web application into the WLS URI name space by adding the
       following line to your weblogic.properties
 file: <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
      </li>
+     <li>Restart the Weblogic server</li>
     </ul>
 
     <s4 title="Classpaths and XSP">
@@ -463,7 +514,7 @@ file: <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
 
      <source>-Dweblogic.system.disableWeblogicClassPath=true</source>
 
-     <p>to the java command at the end of you WebLogic start script.</p>
+     <p>to the java command at the end of your WebLogic start script.</p>
     </s4>
 
    </s3>
@@ -479,7 +530,7 @@ file: <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
      <li>Edit the web.xml file to point to the cocoon.properties file. If you followed
   the instructions above, the &lt;param-value&gt; tag should contain
   /conf/cocoon.properties</li>
-     <li>Make sure ALL the jars in the Cocoon distribution are in your Java CLASSPATH. If
+     <li>Make sure ALL the required jars in the Cocoon distribution are in your Java CLASSPATH. If
   you get errors initializing Cocoon or accessing XSP pages, check this first.</li>
      <li>Start WLS. Cocoon should automagically deploy. Start the console, click on
   the "deployments" -> "Applications". You should see "cocoon" in the application

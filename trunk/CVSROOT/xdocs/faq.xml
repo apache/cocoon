@@ -588,7 +588,7 @@
   </answer>
  </faq>
 
- <faq>
+ <faq id="ieopensave">
   <question>Why is Internet Explorer bringing up an Open/Save dialog when I view PDF pages?</question>
   <answer>
    <p>This is a workaround for a bug in Internet Explorer (see previous question). We think you'll agree
