@@ -63,15 +63,15 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachedResponse.java,v 1.4 2003/08/06 09:26:44 cziegeler Exp $
+ * @version CVS $Id: CachedResponse.java,v 1.5 2003/08/12 08:03:12 cziegeler Exp $
  */
-public final class CachedResponse
+public class CachedResponse
         implements Serializable {
 
-    private final SourceValidity[] validityObjects;
-    private final byte[]           response;
-    private Long                    expires;
-    private final long            lastModified;
+    protected final SourceValidity[] validityObjects;
+    protected final byte[]           response;
+    protected Long                   expires;
+    protected final long             lastModified;
 
     /**
      * Create a new entry for the cache.
@@ -155,6 +155,7 @@ public final class CachedResponse
         // Return the value rounded to the nearest second.
         return lastModified - (lastModified % 1000);
     }
+    
     /**
      * @return the last modified time 
      */
