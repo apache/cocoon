@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.117 2003/08/12 15:50:40 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.118 2003/08/13 08:54:44 bruno Exp $:-->
 <status>
 
  <developers>
@@ -202,6 +202,14 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BRD" type="fix">
+     Fix in the SVG serializer: if setDocumentLocator wasn't called on the
+     serializer (which can happen if you have e.g. an XSLT transformer in the
+     pipeline), then the base URI for the SVG document wasn't set which could
+     cause exceptions. Now it is set to http://localhost/ in such cases. Also
+     fixed a problem with the document locator not being reset between
+     subsequent retrievals of the serializer from the pool.
+   </action>
    <action dev="VG" type="fix">
      Fix Jisp based persistent store: close database files on Cocoon shutdown and
      re-use existing database and index files on startup.
