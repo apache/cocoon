@@ -34,7 +34,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: DefaultExecutor.java,v 1.4 2004/06/17 13:52:35 cziegeler Exp $
+ * @version CVS $Id: DefaultExecutor.java,v 1.5 2004/06/24 13:18:01 cziegeler Exp $
  */
 public class DefaultExecutor 
     implements SitemapExecutor {
@@ -101,5 +101,13 @@ public class DefaultExecutor
                              Map              objectModel,
                              String key, Map variables) {
         return variables;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#enterSitemap(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String)
+     */
+    public String enterSitemap(ExecutionContext context, Map objectModel,
+            String source) {
+        return source;
     }
 }
