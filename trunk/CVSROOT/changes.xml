@@ -3,8 +3,8 @@
 <!DOCTYPE changes SYSTEM "./xdocs/dtd/changes-v10.dtd">
 
 <!--
-  History of Cocoon changes
-  $Id: changes.xml,v 1.123 2000-10-16 04:03:53 balld Exp $   
+  History of Cocoon changes   
+  $Id: changes.xml,v 1.124 2000-10-16 16:45:29 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -26,7 +26,7 @@
   <action dev="RDG" type="update">
    More informative exception information is now produced by taglibs.
   </action>
-  <action dev="RDG" type="update">
+  <action dev="RDG" type="update" due-to="Gabi Brysch" due-to-email="brysch@inxnet.de">
    Turned off Xerces schema checking so that validation does not require a schema.
   </action>
   <action dev="RDG" type="add" due-to="Terry Paddy" 

@@ -30,6 +30,12 @@
     best to implement a site, comparisons with other XML frameworks, etc.
     But don't forget to look in the FAQ first, please!</p>
 
+   <p><strong>IMPORTANT:</strong> If you are posting about a problem you are having
+    (as most people do), it will aid in finding a speedy resolution if you provide
+    full configuration details (especially the <strong>Cocoon version number</strong>,
+    but also your operating system, JDK version, and servlet engine), and full details
+    of any errors encountered (including full error messages and stack traces).</p>
+
    <p>If you would like to make commercial solicitations, please ask permission from
      the list moderator first.</p>
 
