@@ -60,7 +60,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.formmodel.Form;
-import org.apache.cocoon.woody.transformation.WoodyPipeLineConfig;
+import org.apache.cocoon.woody.transformation.WoodyPipelineConfig;
 import org.xml.sax.SAXException;
 
 /**
@@ -85,7 +85,7 @@ public class WoodyGenerator extends AbstractGenerator {
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
-        WoodyPipeLineConfig config = WoodyPipeLineConfig.createConfig(objectModel, parameters);
+        WoodyPipelineConfig config = WoodyPipelineConfig.createConfig(objectModel, parameters);
         form = config.findForm();     
     }
 
