@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.13 2000-10-24 04:23:53 bloritsch Exp $
+  $Id: todo.xml,v 1.6.2.14 2000-12-22 20:04:29 bloritsch Exp $
 -->
 
 
@@ -60,10 +60,6 @@
  </actions>
  
  <actions priority="medium">
-
-  <action context="code">
-   Create a better logging subsystem.
-  </action>
 
   <action context="code">
    Implement a internal profiling tool that should indicate the load and history of 

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.16 2000-12-18 15:00:51 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.17 2000-12-22 20:04:29 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -21,6 +21,13 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="add">
+    I did a first stab at importing the util logicsheet from Cocoon 1.8.x.
+  </action>
+  <action dev="BL" type="add">
+    I added some simple forms that make use of the xsp-request and esql
+    logicsheets.
+  </action>
   <action dev="BL" type="update">
     Clean up a lot of classloader issues.  RepositoryClassLoader is quicker and
     more stable accross installations.  ClassUtils takes care of getting resources.
