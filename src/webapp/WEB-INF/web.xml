@@ -54,6 +54,18 @@
     </init-param>
 
     <!--
+      This parameter allows to set system properties
+    -->
+    <!--
+    <init-param>
+      <param-name>force-property</param-name>
+      <param-value>
+        org.apache.commons.logging.Log=org.apache.commons.logging.impl.LogKitLogger
+      </param-value>
+    </init-param>
+    -->
+
+    <!--
       This parameter points to the main configuration file for Cocoon.
       Note that the path is specified in absolute notation but it will be
       resolved relative to the servlets webapp context path
