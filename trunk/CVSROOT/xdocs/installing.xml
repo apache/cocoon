@@ -71,6 +71,12 @@
    is required for Cocoon page compilation.
   </p>
 
+  <p>
+   It is <strong>very important</strong> to ensure that the xerces jar is in front
+   of other XML parsers in the CLASSPATH. This is the most frequent source of errors
+   in installing Cocoon!
+  </p>
+
   <note>
    The Ant, Stylebook and Servlet packages are only used in the build system and
    are <strong>not</strong> used by Cocoon at run-time. So you can safely
@@ -108,7 +114,10 @@ classpath lines
 <source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
 
    <p>
-    Here is an example:
+    Here is an example: <strong>This is an EXAMPLE only and may not be 
+    up to date. If you get errors, first check that all the required jar files
+    (see top of page)
+    from cocoon/lib are on your CLASSPATH, and spelled correctly.</strong>
    </p>
 
 <source>
@@ -227,7 +236,8 @@ AddHandler cocoon xml</source>
     A context in Tomcat describes to Tomcat how and when to load a particular servlet
     and Cocoon is one such servlet. First we need to make sure that Tomcat knows how to
     load the Cocoon .jar files. To begin with, you must copy any .jar files from
-    <code>$COCOON_HOME/lib</code> to <code>$TOMCAT_HOME/lib</code> that are necessary for Cocoon to run.
+    <code>$COCOON_HOME/lib</code> to <code>$TOMCAT_HOME/lib</code> that are necessary for Cocoon to run
+    (see top of page).
     In addition, you must copy <code>$COCOON_HOME/bin/cocoon.jar</code> to <code>$TOMCAT_HOME/lib</code>.
    </p>
 
@@ -375,7 +385,7 @@ AddHandler cocoon xml</source>
     make sure that <code>xerces.jar</code> is located 
     <strong>before</strong> 
     other XML jars in the CLASSPATH, otherwise XSP won't work.
-    On UNIX at least,
+    On UNIX at least, Tomcat
     constructs its own CLASSPATH automatically and then adds the environment 
     CLASSPATH, so manually setting the CLASSPATH before running Tomcat won't work.
     Instead, a hack which some people have found to work is (in the case of Tomcat 3.1) renaming
@@ -394,9 +404,8 @@ AddHandler cocoon xml</source>
 
 <s2 title="Installing Cocoon on ServletExec 2.2">
 
-<p>After you have obtained all the jar packages you need
-(see the above section), you should add
-them to your <code>Classpath.pref</code> file.
+<p>Add all the required .jar files
+(see top of page) to your <code>Classpath.pref</code> file.
 Then, add this to the <code>servlets.properties</code> file:</p>
 
 <source>servlet.Cocoon.code=org.apache.cocoon.Cocoon
@@ -435,9 +444,8 @@ You could also make these three configuration changes via
 
    <s3 title="BEA WebLogic version 4.5.1">
     <p>
-     After you have obtained all the jar packages you need (see the above
-     section), you should add all of them (included the <code>cocoon.jar</code>
-     package to your <code>weblogic.class.path</code> variable either
+     Add all of the required jar files (see top of page)
+     to your <code>weblogic.class.path</code> variable, either
      using the <em>t3config</em> utility or use the <code>-Dweblogic.class.path</code>
      argument with the java runtime that invokes the system.
     </p>
@@ -452,14 +460,6 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
      path in your system.
     </p>
 
-    <p>
-     At this point, you should check if your system matches the global
-     considerations about Cocoon properties. Usually, you might want to give
-     the installation a try as it is and then read again that section if
-     something goes wrong. Most installations don't need any changes to
-     be operational.
-    </p>
-
    </s3>
 
    <s3 title="BEA WebLogic version 5.1 / Enterprise 5.1 J-Engine">
@@ -469,10 +469,7 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
      Enterprise 5.1 J-Engine.)</p>
 
     <ul>
-     <li>Add the xerces, xalan, fop, turbine-pool, servlet, and cocoon JAR files (from the
-      distribution) to your CLASSPATH. (See below). If you're using Java
-      2, you should also add the tools.jar file from the JDK distribution
-      to your CLASSPATH.</li>
+     <li>Add all the required jar files (see top of page) to your CLASSPATH.</li>
      <li>Create a new subdirectory tree of your WLS run time directory
       "cocoonwar/WEB-INF" and copy the default web.xml file (from the
       src/WEB-INF directory of the distribution) there.</li>
@@ -555,8 +552,16 @@ file: <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
    <s3 title="JRun version 2.3">
     <p>
      For the JRun portion, you must add all Cocoon jars to the java.classpath
-     in [jrun-home]/jsm-default/properties with something like:
+     in [jrun-home]/jsm-default/properties.
     </p>
+
+   <p>
+    Here is an example: <strong>This is an EXAMPLE only and may not be
+    up to date. If you get errors, first check that all the required jar files
+    (see top of page)
+    from cocoon/lib are on your CLASSPATH.</strong>
+   </p>
+                                                                                                                            
 <source>java.classpath=[previous jrun jars]:[cocoon-home]/lib/xerces.jar:
 [cocoon-home]/lib/stylebook.jar:[cocoon-home]/lib/fop.jar:
 [cocoon-home]/bin/cocoon.jar:[cocoon-home]/lib/xalan.jar:
@@ -634,7 +639,7 @@ Alias /cocoon/ "[cocoon-home]"</source>
     The "Alias" line above is optional; but it will make
     testing the setup much easier.  To verify that all is working,
     make sure to test out the XSP demos.  If you get a
-    java.lang.NoSuchMethodError: org.w3c.dom.Node error, try moving
+    NoSuchMethodError, try moving
     the xerces.jar to the front of JRun's java.classpath, restart
     JRun, and try the XSP again.
    </p>
@@ -659,20 +664,27 @@ Alias /cocoon/ "[cocoon-home]"</source>
 servlet.cocoon.initArgs=properties=<yourpath to cocoon>/cocoon/conf/cocoon.properties]]>
 </source>
 
-    <p>In the <code>jvm12.conf</code>, add all the needed ".jar" to the <code>jvm.classpath</code> line 
+    <p>In the <code>jvm12.conf</code>, add all the needed ".jar" files to the <code>jvm.classpath</code> line 
     and uncomment it. This would make the following line, for example, if you
     installed Netscape on D: drive. (Note: This should be all on one line, but 
     for legibility it is split accross lines.)</p>
+
+   <p>
+    <strong>This is an EXAMPLE only and may not be
+    up to date. If you get errors, first check that all the required jar files
+    (see top of page)
+    from cocoon/lib are on your CLASSPATH.</strong>
+   </p>
 
     <source>jvm.classpath=d:/Netscape/Server4/plugins/samples/servlets/beans.10/SDKBeans10.jar;
 d:/Netscape/Server4/plugins/samples/servlets/beans/SDKBeans.jar;
 d:/Netscape/Server4/bin/https/jar/Bugbase.jar;
 d:/Netscape/Server4/bin/https/jar/Calljsac.jar;
 D:/Netscape/Server4/docs/cocoon/bin/cocoon.jar;
-D:/Netscape/Server4/docs/cocoon/lib/fop_0_12_1.jar;
-D:/Netscape/Server4/docs/cocoon/lib/stylebook-1.0-b2.jar;
-D:/Netscape/Server4/docs/cocoon/lib/xalan_1_0_1.jar;
-D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
+D:/Netscape/Server4/docs/cocoon/lib/fop_0_15.jar;
+D:/Netscape/Server4/docs/cocoon/lib/turbine-pool.jar;
+D:/Netscape/Server4/docs/cocoon/lib/xalan_1_2_D02.jar;
+D:/Netscape/Server4/docs/cocoon/lib/xerces_1_2.jar
 </source>
 
     <p>In the rules.properties file, add the following line (this is made to turn around a regexp bug in iWS):</p>
@@ -711,6 +723,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
     <p><strong>WARNING! Do NOT add servlet_2_2.jar (from the Cocoon distribution) to the CLASSPATH.
      This is only provided for the purposes of rebuilding Cocoon, and because WebSphere uses
      non-standard Servlet API calls, this jar may cause WebSphere to fail.</strong></p>
+   <p>
+    <strong>This is an EXAMPLE only and may not be
+    up to date. If you get errors, first check that all the required jar files
+    (see top of page)
+    from cocoon/lib are on your CLASSPATH.</strong>
+   </p>
 
    <source><![CDATA[
 # usage: wscp -f ws.tcl
@@ -725,7 +743,7 @@ set cocoon "$webapp/Servlet:cocoon"
 ApplicationServer modify $appserv/ -attribute
 {{CommandLineArgs {-classpath D:/cocoon-1.8/lib/bsf.jar;D:/cocoon-1.8/lib/bsfengines.jar;
 D:/cocoon-1.8/lib/turbine-pool.jar;D:/cocoon-1.8/lib/xerces_1_2.jar;
-D:/cocoon-1.8/lib/xalan_1_2_D02.jar;D:/cocoon-1.8/lib/fop_0_13_0.jar;
+D:/cocoon-1.8/lib/xalan_1_2_D02.jar;D:/cocoon-1.8/lib/fop_0_15_0.jar;
 D:/WebSphere/AppServer/jdk/lib/tools.jar;D:\cocoon-1.8\bin\cocoon.jar}}}
 
 # create the cocoon web application

@@ -301,10 +301,14 @@
   CVS branch in the Cocoon CVS module. If you are not a CVS expert, this means
   typing:</p>
 
-  <source>cvs checkout -r xml-cocoon2 xml-cocoon</source>
+  <source>
+    cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic login
+    Password: anoncvs
 
-  <p>For more information on CVS access, refer to the CVS docs on this web
-  site.</p>
+    cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic checkout -r xml-cocoon2 xml-cocoon
+  </source>
+
+  <p>For more information on CVS access, refer to the CVS docs on this web site.</p>
 </s1>
 
 </body>
