@@ -65,18 +65,20 @@ import org.xml.sax.SAXException;
 /**
  * Helper class for the implementation of widgets containing other widgets.
  *
- * CVS $Id: ContainerDelegate.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
+ * CVS $Id: ContainerDelegate.java,v 1.3 2004/01/06 12:36:07 joerg Exp $
  * @author Timothy Larson
  */
 public class ContainerDelegate {
-    private WidgetDefinition definition;
+//    private WidgetDefinition definition;
     private List widgets;
     private Map widgetsById;
+
+    private static final String WIDGETS_EL = "widgets";
 
     public ContainerDelegate(WidgetDefinition definition) {
         widgets = new ArrayList();
         widgetsById = new HashMap();
-        this.definition = definition;
+//        this.definition = definition;
     }
 
     public void addWidget(Widget widget) {
@@ -126,9 +128,6 @@ public class ContainerDelegate {
         }
         return true;
     }
-
-    private static final String CONTAINER_EL = "container";
-    private static final String WIDGETS_EL = "widgets";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         contentHandler.startElement(Constants.WI_NS, WIDGETS_EL, Constants.WI_PREFIX_COLON + WIDGETS_EL, Constants.EMPTY_ATTRS);
