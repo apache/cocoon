@@ -56,7 +56,7 @@
     </tr>
     <tr>
      <td>Apache Xerces</td>
-     <td>1.0 (java edition)</td>
+     <td>1.0.1 (java edition)</td>
      <td><link href="http://xml.apache.org/dist/">xml.apache.org</link></td>
     </tr>
     <tr>
@@ -78,7 +78,7 @@
     </tr>
     <tr>
      <td>Apache Xalan</td>
-     <td>0.19.1</td>
+     <td>0.19.0</td>
      <td><link href="http://xml.apache.org/dist/">xml.apache.org</link></td>
     </tr>
     <tr>
@@ -92,7 +92,7 @@
   </table>   
    
   <table>
-   <caption>Other Required Components</caption>
+   <caption>Other Components</caption>
     <tr>
      <th>Name</th>
      <th>Minimum Version</th>
@@ -211,10 +211,10 @@ wrapper.classpath=/usr/local/java/lib/regexp.jar
   
    <p>
     Note that you should not need to change anything from the template
-    properties file found in the distribution, but you must edit it for 
-    more complex operation. Please refer directly to the file that contains
-    breaf indications and comments on the different configurations, but you
-    don't need to care about that at this point.
+    properties file found in the distribution (under <code>/conf/</code>), 
+    but you must edit it for more complex operation. Please refer directly to 
+    the file that contains breaf indications and comments on the different 
+    configurations, but you don't need to care about that at this point.
    </p>
    
    <p>
@@ -291,10 +291,9 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
      Next you need to tell your context where Cocoon can find it's properties 
      file, as well as to map Cocoon to XML document requests.
      Make sure you have a <em>web.xml</em> file in your context's
-     <em>WEB-INF</em> directory.  This file specifies servlet mappings
-     and initial arguments to servlets.  If you don't have this file, you can copy
-     an example from <em>&lt;Tomcat-Root&gt;/examples/WEB-INF</em>
-     directory.  You should add the following entries in that file:
+     <em>WEB-INF</em> directory (look in <code>src/WEB-INF/</code> to find a
+     template <em>web.xml</em>).  This file specifies servlet mappings
+     and initial arguments to servlets and looks like this:
     </p>
 
 <source><![CDATA[

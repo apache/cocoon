@@ -31,6 +31,11 @@
    This page shows how you can use Cocoon to generate dynamic content using
    XML processing instructions to trigger ECMAScript logic execution.
   </sample>
+  
+  <sample name="Special Producer" url="dummy.xml?producer=dummy">
+   This page shows how you can use Cocoon to generate dynamic content using
+   XML processing instructions to trigger ECMAScript logic execution.
+  </sample>
  </group>
  
  <group name="Formatting Object Rendering">
