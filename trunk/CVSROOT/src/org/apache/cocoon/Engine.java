@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.36 2000-11-01 20:12:17 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.37 2000-11-16 17:31:53 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.interpreter.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.36 $ $Date: 2000-11-01 20:12:17 $
+ * @version $Revision: 1.37 $ $Date: 2000-11-16 17:31:53 $
  */
 
 public class Engine implements Defaults {
@@ -496,6 +496,10 @@ public class Engine implements Defaults {
             }
         }
         return table;
+    }
+
+    public void destroy () {
+      manager.destroyAll ();
     }
 
     /**

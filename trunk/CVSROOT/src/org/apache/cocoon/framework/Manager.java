@@ -1,4 +1,4 @@
-/*-- $Id: Manager.java,v 1.8 2000-03-17 16:49:44 stefano Exp $ --
+/*-- $Id: Manager.java,v 1.9 2000-11-16 17:31:56 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import java.io.*;
  * This class is used to create and control software actors and resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-03-17 16:49:44 $
+ * @version $Revision: 1.9 $ $Date: 2000-11-16 17:31:56 $
  */
 
 public class Manager extends Hashtable implements Actor, Factory, Director {
@@ -135,6 +135,19 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
          }
          return v;
      }
+
+    /**
+     * Calls destroy() on all components that are instances of DestroyListener
+     */
+    public void destroyAll () {
+       Enumeration e = elements ();
+       while (e.hasMoreElements ()) {
+          Object x = e.nextElement ();
+          if (x instanceof DestroyListener) {
+            ((DestroyListener) x).destroy ();
+          }
+       }
+    }
 
     /**
      * Get the actor currently playing the given role.

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.146 2000-11-14 22:02:55 greenrd Exp $ 
+  $Id: changes.xml,v 1.147 2000-11-16 17:31:53 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add">
+   Added ability for Engine components to implement 
+   org.apache.cocoon.framework.DestroyListener and be notified for cleanup
+   purposes if/when the Cocoon servlet is destroyed.
+  </action>
   <action dev="RDG" type="fix" due-to="Tagunov Anthony" 
    due-to-email="atagunov@nnt.ru">
    Fixed zombie caching bug where old versions of pages would reappear after

@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.16 2000-05-12 12:40:29 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.17 2000-11-16 17:31:53 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.16 $ $Date: 2000-05-12 12:40:29 $
+ * @version $Revision: 1.17 $ $Date: 2000-11-16 17:31:53 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -180,6 +180,10 @@ public class Cocoon extends HttpServlet implements Defaults {
                 }
             }
         }
+    }
+
+    public void destroy () {
+       engine.destroy ();
     }
 
     /**
