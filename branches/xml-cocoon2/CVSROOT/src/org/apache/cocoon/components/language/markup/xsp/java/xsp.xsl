@@ -60,7 +60,7 @@
         dateCreated = <xsl:value-of select="@creation-date"/>L;
         dependencies = new File[] {
           <xsl:for-each select="xsp:dependency">
-            new File("<xsl:value-of select="."/>"),
+            new File("<xsl:value-of select="translate(., '\','/')"/>"),
           </xsl:for-each>
         };
       }

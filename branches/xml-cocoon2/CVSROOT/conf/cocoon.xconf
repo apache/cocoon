@@ -82,20 +82,10 @@
     
   <sitemap>
     <partition>
-      <process uri="hello" source="../samples/documents/hello-page.xml">
+      <process uri="hello" source="samples/documents/hello-page.xml">
         <generator name="file"/>
         <filter name="xslt">
-          <parameter name="stylesheet" value="../samples/stylesheets/simple-page2html.xsl"/>
-        </filter>
-        <serializer name="html">
-          <parameter name="contentType" value="text/html"/>
-        </serializer>
-      </process>
-      
-      <process uri="**/" source="**/">
-        <generator name="directory"/>
-        <filter name="xslt">
-          <parameter name="stylesheet" value="../samples/stylesheets/simple-directory2html.xsl"/>
+          <parameter name="stylesheet" value="samples/stylesheets/simple-page2html.xsl"/>
         </filter>
         <serializer name="html">
           <parameter name="contentType" value="text/html"/>
@@ -103,7 +93,7 @@
       </process>
 
       <!-- Start XSP -->
-      <process uri="simple-page.xsp" source="../samples/documents/simple-page.xsp">
+      <process uri="simple-page.xsp" source="samples/documents/simple-page.xsp">
         <generator name="serverpages">
           <!--
           <parameter name="markup-language" value="xsp"/>
@@ -111,13 +101,23 @@
           -->
         </generator>
         <filter name="xslt">
-          <parameter name="stylesheet" value="../samples/documents/simple-page.xsl"/>
+          <parameter name="stylesheet" value="samples/documents/simple-page.xsl"/>
         </filter>
         <serializer name="html">
           <parameter name="contentType" value="text/html"/>
         </serializer>
       </process>
       <!-- End XSP -->
+      
+      <process uri="**/" source="**/">
+        <generator name="directory"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="samples/stylesheets/simple-directory2html.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
 
     </partition>
   </sitemap>
