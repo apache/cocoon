@@ -22,8 +22,6 @@
 <separator/>
   <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
 <separator/>
-  <external href="./api/index.html"  label="Javadocs"/>
-<separator/>
   <page id="cocoon2" label="Cocoon 2" source="cocoon2.xml"/>
   <page id="javadoc" label="Javadoc XML" source="javadoc.xml"/>
 <separator/>
