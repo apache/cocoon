@@ -28,9 +28,10 @@
  </xsl:template>
 
  <xsl:template name="section">
-  <xsl:if test="/descendant::action[@priority = $priority]">
+  <xsl:param name="priority">showstopper</xsl:param>
+  <xsl:if test=".//action[@priority=$priority]">
    <s2 title="{$priority}">
-    <xsl:for-each select="/descendant::action[@priority = $priority]">
+    <xsl:for-each select=".//action[@priority=$priority]">
      <li>
       <em><xsl:value-of select="@context"/></em><xsl:text> - </xsl:text>
       <xsl:apply-templates/>
