@@ -52,18 +52,24 @@ package org.apache.cocoon.components;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.Environment;
 
 /**
  * This is the {@link Context} implementation for Cocoon components.
  * It extends the {@link DefaultContext} by a special handling for
- * getting objects from the object model.
- *
+ * getting objects from the object model and other application information.
+ * 
+ * @see org.apache.cocoon.components.ContextHelper
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.3 2004/01/19 10:33:23 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.4 2004/02/24 09:54:56 cziegeler Exp $
  */
 
 public class ComponentContext 
@@ -116,12 +122,18 @@ public class ComponentContext
      */
     public Object get( final Object key )
     throws ContextException {
-        if ( key.equals(ContextHelper.CONTEXT_OBJECT_MODEL)) {
+        if ( ContextHelper.CONTEXT_OBJECT_MODEL.equals(key)) {
             final Environment env = CocoonComponentManager.getCurrentEnvironment();
             if ( env == null ) {
                 throw new ContextException("Unable to locate " + key + " (No environment available)");
             }
             return env.getObjectModel();
+        } else if ( ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER.equals(key)) {
+            final ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+            if ( manager == null ) {
+                throw new ContextException("Unable to locate " + key + " (No environment available)");
+            }
+            return new ComponentManagerWrapper(manager);
         }
         if ( key instanceof String ) {
             String stringKey = (String)key;
@@ -144,4 +156,37 @@ public class ComponentContext
         return super.get( key );
     }
 
+    public static final class ComponentManagerWrapper implements ServiceManager {
+        
+        protected final ComponentManager manager;
+        
+        public ComponentManagerWrapper(ComponentManager m) {
+            this.manager = m;
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
+         */
+        public boolean hasService(String role) {
+            return this.manager.hasComponent(role);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
+         */
+        public Object lookup(String role) throws ServiceException {
+            try {
+                return this.manager.lookup(role);
+            } catch (ComponentException ce) {
+                throw new ServiceException("ComponentManagerWrapper", "Unable to lookup component: " + role, ce);
+            }
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
+         */
+        public void release(Object c) {
+            this.manager.release((Component)c);
+        }
+    }
 }

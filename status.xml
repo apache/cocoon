@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.246 2004/02/23 15:14:05 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.247 2004/02/24 09:54:56 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Make the current sitemap service manager available through the component context.
+   </action>
    <action dev="CZ" type="update">
      Moving portlet environment to portal block.
    </action>
