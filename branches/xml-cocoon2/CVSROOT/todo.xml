@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.7 2000-06-09 23:05:11 stefano Exp $
+  $Id: todo.xml,v 1.6.2.8 2000-06-19 20:29:00 giacomo Exp $
 -->
 
 
@@ -13,13 +13,19 @@
  <devs>
   <!-- in strict alphabetical order -->
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Berin Loritsch" email="bloritsch@infoplanning.com" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
  </devs>
 
  <actions priority="high">
+  <action context="code" assigned-to="BL">
+   Make Cocoon 2 Avalon-aware using the Component api from Avalon.
+  </action>
+
   <action context="code">
    To simplify portability and installation on different enviornments, the
    XSP subsystem should use the temporary directory provided by the
@@ -58,6 +64,10 @@
  </actions>
  
  <actions priority="medium">
+
+  <action context="code" assigned-to="RB">
+   Create a SVGSerializer
+  </action>
 
   <action context="code">
    Create a better logging subsystem.
