@@ -104,7 +104,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
     /**
      * Set the version of the java source code to be compiled
      *
-     * @param sourceCodeVersion The version of the JVM for wich the code was written.
+     * @param compilerComplianceLevel The version of the JVM for wich the code was written.
      * i.e: 130 = Java 1.3, 140 = Java 1.4 and 150 = Java 1.5
      * 
      * @since 2.1.7
