@@ -1,6 +1,7 @@
 <xmap xpath="/sitemap/pipelines/pipeline"
-      insert-after="match[contains(@pattern,'api')]" 
-      replace-properties="true">
+    unless="match[@type='mount-table']"
+    insert-after="match[@pattern,'api')]" 
+    replace-properties="true">
 
     <!--+
         | Find a match in the "mount-table.xml" file, if present. It allows to mount other
