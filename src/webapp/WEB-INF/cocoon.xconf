@@ -212,13 +212,15 @@
   <!--+
       | Source Factories
       |
-      | Each source factory adds a special uri protocol to the system.
+      | Each source factory adds a special uri schemes to the system.
       +-->
   <source-factories>
     <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
     <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
     <component-instance class="org.apache.cocoon.components.source.impl.SitemapSourceFactory" name="cocoon"/>
-    <component-instance class="org.apache.cocoon.components.source.impl.FileSourceFactory" name="file"/>
+    <!-- the "*" protocol handles all uri schemes that are not explicitely specified. This includes all
+         JDK standard protocols, with special handling of the "file:" protocol which is modifiable
+         (can be written to) and traversable (directory structures can be crawled). -->
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
   <!--+
