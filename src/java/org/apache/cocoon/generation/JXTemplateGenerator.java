@@ -353,7 +353,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.27 2004/01/04 06:39:11 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.28 2004/01/04 20:40:26 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -918,6 +918,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     final static String SET = "set";
     final static String MACRO = "macro";
     final static String EVALBODY = "evalBody";
+    final static String EVAL = "eval";
     final static String PARAMETER = "parameter";
     final static String FORMAT_NUMBER = "formatNumber";
     final static String FORMAT_DATE = "formatDate";
@@ -1721,6 +1722,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         StartEvalBody(StartElement raw) {
             super(raw);
         }
+    }
+
+    static class StartEval extends StartInstruction {
+        StartEval(StartElement raw, Expression value) {
+            super(raw);
+            this.value = value;
+        }
+        final Expression value;
     }
 
     static class StartDefine extends StartInstruction {
@@ -2599,6 +2608,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(EVALBODY)) {
                     StartEvalBody startEval = 
                         new StartEvalBody(startElement);
+                    newEvent = startEval;
+                } else if (localName.equals(EVAL)) {
+                    String value = attrs.getValue("select");
+                    Expression valueExpr = 
+                            compileExpr(value, "eval: \"select\":",
+                                        locator);
+                    StartEval startEval = 
+                        new StartEval(startElement, valueExpr);
                     newEvent = startEval;
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
@@ -3571,6 +3588,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     MyVariables vars = new MyVariables(parent);
                     MyJexlContext localJexlContext = 
                         new MyJexlContext(jexlContext);
+                    HashMap macro = new HashMap();
+                    macro.put("body", startElement);
+                    macro.put("arguments", attributeMap);
+                    localJexlContext.put("macro", macro);
+                    vars.declareVariable("macro", macro);
                     Iterator iter = def.parameters.entrySet().iterator();
                     while (iter.hasNext()) {
                         Map.Entry e = (Map.Entry)iter.next();
@@ -3761,6 +3783,24 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 e);
                 }
             } else if (ev instanceof StartTemplate) {
+            } else if (ev instanceof StartEval) {
+                StartEval startEval = (StartEval)ev;
+                Expression expr = startEval.value;
+                try {
+                    Object val = getNode(expr, jexlContext, jxpathContext);
+                    if (!(val instanceof StartElement)) {
+                        throw new Exception("macro invocation required instead of: " + val);
+                    }
+                    StartElement call = (StartElement)val;
+                    execute(consumer, jexlContext,
+                            jxpathContext, call,
+                            call.next, call.endElement);
+                } catch (Exception exc) {
+                    throw new SAXParseException(exc.getMessage(),
+                                                ev.location, exc);
+                }
+                ev = startEval.endInstruction.next;
+                continue;
             } else if (ev instanceof StartEvalBody) {
                 StartEvalBody startEval = (StartEvalBody)ev;
                 try {
