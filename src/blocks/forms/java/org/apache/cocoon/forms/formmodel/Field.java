@@ -41,7 +41,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.12 2004/04/28 16:34:12 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.13 2004/04/30 12:19:01 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -187,7 +187,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         this.needsValidate = true;
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         // If needed, getValue() will do the validation
         getValue();
         return this.validationError == null;

@@ -34,7 +34,7 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
+ * @version $Id: Messages.java,v 1.8 2004/04/30 12:19:01 bruno Exp $
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();
@@ -55,7 +55,7 @@ public class Messages extends AbstractWidget {
         messages.clear();
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         return messages.size() == 0;
     }
 

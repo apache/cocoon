@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.8 2004/04/28 13:11:10 bruno Exp $
+ * @version $Id: BooleanField.java,v 1.9 2004/04/30 12:19:01 bruno Exp $
  */
 public class BooleanField extends AbstractWidget implements ValueChangedListenerEnabled {
     // FIXME(SW) : should the initial value be false or null ? This would allow
@@ -71,7 +71,7 @@ public class BooleanField extends AbstractWidget implements ValueChangedListener
      * 
      * TODO is there a use case for boolean fields having validators?
      */
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         // a boolean field is always valid
         return true;
     }

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.8 2004/04/28 16:34:12 bruno Exp $
+ * @version CVS $Id: Upload.java,v 1.9 2004/04/30 12:19:01 bruno Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -92,7 +92,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         // And keep the current state if the parameter doesn't exist or is null
     }
 
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         if (this.part == null) {
             if (this.uploadDefinition.isRequired()) {
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
