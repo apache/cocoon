@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- $Id: soap.xsl,v 1.1 2003/03/09 00:08:57 pier Exp $-->
+<!-- $Id: soap.xsl,v 1.2 2003/05/22 21:26:26 vgritsenko Exp $-->
 <!--
 
  ============================================================================
@@ -59,17 +59,17 @@
  * Date: July 21, 2001
  *
  * @author <a href="mailto:ovidiu@cup.hp.com>Ovidiu Predescu</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:57 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/05/22 21:26:26 $
 -->
 
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/xsp"
-  xmlns:xscript="http://apache.org/xsp/xscript/1.0"
-  xmlns:soap="http://apache.org/xsp/soap/3.0"
-  >
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsp="http://apache.org/xsp"
+                xmlns:xscript="http://apache.org/xsp/xscript/1.0"
+                xmlns:soap="http://apache.org/xsp/soap/3.0">
 
   <xsl:include href="xscript-lib.xsl"/>
+
 
   <xsl:template match="xsp:page">
     <xsp:page>
@@ -80,6 +80,7 @@
       <xsl:apply-templates/>
     </xsp:page>
   </xsl:template>
+
 
   <xsl:template match="soap:call">
     <xsl:variable name="url">
@@ -99,18 +100,17 @@
     </xsl:variable>
 
     <xsl:variable name="scope">
-      <xsl:call-template name="xscript-get-scope">
-        <xsl:with-param name="scope" select="@scope"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name="creation-scope">
       <xsl:call-template name="xscript-get-scope-for-creation">
-        <xsl:with-param name="scope" select="@scope"/>
+        <xsl:with-param name="scope" select="'request'"/>
       </xsl:call-template>
     </xsl:variable>
 
-    <xscript:variable name="soap:call">
+    <xsl:variable name="tempvar">
+      <xsl:text>__soap_call_</xsl:text>
+      <xsl:value-of select="generate-id(.)"/>
+    </xsl:variable>
+
+    <xscript:variable scope="request" name="{$tempvar}">
       <xsl:choose>
         <xsl:when test="soap:env">
           <xsl:apply-templates select="soap:env"/>
@@ -120,35 +120,33 @@
         </xsl:otherwise>
       </xsl:choose>
     </xscript:variable>
-    <xsl:variable name="object">
-      <xsl:call-template name="xscript-get">
-        <xsl:with-param name="name" select="'soap:call'"/>
-        <xsl:with-param name="scope" select="$scope"/>
-        <xsl:with-param name="as" select="'object'"/>
-      </xsl:call-template>
-    </xsl:variable>
+
     <xsp:logic>
-      getLogger().debug(
-          "XScriptObject for soap:call is\n" + <xsl:value-of select="$object"/> +
-          ", sending request to: " + <xsl:value-of select="$url"/>
-      );
+      if (getLogger().isDebugEnabled()) {
+          getLogger().debug("XScriptObject for soap:call is\n" +
+              <xscript:get scope="request" name="{$tempvar}" as="object"/> +
+              ", sending request to: " + <xsl:value-of select="$url"/>);
+      }
       try {
-        xscriptManager.put(pageScope, objectModel, "soap:call",
-          ((new SOAPHelper(manager,
-                           XSPRequestHelper.getRequestedURL(objectModel),
-                           String.valueOf(<xsl:value-of select="$url"/>),
-                           <xsl:value-of select="$method"/>,
-                           <xsl:value-of select="$object"/>
-                           )).invoke()),
-          <xsl:value-of select="$creation-scope"/>);
-        getLogger().debug("SOAP result is\n" + <xsl:value-of select="$object"/>);
-        <xscript:get name="soap:call"/>
+          xscriptManager.put(pageScope, objectModel, "<xsl:value-of select="$tempvar"/>",
+              new SOAPHelper(manager,
+                             XSPRequestHelper.getRequestedURL(objectModel),
+                             String.valueOf(<xsl:value-of select="$url"/>),
+                             <xsl:value-of select="$method"/>,
+                             <xscript:get scope="request" name="{$tempvar}" as="object"/>).invoke(),
+              <xsl:value-of select="$scope"/>);
+          if (getLogger().isDebugEnabled()) {
+              getLogger().debug("SOAP result is\n" +
+                                <xscript:get scope="request" name="{$tempvar}" as="object"/>);
+          }
+          <xscript:get scope="request" name="{$tempvar}"/>
       } catch (Exception ex) {
-        <soap-err:error xmlns:soap-err="http://apache.org/xsp/soap/3.0"><xsp:expr>ex</xsp:expr></soap-err:error>
-        getLogger().error(ex.toString(), ex);
+          <soap-err:error xmlns:soap-err="http://apache.org/xsp/soap/3.0"><xsp:expr>ex</xsp:expr></soap-err:error>
+          getLogger().error("SOAP call failed", ex);
       }
     </xsp:logic>
   </xsl:template>
+
 
   <xsl:template match="soap:env" name="soap-env">
     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
