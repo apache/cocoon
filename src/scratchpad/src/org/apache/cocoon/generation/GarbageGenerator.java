@@ -94,6 +94,7 @@ public class GarbageGenerator extends ComposerGenerator {
 
     protected static class CacheEntry {
         Tree tree;
+        // FIXME use SourceValidity!
         long compileTime;
     }
 
