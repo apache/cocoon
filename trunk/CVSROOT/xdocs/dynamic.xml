@@ -177,7 +177,7 @@ public class DummyProducer
 </page>
 ]]></source>
   
-  <p>Our simple example processor will look for the %lg;time/%gt; tags and will 
+  <p>Our simple example processor will look for the &lt;time/&gt; tags and will 
   expand them to the current local time, creating this result document:</p>
   
 <source><![CDATA[

@@ -61,6 +61,13 @@
    use them. Note, however, that they were all redistributed untouched from
    their original distributions.
   </p>
+  
+  <p>
+   If you use Java 1.2.x, you also have to treat the file 
+   <code>[jdk_home]/lib/tools.jar</code> as another Cocoon component and include
+   this into your classpath. This package contains the java compiler that
+   is required for Cocoon page compilation.
+  </p>
 
   <note>
    The Ant and Stylebook packages are only used in the build system and
@@ -492,12 +499,6 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
   </tr>
   </table>
 
-  <note>
-   Due to a bug in <link href="http://www.blackdown.org">Blackdown
-   JDK 1.2pre2</link> for Linux, we suggest you to use green threads instead of the
-   native ones which are much less stable, expecially highly concurrent operations
-   like servlet engines and servlet execution.
-  </note>
   <p>
    Please, submit your feedback on the cocoon user mail list (nowhere else!) if
    you were able to install Cocoon on a different combination not listed above.

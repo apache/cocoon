@@ -76,7 +76,7 @@ their resumes.  In a word: Cocoon simply rocks!
   follow a <link href="http://www.w3.org/TR/WD-xml-stylesheet">W3C recommendation</link>
   and add the XML processing instruction to map a stylesheet to a document:</p>
   
-  <source>&lt;xml-stylesheet href"hello.xsl" type="text/xsl"&gt;</source>
+  <source>&lt;?xml-stylesheet href="hello.xsl" type="text/xsl"?&gt;</source>
   
   <p>Now that our content layer is done, we need to create a stylesheet to
   convert it to a format readable by our web clients. Since most available web

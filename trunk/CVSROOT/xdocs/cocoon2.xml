@@ -265,7 +265,7 @@
 <![CDATA[
   <sitemap>
    <process match="/press/en/*.html">
-    <generator type="file" src="/docs/english/press/*.xml"
+    <generator type="file" src="/docs/english/press/*.xml"/>
     <filter type="xslt">
      <parameter name="stylesheet" value="/styles/simple-press-html.xsl"/>
     </filter>
@@ -273,11 +273,41 @@
    </process>
 
    <process match="/press/en/*.pdf">
-    <generator type="file" src="/docs/english/press/*.xml"
+    <generator type="file" src="/docs/english/press/*.xml"/>
     <filter type="xslt">
      <parameter name="stylesheet" value="/styles/simple-press-pdf.xsl"/>
     </filter>
-    <serializer type="fop"/>
+    <serializer type="pdf"/>
+   </process>
+
+   <process match="/">
+    <matcher type="agent">
+     <parameter name="name" value="Mozilla/5.0">
+    </matcher>
+    <generator type="file" src="/docs/root.xml"/>
+    <filter type="xslt">
+     <parameter name="stylesheet" value="/styles/fancy-XUL-view.xsl"/>
+    </filter>
+    <serializer type="html"/>
+   </process>
+
+   <process match="/">
+    <matcher type="agent">
+     <parameter name="capability" value="text/vnd.wap.wml">
+    </matcher>
+    <generator type="file" src="/docs/root.xml"/>
+    <filter type="xslt">
+     <parameter name="stylesheet" value="/styles/WAP-view.xsl"/>
+    </filter>
+    <serializer type="wap"/>
+   </process>
+
+   <process match="/">
+    <generator type="file" src="/docs/root.xml"/>
+    <filter type="xslt">
+     <parameter name="stylesheet" value="/styles/normal-view.xsl"/>
+    </filter>
+    <serializer type="html"/>
    </process>
   </sitemap>
 ]]>

@@ -16,7 +16,7 @@
 	<s1 title="Configuration">
 		<p>Map the</p>
 		<source>http://www.apache.org/1999/SQL</source>
-		<p>namespace to the sql prefix (FIXME - how do we avoid doing this now?). Elements in the sql taglib namespace will be interpreted as input to the sql taglib and will be stripped from the output.</p>
+		<p>namespace to the sql prefix. Elements in the sql taglib namespace will be interpreted as input to the sql taglib and will be stripped from the output.</p>
 		<p>This is typically done like this:</p>
 		<source><![CDATA[
 <xsp:page

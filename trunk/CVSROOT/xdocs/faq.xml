@@ -7,9 +7,12 @@
 <faq>
  <question>I get the exception <em>java.lang.NoClassDefFoundError: sun/tools/javac/Main</em></question>
  <answer>
- <p>
-  Look at the question below.
- </p>
+  <p>
+   This happens because Cocoon requires the java compiler to be present in your 
+   classpath, so, if you have Java 1.2.x, you have to set the <code>tools.jar</code>
+   package you find in <code>[jdk_home]/lib/tools.jar</code> in your classpath (either
+   system classpath or your servlet engine's classpath).
+  </p>
  </answer>
 </faq>
 
@@ -33,17 +36,6 @@
     Since this directory may contain security sensible information, make sure
     you deny access (even read-only) to untrusted users.
   </note>
-
-  <p>
-   Another common problem is the system complaining about missing classes such as:
-  </p>
-
-  <source>java.lang.NoClassDefFoundError: sun/tools/javac/Main</source>
-
-  <p>
-   If this happens, make sure you have installed the <code>tools.jar</code>
-   package you find in <code>[jdk_home]/lib/tools.jar</code>.
-  </p>
  </answer>
 </faq>
 
@@ -90,10 +82,10 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 <faq>
  <question>can I place <em>cocoon.jar</em> in my servlet context or servlet zone instead of my classpath?</question>
  <answer>
-  <p>Due to a problem in most custom classloader implementations (for example, both JServ and Tomcat suffer from this problem) local resources
+  <p>Due to a problem in some classloader implementations (for example, Apache JServ 1.1) local resources
   cannot be loaded if they are located in custom repositories and packaged inside zip/jar files.</p>
   <p>A workaround is to expand the <em>cocoon.jar</em> file and like that directory as your servlet context repository
-  or place the required resources in your classpath or wait for this problem to be fixed.</p>
+  or place the required resources in your classpath or use a servlet engine that doesn't have this limitation (Tomcat 3.1).</p>
  </answer>
 </faq>
 
@@ -228,54 +220,6 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
   and we are not resposible for any lack of synch between the official Cocoon
   documentation and the translated version. For this reason, do not contact
   the Cocoon Project but directly the people that provide the translation. Thank you.</note>
- </answer>
-</faq>
-
-<faq>
- <question>Why do I keep getting FileNotFoundException under Tomcat 3.0?</question>
- <answer><p>See question below</p></answer>
-</faq>
-
-<faq>
- <question>How come Cocoon doesn't work on Tomcat 3.0?</question>
- <answer>
-  <p>You must apply this patch to Tomcat 3.0 and recompile it or it won't work.
-  This patch is already present in latest CVS code but in case you don't want
-  to download the latest code you can apply this:</p>
-
-  <source><![CDATA[ Index: RequestMapper.java
-   ===================================================================
-   RCS file: /home/cvs/jakarta-tomcat/src/share/org/apache/tomcat/core/RequestMapper.java,v
-
-   retrieving revision 1.5
-   retrieving revision 1.6
-   diff -u -r1.5 -r1.6
-   --- RequestMapper.java 1999/11/05 18:36:33  1.5
-   +++ RequestMapper.java 1999/12/17 18:59:14  1.6
-   @@ -285,13 +285,7 @@
-                mapPath = "/" + s;
-            } else if (mapPath == null &&
-                this.resourceName != null) {
-   -            // XXX
-   -            // hack to differentiate amongst a mapped servlet and a jsp
-   -      if (! wrapper.getServletClass().equals(Constants.JSP.CLASSNAME)) {
-   -                mapPath = "/" + wrapper.getServletClass();
-   -            } else {
-   -                mapPath = this.resourceName;
-   -            }
-   +            mapPath = this.resourceName;
-            }
-
-            return mapPath;]]></source>
- </answer>
-</faq>
-
-<faq>
- <question>Are external entities still broken?</question>
- <answer>
-  <p>No, external entity support has been fixed for both absolute and relative
-  URIs. Note that ProjectX and Xerces behave differently on these but this
-  is not something we are in control of.</p>
  </answer>
 </faq>
 

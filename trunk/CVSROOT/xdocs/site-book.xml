@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <book title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
-
   <external href="../index.html"  label="Back"/>
 <separator/>
   <external href="./dist"  label="Download"/>
@@ -30,9 +29,10 @@
   <changes id="changes" label="Changes" source="changes.xml"/>
   <todo id="todo" label="Todo" source="todo.xml"/>
 <separator/>
+  <page id="livesites" label="Live Sites" source="livesites.xml"/>
+<separator/>
   <external label="Code Repository" href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon/"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
   <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
   <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
-
 </book>

@@ -3,17 +3,29 @@
 
 <document>
  <header>
- <title>Live Sites using Cocoon</title>
- <authors>
-  <person name="Donald Ball" email="balld@webslingerZ.com"/>
- </authors>
+  <title>Live Sites powered by Cocoon</title>
+  <authors>
+   <person name="Donald Ball" email="balld@webslingerZ.com"/>
+  </authors>
  </header>
+ 
  <body>
- <ol>
-  <li><link href="http://www.zen.co.za/">http://www.zen.co.za/</link></li>
-  <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za/</link></li>
-  <li><link href="http://www.mtnartinst.com/">http://www.mtnartinst.com/</link></li>
-  <li><link href="http://www.trilug.org/">http://www.trilug.org/</link></li>
- </ol>
+  <s1 title="Live Sites powered by Cocoon">
+   <p>
+    Here is a list of web sites that are proudly powered by Cocoon.
+   </p>
+   
+   <ul>
+    <li><link href="http://www.zen.co.za/">http://www.zen.co.za/</link></li>
+    <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za/</link></li>
+    <li><link href="http://www.mtnartinst.com/">http://www.mtnartinst.com/</link></li>
+    <li><link href="http://www.trilug.org/">http://www.trilug.org/</link></li>
+   </ul>
+   
+   <p>
+    If you don't find your site upthere, make sure you tell us. We want this list
+    to grow bigger every day :-)
+   </p>
+  </s1>
  </body>
 </document>

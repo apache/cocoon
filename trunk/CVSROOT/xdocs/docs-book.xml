@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <book software="Cocoon" title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
-
   <page id="index" label="Index" source="index.xml"/>
   <page id="license" label="License" source="license.xml"/>
   <page id="install" label="Install" source="installing.xml"/>
@@ -27,6 +26,8 @@
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
   <todo id="todo" label="Todo" source="todo.xml"/>
+<separator/>
+  <page id="livesites" label="Live Sites" source="livesites.xml"/>
 <separator/>
   <external label="Code Repository" href="http://www.apache.org/websrc/cvsview.cgi/xml-cocoon"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
