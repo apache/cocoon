@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <body>
-<p>Some links can't be followed. In the following example, the first match doesn't know if it should generate from 'aap/noot/mies.xml', 'wim/zus.xml', '*.xml' or '**.xml'. 
+<p>Some links can't be followed. In the example shown below, the first match doesn't know if it should generate from 'aap/noot/mies.xml', 'wim/zus.xml', '*.xml' or '**.xml'. 
 In a lot of cases it works fine though.
 
 <pre class="example" id="hidden">
