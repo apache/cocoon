@@ -88,7 +88,7 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.10 2003/10/06 16:24:16 bruno Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.11 2003/10/06 16:29:59 haul Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1259,6 +1259,12 @@ public class SQLTransformer
                         // FIXME: bad coding "catch(Exception)"
                         // if an exception occured the data was not xml
                         transformer.data(value);
+                    } finally {
+                        // otherwise serializer won't be reset
+                        if (transformer.compiler!=null){
+                            manager.release(transformer.compiler);
+                            transformer.compiler = null;
+                        }
                     }
                 } else {
                     transformer.data(value);
