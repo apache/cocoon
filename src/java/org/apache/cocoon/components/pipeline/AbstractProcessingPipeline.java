@@ -89,7 +89,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.14 2004/02/06 11:37:49 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.15 2004/02/11 13:59:39 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -151,6 +151,8 @@ public abstract class AbstractProcessingPipeline
     
     /** Output Buffer Size */
     protected int  outputBufferSize;
+    
+    private boolean internal;
 
     /**
      * Composable Interface
@@ -492,11 +494,11 @@ public abstract class AbstractProcessingPipeline
      */
     public boolean process(Environment environment)
     throws ProcessingException {
-        // If this is an internal request, lastConsumer was reset!
-        if (null == this.lastConsumer) {
+        // If this is an internal request, lastConsumer not the serializer!
+        if (this.serializer != this.lastConsumer) {
             this.lastConsumer = this.serializer;
         }
-        if (null != this.lastConsumer || this.reader != null) {
+        if (this.serializer != this.lastConsumer || this.reader != null) {
             this.preparePipeline(environment);
         }
 
