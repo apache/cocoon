@@ -53,7 +53,7 @@ import org.apache.excalibur.source.SourceResolver;
 public class DefaultTreeBuilder
         extends AbstractLogEnabled
         implements TreeBuilder, Contextualizable, Serviceable,
-                   Initializable, Recyclable, Disposable {
+                   Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
 
@@ -148,10 +148,6 @@ public class DefaultTreeBuilder
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
-
-    public void initialize() throws Exception {
-    }
-
 
     /**
      * Get the location of the treebuilder config file. Can be overridden for other versions.
