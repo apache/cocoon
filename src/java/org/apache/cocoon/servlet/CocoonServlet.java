@@ -71,6 +71,7 @@ import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log.ContextMap;
+import org.apache.log.LogTarget;
 import org.apache.log.output.ServletOutputLogTarget;
 
 /**
@@ -116,7 +117,7 @@ public class CocoonServlet extends HttpServlet {
     protected Cocoon cocoon;
 
     /**
-     * Holds exception happened during initialization (if any)
+     * Holds exception happened during iialization (if any)
      */
     protected Exception exception;
 
@@ -1362,6 +1363,25 @@ public class CocoonServlet extends HttpServlet {
          */
         public String getContextPath() {
             return this.contextPath;
+        }
+        
+        
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getDefaultLogTarget()
+         */
+        public LogTarget getDefaultLogTarget() {
+            final CocoonLogFormatter formatter = new CocoonLogFormatter();
+            formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
+                                "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
+            return new ServletOutputLogTarget(this.config.getServletContext(), formatter);
+            
+        }
+
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
+         */
+        public void configureLoggingContext(DefaultContext context) {
+            context.put("servlet-context", this.config.getServletContext());
         }
     }
 

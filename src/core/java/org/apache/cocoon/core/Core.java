@@ -29,8 +29,10 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.log.LogTarget;
 
 /**
  * This is the core Cocoon component.
@@ -228,12 +230,15 @@ public class Core
         InputStream getInputStream(String path);
         
         void configure(Settings settings);
-        
+        void configureLoggingContext(DefaultContext context);
+
         ClassLoader getInitClassLoader();
 
         org.apache.cocoon.environment.Context getEnvironmentContext();
         
         String getContextPath();
+        
+        LogTarget getDefaultLogTarget();
     }
     
 }

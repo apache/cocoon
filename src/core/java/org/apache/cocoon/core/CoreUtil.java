@@ -20,6 +20,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 
+import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
@@ -44,6 +45,9 @@ public class CoreUtil {
     
     /** The settings */
     protected final Settings settings;
+
+    private Logger log;
+    private LoggerManager loggerManager;
 
     public CoreUtil(Core.BootstrapEnvironment e) 
     throws Exception {
@@ -142,16 +146,25 @@ public class CoreUtil {
             // we simply ignore this
         //}
 
-        // TODO create logger
-        final Logger logger = null;
+        // Init logger
+        initLogger();
+        if (this.log.isDebugEnabled()) {
+            this.log.debug(this.settings.toString());
+            this.log.debug("getRealPath for /: " + this.env.getContextPath());
+            if ( this.env.getContextPath() == null ) {                
+                this.log.debug("getResource for /WEB-INF: " + debugPathOne);
+                this.log.debug("Path for Root: " + debugPathTwo);
+            }
+        }
+
 
         // Output some debug info
-        if (logger.isDebugEnabled()) {
-            logger.debug("Context URL: " + contextURL);
+        if (this.log.isDebugEnabled()) {
+            this.log.debug("Context URL: " + contextURL);
             if (workDirParam != null) {
-                logger.debug("Using work-directory " + workDir);
+                this.log.debug("Using work-directory " + workDir);
             } else {
-                logger.debug("Using default work-directory " + workDir);
+                this.log.debug("Using default work-directory " + workDir);
             }
         }
 
@@ -171,13 +184,13 @@ public class CoreUtil {
                     uploadDir = new File(env.getContextPath(), uploadDirParam);
                 }
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Using upload-directory " + uploadDir);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Using upload-directory " + uploadDir);
             }
         } else {
             uploadDir = new File(workDir, "upload-dir" + File.separator);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Using default upload-directory " + uploadDir);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Using default upload-directory " + uploadDir);
             }
         }
         uploadDir.mkdirs();
@@ -200,8 +213,8 @@ public class CoreUtil {
                     cacheDir = new File(env.getContextPath(), cacheDirParam);
                 }
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Using cache-directory " + cacheDir);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Using cache-directory " + cacheDir);
             }
         } else {
             cacheDir = new File(workDir, "cache-dir" + File.separator);
@@ -209,8 +222,8 @@ public class CoreUtil {
             if (parent != null) {
                 parent.mkdirs();
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("cache-directory was not set - defaulting to " + cacheDir);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("cache-directory was not set - defaulting to " + cacheDir);
             }
         }
         cacheDir.mkdirs();
@@ -262,6 +275,24 @@ public class CoreUtil {
             }
         }
         return parentServiceManager;
+    }
+
+    protected void initLogger() {
+        final DefaultContext subcontext = new DefaultContext(this.appContext);
+        subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
+        if (this.env.getContextPath() == null) {
+            File logSCDir = new File(this.settings.getWorkDirectory(), "log");
+            logSCDir.mkdirs();
+            subcontext.put("context-root", logSCDir.toString());
+        } else {
+            subcontext.put("context-root", this.env.getContextPath());
+        }
+        this.env.configureLoggingContext(subcontext);
+
+        // FIXME - we can move the logginghelper code into this class
+        //LoggingHelper lh = new LoggingHelper(this.settings, this.env.getDefaultLogTarget(), subcontext);
+        //this.loggerManager = lh.getLoggerManager();
+        //this.log = lh.getLogger();
     }
 
     public static final class RootServiceManager implements ServiceManager {
