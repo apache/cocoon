@@ -233,5 +233,15 @@ Not rebuilding docs, as they are up-to-date:
          inheritRefs="false"
          target="javadocs"/>
   </target>
+
+  <!-- Creates Javadocs for published classes/interfaces only-->
+  <target name="published-api" 
+          depends="prepare-blocks"
+          description="Builds the published API documentation (javadocs)">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="published-api"/>
+  </target>
   
 </project>

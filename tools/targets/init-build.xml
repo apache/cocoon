@@ -171,6 +171,9 @@
     <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"
            classpathref="tasks.classpath"/>
 
+    <!-- A task for generating javadocs only for published classes/interfaces -->
+    <taskdef name="pubapidocs" classname="doclets.QdoxJavadocTask" classpathref="tasks.classpath"/>
+
     <!-- compile the loader, used to change classpath especially for
            the CLI and Jetty -->
     <mkdir dir="${tools.loader.dest}"/>
