@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 15:52:36 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-31 17:13:33 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -65,6 +65,22 @@
 
     <xsp:logic>
       XSPResponseHelper.setContentType(response, <xsl:value-of select="$type"/>);
+    </xsp:logic>
+  </xsl:template>
+
+  <xsl:template match="xsp-response:send-redirect">
+    <xsl:variable name="location">
+      <xsl:choose>
+        <xsl:when test="@location">"<xsl:value-of select="@location"/>"</xsl:when>
+        <xsl:when test="location">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="xsp-response:location"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsp:logic>
+      XSPResponseHelper.sendRedirect(response, <xsl:value-of select="$location"/>);
     </xsp:logic>
   </xsl:template>
 

@@ -7,6 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup.xsp;
 
+import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ import org.apache.cocoon.Cocoon;
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-31 16:42:00 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 17:13:32 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -51,5 +52,18 @@ public class XSPResponseHelper extends XSPObjectHelper {
    */
   public static void setContentType(HttpServletResponse response, String type) {
     response.setContentType(type);
+  }
+
+  /**
+   * Send an HTTP redirect
+   *
+   * @param response The <code>HttpServletResponse</code>
+   * @param location The location URL
+   */
+  public static void sendRedirect(HttpServletResponse response, String location) {
+    try {
+      response.sendRedirect(location);
+    }
+    catch (IOException e) {}  
   }
 }
