@@ -104,24 +104,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         Object[] values = (Object[])widget.getValue();
 
         JXPathContext multiValueContext = jctx.getRelativeContext(jctx.createPath(this.multiValuePath));
-        multiValueContext.setFactory( new AbstractFactory() {
-            public boolean createObject(JXPathContext context, Pointer pointer,
-                                        Object parent, String name, int index) {
-                final Object o = context.getValue(name);
-		if( o == null ) {
-		    return false;
-		}
-                if( Collection.class.isAssignableFrom( o.getClass() ) ) {
-                    ((Collection)context.getValue(name)).add(null);
-                } else if( o.getClass().isArray() ) {
-                    // not yet supported
-                    return false;
-                } else {
-                    return false;
-                }
-                return true;
-            }
-        });
+
         // Delete all that is already present
         multiValueContext.removeAll(this.rowPath);
 

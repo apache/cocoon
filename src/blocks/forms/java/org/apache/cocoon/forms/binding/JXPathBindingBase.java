@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.binding;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,7 +25,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;
-import org.w3c.dom.Node;
+import org.apache.commons.jxpath.Pointer;
 
 /**
  * Provides a base class for hooking up Binding implementations that use the
@@ -244,9 +245,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
             jxpc.setLenient(true);
-            if (objModel instanceof Node) {
-                jxpc.setFactory(new DOMFactory());
-            }
+            jxpc.setFactory(new BindingJXPathFactory());
         } else {
             jxpc = (JXPathContext) objModel;
         }
@@ -264,5 +263,37 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
     protected Logger getLogger() {
         return logger;
+    }
+    
+    /**
+     * JXPath factory that combines the DOMFactory and support for collections.
+     */
+    private static class BindingJXPathFactory extends DOMFactory {
+        
+        public boolean createObject(JXPathContext context, Pointer pointer, Object parent, String name, int index) {
+            if (createCollectionItem(context, pointer, parent, name, index)) {
+                return true;
+            } else {
+                return super.createObject(context, pointer, parent, name, index);
+            }
+        }
+        
+        private boolean createCollectionItem(JXPathContext context, Pointer pointer, Object parent, String name, int index) {
+            // FIXME: don't clearly understand how this works.
+            // see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=111148567029114&w=2
+            final Object o = context.getValue(name);
+            if (o == null) {
+                return false;
+            }
+            if (o instanceof Collection) {
+                ((Collection)o).add(null);
+            } else if(o.getClass().isArray()) {
+                // not yet supported
+                return false;
+            } else {
+                return false;
+            }
+            return true;
+        }
     }
 }
