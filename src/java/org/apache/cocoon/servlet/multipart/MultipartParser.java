@@ -30,6 +30,8 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.avalon.excalibur.io.IOUtil;
+
 /**
  * This class is used to implement a multipart request wrapper.
  * It will parse the http post stream and and fill it's hashtable with values.
@@ -39,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartParser.java,v 1.6 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id: MultipartParser.java,v 1.7 2004/03/11 15:32:41 sylvain Exp $
  */
 public class MultipartParser {
 
@@ -96,7 +98,6 @@ public class MultipartParser {
         }
 
         this.parts = new Hashtable();
-
         BufferedInputStream bufferedStream = new BufferedInputStream(requestStream);
         PushbackInputStream pushbackStream = new PushbackInputStream(bufferedStream, MAX_BOUNDARY_SIZE);
         TokenStream stream = new TokenStream(pushbackStream);
@@ -255,14 +256,14 @@ public class MultipartParser {
     private void parseInlinePart(TokenStream in, Hashtable headers)
             throws IOException {
 
-        byte[] buf = new byte[INLINE_BUFFER_SIZE];
-        StringBuffer value = new StringBuffer();
+		// Buffer incoming bytes for proper string decoding (there can be multibyte chars)
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         while (in.getState() == TokenStream.STATE_READING) {
-            int read = in.read(buf);
-            value.append(new String(buf, 0, read, this.characterEncoding));
+        	int c = in.read();
+        	if (c != -1) bos.write(c);
         }
-
+        
         String field = (String) headers.get("name");
         Vector v = (Vector) this.parts.get(field);
 
@@ -271,7 +272,7 @@ public class MultipartParser {
             this.parts.put(field, v);
         }
 
-        v.add(value.toString());
+        v.add(new String(bos.toByteArray(), this.characterEncoding));
     }
 
     /**
@@ -335,12 +336,13 @@ public class MultipartParser {
      * @throws IOException
      */
     private String readln(TokenStream in) throws IOException {
-
-        StringBuffer out = new StringBuffer();
+    	
+    	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    	
         int b = in.read();
 
         while ((b != -1) && (b != '\r')) {
-            out.append((char) b);
+            bos.write(b);
             b = in.read();
         }
 
@@ -348,6 +350,6 @@ public class MultipartParser {
             in.read();    // read '\n'
         }
 
-        return out.toString();
+        return new String(bos.toByteArray(), this.characterEncoding);
     }
 }
