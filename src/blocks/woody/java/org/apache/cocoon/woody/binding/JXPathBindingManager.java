@@ -50,17 +50,18 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.util.SimpleServiceSelector;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Document;
@@ -72,50 +73,29 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>. 
  */
-public class JXPathBindingManager implements BindingManager, LogEnabled, Serviceable, Disposable {
+public class JXPathBindingManager extends AbstractLogEnabled implements BindingManager, Serviceable, Disposable,
+        Initializable, Configurable, ThreadSafe {
 
     //TODO caching of the Bindings. 
 
-    private Logger logger;
-
     private DatatypeManager datatypeManager;
     private ServiceManager serviceManager;
-
-    /**
-     * Map of specific builders for the different elements in the 
-     * Binding config.
-     */
-    private final Map bindingBuilders = new HashMap();
-    {
-        //TODO make this configurable
-
-        this.bindingBuilders.put("value", new ValueJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "context",
-            new ContextJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "repeater",
-            new RepeaterJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "aggregate",
-            new AggregateJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "set-attribute",
-            new SetAttributeJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "insert-node",
-            new InsertNodeJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "delete-node",
-            new DeleteNodeJXPathBindingBuilder());
-        this.bindingBuilders.put(
-            "insert-bean",
-            new InsertBeanJXPathBindingBuilder());
-    }
+    private Configuration configuration;
+    private SimpleServiceSelector bindingBuilderSelector;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
         this.datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
+    }
+
+    public void configure(Configuration configuration) throws ConfigurationException {
+        this.configuration = configuration;
+    }
+
+    public void initialize() throws Exception {
+        bindingBuilderSelector = new SimpleServiceSelector("binding", JXpathBindingBuilderBase.class);
+        bindingBuilderSelector.enableLogging(getLogger());
+        bindingBuilderSelector.configure(configuration.getChild("bindings"));
     }
 
     public Binding createBinding(Source bindSrc)
@@ -140,27 +120,12 @@ public class JXPathBindingManager implements BindingManager, LogEnabled, Service
         }
     }
 
-    public void enableLogging(Logger l) {
-        this.logger = l;
-        l.debug("Got logger, passing to the bindingBuilders");
-        Iterator iter = this.bindingBuilders.values().iterator();
-        while (iter.hasNext()) {
-            Object builder = iter.next();
-            if (builder instanceof LogEnabled) {
-                ((LogEnabled) builder).enableLogging(l);
-            }
-        }
-    }
-
-    protected Logger getLogger() {
-        return logger;
-    }
-
     private Assistant getBuilderAssistant() {
         return new Assistant();
     }
 
     public void dispose() {
+        bindingBuilderSelector.dispose();
         serviceManager.release(datatypeManager);
     }
 
@@ -174,11 +139,12 @@ public class JXPathBindingManager implements BindingManager, LogEnabled, Service
      */
     public class Assistant {
 
-        private JXpathBindingBuilderBase getBindingBuilder(String bindingType) {
-            return (JXpathBindingBuilderBase) JXPathBindingManager
-                .this
-                .bindingBuilders
-                .get(bindingType);
+        private JXpathBindingBuilderBase getBindingBuilder(String bindingType) throws BindingException {
+            try {
+                return (JXpathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
+            } catch (ServiceException e) {
+                throw new BindingException("Cannot handle binding element with name \"" + bindingType + "\".", e);
+            }
         }
 
         /**
