@@ -245,6 +245,7 @@
     <!-- the "*" protocol handles all uri schemes that are not explicitely specified. This includes all
          JDK standard protocols. -->
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+    <component-instance class="org.apache.cocoon.components.source.impl.ModuleSourceFactory" name="module"/>
   </source-factories>
   <!--+
       | Entity resolution catalogs
