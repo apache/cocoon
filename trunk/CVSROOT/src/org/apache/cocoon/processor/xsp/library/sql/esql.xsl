@@ -264,7 +264,7 @@
 	</xsp:logic>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-columns">
+<xsl:template match="esql:results//esql:get-columns">
  <xsp:logic>
   for (int _esql_i=1; _esql_i &lt;= _esql_session.resultset_metadata.getColumnCount(); _esql_i++) {
    Node _esql_node = document.createElement(_esql_session.resultset_metadata.getColumnName(_esql_i));
@@ -274,11 +274,11 @@
  </xsp:logic>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-string" name="get-string">
+<xsl:template match="esql:results//esql:get-string" name="get-string">
  <xsp:expr><xsl:call-template name="get-resultset"/>.getString(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-date">
+<xsl:template match="esql:results//esql:get-date">
  <xsl:choose>
   <xsl:when test="@format">
    <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getDate(<xsl:call-template name="get-column"/>))</xsp:expr>
@@ -289,7 +289,7 @@
  </xsl:choose>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-time">
+<xsl:template match="esql:results//esql:get-time">
  <xsl:choose>
   <xsl:when test="@format">
    <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTime(<xsl:call-template name="get-column"/>))</xsp:expr>
@@ -300,7 +300,7 @@
  </xsl:choose>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-timestamp">
+<xsl:template match="esql:results//esql:get-timestamp">
  <xsl:choose>
   <xsl:when test="@format">
    <xsp:expr>new SimpleDateFormat("<xsl:value-of select="@format"/>").format(<xsl:call-template name="get-resultset"/>.getTimestamp(<xsl:call-template name="get-column"/>))</xsp:expr>
@@ -311,7 +311,7 @@
  </xsl:choose>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-xml">
+<xsl:template match="esql:results//esql:get-xml">
  <xsl:variable name="content">
   <xsl:choose>
    <xsl:when test="@root">
@@ -331,19 +331,19 @@
  <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-row-number">
+<xsl:template match="esql:results//esql:get-row-number">
  <xsp:expr>_esql_session.count</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-column-name">
+<xsl:template match="esql:results//esql:get-column-name">
  <xsp:expr>_esql_session.resultset_metadata.getColumnName(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-column-label">
+<xsl:template match="esql:results//esql:get-column-label">
  <xsp:expr>_esql_session.resultset_metadata.getColumnLabel(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
-<xsl:template match="esql:results/esql:get-column-type-name">
+<xsl:template match="esql:results//esql:get-column-type-name">
  <xsp:expr>_esql_session.resultset_metadata.getColumnTypeName(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
