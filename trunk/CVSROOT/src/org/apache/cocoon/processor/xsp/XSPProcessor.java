@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.30 2000-11-20 01:43:57 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.31 2000-12-01 18:01:12 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.30 $ $Date: 2000-11-20 01:43:57 $
+ * @version $Revision: 1.31 $ $Date: 2000-12-01 18:01:12 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -176,8 +176,8 @@ public class XSPProcessor extends AbstractActor
             }
     
             xspLogicsheets.put(languageName, logicsheet);
-        } catch (SAXException e) {
-            throw new RuntimeException(Utils.getStackTraceAsString(e.getException()));
+//        } catch (SAXException e) {
+//            throw new RuntimeException(Utils.getStackTraceAsString(e.getException()));
         } catch (Exception e) {
             throw new RuntimeException("Error while initializing XSP engine: " +
                                        Utils.getStackTraceAsString(e));
