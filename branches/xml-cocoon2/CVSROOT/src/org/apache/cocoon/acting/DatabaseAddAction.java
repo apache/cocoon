@@ -26,7 +26,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-03-13 17:01:34 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-03-19 21:20:12 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();

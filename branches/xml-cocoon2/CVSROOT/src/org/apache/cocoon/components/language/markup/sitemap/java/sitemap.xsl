@@ -71,7 +71,7 @@
     import org.apache.avalon.configuration.Configuration;
     import org.apache.avalon.configuration.ConfigurationException;
     import org.apache.avalon.configuration.DefaultConfiguration;
-    import org.apache.avalon.Parameters;
+    import org.apache.avalon.configuration.Parameters;
 
     import org.apache.regexp.RE;
     import org.apache.regexp.REProgram;
@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.90 2001-03-13 09:43:34 cziegeler Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.91 2001-03-19 21:20:24 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";

@@ -13,7 +13,7 @@ import org.apache.cocoon.Roles;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.generation.FragmentExtractorGenerator;
 import org.apache.cocoon.ProcessingException;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManagerException;
@@ -40,7 +40,7 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-23 14:48:46 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-19 21:20:45 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer implements Composer {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";

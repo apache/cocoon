@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.acting.Action;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 
 import org.xml.sax.EntityResolver;
 
@@ -103,7 +103,7 @@ public class LangSelect extends java.lang.Object implements Action {
      * </ol>
      * @return java.lang.String
      * @param objectModel java.util.Map
-     * @param par org.apache.avalon.Parameters
+     * @param par org.apache.avalon.configuration.Parameters
      */
     public static String getLang(Map objectModel, Parameters par) {
 

@@ -24,7 +24,7 @@ import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Loggable;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;

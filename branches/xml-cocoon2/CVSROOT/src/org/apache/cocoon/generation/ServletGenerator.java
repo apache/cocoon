@@ -14,7 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Composer;
 
 import org.apache.cocoon.Constants;
@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-16 22:07:39 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-19 21:20:33 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer {

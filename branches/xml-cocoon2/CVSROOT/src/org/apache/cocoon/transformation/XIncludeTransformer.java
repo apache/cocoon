@@ -27,7 +27,7 @@ import org.xml.sax.ContentHandler;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Loggable;
@@ -51,7 +51,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 05:55:25 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-19 21:20:48 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
 

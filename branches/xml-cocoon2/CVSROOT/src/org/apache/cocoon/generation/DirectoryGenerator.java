@@ -21,7 +21,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.ProcessingException;
@@ -67,7 +67,7 @@ import org.apache.regexp.RESyntaxException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-08 15:50:57 $ */
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-19 21:20:32 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -98,7 +98,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
     protected RE rootRE;
     protected RE includeRE;
     protected RE excludeRE;
-    
+
     protected boolean isRequestedDirectory;
 
 
@@ -129,7 +129,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
         this.depth = par.getParameterAsInteger("depth", 1);
         getLogger().debug("depth: " + this.depth);
-        
+
         String rePattern = par.getParameter("root", null);
         try {
             getLogger().debug("root pattern: " + rePattern);
@@ -139,7 +139,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
             throw new ProcessingException("Syntax error in root pattern!'",
                     rese);
         }
-        
+
         rePattern = par.getParameter("include", null);
         try {
             getLogger().debug("include pattern: " + rePattern);
@@ -149,7 +149,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
             throw new ProcessingException("Syntax error in include pattern!'",
                     rese);
         }
-        
+
         rePattern = par.getParameter("exclude", null);
         try {
             getLogger().debug("exclude pattern: " + rePattern);
@@ -159,9 +159,9 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
             throw new ProcessingException("Syntax error in exclude pattern!'",
                     rese);
         }
-        
+
         this.isRequestedDirectory = false;
-        
+
         /* Create a reusable attributes for creating nodes */
         AttributesImpl attributes = new AttributesImpl();
     }
@@ -203,7 +203,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
         Stack ancestors = getAncestors(path);
         addPathWithAncestors(path, ancestors);
-        
+
         this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
         } catch (IOException ioe) {
@@ -231,12 +231,12 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
                 ancestors.push(parent);
             }
         }
-        
+
         return ancestors;
     }
-    
-    
-    protected void addPathWithAncestors(File path, Stack ancestors) 
+
+
+    protected void addPathWithAncestors(File path, Stack ancestors)
             throws SAXException {
 
         if (ancestors.empty()) {
@@ -248,8 +248,8 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
             endNode(DIR_NODE_NAME);
         }
     }
-    
-    
+
+
     /**
      * Adds a single node to the generated document. If the path is a
      * directory, and depth is greater than zero, then recursive calls

@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.ThreadSafe;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
@@ -19,7 +19,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-12 05:56:49 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-19 21:20:11 $
  */
 public interface Action extends Component, ThreadSafe {
     /**

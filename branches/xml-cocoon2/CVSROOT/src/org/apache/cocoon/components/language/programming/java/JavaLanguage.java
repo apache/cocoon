@@ -13,7 +13,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
@@ -33,7 +33,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-16 15:38:30 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-19 21:20:29 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composer {
 

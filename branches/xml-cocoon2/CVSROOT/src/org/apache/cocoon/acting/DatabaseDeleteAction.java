@@ -26,7 +26,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-12 04:38:32 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-19 21:20:12 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();

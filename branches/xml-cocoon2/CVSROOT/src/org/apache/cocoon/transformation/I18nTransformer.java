@@ -19,7 +19,7 @@ import org.apache.avalon.Poolable;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Loggable;
 
 import org.xml.sax.Attributes;

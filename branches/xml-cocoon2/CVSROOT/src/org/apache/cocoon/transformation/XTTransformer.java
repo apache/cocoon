@@ -22,7 +22,7 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Modifiable;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.Constants;
@@ -71,7 +71,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-23 14:01:28 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-19 21:20:48 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer, Loggable, Poolable {

@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.xml.sax.EntityResolver;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
@@ -21,7 +21,7 @@ import org.apache.avalon.Recyclable;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-13 06:50:06 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-19 21:20:37 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Poolable, Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */

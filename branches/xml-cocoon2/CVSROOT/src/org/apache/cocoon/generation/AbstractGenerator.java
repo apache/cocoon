@@ -10,7 +10,7 @@ package org.apache.cocoon.generation;
 import java.util.Map;
 import java.io.IOException;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Recyclable;
 
 import org.apache.cocoon.xml.AbstractXMLProducer;
@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-02 15:55:00 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-19 21:20:31 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer
 implements Generator, Recyclable {
@@ -41,7 +41,7 @@ implements Generator, Recyclable {
      * Set the <code>EntityResolver</code>, object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) 
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         this.resolver=resolver;
         this.objectModel=objectModel;

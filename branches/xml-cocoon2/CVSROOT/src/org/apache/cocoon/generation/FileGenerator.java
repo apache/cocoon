@@ -30,7 +30,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Component;
 
@@ -59,7 +59,7 @@ import org.apache.avalon.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-12 04:38:52 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-19 21:20:32 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 

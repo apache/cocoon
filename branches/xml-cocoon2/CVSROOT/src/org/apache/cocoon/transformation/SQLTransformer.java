@@ -21,7 +21,7 @@ import java.util.Enumeration;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
@@ -48,7 +48,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 17:10:55 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-19 21:20:47 $ $Author: bloritsch $
  */
 
 public class SQLTransformer extends AbstractTransformer implements Composer, Loggable, Poolable {

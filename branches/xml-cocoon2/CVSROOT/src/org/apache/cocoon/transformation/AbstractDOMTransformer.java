@@ -17,7 +17,7 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.Roles;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Recyclable;
 
 /**

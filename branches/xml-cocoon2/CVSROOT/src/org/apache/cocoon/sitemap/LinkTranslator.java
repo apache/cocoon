@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -29,7 +29,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 05:55:24 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-19 21:20:39 $
  */
 
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {

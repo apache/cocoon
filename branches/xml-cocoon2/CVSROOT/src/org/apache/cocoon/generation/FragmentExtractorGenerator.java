@@ -13,7 +13,7 @@ import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.Constants;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 
 import org.xml.sax.EntityResolver;
@@ -37,7 +37,7 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-25 00:20:50 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-19 21:20:33 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
 
@@ -58,7 +58,7 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver,objectModel,src,par);
 
-        // Fix for commandline generation. 
+        // Fix for commandline generation.
         // Don't cleanup the store if we are in LINK_VIEW
         AbstractEnvironment env = (AbstractEnvironment) resolver;
         String view = env.getView();
@@ -81,7 +81,7 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
 
             streamer.stream(doc);
-            // Fix for commandline generation. 
+            // Fix for commandline generation.
             // Don't cleanup the store if we are in LINK_VIEW
             if(cleanupStore)
                 FragmentExtractorGenerator.fragmentStore.remove(source);

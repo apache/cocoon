@@ -19,7 +19,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-13 09:45:21 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-19 21:20:40 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;

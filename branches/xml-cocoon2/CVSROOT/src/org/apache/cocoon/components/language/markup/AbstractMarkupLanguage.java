@@ -34,7 +34,7 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.Roles;
@@ -47,7 +47,7 @@ import org.apache.cocoon.util.IOUtils;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-12 04:38:40 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-19 21:20:23 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */

@@ -43,7 +43,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.configuration.SAXConfigurationHandler;
 import org.apache.avalon.util.datasource.DataSourceComponent;
 
@@ -174,7 +174,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-14 16:28:54 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-19 21:20:10 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();

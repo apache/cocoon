@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.Parameters;
+import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.ProcessingException;
@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-11 20:35:50 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-19 21:20:46 $
  *
  */
 public class LogTransformer extends AbstractTransformer implements Poolable {
