@@ -12,13 +12,30 @@
     Currently the documentation is available on the Cocoon Wiki.</sample>
  </group>
 
- <group name="Woody Samples">
+ <group name="Basic Samples">
   <sample name="Various" href="form1">This sample shows validation, event handling and various Woody features.</sample>
   <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
-
   <sample name="Registration" href="registration">A simple registration form.</sample>
+ </group>
+
+ <group name="Binding Samples">
+  <note>
+    Woody has a binding framework which assists in copying Java-bean or XML (DOM) data into a Woody form and back.
+  </note>
   <sample name="XML Binding" href="form2xml.flow">A form for just editing an XML file.</sample>
   <sample name="Bean Binding" href="form2bean.flow">A form for just editing a Java bean</sample>
+ </group>
+
+ <group name="Locales">
+  <note>
+    The samples below are the same as the basic flowscript sample but now use different locales.
+    The locale can affect things like date and number formatting.
+    You can try out other locales by supplying other values for the locale parameter in the URL.
+  </note>
+  <sample name="Flowscript" href="form1.flow?locale=fr-FR">France</sample>
+  <sample name="Flowscript" href="form1.flow?locale=it-IT">Italy</sample>
+  <sample name="Flowscript" href="form1.flow?locale=de-DE">Germany</sample>
+  <sample name="Flowscript" href="form1.flow?locale=nl-BE">Belgium (dutch)</sample>
  </group>
 
 </samples>
