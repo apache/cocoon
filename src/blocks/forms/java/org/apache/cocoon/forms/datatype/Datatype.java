@@ -17,6 +17,7 @@ package org.apache.cocoon.forms.datatype;
 
 import org.outerj.expression.ExpressionContext;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
+import org.apache.cocoon.forms.validation.ValidationError;
 
 import java.util.Locale;
 
@@ -35,7 +36,7 @@ import java.util.Locale;
  * influence on the {@link #validate(Object, ExpressionContext)} method, which should in that case be passed
  * an array of objects. See also {@link #isArrayType()}.
  * 
- * @version $Id: Datatype.java,v 1.1 2004/03/09 10:34:01 reinhard Exp $
+ * @version $Id: Datatype.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public interface Datatype {
     /**

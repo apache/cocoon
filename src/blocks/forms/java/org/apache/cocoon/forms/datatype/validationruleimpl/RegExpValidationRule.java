@@ -16,8 +16,8 @@
 package org.apache.cocoon.forms.datatype.validationruleimpl;
 
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.ValidationError;
 import org.apache.cocoon.forms.util.I18nMessage;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
@@ -30,7 +30,7 @@ import org.outerj.expression.ExpressionContext;
  * <p>The <a href="http://jakarta.apache.org/oro/">Jakarta ORO</a> library
  * is used as regexp engine.
  * 
- * @version $Id: RegExpValidationRule.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id: RegExpValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public class RegExpValidationRule extends AbstractValidationRule {
 	/** Compiled regular expression. */

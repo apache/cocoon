@@ -18,9 +18,9 @@ package org.apache.cocoon.forms.datatype.validationruleimpl;
 import java.math.BigDecimal;
 
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.ValidationError;
 import org.apache.cocoon.forms.formmodel.CannotYetResolveWarning;
 import org.apache.cocoon.forms.util.I18nMessage;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionContext;
 
@@ -36,7 +36,7 @@ import org.outerj.expression.ExpressionContext;
  *  <li>check min and max values (range check)
  * </ul>
  * 
- * @version $Id: RangeValidationRule.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id: RangeValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public class RangeValidationRule extends AbstractValidationRule {
     private Expression minExpr;
