@@ -54,7 +54,7 @@ import org.apache.pluto.om.common.ObjectID;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowListImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: PortletWindowListImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class PortletWindowListImpl implements PortletWindowList, PortletWindowListCtrl {
 
@@ -81,7 +81,7 @@ public class PortletWindowListImpl implements PortletWindowList, PortletWindowLi
     /**
      * Returns the portlet window object of the given id
      *
-     * @param
+     * @param id  id of the portlet window object
      *
      * @return the portlet window object or null if the list does not
      *         contain a portlet window with the given id

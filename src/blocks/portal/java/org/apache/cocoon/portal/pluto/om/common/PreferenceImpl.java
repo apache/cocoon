@@ -59,7 +59,7 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PreferenceImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: PreferenceImpl.java,v 1.2 2004/01/23 12:34:30 joerg Exp $
  */
 public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Serializable {
     private final static String NULL_VALUE = "#*!0_NULL_0!*#";
@@ -92,7 +92,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
 
         // replace all NULL_ARRAYENTRY Strings by NULL
         for (int i = 0; i < returnValue.size(); i++) {
-            if (NULL_ARRAYENTRY.equals((String)returnValue.get(i))) {
+            if (NULL_ARRAYENTRY.equals(returnValue.get(i))) {
                 returnValue.set(i, null);
             }
         }

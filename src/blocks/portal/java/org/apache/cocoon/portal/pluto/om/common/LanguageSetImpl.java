@@ -50,7 +50,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.pluto.om.common.Language;
@@ -62,7 +61,7 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LanguageSetImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: LanguageSetImpl.java,v 1.2 2004/01/23 12:34:30 joerg Exp $
  */
 public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, java.io.Serializable, Support
 {
@@ -95,6 +94,7 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
         return(Language)lang;
     }
 
+    /* never used
     // creates a locale object from a string representation
     private Locale createLocale(String locale)
     {
@@ -115,6 +115,7 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
 
         return new java.util.Locale(localeDef[0], localeDef[1], localeDef[2]+localeDef[3]+localeDef[4]);
     }
+    */
 
     // AbstractSupportSet implementation.
 
@@ -221,7 +222,7 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
         {
             title="";
         }
-        boolean added = add(createLanguage(getDefaultLocale(), null));
+        add(createLanguage(getDefaultLocale(), null));
     }
 
     // create and add all resource bundle information as Language objects to this set

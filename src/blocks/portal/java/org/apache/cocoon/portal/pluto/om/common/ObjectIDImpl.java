@@ -54,7 +54,7 @@ import java.io.*;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ObjectIDImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: ObjectIDImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class ObjectIDImpl implements org.apache.pluto.om.common.ObjectID, java.io.Serializable
 {
@@ -62,13 +62,6 @@ public class ObjectIDImpl implements org.apache.pluto.om.common.ObjectID, java.i
     private String  stringOID;
     private int     intOID;
 
-    private ObjectIDImpl (int oid)
-    {
-        stringOID = String.valueOf (oid);
-        intOID    = oid;
-    }
-
-        
     private ObjectIDImpl (int oid, String stringOID)
     {
         this.stringOID = stringOID;

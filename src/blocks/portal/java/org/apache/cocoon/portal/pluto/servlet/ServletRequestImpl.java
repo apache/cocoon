@@ -566,7 +566,7 @@ public class ServletRequestImpl implements HttpServletRequest {
                 while (parameters.hasMoreElements()) {
                     String paramName = (String) parameters.nextElement();
                     String[] paramValues =
-                        (String[]) this.request.getParameterValues(paramName);
+                        this.request.getParameterValues(paramName);
                     String[] values =
                         (String[]) this.portletParameterMap.get(paramName);
 
