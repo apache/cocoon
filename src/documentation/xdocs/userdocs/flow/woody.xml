@@ -56,6 +56,8 @@ function form1(form) {
 
 }
 ]]></source>
+    <p>
+    </p>
     <s2 title ="The woody function"><anchor id="woody"/>
       <p>The entry point to a Woody form is the <code>woody()</code> function:
       <p>
@@ -82,16 +84,9 @@ store the form. The specified function will be called with one
 parameter, the newly created form.
       </p>
   <p>
-  To use Woody in a Flowscript you must load <code>woody.js</code> into your script and define a function that takes one argument (the argument passed to your function will be a JavaScript representation of your Woody form), for example like this:</p>
-  <source>
-
-    cocoon.load("resource://org/apache/cocoon/components/woody/flow/javascript/woody.js");
-
-    function myFormHandler(form) {
-       ...
-    }
-  </source> 
-  </s2>
+  To use Woody in a Flowscript you must load <code>woody.js</code> into your script and define a function that takes one argument (<code>form1</code> in the example at the top of this page). The argument passed to your function will be a JavaScript representation of your Woody form.
+  </p>
+ </s2>
  <s2 title="Form Object">
   <p>
   Woody provides a JavaScript <code>Form</code> object that provides methods for you to manage your form's <em>model</em> and to invoke its associated <em>view</em> and any validation you've specified.

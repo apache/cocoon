@@ -70,13 +70,13 @@ typically access its <code>id</code>:</p>
 <source>
    &lt;form action="${continuation.id}"&gt;
 </source>
-<p>You can also reach previous continuations by using the <code>getContinuation()</code> function:</p>
+<p>You can also reach previous continuations by using the <code>getParent()</code> function:</p>
 <source>
-    &lt;form action="${continuation.getContinuation(1).id}" >
+    &lt;form action="${continuation.getParent().id}" >
 </source>
 <p>or using an XPath expression:</p>
 <source>
-    &lt;form action="#{getContinuation($continuation, 1)/id}" >
+    &lt;form action="#{getParent($continuation)/id}" >
 </source>
 </s1>
 <s1 title ="Tags">
