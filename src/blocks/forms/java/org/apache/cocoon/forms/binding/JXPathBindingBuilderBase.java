@@ -138,6 +138,10 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * Flag which controls whether a binding is active during saving.
          */
         final boolean saveEnabled;
+        /**
+         * Flag which controls whether the jxpath context used by this binding 
+         * should be operating in lenient mode or not 
+         */
         final Boolean leniency;
 
         final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null);

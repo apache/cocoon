@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * &lt;fb:insert-bean addmethod="..method-to-add.."/&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InsertBeanJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

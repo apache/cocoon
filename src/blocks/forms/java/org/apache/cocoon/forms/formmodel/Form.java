@@ -33,7 +33,7 @@ import org.apache.commons.collections.list.CursorableLinkedList;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Form extends AbstractContainerWidget {
 
