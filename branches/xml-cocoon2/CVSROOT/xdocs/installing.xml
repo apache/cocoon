@@ -4,7 +4,7 @@
 
 <document>
  <header>
-  <title>Installing Cocoon</title>
+  <title>Installing Cocoon2</title>
   <authors>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
   </authors>
@@ -20,7 +20,7 @@
 
   <ul>
    <li><strong>Java Virtual Machine</strong>
-    A Java 1.2 or greater compatible virtual machine must be present for both
+    A Java 1.1 or greater compatible virtual machine must be present for both
     command line and servlet type usage of Cocoon. Note that all servlet engines
     require a JVM to run so if you are already using servlets you already have
     one installed.
@@ -62,16 +62,16 @@
   </note>
  </s1>
 
- <s1 title="Installing Cocoon">
+ <s1 title="Installing Cocoon 2">
   <p>
    Being Cocoon a servlet, you should be able to install it on every compliant
-   servlet engine by associating the "org.apache.cocoon.Cocoon" servlet
-   with the requests you want it to handle. In order to do this, there is no
-   standard way, so we try to provide detailed information for the most used
-   servlet systems.
+   servlet engine by associating the "org.apache.cocoon.servlet.CocoonServlet" 
+   servlet with the requests you want it to handle. In order to do this, there 
+   is no standard way, so we try to provide detailed information for the most 
+   used servlet systems.
   </p>
 
-  <s2 title="Installing Cocoon on Apache JServ">
+  <s2 title="Installing Cocoon2 on Apache JServ">
    <p>
     First thing to do is to make sure that Cocoon and all the needed components
     (as explained in the previous section) are visible. This implies adding
@@ -86,8 +86,6 @@
    </p>
 
 <source>
-wrapper.classpath=/usr/local/java/jdk/lib/tools.jar
-wrapper.classpath=/usr/local/java/lib/cocoon.jar
 wrapper.classpath=/usr/local/java/lib/xerces.jar
 wrapper.classpath=/usr/local/java/lib/xalan.jar
 wrapper.classpath=/usr/local/java/lib/fop.jar
@@ -95,9 +93,8 @@ wrapper.classpath=/usr/local/java/lib/fop.jar
 </source>
 
    <note>
-    from this version of Cocoon the <code>cocoon.jar</code>
-    package should be added to the servlet engine classpath as any other
-    required package (as shown above).
+    We suggest you <strong>do not</strong> place the package <code>cocoon.jar</code> in the
+    classpath but rather follow the instructions in details. 
    </note>
 
    <note>
@@ -107,63 +104,60 @@ wrapper.classpath=/usr/local/java/lib/fop.jar
    </note>
 
    <p>
-    At this point, you must set the Cocoon configurations. To do this, you
-    must choose the servlet zone(s) where you want Cocoon to reside.
-    If you don't know what a servlet zone is, open the
+    At this point, you must installe the Cocoon package and set the Cocoon 
+    configurations. To do this, you must choose the servlet zone(s) where you 
+    want Cocoon to reside. If you don't know what a servlet zone is, open the
     <code>zone.properties</code> file.
    </p>
 
    <p>
-    To configure Cocoon, you must pass the <code>cocoon.properties</code>
-    file location to the servlet by adding the following line to the servlet zone:
+    To configure Cocoon, you must pass the <code>cocoon.xconf</code>
+    file location to the <em>cocoon</em> servlet and you do so by adding the 
+    following lines to the servlet zone properties:
    </p>
 
-<source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
+<source>servlet.cocoon.code = org.apache.cocoon.servlet.CocoonServlet
+servlet.cocoon.initArgs=configurations=[path-to-cocoon]/conf/cocoon.xconf</source>
 
    <p>
-    Note that you should not need to change anything from the template
-    properties file found in the distribution (under <code>/conf/</code>),
-    but you must edit it for more complex operation. Please refer directly to
-    the file that contains breaf indications and comments on the different
-    configurations, but you don't need to care about that at this point.
+    That file contains XML configurations for Cocoon in order to do its job and
+    you should not need to change <em>anything</em> to test Cocoon installation
+    at this point.
    </p>
 
    <p>
     Now your cocoon servlet is properly configured, but you should tell Apache
-    to direct any call to an XML file (or any other file you want Cocoon to
-    process) to the Cocoon servlet. To do this, you should add the following line
-    to your <code>jserv.conf</code> file:
+    to direct any call to a resource you want Cocoon to process it. To do this
+    add the following lines to your <code>jserv.conf</code> file:
    </p>
 
-<source>Action cocoon /servlet/org.apache.cocoon.Cocoon
-AddHandler cocoon xml</source>
+<source>Action cocoon /servlet/cocoon
+
+<location /cocoon>
+ SetHandler cocoon
+</location>
+</source>
 
    <p>
-    where <em>xml</em> is the file extention you want Cocoon to handle
-    and <em>/servlet/</em> is the mount point of your servlet zone (and the
-    above is the standard name for servlet mapping for Apache JServ).
+    Restart Apache (or just Apache JServ if in manual mode), then point your
+    browser to the following URI:
    </p>
 
-   <p>
-    Restart both Apache and Apache JServ and try accessing the Cocoon status page:
-   </p>
-
-<source>http://localhost/Cocoon.xml</source>
+<source>http://localhost/cocoon/hello</source>
 
    <p>
-    Cocoon will show you how it's configured.
-   </p>
-
-   <p>
-    If the page above is working, place the samples contained in the distribution
-    (under <code>./samples</code>) in your web server URI space and call
-    <code>index.xml</code> to see Cocoon in action.
+    where Cocoon will greet you.
    </p>
 
    <note>
-    For any problem, please go to the FAQ list before submitting a bug
-    report or a request for help on the mail lists. Thank you.
+    If this doesn't work, it's a bug in Cocoon2. The above should be the correct
+    behavior and we should aim to have Cocoon2 work that way. So, if it doesn't 
+    work, please help us fixing it. Thank you!
    </note>
+  </s2>
+
+  <s2 title="Installing Cocoon2 on Jakarta Tomcat">
+   <p>yet to be written. Volunteers welcome!</p>
   </s2>
  </s1>
 </body>
