@@ -62,18 +62,18 @@ be used to configure the chosen Forrest skin.
   <!-- Do we want to disable w3c compliance links? -->
   <disable-compliance-links>false</disable-compliance-links>
 
-  <searchsite-domain>xml.apache.org</searchsite-domain>
-  <searchsite-name>Cocoon</searchsite-name>  
+  <searchsite-domain>cocoon.apache.org</searchsite-domain>
+  <searchsite-name>Apache Cocoon</searchsite-name>  
 
   <!-- mandatory project logo
        skin: forrest-site renders it at the top -->
   <project-name>Apache Cocoon</project-name>
-  <project-url>http://xml.apache.org/cocoon/</project-url>
+  <project-url>http://cocoon.apache.org/</project-url>
   <project-logo>images/project-logo.gif</project-logo>
 
   <!-- optional group logo
        skin: forrest-site renders it at the top-left corner -->
-  <group-name>Apache</group-name>
+  <group-name>Apache Cocoon</group-name>
   <group-url>http://xml.apache.org</group-url>
   <group-logo>images/group-logo.gif</group-logo>
 
@@ -91,8 +91,8 @@ be used to configure the chosen Forrest skin.
   -->
   <trail>
     <link1 name="apache" href="http://www.apache.org/"/>
-    <link2 name="xml.apache" href="http://xml.apache.org/"/>
-    <link3 name="" href=""/>
+    <link2 name="xml" href="http://xml.apache.org/"/>
+    <link3 name="cocoon" href="http://cocoon.apache.org/"/>
   </trail>
 
   <!-- Credits are typically rendered as a set of small clickable images in the
