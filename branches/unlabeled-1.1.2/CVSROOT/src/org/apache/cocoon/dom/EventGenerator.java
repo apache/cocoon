@@ -7,30 +7,33 @@
  *****************************************************************************/
 package org.apache.cocoon.dom;
 
-import org.apache.cocoon.XMLProducer;
-import org.apache.cocoon.XMLConsumer;
+import org.apache.cocoon.sax.XMLProducer;
+import org.apache.cocoon.sax.XMLConsumer;
 import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
-import org.xml.sax.AttributeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributeListImpl;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * Generates SAX events from a DOM Document.
- * <br>
- * NOTE (PF) This class need to be FINISHED... It's INCOMPLETE.
+ * The <code>EventGenerator</code> is a utility class that will generate SAX
+ * events from a DOM Document.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 11:41:16 $
+ * @since Cocoon 2.0
  */
 public class EventGenerator implements XMLProducer {
     /** The document for wich SAX events are to be generated */
@@ -82,62 +85,44 @@ public class EventGenerator implements XMLProducer {
     private void processNode(Node n, XMLConsumer h)
     throws SAXException {
         if (n==null) return;
-        switch (n.getNodeType()) {
-            case Node.CDATA_SECTION_NODE:
-                processText((Text)n,h);
-                break;
-            case Node.DOCUMENT_NODE:
-                processDocument((Document)n,h);
-                break;
-            case Node.ELEMENT_NODE:
-                processElement((Element)n,h);
-                break;
-            case Node.PROCESSING_INSTRUCTION_NODE:
-                processProcessingInstruction((ProcessingInstruction)n,h);
-                break;
-            case Node.TEXT_NODE:
-                processText((Text)n,h);
-                break;
-            case Node.ATTRIBUTE_NODE:
-            case Node.COMMENT_NODE:
-            case Node.DOCUMENT_FRAGMENT_NODE:
-            case Node.DOCUMENT_TYPE_NODE:
-            case Node.ENTITY_NODE:
-            case Node.ENTITY_REFERENCE_NODE:
-            case Node.NOTATION_NODE:
-                processChildren(n,h);
-                break;
+        try { 
+            switch (n.getNodeType()) {
+                case Node.DOCUMENT_NODE:
+                    this.setDocument((Document)n,h);
+                    break;
+                case Node.DOCUMENT_TYPE_NODE:
+                    this.setDocumentType((DocumentType)n,h);
+                    break;
+                case Node.ELEMENT_NODE:
+                    this.setElement((Element)n,h);
+                    break;
+                case Node.TEXT_NODE:
+                    this.setText((Text)n,h);
+                    break;
+                case Node.CDATA_SECTION_NODE:
+                    this.setCDATASection((CDATASection)n,h);
+                    break;
+                case Node.PROCESSING_INSTRUCTION_NODE:
+                    this.setProcessingInstruction((ProcessingInstruction)n,h);
+                    break;
+                case Node.COMMENT_NODE:
+                    this.setComment((Comment)n,h);
+                    break;
+                case Node.ENTITY_REFERENCE_NODE:
+                    this.setEntityReference((EntityReference)n,h);
+                    break;
+                case Node.ATTRIBUTE_NODE:
+                    throw new SAXException("Unexpected Attribute node");
+                case Node.DOCUMENT_FRAGMENT_NODE:
+                    throw new SAXException("Unexpected Document Fragment node");
+                case Node.ENTITY_NODE:
+                    throw new SAXException("Unexpected Entity node");
+                case Node.NOTATION_NODE:
+                    throw new SAXException("Unexpected Notation node");
+            }
+        } catch (ClassCastException e) {
+            throw new SAXException("Error casting node to appropriate type");
         }
-    }
-
-    /** Process a Text node */
-    private void processText(Text t, XMLConsumer h)
-    throws SAXException {
-        char c[]=t.getData().toCharArray();
-        h.characters(c,0,c.length);
-    }
-
-    /** Pricess an Element node */
-    private void processElement(Element e, XMLConsumer h)
-    throws SAXException {
-        h.startElement(e.getTagName(),null);
-        processChildren(e,h);
-        h.endElement(e.getTagName());
-    }
-
-    /** Process a Document node */
-    private void processDocument(Document d, XMLConsumer h)
-    throws SAXException {
-        h.startDocument();
-        processChildren(d,h);
-        h.endDocument();
-    }
-
-    /** Pricess a ProcessingInstruction node */
-    private void processProcessingInstruction(ProcessingInstruction p,
-                                              XMLConsumer h)
-    throws SAXException {
-        h.processingInstruction(p.getTarget(),p.getData());
     }
 
     /** Process all children nodes of a Node */
@@ -145,5 +130,73 @@ public class EventGenerator implements XMLProducer {
     throws SAXException {
         NodeList l=n.getChildNodes();
         for(int x=0;x<l.getLength();x++) processNode(l.item(x),h);
+    }
+    
+    /** Process a Document node */
+    private void setDocument(Document n, XMLConsumer h)
+    throws SAXException {
+        h.startDocument();
+        this.processChildren(n,h);
+        h.endDocument();
+    }
+    
+    /** Process a DocumentType node */
+    private void setDocumentType(DocumentType n, XMLConsumer h)
+    throws SAXException {
+        h.startDTD(n.getName(),n.getPublicId(),n.getSystemId());
+        h.endDTD();
+    }
+
+    /** Process a Element node */
+    private void setElement(Element n, XMLConsumer h)
+    throws SAXException {
+        AttributesImpl atts=new AttributesImpl();
+        NamedNodeMap map=n.getAttributes();
+        for (int x=0; x<map.getLength(); x++) {
+            if (map.item(x).getNodeType()!=Node.ATTRIBUTE_NODE) continue;
+            Attr a=(Attr)map.item(x);
+            atts.addAttribute("","",a.getName(),"CDATA",a.getValue());
+        }
+        // TODO: (PF) Try to find out how to send namespace declarations.
+        h.startElement("","",n.getTagName(),atts);
+        this.processChildren(n,h);
+        h.endElement("","",n.getTagName());
+    }
+    
+    /** Process a Text node */
+    private void setText(Text n, XMLConsumer h)
+    throws SAXException {
+        char data[]=n.getData().toCharArray();
+        h.characters(data,0,data.length);
+    }
+    
+    /** Process a CDATASection node */
+    private void setCDATASection(CDATASection n, XMLConsumer h)
+    throws SAXException {
+        h.startCDATA();
+        char data[]=n.getData().toCharArray();
+        h.characters(data,0,data.length);
+        h.endCDATA();
+    }
+    
+    /** Process a ProcessingInstruction node */
+    private void setProcessingInstruction(ProcessingInstruction n, XMLConsumer h)
+    throws SAXException {
+        h.processingInstruction(n.getTarget(),n.getData());
+    }
+    
+    /** Process a Comment node */
+    private void setComment(Comment n, XMLConsumer h)
+    throws SAXException {
+        char data[]=n.getData().toCharArray();
+        h.characters(data,0,data.length);
+    }
+    
+    /** Process a EntityReference node */
+    private void setEntityReference(EntityReference n, XMLConsumer h)
+    throws SAXException {
+        h.startEntity(n.getNodeName());
+        this.processChildren(n,h);
+        h.endEntity(n.getNodeName());
     }
 }
