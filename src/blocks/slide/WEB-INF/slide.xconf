@@ -82,6 +82,7 @@
             <parameter name="standalone">true</parameter>
             <parameter name="acl_inheritance_type">path</parameter>
             
+            <!--
             <content-interceptor class="org.apache.cocoon.components.slide.impl.JMSEventCacheContentInterceptor">
               <parameter name="topic-factory">JmsTopicConnectionFactory</parameter>
               <parameter name="topic">topic1</parameter>
@@ -90,6 +91,7 @@
               <parameter name="priority">4</parameter>
               <parameter name="time-to-live">1000</parameter>
             </content-interceptor>
+            -->
             
         </configuration>
         <data>
