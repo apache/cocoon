@@ -57,7 +57,6 @@ import com.coyotegulch.jisp.BTreeIndex;
 import com.coyotegulch.jisp.IndexedObjectDatabase;
 import com.coyotegulch.jisp.KeyNotFound;
 
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -77,22 +76,17 @@ import org.apache.excalibur.store.impl.JispStringKey;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.1 2003/03/17 09:49:31 cziegeler Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.2 2003/07/14 19:09:00 cziegeler Exp $
  */
 public final class DefaultStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
                Contextualizable,
                ThreadSafe,
-               Initializable,
                Parameterizable {
 
-    protected File m_workDir;
-    protected File m_cacheDir;
-
-    private File m_databaseFile;
-    private File m_indexFile;
-    private int m_Order;
-
+    /** The context containing the work and the cache directory */
+    protected Context context;
+    
     /**
      * Contextualize the Component
      *
@@ -100,8 +94,7 @@ public final class DefaultStore extends AbstractJispFilesystemStore
      * @exception  ContextException
      */
     public void contextualize(final Context context) throws ContextException {
-        this.m_workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
-        this.m_cacheDir = (File)context.get(Constants.CONTEXT_CACHE_DIR);
+        this.context = context;
     }
 
     /**
@@ -118,79 +111,81 @@ public final class DefaultStore extends AbstractJispFilesystemStore
      * @param params the configuration paramters
      * @exception  ParameterException
      */
-     public void parameterize(Parameters params) throws ParameterException {
-
+    public void parameterize(Parameters params) throws ParameterException {
+        
+        // get the directory to use
         try {
+            final File workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
             if (params.getParameterAsBoolean("use-cache-directory", false)) {
+                final File cacheDir = (File)context.get(Constants.CONTEXT_CACHE_DIR);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Using cache directory: " + m_cacheDir);
+                    getLogger().debug("Using cache directory: " + cacheDir);
                 }
-                setDirectory(m_cacheDir);
+                this.setDirectory(cacheDir);
             } else if (params.getParameterAsBoolean("use-work-directory", false)) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Using work directory: " + m_workDir);
+                    getLogger().debug("Using work directory: " + workDir);
                 }
-                setDirectory(m_workDir);
+                this.setDirectory(workDir);
             } else if (params.getParameter("directory", null) != null) {
                 String dir = params.getParameter("directory");
-                dir = IOUtils.getContextFilePath(m_workDir.getPath(), dir);
+                dir = IOUtils.getContextFilePath(workDir.getPath(), dir);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using directory: " + dir);
                 }
-                setDirectory(new File(dir));
+                this.setDirectory(new File(dir));
             } else {
                 try {
                     // Default
-                    setDirectory(m_workDir);
+                    this.setDirectory(workDir);
                 } catch (IOException e) {
                     // Ignored
                 }
             }
+        } catch (ContextException ce) {
+            throw new ParameterException("Unable to get directory information from context.", ce);
         } catch (IOException e) {
             throw new ParameterException("Unable to set directory", e);
         }
 
-        String databaseName = params.getParameter("datafile", "cocoon.dat");
-        String indexName = params.getParameter("m_indexFile", "cocoon.idx");
-        m_Order = params.getParameterAsInteger("order", 301);
+        // get store configuration
+        final String databaseName = params.getParameter("datafile", "cocoon.dat");
+        final String indexName = params.getParameter("m_indexFile", "cocoon.idx");
+        final int order = params.getParameterAsInteger("order", 301);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Database file name = " + databaseName);
             getLogger().debug("Index file name = " + indexName);
-            getLogger().debug("Order=" + m_Order);
+            getLogger().debug("Order=" + order);
         }
 
-        this.m_databaseFile = new File(m_directoryFile, databaseName);
-        m_indexFile = new File(m_directoryFile, indexName);
-    }
+        // open index and dat file
+        final File databaseFile = new File(m_directoryFile, databaseName);
+        final File indexFile = new File(m_directoryFile, indexName);
 
-    /**
-     * Initialize the Component
-     */
-    public void initialize() {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("initialize() JispFilesystemStore");
+            getLogger().debug("Initializing JispFilesystemStore");
         }
-
         try {
-            if (m_databaseFile.exists()) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("initialize(): Datafile exists");
-                }
-                m_Database = new IndexedObjectDatabase(m_databaseFile.toString(), false);
-                m_Index = new BTreeIndex(m_indexFile.toString());
-                m_Database.attachIndex(m_Index);
-            } else {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("initialize(): Datafile does not exist");
-                }
-                m_Database = new IndexedObjectDatabase(m_databaseFile.toString(), false);
-                m_Index = new BTreeIndex(m_indexFile.toString(),
-                                        m_Order, new JispStringKey(), false);
-                m_Database.attachIndex(m_Index);
+            final boolean databaseExists = databaseFile.exists();
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Datafile exists: " + databaseExists);
             }
+            super.m_Database = new IndexedObjectDatabase(databaseFile.toString(), !databaseExists);
+            // TODO: change to getNullKey when updating to latest store
+            super.m_Index = new BTreeIndex(indexFile.toString(),
+                                            order, new JispStringKey(), false);
+            super.m_Database.attachIndex(super.m_Index);
         } catch (KeyNotFound ignore) {
         } catch (Exception e) {
-            getLogger().error("initialize(..) Exception", e);
+            getLogger().error("Exception during initialization of jisp store.", e);
         }
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        // TODO  Remove this when we update to latest store
+    }
+
 }
