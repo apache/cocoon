@@ -23,9 +23,9 @@ import org.apache.cocoon.util.ClassUtils;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-08 20:58:58 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-10 04:47:45 $
  */
-public class ComponentPoolController implements PoolController, ThreadSafe {
+public class ComponentPoolController implements PoolController, ThreadSafe, Component {
 
     /** Initial increase/decrease amount */
     public final static int DEFAULT_AMOUNT = 16;
