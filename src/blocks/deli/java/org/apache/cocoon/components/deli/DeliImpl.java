@@ -98,9 +98,8 @@ import java.util.*;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $ $ $Date: 2003/03/09 00:03:44 $
+ * @version CVS $Id: DeliImpl.java,v 1.2 2003/03/11 17:44:20 vgritsenko Exp $
  */
-
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable,
                Deli,

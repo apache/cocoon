@@ -64,8 +64,8 @@ import org.apache.lucene.store.Directory;
  *   and an index, and generating hits which matches the query string in the index.
  * </p>
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version    CVS $Id: LuceneCocoonSearcher.java,v 1.1 2003/03/09 00:04:28 pier Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: LuceneCocoonSearcher.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
 public interface LuceneCocoonSearcher extends Component
 {

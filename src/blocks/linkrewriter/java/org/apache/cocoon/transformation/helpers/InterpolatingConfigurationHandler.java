@@ -62,8 +62,8 @@ import java.util.StringTokenizer;
  *
  * @see VariableConfiguration
  * @author <a href="jefft@apache.org">Jeff Turner</a>
+ * @version CVS $Id: InterpolatingConfigurationHandler.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
-
 public class InterpolatingConfigurationHandler extends SAXConfigurationHandler {
     private Map vars;
 

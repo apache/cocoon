@@ -169,6 +169,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
+ * @version CVS $Id: VariableRewriterTransformer.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
 public class VariableRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable

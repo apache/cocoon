@@ -106,6 +106,8 @@ import org.apache.excalibur.source.Source;
  * <tr><td>row        </td><td>Object      </td><td>Struct  </td><td>Object       </td></tr>
  * <tr><td>object     </td><td>Object      </td><td>        </td><td>Object       </td></tr>
  * </table></p>
+ *
+ * @version CVS $Id: JDBCTypeConversions.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
 public class JDBCTypeConversions {
     public static final Map typeConstants;

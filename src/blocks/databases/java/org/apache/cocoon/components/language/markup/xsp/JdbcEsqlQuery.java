@@ -64,8 +64,8 @@ import java.sql.CallableStatement;
  * Unfortunately it seems NOT to work with mssql
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: JdbcEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
-
 final public class JdbcEsqlQuery extends AbstractEsqlQuery {
 
     public JdbcEsqlQuery(AbstractEsqlConnection connection, String query) {

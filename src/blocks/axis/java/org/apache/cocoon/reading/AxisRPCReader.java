@@ -104,11 +104,12 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
+ *
+ * @version CVS $Id: AxisRPCReader.java,v 1.2 2003/03/11 17:44:17 vgritsenko Exp $
  */
 public class AxisRPCReader extends ComposerReader
     implements Disposable
 {
-	    
     // soap server reference
     private SoapServer m_server;
 

@@ -62,8 +62,8 @@ import java.io.IOException;
 /**
  * This class encapsulates some helper methods.
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version    CVS $Id: LuceneCocoonHelper.java,v 1.1 2003/03/09 00:04:28 pier Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: LuceneCocoonHelper.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
 public class LuceneCocoonHelper
 {

@@ -64,8 +64,8 @@ import java.util.ArrayList;
  * This is base class for all EsqlQueries
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: AbstractEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
-
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     private int maxRows = -1;
     private int skipRows = 0;

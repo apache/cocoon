@@ -124,7 +124,7 @@ import javax.xml.rpc.server.ServiceLifecycle;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @revision CVS $Id: AvalonProvider.java,v 1.1 2003/03/09 00:02:27 pier Exp $
+ * @version CVS $Id: AvalonProvider.java,v 1.2 2003/03/11 17:44:17 vgritsenko Exp $
  */
 public class AvalonProvider extends RPCProvider
 {

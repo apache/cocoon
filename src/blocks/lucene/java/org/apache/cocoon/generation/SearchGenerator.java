@@ -125,10 +125,10 @@ import java.util.Enumeration;
  * &lt;/search:results&gt;
  * </tt></pre>
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @author     <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author     <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version    CVS $Id: SearchGenerator.java,v 1.1 2003/03/09 00:04:30 pier Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
+ * @version CVS $Id: SearchGenerator.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
 public class SearchGenerator extends ComposerGenerator
     implements Contextualizable, Initializable, Disposable

@@ -64,9 +64,8 @@ import org.xml.sax.SAXException;
  * replaced with values from a lookup table.
  *
  * @author <a href="jefft@apache.org">Jeff Turner</a>
- * @version $Revision: 1.1 $ $Date: 2003/03/09 00:04:19 $
+ * @version CVS $Id: VariableConfiguration.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
-
 public class VariableConfiguration {
     public static final String UNSET_VAR="unset";
     private Configuration conf;

@@ -59,9 +59,9 @@ import org.apache.regexp.RESyntaxException;
 /**
  *  A drawing ascii art pad.
  *
- *@author     huber@apache.org
- *@created    18. Dezember 2002
- *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+ * @author huber@apache.org
+ * @since 18. Dezember 2002
+ * @version CVS $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
  */
 public class AsciiArtPad {
 
@@ -204,7 +204,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    18. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtLine implements AsciiArtElement {
         double xStart;
@@ -328,7 +328,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtRect implements AsciiArtElement {
         double xUpperLeft;
@@ -472,7 +472,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtString implements AsciiArtElement {
         private double x;
@@ -573,7 +573,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtCoordinate {
         int x, y;
@@ -669,7 +669,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArt {
         private String[] s;
@@ -755,7 +755,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtPadBuilder {
         private AsciiArtPad asciiArtPad;
@@ -953,7 +953,7 @@ public class AsciiArtPad {
      *
      *@author     huber@apache.org
      *@created    22. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.1 2003/03/09 00:02:08 pier Exp $
+     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static interface AsciiArtElement {
     }

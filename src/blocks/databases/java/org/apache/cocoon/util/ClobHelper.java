@@ -62,6 +62,8 @@ import java.io.Writer;
  * A minimal implementation just enough to send a CLOB to a
  * database. Advanced methods and all methods for modifying the CLOB
  * are not implemented.
+ *
+ * @version CVS $Id: ClobHelper.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
 public class ClobHelper implements Clob{
 

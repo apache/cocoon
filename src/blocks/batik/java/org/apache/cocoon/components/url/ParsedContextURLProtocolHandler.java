@@ -65,7 +65,7 @@ import java.net.MalformedURLException;
  * an uncontrolled manner (as far as Cocoon is concerned).
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version $Id: ParsedContextURLProtocolHandler.java,v 1.1 2003/03/09 00:02:37 pier Exp $
+ * @version CVS $Id: ParsedContextURLProtocolHandler.java,v 1.2 2003/03/11 17:44:18 vgritsenko Exp $
  */
 public class ParsedContextURLProtocolHandler extends AbstractParsedURLProtocolHandler {
     private static Context context = null;

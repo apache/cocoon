@@ -169,6 +169,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.2 2003/03/11 17:44:20 vgritsenko Exp $
  */
 public class LinkRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
