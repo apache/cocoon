@@ -57,6 +57,8 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.apache.excalibur.xml.xpath.XPathUtil;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.*;
@@ -67,10 +69,12 @@ import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
 /**
@@ -78,7 +82,7 @@ import javax.xml.transform.TransformerException;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.4 2003/07/24 09:17:17 haul Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.5 2003/08/15 15:55:02 haul Exp $
 */
 public final class DOMUtil {
 
@@ -91,7 +95,7 @@ public final class DOMUtil {
      */
     public static Document getOwnerDocument(Node node) {
         if (node.getNodeType() == Node.DOCUMENT_NODE) {
-            return (Document)node;
+            return (Document) node;
         } else {
             return node.getOwnerDocument();
         }
@@ -106,15 +110,15 @@ public final class DOMUtil {
      * @param path XPath search expression.
      * @return     The value of the node or <CODE>null</CODE>
      */
-    public static String getValueOfNode(XPathProcessor processor,
-                                        Node root,
-                                        String path)
-    throws ProcessingException {
+    public static String getValueOfNode(XPathProcessor processor, Node root, String path)
+        throws ProcessingException {
         if (path == null) {
             throw new ProcessingException("Not a valid XPath: " + path);
         }
-        if (root == null) return null;
-        if (path.startsWith("/") == true) path = path.substring(1); // remove leading "/"
+        if (root == null)
+            return null;
+        if (path.startsWith("/") == true)
+            path = path.substring(1); // remove leading "/"
         if (path.endsWith("/") == true) { // remove ending "/" for root node
             path = path.substring(0, path.length() - 1);
         }
@@ -136,13 +140,15 @@ public final class DOMUtil {
      * @param defaultValue The default value if the node does not exist.
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static String getValueOfNode(XPathProcessor processor,
-                                        Node root,
-                                        String path,
-                                        String defaultValue)
-    throws ProcessingException {
+    public static String getValueOfNode(
+        XPathProcessor processor,
+        Node root,
+        String path,
+        String defaultValue)
+        throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
-        if (value == null) value = defaultValue;
+        if (value == null)
+            value = defaultValue;
 
         return value;
     }
@@ -159,7 +165,7 @@ public final class DOMUtil {
      * @throws ProcessingException If the node is not found.
      */
     public static boolean getValueOfNodeAsBoolean(XPathProcessor processor, Node root, String path)
-    throws ProcessingException {
+        throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
         if (value == null) {
             throw new ProcessingException("No such node: " + path);
@@ -179,10 +185,12 @@ public final class DOMUtil {
      * @param defaultValue Default boolean value.
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static boolean getValueOfNodeAsBoolean(XPathProcessor processor,Node root,
-                                              String path,
-                                              boolean defaultValue)
-    throws ProcessingException {
+    public static boolean getValueOfNodeAsBoolean(
+        XPathProcessor processor,
+        Node root,
+        String path,
+        boolean defaultValue)
+        throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
         if (value == null) {
             return defaultValue;
@@ -196,7 +204,8 @@ public final class DOMUtil {
      * If the node has no text nodes, <code>null</code> is returned.
      */
     public static String getValueOfNode(Node node) {
-        if (node == null) return null;
+        if (node == null)
+            return null;
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             return node.getNodeValue();
         } else {
@@ -224,7 +233,8 @@ public final class DOMUtil {
      */
     public static String getValueOfNode(Node node, String defaultValue) {
         String value = getValueOfNode(node);
-        if (value == null) value = defaultValue;
+        if (value == null)
+            value = defaultValue;
         return value;
     }
 
@@ -254,9 +264,8 @@ public final class DOMUtil {
      * has more than one root node. This xml is parsed by the
      * specified parser instance and a DOM DocumentFragment is created.
      */
-    public static DocumentFragment getDocumentFragment(SAXParser parser,
-                                                       Reader stream)
-    throws ProcessingException {
+    public static DocumentFragment getDocumentFragment(SAXParser parser, Reader stream)
+        throws ProcessingException {
         DocumentFragment frag = null;
 
         Writer writer;
@@ -271,7 +280,7 @@ public final class DOMUtil {
 
             writer.write(XML_ROOT_DEFINITION);
             char[] cbuf = new char[16384];
-            int    len;
+            int len;
             do {
                 len = stream.read(cbuf, 0, 16384);
                 if (len != -1) {
@@ -282,10 +291,10 @@ public final class DOMUtil {
 
             // now test if xml input start with <?xml
             String xml = writer.toString();
-            String searchString = XML_ROOT_DEFINITION+"<?xml ";
+            String searchString = XML_ROOT_DEFINITION + "<?xml ";
             if (xml.startsWith(searchString) == true) {
                 // now remove the surrounding root element
-                xml = xml.substring(XML_ROOT_DEFINITION.length(), xml.length()-7);
+                xml = xml.substring(XML_ROOT_DEFINITION.length(), xml.length() - 7);
                 removeRoot = false;
             }
 
@@ -341,26 +350,27 @@ public final class DOMUtil {
     public static SourceParameters createParameters(Node fragment, SourceParameters source) {
         SourceParameters par = (source == null ? new SourceParameters() : source);
         if (fragment != null) {
-            NodeList   childs = fragment.getChildNodes();
+            NodeList childs = fragment.getChildNodes();
             if (childs != null) {
                 Node current;
-                for(int i = 0; i < childs.getLength(); i++) {
+                for (int i = 0; i < childs.getLength(); i++) {
                     current = childs.item(i);
 
                     // only element nodes
                     if (current.getNodeType() == Node.ELEMENT_NODE) {
                         current.normalize();
                         NodeList valueChilds = current.getChildNodes();
-                        String   key;
-                        StringBuffer   valueBuffer;
-                        String         value;
+                        String key;
+                        StringBuffer valueBuffer;
+                        String value;
 
                         key = current.getNodeName();
                         valueBuffer = new StringBuffer();
-                        for(int m = 0; m < valueChilds.getLength(); m++) {
+                        for (int m = 0; m < valueChilds.getLength(); m++) {
                             current = valueChilds.item(m); // attention: current is reused here!
                             if (current.getNodeType() == Node.TEXT_NODE) { // only text nodes
-                                if (valueBuffer.length() > 0) valueBuffer.append(' ');
+                                if (valueBuffer.length() > 0)
+                                    valueBuffer.append(' ');
                                 valueBuffer.append(current.getNodeValue());
                             }
                         }
@@ -369,8 +379,8 @@ public final class DOMUtil {
                             par.setParameter(key, value);
                         }
                     }
-                 }
-             }
+                }
+            }
         }
         return par;
     }
@@ -382,16 +392,17 @@ public final class DOMUtil {
     public static String createText(DocumentFragment fragment) {
         StringBuffer value = new StringBuffer();
         if (fragment != null) {
-            NodeList   childs = fragment.getChildNodes();
+            NodeList childs = fragment.getChildNodes();
             if (childs != null) {
                 Node current;
 
-                for(int i = 0; i < childs.getLength(); i++) {
+                for (int i = 0; i < childs.getLength(); i++) {
                     current = childs.item(i);
 
                     // only text nodes
                     if (current.getNodeType() == Node.TEXT_NODE) {
-                        if (value.length() > 0) value.append(' ');
+                        if (value.length() > 0)
+                            value.append(' ');
                         value.append(current.getNodeValue());
                     }
                 }
@@ -399,7 +410,6 @@ public final class DOMUtil {
         }
         return value.toString().trim();
     }
-
 
     /**
      * Compare all attributes of two elements.
@@ -412,24 +422,26 @@ public final class DOMUtil {
         NamedNodeMap attr2 = second.getAttributes();
         String value;
 
-        if (attr1 == null && attr2 == null) return true;
+        if (attr1 == null && attr2 == null)
+            return true;
         int attr1Len = (attr1 == null ? 0 : attr1.getLength());
         int attr2Len = (attr2 == null ? 0 : attr2.getLength());
         if (attr1Len > 0) {
             int l = attr1.getLength();
-            for(int i=0;i<l;i++) {
+            for (int i = 0; i < l; i++) {
                 if (attr1.item(i).getNodeName().startsWith("xmlns:") == true)
                     attr1Len--;
             }
         }
         if (attr2Len > 0) {
             int l = attr2.getLength();
-            for(int i=0;i<l;i++) {
+            for (int i = 0; i < l; i++) {
                 if (attr2.item(i).getNodeName().startsWith("xmlns:") == true)
                     attr2Len--;
             }
         }
-        if (attr1Len != attr2Len) return false;
+        if (attr1Len != attr2Len)
+            return false;
         int i, l;
         int m, l2;
         i = 0;
@@ -463,8 +475,7 @@ public final class DOMUtil {
      * @param parent The node getting the value
      * @param text   the value
      */
-    public static void valueOf(Node parent, String text) 
-    throws ProcessingException {
+    public static void valueOf(Node parent, String text) throws ProcessingException {
         if (text != null) {
             parent.appendChild(parent.getOwnerDocument().createTextNode(text));
         }
@@ -477,13 +488,12 @@ public final class DOMUtil {
      * @param parent The node getting the value
      * @param v the XML fragment
      */
-    public static void valueOf(Node parent, XMLizable v) 
-    throws ProcessingException {
+    public static void valueOf(Node parent, XMLizable v) throws ProcessingException {
         if (v != null) {
             DOMBuilder builder = new DOMBuilder(parent);
-            try { 
+            try {
                 v.toSAX(builder);
-            } catch(SAXException e) {
+            } catch (SAXException e) {
                 throw new ProcessingException(e);
             }
         }
@@ -496,8 +506,7 @@ public final class DOMUtil {
      * @param parent The node getting the value
      * @param v the value
      */
-    public static void valueOf(Node parent, Node v) 
-    throws ProcessingException {
+    public static void valueOf(Node parent, Node v) throws ProcessingException {
         if (v != null) {
             parent.appendChild(parent.getOwnerDocument().importNode(v, true));
         }
@@ -511,16 +520,14 @@ public final class DOMUtil {
      * @param parent The node getting the value
      * @param v the XML fragment
      */
-    public static void valueOf(Node parent, 
-                                 Collection v) 
-    throws ProcessingException {
+    public static void valueOf(Node parent, Collection v) throws ProcessingException {
         if (v != null) {
             Iterator iterator = v.iterator();
             while (iterator.hasNext()) {
                 valueOf(parent, iterator.next());
             }
         }
-     }
+    }
 
     /**
      * Implementation for <code>java.util.Map</code> :
@@ -531,9 +538,7 @@ public final class DOMUtil {
      * @param parent The node getting the value
      * @param v      the Map
      */
-    public static void valueOf(Node parent, 
-                                 Map  v) 
-    throws ProcessingException {
+    public static void valueOf(Node parent, Map v) throws ProcessingException {
         if (v != null) {
             Iterator iterator = v.keySet().iterator();
             Node mapNode = parent.getOwnerDocument().createElementNS(null, "java.util.map");
@@ -547,13 +552,13 @@ public final class DOMUtil {
                 Node keyNode = entryNode.getOwnerDocument().createElementNS(null, "key");
                 entryNode.appendChild(keyNode);
                 valueOf(keyNode, key);
-                
+
                 Node valueNode = entryNode.getOwnerDocument().createElementNS(null, "value");
                 entryNode.appendChild(valueNode);
                 valueOf(valueNode, v.get(key));
             }
         }
-     }
+    }
 
     /**
      * Implementation for <code>Object</code> depending on its class :
@@ -566,8 +571,7 @@ public final class DOMUtil {
      * @param parent The node getting the value
      * @param v the value
      */
-    public static void valueOf(Node parent, Object v) 
-    throws ProcessingException {
+    public static void valueOf(Node parent, Object v) throws ProcessingException {
         if (v == null) {
             return;
         }
@@ -580,36 +584,36 @@ public final class DOMUtil {
                 valueOf(parent, elements[i]);
             }
             return;
-         }
+        }
 
-         // Check handled object types in case they were not typed in the XSP
+        // Check handled object types in case they were not typed in the XSP
 
-         // XMLizable
-         if (v instanceof XMLizable) {
-             valueOf(parent, (XMLizable)v);
-             return;
-         }
+        // XMLizable
+        if (v instanceof XMLizable) {
+            valueOf(parent, (XMLizable) v);
+            return;
+        }
 
-         // Node
-         if (v instanceof Node) {
-             valueOf(parent, (Node)v);
-             return;
-         }
+        // Node
+        if (v instanceof Node) {
+            valueOf(parent, (Node) v);
+            return;
+        }
 
-         // Collection
-         if (v instanceof Collection) {
-             valueOf(parent, (Collection)v);
-             return;
-         }
+        // Collection
+        if (v instanceof Collection) {
+            valueOf(parent, (Collection) v);
+            return;
+        }
 
-         // Map
-         if (v instanceof Map) {
-             valueOf(parent, (Map)v);
-             return;
-         }
+        // Map
+        if (v instanceof Map) {
+            valueOf(parent, (Map) v);
+            return;
+        }
 
-         // Give up: hope it's a string or has a meaningful string representation
-         valueOf(parent, String.valueOf(v));
+        // Give up: hope it's a string or has a meaningful string representation
+        valueOf(parent, String.valueOf(v));
     }
 
     /**
@@ -623,8 +627,7 @@ public final class DOMUtil {
      *
      * @throws TransformerException
      */
-    public static Node getSingleNode(Node contextNode, String str)
-    throws TransformerException {
+    public static Node getSingleNode(Node contextNode, String str) throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents == null) {
             return XPathAPI.selectSingleNode(contextNode, str);
@@ -656,27 +659,35 @@ public final class DOMUtil {
      * @return         The node specified by the path.
      * @throws ProcessingException If no path is specified or the XPath engine fails.
      */
-    public static Node selectSingleNode(Node rootNode, String path)
-    throws ProcessingException {
+    public static Node selectSingleNode(Node rootNode, String path) throws ProcessingException {
         // Now we have to parse the string
         // First test:  path? rootNode?
         if (path == null) {
             throw new ProcessingException("XPath is required.");
         }
-        if (rootNode == null) return rootNode;
+        if (rootNode == null)
+            return rootNode;
 
-        if (path.length() == 0 || path.equals("/") == true) return rootNode;
+        if (path.length() == 0 || path.equals("/") == true)
+            return rootNode;
 
         // now the first "quick" test is if the node exists using the
         // full XPathAPI
         try {
             Node testNode = getSingleNode(rootNode, path);
-            if (testNode != null) return testNode;
+            if (testNode != null)
+                return testNode;
         } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException("Transforming exception during selectSingleNode with path: '"+path+"'. Exception: " + local, local);
+            throw new ProcessingException(
+                "Transforming exception during selectSingleNode with path: '"
+                    + path
+                    + "'. Exception: "
+                    + local,
+                local);
         }
 
-        if (path.startsWith("/") == true) path = path.substring(1); // remove leading "/"
+        if (path.startsWith("/") == true)
+            path = path.substring(1); // remove leading "/"
         if (path.endsWith("/") == true) { // remove ending "/" for root node
             path = path.substring(0, path.length() - 1);
         }
@@ -693,11 +704,11 @@ public final class DOMUtil {
                 pos = path.indexOf("/", posSelector);
             }
 
-            String  nodeName;
+            String nodeName;
             boolean isAttribute = false;
             if (pos != -1) { // found separator
                 nodeName = path.substring(0, pos); // string until "/"
-                path = path.substring(pos+1); // rest of string after "/"
+                path = path.substring(pos + 1); // rest of string after "/"
             } else {
                 nodeName = path;
             }
@@ -711,7 +722,9 @@ public final class DOMUtil {
             try {
                 singleNode = getSingleNode(parent, nodeName);
             } catch (javax.xml.transform.TransformerException localException) {
-                throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(), localException);
+                throw new ProcessingException(
+                    "XPathUtil.selectSingleNode: " + localException.getMessage(),
+                    localException);
             }
 
             // create node if necessary
@@ -721,22 +734,29 @@ public final class DOMUtil {
                 int posSelect = nodeName.indexOf("[");
                 String XPathExp = null;
                 if (posSelect != -1) {
-                    XPathExp = nodeName.substring(posSelect+1, nodeName.length()-1);
+                    XPathExp = nodeName.substring(posSelect + 1, nodeName.length() - 1);
                     nodeName = nodeName.substring(0, posSelect);
                 }
                 if (isAttribute == true) {
                     try {
-                        newNode = getOwnerDocument(rootNode).createAttributeNS(null, nodeName.substring(1));
-                        ((Element)parent).setAttributeNodeNS((org.w3c.dom.Attr)newNode);
+                        newNode =
+                            getOwnerDocument(rootNode).createAttributeNS(
+                                null,
+                                nodeName.substring(1));
+                        ((Element) parent).setAttributeNodeNS((org.w3c.dom.Attr) newNode);
                         parent = newNode;
                     } catch (DOMException local) {
-                        throw new ProcessingException("Unable to create new DOM node: '"+nodeName+"'.", local);
+                        throw new ProcessingException(
+                            "Unable to create new DOM node: '" + nodeName + "'.",
+                            local);
                     }
                 } else {
                     try {
                         newNode = getOwnerDocument(rootNode).createElementNS(null, nodeName);
                     } catch (DOMException local) {
-                        throw new ProcessingException("Unable to create new DOM node: '"+nodeName+"'.", local);
+                        throw new ProcessingException(
+                            "Unable to create new DOM node: '" + nodeName + "'.",
+                            local);
                     }
                     if (XPathExp != null) {
                         java.util.List attrValuePairs = new java.util.ArrayList(4);
@@ -745,14 +765,17 @@ public final class DOMUtil {
                         String attr;
                         String value;
                         // scan for attributes
-                        java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(XPathExp, "= ");
+                        java.util.StringTokenizer tokenizer =
+                            new java.util.StringTokenizer(XPathExp, "= ");
                         while (tokenizer.hasMoreTokens() == true) {
                             attr = tokenizer.nextToken();
                             if (attr.startsWith("@") == true) {
                                 if (tokenizer.hasMoreTokens() == true) {
                                     value = tokenizer.nextToken();
-                                    if (value.startsWith("'") && value.endsWith("'")) value = value.substring(1, value.length()-1);
-                                    if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);
+                                    if (value.startsWith("'") && value.endsWith("'"))
+                                        value = value.substring(1, value.length() - 1);
+                                    if (value.startsWith("\"") && value.endsWith("\""))
+                                        value = value.substring(1, value.length() - 1);
                                     attrValuePairs.add(attr.substring(1));
                                     attrValuePairs.add(value);
                                 } else {
@@ -763,9 +786,11 @@ public final class DOMUtil {
                             }
                         }
                         if (noError == true) {
-                            for(int l=0;l<attrValuePairs.size();l=l+2) {
-                                ((Element)newNode).setAttributeNS(null, (String)attrValuePairs.get(l),
-                                                                (String)attrValuePairs.get(l+1));
+                            for (int l = 0; l < attrValuePairs.size(); l = l + 2) {
+                                ((Element) newNode).setAttributeNS(
+                                    null,
+                                    (String) attrValuePairs.get(l),
+                                    (String) attrValuePairs.get(l + 1));
                             }
                         }
                     }
@@ -775,7 +800,8 @@ public final class DOMUtil {
             } else {
                 parent = singleNode;
             }
-        } while (pos != -1);
+        }
+        while (pos != -1);
         return parent;
     }
 
@@ -788,13 +814,14 @@ public final class DOMUtil {
      * @param path XPath search expression.
      * @return     The value of the node or <CODE>null</CODE>
      */
-    public static String getValueOf(Node root, String path)
-    throws ProcessingException {
+    public static String getValueOf(Node root, String path) throws ProcessingException {
         if (path == null) {
             throw new ProcessingException("Not a valid XPath: " + path);
         }
-        if (root == null) return null;
-        if (path.startsWith("/") == true) path = path.substring(1); // remove leading "/"
+        if (root == null)
+            return null;
+        if (path.startsWith("/") == true)
+            path = path.substring(1); // remove leading "/"
         if (path.endsWith("/") == true) { // remove ending "/" for root node
             path = path.substring(0, path.length() - 1);
         }
@@ -805,7 +832,9 @@ public final class DOMUtil {
                 return getValueOfNode(node);
             }
         } catch (javax.xml.transform.TransformerException localException) {
-            throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(), localException);
+            throw new ProcessingException(
+                "XPathUtil.selectSingleNode: " + localException.getMessage(),
+                localException);
         }
         return null;
     }
@@ -820,12 +849,11 @@ public final class DOMUtil {
      * @param defaultValue The default value if the node does not exist.
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static String getValueOf(Node root,
-                                    String path,
-                                    String defaultValue)
-    throws ProcessingException {
+    public static String getValueOf(Node root, String path, String defaultValue)
+        throws ProcessingException {
         String value = getValueOf(root, path);
-        if (value == null) value = defaultValue;
+        if (value == null)
+            value = defaultValue;
 
         return value;
     }
@@ -841,8 +869,7 @@ public final class DOMUtil {
      * @return     The boolean value of the node.
      * @throws ProcessingException If the node is not found.
      */
-    public static boolean getValueAsBooleanOf(Node root, String path)
-    throws ProcessingException {
+    public static boolean getValueAsBooleanOf(Node root, String path) throws ProcessingException {
         String value = getValueOf(root, path);
         if (value == null) {
             throw new ProcessingException("No such node: " + path);
@@ -862,10 +889,8 @@ public final class DOMUtil {
      * @param defaultValue Default boolean value.
      * @return     The value of the node or <CODE>defaultValue</CODE>
      */
-    public static boolean getValueAsBooleanOf(Node root,
-                                              String path,
-                                              boolean defaultValue)
-    throws ProcessingException {
+    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue)
+        throws ProcessingException {
         String value = getValueOf(root, path);
         if (value == null) {
             return defaultValue;
@@ -876,8 +901,7 @@ public final class DOMUtil {
     /**
      * Create a new empty DOM document.
      */
-    public static Document createDocument()
-    throws ProcessingException {
+    public static Document createDocument() throws ProcessingException {
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
             documentFactory.setNamespaceAware(true);
@@ -900,7 +924,7 @@ public final class DOMUtil {
      * @throws TransformerException
      */
     public static NodeList selectNodeList(Node contextNode, String str)
-    throws TransformerException {
+        throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents == null) {
             return XPathAPI.selectNodeList(contextNode, str);
@@ -925,19 +949,31 @@ public final class DOMUtil {
             i = 0;
             while (i < l && found == false) {
                 switch (xpath.charAt(i)) {
-                    case '[' : found = true; break;
-                    case '(' : found = true; break;
-                    case '*' : found = true; break;
-                    case '@' : found = true; break;
-                    case ':' : found = true; break;
-                    case '/' : components++;
-                    default: i++;
+                    case '[' :
+                        found = true;
+                        break;
+                    case '(' :
+                        found = true;
+                        break;
+                    case '*' :
+                        found = true;
+                        break;
+                    case '@' :
+                        found = true;
+                        break;
+                    case ':' :
+                        found = true;
+                        break;
+                    case '/' :
+                        components++;
+                    default :
+                        i++;
                 }
             }
             if (found == false) {
                 result = new String[components];
                 if (components == 1) {
-                    result[components-1] = xpath;
+                    result[components - 1] = xpath;
                 } else {
                     i = 0;
                     int start = 0;
@@ -945,7 +981,7 @@ public final class DOMUtil {
                     while (i < l) {
                         if (xpath.charAt(i) == '/') {
                             result[components] = xpath.substring(start, i);
-                            start = i+1;
+                            start = i + 1;
                             components++;
                         }
                         i++;
@@ -967,9 +1003,10 @@ public final class DOMUtil {
      * @param create      If a child with the corresponding name is not found
      *                    and create is set, this node will be created.
     */
-    public static Node getFirstNodeFromPath(Node contextNode,
-                                            final String[] path,
-                                            final boolean  create) {
+    public static Node getFirstNodeFromPath(
+        Node contextNode,
+        final String[] path,
+        final boolean create) {
         if (contextNode == null || path == null || path.length == 0)
             return contextNode;
         // first test if the node exists
@@ -1010,9 +1047,10 @@ public final class DOMUtil {
     /**
      * Private helper method for getFirstNodeFromPath()
      */
-    private static Node getFirstNodeFromPath(final Node contextNode,
-                                             final String[] path,
-                                             final int      startIndex) {
+    private static Node getFirstNodeFromPath(
+        final Node contextNode,
+        final String[] path,
+        final int startIndex) {
         int i = 0;
         NodeList childs;
         boolean found;
@@ -1027,12 +1065,15 @@ public final class DOMUtil {
             while (found == false && i < l) {
                 item = childs.item(i);
                 if (item.getNodeType() == Document.ELEMENT_NODE
-                    && path[startIndex].equals(item.getLocalName()!=null?item.getLocalName():item.getNodeName()) == true) {
-                    if (startIndex == path.length-1) {
+                    && path[startIndex].equals(
+                        item.getLocalName() != null ? item.getLocalName() : item.getNodeName())
+                        == true) {
+                    if (startIndex == path.length - 1) {
                         found = true;
                     } else {
-                        item = getFirstNodeFromPath(item, path, startIndex+1);
-                        if (item != null) found = true;
+                        item = getFirstNodeFromPath(item, path, startIndex + 1);
+                        if (item != null)
+                            found = true;
                     }
                 }
                 if (found == false) {
@@ -1054,11 +1095,11 @@ public final class DOMUtil {
      *                    contextNode is searched for a child named path[0],
      *                    this node is searched for a child named path[1]...
      */
-    public static NodeList getNodeListFromPath(Node contextNode,
-                                                 String[] path) {
-        if (contextNode == null) return new NodeListImpl();
+    public static NodeList getNodeListFromPath(Node contextNode, String[] path) {
+        if (contextNode == null)
+            return new NodeListImpl();
         if (path == null || path.length == 0) {
-            return new NodeListImpl(new Node[] {contextNode});
+            return new NodeListImpl(new Node[] { contextNode });
         }
         NodeListImpl result = new NodeListImpl();
         try {
@@ -1066,9 +1107,10 @@ public final class DOMUtil {
         } catch (NullPointerException npe) {
             // this NPE is thrown because the parser is not configured
             // to use DOM Level 2
-            throw new NullPointerException("XMLUtil.getNodeListFromPath() did catch a NullPointerException."+
-                          "This might be due to a missconfigured XML parser which does not use DOM Level 2."+
-                          "Make sure that you use the XML parser shipped with Cocoon.");
+            throw new NullPointerException(
+                "XMLUtil.getNodeListFromPath() did catch a NullPointerException."
+                    + "This might be due to a missconfigured XML parser which does not use DOM Level 2."
+                    + "Make sure that you use the XML parser shipped with Cocoon.");
         }
         return result;
     }
@@ -1076,14 +1118,15 @@ public final class DOMUtil {
     /**
      * Helper method for getNodeListFromPath()
      */
-    private static void getNodesFromPath(final NodeListImpl result,
-                                         final Node contextNode,
-                                         final String[] path,
-                                         final int startIndex) {
+    private static void getNodesFromPath(
+        final NodeListImpl result,
+        final Node contextNode,
+        final String[] path,
+        final int startIndex) {
         final NodeList childs = contextNode.getChildNodes();
         int m, l;
         Node item;
-        if (startIndex == (path.length-1)) {
+        if (startIndex == (path.length - 1)) {
             if (childs != null) {
                 m = 0;
                 l = childs.getLength();
@@ -1091,7 +1134,12 @@ public final class DOMUtil {
                     item = childs.item(m);
                     if (item.getNodeType() == Document.ELEMENT_NODE) {
                         // Work around: org.apache.xerces.dom.ElementImpl doesn't handle getLocalName() correct
-                        if (path[startIndex].equals(item.getLocalName()!=null?item.getLocalName():item.getNodeName()) == true) {
+                        if (path[startIndex]
+                            .equals(
+                                item.getLocalName() != null
+                                    ? item.getLocalName()
+                                    : item.getNodeName())
+                            == true) {
                             result.addNode(item);
                         }
                     }
@@ -1106,8 +1154,13 @@ public final class DOMUtil {
                     item = childs.item(m);
                     if (item.getNodeType() == Document.ELEMENT_NODE) {
                         // Work around: org.apache.xerces.dom.ElementImpl doesn't handle getLocalName() correct
-                        if (path[startIndex].equals(item.getLocalName()!=null?item.getLocalName():item.getNodeName()) == true) {
-                            getNodesFromPath(result, item, path, startIndex+1);
+                        if (path[startIndex]
+                            .equals(
+                                item.getLocalName() != null
+                                    ? item.getLocalName()
+                                    : item.getNodeName())
+                            == true) {
+                            getNodesFromPath(result, item, path, startIndex + 1);
                         }
                     }
                     m++;
@@ -1117,13 +1170,19 @@ public final class DOMUtil {
     }
 
     /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
+     * Converts a org.w3c.dom.Node to a String. Uses {@link javax.xml.transform.Transformer}
+     * to convert from a Node to a String.
+     * 
      * @param node a <code>org.w3c.dom.Node</code> value
-     * @return a <code>String</code> value
+     * @return String representation of the document
+     * @deprecated Use {@link XMLUtils#serializeNodeToXML(Node)} instead.
      */
     public static String node2String(Node node) {
-        return node2StringBuffer(node).toString();
+        try {
+            return XMLUtils.serializeNodeToXML(node);
+        } catch (ProcessingException e) {
+        }
+        return "";
     }
 
     /**
@@ -1132,9 +1191,20 @@ public final class DOMUtil {
      * @param node a <code>org.w3c.dom.Node</code> value
      * @param pretty a <code>boolean</code> value whether to format the XML
      * @return a <code>String</code> value
+     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)} instead.
      */
     public static String node2String(Node node, boolean pretty) {
-        return node2StringBuffer(node, pretty, "").toString();
+        try {
+            if (pretty) {
+                Properties props = new Properties();
+                props.setProperty(OutputKeys.INDENT, "yes");
+                return XMLUtils.serializeNode(node, props);
+            } else {
+                return XMLUtils.serializeNodeToXML(node);
+            }
+        } catch (ProcessingException e) {
+        }
+        return "";
     }
 
     /**
@@ -1142,11 +1212,12 @@ public final class DOMUtil {
      * (most) subtypes.
      * @param node a <code>org.w3c.dom.Node</code> value
      * @return a <code>StringBuffer</code> value
+     * @deprecated Please use {@link XMLUtils#serializeNodeToXML(Node)} instead.
      */
     public static StringBuffer node2StringBuffer(Node node) {
-        return node2StringBuffer(node, false, "");
+        return new StringBuffer(node2String(node));
     }
-        
+
     /**
      * Create a string representation of a org.w3c.dom.Node and any
      * (most) subtypes.
@@ -1155,98 +1226,10 @@ public final class DOMUtil {
      * @param indent a <code>String</code> value containing spaces as
      * initial indent, if null defaults to empty string.
      * @return a <code>StringBuffer</code> value
+     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)} instead.
      */
     public static StringBuffer node2StringBuffer(Node node, boolean pretty, String indent) {
-
-        String newIndent = null;
-        if (pretty) newIndent = (indent != null ? indent+" " : "");
-        if (node == null) return new StringBuffer();
-        NodeList children = null;
-
-        StringBuffer sb = new StringBuffer();
-        switch (node.getNodeType()) {
-        case Node.ELEMENT_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            sb.append('<').append(node.getNodeName());
-            NamedNodeMap attributes = node.getAttributes();
-            for (int i = 0; i < attributes.getLength(); i++) {
-                Node curr = attributes.item(i);
-                sb.append(' ').append(curr.getNodeName());
-                sb.append("=\"").append(curr.getNodeValue()).append('"');
-            }
-            if (node.hasChildNodes()) {
-                sb.append('>');
-                children = node.getChildNodes();
-                for(int i=0; i < children.getLength(); i++) {
-                    sb.append(node2StringBuffer(children.item(i),pretty,newIndent));
-                }
-                if (pretty) sb.append("\n").append(indent);
-                sb.append("</").append(node.getNodeName()).append(">");
-            } else {
-                sb.append("/>");
-            }
-            break;
-        case Node.TEXT_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            sb.append(node.getNodeValue());
-            break;
-        case Node.DOCUMENT_NODE:
-            sb.append("<?xml version=\"1.0\"?>");
-            if (node.hasChildNodes()) {
-                children = node.getChildNodes();
-                for(int i=0; i < children.getLength(); i++) {
-                    sb.append(node2StringBuffer(children.item(i),pretty,newIndent));
-                }
-            }
-            //sb.append(node2StringBuffer(((Document)node).getDocumentElement(),pretty,newIndent));
-            break;
-        case Node.DOCUMENT_FRAGMENT_NODE:
-            if (node.hasChildNodes()) {
-                children = node.getChildNodes();
-                for(int i=0; i < children.getLength(); i++) {
-                    sb.append(node2StringBuffer(children.item(i),pretty,newIndent));
-                }
-            }
-            break;
-        case Node.PROCESSING_INSTRUCTION_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            sb.append("<?").append(node.getNodeName()).append(' ')
-                .append(node.getNodeValue()).append("?>");
-            break;
-        case Node.DOCUMENT_TYPE_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            DocumentType dt = (DocumentType) node;
-            sb.append("<!DOCTYPE ").append(dt.getName());
-            if (dt.getPublicId() != null) {
-                sb.append(" PUBLIC \"").append(dt.getPublicId()).append('"');
-            } else {
-                sb.append(" SYSTEM ");
-            }
-            sb.append('"').append(dt.getSystemId()).append("\">");
-            break;
-        case Node.CDATA_SECTION_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            sb.append("<![CDATA[").append(node.getNodeValue()).append("]]>");
-            break;
-        case Node.COMMENT_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            sb.append("<!--").append(node.getNodeValue()).append("-->");
-            break;
-        case Node.NOTATION_NODE:
-            if (pretty) sb.append("\n").append(indent);
-            Notation note = (Notation) node;
-            sb.append("<!NOTATION").append(note.getNodeName());
-            if (note.getPublicId() != null) {
-                sb.append(" PUBLIC \"").append(note.getPublicId()).append('"');
-            } else {
-                sb.append(" SYSTEM ");
-            }
-            sb.append('"').append(note.getSystemId()).append("\">");
-            break;
-        default:
-            // skip unknown node types
-        }
-        return sb;
+        return new StringBuffer(node2String(node, pretty));
     }
-    
+
 }
