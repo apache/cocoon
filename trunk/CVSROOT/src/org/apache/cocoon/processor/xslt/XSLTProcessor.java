@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.12 2000-04-27 17:57:17 stefano Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.13 2000-05-01 20:53:53 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,6 +54,7 @@ package org.apache.cocoon.processor.xslt;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.text.StringCharacterIterator;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.store.*;
@@ -71,7 +72,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.12 $ $Date: 2000-04-27 17:57:17 $
+ * @version $Revision: 1.13 $ $Date: 2000-05-01 20:53:53 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -104,7 +105,20 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         if (enum != null) {
             while (enum.hasMoreElements()) {
                 String name = (String) enum.nextElement();
-                params.put(name, request.getParameter(name));
+				StringCharacterIterator iter = new StringCharacterIterator(name);
+				boolean valid_name = true;
+				for (char c = iter.first(); c != iter.DONE; c = iter.next()) {
+					if (!(Character.isLetterOrDigit(c) ||
+						c == '-' ||
+						c == '_' ||
+						c == '.')) {
+						valid_name = false;
+						break;
+					}
+				}
+				if (valid_name) {
+                	params.put(name, request.getParameter(name));
+				}
             }
         }
 
