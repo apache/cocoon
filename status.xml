@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.291 2004/03/31 07:41:37 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.292 2004/04/02 20:22:07 upayavira Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UV" type="update">
+     Enabled use of nested sitemap variables, e.g. {request-param:{1}}.
+   </action>
      <action dev="AG" type="update">
      Updated antlr to 2.7.3
    </action>
