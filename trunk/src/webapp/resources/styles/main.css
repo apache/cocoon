@@ -26,4 +26,30 @@ span.description { color: #336699; font-weight: bold; }
 span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
 
 /* Samples */
-.group { color: #336699; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699; }
+
+/* background-color: #ffffcc; would make the groups even more visible but it's a bit heavy IMHO */
+.samplesGroup {
+    color: black;
+    border-width: 0px 0px 1px 1px;
+    border-style: solid;
+    border-color: #336699;
+    font-size:120%;
+    padding-left: 0.2em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    margin-top: 1em;
+    margin-bottom: 0;
+}
+
+.samplesNote {
+    color: #333333;
+    margin: 0.5em;
+    padding: 0.2em;
+    background-color: #ffffcc;
+    font-style: italic;
+}
+
+.samplesText {
+    margin-top: 0.2em;
+}
+

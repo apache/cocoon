@@ -6,7 +6,7 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: simple-samples2html.xsl,v 1.5 2003/05/07 04:57:13 vgritsenko Exp $
+    | CVS $Id: simple-samples2html.xsl,v 1.6 2003/05/07 10:18:18 bdelacretaz Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,7 +16,7 @@
  <xsl:template match="/">
   <html>
    <head>
-     <title>Apache Cocoon @version@</title>
+     <title>Apache Cocoon 2.1-M2-dev</title>
      <link rel="SHORTCUT ICON" href="favicon.ico"/>
      <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
    </head>
@@ -25,7 +25,7 @@
       <tr>
         <td width="*">The Apache Software Foundation is proud to present...</td>
         <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
-        <td width="30%" align="center">Version: <b>@version@</b></td>
+        <td width="30%" align="center">Version: <b>2.1-M2-dev</b></td>
       </tr>
     </table>
 
@@ -48,7 +48,7 @@
     <xsl:apply-templates select="samples"/>
 
     <p class="copyright">
-      Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+      Copyright &#169; 1999-2003 <a href="http://www.apache.org/">The Apache Software Foundation</a>.
       All rights reserved.
     </p>
    </body>
@@ -116,12 +116,12 @@
   <table width="100%" cellspacing="5">
     <tr>
       <td width="50%" valign="top">
-        <xsl:for-each select="group">  
+        <xsl:for-each select="group">
           <xsl:variable name="group-position" select="position()"/>
           <xsl:choose>
             <xsl:when test="$group-position &lt;= $half">
-              <h4 class="group"><xsl:value-of select="@name"/></h4>
-              <p><xsl:apply-templates/></p>
+              <h4 class="samplesGroup"><xsl:value-of select="@name"/></h4>
+              <p class="samplesText"><xsl:apply-templates/></p>
             </xsl:when>
             <xsl:otherwise></xsl:otherwise>
           </xsl:choose>
@@ -132,8 +132,8 @@
           <xsl:variable name="group-position" select="position()"/>
           <xsl:choose>
             <xsl:when test="$group-position &gt; $half">
-              <h4 class="group"><xsl:value-of select="@name"/></h4>
-              <p><xsl:apply-templates/></p>
+              <h4 class="samplesGroup"><xsl:value-of select="@name"/></h4>
+              <p class="samplesText"><xsl:apply-templates/></p>
             </xsl:when>
             <xsl:otherwise></xsl:otherwise>
           </xsl:choose>
@@ -143,7 +143,7 @@
   </table>
  </xsl:template>
 
- 
+
  <xsl:template match="sample">
    <xsl:variable name="link">
      <xsl:choose>
@@ -161,10 +161,11 @@
    <br/>
  </xsl:template>
 
- 
+
  <xsl:template match="note">
-   <xsl:value-of select="."/>
-   <br/>
+   <p class="samplesNote">
+        <xsl:apply-templates/>
+   </p>
  </xsl:template>
 
 </xsl:stylesheet>
