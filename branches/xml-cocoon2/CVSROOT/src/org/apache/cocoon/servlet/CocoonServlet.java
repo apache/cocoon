@@ -51,7 +51,7 @@ import org.apache.log.LogTarget;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.33 $ $Date: 2000-11-30 21:42:08 $
+ * @version CVS $Revision: 1.1.4.34 $ $Date: 2000-12-06 06:21:56 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -83,7 +83,7 @@ public class CocoonServlet extends HttpServlet {
             String path = this.context.getRealPath("/") +
                           "/WEB-INF/logs/cocoon.log";
 
-            Category cocoonCategory = LogKit.createCategory("cocoon", Priority.DEBUG);
+            Category cocoonCategory = LogKit.createCategory("cocoon", Priority.ERROR);
             log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
                     new FileOutputLogTarget(path),
                     new ServletLogTarget(this.context, Priority.ERROR)
@@ -92,7 +92,7 @@ public class CocoonServlet extends HttpServlet {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
 
-        LogKit.setGlobalPriority(Priority.DEBUG);
+        LogKit.setGlobalPriority(Priority.ERROR);
 
         // WARNING (SM): the line below BREAKS the Servlet API portability of
         // web applications.
@@ -115,6 +115,9 @@ public class CocoonServlet extends HttpServlet {
         this.classpath = (String) context.getAttribute(Cocoon.CATALINA_SERVLET_CLASSPATH);
         if (this.classpath == null) {
             this.classpath = (String) context.getAttribute(Cocoon.TOMCAT_SERVLET_CLASSPATH);
+        }
+        if (this.classpath == null) {
+            this.classpath = (String) context.getAttribute(Cocoon.RESIN_SERVLET_CLASSPATH);
         }
 
         this.workDir = ((File) this.context.getAttribute("javax.servlet.context.tempdir")).toString();
