@@ -1,6 +1,6 @@
-#!/bin/sh -x
+#!/bin/sh 
 
-# $Id: create-repository-jars.sh,v 1.1 2004/02/02 10:36:01 giacomo Exp $
+# $Id: create-repository-jars.sh,v 1.2 2004/02/02 10:38:34 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
