@@ -91,7 +91,7 @@ import org.mozilla.javascript.Wrapper;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.7 2003/03/20 02:46:32 vgritsenko Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.8 2003/03/20 04:18:51 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -429,7 +429,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         }
         thrScope.put(LAST_EXEC_TIME, thrScope, 
                      new Long(System.currentTimeMillis()));
-        for (int i = 0; i < execList.size(); i++) {
+        for (int i = 0, size = execList.size(); i < size; i++) {
             String sourceURI = (String)execList.get(i);
             ScriptSourceEntry entry = 
                 (ScriptSourceEntry)compiledScripts.get(sourceURI);
@@ -439,7 +439,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 compiledScripts.put(sourceURI, entry);
             }
             // Compile the script if necessary
-            Script script = entry.getScript(context, thrScope, needsRefresh);
+            Script script = entry.getScript(context, this.scope, needsRefresh);
             long lastMod = entry.getSource().getLastModified();
             // Execute the script if necessary
             if (lastExecTime == 0 || lastMod > lastExecTime) {
@@ -474,7 +474,6 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      */
 
     public Script compileScript(Context cx, 
-                                Scriptable scope,
                                 Environment environment, 
                                 String fileName) throws Exception {
         Source src = environment.resolveURI(fileName);
@@ -492,12 +491,11 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         return compiledScript;
     }
 
-    private Script compileScript(Context cx, Scriptable scope, 
+    private Script compileScript(Context cx, Scriptable scope,
                                  Source src) throws Exception {
         InputStream is = src.getInputStream();
         Reader reader = new BufferedReader(new InputStreamReader(is));
-        // FIXME: scope or this.scope?
-        Script compiledScript = cx.compileReader(this.scope, reader,
+        Script compiledScript = cx.compileReader(scope, reader,
                                                  src.getURI(), 
                                                  1, null);
         return compiledScript;
@@ -548,7 +546,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             NativeArray funArgsArray = new NativeArray(funArgs);
             Object fun = ScriptableObject.getProperty(thrScope, funName);
             if (fun == Scriptable.NOT_FOUND) {
-                fun = "funName"; // this will produce a better error message
+                fun = funName; // this will produce a better error message
             }
             Object callFunArgs[] = { fun, funArgsArray };
             Object callFun = ScriptableObject.getProperty(thrScope, "callFunction");
