@@ -53,6 +53,8 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.PostInputStream;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -86,7 +88,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.2 2003/07/27 12:52:49 gianugo Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.3 2003/09/03 13:35:20 cziegeler Exp $
  */
 public class StreamGenerator extends ComposerGenerator
 {
@@ -114,13 +116,14 @@ public class StreamGenerator extends ComposerGenerator
     /**
      * Generate XML data out of request InputStream.
      */
-    public void generate() throws IOException, SAXException, ProcessingException
-    {
+    public void generate() 
+    throws IOException, SAXException, ProcessingException {
         SAXParser parser = null;
         int len = 0;
         String contentType = null;
+        
+        Request request = ObjectModelHelper.getRequest(this.objectModel);
         try {
-            HttpServletRequest request = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
             contentType = request.getContentType();
             if (contentType == null) {
                 contentType = parameters.getParameter("defaultContentType", null);
@@ -145,9 +148,13 @@ public class StreamGenerator extends ComposerGenerator
                     contentType.startsWith("text/xml") ||
                     contentType.startsWith("application/xml")) {
 
+                HttpServletRequest httpRequest = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+                if ( httpRequest == null ) {
+                    throw new ProcessingException("This feature is only available in an http environment.");
+                }
                 len = request.getContentLength();
                 if (len > 0) {
-                        PostInputStream anStream = new PostInputStream(request.getInputStream(), len);
+                        PostInputStream anStream = new PostInputStream(httpRequest.getInputStream(), len);
                         inputSource = new InputSource(anStream);
                 } else {
                     throw new IOException("getContentLen() == 0");
@@ -160,8 +167,7 @@ public class StreamGenerator extends ComposerGenerator
                 getLogger().debug("processing stream ContentType=" + contentType + " ContentLen=" + len);
             }
             String charset =  getCharacterEncoding(request, contentType) ;
-            if( charset != null)
-            {
+            if( charset != null) {
                 this.inputSource.setEncoding(charset);
             }
             parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
@@ -193,67 +199,53 @@ public class StreamGenerator extends ComposerGenerator
     *
     * @param contentType value associated with Content-Type HTTP header.
     */
-    public String getCharacterEncoding(HttpServletRequest req, String contentType)
-    {
+    public String getCharacterEncoding(Request req, String contentType) {
         String charencoding = null;
         String charset = "charset=";
-        if (contentType == null)
-        {
-            return (null);
+        if (contentType == null) {
+            return null;
         }
         int idx = contentType.indexOf(charset);
-        if (idx == -1)
-        {
-            return (null);
+        if (idx == -1) {
+            return null;
         }
-        try
-        {
+        try {
             charencoding = req.getCharacterEncoding();
 
-            if ( charencoding != null)
-            {
+            if ( charencoding != null) {
                 getLogger().debug("charset from container: " + charencoding);
                 charencoding = charencoding.trim();
-                if ((charencoding.length() > 2) && (charencoding.startsWith("\""))&& (charencoding.endsWith("\"")))
-                {
+                if ((charencoding.length() > 2) && (charencoding.startsWith("\""))&& (charencoding.endsWith("\""))) {
                     charencoding = charencoding.substring(1, charencoding.length() - 1);
                 }
                 getLogger().debug("charset from container clean: " + charencoding);
-                return (charencoding);
-            }
-            else
-            {
-
+                return charencoding;
+            } else {
                 return extractCharset( contentType, idx );
             }
-        }
-        catch(Throwable e)
-        {
+        } catch(Throwable e) {
             // We will be there if the container do not implement getCharacterEncoding() method
              return extractCharset( contentType, idx );
         }
     }
 
 
-    protected String extractCharset(String contentType, int idx)
-    {
+    protected String extractCharset(String contentType, int idx) {
         String charencoding = null;
         String charset = "charset=";
 
         getLogger().debug("charset from extractCharset");
         charencoding = contentType.substring(idx + charset.length());
         int idxEnd = charencoding.indexOf(";");
-        if (idxEnd != -1)
-        {
+        if (idxEnd != -1) {
             charencoding = charencoding.substring(0, idxEnd);
         }
         charencoding = charencoding.trim();
-        if ((charencoding.length() > 2) && (charencoding.startsWith("\""))&& (charencoding.endsWith("\"")))
-        {
+        if ((charencoding.length() > 2) && (charencoding.startsWith("\""))&& (charencoding.endsWith("\""))) {
             charencoding = charencoding.substring(1, charencoding.length() - 1);
         }
         getLogger().debug("charset from extractCharset: " + charencoding);
-        return (charencoding.trim());
+        return charencoding.trim();
 
     }
 }
