@@ -594,7 +594,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="commons-httpclient"/>
+    <depend project="commons-httpclient-2.0-branch"/>
     <depend project="commons-logging"/>
 
     <work nested="tools/anttasks"/>
