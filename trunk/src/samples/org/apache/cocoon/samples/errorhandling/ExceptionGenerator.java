@@ -66,7 +66,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Exception generator.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ExceptionGenerator.java,v 1.3 2003/07/10 13:17:01 cziegeler Exp $
+ * @version CVS $Id: ExceptionGenerator.java,v 1.4 2003/09/25 17:28:38 joerg Exp $
  */
 public class ExceptionGenerator extends AbstractGenerator {
 
@@ -103,13 +103,13 @@ public class ExceptionGenerator extends AbstractGenerator {
         Attributes noAttrs = new AttributesImpl();
 
         this.contentHandler.startDocument();
-        this.contentHandler.startElement(null, "html", "html", noAttrs);
-        this.contentHandler.startElement(null, "body", "body", noAttrs);
-        this.contentHandler.startElement(null, "p", "p", noAttrs);
+        this.contentHandler.startElement("", "html", "html", noAttrs);
+        this.contentHandler.startElement("", "body", "body", noAttrs);
+        this.contentHandler.startElement("", "p", "p", noAttrs);
         this.contentHandler.characters(text.toCharArray(), 0, text.length());
-        this.contentHandler.endElement(null, "p", "p");
-        this.contentHandler.endElement(null, "body", "body");
-        this.contentHandler.endElement(null, "html", "html");
+        this.contentHandler.endElement("", "p", "p");
+        this.contentHandler.endElement("", "body", "body");
+        this.contentHandler.endElement("", "html", "html");
         this.contentHandler.endDocument();
     }
 }
