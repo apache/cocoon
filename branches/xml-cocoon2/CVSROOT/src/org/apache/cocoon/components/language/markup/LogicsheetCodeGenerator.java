@@ -17,10 +17,10 @@ import org.xml.sax.ContentHandler;
 
 import java.io.IOException;
 
-import org.apache.serialize.SerializerFactory;
-import org.apache.serialize.Method;
-import org.apache.serialize.Serializer;
-import org.apache.serialize.OutputFormat;
+import org.apache.xalan.serialize.SerializerFactory;
+import org.apache.xalan.serialize.Method;
+import org.apache.xalan.serialize.Serializer;
+import org.apache.xalan.serialize.OutputFormat;
 
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXResult;
@@ -31,7 +31,7 @@ import javax.xml.transform.TransformerException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-10 12:32:01 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-14 21:52:05 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 
@@ -77,31 +77,26 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
     * @param logicsheet The logicsheet to be added
     */
     public void addLogicsheet(Logicsheet logicsheet) {
-        try {
-            if (this.currentParent==null) {
-                // Setup the first transformer of the chain.
-                this.currentParent = logicsheet.getTransformerHandler();
+        if (this.currentParent==null) {
+            // Setup the first transformer of the chain.
+            this.currentParent = logicsheet.getTransformerHandler();
 
-                // the parent is the rootReader
-                this.rootReader.setContentHandler(this.currentParent);;
+            // the parent is the rootReader
+            this.rootReader.setContentHandler(this.currentParent);;
 
-                // Set content handler for the end of the chain : serializer
-                this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
+            // Set content handler for the end of the chain : serializer
+            this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
 
-            } else {
-                // Build the transformer chain on the fly
-                TransformerHandler newParent=logicsheet.getTransformerHandler();
+        } else {
+            // Build the transformer chain on the fly
+            TransformerHandler newParent=logicsheet.getTransformerHandler();
 
-                // the currentParent is the parent of the new logicsheet filter
-                this.currentParent.setResult(new SAXResult(newParent));
+            // the currentParent is the parent of the new logicsheet filter
+            this.currentParent.setResult(new SAXResult(newParent));
 
-                // reset the new parent and the contentHanlder
-                this.currentParent = newParent;
-                this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
-            }
-        } catch (TransformerException e) {
-            // FIXME (DIMS) - Need to handle exceptions gracefully.
-            e.printStackTrace();
+            // reset the new parent and the contentHanlder
+            this.currentParent = newParent;
+            this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
         }
     }   
 

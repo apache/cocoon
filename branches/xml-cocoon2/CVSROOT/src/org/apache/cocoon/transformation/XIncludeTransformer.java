@@ -38,6 +38,8 @@ import org.apache.xpath.XPathAPI;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
 
+import javax.xml.transform.TransformerException;
+
 /**
  * My first pass at an XInclude transformation. Currently it should set the base URI
  * from the SAX Locator's system id but allow it to be overridden by xml:base
@@ -46,7 +48,7 @@ import org.apache.log.Logger;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-11-10 22:38:55 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-14 21:52:05 $ $Author: dims $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -206,14 +208,14 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             }
         } else if (parse.equals("xml")) {
             log.debug("Parse type is XML");
-	    Parser parser = null;
-	    try {
-	        log.debug("Looking up " + Roles.PARSER);
+	        Parser parser = null;
+	        try {
+	            log.debug("Looking up " + Roles.PARSER);
                 parser = (Parser)manager.lookup(Roles.PARSER);
-	    } catch (Exception e) {
-	        log.error("Could not find component", e);
-		return;
-	    }
+	        } catch (Exception e) {
+	            log.error("Could not find component", e);
+    		    return;
+	        }
             InputSource input;
             if (object instanceof Reader) {
                 input = new InputSource((Reader)object);
@@ -230,11 +232,16 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 parser.setLexicalHandler(builder);
                 parser.parse(input);
                 Document document = builder.getDocument();
-                NodeList list = XPathAPI.selectNodeList(document,xpath);
-                DOMStreamer streamer = new DOMStreamer(super.contentHandler,super.lexicalHandler);
-                int length = list.getLength();
-                for (int i=0; i<length; i++) {
-                    streamer.stream(list.item(i));
+                try {
+                    NodeList list = XPathAPI.selectNodeList(document,xpath);
+                    DOMStreamer streamer = new DOMStreamer(super.contentHandler,super.lexicalHandler);
+                    int length = list.getLength();
+                    for (int i=0; i<length; i++) {
+                        streamer.stream(list.item(i));
+                    }
+                } catch (TransformerException e){
+	                log.error("TransformerException", e);
+    		        return;
                 }
             } else {
                 XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);

@@ -54,7 +54,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2000-11-11 13:46:09 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2000-11-14 21:52:05 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -223,12 +223,7 @@ implements Transformer, Composer, Poolable, Configurable {
      * accessing the protected <code>super.contentHandler</code> field.
      */
     public void setContentHandler(ContentHandler content) {
-        try {
-            transformerHandler.setResult(new SAXResult(content));
-        } catch (TransformerException e){
-            // FIXME (DIMS) - Need to handle exceptions gracefully.
-            e.printStackTrace();
-        }
+        transformerHandler.setResult(new SAXResult(content));
     }
 
     /**
