@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.111 2003/08/07 16:54:16 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.112 2003/08/09 18:21:49 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add" fixes-bug="22270" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
+   Patch for allowing to specify a cocoon-view for internal requests in the query string.
+  </action>
   <action dev="JH" type="fix" fixes-bug="19839">
     Instrumentation support: Updated client libraries to make instrumentation work again.
     Added a target "start-instrumentation-client" to Cocoon's ant files and removed "runclient" shell scripts.
@@ -174,7 +177,7 @@
   <action dev="JH" type="fix" fixes-bug="22064" due-to="Nicolas Maisonneuve" due-to-email="nicoo_@hotmail.com">
     XMLDBTransformer: retrieving auto-generated resource id.
   </action>
-  <action dev="BD" type="add" due-to="Mark Leicester" due-to.email="mark.leicester@energyintellect.com">
+  <action dev="BD" type="add" due-to="Mark Leicester" due-to-email="mark.leicester@energyintellect.com">
     midi block added
   </action>
   <action dev="BD" type="add">
