@@ -1,9 +1,15 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:ns1="http://foo.bar.com/slashdot"
+                xmlns:ns2="http://foo.bar.com/moreover"
+                xmlns:ns3="http://foo.bar.com/isyndicate"
+>
 
 	<!-- Match The Root Node -->
 	<xsl:template match="/">
 		<HTML>
-            <xsl:apply-templates select="//BODY"/>
+            <xsl:apply-templates select="//ns1:BODY"/>
+            <xsl:apply-templates select="//ns2:BODY"/>
+            <xsl:apply-templates select="//ns3:BODY"/>
 		</HTML>
 	</xsl:template>
 
