@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,11 +31,13 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.NetUtils;
 
 /**
- * 
- * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
+ * HTTP Servlet environment.
+ *
+ * @author <a herf="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
  * @version CVS $Id$
  */
-public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
+public class HttpEnvironment extends AbstractEnvironment
+                             implements Redirector, PermanentRedirector {
 
     public static final String HTTP_REQUEST_OBJECT = "httprequest";
     public static final String HTTP_RESPONSE_OBJECT= "httpresponse";
@@ -68,7 +70,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
                            HttpContext context,
                            String containerEncoding,
                            String defaultFormEncoding)
-     throws MalformedURLException, IOException {
+    throws MalformedURLException, IOException {
         super(uri, null, root, null);
 
         this.request = new HttpRequest(req, this);
@@ -76,14 +78,14 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         this.request.setContainerEncoding(containerEncoding);
         this.response = new HttpResponse(res);
         this.webcontext = context;
-        
+
         setView(extractView(this.request));
         setAction(extractAction(this.request));
-        
+
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, this.webcontext);
-        
+
         // This is a kind of a hack for the components that need
         // the real servlet objects to pass them along to other
         // libraries.
@@ -105,40 +107,33 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         this.hasRedirected = true;
     }
 
-   /**
-    *  Redirect the client to new URL with session mode
-    */
-    private void doRedirect(boolean sessionmode, String newURL, boolean permanent) throws IOException {
+    /**
+     *  Redirect the client to new URL with session mode
+     */
+    private void doRedirect(boolean sessionmode, String newURL, boolean permanent)
+    throws IOException {
         this.hasRedirected = true;
 
         // check if session mode shall be activated
         if (sessionmode) {
-            // The session
-            Session session = null;
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("redirect: entering session mode");
-            }
             String s = request.getRequestedSessionId();
-            if (s != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Old session ID found in request, id = " + s);
-                    if ( request.isRequestedSessionIdValid() ) {
-                        getLogger().debug("And this old session ID is valid");
-                    }
-                }
-            }
-            // get session from request, or create new session
-            session = request.getSession(true);
-            if (session == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("redirect session mode: unable to get session object!");
-                }
-            }
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
+                if (s != null) {
+                    getLogger().debug("Redirect: Requested session ID <" + s + "> is " +
+                                      (request.isRequestedSessionIdValid()? "valid" : "invalid"));
+                } else {
+                    getLogger().debug("Redirect: No session found in request");
+                }
+            }
+
+            // Get session from request, or create new session
+            Session session = request.getSession();
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug ("Redirect: Obtained session <" + session.getId() + ">");
             }
         }
-        // redirect
+
+        // Redirect
         String redirect = this.response.encodeRedirectURL(newURL);
 
         // FIXME (VG): WebSphere 4.0/4.0.1 bug
@@ -156,10 +151,11 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Sending redirect to '" + redirect + "'");
         }
+
         if (permanent) {
             this.response.sendPermanentRedirect(redirect);
         } else {
-            this.response.sendRedirect (redirect);
+            this.response.sendRedirect(redirect);
         }
     }
 
@@ -260,12 +256,12 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
      */
     public OutputStream getOutputStream(final int bufferSize)
     throws IOException {
-        if ( this.outputStream == null) {
+        if (this.outputStream == null) {
             this.outputStream = this.response.getOutputStream();
         }
-        return super.getOutputStream( bufferSize );
+        return super.getOutputStream(bufferSize);
     }
-    
+
     /**
      * Always return <code>true</code>.
      */
