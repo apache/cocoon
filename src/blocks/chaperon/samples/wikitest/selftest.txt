@@ -13,33 +13,36 @@ Lines like -- THIS TEXT -- are comments about this test, they must appear as is.
 
 This must be followed by a section title and a bullet list with some items.
 
-! KNOWN PROBLEMS
-As of March  27th, 2003, the following tests fail: 
+!!! KNOWN PROBLEMS
+Currently this test shows the following problems:
 
-* 0.1 This bullet list is invisible in the html output if there is no section title before it
+* 0.1 This bullet list is invisible in the html output if there is no section title (3 bangs) before it
+* 1.1 Headings must be used in the usual order (big contains medium contains small), otherwise unpredictable results can occur due to the conversion from the linear wiki model to the nested xdocs model. 
 * 5.1 relative link points to wiki.cocoondev.org (but is it by design?)
 
 -- 1.HEADINGS --
 
-! Test 1.1 Small heading
+Test 1.1 headings in the usual order (from big to small): below you should see 3 headings, big, medium, small:
 
-!! Test 1.2 Medium-sized heading
+!!! big heading #1
 
-!!! Test 1.3 Big heading
+!! medium heading #1
 
-text in-between headings.
+! small heading #1
 
-! Test 1.4 Small heading with non-heading text before and after
+Test 1.2 same headings with text in-between
 
-text in-between headings.
+!!! big heading #2
+Text after big heading.
 
-!! Test 1.5 Medium-sized heading with non-heading text before and after
+!! medium heading #2
+Text after medium heading.
 
-text in-between headings.
+! small heading #2
+Text after small heading.
 
-!!! Test 1.6 Big heading with non-heading text before and after
-
-text in-between headings.
+!!! new big heading
+The above heading starts a new section in the xdocs version of this document.
 
 -- 2.NUMBERED LISTS --
 
