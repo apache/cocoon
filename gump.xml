@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
-<!-- module name will change into "cocoon" -->
 <module name="cocoon-2.1">
 
   <url href="http://cocoon.apache.org/"/>
   <description>Java XML Framework</description>
 
-  <!-- repository name will change into "cocoon" -->
   <cvs repository="cocoon"/>
 
   <!--
@@ -14,8 +12,7 @@
     *******************************
   -->
 
-  <!-- project name will change into "cocoon" [remember to update forrest!] -->
-  <project name="xml-cocoon2">
+  <project name="cocoon">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-core">
@@ -76,8 +73,8 @@
     <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org">
-      <regexp pattern="/BUILD FAILED/"   subject="Build Failure - Cocoon2"/>
-      <!--regexp pattern="/Missing prereq/" subject="Prereq failure - Cocoon2"/-->
+      <regexp pattern="/BUILD FAILED/"   subject="Build Failure - Cocoon"/>
+      <!--regexp pattern="/Missing prereq/" subject="Prereq failure - Cocoon"/-->
     </nag>
   </project>
 
@@ -94,7 +91,7 @@
       <property name="block-name" value="fop"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="xml-fop" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -112,7 +109,7 @@
       <property name="block-name" value="batik"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="xml-batik" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -130,7 +127,7 @@
       <property name="block-name" value="chaperon"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="chaperon" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -148,7 +145,7 @@
       <property name="block-name" value="swf"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="spark" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -166,7 +163,7 @@
       <property name="block-name" value="jfor"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jfor" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -183,7 +180,7 @@
       <property name="block-name" value="itext"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="itext" version="supplied"/>
     <depend project="itext-xml" version="supplied"/>
 
@@ -203,7 +200,7 @@
       <property name="block-name" value="session-fw"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -220,7 +217,7 @@
       <property name="block-name" value="authentication-fw"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="cocoon-block-session-fw"/>
 
     <work nested="tools/anttasks"/>
@@ -238,7 +235,7 @@
       <property name="block-name" value="portal-fw"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="cocoon-block-session-fw"/>
     <depend project="cocoon-block-authentication-fw"/>
 
@@ -257,7 +254,7 @@
       <property name="block-name" value="databases"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -274,7 +271,7 @@
       <property name="block-name" value="hsqldb"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="cocoon-block-databases"/>
     <depend project="hsqldb" version="supplied"/>
 
@@ -293,7 +290,7 @@
       <property name="block-name" value="precept"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -310,7 +307,7 @@
       <property name="block-name" value="poi"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jakarta-poi" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -328,7 +325,7 @@
       <property name="block-name" value="naming"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jndi" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -346,7 +343,7 @@
       <property name="block-name" value="jsp"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -363,7 +360,7 @@
       <property name="block-name" value="php"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <option project="phpservlt" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -381,7 +378,7 @@
       <property name="block-name" value="python"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <option project="jython" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -399,7 +396,7 @@
       <property name="block-name" value="lucene"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jakarta-lucene" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -417,7 +414,7 @@
       <property name="block-name" value="html"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jtidy" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -435,7 +432,7 @@
       <property name="block-name" value="bsf"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="bsf" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -453,7 +450,7 @@
       <property name="block-name" value="profiler"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -470,7 +467,7 @@
       <property name="block-name" value="velocity"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jakarta-velocity" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -488,7 +485,7 @@
       <property name="block-name" value="linkrewriter"/>
     </ant>
     
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -505,7 +502,7 @@
       <property name="block-name" value="web3"/>
     </ant>
     
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -522,7 +519,7 @@
       <property name="block-name" value="slide"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="jakarta-slide" ids="kernel" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -540,7 +537,7 @@
       <property name="block-name" value="proxy"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="commons-httpclient" version="supplied"/>
     <depend project="commons-logging" version="supplied"/>
 
@@ -559,7 +556,7 @@
       <property name="block-name" value="xmldb"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <option project="xmldb" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -577,7 +574,7 @@
       <property name="block-name" value="deli"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="deli" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -595,7 +592,7 @@
       <property name="block-name" value="asciiart"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -612,7 +609,7 @@
       <property name="block-name" value="mail"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="cocoon-block-asciiart"/>
     <depend project="javamail" version="supplied"/>
 
@@ -631,7 +628,7 @@
       <property name="block-name" value="axis"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
     <depend project="xml-axis" version="supplied"/>
 
     <work nested="tools/anttasks"/>
@@ -649,7 +646,7 @@
       <property name="block-name" value="taglib"/>
     </ant>
 
-    <depend project="xml-cocoon2"/>
+    <depend project="cocoon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
@@ -720,7 +717,7 @@
       Chaperon is a project that helps to convert structured text to XML
     </description>
     <home nested="src/blocks/chaperon/lib"/>
-    <jar name="chaperon-1.3-dev.jar"/>
+    <jar name="chaperon-20030208.jar"/>
   </project>
 
   <project name="itext">
