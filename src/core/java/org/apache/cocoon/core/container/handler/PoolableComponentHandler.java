@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.core.container.handler;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.ComponentFactory;
 
 /**
  * The PoolableComponentHandler to make sure that poolable components are initialized

@@ -29,6 +29,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.handler.ComponentHandler;
 
 /**
  * Default component selector for Cocoon's components.

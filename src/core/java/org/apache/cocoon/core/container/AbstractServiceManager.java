@@ -32,6 +32,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
+import org.apache.cocoon.core.container.handler.ComponentHandler;
 
 /**
  * Base class for all service managers: ServiceManager and ServiceSelector

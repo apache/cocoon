@@ -27,8 +27,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
-import org.apache.cocoon.core.container.AbstractComponentHandler;
-import org.apache.cocoon.core.container.ComponentHandler;
+import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
+import org.apache.cocoon.core.container.handler.ComponentHandler;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;

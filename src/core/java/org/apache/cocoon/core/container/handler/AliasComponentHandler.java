@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.core.container.handler;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.CoreServiceManager;
 
 /**
  * A component handler used to alias roles: it delegates all its calls to another

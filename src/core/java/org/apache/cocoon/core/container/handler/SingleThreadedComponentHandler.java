@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.core.container.handler;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.ComponentFactory;
 
 /**
  * The DefaultComponentHandler to make sure components are initialized
