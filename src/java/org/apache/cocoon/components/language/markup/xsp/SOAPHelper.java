@@ -72,7 +72,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: SOAPHelper.java,v 1.1 2003/03/09 00:08:54 pier Exp $
+ * @version CVS $Id: SOAPHelper.java,v 1.2 2003/07/05 04:28:54 joerg Exp $
  * @since July 16, 2001
  */
 public class SOAPHelper {
@@ -153,7 +153,6 @@ public class SOAPHelper {
             method.setRequestHeader(
                     new Header("Content-type", "text/xml; charset=\"utf-8\""));
             method.setRequestHeader(new Header("SOAPAction", action));
-            method.setUseDisk(false);
             method.setRequestBody(request);
 
             method.execute(new HttpState(), conn);
