@@ -77,7 +77,7 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MapProfileLS.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: MapProfileLS.java,v 1.5 2003/12/10 17:02:04 cziegeler Exp $
  */
 public class MapProfileLS
     extends AbstractLogEnabled
@@ -94,7 +94,7 @@ public class MapProfileLS
         this.manager = manager;
     }
 
-    protected String getURI(Map keyMap, Map parameters) 
+    protected String getURI(Map keyMap) 
     throws Exception {
         final StringBuffer buffer = new StringBuffer();
         Iterator iter = keyMap.entrySet().iterator();
@@ -133,16 +133,9 @@ public class MapProfileLS
         return buffer.toString();
     }
     
-    protected StringBuffer getSaveURI(Map keyMap, Map parameters)
+    protected StringBuffer getSaveURI(Map keyMap)
     throws Exception {
-        final StringBuffer buffer = new StringBuffer((String)parameters.get("baseURI"));
-        Iterator iter = keyMap.values().iterator();
-        while ( iter.hasNext() ) {
-            final Object value = iter.next();
-            buffer.append('/');
-            buffer.append(value.toString());
-        }
-                
+        final StringBuffer buffer = new StringBuffer(this.getURI(keyMap));
         return buffer;
     }
     
@@ -153,7 +146,7 @@ public class MapProfileLS
     throws Exception {
 		final Map keyMap = (Map) key;
         
-        final String uri = this.getURI( keyMap, parameters );
+        final String uri = this.getURI( keyMap );
         
 		Source source = null;
 		CastorSourceConverter converter = null;
@@ -178,7 +171,7 @@ public class MapProfileLS
     public void saveProfile(Object key, Map parameters, Object profile) throws Exception {
         final Map keyMap = (Map) key;
         
-        final String uri = this.getURI( keyMap, parameters );
+        final String uri = this.getURI( keyMap );
 
         // first test: modifiable source?
         SourceResolver resolver = null;
@@ -204,7 +197,7 @@ public class MapProfileLS
             resolver = null;
         }
         
-        final StringBuffer buffer = this.getSaveURI( keyMap, parameters );
+        final StringBuffer buffer = this.getSaveURI( keyMap );
 
 		SAXParser parser = null;
 		try {
@@ -245,7 +238,7 @@ public class MapProfileLS
 		try {
             final Map keyMap = (Map) key;
         
-            final String uri = this.getURI( keyMap, parameters );
+            final String uri = this.getURI( keyMap );
 
 			resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 			source = resolver.resolveURI(uri);

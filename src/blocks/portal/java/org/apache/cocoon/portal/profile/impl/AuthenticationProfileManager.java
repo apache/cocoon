@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.12 2003/11/07 13:36:51 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.13 2003/12/10 17:02:04 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -189,21 +189,21 @@ public class AuthenticationProfileManager
 
 			HashMap parameters = new HashMap();
 			parameters.put("type", "user");
-            parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
+            parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
             parameters.put("handler", handler);
             parameters.put("profiletype", "copletinstancedata");
 
 			Map key = this.buildKey(service, parameters, layoutKey, false);
 	
 			// save coplet instance data
-			Object profile = ((Object[])service.getAttribute("CopletInstanceData:" + layoutKey))[0];
-			adapter.saveProfile(key, parameters, profile);
+            CopletInstanceDataManager profileManager = ((CopletInstanceDataManager)service.getAttribute("CopletInstanceData:" + layoutKey));
+			adapter.saveProfile(key, parameters, profileManager);
 
 			// save coplet instance data
 			parameters.put("profiletype", "layout");
             key = this.buildKey(service, parameters, layoutKey, false);
-			profile = ((Object[])service.getAttribute("Layout:" + layoutKey))[0];
-			adapter.saveProfile(key, parameters, profile);
+			Layout layout = (Layout)service.getAttribute("Layout:" + layoutKey);
+			adapter.saveProfile(key, parameters, layout);
             
 		} catch (Exception e) {
 			// TODO

@@ -73,9 +73,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * <pre>
  * &lt;root xmlns:ev="http://apache.org/cocoon/portal/eventlink/1.0"&gt;
- *   &lt;ev:eventlink href="http://eventlinkexample" element="a" attribute"href"&gt;linktext&lt;/ev:eventlink&gt;
+ *   &lt;ev:eventlink href="http://eventlinkexample" element="a" attribute="href"&gt;linktext&lt;/ev:eventlink&gt;
  * &lt;/root&gt;<br></pre>
- * 
+ *
  * will be replaced with something like:<br><br>
  * 
  * <pre>
@@ -91,7 +91,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: NewEventLinkTransformer.java,v 1.3 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: NewEventLinkTransformer.java,v 1.4 2003/12/10 17:02:04 cziegeler Exp $
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
     /**
