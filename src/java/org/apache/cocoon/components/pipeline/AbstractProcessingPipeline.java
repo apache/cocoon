@@ -58,7 +58,7 @@ import java.util.StringTokenizer;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.24 2004/06/02 20:11:35 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.25 2004/06/27 00:44:35 antonio Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -570,13 +570,19 @@ public abstract class AbstractProcessingPipeline
                 environment.setContentType(this.sitemapReaderMimeType);                
             } else {
                 final String mimeType = this.reader.getMimeType();
-                if ( mimeType != null ) {
+                if (mimeType != null) {
                     environment.setContentType(mimeType);                    
                 }
             }
-
+            // set the expires parameter on the pipeline if the reader is configured with one
+            if (readerParam.isParameter("expires")) {
+	            // should this checking be done somewhere else??
+	            this.expires = readerParam.getParameterAsLong("expires");
+            }
         } catch (SAXException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
+        } catch (ParameterException e) {
+            throw new ProcessingException("Expires parameter needs to be of type long.",e);            
         } catch (IOException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
         }
@@ -587,7 +593,6 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         // has the read resource been modified?
         if(!environment.isResponseModified(lastModified)) {
-
             // environment supports this, so we are finished
             environment.setResponseIsNotModified();
             return true;

@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.372 2004/06/26 08:41:18 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.373 2004/06/27 00:44:35 antonio Exp $:-->
 
 <status>
  <developers>
@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="17924" due-to="Jorg Heymans">
+     Apply patch: Cached resources don't have Expires-Header.
+   </action>
    <action dev="AG" type="fix" fixes-bug="29752" due-to="Leszek Gawron">
      Apply patch: Caching JXTemplateGenerator.
    </action>
