@@ -195,7 +195,6 @@ function jxform(application, id, validator_ns, validator_doc) {
         return;
     } 
     // Just start a new instance of the application
-    print("hello");
     this[application].apply(this, 
 			    [new JXForm(id, validator_ns, validator_doc, undefined)]);
 }
