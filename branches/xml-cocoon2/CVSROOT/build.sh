@@ -22,8 +22,9 @@ FOP=./lib/fop_0_13_0.jar
 SVG=./lib/svgv_0_8.jar
 JS=./lib/js.jar
 JSTYLE=./lib/jstyle.jar
+PARSER=./lib/parser.jar
 SERVLETS=./lib/servlet_2_2.jar
-LOCALCLASSPATH=$ANT:$JAVAC:$JAXP:$XERCES:$XALAN:$FOP:$SVG:$JS:$JSTYLE:$SERVLETS:$CLASSPATH
+LOCALCLASSPATH=$ANT:$JAVAC:$JAXP:$XERCES:$XALAN:$FOP:$SVG:$JS:$JSTYLE:$PARSER:$SERVLETS:$CLASSPATH
 
 echo
 echo Building with classpath $LOCALCLASSPATH

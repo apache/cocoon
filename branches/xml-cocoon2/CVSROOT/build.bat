@@ -16,8 +16,9 @@ set FOP=.\lib\fop_0_13_0.jar
 set SVG=.\lib\svgv_0_8.jar
 set JS=./lib/js.jar
 set JSTYLE=./lib/jstyle.jar
+set PARSER=./lib/parser.jar
 set SERVLETS=.\lib\servlet_2_2.jar
-set LOCALCLASSPATH=%ANT%;%JAVAC%;%JAXP%;%XERCES%;%XALAN%;%FOP%;%SVG%;%JS%;%JSTYLE%;%SERVLETS%;%CLASSPATH%
+set LOCALCLASSPATH=%ANT%;%JAVAC%;%JAXP%;%XERCES%;%XALAN%;%FOP%;%SVG%;%JS%;%JSTYLE%;%SERVLETS%;%PARSER%;%CLASSPATH%
 
 echo.
 echo Building with classpath %LOCALCLASSPATH%
