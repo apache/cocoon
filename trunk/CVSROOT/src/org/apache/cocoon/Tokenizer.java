@@ -1,4 +1,4 @@
-/*-- $Id: Tokenizer.java,v 1.1 2000-03-19 00:59:02 stefano Exp $ --
+/*-- $Id: Tokenizer.java,v 1.2 2000-03-20 21:14:16 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -129,9 +129,11 @@ public class Tokenizer implements Enumeration {
    * after the current position; false otherwise.
    */
   public boolean hasMoreTokens() {
-    return (current < max);
+    return ((current < max) ? (true) : 
+      (((current == max) && (max == 0 
+        || (returnTokens && delim.indexOf(str.charAt(previous)) >= 0)))));
   }
-
+  
   /**
    * Returns the next token from this string tokenizer.
    *

@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.10 2000-03-19 00:59:32 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.11 2000-03-20 21:14:16 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-03-19 00:59:32 $
+ * @version $Revision: 1.11 $ $Date: 2000-03-20 21:14:16 $
  */
 
 public final class Utils {
@@ -138,18 +138,10 @@ public final class Utils {
     public static final Hashtable getPIPseudoAttributes(Document document, String name) {
         Hashtable attributes = new Hashtable();
         Enumeration nodes = getAllPIs(document, name).elements();
-
         while (nodes.hasMoreElements()) {
-            String data = ((ProcessingInstruction) nodes.nextElement()).getData();
-            Tokenizer st = new Tokenizer(data, " \t\n\f\r=");
-            while (st.hasMoreTokens()) {
-                String key = st.nextToken();
-                String token = st.nextToken();
-                token = token.substring(1, token.length() - 1);
-                attributes.put(key, token);
-            }
-        }
-
+            ProcessingInstruction pi = (ProcessingInstruction) nodes.nextElement();
+            addPIPseudoAttributes(pi, attributes);
+        }   
         return attributes;
     }
 
@@ -160,19 +152,32 @@ public final class Utils {
      */
     public static final Hashtable getPIPseudoAttributes(ProcessingInstruction pi) {
         Hashtable attributes = new Hashtable();
-
-        String data = pi.getData();
-        Tokenizer st = new Tokenizer(data, " \t\n\f\r=");
-        while (st.hasMoreTokens()) {
-            String key = st.nextToken();
-            String token = st.nextToken();
-            token = token.substring(1, token.length() - 1);
-            attributes.put(key, token);
-        }
-
+        addPIPseudoAttributes(pi, attributes);
         return attributes;
     }
 
+    /**
+     * This method adds pseudo attributes from a pi to an existing attribute list.
+     * All attributes are all put in the same hashtable.
+     * If there are collisions, the last attribute is inserted.
+     * No validation is performed on the PI pseudo syntax.
+     */
+    private static final void addPIPseudoAttributes(ProcessingInstruction pi, Hashtable attributes) {
+        String data = pi.getData();
+
+        Tokenizer st = new Tokenizer(data, "\"");
+        try {
+          while (st.hasMoreTokens()) {
+              String key   = st.nextToken();     // attribute name and '='
+              String token = st.nextToken();     // exact attribute value
+              key = key.replace('=',' ').trim(); // remove whitespace and '='
+              attributes.put(key, token);    
+          }
+        } catch(NoSuchElementException nsee) {
+          // ignore white-space at the end of pseudo-list
+        }
+    }
+    
     /**
      * Encodes the given request into a string using the format
      *   protocol://serverName:serverPort/requestURI?query
