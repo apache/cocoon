@@ -155,7 +155,7 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.6 2003/09/09 18:52:32 joerg Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.7 2003/10/06 16:07:33 gianugo Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Initializable {
@@ -188,7 +188,7 @@ public class XMLDBTransformer extends AbstractTransformer
     /** Operation. One of: create, delete, update. */
     private String operation;
 
-    /** Document ID. Can be null if update is performed on collection. */
+    /** Document ID. Can be null if update or insert is performed on collection. */
     private String key;
 
     private StringWriter queryWriter;
@@ -344,7 +344,7 @@ public class XMLDBTransformer extends AbstractTransformer
                 }
 
                 this.key = a.getValue(XMLDB_QUERY_OID_ATTRIBUTE);
-                if(!"update".equals(operation) && this.key == null) {
+                if("delete".equals(operation) && this.key == null) {
                     throw new SAXException("Object ID is missing in xmldb element");
                 }
                 processing = true;
@@ -414,6 +414,7 @@ public class XMLDBTransformer extends AbstractTransformer
                 String message = null;
                 if("create".equals(operation)) {
                     try {
+                        if (key == null) key = collection.createId();
                         Resource resource = collection.createResource(key, "XMLResource");
                         resource.setContent(document);
                         collection.storeResource(resource);
