@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,10 @@
  */
 package org.apache.cocoon.generation;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -34,6 +32,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -41,27 +40,30 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.PostInputStream;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.apache.xerces.parsers.AbstractSAXParser;
+import org.cyberneko.html.HTMLConfiguration;
+import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.w3c.tidy.Tidy;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * @cocoon.sitemap.component.documentation
- * The html generator reads HTML from a source, converts it to XHTML
- * and generates SAX Events.
- *
- * @cocoon.sitemap.component.name   html
+ * The neko html generator reads HTML from a source, converts it to XHTML
+ * and generates SAX Events. It uses the NekoHTML library to do this.
+ * 
+ * @cocoon.sitemap.component.name   nekohtml
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.html
+ * @cocoon.sitemap.component.logger sitemap.generator.nekohtml
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
- *
+ * 
  * @cocoon.sitemap.component.pooling.min   4
  * @cocoon.sitemap.component.pooling.max  32
  * @cocoon.sitemap.component.pooling.grow  4
@@ -73,7 +75,7 @@ import org.xml.sax.SAXException;
  *
  * @version CVS $Id$
  */
-public class HTMLGenerator extends ServiceableGenerator
+public class NekoHTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
 
     /** The parameter that specifies what request attribute to use, if any */
@@ -91,7 +93,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     /** XPath Processor */
     private XPathProcessor processor = null;
 
-    /** JTidy properties */
+    /** Neko properties */
     private Properties properties;
 
     public void service(ServiceManager manager)
@@ -102,7 +104,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
 
     public void configure(Configuration config) throws ConfigurationException {
 
-        String configUrl = config.getChild("jtidy-config").getValue(null);
+        String configUrl = config.getChild("neko-config").getValue(null);
 
         if(configUrl != null) {
             org.apache.excalibur.source.SourceResolver resolver = null;
@@ -152,7 +154,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         super.setup(resolver, objectModel, src, par);
 
         Request request = ObjectModelHelper.getRequest(objectModel);
-
+        
         if (src == null) {
             // Handle this request as the StreamGenerator does (from the POST
             // request or from a request parameter), but try to make sure
@@ -167,7 +169,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 String requested = parameters.getParameter(FORM_NAME, null);
                 if (requested == null) {
                     throw new ProcessingException(
-                        "HtmlGenerator with no \"src\" parameter expects a sitemap parameter called '" +
+                        "NekoHtmlGenerator with no \"src\" parameter expects a sitemap parameter called '" +
                         FORM_NAME + "' for handling form data"
                     );
                 }
@@ -198,9 +200,8 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
 
         xpath = request.getParameter("xpath");
-        if (xpath == null) {
+        if(xpath == null)
             xpath = par.getParameter("xpath",null);
-        }
 
         // append the request parameter to the URL if necessary
         if (par.getParameterAsBoolean("copy-parameters", false)
@@ -212,9 +213,8 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
 
         try {
-            if (source != null) {
+            if (source != null)
                 this.inputSource = resolver.resolveURI(super.source);
-            }
         } catch (SourceException se) {
             throw SourceUtil.handle("Unable to resolve " + super.source, se);
         }
@@ -229,9 +229,8 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      *              is currently not cacheable.
      */
     public java.io.Serializable getKey() {
-        if (this.inputSource == null) {
+        if (this.inputSource == null)
             return null;
-        }
 
         if (this.xpath != null) {
             StringBuffer buffer = new StringBuffer(this.inputSource.getURI());
@@ -251,9 +250,8 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        if (this.inputSource == null) {
+        if (this.inputSource == null)
             return null;
-        }
         return this.inputSource.getValidity();
     }
 
@@ -263,61 +261,38 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-            // Setup an instance of Tidy.
-            Tidy tidy = new Tidy();
-            tidy.setXmlOut(true);
-
-            if (this.properties == null) {
-                tidy.setXHTML(true);
-            } else {
-                tidy.setConfigurationFromProps(this.properties);
-            }
-
-            //Set Jtidy warnings on-off
-            tidy.setShowWarnings(getLogger().isWarnEnabled());
-            //Set Jtidy final result summary on-off
-            tidy.setQuiet(!getLogger().isInfoEnabled());
-            //Set Jtidy infos to a String (will be logged) instead of System.out
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter errorWriter = new PrintWriter(stringWriter);
-            tidy.setErrout(errorWriter);
-
-            // Extract the document using JTidy and stream it.
-
+            HtmlSaxParser parser = new HtmlSaxParser(this.properties);
+            
             if (inputSource != null)
                 requestStream = this.inputSource.getInputStream();
 
-            org.w3c.dom.Document doc = tidy.parseDOM(new BufferedInputStream(requestStream), null);
-
-            // FIXME: Jtidy doesn't warn or strip duplicate attributes in same
-            // tag; stripping.
-            XMLUtils.stripDuplicateAttributes(doc, null);
-
-            errorWriter.flush();
-            errorWriter.close();
-            if(getLogger().isWarnEnabled()) {
-               getLogger().warn(stringWriter.toString());
-            }
-
-            DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,
-                                                      this.lexicalHandler);
-            this.contentHandler.startDocument();
-
             if(xpath != null) {
+                DOMBuilder builder = new DOMBuilder();
+                parser.setContentHandler(builder);
+                parser.parse(new InputSource(requestStream));
+                Document doc = builder.getDocument();
+
+                DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,
+                                                          this.lexicalHandler);
+                this.contentHandler.startDocument();
                 NodeList nl = processor.selectNodeList(doc, xpath);
                 int length = nl.getLength();
                 for(int i=0; i < length; i++) {
                     domStreamer.stream(nl.item(i));
                 }
+                this.contentHandler.endDocument();
             } else {
-                // If the HTML document contained a <?xml ... declaration, tidy would have recognized
-                // this as a processing instruction (with a 'null' target), giving problems further
-                // on in the pipeline. Therefore we only serialize the document element.
-                domStreamer.stream(doc.getDocumentElement());
+                parser.setContentHandler(this.contentHandler);
+                parser.parse(new InputSource(requestStream));
             }
-            this.contentHandler.endDocument();
+            requestStream.close();
+        } catch (IOException e){
+            throw new ResourceNotFoundException("Could not get resource "
+                + this.inputSource.getURI(), e);
         } catch (SAXException e){
-            SourceUtil.handleSAXException(this.inputSource.getURI(), e);
+            throw e;
+        } catch (Exception e){
+            throw new ProcessingException("Exception in NekoHTMLGenerator.generate()",e);
         }
     }
 
@@ -329,5 +304,24 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
         this.processor = null;
         super.dispose();
+    }
+
+    public static class HtmlSaxParser extends AbstractSAXParser {
+
+        public HtmlSaxParser(Properties properties) {
+            super(getConfig(properties));
+        }
+    
+        private static HTMLConfiguration getConfig(Properties properties) {
+            HTMLConfiguration config = new HTMLConfiguration();
+            config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
+            if (properties != null) {
+                for (Iterator i = properties.keySet().iterator();i.hasNext();) {
+                    String name = (String) i.next();
+                    config.setProperty(name, properties.getProperty(name));
+                }
+            }
+            return config;
+        }
     }
 }

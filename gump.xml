@@ -528,9 +528,10 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jtidy"/>
-    <depend project="jakarta-servletapi"/>
+    <depend project="nekohtml"/>
 
     <library name="jtidy"/>
+    <library name="nekohtml"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
