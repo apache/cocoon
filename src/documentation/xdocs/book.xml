@@ -45,7 +45,7 @@
   <menu label="Project">
     <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/index.html"/>
     <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-2.1/"/>
-    <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/cocoon-2.1/"/>
+    <external label="Dev Snapshots" href="http://xml.apache.org/cocoon/mirror.cgi#nightly"/>
   </menu>
 
   <menu label="Links">

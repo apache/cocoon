@@ -37,7 +37,7 @@
    <link href="http://cvs.apache.org/viewcvs.cgi/cocoon-2.1/">latest and
    greatest code</link> (which you find in the cocoon-2.1 module in
    the cvs.apache.org CVS code repository, or from the
-   <link href="http://xml.apache.org/from-cvs/cocoon-2.1/">CVS snapshots</link>).
+   <link href="http://xml.apache.org/cocoon/mirror.cgi#nightly">CVS snapshots</link>).
    Review the <link href="todo.html">todo</link> list, choose a task
    (or perhaps you have noticed something that needs patching). Make the
    changes, do the testing, generate a patch, if you need then discuss it on
