@@ -24,9 +24,6 @@ import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -64,7 +61,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.18 2004/05/25 07:28:26 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.19 2004/05/25 14:24:01 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -106,65 +103,11 @@ public final class SourceUtil {
      * @throws ProcessingException if no suitable converter is found
      */
     static public void toSAX( Source source,
-                                String mimeTypeHint,
+                              String mimeTypeHint,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         toSAX(EnvironmentHelper.getSitemapServiceManager(), 
               source, mimeTypeHint, handler);
-    }
-
-    /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care
-     * should be taken that <code>handler</code> can actually directly implement
-     * the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     * @deprecated Use the {@link #toSAX(ServiceManager, Source, String, ContentHandler)}
-     *             method instead.
-     */
-    static public void toSAX(ComponentManager manager, Source source,
-                             String mimeTypeHint,
-                             ContentHandler handler)
-    throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
-            try {
-                ((XMLizable)source).toSAX( handler );
-            } catch (SAXException e) {
-                // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
-                // See also FileGenerator.generate()
-                final Exception cause = e.getException();
-                if (cause != null) {
-                    if (cause instanceof ProcessingException) {
-                        throw (ProcessingException)cause;
-                    }
-                    if (cause instanceof IOException) {
-                        throw (IOException)cause;
-                    }
-                    if (cause instanceof SAXException) {
-                        throw (SAXException)cause;
-                    }
-                }
-                throw e;
-            }
-        } else {
-            String mimeType = source.getMimeType();
-            if ( null == mimeType) mimeType = mimeTypeHint;
-            XMLizer xmlizer = null;
-            try {
-                xmlizer = (XMLizer) manager.lookup( XMLizer.ROLE);
-                xmlizer.toSAX( source.getInputStream(),
-                               mimeType,
-                               source.getURI(),
-                               handler );
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ComponentException ce) {
-                throw new ProcessingException("Exception during streaming source.", ce);
-            } finally {
-                manager.release( (Component)xmlizer );
-            }
-        }
     }
 
     /**
@@ -175,9 +118,10 @@ public final class SourceUtil {
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX( ServiceManager manager, Source source,
-                                String mimeTypeHint,
-                                ContentHandler handler)
+    static public void toSAX( ServiceManager manager, 
+                              Source source,
+                              String mimeTypeHint,
+                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if ( source instanceof XMLizable ) {
             ((XMLizable)source).toSAX( handler );
@@ -197,36 +141,6 @@ public final class SourceUtil {
                 throw new ProcessingException("Exception during streaming source.", ce);
             } finally {
                 manager.release( xmlizer );
-            }
-        }
-    }
-
-    /**
-     * Generates SAX events from the given source by parsing it.
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     * @deprecated Use {@link #parse(ServiceManager, Source, ContentHandler)}.
-     */
-    static public void parse( ComponentManager manager, 
-                                Source source,
-                                ContentHandler handler)
-    throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
-            ((XMLizable)source).toSAX( handler );
-        } else {
-            SAXParser parser = null;
-            try {
-                parser = (SAXParser) manager.lookup( SAXParser.ROLE);
-                parser.parse( getInputSource( source ), handler );
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ComponentException ce) {
-                throw new ProcessingException("Exception during parsing source.", ce);
-            } finally {
-                manager.release( (Component)parser );
             }
         }
     }
@@ -527,6 +441,7 @@ public final class SourceUtil {
      * If the source is a ModifiableSource the interface is used.
      * If not, the source is invoked with an additional parameter named
      * "content" containing the XML.
+     * The current sitemap service manager is used to lookup the serializer.
      *
      * @param location URI of the Source
      * @param typeParameters Type of Source query.  Currently, only
@@ -536,7 +451,7 @@ public final class SourceUtil {
      * May be <code>null</code>
      * @param frag DOM fragment to serialize to the Source
      * @param resolver Resolver for the source.
-     * @param serializerName
+     * @param serializerName The serializer to use
      *
      * @throws ProcessingException
      */
@@ -547,7 +462,6 @@ public final class SourceUtil {
                                 SourceResolver resolver,
                                 String serializerName)
     throws ProcessingException {
-
         Source source = null;
 
         try {
@@ -559,8 +473,8 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if ( null != serializerName) {
-					ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
 
+                    ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
 	                ServiceSelector selector = null;
 	                Serializer serializer = null;
 	                OutputStream oStream = null;
@@ -601,8 +515,8 @@ public final class SourceUtil {
             } else {
             	String content;
 				if ( null != serializerName) {
-					ServiceManager  manager = EnvironmentHelper.getSitemapServiceManager();
                     
+                    ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
                     ServiceSelector selector = null;
                     Serializer serializer = null;
                     ByteArrayOutputStream oStream = new ByteArrayOutputStream();

@@ -64,7 +64,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.30 2004/05/25 13:48:12 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.31 2004/05/25 14:24:01 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -265,7 +265,7 @@ public class TreeProcessor
             Source source = this.resolver.resolveURI( xconfURL );
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX( this.manager, source, null, handler);
+                SourceUtil.toSAX( new ComponentManagerWrapper(this.manager), source, null, handler);
                 builtin = handler.getConfiguration();
             } finally {
                 this.resolver.release( source );

@@ -29,7 +29,7 @@ import javax.xml.transform.sax.TransformerHandler;
  * DOM Document from SAX events.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DOMBuilder.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: DOMBuilder.java,v 1.3 2004/05/25 14:24:01 cziegeler Exp $
  */
 public class DOMBuilder
 extends AbstractXMLPipe {
@@ -55,33 +55,9 @@ extends AbstractXMLPipe {
 
     /**
      * Construct a new instance of this DOMBuilder.
-     * @deprecated Use DOMBuilder() instead.
-     */
-    public DOMBuilder(DOMFactory factory) {
-        this( (Listener)null, (Node)null );
-    }
-
-    /**
-     * Construct a new instance of this DOMBuilder.
      */
     public DOMBuilder( Listener listener ) {
         this(listener, null);
-    }
-
-    /**
-     * Construct a new instance of this DOMBuilder.
-     * @deprecated Use DOMBuilder(listener) instead.
-     */
-    public DOMBuilder( DOMFactory factory, Listener listener ) {
-        this(listener, null);
-    }
-
-    /**
-     * Construct a new instance of this DOMBuilder.
-     * @deprecated Use DOMBuilder(listener, parentNode) instead.
-     */
-    public DOMBuilder( DOMFactory domFactory, Listener listener, Node parentNode ) {
-        this(listener, parentNode);
     }
 
     /**
@@ -113,7 +89,7 @@ extends AbstractXMLPipe {
      * which does not happen here.
      */
     public DOMBuilder( Node parentNode ) {
-        this(null, null, parentNode);
+        this( null, parentNode);
     }
 
     /**
