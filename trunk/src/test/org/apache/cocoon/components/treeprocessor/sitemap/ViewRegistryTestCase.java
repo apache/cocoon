@@ -71,18 +71,24 @@ public class ViewRegistryTestCase extends FortressTestCase {
     public void testGetViewForStatement() throws Exception {
         ViewRegistry vr = (ViewRegistry) super.lookup(ViewRegistry.class.getName());
         
-        Collection views = vr.getViewsForStatement(Generator.ROLE, "some-generator", createEmptyStatement());
+        Collection views = vr.getViewsForStatement(Generator.ROLE, "some", createEmptyStatement());
+        assertTrue(views != null);
         assertTrue(views.size() == 3);
         assertTrue(views.contains("firstview"));
         assertTrue(views.contains("gen1view"));
         assertTrue(views.contains("gen2view"));
         
-        views = vr.getViewsForStatement(Transformer.ROLE, "some-transformer", createLabeledStatement("trans2"));
+        views = vr.getViewsForStatement(Transformer.ROLE, "some", createLabeledStatement("trans2"));
+        assertTrue(views != null);        
         assertTrue(views.size() == 2);
         assertTrue(views.contains("trans1view"));
         assertTrue(views.contains("trans2view"));
+        
+        views = vr.getViewsForStatement(Transformer.ROLE, "someother", createEmptyStatement());
+        assertTrue(views == null);
 
-        views = vr.getViewsForStatement(Serializer.ROLE, "some-serializer", createEmptyStatement());
+        views = vr.getViewsForStatement(Serializer.ROLE, "some", createEmptyStatement());
+        assertTrue(views != null);
         assertTrue(views.size() == 1);
         assertTrue(views.contains("lastview"));
     }

@@ -10,10 +10,8 @@
     <sitemap>
       <xsl:apply-templates select="map:components|map:views|map:resources|map:action-sets|map:pipelines"/>
       <view-registry id="default">
-        <xsl:for-each select="/map:sitemap/map:components/*/*">
-          <xsl:if test="@label">
-            <component id-ref="{@name}-{local-name()}" label="{@label}" />
-          </xsl:if>
+        <xsl:for-each select="/map:sitemap/map:components/*/*[@label]">
+          <component id-ref="{@name}-{local-name()}" label="{@label}" />
         </xsl:for-each>
         <xsl:for-each select="/map:sitemap/map:views/*">
           <view id-ref="v-{position()}">

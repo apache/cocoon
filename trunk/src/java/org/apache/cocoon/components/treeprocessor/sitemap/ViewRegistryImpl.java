@@ -65,6 +65,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.xml.LocationAugmentationPipe;
 
@@ -97,6 +98,14 @@ public class ViewRegistryImpl extends AbstractLogEnabled implements ViewRegistry
     private static final String LABEL_ATTR = "label";
     private static final String FROM_LABEL_ATTR = "from-label";
     private static final String FROM_POSITION_ATTR = "from-position";
+    
+    
+    private static final Map ROLE2ID_SUFFIX = new HashMap(3);
+    static {
+        ROLE2ID_SUFFIX.put(Generator.ROLE,"-generator");
+        ROLE2ID_SUFFIX.put(Transformer.ROLE,"-transformer");
+        ROLE2ID_SUFFIX.put(Serializer.ROLE,"-serializer");
+    }
     
     // component ids -> labels
     private Map m_componentLabels;
@@ -142,13 +151,15 @@ public class ViewRegistryImpl extends AbstractLogEnabled implements ViewRegistry
     
     // ---------------------------------------------------- ViewRegistry implementation
     
-    public Collection getViewsForStatement(String role, String componentId, Configuration statement) {
+    public Collection getViewsForStatement(String role, String hint, Configuration statement) {
         
         // Compute the views attached to this component
         Set views = null;
 
         // Build the set of all labels for this statement
         Set labels = new HashSet();
+        
+        String componentId = hint + ROLE2ID_SUFFIX.get(role);
         
         // 1 - labels defined on the component
         Collection componentLabels = (Collection) m_componentLabels.get(componentId);

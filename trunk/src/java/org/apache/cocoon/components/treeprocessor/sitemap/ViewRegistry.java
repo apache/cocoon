@@ -66,10 +66,10 @@ public interface ViewRegistry {
      * collection, the statement can directly branch to the view-handling node.
      *
      * @param role the component role (e.g. <code>Generator.ROLE</code>)
-     * @param componenId the lookup id of the sitemap component (e.g. <code>file-generator</code>).
+     * @param componenId the component hint, i.e. the 'type' attribute (e.g. <code>file</code>).
      * @param statement the sitemap statement
      * @return the view names for this statement
      */
-    Collection getViewsForStatement(String role, String componentId, Configuration statement);
+    Collection getViewsForStatement(String role, String hint, Configuration statement);
     
 }
