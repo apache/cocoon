@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-27 18:19:07 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-27 19:13:32 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -58,11 +58,11 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
         try {
             Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
             String query = this.getAddQuery(conf);
+
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
             conn.setAutoCommit(false);
-
             PreparedStatement statement = conn.prepareStatement(query);
 
             Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
@@ -73,7 +73,17 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             while (keys.hasNext()) {
                 Configuration key = (Configuration) keys.next();
                 if ("manual".equals(key.getAttribute("mode", "automatic"))) {
-                    this.setColumn(statement, currentIndex, request, key);
+                    String selectQuery = this.getSelectQuery(key);
+                    getLogger().info("Select query is: " + selectQuery);
+
+                    ResultSet set = conn.createStatement().executeQuery(selectQuery);
+                    int value = set.getInt("maxid") + 1;
+
+                    getLogger().info("Assigning column " + currentIndex + "'" + key.getAttribute("dbcol") + "' to: " + value);
+                    statement.setInt(currentIndex, value);
+
+                    set.close();
+                    set.getStatement().close();
                     currentIndex++;
                 }
             }
@@ -128,6 +138,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                 queryBuffer.append(" (");
 
                 boolean firstIteration = true;
+                int numKeys = 0;
 
                 while (keys.hasNext()) {
                     Configuration key = (Configuration) keys.next();
@@ -140,8 +151,11 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
                         queryBuffer.append(key.getAttribute("dbcol"));
                         this.setSelectQuery(conf, key);
+                        numKeys++;
                     }
                 }
+
+                int numValues = 0;
 
                 while (values.hasNext()) {
                     if (firstIteration) {
@@ -151,22 +165,22 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                     }
 
                     queryBuffer.append(((Configuration) values.next()).getAttribute("dbcol"));
+                    numValues++;
                 }
 
                 queryBuffer.append(") VALUES (");
 
-                values = table.getChild("values").getChildren("value");
-                firstIteration = true;
+                int numParams = numValues + numKeys;
 
-                while (values.hasNext()) {
-                    if (firstIteration) {
-                        firstIteration = false;
-                    } else {
+                for (int i = 0; i < numParams; i++) {
+                    if (i > 0) {
                         queryBuffer.append(", ");
                     }
 
                     queryBuffer.append("?");
                 }
+
+                queryBuffer.append(")");
 
                 query = queryBuffer.toString();
             }
@@ -175,27 +189,6 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
         }
 
         return query;
-    }
-
-    protected final void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry) throws Exception {
-        super.setColumn(statement, position, request, entry);
-
-        if ("key".equals(entry.getName())) {
-            String mode = entry.getAttribute("mode", "automatic");
-
-            if ("manual".equals(mode)) {
-                String query = this.getSelectQuery(entry);
-                Connection conn = statement.getConnection();
-
-                ResultSet set = conn.createStatement().executeQuery(query);
-                int value = set.getInt("maxid");
-
-                getLogger().info("Reassigning column " + position + "'" + entry.getAttribute("dbcol") + "' to: " + value);
-                statement.setInt(position, value);
-
-                set.getStatement().close();
-            }
-        }
     }
 
     /**
