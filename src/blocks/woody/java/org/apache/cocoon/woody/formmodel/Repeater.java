@@ -69,7 +69,7 @@ import java.util.*;
  * <p>Using the methods {@link #getSize} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  */
-public class Repeater extends AbstractWidget implements ContainerWidget {
+public class Repeater extends AbstractWidget {
     private RepeaterDefinition definition;
     private List rows = new ArrayList();
 
@@ -225,7 +225,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         contentHandler.endElement(Constants.WI_NS, REPEATER_SIZE_EL, Constants.WI_PREFIX_COLON + REPEATER_SIZE_EL);
     }
 
-    public class RepeaterRow implements ContainerWidget {
+    public class RepeaterRow implements Widget {
         private List widgets;
         private Map widgetsById;
 
@@ -249,7 +249,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             return String.valueOf(rows.indexOf(this));
         }
 
-        public ContainerWidget getParent() {
+        public Widget getParent() {
             return Repeater.this;
         }
 
@@ -261,7 +261,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             return getParent().getNamespace() + "." + getId();
         }
 
-        public void setParent(ContainerWidget widget) {
+        public void setParent(Widget widget) {
             throw new RuntimeException("Parent of RepeaterRow is fixed, and cannot be set.");
         }
 

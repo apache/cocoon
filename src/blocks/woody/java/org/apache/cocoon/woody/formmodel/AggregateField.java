@@ -83,7 +83,7 @@ import java.util.*;
  * <p>Currently the child widgets should always be field widgets whose datatype is string.
  *
  */
-public class AggregateField extends AbstractWidget implements ContainerWidget {
+public class AggregateField extends AbstractWidget {
     private AggregateFieldDefinition definition;
     private String enteredValue;
     private List fields = new ArrayList();

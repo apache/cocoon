@@ -58,15 +58,35 @@ import java.util.Locale;
 
 /**
  * Interface to be implemented by Widgets. In Woody, a form consists of a number
- * of widgets. Each widget can hold a (possibly strongly-typed) value, can validate
- * itself, can generate an XML representation of itself, can read its value
- * from the Request object, and so on.
+ * of widgets. Each widget:
+ *
+ * <ul>
+ *  <li>has an id, unique within its parent context widget. See {@link #getId}.</li>
+ *  <li>can have children (see {@link #getWidget}, and can have a parent (see {@link #getParent}.</li>
+ *  <li>can hold a value (which can be any kind of object). See {@link #getValue}.</li>
+ *  <li>can read its value from a request object (and convert it from a string to its native type).
+ *  See {@link #readFromRequest}.</li>
+ *  <li>can validate itself. See {@link #validate}.</li>
+ *  <li>can generate an XML representation of itself.</li>
+ * </ul>
+ *
+ * <p>Because widgets can have children, the widgets form a widget tree, with its root
+ * being the {@link Form} widget.</p>
+ *
+ * <p>A widget can have only a value, or only child widgets, or can have both a value and child
+ * widgets, or can have neither. This all depends on the widget implementation.</p>
+ *
+ * <p>When a request is submitted, first the {@link #readFromRequest} method of all widgets
+ * will be called so that they can read their value(s). Next, the {@link #validate} method will
+ * be called. Doing this in two steps allows the validation to compare values between widgets.
+ * See also the method {@link Form#process}.</p>
  *
  * <p>A Widget is created by calling the createInstance method on the a
  * {@link WidgetDefinition}. A Widget holds all the data that is specific for
  * a certain use of the widget (its value, validationerrors, ...), while the
  * WidgetDefinition holds the data that is static accross all widgets. This
- * keeps the Widgets small and light to create.
+ * keeps the Widgets small and light to create. This mechanism is similar to
+ * classes and objects in Java.
  */
 public interface Widget {
     /**
@@ -78,14 +98,14 @@ public interface Widget {
      * Gets the parent of this widget. If this widget is the root widget,
      * this method returns null.
      */
-    public ContainerWidget getParent();
+    public Widget getParent();
 
     /**
      * This method is called on a widget when it is added to a container.
-     * Unless you're implementing a {@link ContainerWidget}, you should not use
-     * this method.
+     * You shouldn't call this method unless youre implementing a widget yourself (in
+     * which case it should be called when a widget is added as child of your widget).
      */
-    public void setParent(ContainerWidget widget);
+    public void setParent(Widget widget);
 
     /**
      * Gets the namespace of this widget. The combination of a widget's namespace
@@ -139,4 +159,9 @@ public interface Widget {
      * widgets this may not make sense, those should return false here.
      */
     public boolean isRequired();
+
+    /**
+     * Gets the child widget of this widget with the given id, or null if there isn't such a child.
+     */
+    public Widget getWidget(String id);
 }

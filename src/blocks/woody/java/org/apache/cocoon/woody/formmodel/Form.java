@@ -63,7 +63,7 @@ import java.util.*;
  * A widget that serves as a container for other widgets, the top-level widget in
  * a form description file.
  */
-public class Form extends AbstractWidget implements ContainerWidget {
+public class Form extends AbstractWidget {
     private List widgets;
     private Map widgetsById;
     private FormDefinition definition;
