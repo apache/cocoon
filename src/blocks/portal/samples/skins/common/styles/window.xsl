@@ -44,6 +44,11 @@
 	  			    <img src="show.gif" border="0" alt="Max Page"/>
 	  			</a>
 			</xsl:if>
+			<xsl:if test="minpage-uri">
+				<a href="{minpage-uri}">
+	  			    <img src="show.gif" border="0" alt="Min Page"/>
+	  			</a>
+			</xsl:if>
 			<xsl:if test="maximize-uri">
 				<a href="{maximize-uri}">
 	  			    <img src="maximize.gif" border="0" alt="Maximize"/>
