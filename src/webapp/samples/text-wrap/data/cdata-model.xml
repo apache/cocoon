@@ -4,9 +4,6 @@
 <document>
   <header>
     <title>Deeply emebedded content model</title>
-    <authors>
-      <person name="David Crossley" email="crossley@apache.org"/>
-    </authors>
   </header>
 
   <body>
