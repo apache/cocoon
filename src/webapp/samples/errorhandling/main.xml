@@ -1,6 +1,12 @@
-<html>
+<document>
+  <header>
+    <title>Error handling</title>
+  </header>
 	<body>
 		<p>Please choose an exception:</p>
+    <form action="exception/generror">
+      <input type="submit" value="Syntax error in a page"/>
+    </form>
 		<form action="exception/exception">
 			<input type="hidden" name="exception" value="validation"/>
 			<input type="submit" value="ValidationException"/>
@@ -36,4 +42,4 @@
 			<input type="submit" value="No exception"/>
 		</form>
 	</body>
-</html>
+</document>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.15 2003/05/08 08:19:16 crossley Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.16 2003/05/08 11:24:02 stephan Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -136,9 +136,6 @@
    </sample>
    <sample name="Request Page" href="request.html">
     This example shows the usage of the RequestGenerator.
-   </sample>
-   <sample name="Error Page" href="generror.html">
-    This example shows what happens if an error is triggered in the pipeline.
    </sample>
    <sample name="Error handling" href="errorhandling/main">
     An example page producing exceptions and handling them. Demonstrates the 
