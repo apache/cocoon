@@ -20,16 +20,16 @@
  <map:components>
 
   <map:generators default="file">   
-    <map:generator name="forms" src="org.apache.cocoon.forms.generation.FormsGenerator" logger="forms"/>
+    <map:generator name="form" src="org.apache.cocoon.forms.generation.FormGenerator" logger="forms"/>
     <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
   </map:generators>
 
   <map:transformers default="xalan">    
-    <map:transformer name="forms" src="org.apache.cocoon.forms.transformation.FormsTemplateTransformer" logger="forms"/>
+    <map:transformer name="form" src="org.apache.cocoon.forms.transformation.FormTemplateTransformer" logger="forms"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-      <catalogues default="other">
+      <catalogues default="forms">
         <catalogue id="other" name="OtherMessages" location="messages"/>
-        <catalogue id="forms" name="FormsMessages" location="messages"/>
+        <catalogue id="forms" name="FormMessages" location="messages"/>
       </catalogues>
       <cache-at-startup>true</cache-at-startup>
     </map:transformer>
@@ -40,9 +40,9 @@
   </map:selectors>
 
   <map:actions>
-    <map:action name="forms-make-form" src="org.apache.cocoon.forms.acting.MakeFormAction" logger="forms"/>
-    <map:action name="init-form1" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms"/>
-    <map:action name="forms-handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms"/>
+    <map:action name="make-form" src="org.apache.cocoon.forms.acting.MakeFormAction" logger="forms"/>
+    <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms"/>
+    <map:action name="handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms"/>
   </map:actions>
 
   <map:pipes default="caching">
@@ -112,13 +112,13 @@
          <map:when test="GET">
            <!-- Here we use an action especially created for the "form1" example
            which will initialise the form with some data. -->
-           <map:act type="init-form1">
+           <map:act type="init-form">
              <map:parameter name="form-definition" value="forms/form1.xml"/>
              <map:parameter name="attribute-name" value="form1"/>
            </map:act>
          </map:when>
          <map:when test="POST">
-           <map:act type="forms-handle-form-submit">
+           <map:act type="handle-form-submit">
              <map:parameter name="form-definition" value="forms/form1.xml"/>
              <map:parameter name="attribute-name" value="form1"/>
              <map:parameter name="formhandler" value="org.apache.cocoon.forms.samples.Form1Handler"/>
@@ -139,7 +139,7 @@
 
        <!-- pipeline to show the form -->
        <map:generate src="forms/form1_template_action.xml"/>
-       <map:transform type="forms">
+       <map:transform type="form">
          <map:parameter name="attribute-name" value="form1"/>
        </map:transform>
        <map:transform type="i18n">
@@ -171,7 +171,7 @@
      <map:match pattern="*-display-pipeline">
        <!-- pipeline to show the form -->
        <map:generate src="forms/{1}_template.xml"/>
-       <map:transform type="forms"/>
+       <map:transform type="form"/>
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
@@ -339,7 +339,7 @@
      
      <map:match pattern="htmlarea-display-pipeline">
        <map:generate src="forms/htmlarea_template.xml"/>
-       <map:transform type="forms"/>
+       <map:transform type="form"/>
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
@@ -402,10 +402,10 @@
      </map:match>
      
      <map:match pattern="binding.form">
-       <map:generate type="forms">
+       <map:generate type="form">
          <map:parameter name="form-action" value="#\{$continuation/id}.continue" />
        </map:generate>
-       <!--TODO: fix xsl for use with forms-generator -->
+       <!--TODO: fix xsl for use with FormGenerator -->
        <map:transform src="resources/forms-samples-styling.xsl" />
        <map:serialize type="html" />
      </map:match>

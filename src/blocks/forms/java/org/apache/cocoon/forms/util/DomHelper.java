@@ -42,7 +42,7 @@ import org.xml.sax.SAXNotSupportedException;
 /**
  * Helper class to create and retrieve information from DOM-trees. It provides
  * some functionality comparable to what's found in Avalon's Configuration
- * objects. These lasts one could however not be used by Woody because they
+ * objects. These lasts one could however not be used by Cocoon Forms because they
  * don't provide an accurate model of an XML file (no mixed content,
  * no namespaced attributes, no namespace declarations, ...).
  *
@@ -50,7 +50,7 @@ import org.xml.sax.SAXNotSupportedException;
  * able to provide information about the location of elements in their source
  * XML file. See the {@link #getLocation(Element)} method.
  * 
- * @version CVS $Id: DomHelper.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version CVS $Id: DomHelper.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public class DomHelper {
 

@@ -24,11 +24,11 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 
 /**
- * Abstract base class for Woody actions.
+ * Abstract base class for Cocoon Forms actions.
  * 
- * @version $Id: AbstractFormsAction.java,v 1.1 2004/03/09 10:33:54 reinhard Exp $
+ * @version $Id: AbstractFormAction.java,v 1.1 2004/03/11 02:56:33 joerg Exp $
  */
-public abstract class AbstractFormsAction 
+public abstract class AbstractFormAction 
   implements Action, ThreadSafe, Serviceable, Disposable {
       
     protected ServiceManager manager;

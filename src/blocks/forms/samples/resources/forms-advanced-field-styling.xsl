@@ -31,20 +31,20 @@
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 
-  <xsl:template match="head" mode="woody-field">
+  <xsl:template match="head" mode="forms-field">
     <xsl:apply-imports/>
     <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/OptionTransfer.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/selectbox.js" type="text/javascript"/>
-    <xsl:apply-templates select="." mode="woody-calendar"/>
-    <xsl:apply-templates select="." mode="woody-htmlarea"/>
+    <xsl:apply-templates select="." mode="forms-calendar"/>
+    <xsl:apply-templates select="." mode="forms-htmlarea"/>
   </xsl:template>
 
-  <xsl:template match="body" mode="woody-field">
+  <xsl:template match="body" mode="forms-field">
     <xsl:apply-imports/>
-    <xsl:apply-templates select="." mode="woody-calendar"/>
-    <xsl:apply-templates select="." mode="woody-htmlarea"/>
+    <xsl:apply-templates select="." mode="forms-calendar"/>
+    <xsl:apply-templates select="." mode="forms-htmlarea"/>
   </xsl:template>
 
   <!--+ This template should not be necessary as this stylesheet "inherits"
@@ -70,7 +70,7 @@
       +-->
   <xsl:template match="fi:help">
     <xsl:variable name="id" select="generate-id()"/>
-    <div class="woody-help" id="help{$id}" style="visibility:hidden; position:absolute;">
+    <div class="forms-help" id="help{$id}" style="visibility:hidden; position:absolute;">
       <xsl:apply-templates select="node()"/>
     </div>
     <script type="text/javascript">
@@ -86,7 +86,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <span class="woody-doubleList" title="{fi:hint}">
+    <span class="forms-doubleList" title="{fi:hint}">
       <table>
         <xsl:if test="fi:styling/fi:available-label|fi:styling/fi:selected-label">
           <tr>

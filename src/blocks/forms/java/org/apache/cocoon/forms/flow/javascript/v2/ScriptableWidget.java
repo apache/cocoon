@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * @version $Id: ScriptableWidget.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -342,7 +342,7 @@ public class ScriptableWidget extends ScriptableObject {
                     value = Context.toBoolean(value) ? Boolean.TRUE : Boolean.FALSE;
                 } else {
                     if (value instanceof Double) {
-                        // make woody accept a JS Number
+                        // make cform accept a JS Number
                         if (typeClass == long.class || typeClass == Long.class) {
                             value = new Long(((Number)value).longValue());
                         } else if (typeClass == int.class || 

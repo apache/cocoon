@@ -28,15 +28,15 @@
   <xsl:template match="head">
     <head>
       <xsl:apply-templates/>
-      <xsl:apply-templates select="." mode="woody-page"/>
-      <xsl:apply-templates select="." mode="woody-field"/>
+      <xsl:apply-templates select="." mode="forms-page"/>
+      <xsl:apply-templates select="." mode="forms-field"/>
     </head>
   </xsl:template>
 
   <xsl:template match="body">
     <body>
-      <xsl:apply-templates select="." mode="woody-page"/>
-      <xsl:apply-templates select="." mode="woody-field"/>
+      <xsl:apply-templates select="." mode="forms-page"/>
+      <xsl:apply-templates select="." mode="forms-field"/>
       <xsl:apply-templates/>
     </body>
   </xsl:template>

@@ -26,10 +26,10 @@ import java.util.Locale;
 /**
  * ValueJXPathBinding provides an implementation of a {@link Binding}
  * that loads and saves the information behind a specific xpath expresion
- * (pointing to an attribute or text-node) to and from a specific Woody
+ * (pointing to an attribute or text-node) to and from a specific CForms
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -39,7 +39,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
     private final String xpath;
 
     /**
-     * The id of the Woody form-widget
+     * The id of the CForms form-widget
      */
     private final String fieldId;
 
@@ -77,7 +77,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
 
     /**
      * Actively performs the binding from the ObjectModel wrapped in a jxpath
-     * context to the Woody-form-widget specified in this object.
+     * context to the CForms-form-widget specified in this object.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget widget = frmModel.getWidget(this.fieldId);
@@ -102,7 +102,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel
+     * Actively performs the binding from the CForms-form to the ObjectModel
      * wrapped in a jxpath context
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

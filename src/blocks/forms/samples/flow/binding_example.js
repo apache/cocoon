@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/forms.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 // The purpose of the form2 example is to edit the contents of an XML file
 // or a Java bean through a Cocoon form

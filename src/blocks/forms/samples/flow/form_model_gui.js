@@ -13,9 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/forms.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
-// CVS $Id: form_model_gui.js,v 1.1 2004/03/09 10:34:11 reinhard Exp $
+// CVS $Id: form_model_gui.js,v 1.2 2004/03/11 02:56:33 joerg Exp $
 // Author: Timothy Larson
 
 function form_model_gui(form) {

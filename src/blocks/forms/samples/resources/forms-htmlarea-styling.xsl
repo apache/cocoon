@@ -19,13 +19,13 @@
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
   <!--+
-      | This stylesheet is designed to be included by 'woody-advanced-styling.xsl'.
+      | This stylesheet is designed to be included by 'forms-advanced-styling.xsl'.
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 
-  <xsl:template match="head" mode="woody-htmlarea">
+  <xsl:template match="head" mode="forms-htmlarea">
     <script type="text/javascript">
       _editor_url = "<xsl:value-of select="concat($resources-uri, '/htmlarea/')"/>";
       _editor_lang = "en";
@@ -33,7 +33,7 @@
     <script type="text/javascript" src="{$resources-uri}/htmlarea/htmlarea.js"></script>
   </xsl:template>
 
-  <xsl:template match="body" mode="woody-htmlarea"/>
+  <xsl:template match="body" mode="forms-htmlarea"/>
 
   <!--+
       | fi:field with @type 'htmlarea'

@@ -36,8 +36,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Test case for Woody's DynamicSelectionList datatype.
- * @version CVS $Id: DynamicSelectionListTestCase.java,v 1.3 2004/03/10 09:13:22 stephan Exp $
+ * Test case for CForms's DynamicSelectionList datatype.
+ * @version CVS $Id: DynamicSelectionListTestCase.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
  */
 public class DynamicSelectionListTestCase extends ExcaliburTestCase {
 

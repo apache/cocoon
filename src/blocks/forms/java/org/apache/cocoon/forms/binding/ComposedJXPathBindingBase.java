@@ -26,7 +26,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * into specific {@link JXPathBindingBase} implementations that have nested
  * child-bindings.
  *
- * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public class ComposedJXPathBindingBase extends JXPathBindingBase {
     private final JXPathBindingBase[] subBindings;
@@ -86,7 +86,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the ObjectModel to the Woody-form
+     * Actively performs the binding from the ObjectModel to the CForms-form
      * by passing the task onto it's children.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
@@ -99,7 +99,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel
+     * Actively performs the binding from the CForms-form to the ObjectModel
      * by passing the task onto it's children.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

@@ -36,19 +36,19 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * WoodyPipeLineConfig
+ * FormPipeLineConfig
  * 
- * @version CVS $Id: FormsPipelineConfig.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * @version CVS $Id: FormPipelineConfig.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
  */
-public class FormsPipelineConfig {
+public class FormPipelineConfig {
 
     /**
-     * Default key under which the woody form is stored in the JXPath context.
+     * Default key under which the Cocoon Form is stored in the JXPath context.
      */
-    public static final String WOODY_FORM = "woody-form";
+    public static final String COCOONFORM = "CocoonForm";
 
     /** 
-     * Name of the request attribute under which the Woody form is stored (optional). */
+     * Name of the request attribute under which the Cocoon Form is stored (optional). */
     private final String attributeName;
 
     /**
@@ -77,7 +77,7 @@ public class FormsPipelineConfig {
      */
     private String formMethod;
 
-    private FormsPipelineConfig(JXPathContext jxpc, Request req, Locale localeParam, 
+    private FormPipelineConfig(JXPathContext jxpc, Request req, Locale localeParam, 
             String attName, String actionExpression, String method) {
         this.attributeName = attName;
         this.request = req;
@@ -88,15 +88,15 @@ public class FormsPipelineConfig {
     }
 
     /**
-     * Creates and initializes a WoodyPipelineConfig object based on the passed
+     * Creates and initializes a FormsPipelineConfig object based on the passed
      * arguments of the setup() of the specific Pipeline-component.
      * 
      * @param objectModel the objectmodel as passed in the setup()
      * @param parameters the parameters as passed in the setup()
-     * @return an instance of WoodyPipelineConfig initialized according to the 
+     * @return an instance of FormsPipelineConfig initialized according to the 
      * settings in the sitemap.
      */
-    public static FormsPipelineConfig createConfig(Map objectModel, Parameters parameters) {
+    public static FormPipelineConfig createConfig(Map objectModel, Parameters parameters) {
         // create and set the jxpathContext...
         Object flowContext = FlowHelper.getContextObject(objectModel);
         WebContinuation wk = FlowHelper.getWebContinuation(objectModel);
@@ -122,7 +122,7 @@ public class FormsPipelineConfig {
         // Note generator will also need some text to go on the submit-button? 
         // Alternative to adding more here is to apply xinclude ?
 
-        return new FormsPipelineConfig(jxpc, request, localeParameter, 
+        return new FormPipelineConfig(jxpc, request, localeParameter, 
                 attributeName, actionExpression, formMethod);
     }
 
@@ -157,24 +157,24 @@ public class FormsPipelineConfig {
         if (jxpathExpression != null) {
             form = this.jxpathContext.getValue(jxpathExpression);
             if (form == null) {
-                throw new SAXException("No form found at location \"" + jxpathExpression + "\".");
+                throw new SAXException("No Cocoon Form found at location \"" + jxpathExpression + "\".");
             } else if (!(form instanceof Form)) {
-                throw new SAXException("Object returned by expression \"" + jxpathExpression + "\" is not a Woody Form.");
+                throw new SAXException("Object returned by expression \"" + jxpathExpression + "\" is not a Cocoon Form.");
             }
         } else if (this.attributeName != null) { // then see if an attribute-name was specified
             form = this.request.getAttribute(this.attributeName);
             if (form == null) {
-                throw new SAXException("No form found in request attribute with name \"" + this.attributeName + "\"");
+                throw new SAXException("No Cocoon Form found in request attribute with name \"" + this.attributeName + "\"");
             } else if (!(form instanceof Form)) {
-                throw new SAXException("Object found in request (attribute = '" + this.attributeName + "') is not a Woody Form.");
+                throw new SAXException("Object found in request (attribute = '" + this.attributeName + "') is not a Cocoon Form.");
             }
         } else { // and then see if we got a form from the flow
-            jxpathExpression = "/" + FormsPipelineConfig.WOODY_FORM;
+            jxpathExpression = "/" + FormPipelineConfig.COCOONFORM;
             try {
                 form = this.jxpathContext.getValue(jxpathExpression);
             } catch (JXPathException e) { /* do nothing */ }
             if (form == null) {
-                throw new SAXException("No Woody form found.");
+                throw new SAXException("No Cocoon Form found.");
             }
         }
         return (Form)form;

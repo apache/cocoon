@@ -20,11 +20,11 @@ import org.xml.sax.SAXException;
 
 /**
  * A WidgetDefinition holds all the static information about a Widget. It's
- * function is a lot like that of the class in Java. Users of the Woody framework
+ * function is a lot like that of the class in Java. Users of the Cocoon Forms framework
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
  * 
- * @version CVS $Id: WidgetDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: WidgetDefinition.java,v 1.2 2004/03/11 02:56:33 joerg Exp $
  */
 public interface WidgetDefinition {
 

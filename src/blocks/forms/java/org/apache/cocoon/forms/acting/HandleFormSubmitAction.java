@@ -45,9 +45,9 @@ import java.util.Locale;
  *  <li><strong>attribute-name</strong>: name of the request attribute in which the form instance should be stored
  * </ul>
  * 
- * @version $Id: HandleFormSubmitAction.java,v 1.1 2004/03/09 10:33:54 reinhard Exp $
+ * @version $Id: HandleFormSubmitAction.java,v 1.2 2004/03/11 02:56:33 joerg Exp $
  */
-public class HandleFormSubmitAction extends AbstractFormsAction implements Action, ThreadSafe {
+public class HandleFormSubmitAction extends AbstractFormAction implements Action, ThreadSafe {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws Exception {

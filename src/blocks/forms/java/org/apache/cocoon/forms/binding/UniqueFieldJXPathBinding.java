@@ -29,7 +29,7 @@ import java.util.Locale;
  * <li>This Binding uses the provided widget-id of a defined field in the repeater.</li>
  * </ol>
  * 
- * @version CVS $Id: UniqueFieldJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: UniqueFieldJXPathBinding.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public class UniqueFieldJXPathBinding extends JXPathBindingBase {
 
@@ -39,7 +39,7 @@ public class UniqueFieldJXPathBinding extends JXPathBindingBase {
     private final String xpath;
 
     /**
-     * The id of the Woody form-widget
+     * The id of the CocoonForm widget
      */
     private final String fieldId;
 
@@ -71,7 +71,7 @@ public class UniqueFieldJXPathBinding extends JXPathBindingBase {
 
     /**
      * Actively performs the binding from the ObjectModel wrapped in a jxpath
-     * context to the Woody-form-widget specified in this object.
+     * context to the form widget specified in this object.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget widget = frmModel.getWidget(this.fieldId);
@@ -96,7 +96,7 @@ public class UniqueFieldJXPathBinding extends JXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel
+     * Actively performs the binding from the form to the ObjectModel
      * wrapped in a jxpath context
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 import java.util.Locale;
 
 /**
- * Interface to be implemented by Widgets. In Woody, a form consists of a number
+ * Interface to be implemented by Widgets. In CForms, a form consists of a number
  * of widgets. Each widget:
  *
  * <ul>
@@ -54,7 +54,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: Widget.java,v 1.2 2004/03/11 02:56:33 joerg Exp $
  */
 public interface Widget {
 
@@ -117,7 +117,7 @@ public interface Widget {
 
     /**
      * Generates an XML representation of this widget. The startDocument and endDocument
-     * SAX events will not be called. It is assumed that the prefix for the Woody namespace
+     * SAX events will not be called. It is assumed that the prefix for the CForms namespace
      * mentioned in Constants.FI_PREFIX is already declared (by the caller or otherwise).
      */
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException;

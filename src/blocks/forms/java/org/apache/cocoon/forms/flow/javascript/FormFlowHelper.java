@@ -21,17 +21,17 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
 import org.apache.cocoon.forms.FormContext;
 
 /**
- * A helper class for the flowscript/woody integration.
+ * A helper class for the flowscript/cforms integration.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FormsFlowHelper.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * @version CVS $Id: FormFlowHelper.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
  */
 // FOM is really a PITA when the flow has to be integrated with Java classes that use the real
 // environment objects...
-public class FormsFlowHelper {
+public class FormFlowHelper {
     
     /** Only static methods in this class */
-    private FormsFlowHelper() {}
+    private FormFlowHelper() {}
     
     public static final FormContext getFormContext(FOM_Cocoon cocoon, Locale locale) {
         return new FormContext(cocoon.getRequest(), locale);

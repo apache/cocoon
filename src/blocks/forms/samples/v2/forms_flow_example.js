@@ -28,7 +28,7 @@ function showForm1() {
     var locale = determineLocale();
     var wid = form.getWidget();
     //
-    // 'wid' is a javascript wrapper of the Woody Form widget.
+    // 'wid' is a javascript wrapper of the Cocoon Form widget.
     //
     // Its subwidgets can be accessed by id.
     //

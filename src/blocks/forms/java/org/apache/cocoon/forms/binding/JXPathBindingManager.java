@@ -39,13 +39,13 @@ import org.xml.sax.InputSource;
  * usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package </a>.
  * 
- * @version CVS $Id: JXPathBindingManager.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled implements
         BindingManager, Serviceable, Disposable, Initializable, Configurable,
         ThreadSafe {
 
-    private static final String PREFIX = "WoodyBinding:";
+    private static final String PREFIX = "CocoonFormBinding:";
 
     private ServiceManager serviceManager;
 

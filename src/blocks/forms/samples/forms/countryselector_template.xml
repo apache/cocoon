@@ -19,7 +19,7 @@
   <para>This example illustrates how you can programmatically update the
     content of a selection list using a collection built in the flow.</para>
   <para>
-    This sample illustrates event-handling in Woody and how selection lists can be changed
+    This sample illustrates event-handling in Cocoon Forms and how selection lists can be changed
     programmatically.
   </para>
   <para>

@@ -50,23 +50,23 @@ import java.util.Map;
  * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
- * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "Woody Instance"} namespace), can
+ * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "CForms Instance"} namespace), can
  * then be translated to a HTML presentation by an XSL. This XSL will then only have to style
  * individual widget, and will not need to do the whole page layout.
  *
  * <p>For more information about the supported tags and their function, see the user documentation
- * for the woody template transformer.</p>
+ * for the forms template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
     /**
-     * Form location attribute on <code>wt:form-template</code> element, containing
+     * Form location attribute on <code>ft:form-template</code> element, containing
      * JXPath expression which should result in Form object.
      *
-     * @see WoodyPipelineConfig#findForm
+     * @see FormPipelineConfig#findForm
      */
     private static final String LOCATION = "location";
 
@@ -114,7 +114,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      */
     private final Map templates = new HashMap(12, 1);
 
-    protected FormsPipelineConfig pipeContext;
+    protected FormPipelineConfig pipeContext;
 
     /**
      * Have we encountered a <wi:style> element in a widget ?
@@ -144,10 +144,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     }
 
     private void throwSAXException(String message) throws SAXException{
-        throw new SAXException("EffectWoodyTemplateTransformer: " + message);
+        throw new SAXException("EffectFormTemplateTransformer: " + message);
     }
 
-    public void init(Widget contextWidget, FormsPipelineConfig pipeContext) {
+    public void init(Widget contextWidget, FormPipelineConfig pipeContext) {
         super.init();
         this.pipeContext = pipeContext;
 
@@ -210,7 +210,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     public Handler nestedTemplate() throws SAXException {
         if (Constants.TEMPLATE_NS.equals(input.uri)) {
-            // Element in woody template namespace.
+            // Element in forms template namespace.
             Handler handler = (Handler)templates.get(input.loc);
             if (handler != null) {
                 return handler;
@@ -222,13 +222,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 return null; // Keep the compiler happy.
             }
         } else {
-            // Element not in woody namespace.
+            // Element not in forms namespace.
             return nestedHandler;
         }
     }
 
     //==============================================
-    // Handler classes to transform Woody templates
+    // Handler classes to transform CForms templates
     //==============================================
 
     protected class DocHandler extends Handler {
@@ -245,7 +245,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     if (FORM_TEMPLATE_EL.equals(input.loc)) {
                         return formHandler;
                     } else {
-                        throwSAXException("Woody template \"" + input.loc +
+                        throwSAXException("CForms template \"" + input.loc +
                                 "\" not permitted outside \"form-template\"");
                     }
                 } else {
