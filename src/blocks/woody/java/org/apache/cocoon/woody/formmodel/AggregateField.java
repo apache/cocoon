@@ -209,6 +209,7 @@ public class AggregateField extends AbstractWidget implements ContainerWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl aggregatedFieldAttrs = new AttributesImpl();
         aggregatedFieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
+        aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(definition.isRequired()));
 
         contentHandler.startElement(Constants.WI_NS, AGGREGATEFIELD_EL, Constants.WI_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
 
