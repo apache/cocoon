@@ -112,7 +112,7 @@ function edit(id,type,subpage) {
 	    			innerHTML : cocoon.request.getParameter("innerHTML") 
 	    		}
 	    	);
-	        var action = cocoon.request.getParameter("action"); d
+	        var action = cocoon.request.getParameter("action");
 	       	if (action == "delete") {
 	        	repo.remove(document);
 	        	break;
