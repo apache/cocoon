@@ -55,17 +55,18 @@ import java.util.Map;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.15 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.16 2004/02/22 17:36:34 cziegeler Exp $
  */
 public interface Processor {
 
+    /** The role of the root processor */
     String ROLE = Processor.class.getName();
 
     public class InternalPipelineDescription {
@@ -77,6 +78,8 @@ public interface Processor {
         public ProcessingPipeline processingPipeline;
         public ServiceManager pipelineManager;
         public Processor lastProcessor;
+        public String prefix;
+        public String uri;
         
         public void release() {
             if (this.pipelineManager != null) {
@@ -124,15 +127,13 @@ public interface Processor {
     Processor getRootProcessor();
     
     /**
-     * Get the EnvironmentHelper for this processor
-     * EXPERIMENTAL
+     * Get the source resolver for this processor
      * @since 2.2
      */
-    EnvironmentHelper getEnvironmentHelper();
+    SourceResolver getSourceResolver();
     
     /**
      * Get the context URI for this processor
-     * EXPERIMENTAL
      * @since 2.2
      */
     String getContext();

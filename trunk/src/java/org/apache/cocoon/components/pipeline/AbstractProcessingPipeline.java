@@ -89,7 +89,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.32 2004/02/22 15:07:58 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.33 2004/02/22 17:36:34 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -357,7 +357,7 @@ public abstract class AbstractProcessingPipeline
         try {
             // setup the generator
             this.generator.setup(
-                this.processor.getEnvironmentHelper(),
+                this.processor.getSourceResolver(),
                 environment.getObjectModel(),
                 generatorSource,
                 generatorParam
@@ -369,7 +369,7 @@ public abstract class AbstractProcessingPipeline
 
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer)transformerItt.next();
-                trans.setup(this.processor.getEnvironmentHelper(),
+                trans.setup(this.processor.getSourceResolver(),
                             environment.getObjectModel(),
                             (String)transformerSourceItt.next(),
                             (Parameters)transformerParamItt.next());
@@ -377,7 +377,7 @@ public abstract class AbstractProcessingPipeline
 
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
-                this.processor.getEnvironmentHelper(),
+                this.processor.getSourceResolver(),
                     environment.getObjectModel(),
                     this.serializerSource,
                     this.serializerParam
@@ -552,7 +552,7 @@ public abstract class AbstractProcessingPipeline
     protected void setupReader(Environment environment)
     throws ProcessingException {
         try {
-            this.reader.setup(this.processor.getEnvironmentHelper(),environment.getObjectModel(),readerSource,readerParam);
+            this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
             // Set the mime-type
             // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
             // MIME type declared on the reader instance

@@ -453,7 +453,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         context.setLastProcessor(this);
         try {
             if (process(environment, context)) {
-                return context.getInternalPipelineDescription();
+                return context.getInternalPipelineDescription(environment);
             } else {
                 return null;
             }
@@ -516,8 +516,11 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         return this.sitemapComponentConfigurations;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getContext()
+     */
     public String getContext() {
-        return getEnvironmentHelper().getContext();
+        return m_environmentHelper.getContext();
     }
     
     /**
@@ -534,10 +537,14 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
-    public EnvironmentHelper getEnvironmentHelper() {
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
         return m_environmentHelper;
     }
 
+    public EnvironmentHelper getEnvironmentHelper() {
+        return m_environmentHelper;   
+    }
+    
     /**
      * Create a new child of this processor (used for mounting submaps).
      *

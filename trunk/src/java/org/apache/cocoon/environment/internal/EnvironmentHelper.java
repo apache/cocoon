@@ -75,7 +75,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.12 2004/02/21 18:06:09 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.13 2004/02/22 17:36:34 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -211,28 +211,6 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
     
-    /**
-     * Set the context of the environment.
-     * @param env The environment to change
-     * @throws ProcessingException
-     */
-    public void setContext(Environment env) 
-    throws ProcessingException {
-        if ( this.prefix != null ) {
-            // FIXME - This is not correct!
-            final String uris = env.getURIPrefix() + env.getURI();
-            if (!uris.startsWith(this.prefix)) {
-                final String message = "The current URI (" + uris +
-                                 ") doesn't start with given prefix (" + this.prefix + ")";
-                throw new ProcessingException(message);
-            }      
-            // we don't need to check for slash at the beginning
-            // of uris - the prefix always ends with a slash!
-            final int l = this.prefix.length();
-            env.setURI(this.prefix, uris.substring(l));
-        }
-    }
-
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */

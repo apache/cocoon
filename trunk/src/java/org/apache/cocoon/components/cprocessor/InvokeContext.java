@@ -64,6 +64,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 
 /**
@@ -79,7 +80,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.8 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.9 2004/02/22 17:36:34 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 
@@ -198,11 +199,13 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
     /**
      * Get the pipeline description
      */
-    public Processor.InternalPipelineDescription getInternalPipelineDescription() {
+    public Processor.InternalPipelineDescription getInternalPipelineDescription(Environment env) {
         if ( this.internalPipelineDescription == null ) {
             this.internalPipelineDescription = new Processor.InternalPipelineDescription(
                     this.processingPipeline, this.pipelinesManager);
             this.internalPipelineDescription.lastProcessor = this.lastProcessor;
+            this.internalPipelineDescription.prefix = env.getURIPrefix();
+            this.internalPipelineDescription.uri = env.getURI();
         }
         return this.internalPipelineDescription;
     }

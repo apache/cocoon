@@ -55,14 +55,14 @@ import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.11 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.12 2004/02/22 17:36:34 cziegeler Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Disposable, ThreadSafe {
@@ -113,15 +113,14 @@ implements Processor, Disposable, ThreadSafe {
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
-    public EnvironmentHelper getEnvironmentHelper() {
-        return this.processor.getEnvironmentHelper();
+    public SourceResolver getSourceResolver() {
+        return this.processor.getSourceResolver();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getContext()
-     */
-    public String getContext() {
-        return this.processor.getContext();
-    }
-
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.Processor#getContext()
+	 */
+	public String getContext() {
+		return this.processor.getContext();
+	}
 }

@@ -85,7 +85,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.37 2004/02/20 20:34:37 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.38 2004/02/22 17:36:34 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=CompilingProcessor
@@ -509,7 +509,7 @@ public class Cocoon
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
-    public EnvironmentHelper getEnvironmentHelper() {
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
         return this.environmentHelper;
     }
 

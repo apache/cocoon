@@ -62,7 +62,6 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -70,7 +69,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SerializeNode.java,v 1.5 2004/02/22 15:07:57 unico Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.6 2004/02/22 17:36:34 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

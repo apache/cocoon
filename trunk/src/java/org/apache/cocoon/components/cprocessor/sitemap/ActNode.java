@@ -80,7 +80,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActNode.java,v 1.6 2004/02/20 19:06:21 cziegeler Exp $
+ * @version CVS $Id: ActNode.java,v 1.7 2004/02/22 17:36:34 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -125,7 +125,7 @@ implements ProcessingNode, Initializable, Disposable, Contextualizable {
      */
     public void contextualize(Context context) throws ContextException {
         TreeProcessor processor = (TreeProcessor) context.get(TreeProcessor.CONTEXT_TREE_PROCESSOR);
-        this.resolver = processor.getEnvironmentHelper();
+        this.resolver = processor.getSourceResolver();
     }
     
     public void configure(Configuration config) throws ConfigurationException {
