@@ -200,8 +200,16 @@ public class ContinuationsManagerImpl
         // REVISIT: Is the following check needed to avoid threading issues:
         // return wk only if !(wk.hasExpired) ?
         WebContinuation kont = (WebContinuation) idToWebCont.get(id);
-        if ( kont != null )
-        	return (kont.interpreterMatches(interpreterId)) ? kont : null;
+        if ( kont != null ) {
+            boolean interpreterMatches = kont.interpreterMatches(interpreterId);
+            if (!interpreterMatches && getLogger().isWarnEnabled()) {
+                getLogger().warn("WK: Continuation (" + kont.getId() 
+                                 + ") lookup for wrong interpreter. Bound to: " 
+                                 + kont.getInterpreterId() + ", looked up for: " 
+                                 + interpreterId);
+            }
+            return interpreterMatches ? kont : null;
+        }
         return null;
     }
 

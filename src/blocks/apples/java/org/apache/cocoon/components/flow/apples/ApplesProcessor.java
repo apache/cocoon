@@ -125,7 +125,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         DefaultAppleResponse res = new DefaultAppleResponse(cocoonResponse);
 
         try {
-        app.process(req, res);
+            app.process(req, res);
         } finally {
             if (wk == null) {
                 // dispose stateless apple immediatelly
