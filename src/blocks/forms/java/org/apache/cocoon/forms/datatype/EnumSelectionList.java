@@ -56,8 +56,6 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class EnumSelectionList implements SelectionList {
-    public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
-    public static final String I18N_PREFIX_COLON = "i18n:";
     public static final String TEXT_EL = "text";
 
     private Datatype datatype;
@@ -108,9 +106,9 @@ public class EnumSelectionList implements SelectionList {
                     contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
                     contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
                     // TODO: make i18n element optional
-                    contentHandler.startElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL, XMLUtils.EMPTY_ATTRIBUTES);
+                    contentHandler.startElement(Constants.I18N_NS, TEXT_EL, Constants.I18N_PREFIX_COLON + TEXT_EL, XMLUtils.EMPTY_ATTRIBUTES);
                     contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
-                    contentHandler.endElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL);
+                    contentHandler.endElement(Constants.I18N_NS, TEXT_EL, Constants.I18N_PREFIX_COLON + TEXT_EL);
                     contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
                     contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
                 }

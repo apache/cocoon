@@ -22,6 +22,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
@@ -46,13 +47,31 @@ public class FlowJXPathSelectionList implements SelectionList {
     private String labelPath;
     private Datatype datatype;
     private Object model;
+    private boolean nullable = false; 
+    private String nullText;
+    private boolean nullTextIsI18nKey = false;
+    private String i18nCatalog;
+    private boolean labelIsI18nKey = false;
 
-    public FlowJXPathSelectionList(Context context, String listPath, String valuePath, String labelPath, Datatype datatype) {
+    public FlowJXPathSelectionList(Context context, 
+                                   String listPath, 
+                                   String valuePath, 
+                                   String labelPath, 
+                                   Datatype datatype,
+                                   String nullText, 
+                                   boolean nullTextIsI18nKey, 
+                                   String i18nCatalog, 
+                                   boolean labelIsI18nKey) {
         this.context = context;
         this.listPath = listPath;
         this.valuePath = valuePath;
         this.labelPath = labelPath;
         this.datatype = datatype;
+        this.nullText = nullText;
+        this.nullable = (nullText != null);
+        this.nullTextIsI18nKey = nullTextIsI18nKey;
+        this.i18nCatalog =i18nCatalog;
+        this.labelIsI18nKey = labelIsI18nKey;
     }
 
     /**
@@ -100,6 +119,39 @@ public class FlowJXPathSelectionList implements SelectionList {
 
         // Start the selection-list
         contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
+        if( this.nullable ) {
+            final AttributesImpl voidAttrs = new AttributesImpl(  );
+            voidAttrs.addCDATAAttribute( "value", "" );
+            contentHandler.startElement( Constants.INSTANCE_NS, ITEM_EL,
+                                         Constants.INSTANCE_PREFIX_COLON +
+                                         ITEM_EL, voidAttrs );
+
+            if( this.nullText != null ) {
+                contentHandler.startElement( Constants.INSTANCE_NS, LABEL_EL,
+                                             Constants.INSTANCE_PREFIX_COLON +
+                                             LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES );
+
+                if( this.nullTextIsI18nKey ) {
+                    if( ( this.i18nCatalog != null ) &&
+                        ( this.i18nCatalog.trim(  ).length(  ) > 0 ) ) {
+                        new I18nMessage( this.nullText, this.i18nCatalog ).toSAX( contentHandler );
+                    } else {
+                        new I18nMessage( this.nullText ).toSAX( contentHandler );
+                    }
+                } else {
+                    contentHandler.characters( this.nullText.toCharArray(  ), 0,
+                                               this.nullText.length(  ) );
+                }
+
+                contentHandler.endElement( Constants.INSTANCE_NS, LABEL_EL,
+                                           Constants.INSTANCE_PREFIX_COLON +
+                                           LABEL_EL );
+            }
+
+            contentHandler.endElement( Constants.INSTANCE_NS, ITEM_EL,
+                                       Constants.INSTANCE_PREFIX_COLON +
+                                       ITEM_EL );
+        }
 
         while(iter.hasNext()) {
             String stringValue = "";
@@ -135,6 +187,15 @@ public class FlowJXPathSelectionList implements SelectionList {
                 contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
                 if (label instanceof XMLizable) {
                     ((XMLizable)label).toSAX(contentHandler);
+                }  else if( this.labelIsI18nKey ) {
+                    String stringLabel = label.toString();
+
+                    if( ( this.i18nCatalog != null ) &&
+                        ( this.i18nCatalog.trim(  ).length(  ) > 0 ) ) {
+                        new I18nMessage( stringLabel, this.i18nCatalog ).toSAX( contentHandler );
+                    } else {
+                        new I18nMessage( stringLabel ).toSAX( contentHandler );
+                    }
                 } else {
                     String stringLabel = label.toString();
                     contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
