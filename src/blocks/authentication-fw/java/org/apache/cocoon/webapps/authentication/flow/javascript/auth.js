@@ -54,12 +54,12 @@
  * WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: auth.js,v 1.7 2003/11/24 03:42:44 antonio Exp $
+ * @version CVS $Id: auth.js,v 1.8 2004/01/19 09:10:54 antonio Exp $
 */
 
 function auth_checkAuthentication(handler, application) {
 
-    var authMgr = null;
+    var authMgr;
     var authenticated = false;
     try {
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
@@ -76,13 +76,13 @@ function auth_checkAuthentication(handler, application) {
 }
 
 function auth_isAuthenticated(handler) {
-    var authMgr = null;
+    var authMgr;
     try {
         // ApplicationName, do we need it?
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
-        
+
         var userHandler = authMgr.isAuthenticated(handler);
-        return (userHandler!=null);
+        return userHandler != null;
     } finally {
         cocoon.releaseComponent(authMgr);
     }
@@ -96,8 +96,7 @@ function auth_login(handler, application, params) {
         authParams.setParameter(name.substring(10), params[name]);
       }
     }
-    
-    var authMgr = null;
+    var authMgr;
     try {
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
         return authMgr.login( handler, application, authParams) != null;
@@ -108,16 +107,16 @@ function auth_login(handler, application, params) {
 
 function auth_logout(handler, modeString) {
     var mode;
-    if ( modeString == null || modeString == "" || modeString == "if-not-authenticated" ) {
+    if (modeString == null || modeString == "" || modeString == "if-not-authenticated") {
         mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IF_NOT_AUTHENTICATED;
-    } else if ( modeString == "if-unused" ) {
+    } else if (modeString == "if-unused") {
         mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IF_UNUSED;
-    } else if ( modeString == "immediately" ) {
+    } else if (modeString == "immediately") {
         mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY;
     } else {
        throw new Error("Unknown mode"); // " + modeString);
     }
-    var authMgr = null;
+    var authMgr;
     try {
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
         var state = authMgr.getState();
