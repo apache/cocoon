@@ -134,7 +134,9 @@
   <!-- package the core -->
   <target name="package-core" depends="compile-core, block-roles">
     <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf">
-      <fileset dir="${build.dest}"/>
+      <fileset dir="${build.dest}">
+         <exclude name="**/Manifest.mf"/>
+      </fileset>
     </jar>
   </target>
 
