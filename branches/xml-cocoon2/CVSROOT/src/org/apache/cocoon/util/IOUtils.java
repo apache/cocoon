@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-24 13:57:49 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-27 16:14:04 $
  */
 public class IOUtils {
 
@@ -204,37 +204,42 @@ public class IOUtils {
   /**
    * Return the path within a base directory
    */
-  public static String getContextFilePath(String contextDir, String filePath) {
+  public static String getContextFilePath(String directoryPath, String filePath) {
+      try
+      {
+          File directory = new File(directoryPath);
+          File file = new File(filePath);
 
-      // If the context directory has a . indicating current directory 
-      // then replace it with the users directory
-      if (contextDir.startsWith(".")) {
-        contextDir = System.getProperty("user.dir") + contextDir.substring(1);
-      }
+          directoryPath = directory.getCanonicalPath();
+          filePath = file.getCanonicalPath();
 
-      // If the context directory does not have a File.separator 
-      // at the end then add one explicitly
-      if(!contextDir.endsWith(File.separator)){
-        contextDir += File.separator;
-      }
+          // If the context directory does not have a File.separator 
+          // at the end then add one explicitly
+          if(!directoryPath.endsWith(File.separator)){
+            directoryPath += File.separator;
+          }
       
-      // If the context dir contains both kinds of spearator 
-      // then standardize on using the File.separator
-      if ((contextDir.indexOf('/') !=-1) && (contextDir.indexOf('\\') !=-1)) {
-        contextDir = contextDir.replace('\\', File.separator.charAt(0));
-        contextDir = contextDir.replace('/', File.separator.charAt(0));
+          // If the context dir contains both kinds of spearator 
+          // then standardize on using the File.separator
+          if ((directoryPath.indexOf('/') !=-1) && (directoryPath.indexOf('\\') !=-1)) {
+            directoryPath = directoryPath.replace('\\', File.separator.charAt(0));
+            directoryPath = directoryPath.replace('/', File.separator.charAt(0));
+          }
+
+          // If the file path contains both kinds of spearator 
+          // then standardize on using the File.separator
+          if ((filePath.indexOf('/') !=-1) && (filePath.indexOf('\\') !=-1)) {
+            filePath = filePath.replace('\\', File.separator.charAt(0));
+            filePath = filePath.replace('/', File.separator.charAt(0));
+          }
+
+          if (filePath.startsWith(directoryPath)) {
+              filePath = filePath.substring(directoryPath.length());
+          }
+      } catch (Exception e){
+          LogKit.getLoggerFor("cocoon").debug("IOUtils.getContextFilePath", e);
       }
 
-      // If the file path contains both kinds of spearator 
-      // then standardize on using the File.separator
-      if ((filePath.indexOf('/') !=-1) && (filePath.indexOf('\\') !=-1)) {
-        filePath = filePath.replace('\\', File.separator.charAt(0));
-        filePath = filePath.replace('/', File.separator.charAt(0));
-      }
-
-      if (filePath.startsWith(contextDir)) {
-          filePath = filePath.substring(contextDir.length());
-      }
       return filePath;
   }
 
