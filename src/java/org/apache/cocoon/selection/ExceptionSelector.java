@@ -87,7 +87,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.3 2003/04/29 10:45:19 cziegeler Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.4 2003/05/07 05:09:38 vgritsenko Exp $
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {
@@ -142,7 +142,7 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
     /**
      * Compute the exception type, given the configuration and the exception stored in the object model.
      * 
-     * @see ObjectModelHelper#getThrowable()
+     * @see ObjectModelHelper#getThrowable(java.util.Map)
      */
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
         // Get the name of the exception
