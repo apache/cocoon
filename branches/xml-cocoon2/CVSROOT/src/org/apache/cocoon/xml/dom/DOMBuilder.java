@@ -35,16 +35,12 @@ import org.apache.log.LogKit;
 import org.apache.log.Logger;
 
 /**
- * The <code>DOMBuilder</code> is a utility cl		Object hint = null;
-        String className = null;
-
-                try {
-ass that will generate a W3C
+ * The <code>DOMBuilder</code> is a utility class that will generate a W3C
  * DOM Document from SAX events.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-11 16:07:01 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-02 17:19:49 $
  */
 public class DOMBuilder implements XMLConsumer {
     protected Logger log = LogKit.getLoggerFor("cocoon");
