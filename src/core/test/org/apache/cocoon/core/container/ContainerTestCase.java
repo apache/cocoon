@@ -239,8 +239,18 @@ public class ContainerTestCase extends TestCase {
      * into the context programmatically.
      */
     protected void addContext( DefaultContext context ) {
+        // nothing to add here
     }
 
+    /**
+     * This method may be overwritten by subclasses to add aditional
+     * components.
+     */
+    protected void addComponents( CocoonServiceManager manager) 
+    throws ServiceException {
+        // subclasses can add components here
+    }
+    
     final private void setupManagers( final Configuration confCM,
                                       final Configuration confRM,
                                       final Context context )
@@ -257,6 +267,7 @@ public class ContainerTestCase extends TestCase {
         ecManager.setRoleManager( roleManager );
         ecManager.setLoggerManager( new DefaultLoggerManager(this.logger));
         ecManager.configure( confCM );
+        this.addComponents( ecManager );
         ecManager.initialize();
         this.manager = ecManager;
     }

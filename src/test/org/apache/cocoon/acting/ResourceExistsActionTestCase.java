@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.MockLogger;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.jmock.Mock;
@@ -42,9 +41,6 @@ public class ResourceExistsActionTestCase extends MockObjectTestCase {
     }
 
     public void testExists() throws Exception {
-
-        MockRequest request = new MockRequest();
-
         String src = "don't care";
         Parameters parameters = new Parameters();
 
@@ -64,9 +60,6 @@ public class ResourceExistsActionTestCase extends MockObjectTestCase {
     }
 
     public void testNotExists() throws Exception {
-
-        MockRequest request = new MockRequest();
-
         String src = "don't care";
         Parameters parameters = new Parameters();
 

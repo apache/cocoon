@@ -81,4 +81,13 @@ public class CookieMatcherTestCase extends SitemapComponentTestCase {
         System.out.println(result);
         assertNull( "Test if cookie does not exist", result );
     }
+
+    protected boolean addSourceFactories() {
+        return true;
+    }
+    
+    protected boolean addSourceResolver() {
+        return true;
+    }
+
 }
