@@ -60,9 +60,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -89,7 +87,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.19 2004/01/05 12:41:48 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.20 2004/01/06 12:49:26 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -104,9 +102,6 @@ implements Source, XMLizable {
     /** The system id used for caching */
     private String systemIdForCaching;
     
-    /** The uri */
-//    private String uri;
-
     /** The current ServiceManager */
     private ServiceManager manager;
 
@@ -118,9 +113,6 @@ implements Source, XMLizable {
 
     /** The environment */
     private MutableEnvironmentFacade environment;
-
-    /** The prefix for the processing */
-//    private String prefix;
 
     /** The <code>ProcessingPipeline</code> */
     private ProcessingPipeline processingPipeline;
@@ -163,84 +155,20 @@ implements Source, XMLizable {
         this.manager = manager;
         this.enableLogging(logger);
 
-        boolean rawMode = false;
-
-        // remove the protocol
-        int position = uri.indexOf(':') + 1;
-        if (position != 0) {
-            this.protocol = uri.substring(0, position-1);
-            // check for subprotocol
-            if (uri.startsWith("raw:", position)) {
-                position += 4;
-                rawMode = true;
-            }
-        } else {
-            throw new MalformedURLException("No protocol found for sitemap source in " + uri);
-        }
+        SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
 
         // does the uri point to this sitemap or to the root sitemap?
         String prefix;
-        if (uri.startsWith("//", position)) {
-            position += 2;
-            try {
-                this.processor = (Processor)this.manager.lookup(Processor.ROLE);
-            } catch (ServiceException e) {
-                throw new MalformedURLException("Cannot get Processor instance");
-            }
-            prefix = ""; // start at the root
-        } else if (uri.startsWith("/", position)) {
-            position ++;
-            prefix = null;
+        if (info.prefix.length() == 0) {
+            this.processor = EnvironmentHelper.getCurrentProcessor().getRootProcessor();
+        } else {
             this.processor = EnvironmentHelper.getCurrentProcessor();
-        } else {
-            throw new MalformedURLException("Malformed cocoon URI: " + uri);
         }
-
-        // create the queryString (if available)
-        String queryString = null;
-        int queryStringPos = uri.indexOf('?', position);
-        if (queryStringPos != -1) {
-            queryString = uri.substring(queryStringPos + 1);
-            uri = uri.substring(position, queryStringPos);
-        } else if (position > 0) {
-            uri = uri.substring(position);
-        }
-        
-        // determine if the queryString specifies a cocoon-view
-        String view = null;
-        if (queryString != null) {
-            int index = queryString.indexOf(Constants.VIEW_PARAM);
-            if (index != -1 
-                && (index == 0 || queryString.charAt(index-1) == '&')
-                && queryString.length() > index + Constants.VIEW_PARAM.length() 
-                && queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
-                
-                String tmp = queryString.substring(index+Constants.VIEW_PARAM.length()+1);
-                index = tmp.indexOf('&');
-                if (index != -1) {
-                    view = tmp.substring(0,index);
-                } else {
-                    view = tmp;
-                }
-            } else {
-                view = env.getView();
-            }
-        } else {
-            view = env.getView();
-        }
-
-        // build the request uri which is relative to the context
-        String requestURI = (prefix == null ? env.getURIPrefix() + uri : uri);
-
-        // create system ID
-        this.systemId = queryString == null ?
-            this.protocol + "://" + requestURI :
-            this.protocol + "://" + requestURI + "?" + queryString;
 
         // create environment...
-        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, requestURI, 
-                                                   queryString, logger, manager, rawMode, view);
-        wrapper.setURI(prefix, uri);
+        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info.requestURI, 
+                                                   info.queryString, logger, manager, info.rawMode, info.view);
+        wrapper.setURI(info.prefix, uri);
         
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);
@@ -284,7 +212,7 @@ implements Source, XMLizable {
      * Return an <code>InputStream</code> object to read from the source.
      */
     public InputStream getInputStream()
-      throws IOException, SourceException {
+    throws IOException, SourceException {
 
         if (this.needsRefresh) {
             this.refresh();
@@ -381,7 +309,6 @@ implements Source, XMLizable {
             this.processKey = EnvironmentHelper.startProcessing(this.environment);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
             this.pipelineProcessor = EnvironmentHelper.getLastProcessor(this.environment);
-            //FIXME - set the context of the environment to the context of the pipeline processor
             this.pipelineProcessor.getEnvironmentHelper().setContext(this.environment);
 
             String redirectURL = this.environment.getRedirectURL();
@@ -435,7 +362,7 @@ implements Source, XMLizable {
      * Stream content to the content handler
      */
     public void toSAX(ContentHandler contentHandler)
-        throws SAXException
+    throws SAXException
     {
         if (this.needsRefresh) {
             this.refresh();
@@ -507,6 +434,7 @@ implements Source, XMLizable {
         this.reset();
         if ( this.sourceResolver != null ) {
             this.manager.release( this.sourceResolver );
+            this.sourceResolver = null;
         }
     }
 
@@ -536,6 +464,5 @@ implements Source, XMLizable {
     public Iterator getParameterNames() {
         return java.util.Collections.EMPTY_LIST.iterator();
     }
-
 
 }

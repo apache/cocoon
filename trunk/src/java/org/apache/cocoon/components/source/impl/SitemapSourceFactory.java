@@ -59,11 +59,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
-import org.apache.excalibur.source.URIAbsolutizer;
 import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.source.URIAbsolutizer;
 
 /**
  * This class implements the cocoon: protocol.
@@ -71,7 +70,7 @@ import org.apache.excalibur.source.SourceUtil;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.5 2003/12/26 18:43:39 unico Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.6 2004/01/06 12:49:26 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=SourceFactory
