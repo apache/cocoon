@@ -54,14 +54,15 @@ package org.apache.cocoon.acting;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ResourceExistsActionTestCase.java,v 1.1 2003/04/19 16:11:17 stephan Exp $
+ * @version CVS $Id: ResourceExistsActionTestCase.java,v 1.2 2003/11/26 16:27:22 stephan Exp $
  */
-public class ResourceExistsActionTestCase extends AbstractActionTestCase {
+public class ResourceExistsActionTestCase extends SitemapComponentTestCase {
 
     public ResourceExistsActionTestCase(String name) {
         super(name);

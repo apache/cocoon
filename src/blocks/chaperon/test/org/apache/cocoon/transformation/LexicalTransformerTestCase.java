@@ -54,14 +54,15 @@ package org.apache.cocoon.transformation;
 import java.util.HashMap;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformerTestCase.java,v 1.3 2003/04/17 07:36:25 stephan Exp $
+ * @version CVS $Id: LexicalTransformerTestCase.java,v 1.4 2003/11/26 16:27:23 stephan Exp $
  */
-public class LexicalTransformerTestCase extends AbstractTransformerTestCase {
+public class LexicalTransformerTestCase extends SitemapComponentTestCase {
 
     public LexicalTransformerTestCase(String name) {
         super(name);

@@ -52,12 +52,13 @@
 package org.apache.cocoon.serialization;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  * Test case for the MIDISerializer
  * @author Mark Leicester
  */
-public class XMidiSerializerTestCase extends AbstractSerializerTestCase
+public class XMidiSerializerTestCase extends SitemapComponentTestCase
 {
 
   public XMidiSerializerTestCase(String name)

@@ -52,6 +52,7 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.SitemapComponentTestCase;
 
 import org.w3c.dom.Document;
 
@@ -59,9 +60,9 @@ import org.w3c.dom.Document;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TraxTransformerTestCase.java,v 1.3 2003/07/10 00:25:25 ghoward Exp $
+ * @version CVS $Id: TraxTransformerTestCase.java,v 1.4 2003/11/26 16:27:22 stephan Exp $
  */
-public class TraxTransformerTestCase extends AbstractTransformerTestCase {
+public class TraxTransformerTestCase extends SitemapComponentTestCase {
 
     public TraxTransformerTestCase(String name) {
         super(name);
