@@ -49,7 +49,9 @@
         <map:call continuation="{1}"/>
       </map:match>
       <map:match pattern="*.do">
-        <map:call function="{1}"/>
+        <map:call function="main">
+          <map:parameter name="page" value="{1}"/>
+        </map:call>
       </map:match>
       <map:match pattern="">
         <map:call function="index"/>

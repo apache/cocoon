@@ -44,6 +44,8 @@
 
 */
 
+cocoon.load("resource://org/apache/cocoon/components/flow/Database.js");
+
 function OrderForm() {
     this.order = new Order();
     this.shippingAddressRequired = false;        
@@ -79,33 +81,33 @@ OrderForm.prototype.initOrder = function(accountForm, cartForm) {
 }
 
 function Order() {
-  this.orderId = 0;
-  this.username= "";
-  this.orderDate =null;
-  this.shipAddress1= "";
-  this.shipAddress2= "";
-  this.shipCity= "";
-  this.shipState= "";
-  this.shipZip= "";
-  this.shipCountry= "";
-  this.billAddress1= "";
-  this.billAddress2= "";
-  this.billCity= "";
-  this.billState= "";
-  this.billZip= "";
-  this.billCountry= "";
-  this.courier= "";
-  this.totalPrice= 0;
-  this.billToFirstName= "";
-  this.billToLastName= "";
-  this.shipToFirstName= "";
-  this.shipToLastName= "";
-  this.creditCard= "";
-  this.expiryDate= "";
-  this.cardType= "";
-  this.locale= "";
-  this.status= "";
-  this.lineItems = [];
+    this.orderId = 0;
+    this.username= "";
+    this.orderDate =null;
+    this.shipAddress1= "";
+    this.shipAddress2= "";
+    this.shipCity= "";
+    this.shipState= "";
+    this.shipZip= "";
+    this.shipCountry= "";
+    this.billAddress1= "";
+    this.billAddress2= "";
+    this.billCity= "";
+    this.billState= "";
+    this.billZip= "";
+    this.billCountry= "";
+    this.courier= "";
+    this.totalPrice= 0;
+    this.billToFirstName= "";
+    this.billToLastName= "";
+    this.shipToFirstName= "";
+    this.shipToLastName= "";
+    this.creditCard= "";
+    this.expiryDate= "";
+    this.cardType= "";
+    this.locale= "";
+    this.status= "";
+    this.lineItems = [];
 }
 
 function Account() {
@@ -135,12 +137,6 @@ function AccountForm(username, password) {
     this.signOn = true;
 }
 
-function Cart() {
-    this.cartItems = {};
-    this.numberOfItems = 0;
-    this.subTotal = 0;
-}
-
 function CartItem(cart, item) {
     this.cart = cart;
     this.item = item;
@@ -153,6 +149,12 @@ CartItem.prototype.updateQuantity = function(newQuantity) {
     var delta = newQuantity - this.quantity;
     this.cart.subTotal += (this.item.listPrice * delta);
     this.quantity = newQuantity;
+}
+
+function Cart() {
+    this.cartItems = {};
+    this.numberOfItems = 0;
+    this.subTotal = 0;
 }
 
 Cart.prototype.addItem = function(item) {
@@ -379,7 +381,6 @@ PetStore.prototype.populate = function() {
     try {
         conn.update(CREATE_SCRIPT);
     } catch (ignored) {
-        ignored.printStackTrace();
         conn.close();
         return;
     }
@@ -489,7 +490,6 @@ PetStore.prototype.populate = function() {
 PetStore.prototype.getCategory = function(catId) {
     var conn = this.getConnection(this.poolId);
     var result = conn.query("select * from CATEGORY where CATID = '"+catId + "'");
-    
     conn.close();
     return result.rows[0];
 }
