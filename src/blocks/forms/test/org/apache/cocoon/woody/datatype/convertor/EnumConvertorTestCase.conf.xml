@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -15,12 +15,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<wd:field id="sex" xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
+  <wd:label>Sex</wd:label>
+  <wd:datatype base="enum">
+  	<wd:convertor type="enum">
+      <wd:enum>org.apache.cocoon.woody.datatype.Sex</wd:enum>
+  	</wd:convertor>
+  </wd:datatype>
+  <wd:selection-list type="enum" class="org.apache.cocoon.woody.datatype.Sex"/>
+</wd:field>

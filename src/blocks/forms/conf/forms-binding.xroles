@@ -15,12 +15,10 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+<xroles xpath="/role-list"
+        unless="role[@name='org.apache.cocoon.forms.binding.BindingManager']">
 
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+  <role name="org.apache.cocoon.forms.binding.BindingManager"
+        shorthand="forms-binding"
+        default-class="org.apache.cocoon.forms.binding.JXPathBindingManager"/>
+</xroles>

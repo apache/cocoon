@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id: welcome.xml,v 1.1 2004/03/09 10:34:13 reinhard Exp $-->
+<samples>
+
+ <group name="Main examples page.">
+   <sample name="Back" href="../blocks">to Cocoon examples main page</sample>
+  <note>
+    Cocoon Forms is the upcoming forms framework for Cocoon.
+    Although it is marked as unstable it is the *only* supported solution - all
+    other similar approaches will be deprecated soon.
+    Of course, your feedback is very much welcome on the Cocoon mailing lists.
+  </note>
+  <sample name="Cocoon Forms Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">
+    Documentation is available on the Cocoon Wiki.</sample>
+ </group>
+
+ <group name="Basic Samples">
+  <sample name="Various" href="various.action">This sample shows validation, event handling and various Cocoon Forms features.</sample>
+  <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
+  <sample name="Registration" href="registration">A simple registration form.</sample>
+  <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
+  <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
+  <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
+  <sample name="Custom validation" href="customvalidationdemo">Shows custom validation and messages widget.</sample>
+  <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
+  <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget.</sample>
+  <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>
+ </group>
+
+ <group name="Binding Samples">
+  <note>
+    Cocoon Forms has a binding framework which assists in copying Java-bean or XML (DOM) data into a form and back.
+  </note>
+  <sample name="XML Binding" href="form2xml.flow">A form for just editing an XML file.</sample>
+  <sample name="Bean Binding" href="form2bean.flow">A form for just editing a Java bean</sample>
+  <note>
+  	Step-by-step tutorial into individual binding features:
+  </note>
+  <sample name="1. Binding Simple Values" href="binding-01value.flow">fb:*/direction and fb:value/*</sample>
+  <sample name="2. Lenient Binding" href="binding-02lenient.flow">*/@lenient</sample>
+  <!-- TODO: provide more tutorial samples like these:
+  <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">fb:aggregate</sample>
+  <sample name="4. Repeater Binding" href="binding-04repeater.flow">fb:repeater</sample>
+  <sample name="5. JavaScript Binding" href="binding-05js.flow">fb:javascript</sample>
+  -->
+ </group>
+
+ <group name="Locales">
+  <note>
+    The samples below are the same as the basic flowscript sample but now use different locales.
+    The locale can affect things like date and number formatting.
+    You can try out other locales by supplying other values for the locale parameter in the URL.
+  </note>
+  <sample name="Flowscript" href="form1.flow?locale=fr-FR">France</sample>
+  <sample name="Flowscript" href="form1.flow?locale=it-IT">Italy</sample>
+  <sample name="Flowscript" href="form1.flow?locale=de-DE">Germany</sample>
+  <sample name="Flowscript" href="form1.flow?locale=nl-BE">Belgium (dutch)</sample>
+ </group>
+ <group name="Experimental Flowscript API for Cocoon Forms">
+  <note>
+    The sample below demonstrates a proposal for a new Flowscript API, including a multipage form with a back button.
+  </note>
+  <sample name="New Flowscript API example" href="v2/example">example</sample>
+ </group>
+
+</samples>

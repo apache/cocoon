@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | CForms aggegate sample form definition file.
+    |
+    | CVS $Id: form.xml,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+    +-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+  <fd:widgets>
+    <fd:aggregatefield id="phone" required="true">
+      <fd:label>
+        Enter Phone Number
+        <br/><small>(Format is: 999-999-9999x9999)
+        <br/>Extension number is optional.</small>
+      </fd:label>
+      <fd:datatype base="string"/>
+
+      <fd:split pattern="([0-9]{3})-([0-9]{3})-([0-9]{4})(x([0-9]{1,4}))?">
+        <fd:map group="1" field="part1"/>
+        <fd:map group="2" field="part2"/>
+        <fd:map group="3" field="part3"/>
+        <fd:map group="5" field="part4"/>
+        <fd:failmessage>Not a valid phone number.</fd:failmessage>
+      </fd:split>
+      <fd:combine expression='Concat(part1, "-", part2, "-", part3, If(IsNull(part4), "", Concat("x", part4))) )'/>
+
+      <fd:widgets>
+        <fd:field id="part1" required="true">
+          <fd:label>
+            Enter Phone (Part1)
+            <br/><small>(Format is: 999)</small>
+          </fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="part2" required="true">
+          <fd:label>
+            Enter Phone (Part2)
+            <br/><small>(Format is: 999)</small>
+          </fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="part3" required="true">
+          <fd:label>
+            Enter Phone (Part3)
+            <br/><small>(Format is: 9999)</small>
+          </fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="part4">
+          <fd:label>
+            Enter Phone (Part4)
+            <br/><small>(Format is: 9999)</small>
+          </fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:aggregatefield>
+
+
+    <fd:aggregatefield id="date" required="true">
+      <fd:label>
+        Enter Date
+        <br/><small>(Format is: dd/MM/yyyy)
+        <br/>Year should be between 1990 and 2010. Day should be between 1 to 15</small>
+      </fd:label>
+      <fd:datatype base="date">
+        <fd:convertor>
+          <fd:patterns>
+            <fd:pattern>dd/MM/yyyy</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+        <fd:validation>
+          <fd:range min="Date(1990, 1, 1)" max="Date(2010, 12, 31)">
+            <fd:failmessage>Enter date in 1990 to 2010 year</fd:failmessage>
+          </fd:range>
+        </fd:validation>
+      </fd:datatype>
+
+      <fd:split pattern="([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})">
+        <fd:map group="1" field="day"/>
+        <fd:map group="2" field="month"/>
+        <fd:map group="3" field="year"/>
+        <fd:failmessage>Not a valid date.</fd:failmessage>
+      </fd:split>
+      <fd:combine expression='Date(year, month, day)'/>
+
+      <fd:widgets>
+        <fd:field id="day" required="true">
+          <fd:datatype base="integer"/>
+          <fd:label>
+            Enter Day
+            <br/><small>(Day should be between 1 to 15)</small>
+          </fd:label>
+          <fd:validation>
+            <fd:range min="1" max="15">
+              <fd:failmessage>Enter date between 1st and 15th day of the month.</fd:failmessage>
+            </fd:range>
+          </fd:validation>
+        </fd:field>
+        <fd:field id="month" required="true">
+          <fd:label>
+            Enter Month
+            <br/><small>(Month should be between 1 to 12)</small>
+          </fd:label>
+          <fd:datatype base="integer"/>
+          <fd:selection-list>
+            <fd:item value="">
+              <fd:label>Select Month</fd:label>
+            </fd:item>
+            <fd:item value="1">
+              <fd:label>January</fd:label>
+            </fd:item>
+            <fd:item value="2">
+              <fd:label>February</fd:label>
+            </fd:item>
+            <fd:item value="3">
+              <fd:label>March</fd:label>
+            </fd:item>
+            <fd:item value="4">
+              <fd:label>April</fd:label>
+            </fd:item>
+            <fd:item value="5">
+              <fd:label>May</fd:label>
+            </fd:item>
+            <fd:item value="6">
+              <fd:label>June</fd:label>
+            </fd:item>
+            <fd:item value="7">
+              <fd:label>July</fd:label>
+            </fd:item>
+            <fd:item value="8">
+              <fd:label>August</fd:label>
+            </fd:item>
+            <fd:item value="9">
+              <fd:label>September</fd:label>
+            </fd:item>
+            <fd:item value="10">
+              <fd:label>October</fd:label>
+            </fd:item>
+            <fd:item value="11">
+              <fd:label>November</fd:label>
+            </fd:item>
+            <fd:item value="12">
+              <fd:label>December</fd:label>
+            </fd:item>
+          </fd:selection-list>
+        </fd:field>
+        <fd:field id="year" required="true">
+          <fd:label>
+            Enter Year
+            <br/><small>(Year should be between 1990 to 2010)</small>
+          </fd:label>
+          <fd:datatype base="integer"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:aggregatefield>
+
+    <fd:submit id="switch" action-command="switch" validate="false">
+      <fd:label>Switch</fd:label>
+    </fd:submit>
+  </fd:widgets>
+</fd:form>

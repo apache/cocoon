@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<xsp:page language="java"
+  xmlns:xsp="http://apache.org/xsp">
+
+  <xsp:structure>
+    <xsp:include>org.apache.cocoon.forms.formmodel.*</xsp:include>
+  </xsp:structure>
+
+  <page>
+    <title>Sample form result</title>
+    <content>
+      <xsp:logic>
+        // get reference to form and some of the widgets on it
+        Form form = (Form)request.getAttribute("form1");
+        Field field = (Field)form.getWidget("email");
+        BooleanField booleanField = (BooleanField)form.getWidget("somebool");
+        Field field2 = (Field)((Repeater)form.getWidget("contacts")).getWidget(1, "firstname");
+      </xsp:logic>
+
+      email has the following value:
+      <xsp:expr>field.getValue()</xsp:expr>
+      <br/>
+      Second person has this firstname:
+      <xsp:expr>field2.getValue()</xsp:expr>
+      <br/>
+      The value of the checkbox is:
+      <xsp:expr>booleanField.getValue()</xsp:expr>
+    </content>
+  </page>
+</xsp:page>

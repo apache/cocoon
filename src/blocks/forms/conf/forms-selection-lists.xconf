@@ -15,12 +15,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+<xconf xpath="/cocoon" unless="forms-selection-lists">
 
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+  <forms-selection-lists default="default">
+    <selection-list name="default" class="org.apache.cocoon.forms.datatype.DefaultSelectionListBuilder"/>
+    <selection-list name="flow-jxpath" class="org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder"/>
+    <selection-list name="enum" class="org.apache.cocoon.forms.datatype.EnumSelectionListBuilder"/>
+  </forms-selection-lists>
+  
+</xconf>

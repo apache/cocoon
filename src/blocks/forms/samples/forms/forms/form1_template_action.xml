@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the ft:form-template element -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <title>Sample form</title>
+  <content>
+    <ft:form-template action="form1" method="POST">
+      <table align="center">
+        <tr>
+          <td>
+                      
+            <!-- group with tabs. Each of the children of <items> will constitute a tab -->
+            <fi:group>
+              <fi:styling type="tabs"/>
+              <fi:label>Choose a panel: </fi:label>
+              <fi:state>
+                <ft:widget id="tab-state"/>
+              </fi:state>
+              
+              <fi:items>
+                <!-- group with automatic two-column layout -->
+                <fi:group>
+                  <fi:label>String fields</fi:label>
+                  <fi:styling layout="columns"/>
+                  <fi:items>
+                    <ft:widget id="email"/>
+                    <ft:widget id="fourchars">
+                      <!-- particular styling for the enumeration -->
+                      <fi:styling list-type="listbox" listbox-size="4"/>
+                    </ft:widget>
+                  </fi:items>
+                </fi:group>
+                
+                <fi:group>
+                  <fi:label>Number fields</fi:label>
+                  <fi:styling layout="columns"/>
+                  <fi:items>
+                    <ft:widget id="number1">
+                      <fi:styling submit-on-change="true"/>
+                    </ft:widget>
+                    <ft:widget id="number2"/>
+                    <ft:widget id="account"/>
+                    <ft:widget id="cowheight">
+                      <fi:styling list-type="radio"/>
+                    </ft:widget>
+                  </fi:items>
+                </fi:group>
+                
+                <fi:group>
+                  <fi:styling layout="columns"/>
+                  <fi:label>Boolean fields</fi:label>
+                  <fi:items>
+                    <ft:widget id="somebool"/>
+                    <ft:widget id="drinks">
+                      <fi:styling list-type="double-listbox">
+                        <fi:available-label>Available drinks</fi:available-label>
+                        <fi:selected-label>Your selection</fi:selected-label>
+                      </fi:styling>
+                    </ft:widget>
+                  </fi:items>
+                </fi:group>
+              </fi:items>
+            </fi:group>
+            
+            <p>Checkout the <a href="form1.flow">form1 flow page</a> for another way of formatting panels</p>
+            
+            <!-- Group of type 'fieldset' will have a surrounding frame -->
+            <fi:group>
+              <fi:styling type="fieldset" layout="columns"/>
+              <fi:label>Misc controls</fi:label>
+              <fi:items>
+                <ft:widget id="visa"/>
+                <ft:widget id="ipaddress"/>
+                <ft:widget id="altbirthdate"/>
+                <ft:widget id="birthdate">
+                  <fi:styling type="date" format="dd/MM/yyyy"/>
+                </ft:widget>
+                <ft:widget id="dieselprice"/>
+              </fi:items>
+            </fi:group>
+            
+            
+            <!-- manual layout of fields, without use of a fi:group -->
+            <ft:widget-label id="contacts"/>
+            <br/>
+            <ft:repeater-size id="contacts"/>
+            <table border="1">
+              <tr>
+                <th>
+                  <ft:repeater-widget-label id="contacts" widget-id="firstname"/>
+                </th>
+                <th>
+                  <ft:repeater-widget-label id="contacts" widget-id="lastname"/>
+                </th>
+                <th>
+                  <ft:repeater-widget-label id="contacts" widget-id="phone"/>
+                </th>
+                <th>
+                  <ft:repeater-widget-label id="contacts" widget-id="email"/>
+                </th>
+                <th>
+                  <ft:repeater-widget-label id="contacts" widget-id="select"/>
+                </th>
+              </tr>
+              <!-- The contents of the repeater-widget element is a template that will
+        be applied to each row in the repeater. -->
+              <ft:repeater-widget id="contacts">
+                <tr>
+                  <td>
+                    <ft:widget id="firstname"/>
+                  </td>
+                  <td>
+                    <ft:widget id="lastname"/>
+                  </td>
+                  <td>
+                    <ft:widget id="phone"/>
+                  </td>
+                  <td>
+                    <ft:widget id="email"/>
+                  </td>
+                  <td>
+                    <ft:widget id="select"/>
+                  </td>
+                </tr>
+              </ft:repeater-widget>
+              <tr>
+                <td colspan="4" align="right">
+                  <ft:widget id="addcontact"/>
+                  <ft:widget id="removecontacts"/>
+                </td>
+              </tr>
+            </table>
+            <input type="submit"/>
+          </td>
+        </tr>
+      </table>
+    </ft:form-template>
+  </content>
+</page>

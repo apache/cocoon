@@ -15,12 +15,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<!-- mind how xpatch oddly requires the file extension to 
+	be equal to the root elm -->
+	
+<xlog xpath="/logkit/categories" 
+      unless="category[@name='forms']">
+    
+    <category log-level="ERROR" name="forms">
+    	<log-target id-ref="forms" />
+      <log-target id-ref="error"/>
+    </category>
+    
+</xlog>

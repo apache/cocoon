@@ -14,13 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+    <title>Car selector result</title>
+    <content>
+      You selected: maker: ${make.value},
+      type: ${type.value},
+      model: ${model.value}
+    </content>
+</page>

@@ -14,13 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+<fd:selection-list xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+  <fd:item value="a"/>
+  <fd:item value="aa"/>
+  <fd:item value="aaa"/>
+  <fd:item value="aaaa"/>
+  <fd:item value="aaaaa"/>
+</fd:selection-list>

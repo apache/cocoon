@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,13 +14,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
-
-  <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
-      Cocoon Forms examples.
-    </sample>
-  </group>
-
-</xsamples>
+  <fd:widgets>
+  
+    <fd:field id="anyfield" >
+      <fd:label>String - Only one, bound to various paths in the model</fd:label>
+      <fd:datatype base="string" />
+    </fd:field>
+    
+  </fd:widgets>
+  
+</fd:form>

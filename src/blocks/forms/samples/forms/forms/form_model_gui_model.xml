@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+
+    <!--
+      CVS $Id: form_model_gui_model.xml,v 1.1 2004/03/09 10:33:52 reinhard Exp $
+      Author: Timothy Larson
+    -->
+
+    <!--
+    TODO:
+      Add features to "widgets-class" (e.g. move-up, move-down, add-before, add-after).
+    -->
+
+    <fd:new id="widgets-class"/>
+
+    <!--
+    <fd:struct id="form">
+      <fd:widgets>
+        <fd:new id="widgets-class"/>
+      </fd:widgets>
+    </fd:struct>
+    -->
+
+    <fd:class id="widgets-class">
+      <fd:widgets>
+        <fd:repeater id="widgets" initial-size="1">
+          <fd:label>Widgets</fd:label>
+          <fd:widgets>
+            <fd:new id="widget-row-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addWidget" action-command="add-row" repeater="widgets">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeWidgets" action-command="delete-rows" repeater="widgets" select="select">
+          <fd:label>Delete</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="widget-row-class">
+      <fd:widgets>
+        <fd:booleanfield id="select"><fd:label>Select</fd:label></fd:booleanfield>
+        <fd:field id="type">
+          <fd:label>Widget Type</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value=""><fd:label>Nothing</fd:label></fd:item>
+            <fd:item value="action"><fd:label>Action</fd:label></fd:item>
+            <fd:item value="aggregatefield"><fd:label>AggregateField</fd:label></fd:item>
+            <fd:item value="booleanfield"><fd:label>BooleanField</fd:label></fd:item>
+            <fd:item value="class"><fd:label>Class</fd:label></fd:item>
+            <fd:item value="field"><fd:label>Field</fd:label></fd:item>
+            <fd:item value="new"><fd:label>New</fd:label></fd:item>
+            <fd:item value="output"><fd:label>Output</fd:label></fd:item>
+            <fd:item value="repeater"><fd:label>Repeater</fd:label></fd:item>
+            <fd:item value="row-action"><fd:label>RowAction</fd:label></fd:item>
+            <fd:item value="struct"><fd:label>Struct</fd:label></fd:item>
+            <fd:item value="submit"><fd:label>Submit</fd:label></fd:item>
+            <fd:item value="union"><fd:label>Union</fd:label></fd:item>
+          </fd:selection-list>
+        </fd:field>
+        <fd:union id="union" default="" case="type">
+          <fd:datatype base="string"/>
+          <fd:label>Type</fd:label>
+          <fd:widgets>
+
+            <fd:struct id="action">
+              <fd:label>Action</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="aggregatefield">
+              <fd:label>AggregateField</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="required-class"/>
+                <fd:new id="widgets-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="booleanfield">
+              <fd:label>BooleanField</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="class">
+              <fd:label>Class</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="widgets-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="field">
+              <fd:label>Field</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="required-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="new">
+              <fd:label>New</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="output">
+              <fd:label>Output</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="repeater">
+              <fd:label>Repeater</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="initial-size-class"/>
+                <fd:new id="widgets-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="row-action">
+                <fd:label>RowAction</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="struct">
+              <fd:label>Struct</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="widgets-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="submit">
+              <fd:label>Submit</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+            <fd:struct id="union">
+              <fd:label>Union</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="label-class"/>
+                <fd:new id="widgets-class"/>
+              </fd:widgets>
+            </fd:struct>
+
+          </fd:widgets>
+
+        </fd:union>
+      </fd:widgets>
+    </fd:class>
+ 
+    <fd:class id="id-class">
+      <fd:widgets>
+        <fd:field id="id" required="true">
+          <fd:label>Id</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="label-class">
+      <fd:widgets>
+        <fd:field id="label">
+          <fd:label>Label</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="required-class">
+      <fd:widgets>
+        <fd:booleanfield id="required">
+          <fd:label>Required</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="initial-size-class">
+      <fd:widgets>
+        <fd:field id="initial-size">
+          <fd:label>Initial Size</fd:label>
+          <fd:datatype base="long"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+  </fd:widgets>
+</fd:form>
