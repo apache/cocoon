@@ -1,0 +1,20 @@
+# Cache configuration defaults.
+
+jcs.default=
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+# SYSTEM GROUP ID CACHE
+jcs.system.groupIdCache=
+jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.main=
+jcs.region.main.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.main.cacheattributes.MaxObjects=100
+jcs.region.main.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.main.cacheattributes.UseMemoryShrinker=true
+jcs.region.main.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.main.cacheattributes.ShrinkerIntervalSeconds=60

@@ -15,14 +15,18 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="persistent-store[@class='org.apache.cocoon.components.store.JCSStore']">
+<xconf xpath="/cocoon" unless="store[@class='org.apache.cocoon.components.store.JCSDefaultStore']">
 
   <!-- Experimental JCS Store implementation -->
-  <persistent-store class="org.apache.cocoon.components.store.JCSStore" 
-                    logger="core.store.persistent">
-    <parameter name="region-name" value="indexedRegion4"/>
-    <parameter name="group-name" value="indexedDiskCache2"/>
-    <parameter name="config-file" value="context://WEB-INF/cache.ccf"/>
-  </persistent-store>
+  <store class="org.apache.cocoon.components.store.JCSDefaultStore" 
+                    logger="core.store">
+    <parameter name="maxobjects" value="100"/>
+    <parameter name="use-cache-directory" value="true"/>
+  </store>
   
+  <transient-store class="org.apache.cocoon.components.store.JCSTransientStore" 
+                    logger="core.store.transient">
+    <parameter name="maxobjects" value="100"/>
+  </transient-store>
+
 </xconf>
