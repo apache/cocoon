@@ -203,6 +203,10 @@
   <changes>
   <release version="@version@" date="@date@">
    <action dev="CZ" type="fix" fixes-bug="10277">
+     CForms: JavaSelectionList implementations can now be Contextualizable and
+     can build SelectionLists with XMLizable labels.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="10277">
      Change the mime-type setting of a reader. See also bug #25121.
    </action>
    <action dev="LG" type="fix" fixes-bug="33836" due-to="Niklas Therning" due-to-email="niklas@trillian.se">
