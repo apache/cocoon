@@ -205,6 +205,21 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add" due-to="Juergen Seitz" due-to-email="Juergen.Seitz@Basf-It-Services.Com">
+     Portal block: Apply batch for configuring the type handling in the Castor converter.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="30250" due-to="Sal Mangano" due-to-email="smangano@ureach.com">
+     Fix bug in SessionPropagatorAction.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="22707" due-to="Jeff Ramsdale" due-to-email="jefe182@earthlink.net">
+     Fix syntax error in build.bat on Windows ME
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="29996" due-to="Christian Mayrhuber" due-to-email="christian.mayrhuber@gmx.net">
+     Portal block: Apply patch for rendering a link of the selected tab in TabContentAspect.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="29951" due-to="Christian Mayrhuber" due-to-email="christian.mayrhuber@gmx.net">
+     Portal block: Apply patch for handling GET method when no enctype is set in CopletTransformer.
+   </action>
    <action dev="TC" type="fix" fixes-bug="31545">
     Throw a more meaningful exception if charset classes are missing
    </action>
