@@ -328,7 +328,7 @@ public class AuthenticationProfileManager
                 this.attributes.put(key, new Object[] {object, newValidity});
 			}
 
-			return new Object[]{object, Boolean.TRUE};
+			return new Object[] {object, Boolean.TRUE};
         } catch (ProfileException pe) {
             this.getLogger().error("Error loading profile: " + pe.getMessage(), pe);
             throw pe;

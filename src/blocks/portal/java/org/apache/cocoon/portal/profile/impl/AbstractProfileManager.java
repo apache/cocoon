@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
-import java.util.List;
-
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -27,7 +25,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -37,7 +34,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProfileManager.java,v 1.7 2004/04/28 13:58:16 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
@@ -55,67 +52,33 @@ public abstract class AbstractProfileManager
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
-     */
-    public List getCopletInstanceData(CopletData data) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
-     */
-    public CopletInstanceData getCopletInstanceData(String copletID) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(java.lang.String, java.lang.String)
-     */
-    public Layout getPortalLayout(String layoutKey, String layoutID) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void register(CopletInstanceData coplet) {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
      */
     public void register(Layout layout) {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
      */
     public void saveUserProfiles() {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void unregister(CopletInstanceData coplet) {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
      */
     public void unregister(Layout layout) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -207,6 +170,9 @@ public abstract class AbstractProfileManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         Configuration child = configuration.getChild("default-layout-key");
         // get configured default LayoutKey

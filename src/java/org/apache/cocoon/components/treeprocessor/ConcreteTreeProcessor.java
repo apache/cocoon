@@ -46,7 +46,9 @@ import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
  * 
  * @version CVS $Id: ConcreteTreeProcessor.java,v 1.1 2004/06/05 08:18:50 sylvain Exp $
  */
-public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
+public class ConcreteTreeProcessor 
+extends AbstractLogEnabled 
+implements Processor, Disposable {
 
 	/** The processor that wraps us */
 	private TreeProcessor wrappingProcessor;
@@ -297,16 +299,22 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         }
         
         // Process the redirect
-// No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
-//        context.reset();
-        // The following is a fix for bug #26854 and #26571
+        // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
+        // context.reset();
+        // The following is a fix for bug #26854 and #26571        
         final boolean result = processor.process(newEnv, context);
+        if ( facade != null ) {
+            newEnv = facade.getDelegate();
+        }
         if ( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() != null ) {
             environment.redirect( false, ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() );
         }
         return result;
     }
     
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
+	 */
 	public void dispose() {
         if (this.disposableNodes != null) {
             // we must dispose the nodes in reverse order

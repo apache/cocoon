@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.factory.impl.AbstractProducible;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.10 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class CopletInstanceData 
     extends AbstractProducible {
@@ -43,6 +43,7 @@ public final class CopletInstanceData
 	 * Constructor
 	 */
 	public CopletInstanceData() {
+        // Nothing to do
 	}
 
 	/**
