@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="xsp"?>
+<?xml-logicsheet href="resource://org/apache/cocoon/processor/xsp/library/mail/mail.xsl"?>
+
+<xsp:page
+ xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+ xmlns:request="http://www.apache.org/1999/XSP/Request"
+ xmlns:mail="http://apache.org/cocoon/mail/v1"
+ language="java"
+>
+
+<page>
+
+<mail:execute-query>
+ <mail:protocol>imap</mail:protocol>
+ <mail:host>imap</mail:host>
+ <mail:port>143</mail:port>
+ <mail:username><request:get-parameter name="username"/></mail:username>
+ <mail:password><request:get-parameter name="password"/></mail:password>
+ <mail:mbox>INBOX</mail:mbox>
+ <mail:results>
+  <count><mail:get-message-count/></count>
+  <mail:get-message number="1">
+   <subject><mail:get-subject/></subject>
+   <from><mail:get-from/></from>
+   <to><mail:get-recipients type="TO"/></to>
+  </mail:get-message>
+ </mail:results>
+</mail:execute-query>
+
+</page>
+
+</xsp:page>

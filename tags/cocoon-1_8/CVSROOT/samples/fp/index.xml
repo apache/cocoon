@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!-- Written by Jeremy Quinn "sharkbait@mac.com" -->
+<?cocoon-process type="xslt"?>
+<?xml-stylesheet href="page-html.xsl" type="text/xsl"?>
+<page>  
+  <title>FP Demo</title>
+  <author>
+    <name>Jeremy Quinn</name>
+    <address>sharkbait@mac.com</address>
+  </author>
+
+  <item>
+    <title>FP TagLib</title>
+    <body>
+      <p>This is a demo of the FP Taglib.</p>
+      
+      <p>There is a completely normal XML Data page <a href="../xsp/view-source.xml?filename=../fp/index.xml" target="blank">index.xml</a>, 
+       viewed with the StyleSheet <a href="../xsp/view-source.xml?filename=../fp/page-html.xsl" target="blank">page-html.xsl</a>, 
+       containing multiple &lt;item/&gt; Nodes, that can be individually edited. This is this functionality that the FP TagSet brings.</p>
+      
+      <p>Click on the [edit] link above to edit this Item, click on the [add] link to add a new Item, before this one.</p>
+      
+      <p>There is an XML File using the FP TagLib that provides for editing, called 
+       <a href="../xsp/view-source.xml?filename=../fp/form/item-edit.xml" target="blank">form/item-edit.xml</a>
+       and another called <a href="../xsp/view-source.xml?filename=../fp/form/item-add.xml" target="blank">form/item-add.xml</a>
+       for adding. They are both viewed using this StyleSheet <a href="../xsp/view-source.xml?filename=../fp/form/form-html.xsl" target="blank">form/form-html.xsl</a>.</p>
+    </body>
+
+    <figure>images/image1.jpg</figure>
+    <date>12/07/2000 04:35:45</date>
+  </item>
+  
+  <item>
+    <title>Another Item</title>
+    <body>This field for instance, is handled as XML. If you write bad XML into it and try to save, you should get a parser error.</body>
+    <figure>images/image2.jpg</figure>
+    <date>22/07/2000 01:38:16</date>
+  </item>
+ 
+  <item>
+    <title>Lorem ipsum</title>
+    <body>
+      <p>Lorem ipsum dolor sit <em>amet</em>, consectetuer adipiscing elit, 
+      sed diam nonummy nibheuis erat volutpat. Ut wisi enim ad minim veniam, 
+      quis nostrud exerci tation ullamcorper suscipit lobortis nisul ut aliquip 
+      ex ea commodo.</p>
+      <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse 
+      molestie consequat, vel blandit praesent lupatum zril delenit augue duis 
+      dolore te feugait nulla.</p>
+      <p>Exerci tation ullamcorper suscipit lobortis nisl feugiat nulla 
+      facilisis at vero eros et accumsan et iusto odio dignissim quiblandit 
+      prasent.</p>
+    </body>
+    <date>22/07/2000 01:38:26</date>
+    <figure>images/image3.jpg</figure>
+  </item>  
+</page>

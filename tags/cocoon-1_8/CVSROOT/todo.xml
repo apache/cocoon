@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
+
+<!--
+  $Id: todo.xml,v 1.33 2000-09-22 22:56:47 greenrd Exp $
+-->
+
+<todo title="Things To Do for Cocoon 1.x">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Robin Green" email="greenrd@hotmail.com" id="RDG"/>
+ </devs>
+
+ <actions priority="high">
+  <action context="code" assigned-to="RDG">
+   Workaround redirect problem with Tomcat and IE
+   (code written; just needs to be merged in.)
+  </action>
+ </actions>
+
+ <actions priority="medium">
+  <action context="code">
+   Fix remaining caching bugs. Cleanup caching code, which is messy.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Fix stylesheet-chaining bug.
+  </action>
+  <action context="code" assigned-to="RDG">
+   More meaningful XSLT and filenotfound
+   error reporting for XSP logicsheets
+   (currently just throws a NullPointerException)
+  </action>
+  <action context="docs">
+   Cleanup and improve documentation. (in progress.)
+  </action>
+  <action context="code">
+   Work out how to integrate inline XSP docs (such as inline esql docs)
+   into the build docs procedure.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Class auto-reloading for XSP pages
+   (code written; just needs to be merged in and documented.)
+  </action>
+ </actions>
+
+ <actions priority="wish">
+  <action context="design">
+   Work out best way of breaking the 64K method barrier in XSP.
+  </action>
+  <action context="code">
+   Better error reporting for typos in stylesheet URIs.
+  </action>
+ </actions>
+
+</todo>

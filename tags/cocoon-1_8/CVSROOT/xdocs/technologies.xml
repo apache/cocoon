@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+<header>
+  <title>Technologies Used</title>
+  <authors>
+    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+    <person name="Keith Visco" email="visco@exoffice.com"/>
+  </authors>
+</header>
+ 
+<body>
+
+<s1 title="Introduction">
+
+  <p>Since many people do not seem to understand the big picture of
+  the technologies used by Cocoon, I will try to explain my vision of
+  them.  I will also provide some information that I hope will enable
+  you to jump right in, help with its development, or show your boss
+  how much money can be saved using Cocoon.</p>
+
+</s1>
+
+<s1 title="What is this XML?">
+
+  <p>XML (<link href="http://www.w3.org/XML/">eXtensible Markup
+  Language</link>) is a subset of SGML (<link
+  href="http://www.oasis-open.org/cover/general.html">Standard
+  Generalized Mark-up Language</link>).  SGML is the grandparent of
+  all markup languages and a 15-year-old <link
+  href="http://www.iso.ch/">ISO</link> standard for creating
+  languages.  You can think of XML as a lighter version of SGML.</p>
+
+  <p>The first thing you must understand is that XML is <em>not</em> a
+  language (like HTML), but a syntax, in the same way that ASCII
+  defines a standard way to map characters to bytes rather than to
+  character strings.</p>
+
+  <p>XML is usually referred to as <em>portable data</em> in the sense
+  that its parsing is <em>application independent</em>.  The same XML
+  parser can read every possible XML document: one describing your
+  bank account, another describing your favorite Italian meal,
+  etc. This is, as you all know, impossible with other text-based or
+  binary file formats.  A near-equivalent in the old days was CSV
+  (comma separated values) files, which used a very simple syntax (one
+  record per line, a comma separating fields, and the values in the
+  first row naming the columns).  XML, unlike CSV, is much more
+  flexible and structured, even though it's much simpler than SGML.</p>
+
+  <p>A particular XML language is defined by its Document Type
+  Definition (DTD).  DTDs are described in the XML specification.
+  They describe the syntax of a language implemented in XML.  An XML
+  document may be validated against a DTD (if present).  If the
+  validation is successful the document is said to be <em>valid XML
+  based on the particular DTD</em>.  If a DTD is not present and the
+  parser does not encounter syntax errors parsing the file, the XML
+  document is said to be <em>well-formed</em>. If errors are found,
+  the document is not XML compliant.</p>
+
+  <p>So, any valid XML document is <em>well-formed</em> and an XML
+  document <em>valid</em> for one particular DTD may not necessarily
+  be valid for another DTD.  For example, <link
+  href="http://www.w3.org/TR/REC-html40/">HTML</link> is not an XML
+  language because some tags such as <code>&lt;br&gt;</code> are not
+  XML compliant.  In <link
+  href="http://www.w3.org/TR/xhtml1/">XHTML</link>, an XML compliant
+  reformulation of HTML, <code>&lt;br&gt;</code>, for example, is
+  replaced with <code>&lt;br/&gt;</code>. While HTML pages are not
+  always well-formed XML documents (some pages might be), XHTML pages
+  are always well-formed and valid XML documents if they match the
+  XHTML DTD.</p>
+
+  <p>So much for the technical differences, but why was HTML not good
+  enough?  Let's consider an example.</p>
+
+</s1>
+
+<s1 title="XML shows its power">
+
+  <p>Consider how the need for XML came about:</p>
+
+  <ul>
+    <li>Everyone starts publishing HTML documents on the web.</li>
+    <li>Search engines spring up across the net to help find documents.</li>
+    <li>Search engines have a difficult time searching specific pieces of a
+      document since HTML was designed to represent hierarchically how data
+      should be presented, but not what data is being presented.</li>
+    <li>Web applications spring up across the net to provide information and
+      <em>services</em>.</li>
+  </ul>
+
+  <p>These services could be web pages that serve up important
+  information about an organization or the structure of the
+  organization. It could be weather information or travel
+  advisories. It could be contact information for people. Stock
+  quotes. It could a book on how to grow the perfect Tomato.</p>
+
+  <p>So now we have all this information. Tons of it. Great! Now go
+  and search all those web pages for specific content, like Author or
+  Subject. Find me all abstracts of documents published on the subject
+  of <em>Big Tomatoes</em>, since I only want to view abstracts to
+  find the document best for me.  An HTML page is not designed for
+  this. It was designed for <em>how to present</em> the data.</p>
+
+  <p>When I look at a web page I might see that an author chose to
+  make every heading bold with <code>&lt;font
+  size="+1"&gt;</code>. Yet if I look at another page I might notice
+  that every heading was marked up with <code>&lt;H1&gt;</code>.  Yet
+  another page may use tables and table headers to format the
+  data. Find me every document that has the word <em>potato</em> in
+  the first heading.</p>
+
+  <p>Suppose I have a web application that serves up weather
+  information for different parts of the country. Let's say you live
+  in Boston, MA and only want the local weather. Your boss asks you to
+  write an application that goes out and grabs the two-to-three
+  sentence weather summary from my application and display it on your
+  intranet's homepage.</p>
+
+  <p>You take a quick jaunt over to my weather application and notice
+  that the summary is in what looks like the second paragraph of the
+  page. So you take a quick peek at the HTML source that my weather
+  application returns. You suddenly realize that it's all on one line
+  and is buried deep within tables.</p>
+
+  <p>So you start writing your little application to parse my HTML
+  code to retrieve only the information you were looking for. You pat
+  yourself on the back when&mdash;4 hours later&mdash;you finally get
+  the information you were looking for.  Your code looks for the 2nd
+  <code>TABLE</code>, the 6th <code>TR</code>, and then the 2nd
+  <code>TD</code>. Phew. Your application, which really only wants to
+  retrieve weather data, is forced to parse display markup to get
+  it.</p>
+
+  <p>You run over to your boss and demonstrate the application you are
+  so proud of writing. Lo and behold it doesn't work.  What happened?
+  The good old page author decided to change the layout and move the
+  weather summary to <code>TABLE</code> 1, <code>TR</code> 1,
+  <code>TD</code> 1. Your application breaks because it is tied to the
+  presentation of the data and not to the data itself. Not very
+  effective, since now your app will break every time the page author
+  drinks too much coffee.</p>
+
+  <p>Then you notice something on the page that interests you. The
+  site is automatically generated from XML and you see a link that
+  indicates there is an XML DTD for weather information. And another
+  link that indicates the availability of an XML stream for weather
+  information. Yikes, would you look at that:</p>
+  
+  <source><![CDATA[
+   <weather-information>
+    <location>
+     <city>Boston</city>
+     <state>MA</state>
+    </location>
+    <summary>
+     Beautiful and Sunny, lows 50, highs 65, with the
+     chance of a blizzard and gail force winds.
+    </summary>
+   </weather-information>
+  ]]></source>
+          
+  <p>So you simply download Cocoon and quickly write an XSL stylesheet
+  that looks like the following:</p>
+  
+  <source><![CDATA[
+   <xsl:stylesheet>
+    <xsl:template match="/">
+     ... presentation info here ...
+    </xsl:template>
+    <xsl:tempate 
+      match="weather-information[location/city = 'Boston']">
+     <xsl:apply-templates select="summary"/>
+    </xsl:template>
+   </xsl:stylesheet>  
+  ]]></source>
+  
+  <p>And your boss gives you your job back! ;-)</p>
+
+</s1>
+
+<s1 title="The HTML Model">
+
+  <p>As the above example explains, HTML is a language for describing
+  graphics, behavior, and hyperlinks on web pages. HTML is
+  <em>not</em> able to <em>contextualize</em> (i.e. <em>give meaning
+  to some text</em>).  For example, if you look for the <em>title</em>
+  of a page, a nice HTML tag gives you that, but if you look for the
+  author or version or something more specific like the author's mail
+  address&mdash;even if this information is present in the
+  text&mdash;you don't have a way to <em>isolate</em> it
+  (contextualize it) from the surrounding information.</p>
+
+  <p>In HTML like this</p>
+
+  <source><![CDATA[
+   <html>
+    <head>
+     <title>This is my article</title>
+    </head>
+    <body>
+     <h1 align="center">This is my article</h1>
+     <h3 align="center">
+      by <a href="mailto:stefano@apache.org">
+          Stefano Mazzocchi
+         </a>
+     </h3>
+     ...
+    </body>
+   </html> 
+  ]]></source>
+
+  <p>you don't have a guaranteed way to extract the mail address.
+  Whereas in the following XML document</p>
+
+  <source><![CDATA[
+   <?xml version="1.0"?>
+   <page>
+    <title>This is my article</title>
+    <author>
+     <name>Stefano Mazzocchi</name>
+     <mail>stefano@apache.org</mail>
+    </author>
+    ...
+   </page>
+  ]]></source> 
+
+  <p>it's trivial and algorithmically certain.</p>
+
+  <p>We don't imagine XML overtaking HTML in web publishing since HTML
+  is great for small needs. HTML was born as an SGML-based DTD for
+  scientists' homepages, i.e. to parallelize and simplify the
+  deployment and management of personal information. HTML was
+  <em>not</em> designed for the publishing and processing of large
+  quantities of data and complex dynamic information systems.</p>
+
+</s1>
+
+<s1 title="The XSL Language">
+
+  <p>As you can see, XML alone is useless without some defined
+  semantics: even if an application is able to parse a document, it
+  must be able to <em>understand</em> what the markup means. This is
+  why XML-only browsers are meaningless and not more useful than text
+  editors from a usability point of view.</p>
+
+  <p>This is one of the reasons why XSL (the <link
+  href="http://www.w3.org/style/xsl/">eXtensible Stylesheet
+  Language</link>) was proposed and designed. XSL is divided into two
+  parts: <link href="http://www.w3.org/TR/xslt">transformation</link>
+  (XSLT) and <link href="http://www.w3.org/TR/WD-xsl/">formatting
+  objects</link> (sometimes referred to as FO, XSL:FO, or simply
+  XSL). Both are XML DTDs that define a particular XML syntax, so
+  every XSL or XSLT document is a well-formed XML document.</p>
+
+</s1>
+
+<s1 title="XSL Transformations (XSLT)">
+
+  <p>XSLT is a language for transforming one well-formed XML document
+  into something else (which may <em>not</em> necessarily be another
+  XML document, although it most often will be). This means that you
+  can use it to go from one DTD to another in a procedural way that is
+  defined inside your XSLT document.  XSLT can be used in ways its
+  name might not imply: a transformation may be applied to a document
+  to generate a <em>graphical description</em> of its content. This is
+  called <em>styling</em>, but, as you can imagine, it is just one of
+  the possible uses of transformation technology.</p>
+
+  <p>Back in the earlier example, the HTML file may have been
+  generated from an XML file using <em>another</em> XML file as a
+  transformation sheet (which in this case is a stylesheet).  The data
+  is all there: we just have to tell the transformer how to come up
+  with the HTML document once all the data is parsed.</p>
+
+  <p>Usually, transformation sheets work from one DTD to another and
+  in this way form a chain: transformA goes from DTD1 to DTD2 and
+  transformB from DTD2 to DTD3 or graphically</p>
+
+  <!-- FIXME (RAW): Any reason not to use &rarr; entities here? -->
+  <source>DTD1 ---(transformA)--&gt; DTD2 ---(transformB)---&gt; DTD3</source>
+
+  <p>We'll call DTD1 the <em>original DTD</em>, DTD2 some
+  <em>intermediate DTD</em>, DTD3 the <em>final DTD</em>.  A
+  transformation can always be created to go directly from DTD1 to
+  DTD3, but this might be more complicated and less
+  human-readable/manageable.</p>
+
+</s1>
+
+<s1 title="XSL Formatting Objects (XSL:FO)">
+
+  <p>XSLFO is a language (an XML DTD) for describing 2D layout of text
+  in both printed and digital media. I will not concentrate on the
+  graphical abilities that formatting objects give you, but rather on
+  the fact that it is mostly used as a <em>final DTD</em>, meaning
+  that a transformation is used to generate a formatting object
+  description of a document starting from a general XML file.</p>
+
+  <p>An XSLFO document for our ongoing example would be</p>
+
+  <source><![CDATA[
+  <?xml version="1.0"?>
+  <fo:root xmlns:fo="http://www.w3.org/XSL/Format/1.0">
+   ...
+   <fo:flow font-size="14pt" line-height="14pt">
+    <fo:block 
+        text-align="centered" 
+        font-size="24pt" 
+        line-height="28pt">This is my article</fo:block>
+    <fo:block 
+        space-before.optimum="12pt" 
+        text-align="centered">by Stefano Mazzocchi</fo:block>
+   </fo:flow>
+  </fo:root>
+  ]]></source> 
+
+  <p>which tells the formatting object formatter (the rendering
+  engine), how to <em>draw</em> and place the text on screen or on
+  paper.</p>
+
+  <p>XSL formatting objects and transformations are being specified by
+  the same working group and have a lot of synergy, even though the
+  XSLT specification also includes ways to create HTML and text from
+  XML files.</p>
+
+</s1>
+
+<s1 title="The XSP Language">
+
+  <p>The Cocoon publishing model is heavily based on the XSLT
+  transformation capabilities.  XSLT allows complete separation of
+  content and style (something that is much harder to obtain with
+  HTML, even using CSS2 or other styling technologies).  But Cocoon
+  goes further and defines a way of separating content and style from
+  the programming logic that drives server side behavior.</p>
+
+  <p>The XSP language defines an XML DTD for separating content and logic
+  for compiled server pages. XSP is, like XSLFO, supposed to be a 
+  <em>final DTD</em>. In fact, XSP is rendered into source code and then
+  compiled into binary code. This allows performance increase since no
+  parsing or interpretation overhead happens at runtime.</p>
+
+  <p>In dynamic content generation technology, content and logic are
+  combined: in every page there is a mix of static content and dynamic
+  logic that work together to create the final result, usually using
+  run-time or time-dependent input.  XSP is no exception, since it
+  defines a syntax to mix static content and programmatic logic in a
+  way that is independent of both the programming language used and
+  the binary results that the final source-rendering generated.</p>
+
+  <p>But it must be understood that XSP is just a piece of the
+  framework: exactly like how formatting objects mix style and
+  content, XSP objects mix logic and content. On the other hand, since
+  both are XML DTDs, XSLT can be used to move from pure content to
+  these final DTDs, placing the style and logic on the transformation
+  layers and guaranteeing complete separation and easier
+  maintenance.</p>
+
+</s1>
+</body>
+</document>
+

@@ -1,0 +1,108 @@
+
+                        C   O   C   O   O   N
+
+                               @version@
+
+
+Contents
+
+* What is it?
+* Where is it?
+* Requirements
+* Release Notes for Cocoon 1.8
+* Licensing and Legal Issues
+
+
+  What is it?
+  -----------
+
+  Cocoon is a 100% pure Java publishing framework that relies on 
+  new W3C technologies (such as XML and XSL) to provide web content.
+
+  The Cocoon project aims to change the way web information is created, 
+  rendered and delivered. This new paradigm is based on fact that document 
+  content, style and logic are often created by different individuals or 
+  working groups.
+  
+  Cocoon aims to a complete separation of the three layers, allowing the 
+  three layers to be indipendently designed, created and managed, reducing 
+  management overhead, increasing work reuse and reducing time to market.
+
+
+  Where is it?
+  ------------
+
+  The home page for the Cocoon project can be found in the Apache XML Project 
+  web site (http://xml.apache.org/cocoon/). There you also find information
+  on how to download the latest release as well as all the other information
+  you might need regarding this project.
+
+
+  Requirements
+  ------------
+
+  Cocoon is implemented both as a Java servlet and a Java command line
+  application. The following requirements exist for installing it:
+  
+   o  A Java 1.1 or later compatible virtual machine for your operating system.
+
+   o  Server API 2.x Servlet Engine (optional for command line operation).
+   
+
+  Installation Instructions and Documentation
+  -------------------------------------------
+
+  The documentation available as of the date of this release is
+  included in the "docs/" directory (unless you got this from CVS,
+  in which case you need to run build docs, which generates documentation
+  in the build/docs directory).
+
+  Look for the most updated documentation on the Cocoon web site under
+  the Apache XML Project (http://xml.apache.org/cocoon/).
+
+
+  Release Notes for Cocoon 1.8
+  ----------------------------
+
+  There are no reported major issues with this release.
+
+  As usual, if upgrading from an earlier release, you need to replace your
+  cocoon.properties file with the one supplied in
+  src/org/apache/cocoon/cocoon.properties,
+  (then make any site-specific adjustments if you have any),
+  or Cocoon will very likely not work at all.
+
+  *** IMPORTANT ***
+  If you get an error message about ProducerFromRequest, this means
+  that you forgot to do the above. See the FAQ for more details.
+
+  Note also that you need an additional library, new to 1.8,
+  turbine-pool.jar, which is in the /lib directory, to be visible
+  to the servlet engine. See the installation instructions.
+
+  As usual, changes since previous releases are documented in docs/changes.html
+  Highlights include:
+
+  * Database connection pooling
+  * Numerous bugfixes, including better Servlet 2.0 compatibility
+  * Increased performance for heavy load conditions
+  * Also increased speed for some XSP pages which include complex Nodes
+  * New ESQL logicsheet allowing easy post-processing of resultsets in XSP
+  * Improved documentation, with new expanded FAQ
+  * More installation instructions for more different servlet engines
+  * Experimental FP taglib for form-handling and other tasks
+  * Jikes support for faster XSP page compilation
+
+
+  Licensing and legal issues
+  --------------------------
+
+  For legal and licensing issues, please read the LICENSE file.
+
+
+  Thanks for using Cocoon.
+
+                                           The Apache XML Project
+                                           http://xml.apache.org/                                         
+                                           
+  
