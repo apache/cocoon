@@ -7,13 +7,17 @@
  */
 package org.apache.cocoon.components;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ThreadSafe;
-//import org.apache.avalon.Loggable;
+import org.apache.avalon.Initializable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.util.pool.ObjectFactory;
+import org.apache.avalon.util.Lock;
+import org.apache.avalon.util.LockException;
 import org.apache.avalon.Recyclable;
 import org.apache.cocoon.components.ComponentFactory;
 import org.apache.avalon.AbstractLoggable;
@@ -24,29 +28,27 @@ import org.apache.avalon.AbstractLoggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  */
-public class ComponentPool extends AbstractLoggable implements Pool, ThreadSafe {
+public class ComponentPool extends AbstractLoggable implements Pool, Initializable, Disposable, Runnable, ThreadSafe {
 
     public final static int DEFAULT_POOL_SIZE = 8;
 
-    public final static int DEFAULT_WAIT_TIME = (5*100);
-
     /** The resources that are currently free */
-    protected Vector availableResources;
+    protected List availableResources = new ArrayList();
 
     /** Resources that have been allocated out of the pool */
-    protected Vector usedResources;
+    protected List usedResources = new ArrayList();
 
-    /** Flag to make sure at least one thread has received notification */
-    boolean receivedWakeup;
+    private boolean initialized = false;
+    private boolean disposed = false;
 
-    /** The number of threads waiting for notification */
-    int numThreadsWaiting;
+    private Lock lock = new Lock();
+    private Thread initializationThread;
 
-    protected ObjectFactory m_factory = null;
+    protected ObjectFactory factory = null;
 
-    protected int m_initial = DEFAULT_POOL_SIZE/2;
+    protected int initial = DEFAULT_POOL_SIZE/2;
 
-    protected int m_maximum = DEFAULT_POOL_SIZE;
+    protected int maximum = DEFAULT_POOL_SIZE;
 
     public ComponentPool(final ObjectFactory factory) throws Exception {
         init(factory, DEFAULT_POOL_SIZE/2, DEFAULT_POOL_SIZE);
@@ -66,31 +68,65 @@ public class ComponentPool extends AbstractLoggable implements Pool, ThreadSafe 
     private void init(final ObjectFactory factory,
                       final int initial,
                       final int maximum) throws Exception {
-        m_factory = factory;
-        m_initial = initial;
-        m_maximum = maximum;
+        this.factory = factory;
+        this.initial = initial;
+        this.maximum = maximum;
     }
 
     public void init() throws Exception {
-        availableResources = new Vector();
-        usedResources = new Vector();
-        receivedWakeup = true;
-        numThreadsWaiting = 0;
-
-        for( int i = 0; i < m_initial; i++ )
-            availableResources.addElement(m_factory.newInstance());
+        this.initializationThread = new Thread(this);
+        this.initializationThread.start();
     }
 
-    /** Allocates a resource when the pool is empty. By default, this method
-     *	returns null, indicating that the requesting thread must wait. This
-     *	allows a thread pool to expand when necessary, allowing for spikes in
-     *	activity.
-     *	@return A new resource, or null to force the requester to wait
+    public void run() {
+        this.lock.lock(this.availableResources);
+
+        for( int i = 0; i < this.initial; i++ ) {
+            try {
+                this.availableResources.add(this.factory.newInstance());
+            } catch (Exception e) {
+                getLogger().warn("Could not create poolable resource", e);
+            }
+        }
+
+        if ((this.availableResources.size() < this.initial) && (this.availableResources.size() > 0)) {
+            while (this.availableResources.size() < this.initial) {
+                try {
+                    this.availableResources.add(this.factory.newInstance());
+                } catch (Exception e) {
+                    getLogger().warn("Could not create poolable resource", e);
+                }
+            }
+        }
+
+        if (this.availableResources.size() > 0) {
+            this.initialized = true;
+        }
+
+        this.lock.unlock(this.availableResources);
+    }
+
+    public void dispose() {
+        this.lock.lock(this.availableResources);
+        this.disposed = true;
+
+        while ( ! this.availableResources.isEmpty() ) {
+            this.availableResources.remove(0);
+        }
+
+        this.lock.unlock(this.availableResources);
+    }
+
+    /**
+     * Allocates a resource when the pool is empty. By default, this method
+     * returns null, indicating that the requesting thread must wait. This
+     * allows a thread pool to expand when necessary, allowing for spikes in
+     * activity.
+     *
+     * @return A new resource, or null to force the requester to wait
      */
-    protected synchronized Poolable getOverflowResource()
-        throws Exception
-    {
-        Poolable poolable = (Poolable)m_factory.newInstance();
+    protected Poolable getOverflowResource() throws Exception {
+        Poolable poolable = (Poolable) this.factory.newInstance();
         getLogger().debug("Component Pool - creating Overflow Resource:"
                         + " Resource=" + poolable
                         + " Available=" + availableResources.size()
@@ -98,125 +134,50 @@ public class ComponentPool extends AbstractLoggable implements Pool, ThreadSafe 
         return poolable;
     }
 
-    /** Grabs a resource from the free list and moves it to the used list.
-     * This method is really the core of the resource pool. The rest of the class
-     * deals with synchronization around this method.
-     * @return The allocated resource
-     */
-    protected synchronized Poolable getResourceFromList()
-    {
-        // See if there is a resource available.
-        if (availableResources.size() > 0) {
-
-            // Get the first resource from the free list
-            Poolable resource = (Poolable) availableResources.elementAt(0);
-
-            // Remove the resource from the free list
-            availableResources.removeElement(resource);
-
-            // Add the resource and its associated info to the used list
-            usedResources.addElement(resource);
-
-            return resource;
-        }
-
-        return null;
-    }
-
-    /** Performs a wait for a specified number of milliseconds.
-     * @param timeout The number of milliseconds to wait
-     * (wait forever if timeout < 0)
-     */
-    protected synchronized void doWait(long timeout)
-    {
-        try {
-            if (timeout < 0) {
-                wait();
-            }
-            else {
-                wait(timeout);
-            }
-        }
-        catch (Exception ignore) {
-        }
-    }
-
     /** Requests a resource from the pool, waiting forever if one is not available.
      * No extra information is associated with the allocated resource.
      * @return The allocated resource
      */
-    public Poolable get()
-        throws Exception
-    {
-        return get(DEFAULT_WAIT_TIME);
-    }
-
-    /** Requests a resource from the pool, waiting forever if one is not available.
-     * @param timeout The maximum amount of time (in milliseconds)
-     * to wait for the resource
-     * @return The allocated resource
-     */
-    public Poolable get(long timeout)
-        throws Exception
-    {
-        // See if there is a resource in the pool already
-        Poolable resource = getResourceFromList();
-        if (resource != null)
-        {
-            return resource;
+    public Poolable get() throws Exception {
+        if (! this.initialized) {
+            if (this.initializationThread == null) {
+                throw new IllegalStateException("You cannot get a resource before the pool is initialized");
+            } else {
+                this.initializationThread.join();
+            }
         }
 
-        // Figure out when to stop waiting
-        long endTime = System.currentTimeMillis() + timeout;
+        if (this.disposed) {
+            throw new IllegalStateException("You cannot get a resource after the pool is disposed");
+        }
 
-        do {
+        this.lock.lock(this.availableResources);
+        // See if there is a resource in the pool already
+        Poolable resource = null;
 
-            synchronized(this) {
-                // See if there are any available resources in the pool
-                if (availableResources.size() == 0) {
+        if (this.availableResources.size() > 0) {
+            resource = (Poolable)this.availableResources.remove(0);
 
-                    // Allow subclasses to provide overflow resources
-                    resource = getOverflowResource();
+            this.lock.lock(this.usedResources);
+            this.usedResources.add(resource);
+            this.lock.unlock(this.usedResources);
+        } else {
+            resource = this.getOverflowResource();
 
-                    // If there was a resource allocated for overflow, add it to the used list
-                    if (resource != null) {
-                        usedResources.addElement(resource);
-                        return resource;
-                    }
-                }
+            if (resource != null) {
+                this.lock.lock(this.usedResources);
+                this.usedResources.add(resource);
+                this.lock.unlock(this.usedResources);
             }
+        }
 
-            // Wait for a resource to be allocated
+        this.lock.unlock(this.availableResources);
 
-            // Figure out the longest time to wait before timing out
-            long maxWait = endTime - System.currentTimeMillis();
-            if (timeout < 0) maxWait = -1;
+        if (resource == null) {
+            throw new RuntimeException("Could not get the component from the pool");
+        }
 
-            // Indicate that there is a thread waiting for a wakeup
-            numThreadsWaiting++;
-
-            // Wait for a wakeup
-            doWait(maxWait);
-
-            numThreadsWaiting--;
-
-            // Only mention the received wakeup if the timeout hasn't expired
-            if ((timeout < 0) || (System.currentTimeMillis() < maxWait)) {
-                receivedWakeup = true;
-            }
-
-            // See if there is now a resource in the free pool
-            resource = getResourceFromList();
-            if (resource != null)
-            {
-                return resource;
-            }
-
-            // Keep looping while the timeout hasn't expired (loop forever if there is
-            // no timeout.
-        } while ((timeout < 0) || (System.currentTimeMillis() < endTime));
-
-        return null;
+        return resource;
     }
 
     /** Releases a resource back to the pool of available resources
@@ -226,52 +187,42 @@ public class ComponentPool extends AbstractLoggable implements Pool, ThreadSafe 
     {
         int pos = -1;
 
-        synchronized(this) {
-            // Make sure the resource is in the used list
-            pos = usedResources.indexOf(resource);
+        this.lock.lock(this.usedResources);
 
-            if( resource instanceof Recyclable )
-            {
-                ((Recyclable)resource).recycle();
+        // Make sure the resource is in the used list
+        pos = usedResources.indexOf(resource);
+
+        if (resource instanceof Recyclable) {
+            ((Recyclable)resource).recycle();
+        }
+
+        // If the resource was in the used list, remove it from the used list and
+        // add it back to the free list
+        if (pos >= 0) {
+            this.usedResources.remove(pos);
+
+            this.lock.lock(this.availableResources);
+
+            if (this.availableResources.size() < this.maximum) {
+                // If the available resources are below the maximum add this back.
+                this.availableResources.add(resource);
+            } else {
+                // If the available are above the maximum destroy this resource.
+                try {
+                    this.factory.decommission(resource);
+                    getLogger().debug("Component Pool - decommissioning Overflow Resource:"
+                                    + " Resource=" + resource
+                                    + " Available=" + availableResources.size()
+                                    + " Used=" + usedResources.size() );
+                    resource = null;
+                } catch (Exception e) {
+                    throw new RuntimeException("caught exception decommissioning resource: " + resource);
+                }
             }
 
-            // If the resource was in the used list, remove it from the used list and
-            // add it back to the free list
-            if (pos >= 0) {
-                usedResources.removeElementAt(pos);
-                availableResources.addElement(resource);
-            }
+            this.lock.unlock(this.availableResources);
         }
 
-        // If we released a resource, wake up any threads that may be waiting
-        if (pos >= 0)
-        {
-            doWakeup();
-        }
-    }
-
-    /** Performs a notifyAll (which requires a synchronized method) */
-    protected synchronized void doNotify()
-    {
-        try {
-            notifyAll();
-        }
-        catch (Exception ignore) {
-        }
-    }
-
-    protected void doWakeup()
-    {
-        // Wake up any threads waiting for the resource
-        receivedWakeup = false;
-        do {
-            try {
-                doNotify();
-            }
-            catch (Exception ignore) {
-            }
-        }
-        // Keep looping while there are threads waiting and none have received a wakeup
-        while ((numThreadsWaiting > 0) && !receivedWakeup);
+        this.lock.unlock(this.usedResources);
     }
 }
