@@ -129,7 +129,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.21 2003/12/02 14:47:21 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.22 2004/02/07 09:12:57 antonio Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1210,7 +1210,11 @@ public class CocoonServlet extends HttpServlet {
                 } else if (getLogger().isWarnEnabled()) {
                     getLogger().warn("SocketException while trying to close stream.");
                 }
-
+            // See: http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=107489037219505&w=2
+            } catch (IOException ie) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Cocoon got an IOException while trying to close stream.", ie);
+                }
             } catch (Exception e) {
                 getLogger().error("Cocoon got an Exception while trying to close stream.", e);
             }
@@ -1329,8 +1333,6 @@ public class CocoonServlet extends HttpServlet {
         }
         return parentComponentManager;
     }
-
-
 
     /**
      * Creates the Cocoon object and handles exception handling.
