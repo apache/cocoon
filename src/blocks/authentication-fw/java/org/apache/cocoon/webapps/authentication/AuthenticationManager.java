@@ -68,12 +68,12 @@ import org.apache.excalibur.source.SourceParameters;
  * actions perform all required tasks.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationManager.java,v 1.5 2003/05/27 12:19:30 cziegeler Exp $
+ * @version CVS $Id: AuthenticationManager.java,v 1.6 2004/01/28 14:19:57 cziegeler Exp $
 */
 public interface AuthenticationManager {
 
     /** The Avalon Role */
-    public static final String ROLE = AuthenticationManager.class.getName();
+    String ROLE = AuthenticationManager.class.getName();
 
     /**
      * Is the current user authenticated for the given handler?
