@@ -48,86 +48,82 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.profile.impl;
 
-import org.exolab.castor.mapping.MapItem;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.util.DeltaApplicable;
 
 /**
+ * Holds instances of CopletData.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.2 2003/05/19 09:14:06 cziegeler Exp $
+ * @version CVS $Id: CopletDataManager.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
  */
-public final class CopletInstanceData
-//	extending MapItem used for Castor map workaround 
-extends MapItem {
-
-	public final static int STATUS_MINIMIZED = 0;
-	public final static int STATUS_MAXIMIZED = 1;
-
-    private String copletId;
-    
-	private CopletData copletData;
-
-	protected int status = STATUS_MAXIMIZED;
+public class CopletDataManager 
+implements DeltaApplicable {
 
 	/**
-	 * Constructor
+	 * The coplet data instances.
 	 */
-	public CopletInstanceData() {
-		// used for Castor map workaround
-		this.setValue(this);
+	private Map copletData = new HashMap();
+	
+	/**
+	 * Gets all coplet data.
+	 */
+	public Map getCopletData() {
+		return this.copletData;
 	}
 
 	/**
-	 * Returns the copletId.
-	 * @return String
+	 * Gets the specified coplet data. 
 	 */
-	public String getCopletId() {
-		return copletId;
+	public CopletData getCopletData(String name) {
+		return (CopletData)this.copletData.get(name);
 	}
-
+	
 	/**
-	 * Sets the copletId.
-	 * @param copletId The copletId to set
+	 * Puts the specified coplet data to the manager.
 	 */
-	public void setCopletId(String copletId) {
-		this.copletId = copletId;
-
-		// used for Castor map workaround
-		this.setKey(copletId);
+	public void putCopletData(CopletData data) {
+		this.copletData.put(data.getName(), data);
 	}
-
+	
 	/**
-	 * @return CopletData
+	 * Applies the specified delta.
+	 * @throws ClassCastException If the object is not of the expected type.
 	 */
-	public CopletData getCopletData() {
-		return copletData;
+	public boolean applyDelta(Object object) {
+		CopletDataManager manager = (CopletDataManager)object;
+		
+		Iterator iterator = manager.getCopletData().values().iterator();
+		CopletData data, delta;
+		while (iterator.hasNext()) {
+			delta = (CopletData)iterator.next();
+			data = this.getCopletData(delta.getName());
+			if (data == null) {
+				this.putCopletData(delta);
+			} else {
+				data.applyDelta(delta); 
+			}
+		}
+		
+		return true;
 	}
-
+	
 	/**
-	 * Sets the copletData.
-	 * @param copletData The copletData to set
+	 * Updates the references to the coplet base data to the ones stored in the manager.
 	 */
-	public void setCopletData(CopletData copletData) {
-		this.copletData = copletData;
-	}
-
-	/**
-	 * Returns the status.
-	 * @return int
-	 */
-	public int getStatus() {
-		return status;
-	}
-
-	/**
-	 * Sets the status.
-	 * @param status The status to set
-	 */
-	public void setStatus(int status) {
-		this.status = status;
+	public void update(CopletBaseDataManager manager) {
+		Iterator iterator = this.copletData.values().iterator();
+		CopletData data;
+		while (iterator.hasNext()) {
+			data = (CopletData)iterator.next();
+			data.setCopletBaseData(manager.getCopletBaseData(data.getCopletBaseData().getName()));
+		}
 	}
 }

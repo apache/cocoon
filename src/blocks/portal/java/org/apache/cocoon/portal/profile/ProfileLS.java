@@ -57,10 +57,10 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileLS.java,v 1.1 2003/05/07 06:22:28 cziegeler Exp $
+ * @version CVS $Id: ProfileLS.java,v 1.2 2003/05/19 09:14:10 cziegeler Exp $
  */
 public interface ProfileLS {
     Object loadProfile(Object key) throws Exception;  //TODO define ExceptionType later
-    void saveProfile(Object key, Object profile);
+    void saveProfile(Object key, Object profile) throws Exception;  //TODO define ExceptionType later
     SourceValidity getValidity(Object key);
 }

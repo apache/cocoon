@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coplets>
+   <coplet-base-data name="URICoplet">
+      <coplet-adapter>uri</coplet-adapter>
+      <default-renderer>window</default-renderer>
+   </coplet-base-data>
+</coplets>
+

@@ -51,24 +51,32 @@
 package org.apache.cocoon.portal.coplet;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.cocoon.portal.util.DeltaApplicable;
+import org.exolab.castor.mapping.MapItem;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.1 2003/05/07 06:22:29 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.2 2003/05/19 09:14:07 cziegeler Exp $
  */
-public class CopletData {
+public class CopletData 
+//extending MapItem used for Castor map workaround 
+extends MapItem 
+implements DeltaApplicable {
 
     protected String name;
 
     protected String title;
 
-    protected boolean maxpageable;
+    protected Boolean maxpageable;
     
-    protected boolean removable;
+    protected Boolean removable;
 
     protected CopletBaseData copletBaseData;
 
@@ -78,8 +86,8 @@ public class CopletData {
      * Constructor
      */
     public CopletData() {
-        this.maxpageable = true;
-        this.removable = true;
+		// used for Castor map workaround
+		this.setValue(this);
     }
 
     public String getName() {
@@ -88,30 +96,57 @@ public class CopletData {
 
     public void setName(String name) {
         this.name = name;
+
+		// used for Castor map workaround
+		this.setKey(name);
     }
 
     /**
-      * Returns the maxpageable.
+      * Returns the maxpageable as boolean. If it has not been set "true" is returned.
       * @return boolean
       */
     public boolean isMaxpageable() {
-        return maxpageable;
+    	if (this.maxpageable == null) {
+			return true;
+    	} else {
+			return this.maxpageable.booleanValue();
+    	}
     }
 
     /**
-     * Returns the removable.
+     * Returns the removable as boolean. If it has not been set "true" is returned.
      * @return boolean
      */
     public boolean isRemovable() {
-        return removable;
+		if (this.removable == null) {
+			return true;
+		} else {
+			return this.removable.booleanValue();
+		}
     }
+
+	/**
+	  * Returns the maxpageable as Boolean.
+	  * @return boolean
+	  */
+	public Boolean getMaxpageable() {
+		return this.maxpageable;
+	}
+
+	/**
+	 * Returns the removable as Boolean.
+	 * @return boolean
+	 */
+	public Boolean getRemovable() {
+		return this.removable;
+	}
 
     /**
      * Sets the maxpageable.
      * @param maxpageable The maxpageable to set
      */
     public void setMaxpageable(boolean maxpageable) {
-        this.maxpageable = maxpageable;
+        this.maxpageable = new Boolean(maxpageable);
     }
 
     /**
@@ -119,7 +154,7 @@ public class CopletData {
      * @param removable The removable to set
      */
     public void setRemovable(boolean removable) {
-        this.removable = removable;
+        this.removable = new Boolean(removable);
     }
 
     /**
@@ -161,4 +196,61 @@ public class CopletData {
     public void setAttribute(String key, Object value) {
         this.attributes.put(key, value);
     }
+    
+    public Map getAttributes() {
+    	return this.attributes;
+    }
+	
+	/**
+	 * Applies the specified delta.
+	 * @throws ClassCastException If the object is not of the expected type.
+	 */
+	public boolean applyDelta(Object object) {
+		CopletData data = (CopletData)object;
+		
+		Boolean maxpageable = data.maxpageable;
+		if (maxpageable != null)
+			this.maxpageable = maxpageable;
+		
+		Boolean removable = data.removable;
+		if (removable != null)
+			this.removable = removable;
+
+		String title = data.getTitle();
+		if (title != null)
+			this.setTitle(title);
+			
+		CopletBaseData copletBaseData = data.getCopletBaseData();
+		if (copletBaseData != null)	{
+			this.setCopletBaseData(copletBaseData);
+		}
+			
+		Iterator iterator = data.getAttributes().entrySet().iterator();
+		Object attribute, delta;
+		String key;
+		Map.Entry entry;
+		while (iterator.hasNext()) {
+			entry = (Map.Entry)iterator.next();
+			key = (String)entry.getKey();
+			delta = entry.getValue();
+
+			attribute = this.getAttribute(key);
+			if (attribute == null) {
+				// add new attribute
+				this.setAttribute(key, delta);
+			} else if (attribute instanceof DeltaApplicable) {
+				// apply delta
+				boolean success = ((DeltaApplicable)attribute).applyDelta(delta);
+				if (!success) {
+					// replace attribute
+					this.setAttribute(key, delta);
+				}
+			} else {
+				// replace attribute
+				this.setAttribute(key, delta);
+			}
+		}
+		
+		return true;
+	}
 }

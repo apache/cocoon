@@ -123,7 +123,10 @@
  </component>
  
  <component class="org.apache.cocoon.components.persistance.CastorSourceConverter" role="org.apache.cocoon.components.persistance.CastorSourceConverter">
- 	<mapping-source>context://samples/portal/profiles/mapping/layout.xml</mapping-source>
+ 	<mapping-source source="layout">context://samples/portal/profiles/mapping/layout.xml</mapping-source>
+ 	<mapping-source source="copletbasedata">context://samples/portal/profiles/mapping/copletbasedata.xml</mapping-source>
+ 	<mapping-source source="copletdata">context://samples/portal/profiles/mapping/copletdata.xml</mapping-source>
+ 	<mapping-source source="copletinstancedata">context://samples/portal/profiles/mapping/copletinstancedata.xml</mapping-source>
  </component>
- <component class="org.apache.cocoon.portal.profile.impl.ParameterSourceAdapter" role="org.apache.cocoon.portal.profile.impl.ParameterSourceAdapter" />
+ <component class="org.apache.cocoon.portal.profile.impl.MapSourceAdapter" role="org.apache.cocoon.portal.profile.impl.MapSourceAdapter" />
 </xconf>

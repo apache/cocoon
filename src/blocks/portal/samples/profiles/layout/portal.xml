@@ -7,14 +7,16 @@
                 <row-layout renderer-name="row" static="true">
                     <item>
 		                <coplet-layout renderer-name="window" static="true">
-		                    <id>cocoon://samples/portal/news/newsweek.rss</id>
-		                    <parameter name="title" value="Newsweek" />
+		                    <id>1</id>
+		                    <parameter name="title" value="Newsweek"/>
+		                    <coplet-instance-data>Newsweek-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/NYTBusiness.rss</id>
-		                    <parameter name="title" value="NYT Business" />
+		                    <id>2</id>
+		                    <parameter name="title" value="NYT Business"/> 
+		                    <coplet-instance-data>NYTBusiness-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                 </row-layout>
@@ -23,8 +25,9 @@
                 <row-layout renderer-name="row" static="false">
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/BBCNews.rss</id>
-		                    <parameter name="title" value="BBC News" />
+		                    <id>3</id>
+		                    <parameter name="title" value="BBC News"/>
+		                    <coplet-instance-data>BBCNews-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
@@ -37,8 +40,9 @@
                             </item>
                             <item>
                                 <coplet-layout renderer-name="window">
-				                    <id>cocoon://samples/portal/news/CNET_news.rss</id>
+				                    <id>4</id>
 				                    <parameter name="title" value="CNET News" />
+				                    <coplet-instance-data>CNET News-1</coplet-instance-data>
                                 </coplet-layout>
                             </item>
                         </column-layout>
@@ -47,8 +51,9 @@
                         <column-layout renderer-name="column">
                             <item>
                                 <coplet-layout renderer-name="window">
-				                    <id>cocoon://samples/portal/news/CNET_business.rss</id>
+				                    <id>5</id>
 				                    <parameter name="title" value="CNET Business News" />
+				                    <coplet-instance-data>CNET Business-1</coplet-instance-data>
                                 </coplet-layout>
                             </item>
                             <item>
@@ -66,14 +71,16 @@
                 <row-layout renderer-name="row" static="false">
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/CSTNews.rss</id>
+		                    <id>6</id>
 		                    <parameter name="title" value="Chicago Sunday Times" />
+		                    <coplet-instance-data>CSTNews-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/CNNEurope.rss</id>
+		                    <id>7</id>
 		                    <parameter name="title" value="CNN Europe" />
+		                    <coplet-instance-data>CNNEurope-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                 </row-layout>
@@ -86,16 +93,18 @@
                 <row-layout renderer-name="row">
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/ML_weblog.rss</id>
+		                    <id>8</id>
 		                    <parameter name="title" value="ML's Weblog" />
 		                    <parameter name="bgcolor" value="#ffff00" />
+		                    <coplet-instance-data>ML Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/CZ_weblog.rss</id>
+		                    <id>9</id>
 		                    <parameter name="title" value="CZ's Weblog" />
 		                    <parameter name="bgcolor" value="#ffff00" />
+		                    <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                 </row-layout>
@@ -104,9 +113,10 @@
                 <row-layout renderer-name="row">
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/weblog.rss</id>
+		                    <id>10</id>
 		                    <parameter name="title" value="Another Weblog" />
 		                    <parameter name="bgcolor" value="#ffff00" />
+		                    <coplet-instance-data>Weblog-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                 </row-layout>
@@ -119,14 +129,16 @@
                 <column-layout renderer-name="column">
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/introduction.html</id>
+		                    <id>11</id>
 		                    <parameter name="title" value="Cocoon Introduction" />
+		                    <coplet-instance-data>Introduction-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
                     <item>
 		                <coplet-layout renderer-name="window">
-		                    <id>cocoon://samples/portal/news/overview.html</id>
+		                    <id>12</id>
 		                    <parameter name="title" value="Cocoon Overview" />
+		                    <coplet-instance-data>Overview-1</coplet-instance-data>
 		                </coplet-layout>
                     </item>
 	            </column-layout>

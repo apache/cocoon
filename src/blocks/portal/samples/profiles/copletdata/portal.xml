@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coplets>
+   <coplet-data name="Newsweek">
+      <title>Newsweek</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/newsweek.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="NYTBusiness">
+      <title>NYT Business</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/NYTBusiness.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="BBCNews">
+      <title>BBC News</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/BBCNews.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="CNET News">
+      <title>CNET News</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/CNET_news.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="CNET Business">
+      <title>CNET Business News</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/CNET_business.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="CSTNews">
+      <title>Chicago Sunday Times</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/CSTNews.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="CNNEurope">
+      <title>CNN Europe</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/CNNEurope.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="ML Weblog">
+      <title>ML's Weblog</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/ML_weblog.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="CZ Weblog">
+      <title>CZ's Weblog</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/CZ_weblog.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="Weblog">
+      <title>Another Weblog</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/weblog.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="Introduction">
+      <title>Cocoon Introduction</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/introduction.html</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data name="Overview">
+      <title>Cocoon Overview</title>
+      <maxpageable>true</maxpageable>
+      <removable>true</removable>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/news/overview.html</value>
+      </attribute>
+   </coplet-data>
+</coplets>
+

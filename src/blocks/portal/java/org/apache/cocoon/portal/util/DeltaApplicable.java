@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -48,86 +48,22 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.coplet;
-
-import org.exolab.castor.mapping.MapItem;
+package org.apache.cocoon.portal.util;
 
 /**
+ * Interface for functionality of objects to be updated by a delta object.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.2 2003/05/19 09:14:06 cziegeler Exp $
+ * @version CVS $Id: DeltaApplicable.java,v 1.1 2003/05/19 09:14:11 cziegeler Exp $
  */
-public final class CopletInstanceData
-//	extending MapItem used for Castor map workaround 
-extends MapItem {
-
-	public final static int STATUS_MINIMIZED = 0;
-	public final static int STATUS_MAXIMIZED = 1;
-
-    private String copletId;
-    
-	private CopletData copletData;
-
-	protected int status = STATUS_MAXIMIZED;
-
+public interface DeltaApplicable {
 	/**
-	 * Constructor
+	 * Applies the specified delta.
+	 * @return true if the delta could be successfully applied, false otherwise.
+	 * false can be used if object references stored in maps must be replaced 
+	 * by the caller instead of a delta being applied.
+	 * @throws ClassCastException If the object is not of the expected type.
 	 */
-	public CopletInstanceData() {
-		// used for Castor map workaround
-		this.setValue(this);
-	}
-
-	/**
-	 * Returns the copletId.
-	 * @return String
-	 */
-	public String getCopletId() {
-		return copletId;
-	}
-
-	/**
-	 * Sets the copletId.
-	 * @param copletId The copletId to set
-	 */
-	public void setCopletId(String copletId) {
-		this.copletId = copletId;
-
-		// used for Castor map workaround
-		this.setKey(copletId);
-	}
-
-	/**
-	 * @return CopletData
-	 */
-	public CopletData getCopletData() {
-		return copletData;
-	}
-
-	/**
-	 * Sets the copletData.
-	 * @param copletData The copletData to set
-	 */
-	public void setCopletData(CopletData copletData) {
-		this.copletData = copletData;
-	}
-
-	/**
-	 * Returns the status.
-	 * @return int
-	 */
-	public int getStatus() {
-		return status;
-	}
-
-	/**
-	 * Sets the status.
-	 * @param status The status to set
-	 */
-	public void setStatus(int status) {
-		this.status = status;
-	}
+	public boolean applyDelta(Object object);
 }
