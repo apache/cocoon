@@ -26,8 +26,6 @@
     <map:action name="woody-make-form" src="org.apache.cocoon.woody.acting.MakeFormAction"/>
     <map:action name="init-form1" src="org.apache.cocoon.woody.samples.InitForm1Action"/>
     <map:action name="woody-handle-form-submit" src="org.apache.cocoon.woody.acting.HandleFormSubmitAction"/>
-    <map:action name="woody-bind-form" src="org.apache.cocoon.woody.acting.BindingFormAction"
-    	          logger="woody"/>
   </map:actions>
 
   <map:pipes default="caching">
