@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.15 2003/05/08 05:05:22 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.16 2003/05/08 06:39:47 bdelacretaz Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -520,9 +520,10 @@
       <map:select type="exception">
 
         <map:when test="not-found">
-          <map:generate src="not-found.xml"/>
-          <map:transform src="welcome.xslt">
+          <map:generate type="notifying"/>
+          <map:transform src="stylesheets/system/error2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="pageTitle" value="Resource not found"/>
           </map:transform>
         </map:when>
 
