@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 /**
  * Implementation of <code>Bundle</code> interface for XML resources. Represents a
  * single XML message bundle.
- * 
+ *
  * XML format for this resource bundle implementation is the following:
  * <pre>
  * &lt;catalogue xml:lang="en"&gt;
@@ -51,13 +51,13 @@ import org.xml.sax.SAXException;
  *   ...
  * &lt;/catalogue&gt;
  * </pre>
- * 
+ *
  * Value can be any well formed XML snippet and it will be cached by the key specified
  * in the attrbute <code>key</code>. Objects returned by this {@link Bundle} implementation
  * are instances of the {@link ParamSaxBuffer} class.
- * 
+ *
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.8 2004/06/24 07:32:17 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle, Serviceable {
@@ -66,23 +66,23 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * Namespace for the Bundle markup
      */
     public static final String NS = "http://apache.org/cocoon/i18n/2.0";
-    
+
     /**
      * XML bundle root element name
      */
     public static final String EL_CATALOGUE = "catalogue";
-    
+
     /**
      * XML bundle message element name
      */
     public static final String EL_MESSAGE = "message";
-    
+
     /**
-     * XML bundle message element's key attribute name 
+     * XML bundle message element's key attribute name
      */
     public static final String AT_KEY = "key";
-    
-    
+
+
     /**
      * Bundle name
      */
@@ -107,7 +107,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * Objects stored in the bundle
      */
     protected HashMap values;
-    
+
     /**
      * Service Manager
      */
@@ -120,12 +120,12 @@ public class XMLResourceBundle extends AbstractLogEnabled
         private Map values;
         private int state;
         private String namespace;
-        private ParamSaxBuffer buffer; 
-        
+        private ParamSaxBuffer buffer;
+
         public SAXContentHandler(Map values) {
             this.values = values;
         }
-        
+
         public void setDocumentLocator(Locator arg0) {
             // Ignore
         }
@@ -233,7 +233,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
             }
         }
     }
-    
+
     /**
      * Compose this instance
      *
@@ -376,7 +376,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
         if (value != null) {
             return value.toString();
         }
-        
+
         if(this.parent != null) {
             return this.parent.getString(key);
         }

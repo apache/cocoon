@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,13 +48,13 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.16 2004/07/15 06:05:40 stefano Exp $
+ * @version CVS $Id$
  */
 public class XMLResourceBundleFactory
        implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
 
     protected Map cache = Collections.synchronizedMap(new HashMap());
-    
+
     /**
      * Should we load bundles to cache on startup or not?
      */
@@ -79,7 +79,7 @@ public class XMLResourceBundleFactory
      * Service Manager
      */
     protected ServiceManager manager = null;
-    
+
     /**
      * Source resolver
      */
@@ -372,7 +372,7 @@ public class XMLResourceBundleFactory
                 throw new CascadingRuntimeException("Cannot resolve " + base, ioe);
             }
         }
-        
+
         sb.append(name);
 
         if (locale != null) {
