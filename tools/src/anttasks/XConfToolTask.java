@@ -66,7 +66,7 @@ import java.util.Map;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.22 $ $Date: 2004/03/17 20:04:18 $
+ * @version CVS $Revision: 1.23 $ $Date: 2004/03/18 10:56:53 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -305,7 +305,7 @@ public final class XConfToolTask extends MatchingTask {
         String ifProp = getAttribute(elem, "if-prop", replaceProperties);
         boolean ifValue = false;
         if (ifProp != null && !ifProp.equals("")) {
-            Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
+            ifValue = Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
         }
 
         if (ifProp != null && ifProp.length() > 0 && !ifValue ) {
