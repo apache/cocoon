@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.119 2003/11/04 04:46:36 antonio Exp $
+    | CVS $Id: jars.xml,v 1.120 2003/11/06 14:30:00 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -49,7 +49,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-component-1.1.jar</lib>
+    <lib>core/excalibur-component-20031106.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 

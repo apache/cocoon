@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.182 2003/11/06 09:01:35 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.183 2003/11/06 14:30:00 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" due-to="Volker Schmitt">
+     Fixing threading problems in the ExtendedComponentSelector.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="24409" due-to-email="holz@fiz-chemie.de" due-to="Martin Holz">
       Fixing namespace handling in the send-mail transformer (Patch submitted by Martin Holz).
    </action>
