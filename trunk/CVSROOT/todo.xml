@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.75 2001-03-22 16:34:02 greenrd Exp $
+  $Id: todo.xml,v 1.76 2001-04-09 17:36:13 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,15 +16,17 @@
  </devs>
 
  <actions priority="high">
-  <action context="code" bugid="11">
-   NEEDED URGENTLY FOR TOMCAT 3.3 - because CLASSPATH will be ignored!
-   Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
+  <action context="docs">
+   Write Tomcat 3.3 installation instructions.
   </action>
   <action context="code" assigned-to="RDG" bugid="25">
    Fix redundant XSP namespace declarations output quirk/bugs.
   </action>
   <action context="code" assigned-to="RDG" bugid="39">
    Fix caching bug with Lynx.
+  </action>
+  <action context="code" bugid="11">
+   Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
   </action>
   <action context="docs" assigned-to="RDG" bugid="8">
    Write a full guide to logicsheets, including: (1) What they are and how
@@ -48,6 +50,10 @@
   </action>
   <action context="code" bugid="30">
    Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
+  </action>
+  <action context="code">
+   Fix problem with not being able to call getInputStream on a POST in XSP because Cocoon
+   has already called request.getParameter ().
   </action>
   <action context="code">
    Allow configuring of formatters in PIs.
