@@ -48,15 +48,27 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
+package org.apache.cocoon.components.source.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
-import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -75,9 +87,10 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.1 2003/03/09 00:06:48 pier Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.1 2003/03/12 09:35:39 cziegeler Exp $
  */
-public class XMLDBSource extends AbstractSAXSource {
+public class XMLDBSource extends AbstractLogEnabled  
+    implements Source, XMLizable {
 
     /** The driver implementation class */
     protected String driver;
@@ -100,6 +113,12 @@ public class XMLDBSource extends AbstractSAXSource {
     /** The System ID */
     protected String systemId;
 
+    /** The scheme */
+    protected String scheme;
+    
+    /** ComponentManager */
+    protected ComponentManager manager;
+    
     /** Static Strings used for XML Collection representation */
 
     protected static final String URI = "http://apache.org/cocoon/xmldb/1.0";
@@ -143,18 +162,18 @@ public class XMLDBSource extends AbstractSAXSource {
      * @param url the URL being queried.
      * @param driver the XML:DB driver class name.
      */
-    public XMLDBSource(Environment environment,
-                       ComponentManager manager,
-                       Logger logger,
+    public XMLDBSource(Logger logger,
                        String driver,
                        SourceCredential credential,
-                       String url) {
-
-        super(environment, manager, logger);
+                       String url,
+                       String scheme,
+                       ComponentManager manager) {
+        this.enableLogging(logger);
+        this.manager = manager;
         int start;
 
         this.driver = driver;
-
+        this.scheme = scheme;
         this.user = credential.getPrincipal();
         this.password = credential.getPassword();
 
@@ -173,8 +192,8 @@ public class XMLDBSource extends AbstractSAXSource {
     public void connect()
     throws ProcessingException {
 
-        if (log.isDebugEnabled()) {
-            this.log.debug("Initializing XML:DB connection, using driver " + driver);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Initializing XML:DB connection, using driver " + driver);
         }
 
         try {
@@ -186,7 +205,7 @@ public class XMLDBSource extends AbstractSAXSource {
 
             String error = "Unable to connect to the XMLDB database. Error "
                     + xde.errorCode + ": " + xde.getMessage();
-            this.log.debug(error, xde);
+            this.getLogger().debug(error, xde);
             throw new ProcessingException(error, xde);
 
         } catch (Exception e) {
@@ -239,15 +258,15 @@ public class XMLDBSource extends AbstractSAXSource {
 
             if (query != null) {
                 // Query resource
-                if (log.isDebugEnabled()) {
-                    this.log.debug("Querying resource " + res + " from collection " + url + "; query= " + this.query);
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Querying resource " + res + " from collection " + url + "; query= " + this.query);
                 }
 
                 queryToSAX(handler, collection, res);
             } else {
                 // Return entire resource
-                if (log.isDebugEnabled()) {
-                    this.log.debug("Obtaining resource " + res + " from collection " + col);
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Obtaining resource " + res + " from collection " + col);
                 }
 
                 xmlResource.getContentAsSAX(handler);
@@ -274,15 +293,15 @@ public class XMLDBSource extends AbstractSAXSource {
 
             if (query != null) {
                 // Query collection
-                if (log.isDebugEnabled()) {
-                    this.log.debug("Querying collection " + url + "; query= " + this.query);
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Querying collection " + url + "; query= " + this.query);
                 }
 
                 queryToSAX(handler, collection, null);
             } else {
                 // List collection
-                if (log.isDebugEnabled()) {
-                    this.log.debug("Listing collection " + url);
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Listing collection " + url);
                 }
 
                 final String ncollections = Integer.toString(collection.getChildCollectionCount());
@@ -385,13 +404,71 @@ public class XMLDBSource extends AbstractSAXSource {
 
     public void recycle() {
         this.driver = null;
-        this.log = null;
-        this.manager = null;
         this.url = null;
         this.query = null;
     }
 
-    public String getSystemId() {
+    public String getURI() {
         return url;
     }
+    
+    public long getContentLength() {
+      return -1;
+    }
+
+    public long getLastModified() {
+      return 0;
+    }
+
+    public boolean exists() {
+        // FIXME
+        return true;
+    }
+
+    public String getMimeType() {
+        return null;
+    }
+
+    public String getScheme() {
+        return this.getScheme();
+    }
+
+    public SourceValidity getValidity() {
+        return null;
+    }
+
+    public void refresh() {
+    }
+
+    /**
+     * Get an InputSource for the given URL. Shamelessly stolen
+     * from SitemapSource.
+     *
+     */
+    public InputStream getInputStream()
+    throws IOException {
+
+        ComponentSelector serializerSelector = null;
+        Serializer serializer = null;
+        try {
+
+            serializerSelector = (ComponentSelector) this.manager.lookup(Serializer.ROLE + "Selector");
+            serializer = (Serializer)serializerSelector.select("xml");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            serializer.setOutputStream(os);
+
+            this.toSAX(serializer);
+
+            return new ByteArrayInputStream(os.toByteArray());
+        } catch (ComponentException cme) {
+            throw new CascadingIOException("could not lookup pipeline components", cme);
+        } catch (Exception e) {
+            throw new CascadingIOException("Exception during processing of " + this.getURI(), e);
+        } finally {
+            if (serializer != null) serializerSelector.release(serializer);
+            if (serializerSelector != null) this.manager.release(serializerSelector);
+        }
+    }
+
+
 }

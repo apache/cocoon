@@ -88,7 +88,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:crossley@apache.org">David Crossley</a>
- * @version CVS $Id: ResolverImpl.java,v 1.1 2003/03/09 00:09:10 pier Exp $
+ * @version CVS $Id: ResolverImpl.java,v 1.1 2003/03/12 09:35:37 cziegeler Exp $
  * @since 2.0rc1
  */
 public class ResolverImpl extends AbstractLogEnabled

@@ -84,7 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Bernhard Huber
  * @since 24. Oktober 2002
- * @version CVS $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @version CVS $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
  */
 
 /*
@@ -834,10 +834,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
      */
     static class FolderXMLizer extends AbstractLogEnabled
-             implements XMLizable, org.apache.cocoon.xml.XMLizable {
+             implements XMLizable {
         //private Folder folder;
         private Folder[] folders;
 
@@ -885,10 +885,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
-             implements XMLizable, org.apache.cocoon.xml.XMLizable {
+             implements XMLizable {
         private Message[] messages;
 
         private SimpleDateFormat sdf;
@@ -961,10 +961,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.3 2003/03/12 09:35:36 cziegeler Exp $
      */
     static class MessageXMLizer extends AbstractLogEnabled
-             implements XMLizable, org.apache.cocoon.xml.XMLizable {
+             implements XMLizable {
         private Message message;
 
         private SimpleDateFormat sdf;

@@ -14,6 +14,11 @@
 
 <role-list>
 
+  <!-- The entity resolver used by most parsers -->
+  <role name="org.apache.excalibur.xml.EntityResolver"
+        shorthand="entity-resolver"
+        default-class="org.apache.cocoon.components.resolver.ResolverImpl"/>
+
   <!-- Parser:
   
        Starting with Cocoon 2.1 we have a bunch of different parser:
@@ -38,10 +43,6 @@
         shorthand="html-parser"
         default-class="org.apache.excalibur.xml.sax.JTidyHTMLParser"/>
 
-  <!-- The entity resolver used by most parsers -->
-  <role name="org.apache.excalibur.xml.EntityResolver"
-        shorthand="entity-resolver"
-        default-class="org.apache.cocoon.components.resolver.ResolverImpl"/>
 
   <!-- A Dom Serializer -->
   <role default-class="org.apache.excalibur.xml.dom.DefaultDOMSerializer" name="org.apache.excalibur.xml.dom.DOMSerializer" shorthand="dom-serializer"/>

@@ -52,6 +52,7 @@ package org.apache.cocoon.transformation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Stack;
 
@@ -70,12 +71,12 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.NOPCacheValidity;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.components.search.LuceneXMLIndexer;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -91,10 +92,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>FIXME: Write Documentation.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.2 2003/03/11 17:44:23 vgritsenko Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.3 2003/03/12 09:35:39 cziegeler Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
-    implements Disposable, Cacheable, Recyclable, Configurable, Contextualizable {
+    implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
 
     public static final String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
     public static final String ANALYZER_CLASSNAME_PARAMETER = "analyzer-classname";
@@ -196,10 +197,10 @@ public class LuceneIndexTransformer extends AbstractTransformer
      * Generate the unique key.
      * This key must be unique inside the space of this component.
      *
-     * @return The generated key hashes the src
+     * @return The generated key
      */
-    public long generateKey() {
-        return 1;
+    public Serializable generateKey() {
+        return "1";
     }
 
     /**
@@ -208,8 +209,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public CacheValidity generateValidity() {
-        return NOPCacheValidity.CACHE_VALIDITY;
+    public SourceValidity generateValidity() {
+        return NOPValidity.SHARED_INSTANCE;
     }
 
 
