@@ -81,7 +81,7 @@ import org.xml.sax.SAXException;
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.5 2003/12/18 14:29:03 cziegeler Exp $
+ * @version CVS $Id: SessionContextProviderImpl.java,v 1.6 2004/01/09 11:20:23 cziegeler Exp $
 */
 public final class SessionContextProviderImpl
 extends AbstractLogEnabled
@@ -153,7 +153,7 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
                 } catch (ComponentException ce) {
                     throw new ProcessingException("Unable to lookup portal.", ce);
                 } finally {
-                    manager.release(portal);
+                    manager.release( (Component)portal);
                 }
             }
         }

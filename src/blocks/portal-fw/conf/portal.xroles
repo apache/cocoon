@@ -4,6 +4,6 @@
 
   <role name="org.apache.cocoon.webapps.portal.components.PortalManager"
         shorthand="portal-manager"
-        default-class="org.apache.cocoon.webapps.portal.components.PortalManager"/>
+        default-class="org.apache.cocoon.webapps.portal.components.PortalManagerImpl"/>
 
 </xroles>
