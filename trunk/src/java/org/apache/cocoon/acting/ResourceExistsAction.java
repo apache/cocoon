@@ -56,6 +56,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceNotFoundException;
 
 /**
  * This action simply checks to see if a given resource exists. It checks
@@ -69,27 +70,31 @@ import org.apache.excalibur.source.Source;
  * match the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.5 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.6 2003/12/12 15:17:12 vgritsenko Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"
  * @x-avalon.lifestyle type="singleton"
  * @x-avalon.info name="resource-exists"
- * 
  */
 public class ResourceExistsAction extends AbstractAction {
 
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
-        String urlstring = parameters.getParameter("url", source);
-        Source src = null;
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters) throws Exception {
+        String resourceURI = parameters.getParameter("url", src);
+        Source source = null;
         try {
-            src = resolver.resolveURI(urlstring);
-            if (src.exists())
-              return EMPTY_MAP;
+            source = resolver.resolveURI(resourceURI);
+            if (source.exists()) {
+                return EMPTY_MAP;
+            }
+        } catch (SourceNotFoundException e) {
+            // Do not log
         } catch (Exception e) {
-            getLogger().warn("Exception", e);
+            getLogger().warn("Exception resolving resource " + resourceURI, e);
         } finally {
-            resolver.release(src);
+            if (source != null) {
+                resolver.release(source);
+            }
         }
         return null;
     }
