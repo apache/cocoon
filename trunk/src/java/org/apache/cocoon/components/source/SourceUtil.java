@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.4 2003/03/24 14:33:54 stefano Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.5 2003/04/09 12:17:20 stephan Exp $
  */
 public final class SourceUtil {
 
@@ -122,7 +122,8 @@ public final class SourceUtil {
     static public void toSAX( Source source,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(source, null, handler);
+        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+              source, null, handler);
     }
 
     /**
@@ -137,7 +138,22 @@ public final class SourceUtil {
                                 String mimeTypeHint,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-    	ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+              source, mimeTypeHint, handler);
+    }
+
+    /**
+     * Generates SAX events from the given source
+     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
+     * that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!
+     * @param  source    the data
+     * @throws ProcessingException if no suitable converter is found
+     */
+    static public void toSAX( ComponentManager manager, Source source,
+                                String mimeTypeHint,
+                              ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
         if ( source instanceof XMLizable ) {
             ((XMLizable)source).toSAX( handler );
         } else {
