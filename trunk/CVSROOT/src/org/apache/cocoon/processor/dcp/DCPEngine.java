@@ -1,36 +1,36 @@
-/*-- $Id: DCPEngine.java,v 1.5 2000-02-13 18:29:30 stefano Exp $ -- 
+/*-- $Id: DCPEngine.java,v 1.6 2000-03-19 00:59:32 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
- 
+
  Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
- 
+
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
- 
+
  1. Redistributions of  source code must  retain the above copyright  notice,
     this list of conditions and the following disclaimer.
- 
+
  2. Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
- 
+
  3. The end-user documentation included with the redistribution, if any, must
     include  the following  acknowledgment:  "This product includes  software
     developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
- 
+
  4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
     endorse  or promote  products derived  from this  software without  prior
     written permission. For written permission, please contact
     apache@apache.org.
- 
+
  5. Products  derived from this software may not  be called "Apache", nor may
     "Apache" appear  in their name,  without prior written permission  of the
     Apache Software Foundation.
- 
+
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
@@ -41,12 +41,12 @@
  ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
- 
+
  */
 package org.apache.cocoon.processor.dcp;
 
@@ -54,6 +54,7 @@ import java.io.*;
 import java.util.*;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
+import org.apache.cocoon.*;
 import org.apache.cocoon.processor.*;
 import org.apache.cocoon.framework.*;
 import org.apache.cocoon.interpreter.*;
@@ -63,7 +64,7 @@ import org.apache.cocoon.interpreter.*;
  * <i><font color="green">&lt;?</font><font color="brown">dcp?</font>
  * <font color="green">&gt;</font></i> processing instructions to generate
  * dynamic content.
- * 
+ *
  * <p align="justify">
  * The following processing instructions are recognized:
  * </p>
@@ -78,7 +79,7 @@ import org.apache.cocoon.interpreter.*;
  * This instruction declares an external program (or <i>DCP script</i>) that contains
  * node-generation methods. These methods will be invoked during document processing
  * as dictated by the appearance of subsequent <i><font color="green">&lt;?</font>
- * <font color="brown">dcp-content?</font><font color="green">&gt;</font></i> 
+ * <font color="brown">dcp-content?</font><font color="green">&gt;</font></i>
  * directives (explained below).
  * </p>
  * <p align="justify">
@@ -109,7 +110,7 @@ import org.apache.cocoon.interpreter.*;
  * <li>
  * <pre><font color="green">&lt;?</font><font color="brown">dcp-content</font>
  * <font color="darkGreen">method</font>=<font color="magenta">"<i>object.method</i>"</font>
- * [<font color="darkGreen">param1</font>=<font color="magenta">"<i>value</i>"</font> 
+ * [<font color="darkGreen">param1</font>=<font color="magenta">"<i>value</i>"</font>
  * <font color="darkGreen">param2</font>=<font color="magenta">"<i>value</i>"</font> ...]
  * <font color="green">?&gt;</font></pre>
  * <p align="justify">
@@ -167,13 +168,13 @@ import org.apache.cocoon.interpreter.*;
  * </p>
  * </li>
  * </ul>
- * 
+ *
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.5 $ $Date: 2000-02-13 18:29:30 $
+ * @version $Revision: 1.6 $ $Date: 2000-03-19 00:59:32 $
  */
- 
+
 public class DCPEngine {
-    
+
     private static final String OBJECT_PI = "dcp-object";
     private static final String CONTENT_PI = "dcp-content";
     private static final String VARIABLE_PI = "dcp-var";
@@ -181,7 +182,7 @@ public class DCPEngine {
     private static final String LANGUAGE_ATTRIBUTE = "language";
     private static final String CODE_ATTRIBUTE = "code";
     private static final String METHOD_ATTRIBUTE = "method";
-    
+
     private InterpreterFactory interpreterFactory;
     private Document document;
     private Director director;
@@ -198,7 +199,7 @@ public class DCPEngine {
      * processing instructions as well as the context parameters provided by the
      * invoking environment.
      * </p>
-     * 
+     *
      * @param document The document to be processed for dynamic content
      * @param parameters The table of environment variables to be used during processing
      */
@@ -218,7 +219,7 @@ public class DCPEngine {
      * This method carries out the actual expansion of dynamic content
      * processing instructions embedded in the document.
      * </p>
-     * 
+     *
      * @throws Exception When any error occurs during processing
      */
     public void process() throws Exception {
@@ -234,8 +235,8 @@ public class DCPEngine {
             Instance instance = (Instance) this.instances.get(instanceName);
 
             instance.destroy();
-        } 
-    } 
+        }
+    }
 
     private void doProcess(Node node) {
         short nodeType = node.getNodeType();
@@ -249,7 +250,7 @@ public class DCPEngine {
 
                 for (int i = 0; i < children.length; i++) {
                     doProcess(children[i]);
-                } 
+                }
 
                 break;
 
@@ -270,15 +271,15 @@ public class DCPEngine {
                             parent.removeChild(pi);
                         } else {
                             parent.replaceChild(result, pi);
-                        } 
+                        }
                     } else if (target.equals(VARIABLE_PI)) {
                         processVariable(pi);
                         parent.removeChild(pi);
-                    } 
+                    }
                 } catch (Exception e) {
                     String message = e.getMessage();
                     String className = e.getClass().getName();
-                    
+
                     StringWriter sw = new StringWriter();
                     PrintWriter pw = new PrintWriter(sw, true);
                     e.printStackTrace(pw);
@@ -288,13 +289,13 @@ public class DCPEngine {
                         message + "}\n" +
                         sw.toString()
                     );
-                    
+
                     parent.replaceChild(errorText, pi);
-                } 
+                }
 
                 break;
         }
-    } 
+    }
 
     private void processObject(ProcessingInstruction pi) throws Exception {
 
@@ -305,18 +306,18 @@ public class DCPEngine {
         if (objectName == null) {
             // Object name is mandatory
             throw new DCPException("Missing name in object definition");
-        } 
+        }
 
         // Verify object name uniqueness within document
         if (this.instances.containsKey(objectName)) {
             throw new DCPException("Duplicate object name: " + objectName);
-        } 
+        }
 
         String codeLocation = (String) attributes.get(CODE_ATTRIBUTE);
-        if (codeLocation == null) {     
+        if (codeLocation == null) {
             // Code location is mandatory
             throw new DCPException("Missing code location in object definition");
-        } 
+        }
 
         String languageName = (String) attributes.get(LANGUAGE_ATTRIBUTE);
 
@@ -326,7 +327,7 @@ public class DCPEngine {
 
         // Register object instance
         this.instances.put(objectName, instance);
-    } 
+    }
 
     private Node processContent(ProcessingInstruction pi) throws Exception {
 
@@ -338,35 +339,35 @@ public class DCPEngine {
         if (methodReference == null) {
             // Method reference is mandatory
             throw new DCPException("Missing method name in content generation");
-        } 
+        }
 
         /* Extract object and method names */
         String objectName = null;
         String methodName = null;
-        StringTokenizer st = new StringTokenizer(methodReference, ".");
+        Tokenizer st = new Tokenizer(methodReference, ".");
 
         try {
             objectName = st.nextToken();
             methodName = st.nextToken();
         } catch (NoSuchElementException e) {
             throw new DCPException("Invalid method reference: " + methodReference);
-        } 
+        }
 
         Instance instance = (Instance) this.instances.get(objectName);
 
-        if (instance == null) {      
+        if (instance == null) {
             // Reference to an object not previously defined
             throw new DCPException("Undefined object: " + objectName);
-        } 
+        }
 
         // Invoke method
         return instance.invoke(methodName, attributes, pi);
-    } 
+    }
 
     private void processVariable(ProcessingInstruction pi) throws Exception {
         // Add given attributes to global variable list
         parseAttributes(pi.getData(), this.globalVariables);
-    } 
+    }
 
     private void parseAttributes(String data, Hashtable attributes) {
         int length = data.length();
@@ -378,59 +379,59 @@ public class DCPEngine {
                 /* Skip leading blanks */
                 while (index < length && chars[index] <= ' ') {
                     index++;
-                } 
+                }
 
                 /* Get variable name */
                 StringBuffer nameBuffer = new StringBuffer();
 
-                while (index < length 
+                while (index < length
                        &&!(chars[index] == '=' || chars[index] <= ' ')) {
                     nameBuffer.append(chars[index++]);
-                } 
+                }
 
                 String name = nameBuffer.toString();
 
                 // Skip blanks
                 while (index < length && chars[index] <= ' ') {
                     index++;
-                } 
+                }
 
                 /* Get variable value */
                 if (chars[index++] != '=') {
-                    throw new Exception("Invalid attribute name: '" + name 
+                    throw new Exception("Invalid attribute name: '" + name
                                         + "'");
-                } 
+                }
 
                 // Skip blanks
                 while (index < length && chars[index] <= ' ') {
                     index++;
-                } 
+                }
 
                 if (chars[index++] != '"') {
-                    throw new Exception("Invalid attribute value for '" 
+                    throw new Exception("Invalid attribute value for '"
                                         + name + "'");
-                } 
+                }
 
                 StringBuffer valueBuffer = new StringBuffer();
 
                 while (index < length && chars[index] != '"') {
                     valueBuffer.append(chars[index++]);
-                } 
+                }
 
                 String value = valueBuffer.toString();
 
                 if (index == length || chars[index] != '"') {
-                    throw new Exception("Unterminated string '" + value 
+                    throw new Exception("Unterminated string '" + value
                                         + "' in attribute '" + name + "'");
-                } 
+                }
 
                 // Store name/value pair
                 attributes.put(name, value);
-            } 
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-        } 
-    } 
+        }
+    }
 
     private Node[] getChildren(Node node) {
         NodeList nodeList = node.getChildNodes();
@@ -439,8 +440,8 @@ public class DCPEngine {
 
         for (int i = 0; i < childCount; i++) {
             children[i] = nodeList.item(i);
-        } 
+        }
 
         return children;
-    } 
+    }
 }

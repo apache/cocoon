@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.13 2000-03-17 16:47:24 stefano Exp $ --
+/*-- $Id: XSPUtil.java,v 1.14 2000-03-19 00:59:33 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,12 +58,11 @@ import java.text.*;
 import org.w3c.dom.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-import org.apache.cocoon.Utils;
+import org.apache.cocoon.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.13 $ $Date: 2000-03-17 16:47:24 $
+ * @version $Revision: 1.14 $ $Date: 2000-03-19 00:59:33 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -155,11 +154,11 @@ public class XSPUtil {
   }
 
   public static String[] split(String line) {
-    return split(line, " \t\r\n");
+    return split(line, " \t\r\f\n");
   }
 
   public static String[] split(String line, String delimiter) {
-    StringTokenizer tokenizer = new StringTokenizer(line, delimiter);
+    Tokenizer tokenizer = new Tokenizer(line, delimiter);
     int tokenCount = tokenizer.countTokens();
     String[] result = new String[tokenCount];
 

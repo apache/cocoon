@@ -1,36 +1,36 @@
-/*-- $Id: Utils.java,v 1.9 2000-02-13 18:29:16 stefano Exp $ -- 
+/*-- $Id: Utils.java,v 1.10 2000-03-19 00:59:32 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
- 
+
  Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
- 
+
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
- 
+
  1. Redistributions of  source code must  retain the above copyright  notice,
     this list of conditions and the following disclaimer.
- 
+
  2. Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
- 
+
  3. The end-user documentation included with the redistribution, if any, must
     include  the following  acknowledgment:  "This product includes  software
     developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
- 
+
  4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
     endorse  or promote  products derived  from this  software without  prior
     written permission. For written permission, please contact
     apache@apache.org.
- 
+
  5. Products  derived from this software may not  be called "Apache", nor may
     "Apache" appear  in their name,  without prior written permission  of the
     Apache Software Foundation.
- 
+
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
@@ -41,12 +41,12 @@
  ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
- 
+
  */
 package org.apache.cocoon;
 
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-02-13 18:29:16 $
+ * @version $Revision: 1.10 $ $Date: 2000-03-19 00:59:32 $
  */
 
 public final class Utils {
@@ -72,7 +72,7 @@ public final class Utils {
     public static final Vector getAllPIs(Document document, String name) {
         return getAllPIs(document, name, false);
     }
-	
+
     /**
      * This method returns a vector of PI nodes based on the PI target name
      * and removes the found PIs from the document if the remove flag is
@@ -80,7 +80,7 @@ public final class Utils {
      */
     public static final Vector getAllPIs(Document document, String name, boolean remove) {
         Vector pis = new Vector();
-        
+
         NodeList nodelist = document.getChildNodes();
         int i = nodelist.getLength();
         for (int j = 0; j < i; j++) {
@@ -95,10 +95,10 @@ public final class Utils {
                 }
             }
         }
-        
+
         return pis;
     }
-    
+
     /**
      * This method returns the first PI node based on the PI target name.
      */
@@ -128,7 +128,7 @@ public final class Utils {
 
         return pi;
     }
-    
+
     /**
      * This method returns an hashtable with all the pseudo attributes collected
      * in the document. If more PI have the same target, the attributes are
@@ -138,10 +138,10 @@ public final class Utils {
     public static final Hashtable getPIPseudoAttributes(Document document, String name) {
         Hashtable attributes = new Hashtable();
         Enumeration nodes = getAllPIs(document, name).elements();
-        
+
         while (nodes.hasMoreElements()) {
             String data = ((ProcessingInstruction) nodes.nextElement()).getData();
-            StringTokenizer st = new StringTokenizer(data, " \t=");
+            Tokenizer st = new Tokenizer(data, " \t\n\f\r=");
             while (st.hasMoreTokens()) {
                 String key = st.nextToken();
                 String token = st.nextToken();
@@ -149,10 +149,10 @@ public final class Utils {
                 attributes.put(key, token);
             }
         }
-        
+
         return attributes;
     }
-    
+
     /**
      * This method returns an hashtable of pseudo attributes found in the first
      * occurrence of the PI with the given name in the given document.
@@ -160,16 +160,16 @@ public final class Utils {
      */
     public static final Hashtable getPIPseudoAttributes(ProcessingInstruction pi) {
         Hashtable attributes = new Hashtable();
-        
+
         String data = pi.getData();
-        StringTokenizer st = new StringTokenizer(data, " \t=");
+        Tokenizer st = new Tokenizer(data, " \t\n\f\r=");
         while (st.hasMoreTokens()) {
             String key = st.nextToken();
             String token = st.nextToken();
             token = token.substring(1, token.length() - 1);
             attributes.put(key, token);
         }
-        
+
         return attributes;
     }
 
@@ -190,7 +190,7 @@ public final class Utils {
     public static final String encode(HttpServletRequest req, boolean agent) {
         return encode(req, agent, true);
     }
-    
+
     /**
      * Encodes the given request into a string using the format
      *   userAgent:protocol://serverName:serverPort/requestURI?query
