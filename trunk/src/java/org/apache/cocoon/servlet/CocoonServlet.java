@@ -70,7 +70,7 @@ import org.apache.cocoon.util.StringUtils;
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
- * @version CVS $Id: CocoonServlet.java,v 1.29 2004/03/10 17:58:04 unico Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.30 2004/03/13 15:06:04 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -766,9 +766,7 @@ public class CocoonServlet extends HttpServlet {
         final CocoonLogFormatter formatter = new CocoonLogFormatter();
         formatter.setFormat( "%7.7{priority} %{time}   [%8.8{category}] " +
                              "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}" );
-        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext );
-
-        servTarget.setFormatter(formatter);
+        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter );
 
         final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
         final ErrorHandler errorHandler = new DefaultErrorHandler();
