@@ -293,7 +293,7 @@ implements Processor, Disposable {
         // Get the processor that should process this request
         ConcreteTreeProcessor processor;
         if (newEnv.getRootContext() == newEnv.getContext()) {
-            processor = (ConcreteTreeProcessor)getRootProcessor();
+            processor = ((TreeProcessor)getRootProcessor()).concreteProcessor;
         } else {
             processor = this;
         }
