@@ -447,6 +447,10 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="RG" type="add">
+        Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and 
+        allows external portlets to be in a war.
+   </action>
    <action dev="SW" type="fix" fixes-bug="31668">
      CForms: the parser used to read form files now uses the EntityResolver defined in cocoon.xconf.
    </action>
