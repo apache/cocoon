@@ -50,36 +50,32 @@
 */
 package org.apache.cocoon.generation;
 
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXResult;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.jxdom.DocumentAdapter;
+import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.transformation.TraxTransformer;
-import org.apache.cocoon.ProcessingException;
-import java.io.IOException;
-import org.xml.sax.SAXException;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import org.w3c.dom.Node;
-import org.apache.cocoon.components.jxdom.DocumentAdapter;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.commons.jxpath.JXPathIntrospector;
-import org.apache.commons.jxpath.JXPathBeanInfo;
-import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Environment;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.transformation.TraxTransformer;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.commons.jxpath.DynamicPropertyHandler;
+import org.apache.commons.jxpath.JXPathBeanInfo;
+import org.apache.commons.jxpath.JXPathIntrospector;
 import org.xml.sax.SAXException;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 
 /**
  * <p>XSLT Generator: works by taking a Java Bean as an input "document"</p>

@@ -52,7 +52,6 @@ package org.apache.cocoon.environment.http;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -72,7 +71,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.5 2003/05/03 18:34:41 gianugo Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.6 2003/05/04 20:24:47 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 

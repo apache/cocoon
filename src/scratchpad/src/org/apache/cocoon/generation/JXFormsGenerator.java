@@ -71,7 +71,6 @@ import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathContextFactory;
 import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.xml.sax.Attributes;
