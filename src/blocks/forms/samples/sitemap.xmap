@@ -132,13 +132,13 @@
          <map:parameter name="attribute-name" value="form1"/>
        </map:transform>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/form1_success.xsp"/>
        </map:call>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:transform src="resources/forms-samples-styling.xsl"/>
        <map:serialize/>
@@ -177,7 +177,7 @@
        <map:generate src="forms/{1}_template.xml"/>
        <map:transform type="forms" label="content1"/>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template.xml"/>
@@ -192,7 +192,7 @@
      <map:match pattern="*-display-pipeline.jx">
        <map:generate type="jx" src="forms/{1}_template.xml" label="content1"/>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template.xml"/>
@@ -264,7 +264,7 @@
      <map:match pattern="form2-success-pipeline">
        <map:generate src="forms/form2_data-result.xml"/>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:serialize type="xml"/>
      </map:match>
@@ -277,7 +277,7 @@
      <map:match pattern="form2bean-success-pipeline">
        <map:generate type="jx" src="forms/form2_jx.xml"/>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:serialize/>
      </map:match>
@@ -412,7 +412,7 @@
        <map:generate src="forms/htmlarea_template.xml"/>
        <map:transform type="forms"/>
        <map:transform type="i18n">
-         <map:parameter name="locale" value="en-US"/>
+         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
          <map:parameter name="contextPath" value="{request:contextPath}"/>
