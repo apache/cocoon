@@ -48,28 +48,54 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
+
 package org.apache.cocoon.woody.expression;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.outerj.expression.DefaultFunctionFactory;
 import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionException;
-import org.outerj.expression.ParseException;
 import org.outerj.expression.FormulaParser;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.outerj.expression.ParseException;
 
 /**
  * Implementation of the {@link ExpressionManager} role.
  *
- * <p>In the future, this component should become configurable so that new, user-defined
- * functions can be registered.
+ * Custom functions can be added using configuration elements:
+ * <pre>
+ *   &lt;function name="MyFunction" class="net.foo.MyFunction"/&gt;
+ * </pre>
+ * 
+ * @version CVS $Id: DefaultExpressionManager.java,v 1.3 2004/01/03 16:03:11 vgritsenko Exp $
  */
-public class DefaultExpressionManager 
-    implements ExpressionManager, Component, ThreadSafe {
+public class DefaultExpressionManager
+        implements ExpressionManager, Component, Configurable, ThreadSafe {
+    
+    private DefaultFunctionFactory factory;
+    
+    public void configure(Configuration config) throws ConfigurationException {
+        factory = new DefaultFunctionFactory();
         
-    public Expression parse(String expressionString) 
-    throws ParseException, ExpressionException {
+        Configuration[] functions = config.getChildren("function");
+        for (int i = 0; i < functions.length; i++) {
+            String name = functions[i].getAttribute("name");
+            String clazz = functions[i].getAttribute("class");
+            try {
+                factory.registerFunction(name, Class.forName(clazz));
+            } catch (ClassNotFoundException e) {
+                throw new ConfigurationException("Can not find class " + clazz + " for function " + name + ": " + e);
+            }
+        }
+    }
+    
+    public Expression parse(String expressionString) throws ParseException, ExpressionException {
         
-        FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString)); //, functionFactory);
+        FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
         parser.sum();
 
         Expression expression = parser.getExpression();

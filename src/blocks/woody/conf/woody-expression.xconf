@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 
 <xconf xpath="/cocoon" unless="woody-expression">
-  <woody-expression logger="woody.expression"/>
+
+  <woody-expression logger="woody.expression">
+    <function name="Null" class="org.apache.cocoon.woody.expression.NullFunction"/>
+    <function name="IsNull" class="org.apache.cocoon.woody.expression.IsNullFunction"/>
+  </woody-expression>
 </xconf>
