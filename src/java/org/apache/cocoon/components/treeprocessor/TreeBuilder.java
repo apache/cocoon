@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,16 +26,16 @@ import org.apache.avalon.framework.service.ServiceManager;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-
 public interface TreeBuilder {
-    
-    final static String ROLE = TreeBuilder.class.getName();
 
-    void setProcessor(ConcreteTreeProcessor processor);
-    
+    String ROLE = TreeBuilder.class.getName();
+
+
     void setParentProcessorManager(ServiceManager manager);
 
     ConcreteTreeProcessor getProcessor();
+
+    void setProcessor(ConcreteTreeProcessor processor);
 
     /**
      * Register a <code>ProcessingNode</code> under a given name.
@@ -83,7 +83,7 @@ public interface TreeBuilder {
      * Get the type for a statement : it returns the 'type' attribute if present,
      * and otherwhise the default hint for the <code>ServiceSelector</code> identified by
      * the role <code>role</code>.
-     * 
+     *
      * @param statement the statement
      * @param role the component's role (warn: not the selector's role)
      *
@@ -95,7 +95,7 @@ public interface TreeBuilder {
      * Add an attribute. Useful to transmit information between distant (in the tree) node builders
      */
     void setAttribute(String name, Object value);
-    
+
     /**
      * Get the value of an attribute.
      */
