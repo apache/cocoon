@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: cacheable.xsp,v 1.2 2003/05/01 10:08:20 bdelacretaz Exp $ -->
+<!-- CVS: $Id: cacheable.xsp,v 1.3 2003/05/01 13:00:22 bdelacretaz Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
@@ -14,11 +14,19 @@
 </xsp:structure>
 
 <xsp:logic>
-    // how long to keep the contents of this page in cache
-    final int VALIDITY_SECS = 15;
 
     // artificial slowdown to make the effects of the cache visible
     final int DELAY_SECS = 2;
+
+    private int getValidityFromRequest() {
+        int result = 15;
+        try {
+            result = Integer.valueOf(request.getParameter("validity")).intValue();
+        } catch(Exception e) {
+            // keep default value
+        }
+        return result;
+    }
 
     /**
     * Generate the unique key for the cache.
@@ -50,9 +58,9 @@
     *         component is currently not cacheable.
     */
     public SourceValidity getValidity() {
-       // keep in cache for VALIDITY_SECS
+       // keep in cache for our validity time
        return CacheValidityToSourceValidity.createValidity(
-           new DeltaTimeCacheValidity(0, VALIDITY_SECS));
+           new DeltaTimeCacheValidity(0, getValidityFromRequest()));
     }
  </xsp:logic>
 
@@ -82,7 +90,8 @@
 
         <para>
           All other request parameters do not influence cache status, but
-            my validity will expire after <xsp:expr>VALIDITY_SECS</xsp:expr> seconds (see source).
+            my validity will expire after <xsp:expr>getValidityFromRequest()</xsp:expr> seconds
+            (set by 'validity' URL parameter when page is generated).
         </para>
 
         <para>
@@ -104,10 +113,11 @@
 
         <para>Test links:
             <ul>
-                <li><a target="_new" href="cacheable?pageKey=one">test with pageKey=one</a></li>
-                <li><a target="_new" href="cacheable?pageKey=two">test with pageKey=two</a></li>
-                <li><a target="_new" href="cacheable?pageKey=three&amp;other=abc">test with pageKey=three, other=abc</a></li>
-                <li><a target="_new" href="cacheable?pageKey=three&amp;other=xyz">test with pageKey=three, other=xyz</a></li>
+                <li><a target="_new" href="cacheable?pageKey=one">pageKey=one</a></li>
+                <li><a target="_new" href="cacheable?pageKey=two">pageKey=two</a></li>
+                <li><a target="_new" href="cacheable?pageKey=three&amp;other=abc">pageKey=three, other=abc</a></li>
+                <li><a target="_new" href="cacheable?pageKey=three&amp;other=xyz">pageKey=three, other=xyz</a></li>
+                <li><a target="_new" href="cacheable?pageKey=three&amp;other=wow&amp;validity=5">pageKey=three, other=wow and 5 seconds of cache validity</a></li>
             </ul>
         </para>
     </content>
