@@ -89,7 +89,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.21 2003/09/10 09:12:20 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.22 2003/09/10 19:20:38 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -209,12 +209,12 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public void addExcludePattern(String pattern) {
-		int preparedPattern[] = WildcardHelper.compilePattern(pattern);
-		excludePatterns.add(preparedPattern);
+        int preparedPattern[] = WildcardHelper.compilePattern(pattern);
+        excludePatterns.add(preparedPattern);
     }
     
     public void addIncludePattern(String pattern) {
-		int preparedPattern[] = WildcardHelper.compilePattern(pattern);
+        int preparedPattern[] = WildcardHelper.compilePattern(pattern);
         includePatterns.add(preparedPattern);
     }
 
@@ -419,55 +419,57 @@ public class CocoonBean extends CocoonWrapper {
                 this.getLinks(deparameterizedURI, parameters).iterator();
 
             while (i.hasNext()) {
-                String link = (String) i.next();
-                
+                String originalLinkSourceURI = (String) i.next();
+
                 // Fix relative links starting with "?"
-                String relativeLink = link;
-                if (relativeLink.startsWith("?")) {
-                    relativeLink = pageURI + relativeLink;
+                String linkSourceURI = originalLinkSourceURI;
+                if (linkSourceURI.startsWith("?")) {
+                    linkSourceURI = pageURI + linkSourceURI;
                 }
 
-                String absoluteLink =
-                    NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
+                linkSourceURI =
+                    NetUtils.normalize(NetUtils.absolutize(path, linkSourceURI));
                 
-                if (!isIncluded(absoluteLink)) {
+                if (!isIncluded(linkSourceURI)) {
                     //@TODO@ Log/report skipped link
                     continue;
                 }
-                
+
                 {
                     final TreeMap p = new TreeMap();
-                    absoluteLink =
+                    linkSourceURI =
                         NetUtils.parameterize(
-                            NetUtils.deparameterize(absoluteLink, p),
+                            NetUtils.deparameterize(linkSourceURI, p),
                             p);
                 }
-                String translatedAbsoluteLink =
-                    (String) allTranslatedLinks.get(absoluteLink);
-                if (translatedAbsoluteLink == null) {
+                String linkDestinationURI =
+                    (String) allTranslatedLinks.get(linkSourceURI);
+                if (linkDestinationURI == null) {
                     try {
-                        translatedAbsoluteLink =
-                            this.translateURI(absoluteLink);
-                        log.info("  Link translated: " + absoluteLink);
+                        linkDestinationURI =
+                            this.translateURI(linkSourceURI);
+                        log.info("  Link translated: " + linkSourceURI);
                         allTranslatedLinks.put(
-                            absoluteLink,
-                            translatedAbsoluteLink);
+                            linkSourceURI,
+                            linkDestinationURI);
                     } catch (ProcessingException pe) {
-                        this.sendBrokenLinkWarning(absoluteLink, pe.getMessage());
+                        this.sendBrokenLinkWarning(linkSourceURI, pe.getMessage());
                     }
                 }
 
+                // AllTranslatedLinks is for preventing retranslation
+                // translartedLinks is for use by the LinkTranslator
+                final String translatedRelativeLink =
+                    NetUtils.relativize(path, linkDestinationURI);
+                translatedLinks.put(originalLinkSourceURI, translatedRelativeLink);
+
                 // I have to add also broken links to the absolute links
                 // to be able to generate the "broken link" page
-
-				Target derivedTarget = target.getDerivedTarget(absoluteLink);
-				if (derivedTarget != null) {
-					targets.add(derivedTarget);
-				}
-
-                final String translatedRelativeLink =
-                    NetUtils.relativize(path, translatedAbsoluteLink);
-                translatedLinks.put(link, translatedRelativeLink);
+                // @TODO@ Only do this if broken page generation is required
+                Target derivedTarget = target.getDerivedTarget(linkSourceURI);
+                if (derivedTarget != null) {
+                    targets.add(derivedTarget);
+                }
             }
 
             linkCount = translatedLinks.size();
@@ -493,24 +495,24 @@ public class CocoonBean extends CocoonWrapper {
 
                 if (followLinks && !confirmExtension) {
                     for (Iterator it = gatheredLinks.iterator();it.hasNext();) {
-					    String link = (String) it.next();
-                        if (link.startsWith("?")) {
-                            link = pageURI + link;
+                        String linkSourceURI = (String) it.next();
+                        if (linkSourceURI.startsWith("?")) {
+                            linkSourceURI = pageURI + linkSourceURI;
                         }
-                        String absoluteLink =
-                            NetUtils.normalize(NetUtils.absolutize(path, link));
+                        linkSourceURI =
+                            NetUtils.normalize(NetUtils.absolutize(path, linkSourceURI));
                         {
                             final TreeMap p = new TreeMap();
-                            absoluteLink =
+                            linkSourceURI =
                                 NetUtils.parameterize(
-                                    NetUtils.deparameterize(absoluteLink, p),
+                                    NetUtils.deparameterize(linkSourceURI, p),
                                     p);
                         }
-						Target derivedTarget = target.getDerivedTarget(absoluteLink);
-						if (isIncluded(absoluteLink)) {
-							if (derivedTarget != null) { 
-							    targets.add(derivedTarget);
-							}
+                        if (isIncluded(linkSourceURI)) {
+                            Target derivedTarget = target.getDerivedTarget(linkSourceURI);
+                            if (derivedTarget != null) { 
+                                targets.add(derivedTarget);
+                            }
                         } else {
                             // @TODO@ Log/report skipped link
                         }
@@ -542,7 +544,6 @@ public class CocoonBean extends CocoonWrapper {
                         releaseSource(source);
                     }
                 }
-                
             }
         } catch (Exception rnfe) {
             log.warn("Could not process URI: " + deparameterizedURI);
