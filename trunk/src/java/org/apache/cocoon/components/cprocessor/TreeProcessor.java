@@ -125,8 +125,8 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
      * sitemap into a Fortress container configuration 
      */
     private static final String SITEMAP2XCONF_URL = 
-        "resource://org/apache/cocoon/components/cprocessor/sitemap2xconf.xsl";
-//        "file://d:/apache/cocoon-2.2/src/java/org/apache/cocoon/components/cprocessor/sitemap2xconf.xsl";
+//        "resource://org/apache/cocoon/components/cprocessor/sitemap2xconf.xsl";
+        "file://d:/apache/cocoon-2.2/src/java/org/apache/cocoon/components/cprocessor/sitemap2xconf.xsl";
     
     /* The parent TreeProcessor, if any */
     private TreeProcessor m_parent;
@@ -177,6 +177,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     throws Exception {
         m_parent = parent;
         m_transform = parent.m_transform;
+        m_lastModifiedDelay = parent.m_lastModifiedDelay;
         m_checkReload = checkReload;
         m_source = source;
         m_environmentHelper = new EnvironmentHelper(parent.m_environmentHelper);
