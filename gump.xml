@@ -41,7 +41,7 @@
     <mkdir dir="build/cocoon-@@DATE@@/test"/>
 
     <ant target="gump-core">
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
       <depend property="logkit.jar" project="avalon-logkit"/>
       <depend property="avalonapi.jar" project="avalon-framework-api"/>
     </ant>
