@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.serializers.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * The <code>DocType</code> class encapsulates informations regarding
  * the document type public and system IDs and root element name.
@@ -138,18 +140,11 @@ public class DocType {
         if (!(object instanceof DocType)) return(false);
         DocType doctype = (DocType)object;
 
-        if (this.public_id == null) {
-            if (doctype.public_id != null) return(false);
-        } else {
-            if (!this.public_id.equals(doctype.public_id)) return(false);
+        if (StringUtils.equals(this.public_id, doctype.public_id)
+            && StringUtils.equals(this.system_id, doctype.system_id)
+            && this.root_name.equals(doctype.root_name)) {
+            return true;
         }
-        
-        if (this.system_id == null) {
-            if (doctype.system_id != null) return(false);
-        } else {
-            if (!this.system_id.equals(doctype.system_id)) return(false);
-        }
-
-        return(this.root_name.equals(doctype.root_name));
+        return false;
     }
 }
