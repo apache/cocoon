@@ -144,7 +144,6 @@
        <map:call function="woody">
          <map:parameter name="function" value="form1"/>
          <map:parameter name="form-definition" value="forms/form1.xml"/>
-         <map:parameter name="attribute-name" value="form1"/>
        </map:call>
      </map:match>
 
