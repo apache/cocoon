@@ -114,7 +114,7 @@
       <fileset dir="${build.test}">
         <include name="org/apache/cocoon/environment/mock/*"/>
         <include name="org/apache/cocoon/components/source/SourceResolverAdapter*"/>
-        <include name="org/apache/cocoon/AbstractCocoonComponentTestCase*"/>
+        <include name="org/apache/cocoon/SitemapComponentTestCase*"/>
         <include name="org/apache/cocoon/xml/WhitespaceFilter*"/>
       </fileset>
     </jar>
