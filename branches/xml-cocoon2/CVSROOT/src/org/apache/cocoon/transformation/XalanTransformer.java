@@ -8,6 +8,7 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Hashtable;
@@ -45,7 +46,8 @@ import org.apache.trax.Processor;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-11-01 15:01:42 $
+ * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-11-07 16:47:08 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -65,13 +67,49 @@ implements Transformer, Composer, Poolable, Configurable {
     private org.apache.trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException
     {
+        // Only local files are checked for midification for compatibility reasons!
+        // Using the entity resolver we get the filename of the current file:
+        // The systemID if such a resource starts with file:/.
         Templates templates = null;
-        if (this.useCache == true) templates = (Templates)templatesCache.get(xsluri);
+        InputSource src = resolver.resolveEntity(null, xsluri);
+        String      systemID = src.getSystemId();
+        if (this.useCache == true)
+        {
+            // Is this a local file
+            if (systemID.startsWith("file:/") == true) {
+                // Cached is an array of the template and the caching time
+                Object[] templateAndTime = (Object[])templatesCache.get(xsluri);
+                if (templateAndTime != null) {
+                    File xslFile = new File(systemID.substring(6));
+                    long cachedTime = ((Long)templateAndTime[1]).longValue();
+                    if (cachedTime < xslFile.lastModified()) {
+                        templates = null;
+                    } else {
+                        templates = (Templates)templateAndTime[0];
+                    }
+                }
+            } else {
+                // only the template is cached
+                templates = (Templates)templatesCache.get(xsluri);
+            }
+        }
         if(templates == null)
         {
     	    Processor processor = Processor.newInstance("xslt");
-	        templates = processor.process(resolver.resolveEntity(null, xsluri));
-            if (this.useCache == true) templatesCache.put(xsluri,templates);
+            templates = processor.process(src);
+            if (this.useCache == true)
+            {
+                // Is this a local file
+                if (systemID.startsWith("file:/") == true) {
+                    // Cached is an array of the template and the current time
+                    Object[] templateAndTime = new Object[2];
+                    templateAndTime[0] = templates;
+                    templateAndTime[1] = new Long(System.currentTimeMillis());
+                    templatesCache.put(xsluri, templateAndTime);
+                } else {
+                    templatesCache.put(xsluri,templates);
+                }
+            }
         }
         return templates.newTransformer();
     }
