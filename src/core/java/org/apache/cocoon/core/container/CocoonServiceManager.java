@@ -17,7 +17,6 @@
 package org.apache.cocoon.core.container;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
