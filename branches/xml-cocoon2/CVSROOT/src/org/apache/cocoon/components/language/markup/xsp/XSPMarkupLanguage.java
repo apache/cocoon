@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/xsp.html">XSP</a>.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:29 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-31 15:51:20 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
   /**
@@ -110,9 +110,9 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
     switch (node.getNodeType()) {
       case Node.PROCESSING_INSTRUCTION_NODE:
         ProcessingInstruction pi = (ProcessingInstruction) node;
-	if (!pi.getTarget().equals("xml-logicsheet")) {
+        if (!pi.getTarget().equals("xml-logicsheet")) {
           pi.setData(language.quoteString(pi.getData()));
-	}
+        }
         break;
       case Node.TEXT_NODE:
         Element parent = (Element) node.getParentNode();
@@ -173,14 +173,14 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
     for (int i = 0; i < count; i++) {
       Node node = nodeList.item(i);
       if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-	ProcessingInstruction pi = (ProcessingInstruction) node;
+        ProcessingInstruction pi = (ProcessingInstruction) node;
 
-	if (pi.getTarget().equals("xml-logicsheet")) {
+        if (pi.getTarget().equals("xml-logicsheet")) {
           Hashtable attrs = DOMUtils.getPIPseudoAttributes(pi);
-	  logicsheetList.addElement(attrs.get("href"));
+          logicsheetList.addElement(attrs.get("href"));
 
-	  removedNodes.addElement(pi);
-	}
+          removedNodes.addElement(pi);
+        }
       }
     }
 
