@@ -1002,8 +1002,14 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-databases"/>
+    <depend project="cocoon-block-databases" type="samples"/>
+    <depend project="cocoon-block-hsqldb" type="samples"/>
     <depend project="cocoon-block-forms" type="samples"/>
+    <depend project="db-ojb"/>
+    <depend project="jdo"/>
+    <depend project="antlr"/>
+    <depend project="commons-dbcp"/>
+    <depend project="commons-pool"/>
 
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/ojb/mocks"/>
@@ -1106,7 +1112,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-forms" />
-    <depend project="cocoon-block-ojb" />
+    <depend project="cocoon-block-ojb" type="samples"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
