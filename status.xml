@@ -199,6 +199,15 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BD" type="add">
+    standalone-demo build target added
+  </action>
+  <action dev="BD" type="fix">
+    cacheable.xsp sample reworked, did not work in M1
+  </action>
+  <action dev="BD" type="fix">
+    new FOP serializer samples, accessible from the "blocks with samples" page
+  </action>
   <action dev="TC" type="fix" fixes-bug="15820" due-to="John R. Daily" due-to-email="john@geekhavoc.com">
     Fixed NPE if ESQL does not get a connection
   </action>
