@@ -58,7 +58,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.2 2003/03/11 17:44:20 vgritsenko Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.1 2003/03/19 08:52:26 cziegeler Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled implements Connection {
 
