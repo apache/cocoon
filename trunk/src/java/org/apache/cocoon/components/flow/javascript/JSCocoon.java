@@ -70,7 +70,7 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
+import org.apache.cocoon.components.cprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.acting.Action;
@@ -84,7 +84,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.13 2003/10/28 17:21:14 vgritsenko Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.14 2003/12/28 21:09:59 unico Exp $
  */
 public class JSCocoon extends ScriptableObject
 {

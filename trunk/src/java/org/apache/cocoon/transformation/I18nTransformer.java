@@ -79,7 +79,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
+import org.apache.cocoon.components.cprocessor.variables.PreparedVariableResolver;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.i18n.Bundle;
 import org.apache.cocoon.i18n.BundleFactory;
@@ -248,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.17 2003/12/25 13:56:38 unico Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.18 2003/12/28 21:09:59 unico Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
