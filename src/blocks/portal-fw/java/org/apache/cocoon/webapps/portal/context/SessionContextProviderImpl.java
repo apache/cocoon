@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webapps.portal.context;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,13 +39,12 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.xml.sax.SAXException;
 
 /**
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.8 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id: SessionContextProviderImpl.java,v 1.9 2004/05/26 08:39:49 cziegeler Exp $
 */
 public final class SessionContextProviderImpl extends AbstractLogEnabled
         implements SessionContextProvider, ThreadSafe, Component, Serviceable, Contextualizable, Disposable {
@@ -75,7 +73,7 @@ public final class SessionContextProviderImpl extends AbstractLogEnabled
 
                 PortalManager portal = null;
                 try {
-                    portal = (PortalManager)manager.lookup(PortalManager.ROLE);
+                    portal = (PortalManager)this.manager.lookup(PortalManager.ROLE);
                     // is this an external resource which wants access to a coplet?
                     String value = req.getParameter("portalcontext");
                     if (value != null) {
@@ -110,22 +108,18 @@ public final class SessionContextProviderImpl extends AbstractLogEnabled
                     }
                     context = new SessionContextImpl(name, objectModel, portal, this.xpathProcessor);
                     objectModel.put(this.getClass().getName()+name, context);
-                } catch (SAXException se) {
-                    throw new ProcessingException("SAXException", se);
-                } catch (IOException ioe) {
-                    throw new ProcessingException("IOException", ioe);
                 } catch (ServiceException se) {
                     throw new ProcessingException("Unable to lookup portal.", se);
                 } finally {
-                    manager.release(portal);
+                    this.manager.release(portal);
                 }
             }
         }
         return context;
     }
     
-    /**
-     * Does the context exist?
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.webapps.session.context.SessionContextProvider#existsSessionContext(java.lang.String)
      */
     public boolean existsSessionContext(String name)
     throws ProcessingException {

@@ -26,16 +26,15 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.sax.XMLDeserializer;
@@ -78,11 +77,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.7 2004/05/26 01:55:30 joerg Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.8 2004/05/26 08:39:49 cziegeler Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
-implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, Component, PortalManager {
+implements Disposable, Serviceable, Recyclable, Contextualizable, Component, PortalManager {
 
     /** The cache (store) for the profiles */
     private Store   profileStore;
@@ -105,8 +104,8 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
     /** The transaction manager */
     private TransactionManager transactionManager;
 
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The service manager */
+    protected ServiceManager manager;
 
     /** The current source resolver */
     protected SourceResolver resolver;
@@ -122,12 +121,12 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      */
     public void recycle() {
         if (this.manager != null) {
-            this.manager.release(this.profileStore);
-            this.manager.release( (Component)this.authenticationManager);
-            this.manager.release( (Component)this.mediaManager);
-            this.manager.release( (Component)this.sessionManager);
-            this.manager.release( (Component)this.contextManager);
-            this.manager.release( (Component)this.transactionManager);
+            this.manager.release( this.profileStore );
+            this.manager.release( this.authenticationManager);
+            this.manager.release( this.mediaManager);
+            this.manager.release( this.sessionManager);
+            this.manager.release( this.contextManager);
+            this.manager.release( this.transactionManager);
             this.profileStore = null;
             this.authenticationManager = null;
             this.mediaManager = null;
@@ -146,29 +145,22 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
             return authManager.getState();    
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             // ignore this here
             return null;
         } finally {
-            this.manager.release( (Component)authManager );
+            this.manager.release( authManager );
         }
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
+    public void service(ServiceManager manager) 
+    throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Recomposable#recompose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
     /* (non-Javadoc)
@@ -176,7 +168,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release( (Component)this.xpathProcessor );
+            this.manager.release( this.xpathProcessor );
             this.xpathProcessor = null;
             this.manager.release( this.resolver );
             this.resolver = null;
@@ -198,7 +190,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.profileStore == null) {
             try {
                 this.profileStore = (Store)this.manager.lookup(Store.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of store component.", ce);
             }
         }
@@ -213,7 +205,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.authenticationManager == null) {
             try {
                 this.authenticationManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of AuthenticationManager.", ce);
             }
         }
@@ -228,7 +220,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.mediaManager == null) {
             try {
                 this.mediaManager = (MediaManager)this.manager.lookup(MediaManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of MediaManager.", ce);
             }
         }
@@ -255,8 +247,6 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     this.changeProfile();
                 } catch (SAXException se) {
                     throw new ProcessingException(se);
-                } catch (IOException ioe) {
-                    throw new ProcessingException(ioe);
                 }
             }
             
@@ -268,7 +258,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      * @see org.apache.cocoon.webapps.portal.components.PortalManager#configurationTest()
      */
     public void configurationTest()
-    throws ProcessingException, IOException, SAXException {        
+    throws ProcessingException {        
         // no sync required
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN configurationTest");
@@ -288,7 +278,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      * @see org.apache.cocoon.webapps.portal.components.PortalManager#getContext(boolean)
      */
     public SessionContext getContext(boolean create)
-    throws ProcessingException, IOException, SAXException {
+    throws ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN getContext create="+create);
@@ -329,7 +319,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                     String      profileID,
                                     String      media,
                                     String      contextID)
-    throws IOException, SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         // synchronized not req.
         this.setup();
         Response response = ContextHelper.getResponse(this.componentContext);
@@ -547,18 +537,17 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
 
                         if (saveResource == null) {
                             throw new ProcessingException("portal: No save resource defined for type coplet-base.");
-                        } else {
+                        } 
                             
-                            SourceUtil.writeDOM(saveResource, 
-                                                null, 
-                                                pars, 
-                                                copletsFragment, 
-                                                this.resolver, 
-                                                "xml");
+                        SourceUtil.writeDOM(saveResource, 
+                                            null, 
+                                            pars, 
+                                            copletsFragment, 
+                                            this.resolver, 
+                                            "xml");
 
-                            // now the hardest part, clean up the whole cache
-                            this.cleanUpCache(null, null, configuration);
-                        }
+                        // now the hardest part, clean up the whole cache
+                        this.cleanUpCache(null, null, configuration);
                     }
                 } finally {
                     this.getTransactionManager().stopWritingTransaction(context);
@@ -725,7 +714,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      * @see org.apache.cocoon.webapps.portal.components.PortalManager#getStatusProfile()
      */
     public Element getStatusProfile()
-    throws SAXException, IOException, ProcessingException {
+    throws ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN getStatusProfile");
@@ -748,6 +737,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
             try {
                 statusProfile = (Element)DOMUtil.getSingleNode(profile, "profile/status-profile", this.xpathProcessor);
             } catch (javax.xml.transform.TransformerException ignore) {
+                // ignore
             }
         }
 
@@ -763,7 +753,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
     public void showPortal(XMLConsumer consumer,
                            boolean configMode,
                            boolean adminProfile)
-    throws SAXException, ProcessingException, IOException {
+    throws SAXException, ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN showPortal consumer=" + consumer+", configMode="+
@@ -879,7 +869,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                            SessionContext context,
                            Map          storedProfile,
                            String       profileID)
-    throws SAXException, ProcessingException, IOException {
+    throws SAXException, ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN showPortal consumer=" + consumer+", configMode="+configMode+", context="+context+
@@ -1174,7 +1164,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                              String role,
                              String id,
                              boolean adminProfile)
-    throws ProcessingException, IOException, SAXException {
+    throws ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN buildProfile type=" + type + ", role=" + role + ", id=" +id+", adminProfile="+adminProfile);
@@ -1359,7 +1349,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                                String role,
                                                String id,
                                                boolean adminProfile)
-    throws SAXException, ProcessingException, IOException, javax.xml.transform.TransformerException {
+    throws SAXException, ProcessingException, javax.xml.transform.TransformerException {
         // calling method must be synchronized
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END buildProfileDeltaN type="+type+", role="+role+", id="+id);
@@ -1649,14 +1639,13 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         int pos = profileID.indexOf('_');
         if (pos == -1) {
             return null;
-        } else {
-            String lastPart = profileID.substring(pos+1);
-            pos = lastPart.indexOf('_');
-            if (pos == -1) return null;
-            int len = new Integer(lastPart.substring(0, pos)).intValue();
-            lastPart = lastPart.substring(pos+1, pos+1+len);
-            return lastPart;
-        }
+        } 
+        String lastPart = profileID.substring(pos+1);
+        pos = lastPart.indexOf('_');
+        if (pos == -1) return null;
+        int len = new Integer(lastPart.substring(0, pos)).intValue();
+        lastPart = lastPart.substring(pos+1, pos+1+len);
+        return lastPart;
     }
 
     /**
@@ -2790,7 +2779,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                   ContextHelper.getObjectModel(this.componentContext),
                                   this.getLogger(),
                                   loadedCoplet,
-                                  this.manager,
+                                  ContextHelper.getSitemapServiceManager(this.componentContext),
                                   this.resolver,
                                   this.xpathProcessor);
                 theThread.start();
@@ -2908,7 +2897,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         interpreter = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
                         interpreter.setConsumer(new IncludeXMLConsumer(consumer, consumer));
                         interpreter.deserialize(content);
-                    } catch (ComponentException e) {
+                    } catch (ServiceException e) {
                         throw new ProcessingException("Component for XMLDeserializer not found." + e, e);
                     } finally {
                         if (interpreter != null) this.manager.release(interpreter);
@@ -3235,7 +3224,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      * @see org.apache.cocoon.webapps.portal.components.PortalManager#checkAuthentication(org.apache.cocoon.environment.Redirector, java.lang.String)
      */
     public boolean checkAuthentication(Redirector redirector, String copletID)
-    throws SAXException, IOException, ProcessingException {
+    throws IOException, ProcessingException {
         // synchronized
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN checkAuthentication coplet="+copletID);
@@ -3469,7 +3458,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                               String role,
                               String id,
                               boolean adminProfile)
-    throws SAXException, IOException, ProcessingException {
+    throws ProcessingException {
         // no sync required
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN createProfile context="+context+
@@ -3891,7 +3880,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
      * Change the profile according to the request parameter
      */
     private void changeProfile()
-    throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException {
         // synchronized
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN changeProfile");
@@ -4300,7 +4289,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.sessionManager == null) {
             try {
                 this.sessionManager = (SessionManager)this.manager.lookup(SessionManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of SessionManager component.", ce);
             }
         }
@@ -4315,7 +4304,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.contextManager == null) {
             try {
                 this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of ContextManager component.", ce);
             }
         }
@@ -4330,7 +4319,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.transactionManager == null) {
             try {
                 this.transactionManager = (TransactionManager)this.manager.lookup(TransactionManager.ROLE);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Error during lookup of TransactionManager component.", ce);
             }
         }
