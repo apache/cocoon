@@ -3,15 +3,16 @@ package org.apache.cocoon.components.store;
 import java.io.File;
 import java.util.Enumeration;
 
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
-
 import org.apache.avalon.AbstractLoggable;
-
 import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Context;
 
 import java.io.IOException;
 
-public class FilesystemStore extends AbstractLoggable implements Store, ThreadSafe {
+public class FilesystemStore extends AbstractLoggable implements Contextualizable, Store, ThreadSafe {
   /** The directory repository */
   protected File directoryFile;
   protected volatile String directoryPath;
@@ -21,6 +22,14 @@ public class FilesystemStore extends AbstractLoggable implements Store, ThreadSa
    */
   public void setDirectory(String directory) throws IOException {
       this.setDirectory(new File(directory));
+  }
+
+  public void contextualize(Context context) {
+      try {
+          setDirectory((File) context.get(Constants.CONTEXT_WORK_DIR));
+      } catch (Exception e) {
+          // ignore
+      }
   }
 
   /**
