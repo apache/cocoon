@@ -32,7 +32,7 @@ function forms_onload() {
 }
 
 // Handlers that are to be called in form's "onsubmit" event
-//FIXME: this single var implies only one form per page, and needs to be
+// FIXME: this single var implies only one form per page, and needs to be
 //       visited if we decide to support several forms per page.
 var forms_onsubmitHandlers = new Array();
 

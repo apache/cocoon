@@ -47,11 +47,46 @@
     </textarea>
     <xsl:apply-templates select="." mode="common"/>
     <xsl:choose>
-      <xsl:when test="fi:styling/initFunction">
-        <script language="JavaScript"><xsl:value-of select="fi:styling/initFunction"/>('<xsl:value-of select="@id"/>');</script>
+      <xsl:when test="fi:styling/conf">
+        <!-- use an 'ad hoc'  configuration -->
+        <script  type="text/javascript">
+          var handler = new Object();    
+          handler.fieldId = "<xsl:value-of select="@id"/>";     
+          handler.forms_onload = function() {
+            var id = "<xsl:value-of select="@id"/>";
+            var textarea = document.getElementById(id);
+            var editor = new HTMLArea(id);
+            textarea.htmlarea = editor;
+            var conf = editor.config;
+            <xsl:value-of select="fi:styling/conf/text()"/>
+            editor.generate();
+          }
+          forms_onloadHandlers.push(handler);      
+        </script>        
       </xsl:when>
+      <!-- use a passed configuration function -->
+      <xsl:when test="fi:styling/initFunction and not(fi:styling/conf)">
+        <script  type="text/javascript">
+          var handler = new Object();    
+          handler.fieldId = "<xsl:value-of select="@id"/>";
+          if(typeof(<xsl:value-of select="fi:styling/initFunction"/>)!="function") {
+            alert("<xsl:value-of select="fi:styling/initFunction"/> is not a function " +
+            or not available! Can't render widget '<xsl:value-of select="@id"/>'");
+          }
+          handler.forms_onload = <xsl:value-of select="fi:styling/initFunction"/>;
+          forms_onloadHandlers.push(handler);   
+        </script>
+      </xsl:when>    
+      <!-- default mode with all buttons available -->  
       <xsl:otherwise>
-        <script type="text/javascript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>        
+        <script  type="text/javascript">
+          var handler = new Object();    
+          handler.fieldId = "<xsl:value-of select="@id"/>";     
+          handler.forms_onload = function() {
+            HTMLArea.replace('<xsl:value-of select="@id"/>');
+          }
+          forms_onloadHandlers.push(handler);      
+        </script>  
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

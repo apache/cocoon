@@ -202,6 +202,48 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RP" type="add">
+    cForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
+            up the result by HTMLArea fields. The cleanup process, that is based upon
+            Nekohtml can be configured. One confiugration is available at
+            resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml
+            and guarantees valid XHTML
+     <br/>
+     Example:
+     <code>
+&lt;fd:datatype base="string"&gt;
+  &lt;fd:convertor type="htmlcleaner"
+      config="resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml"/&gt;
+&lt;/fd:datatype&gt;
+     </code>
+   </action>
+   <action dev="RP" type="add">
+    cForms: 'htmlarea' fields can be directly configured in cForms templates
+    <br/>
+    Example configuration (within the &lt;conf&gt; part the variable conf contains
+    the configuration object of HTMLArea
+    <code>
+&lt;fi:styling type="htmlarea" rows="8" style="width:100%"&gt;
+  &lt;conf&gt;
+    conf.statusBar = false;
+    conf.sizeIncludesToolbar = false;
+    conf.fullPage = false;
+    conf.toolbar = [
+      [ "bold", "italic", "separator",
+        "subscript", "superscript", "separator",
+        "insertorderedlist", "insertunorderedlist",
+        "outdent", "indent", "separator",
+        "inserthorizontalrule", "separator",
+        "copy", "cut", "paste", "space", "undo", "redo",
+        "separator", "showhelp"]
+      ];
+  &lt;/conf&gt;
+&lt;/fi:styling&gt;
+    </code>
+   </action>
+   <action dev="RP" type="fix">
+    cForms: fields styled as 'htmlarea' can be used in tables (workaround for strange IE behaviour)
+   </action> 
    <action dev="SW" type="add">
      CForms: add a new "link" styling for action widgets, that renders the action
      as an hypertext link.

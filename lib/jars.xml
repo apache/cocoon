@@ -518,13 +518,42 @@
   </file>
 
   <file>
-    <title>Transform HTML to XML</title>
+    <title>CyberNeko: Transform HTML to XML</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>NekoHTML generator (html block)</used-by>
     <lib>optional/nekohtml-0.9.3.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
 
+  <file>
+    <title>CyberNeko DTD Converter</title>
+    <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
+    <used-by>Forms block</used-by>
+    <lib>optional/nekodtd-0.1.10.jar</lib>
+    <homepage>http://www.apache.org/~andyc/neko/</homepage>
+  </file>
+  
+  <file>
+    <title>Daisy HTMLCleaner</title>
+    <description>
+      NekoHTML, but then performs further filtering, conversion and restructuring 
+      on it to have a nice output, limitted to a subset of the HTML DTD
+    </description>
+    <used-by>Forms block</used-by>
+    <lib>optional/daisy-htmlcleaner-1.1.jar</lib>
+    <homepage>http://daisy.cocoondev.org/</homepage>
+  </file>  
+
+  <file>
+    <title>Daisy Utils</title>
+    <description>
+      Java Utility classes of Daisy
+    </description>
+    <used-by>Forms block - HTMLCleaner</used-by>
+    <lib>optional/daisy-util-1.1.jar</lib>
+    <homepage>http://daisy.cocoondev.org/</homepage>
+  </file>   
+  
   <file>
     <title>Search engine</title>
     <description>

@@ -33,7 +33,13 @@
 
   <xsl:template match="body" mode="forms-field">
     <xsl:copy-of select="@*"/>
-    <xsl:attribute name="onload">forms_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
+    <xsl:attribute name="onload">forms_onload();<xsl:value-of select="@onload"/></xsl:attribute>
+  </xsl:template>
+  
+  <xsl:template match="body" mode="forms-afterload">
+    <script language="Javascript">
+       forms_afterLoad();
+    </script>   
   </xsl:template>
 
   <!--+
