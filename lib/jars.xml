@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.153 2004/01/21 08:50:29 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.154 2004/01/22 03:37:25 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -577,6 +577,22 @@
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-api-20021118.jar</lib>
+    <homepage>http://www.xmldb.org/</homepage>
+  </file>
+
+  <file>
+    <title>XML DB APIs</title>
+    <description>Database tailored for the storage of XML data.</description>
+    <used-by>XML:DB source (xmldb block)</used-by>
+    <lib>xmldb/lib/xmldb-common-20021220.jar</lib>
+    <homepage>http://www.xmldb.org/</homepage>
+  </file>
+
+  <file>
+    <title>XML DB APIs</title>
+    <description>Database tailored for the storage of XML data.</description>
+    <used-by>XML:DB source (xmldb block)</used-by>
+    <lib>xmldb/lib/xmldb-xupdate-20021220.jar</lib>
     <homepage>http://www.xmldb.org/</homepage>
   </file>
 
