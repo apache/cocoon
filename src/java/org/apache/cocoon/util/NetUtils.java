@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.11 2004/04/18 23:17:39 ugo Exp $
+ * @version CVS $Id: NetUtils.java,v 1.12 2004/04/28 22:14:19 ugo Exp $
  */
 
 public class NetUtils {
@@ -321,6 +321,9 @@ public class NetUtils {
      * @return The normalized uri
      */
     public static String normalize(String uri) {
+        if ("".equals(uri)) {
+            return uri;
+        }
         String[] dirty = StringUtils.split(uri, '/');
         int length = dirty.length;
         String[] clean = new String[length];
