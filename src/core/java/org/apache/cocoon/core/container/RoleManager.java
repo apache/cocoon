@@ -173,10 +173,9 @@ implements Configurable {
             if (!"role".equals(role.getName())) {
                 if (strictMode) {
                     throw new ConfigurationException("Unexpected '" + role.getName() + "' element at " + role.getLocation());
-                } else {
-                    // Skip to next one
-                    continue;
                 }
+                // Skip to next one
+                continue;
             }
             
             final String roleName = role.getAttribute("name");

@@ -272,7 +272,7 @@ public class ContainerTestCase extends TestCase {
         roleManager.configure( confRM );
 
         // Set up the ComponentLocator
-        CocoonServiceManager ecManager = new CocoonServiceManager(null, null);
+        CocoonServiceManager ecManager = new CocoonServiceManager(null);
         ecManager.enableLogging( this.getLogger() );
         ecManager.contextualize( this.context );
         ecManager.setRoleManager( roleManager );

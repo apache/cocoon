@@ -58,7 +58,7 @@ public class ParentServiceManager implements ServiceManager, LogEnabled, Initial
         this.jndiName = jndiName;
 
         // Initialize it here so we can let it be final.
-        this.delegate = new CocoonServiceManager(null, null);
+        this.delegate = new CocoonServiceManager(null);
     }
 
     /* (non-Javadoc)

@@ -58,11 +58,6 @@ implements ServiceSelector, Serviceable, Configurable {
     /** The default key */
     protected String defaultKey;
 
-    /** Create the selector */
-    public StandaloneServiceSelector() {
-        super(null);
-    }
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.ServiceSelector#select(java.lang.Object)
      */
