@@ -95,7 +95,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.28 2004/01/28 16:07:17 vgritsenko Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.29 2004/02/10 23:18:32 coliver Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -1343,20 +1343,40 @@ public class FOM_Cocoon extends ScriptableObject {
             return "FOM_Log";
         }
 
-        public void jsFunction_debug(String message) {
-            logger.debug(message);
+        public void jsFunction_debug(String message, Object throwable) {
+            throwable = unwrap(throwable);
+            if (throwable instanceof Throwable) {
+                logger.debug(message, (Throwable)throwable);
+            } else {
+                logger.debug(message);
+            }
         }
 
-        public void jsFunction_info(String message) {
-            logger.info(message);
+        public void jsFunction_info(String message, Object throwable) {
+            throwable = unwrap(throwable);
+            if (throwable instanceof Throwable) {
+                logger.info(message, (Throwable)throwable);
+            } else {
+                logger.info(message);
+            }
         }
 
-        public void jsFunction_warn(String message) {
-            logger.warn(message);
+        public void jsFunction_warn(String message, Object throwable) {
+            throwable = unwrap(throwable);
+            if (throwable instanceof Throwable) {
+                logger.warn(message, (Throwable)throwable);
+            } else {
+                logger.warn(message);
+            }
         }
 
-        public void jsFunction_error(String message) {
-            logger.error(message);
+        public void jsFunction_error(String message, Object throwable) {
+            throwable = unwrap(throwable);
+            if (throwable instanceof Throwable) {
+                logger.error(message, (Throwable)throwable);
+            } else {
+                logger.error(message);
+            }
         }
 
         public boolean jsFunction_isDebugEnabled() {
