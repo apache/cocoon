@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,10 +44,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * A simple AsciiArt text SVG XML generator.
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.5 2004/03/05 13:01:38 bdelacretaz Exp $
+ * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.6 2004/06/11 20:32:19 vgritsenko Exp $
  * @since Cocoon 2.1, 22 December 2002
  */
-public class AsciiArtSVGGenerator 
+public class AsciiArtSVGGenerator
     extends AbstractGenerator
     implements CacheableProcessingComponent {
 
@@ -66,11 +66,11 @@ public class AsciiArtSVGGenerator
     /** default SVG line attributes
      */
     private final String DEFAULT_LINE_ATTRIBUTE = "stroke:black; stroke-width:1.5";
-    
+
     /** default SVG text attribute
      */
     private final String DEFAULT_TEXT_ATTRIBUTE = "font-size: 12; font-family:Times Roman; fill:blue;";
-    
+
     private String lineAttribute = DEFAULT_LINE_ATTRIBUTE;
     private String textAttribute = DEFAULT_TEXT_ATTRIBUTE;
 
@@ -79,7 +79,7 @@ public class AsciiArtSVGGenerator
     final int DEFAULT_Y_GRID = 12;
     private int xGrid = DEFAULT_X_GRID;
     private int yGrid = DEFAULT_Y_GRID;
-    
+
     /**
      * Setup the AsciiArtSVG generator.
      * Try to get the last modification date of the source for caching.
@@ -95,20 +95,20 @@ public class AsciiArtSVGGenerator
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        
+
         try {
             this.inputSource = resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
-        
-        // setup lineAttribute
-        lineAttribute = par.getParameter( "line-attribute", DEFAULT_LINE_ATTRIBUTE );
-        // setup textAttribute
-        textAttribute = par.getParameter( "text-attribute", DEFAULT_TEXT_ATTRIBUTE );
-        
-        xGrid = par.getParameterAsInteger( "x-grid", DEFAULT_X_GRID );
-        yGrid = par.getParameterAsInteger( "y-grid", DEFAULT_Y_GRID );
+
+        // Setup lineAttribute
+        lineAttribute = par.getParameter("line-attribute", DEFAULT_LINE_ATTRIBUTE);
+        // Setup textAttribute
+        textAttribute = par.getParameter("text-attribute", DEFAULT_TEXT_ATTRIBUTE);
+
+        xGrid = par.getParameterAsInteger("x-grid", DEFAULT_X_GRID);
+        yGrid = par.getParameterAsInteger("y-grid", DEFAULT_Y_GRID);
     }
 
 
@@ -129,7 +129,7 @@ public class AsciiArtSVGGenerator
      * Generate the unique key.
      * This key must be unique inside the space of this component.
      *
-     *@return    The generated key hashes the src
+     * @return The generated key hashes the src
      */
     public java.io.Serializable getKey() {
         return this.inputSource.getURI();
@@ -139,7 +139,7 @@ public class AsciiArtSVGGenerator
     /**
      * Generate the validity object.
      *
-     *@return    The generated validity object or <code>null</code> if the
+     * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
@@ -149,17 +149,13 @@ public class AsciiArtSVGGenerator
 
     /**
      * Generate XML data.
-     *
-     *@exception  IOException          Description of the Exception
-     *@exception  SAXException         Description of the Exception
-     *@exception  ProcessingException  Description of the Exception
      */
     public void generate()
-             throws IOException, SAXException, ProcessingException {
+    throws IOException, SAXException, ProcessingException {
         try {
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("processing asciiart file " + super.source);
-                this.getLogger().debug("asciiart file resolved to " + this.inputSource.getURI());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Source " + super.source +
+                                  " resolved to " + this.inputSource.getURI());
             }
 
             // read the ascii art
@@ -206,21 +202,7 @@ public class AsciiArtSVGGenerator
             this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
         } catch (SAXException e) {
-            final Exception cause = e.getException();
-            if (cause != null) {
-                if (cause instanceof ProcessingException) {
-                    throw (ProcessingException) cause;
-                }
-                if (cause instanceof IOException) {
-                    throw (IOException) cause;
-                }
-                if (cause instanceof SAXException) {
-                    throw (SAXException) cause;
-                }
-                throw new ProcessingException("Could not read resource "
-                         + this.inputSource.getURI(), cause);
-            }
-            throw e;
+            SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
     }
 
