@@ -30,6 +30,7 @@ import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.EmbeddedXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.commons.lang.StringUtils;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
@@ -60,7 +61,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.14 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.15 2004/03/28 23:57:41 antonio Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -240,9 +241,9 @@ public class DOMStreamer implements XMLProducer {
                         pos = pos.getParentNode();
 
                         if ((null == pos) || (top.equals(pos))) {
-                            if (null != pos)
+                            if (null != pos) {
                                 endNode(pos);
-
+                            }
                             nextNode = null;
 
                             break;
@@ -320,12 +321,12 @@ public class DOMStreamer implements XMLProducer {
 
                     if (namespaceURI != null) {
                         // no prefix means: make this the default namespace
-                        if (prefix == null)
+                        if (prefix == null) {
                             prefix = "";
-
+                        }
                         // check that is declared
                         String uri = currentElementInfo.findNamespaceURI(prefix);
-                        if (uri != null && uri.equals(namespaceURI)) {
+                        if (StringUtils.equals(uri, namespaceURI)) {
                             // System.out.println("namespace is declared");
                             // prefix is declared correctly, do nothing
                         } else if (uri != null) {
@@ -340,7 +341,7 @@ public class DOMStreamer implements XMLProducer {
                         // element has no namespace
                         // check if there is a default namespace, if so undeclare it
                         String uri = currentElementInfo.findNamespaceURI("");
-                        if (uri != null && !uri.equals("")) {
+                        if (StringUtils.isNotEmpty(uri)) {
                             // System.out.println("undeclaring default namespace");
                             currentElementInfo.put("", "");
                         }
@@ -351,10 +352,11 @@ public class DOMStreamer implements XMLProducer {
                         namespaceURI = "";
 
                     String qName;
-                    if (prefix != null && prefix.length() > 0)
+                    if (StringUtils.isNotEmpty(prefix)) {
                         qName = prefix + ":" + localName;
-                    else
+                    } else {
                         qName = localName;
+                    }
 
                     // make the attributes
                     AttributesImpl newAttrs = new AttributesImpl();
@@ -416,10 +418,11 @@ public class DOMStreamer implements XMLProducer {
 
                             String assignedAttrNsURI = attrNsURI != null ? attrNsURI : "";
                             String attrQName;
-                            if (assignedAttrPrefix != null)
+                            if (assignedAttrPrefix != null) {
                                 attrQName = assignedAttrPrefix + ":" + attrLocalName;
-                            else
+                            } else {
                                 attrQName = attrLocalName;
+                            }
                             newAttrs.addAttribute(assignedAttrNsURI, attrLocalName, attrQName, "CDATA", attr.getNodeValue());
                         }
                     }
@@ -522,16 +525,14 @@ public class DOMStreamer implements XMLProducer {
                        || (type == Node.ENTITY_REFERENCE_NODE))) {
                     if (type == Node.ELEMENT_NODE) {
                         Attr attr=((Element)parent).getAttributeNode(declname);
-                        if(attr!=null) {
+                        if (attr != null) {
                             namespace = attr.getNodeValue();
                             break;
                         }
                     }
-
                     parent = parent.getParentNode();
                 }
             }
-
             return namespace;
         }
 
@@ -651,13 +652,15 @@ public class DOMStreamer implements XMLProducer {
             public String findPrefix(String namespaceURI) {
                 if (namespaceDeclarations != null && namespaceDeclarations.size() != 0) {
                     String prefix = getPrefix(namespaceURI);
-                    if (prefix != null)
+                    if (prefix != null) {
                         return prefix;
+                    }
                 }
-                if (parent != null)
+                if (parent != null) {
                     return parent.findPrefix(namespaceURI);
-                else
+                } else {
                     return null;
+                }
             }
 
             /**
@@ -666,8 +669,9 @@ public class DOMStreamer implements XMLProducer {
             public String findNamespaceURI(String prefix) {
                 if (namespaceDeclarations != null && namespaceDeclarations.size() != 0) {
                     String uri = (String) namespaceDeclarations.get(prefix);
-                    if (uri != null)
+                    if (uri != null) {
                         return uri;
+                    }
                 }
                 if (parent != null)
                     return parent.findNamespaceURI(prefix);
