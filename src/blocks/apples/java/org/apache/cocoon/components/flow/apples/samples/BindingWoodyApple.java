@@ -148,7 +148,8 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
             formSource = resolver.resolveURI(formURI);
             this.form = formManager.createForm(formSource);
             formHandler = (FormHandler) this.makeInstance(formHandlerClassName);
-            formHandler.setup(this.form);
+            // FIX THIS
+            // formHandler.setup(this.form);
             this.form.setFormHandler(formHandler);
 
             bindSource = resolver.resolveURI(bindURI);
