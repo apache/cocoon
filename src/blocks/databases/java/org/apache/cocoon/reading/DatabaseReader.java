@@ -62,14 +62,13 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -77,11 +76,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
-
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -90,13 +87,13 @@ import org.xml.sax.SAXException;
  * to pull the image from, and source specifies the source key information.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: DatabaseReader.java,v 1.3 2003/07/11 18:32:25 joerg Exp $
+ * @version CVS $Id: DatabaseReader.java,v 1.4 2003/08/06 08:44:22 cziegeler Exp $
  */
 public class DatabaseReader extends ServiceableReader
     implements Configurable, Disposable, CacheableProcessingComponent
 {
 
-    private ComponentSelector dbselector;
+    private ServiceSelector dbselector;
     private String dsn;
     private long lastModified = System.currentTimeMillis();
     private InputStream resource = null; // because HSQL doesn't yet implement getBlob()
@@ -109,7 +106,7 @@ public class DatabaseReader extends ServiceableReader
 
     public void service(final ServiceManager manager) throws ServiceException {
         super.service(manager);
-        this.dbselector = (ComponentSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
+        this.dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
 
     /**
