@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.3 2000-01-03 01:42:50 stefano Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.4 2000-01-05 19:38:12 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,13 +54,14 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.text.*;
 import org.w3c.dom.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:42:50 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-05 19:38:12 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -367,5 +368,17 @@ public class XSPUtil {
 
   public static String formDecode(String text) throws Exception {
     return URLDecoder.decode(text);
+  }
+
+  /* Date */
+  public static String formatDate(Date date, String pattern) {
+    if (pattern == null || pattern.length() == 0) {
+      pattern = "yyyy/MM/dd hh:mm:ss aa";
+    }
+    try {
+      return (new SimpleDateFormat(pattern)).format(date);
+    } catch (Exception e) {
+      return date.toString();
+    }
   }
 }
