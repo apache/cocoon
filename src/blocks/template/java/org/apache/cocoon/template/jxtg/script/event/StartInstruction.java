@@ -16,6 +16,7 @@
 package org.apache.cocoon.template.jxtg.script.event;
 
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 public abstract class StartInstruction extends Event {
     public StartInstruction(Locator locator) {
@@ -37,5 +38,9 @@ public abstract class StartInstruction extends Event {
 
     public void setEndInstruction(EndInstruction endInstruction) {
         this.endInstruction = endInstruction;
+    }
+
+    public void endNotify() throws SAXException {
+        return;
     }
 }

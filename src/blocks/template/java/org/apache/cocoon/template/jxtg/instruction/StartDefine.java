@@ -69,7 +69,7 @@ public class StartDefine extends StartInstruction {
         return getEndInstruction().getNext();
     }
 
-    public void finish() throws SAXException {
+    public void endNotify() throws SAXException {
         Event e = next;
         boolean params = true;
         while (e != this.getEndInstruction()) {
