@@ -60,6 +60,7 @@ import org.apache.cocoon.woody.formmodel.Widget;
  * value, thus avoiding unnecessary validation warnings when a user clicks an action.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: DeferredValueChangedEvent.java,v 1.2 2004/02/11 09:27:55 antonio Exp $
  */
 public class DeferredValueChangedEvent extends ValueChangedEvent {
     

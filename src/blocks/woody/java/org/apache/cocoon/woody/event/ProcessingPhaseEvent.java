@@ -56,6 +56,7 @@ import org.apache.cocoon.woody.formmodel.Form;
  * Event raised when a form processing phase is finished.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ProcessingPhaseEvent.java,v 1.3 2004/02/11 09:27:55 antonio Exp $
  */
 public class ProcessingPhaseEvent extends WidgetEvent {
     

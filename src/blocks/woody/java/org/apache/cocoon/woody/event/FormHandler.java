@@ -61,6 +61,8 @@ package org.apache.cocoon.woody.event;
  * handled by one class (which could of course again delegate to other classes), and when
  * you want the event handler to have access to objects it would not be able to get access
  * to if they were part of the form definition.
+ * 
+ * @version CVS $Id: FormHandler.java,v 1.2 2004/02/11 09:27:55 antonio Exp $
  */
 public interface FormHandler {
 
