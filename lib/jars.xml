@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.97 2003/09/24 06:55:34 antonio Exp $
+    | CVS $Id: jars.xml,v 1.98 2003/09/25 03:06:06 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -530,7 +530,7 @@
   </file>
   <file>
     <title>Servlet API</title>
-    <description>Servlet API Version 2.2</description>
+    <description>Servlet API Version 2.3</description>
     <used-by>Cocoon</used-by>
     <lib>scratchpad/lib/servlet-2_3.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
@@ -694,11 +694,15 @@
   </file>
 
   <file>
-    <title>???</title>
-    <description>???</description>
+    <title>Commons Discovery</title>
+    <description>
+      The Discovery Component is about discovering, or finding, implementations
+      for pluggable interfaces. It provides facilities intantiating classes in
+      general, and for lifecycle management of singleton (factory) classes.
+    </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/commons-discovery.jar</lib>
-    <homepage>#</homepage>
+    <lib>axis/lib/commons-discovery-0.2.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/discovery/</homepage>
   </file>
 
   <file>
@@ -725,7 +729,7 @@
       such as unrolling exceptions.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/commons-lang-1.0.1.jar</lib>
+    <lib>core/commons-lang-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/commons/lang/</homepage>
   </file>
 

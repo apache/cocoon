@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.152 2003/09/24 20:54:14 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.153 2003/09/25 03:06:06 antonio Exp $:-->
 
 <status>
  <developers>
@@ -56,6 +56,7 @@
   <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
   <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Antonio Gallardo" email="antonio@apache.org" id="AG"/>
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Christian Haul" email="haul@apache.org" id="CH"/>
   <person name="J&#246;rg Heinicke" email="joerg@apache.org" id="JH"/>
@@ -205,6 +206,9 @@
      popups, etc) to trigger server-side event handlers through client-side interaction.
      <br/>
      Rewriting of the Woody/FlowScript integration to be more simple.
+   </action>
+   <action dev="AG" type="update">
+     Update libs Xerces 2.5.0 and Ant to 1.5.4
    </action>
    <action dev="JH" type="fix" fixes-bug="23208"
      due-to="Yury Mikhienko" due-to-email="yuryx@mobicomk.donpac.ru">
