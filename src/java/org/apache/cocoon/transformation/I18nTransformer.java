@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.8 2003/05/20 15:49:56 bruno Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.9 2003/05/22 16:01:57 bruno Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -625,11 +625,14 @@ public class I18nTransformer extends AbstractTransformer
 
     /**
      * This attribute is used to specify a different locale for the
-     * GroupingSeparator and MonetaryDecimalSeparator.
+     * currency. When specified, this locale will be combined with
+     * the "normal" locale: e.g. the seperator symbols are taken from
+     * the normal locale but the currency symbol and possition will
+     * be taken from the currency locale.
      * This enables to see a currency formatted for Euro but with US
      * grouping and decimal char.
      */
-    public static final String I18N_DEC_AND_GRP_LOCALE_ATTRIBUTE = "dec-and-grp-locale";
+    public static final String CURRENCY_LOCALE_ATTRIBUTE = "currency";
 
     /**
      * This attribute can be used on <code>i18n:text</code> to indicate the catalogue
@@ -1404,9 +1407,9 @@ public class I18nTransformer extends AbstractTransformer
             formattingParams.put(I18N_LOCALE_ATTRIBUTE, attr_value);
         }
 
-        attr_value = attr.getValue(I18N_DEC_AND_GRP_LOCALE_ATTRIBUTE);
+        attr_value = attr.getValue(CURRENCY_LOCALE_ATTRIBUTE);
         if (attr_value != null) {
-            formattingParams.put(I18N_DEC_AND_GRP_LOCALE_ATTRIBUTE, attr_value);
+            formattingParams.put(CURRENCY_LOCALE_ATTRIBUTE, attr_value);
         }
 
         attr_value = attr.getValue(I18N_SRC_LOCALE_ATTRIBUTE);
@@ -1886,8 +1889,17 @@ public class I18nTransformer extends AbstractTransformer
         // locale, may be switched locale
         Locale loc = getLocale(params, I18N_LOCALE_ATTRIBUTE);
         Locale srcLoc = getLocale(params, I18N_SRC_LOCALE_ATTRIBUTE);
-        // Decimal and Grouping locale
-        Locale dgLoc = getLocale(params, I18N_DEC_AND_GRP_LOCALE_ATTRIBUTE);
+        // currency locale
+        Locale currencyLoc = getLocale(params, CURRENCY_LOCALE_ATTRIBUTE);
+        // decimal and grouping locale
+        Locale dgLoc = null;
+        if (currencyLoc != null) {
+            // the reasoning here is: if there is a currency locale, then start from that
+            // one but take certain properties (like decimal and grouping seperation symbols)
+            // from the default locale (this happens further on).
+            dgLoc = loc;
+            loc = currencyLoc;
+        }
 
         // src format
         DecimalFormat from_fmt = (DecimalFormat)NumberFormat.getInstance(srcLoc);
@@ -1957,13 +1969,13 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         if(dgLoc != null) {
-            DecimalFormat _df = (DecimalFormat)NumberFormat.getCurrencyInstance(dgLoc);
-            DecimalFormatSymbols _dfsNew = _df.getDecimalFormatSymbols();
-            DecimalFormatSymbols _dfsOrig = to_fmt.getDecimalFormatSymbols();
-            _dfsOrig.setDecimalSeparator(_dfsNew.getDecimalSeparator());
-            _dfsOrig.setMonetaryDecimalSeparator(_dfsNew.getMonetaryDecimalSeparator());
-            _dfsOrig.setGroupingSeparator(_dfsNew.getGroupingSeparator());
-            to_fmt.setDecimalFormatSymbols(_dfsOrig);
+            DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance(dgLoc);
+            DecimalFormatSymbols dfsNew = df.getDecimalFormatSymbols();
+            DecimalFormatSymbols dfsOrig = to_fmt.getDecimalFormatSymbols();
+            dfsOrig.setDecimalSeparator(dfsNew.getDecimalSeparator());
+            dfsOrig.setMonetaryDecimalSeparator(dfsNew.getMonetaryDecimalSeparator());
+            dfsOrig.setGroupingSeparator(dfsNew.getGroupingSeparator());
+            to_fmt.setDecimalFormatSymbols(dfsOrig);
         }
 
         // pattern overwrites locale format
