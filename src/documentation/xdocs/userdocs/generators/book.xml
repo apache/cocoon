@@ -27,9 +27,12 @@
     <menu-item label="File Generator" href="file-generator.html"/>
   </menu>
   <menu label="Core">
+    <menu-item label="Calendar Generator" href="calendar-generator.html"/>
     <menu-item label="Directory Generator" href="directory-generator.html"/>
     <menu-item label="Image Directory Generator" href="imagedirectory-generator.html"/>
+    <menu-item label="JX Generator" href="jx-generator.html"/>
     <menu-item label="LinkStatus Generator" href="linkstatus-generator.html"/>
+    <menu-item label="MP3Directory Generator" href="mp3directory-generator.html"/>
     <menu-item label="Notifying Generator" href="error-generator.html"/>
     <menu-item label="Request Generator" href="request-generator.html"/>
     <menu-item label="Status Generator" href="status-generator.html"/>
