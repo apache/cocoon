@@ -29,7 +29,7 @@ import org.apache.cocoon.ojb.samples.bean.Employee;
 import org.apache.ojb.broker.*;
 import org.apache.ojb.broker.query.*;
 
-public class PersistenceFlow extends AbstractCocoonFlow {
+public class PersistenceFlow extends AbstractContinuable {
 
     private transient PersistenceBroker broker = null;
 

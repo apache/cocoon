@@ -34,9 +34,9 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.2 2004/03/31 14:16:30 stephan Exp $
+ * @version CVS $Id: FormInstance.java,v 1.3 2004/04/01 12:40:40 stephan Exp $
  */
-public class FormInstance extends AbstractCocoonFlow {
+public class FormInstance extends AbstractContinuable {
 
     private Form form;
     private Binding binding;

@@ -30,16 +30,18 @@ import java.io.OutputStream;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCocoonFlow.java,v 1.2 2004/03/31 20:32:45 vgritsenko Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.1 2004/04/01 12:40:40 stephan Exp $
  */
-public abstract class AbstractCocoonFlow implements Continuable {
-
-    public Logger getLogger() {
-        return getContext().getLogger();
-    }
+public abstract class AbstractContinuable implements Continuable {
 
     private ContinuationContext getContext() {
+        if (Continuation.currentContinuation()==null)
+            throw new IllegalStateException("No continuation is running");
         return (ContinuationContext) Continuation.currentContinuation().getContext();
+    }
+  
+    public Logger getLogger() {
+        return getContext().getLogger();
     }
 
     public void sendPageAndWait(String uri) {
@@ -48,28 +50,27 @@ public abstract class AbstractCocoonFlow implements Continuable {
 
     public void sendPageAndWait(String uri, Object bizdata) {
 
-        System.out.println("send page and wait '" + uri + "'");
-        if (Continuation.currentContinuation()!=null) {
-            ContinuationContext context = getContext();
+        ContinuationContext context = getContext();
 
-            FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
+        context.getLogger().debug("send page and wait '" + uri + "'");
 
-            if (SourceUtil.indexOfSchemeColon(uri) == -1) {
-                uri = "cocoon:/" + uri;
-                if (getContext().getRedirector().hasRedirected()) {
-                    throw new IllegalStateException("Pipeline has already been processed for this request");
-                }
-                try {
-                    context.getRedirector().redirect(false, uri);
-                } catch (Exception e) {
-                    throw new CascadingRuntimeException("Cannot redirect to '"+uri+"'", e);
-                }
-            } else {
-                throw new IllegalArgumentException("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
+        FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
+
+        if (SourceUtil.indexOfSchemeColon(uri) == -1) {
+            uri = "cocoon:/" + uri;
+            if (getContext().getRedirector().hasRedirected()) {
+                throw new IllegalStateException("Pipeline has already been processed for this request");
             }
-
-            Continuation.suspend();
+            try {
+                context.getRedirector().redirect(false, uri);
+            } catch (Exception e) {
+                throw new CascadingRuntimeException("Cannot redirect to '"+uri+"'", e);
+            } 
+        } else {
+            throw new IllegalArgumentException("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
+
+        Continuation.suspend();
     }
 
     public void sendPage(String uri) {
@@ -78,8 +79,9 @@ public abstract class AbstractCocoonFlow implements Continuable {
 
     public void sendPage(String uri, Object bizdata) {
 
-        System.out.println("send page '" + uri + "'");
         ContinuationContext context = getContext();
+
+        context.getLogger().debug("send page '" + uri + "'");
 
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 

@@ -35,7 +35,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.2 2004/03/29 19:02:23 unico Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.3 2004/04/01 12:40:40 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -71,19 +71,20 @@ public class ContinuationClassLoader extends ClassLoader {
     public ContinuationClassLoader(ClassLoader parent) {
         super(parent);
 
-        if (parent instanceof ContinuationClassLoader)
-            throw new IllegalArgumentException("Cannot cascade ContinuationClassLoader");
-
         Repository.setRepository(new ClassLoaderRepository(parent));
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
 
-        //System.out.println("load class "+name+" classloader="+this);
+        //System.out.println("load class "+name);
 
+        // this finds also classes, which are already transformed, 
+        // via findLoadedClass
         Class c = super.loadClass(name, resolve);
 
+        // transform class if class is continuable 
+        // and not continuation capable
         if ((Continuable.class.isAssignableFrom(c)) && 
             (!ContinuationCapable.class.isAssignableFrom(c)) && 
             (!c.isInterface())) {
@@ -144,11 +145,6 @@ public class ContinuationClassLoader extends ClassLoader {
                 // add intercepting code 
                 //System.out.println("rewriting " + methods[i].getName());
                 rewrite(method, cfg);
-
-                /*InstructionHandle handle = method.getInstructionList().getStart();
-                do {
-                  System.out.println(handle);
-                } while ((handle = handle.getNext()) != null);*/
 
                 // make last optional check for consistency
                 //System.out.println("check " + methods[i].getName());
