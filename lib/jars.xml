@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.82 2003/08/31 09:32:35 bruno Exp $
+    | CVS $Id: jars.xml,v 1.83 2003/09/03 16:04:01 giacomo Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -792,5 +792,14 @@
     <used-by>QDoxSource (qdox block)</used-by>
     <lib>qdox/lib/qdox-1.1.jar</lib>
     <homepage>http://qdox.codehaus.org</homepage>
-  </file>
+   </file>
+
+   <file>
+    <title>Quartz</title>
+    <description>Quartz Scheduler</description>
+    <used-by>Cron block</used-by>
+    <lib>cron/lib/quartz-1.0.7.jar</lib>
+    <homepage>http://quartz.sf.net/</homepage>
+   </file>
+
 </jars>
