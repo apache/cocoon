@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.event;
  * Listener invoked when a field value changes.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface ValueChangedListener extends WidgetListener {
     

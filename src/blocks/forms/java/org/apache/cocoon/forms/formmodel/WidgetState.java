@@ -23,7 +23,7 @@ import org.apache.commons.lang.enums.ValuedEnum;
  * computed: a widget's combined state is the strictest between the widget's own
  * state and its parent state.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class WidgetState extends ValuedEnum {
 

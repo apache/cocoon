@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class JavaScriptHelper {
 

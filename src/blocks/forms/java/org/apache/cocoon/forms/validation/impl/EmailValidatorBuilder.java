@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * Adapter for {@link org.apache.cocoon.forms.datatype.validationruleimpl.EmailValidationRuleBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EmailValidatorBuilder extends EmailValidationRuleBuilder implements WidgetValidatorBuilder {
 

@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link EnumType}s.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnumTypeBuilder extends AbstractDatatypeBuilder {
 

@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  *
  * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionList
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Contextualizable {
 

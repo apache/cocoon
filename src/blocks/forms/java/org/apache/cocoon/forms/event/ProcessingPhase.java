@@ -25,7 +25,7 @@ import org.apache.commons.lang.enums.ValuedEnum;
  * Type-safe enumeration of the various form processing phases.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ProcessingPhase extends ValuedEnum {
 

@@ -19,7 +19,7 @@ import org.apache.excalibur.source.Source;
 
 /**
  * BindingManager declares the factory method that produces actual Bindings.
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface BindingManager {
 

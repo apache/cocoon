@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface WidgetValidatorBuilder {
     

@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * case of a union.</li>
  * </ol>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CaseJXPathBinding extends ComposedJXPathBindingBase {
 

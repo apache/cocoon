@@ -26,7 +26,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
  * be a simple string or a piece of XML.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ValidationError {
 

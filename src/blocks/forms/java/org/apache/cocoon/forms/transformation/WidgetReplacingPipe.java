@@ -44,7 +44,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 

@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.datatype.convertor;
  * Builds {@link FormattingIntegerConvertor}s.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FormattingIntegerConvertorBuilder extends FormattingDecimalConvertorBuilder {
     protected FormattingDecimalConvertor createConvertor() {

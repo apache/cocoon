@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 
 /**
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PlainDoubleConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

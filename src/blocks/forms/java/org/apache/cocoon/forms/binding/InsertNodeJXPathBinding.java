@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * <li>This expects the back-end model to be an XML file.</li>
  * </ol>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InsertNodeJXPathBinding extends JXPathBindingBase {
 

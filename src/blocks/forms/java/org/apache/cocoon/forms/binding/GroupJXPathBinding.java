@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class GroupJXPathBinding extends ComposedJXPathBindingBase {
 

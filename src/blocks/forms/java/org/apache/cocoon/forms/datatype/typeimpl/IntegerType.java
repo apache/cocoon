@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.datatype.typeimpl;
  * for whole numbers.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class IntegerType extends AbstractDatatype {
     public Class getTypeClass() {

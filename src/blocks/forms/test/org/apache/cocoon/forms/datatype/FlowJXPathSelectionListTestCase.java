@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for CForms's FlowModelSelectionList datatype.
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FlowJXPathSelectionListTestCase extends ContainerTestCase {
 

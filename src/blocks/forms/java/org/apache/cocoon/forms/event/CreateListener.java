@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.event;
 /**
  * Listeners for {@link CreateEvent}s
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public interface CreateListener extends WidgetListener {

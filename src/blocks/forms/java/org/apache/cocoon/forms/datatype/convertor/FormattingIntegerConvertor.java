@@ -28,7 +28,7 @@ import java.text.ParseException;
  * so see there for more information.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id$
+ * @version $Id$
 */
 public class FormattingIntegerConvertor extends FormattingDecimalConvertor {
 

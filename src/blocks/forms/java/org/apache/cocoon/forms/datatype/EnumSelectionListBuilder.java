@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 
 /**
  * Description of EnumSelectionListBuilder.
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnumSelectionListBuilder implements SelectionListBuilder {
 

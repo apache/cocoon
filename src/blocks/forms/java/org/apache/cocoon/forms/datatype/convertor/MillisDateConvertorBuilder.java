@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link MillisDateConvertor}s.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MillisDateConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) {

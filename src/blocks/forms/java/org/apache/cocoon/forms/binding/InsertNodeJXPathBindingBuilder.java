@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * &lt;/fb:insert-node&gt;
  * </code></pre>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InsertNodeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
