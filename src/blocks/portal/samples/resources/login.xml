@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
-<!-- $Id: login.xml,v 1.1 2003/05/19 09:14:09 cziegeler Exp $ 
+<!-- $Id: login.xml,v 1.2 2003/12/11 13:31:55 cziegeler Exp $ 
  Description: The login form for the portal
 
 -->
 
 <content>
 	<form>
-		<url>auth?resource=portal</url>
+		<url>auth</url>
 		<field name="name" type="text" length="24" description="User"/>
 		<field name="password" type="password" length="10" description="Password"/>
 	</form>

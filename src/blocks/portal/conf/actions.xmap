@@ -13,4 +13,6 @@
                 src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
     <map:action name="portal-save-profile"
                 src="org.apache.cocoon.portal.acting.SaveAction"/>
+    <map:action name="portal-bookmark"
+                src="org.apache.cocoon.portal.acting.BookmarkAction"/>
 </xmap>

@@ -135,7 +135,9 @@
             <map:redirect-to uri="portal"/>
         </map:act>
         <map:generate src="resources/login.xml"/>
-        <map:transform src="{global:skin}styles/login-html.xsl"/>
+        <map:transform src="{global:skin}styles/login-html.xsl">
+            <map:parameter name="resource" value="{request-param:resource}"/>
+        </map:transform>
         <map:transform src="{global:skin}styles/portal-page.xsl"/>
         <map:transform type="encodeURL"/>
         <map:serialize/>

@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 
-<!--+ $Id: login-html.xsl,v 1.2 2003/05/27 11:10:20 cziegeler Exp $ 
+<!--+ $Id: login-html.xsl,v 1.3 2003/12/11 13:31:55 cziegeler Exp $ 
     |
     | Description: Login page to HTML
     |
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:param name="resource"/>
 
 <xsl:template match="content">
 <table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody>
@@ -43,7 +45,14 @@
 
 <xsl:template match="form">
 	<form method="post" target="_top">
-		<xsl:attribute name="action"><xsl:value-of select="normalize-space(url)"/></xsl:attribute>
+	    <xsl:choose>
+	        <xsl:when test="$resource=''">
+  		        <xsl:attribute name="action"><xsl:value-of select="normalize-space(url)"/>?resource=portal</xsl:attribute>
+	        </xsl:when>
+	        <xsl:otherwise>
+        		<xsl:attribute name="action"><xsl:value-of select="normalize-space(url)"/>?resource=<xsl:value-of select="$resource"/></xsl:attribute>
+	        </xsl:otherwise>
+	    </xsl:choose>
 		<table>
 		        <xsl:apply-templates select="field"/><br/>
 		</table>
