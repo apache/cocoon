@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.portal.coplet;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.cocoon.portal.factory.impl.AbstractProducible;
 
 
@@ -59,7 +62,7 @@ import org.apache.cocoon.portal.factory.impl.AbstractProducible;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.5 2003/05/21 13:23:59 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceData.java,v 1.6 2003/06/13 14:15:04 cziegeler Exp $
  */
 public final class CopletInstanceData 
     extends AbstractProducible {
@@ -70,6 +73,8 @@ public final class CopletInstanceData
 	private CopletData copletData;
 
 	protected int status = STATUS_MAXIMIZED;
+
+    protected Map attributes = new HashMap();
 
 	/**
 	 * Constructor
@@ -107,4 +112,20 @@ public final class CopletInstanceData
 	public void setStatus(int status) {
 		this.status = status;
 	}
+
+    public Object getAttribute(String key) {
+        return this.attributes.get(key);
+    }
+
+    public void setAttribute(String key, Object value) {
+        this.attributes.put(key, value);
+    }
+    
+    public void removeAttribute(String key) {
+        this.attributes.remove(key);
+    }
+    
+    public Map getAttributes() {
+        return this.attributes;
+    }
 }

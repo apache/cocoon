@@ -55,27 +55,37 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.exolab.castor.mapping.FieldHandler;
 import org.exolab.castor.mapping.MapItem;
 
 /**
  * Field handler for attributes of a CopletData object.
  *
+ * FIXME This is a little bit hacky and should be changed by using
+ * reflection
+ * 
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AttributesFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: AttributesFieldHandler.java,v 1.2 2003/06/13 14:15:04 cziegeler Exp $
  */
 public class AttributesFieldHandler
 implements FieldHandler
 {
-	public void checkValidity(Object object)
-	{
+	public void checkValidity(Object object) {
 	}
 
-	public Object getValue(Object object) 
-	{
+    protected Map getAttributes(Object object) {
+        if (object instanceof CopletData) {
+            return ((CopletData)object).getAttributes();
+        } else {
+            return ((CopletInstanceData)object).getAttributes();
+        }
+    }
+    
+	public Object getValue(Object object) {
 		HashMap map = new HashMap();
-		Iterator iterator = ((CopletData)object).getAttributes().entrySet().iterator();
+		Iterator iterator = this.getAttributes( object ).entrySet().iterator();
 		Map.Entry entry;
 		Object key;
 		while (iterator.hasNext()) {
@@ -93,12 +103,12 @@ implements FieldHandler
 
 	public void resetValue(Object object)
 	{
-		((CopletData)object).getAttributes().clear();
+		this.getAttributes( object ).clear();
 	}
 
 	public void setValue(Object object, Object value)
 	{
 		MapItem item = (MapItem)value;
-		((CopletData)object).setAttribute((String)item.getKey(), item.getValue());
+        this.getAttributes( object ).put((String)item.getKey(), item.getValue());
 	}
 }

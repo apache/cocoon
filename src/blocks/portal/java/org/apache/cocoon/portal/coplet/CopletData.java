@@ -63,7 +63,7 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.6 2003/05/22 15:19:45 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.7 2003/06/13 14:15:04 cziegeler Exp $
  */
 public class CopletData 
 extends AbstractProducible
@@ -148,6 +148,10 @@ implements DeltaApplicable {
         this.copletBaseData = copletBaseData;
     }
 
+    public void removeAttribute(String key) {
+        this.attributes.remove(key);
+    }
+    
     public Object getAttribute(String key) {
         return this.attributes.get(key);
     }
