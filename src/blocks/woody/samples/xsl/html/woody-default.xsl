@@ -176,6 +176,19 @@
     </table>
   </xsl:template>
 
+  <xsl:template match="wi:aggregatefield">
+    <input name="{@id}" value="{wi:value}"/>
+
+    <xsl:if test="wi:validation-message">
+      <xsl:call-template name="validation-message">
+        <xsl:with-param name="message" select="wi:validation-message"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="@required='true'">
+      <b>*</b>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
