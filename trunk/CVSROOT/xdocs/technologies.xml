@@ -170,7 +170,7 @@
     <xsl:template match="/">
      ... presentation info here ...
     </xsl:template>
-    <xsl:tempate 
+    <xsl:template 
       match="weather-information[location/city = 'Boston']">
      <xsl:apply-templates select="summary"/>
     </xsl:template>
