@@ -57,8 +57,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
@@ -74,7 +74,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.11 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.12 2003/10/19 16:21:28 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -137,7 +137,7 @@ public class EnvironmentWrapper
                               String           requestURI,
                               String           queryString,
                               Logger           logger,
-                              ComponentManager manager,
+                              ServiceManager   manager,
                               boolean          rawMode)
     throws MalformedURLException {
         this(env, requestURI, queryString, logger, null, rawMode,env.getView());
@@ -151,7 +151,7 @@ public class EnvironmentWrapper
                               String           requestURI,
                               String           queryString,
                               Logger           logger,
-                              ComponentManager manager,
+                              ServiceManager manager,
                               boolean          rawMode,
                               String           view)
     throws MalformedURLException {
@@ -163,7 +163,7 @@ public class EnvironmentWrapper
                               String           requestURI,
                               String           queryString,
                               Logger           logger,
-                              ComponentManager manager,
+                              ServiceManager manager,
                               boolean          rawMode,
                               String           view)
         throws MalformedURLException {
@@ -197,7 +197,7 @@ public class EnvironmentWrapper
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
     }
    
-    public EnvironmentWrapper(Environment env, ComponentManager manager, String uri,  Logger logger)  throws MalformedURLException {
+    public EnvironmentWrapper(Environment env, ServiceManager manager, String uri,  Logger logger)  throws MalformedURLException {
         super(env.getURI(), env.getView(), env.getContext(), env.getAction());
 
         // FIXME(SW): code stolen from SitemapSource. Factorize somewhere...
@@ -309,17 +309,6 @@ public class EnvironmentWrapper
 
     /**
      * Get the output stream
-     * @deprecated use {@link #getOutputStream(int)} instead.
-     */
-    public OutputStream getOutputStream()
-    throws IOException {
-      return this.outputStream == null
-        ? this.environment.getOutputStream()
-        : this.outputStream;
-    }
-
-    /**
-     * Get the output stream
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
@@ -345,9 +334,9 @@ public class EnvironmentWrapper
     */
     public boolean tryResetResponse()
     throws IOException {
-        if (getOutputStream() != null
-            && getOutputStream() instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)getOutputStream()).clearBuffer();
+        if (getOutputStream(0) != null
+            && getOutputStream(0) instanceof BufferedOutputStream) {
+            ((BufferedOutputStream)getOutputStream(0)).clearBuffer();
             return true;
         }
         else
@@ -359,9 +348,9 @@ public class EnvironmentWrapper
      */
     public void commitResponse() 
     throws IOException {
-        if (getOutputStream() != null
-            && getOutputStream() instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)getOutputStream()).realFlush();
+        if (getOutputStream(0) != null
+            && getOutputStream(0) instanceof BufferedOutputStream) {
+            ((BufferedOutputStream)getOutputStream(0)).realFlush();
         }
         else
           super.commitResponse();

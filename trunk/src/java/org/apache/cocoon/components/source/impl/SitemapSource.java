@@ -58,10 +58,10 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -89,7 +89,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.13 2003/10/15 20:15:29 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.14 2003/10/19 16:21:28 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -107,8 +107,8 @@ implements Source, XMLizable {
     /** The uri */
 //    private String uri;
 
-    /** The current ComponentManager */
-    private ComponentManager manager;
+    /** The current ServiceManager */
+    private ServiceManager manager;
 
     /** The processor */
     private Processor processor;
@@ -149,10 +149,10 @@ implements Source, XMLizable {
     /**
      * Construct a new object
      */
-    public SitemapSource(ComponentManager manager,
-                          String           uri,
-                          Map              parameters,
-                          Logger           logger)
+    public SitemapSource(ServiceManager manager,
+                         String         uri,
+                         Map            parameters,
+                         Logger         logger)
     throws MalformedURLException {
 
         Environment env = CocoonComponentManager.getCurrentEnvironment();
@@ -188,7 +188,7 @@ implements Source, XMLizable {
             position += 2;
             try {
                 this.processor = (Processor)this.manager.lookup(Processor.ROLE);
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new MalformedURLException("Cannot get Processor instance");
             }
             prefix = ""; // start at the root

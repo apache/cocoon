@@ -69,7 +69,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.3 2003/10/15 19:25:47 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.4 2003/10/19 16:21:28 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -212,13 +212,6 @@ public class MutableEnvironmentFacade implements Environment {
 	 */
 	public void setStatus(int statusCode) {
 		env.setStatus(statusCode);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.Environment#getOutputStream()
-	 */
-	public OutputStream getOutputStream() throws IOException {
-		return env.getOutputStream();
 	}
 
 	/* (non-Javadoc)

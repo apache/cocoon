@@ -54,9 +54,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.excalibur.source.Source;
@@ -70,19 +71,19 @@ import org.apache.excalibur.source.SourceUtil;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.2 2003/06/07 21:19:36 bruno Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.3 2003/10/19 16:21:28 cziegeler Exp $
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Composable, URIAbsolutizer
+    implements SourceFactory, ThreadSafe, Serviceable, URIAbsolutizer
 {
-    /** The <code>ComponentManager</code> */
-    private ComponentManager manager;
+    /** The <code>ServiceManager</code> */
+    private ServiceManager manager;
 
     /**
      * Composable
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
