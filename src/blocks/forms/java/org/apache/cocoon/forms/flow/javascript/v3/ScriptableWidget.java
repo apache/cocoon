@@ -493,7 +493,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
 //        return delegate.getNamespace();
 //    }
 
-    public Scriptable jsFunction_getParent() {
+    public Object jsFunction_getParent() {
         if (delegate != null) {
             return wrap(delegate.getParent());
         }
