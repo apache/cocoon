@@ -68,7 +68,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.cocoon.components.source.RestrictableSource;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
-import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
@@ -90,7 +89,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.1 2003/07/11 10:32:35 gianugo Exp $
+ *  @version $Id: WebDAVSource.java,v 1.2 2003/07/14 16:06:21 cziegeler Exp $
 */
 public class WebDAVSource
     implements Source, RestrictableSource, ModifiableSource, TraversableSource {
