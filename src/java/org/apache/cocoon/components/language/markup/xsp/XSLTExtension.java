@@ -55,20 +55,21 @@ package org.apache.cocoon.components.language.markup.xsp;
  * generation stylesheet to escape XML characters to make a valid Java strings.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSLTExtension.java,v 1.1 2003/03/09 00:08:54 pier Exp $
+ * @version CVS $Id: XSLTExtension.java,v 1.2 2003/10/07 15:13:20 tcurdt Exp $
  */
 public class XSLTExtension {
 
     /**
      * Escapes '"' and '\' characters in a String (add a '\' before them) so that it can
-     * be inserted in java source.
+     * be inserted in java source + quote special characters as utf-8
      */
-    public static String escapeString(String string) {
+    public static String escapeJavaString(String string) {
         char chr[] = string.toCharArray();
         StringBuffer buffer = new StringBuffer();
 
         for (int i = 0; i < chr.length; i++) {
-            switch (chr[i]) {
+            char c = chr[i];
+            switch (c) {
                 case '\t':
                     buffer.append("\\t");
                     break;
@@ -87,23 +88,49 @@ public class XSLTExtension {
                 case '"':
                 case '\\':
                     buffer.append('\\');
-                    buffer.append(chr[i]);
+                    buffer.append(c);
                     break;
                 default:
-                    if (' ' <= chr[i] && chr[i] <= 127) {
-                        buffer.append(chr[i]);
+                    if (' ' <= c && c <= 127) {
+                        buffer.append(c);
                     } else {
                         buffer.append("\\u");
-                        buffer.append(int2digit(chr[i] >> 12));
-                        buffer.append(int2digit(chr[i] >> 8));
-                        buffer.append(int2digit(chr[i] >> 4));
-                        buffer.append(int2digit(chr[i]));
+                        buffer.append(int2digit(c >> 12));
+                        buffer.append(int2digit(c >> 8));
+                        buffer.append(int2digit(c >> 4));
+                        buffer.append(int2digit(c));
                     }
                     break;
             }
         }
 
-        return buffer.toString();
+        final String encoded = buffer.toString();
+        return encoded;
+    }
+
+    /**
+     * quote special characters as utf-8
+     * TC: it's code doublication but that way we don't
+     *     have to iterate through the StringBuffer twice
+     */
+    public static String escapeString(String string) {
+        char chr[] = string.toCharArray();
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < chr.length; i++) {
+            char c = chr[i];
+            if (c <= 127) {
+                buffer.append(c);
+            } else {
+                buffer.append("\\u");
+                buffer.append(int2digit(c >> 12));
+                buffer.append(int2digit(c >> 8));
+                buffer.append(int2digit(c >> 4));
+                buffer.append(int2digit(c));
+            }
+        }
+
+        final String encoded = buffer.toString();
+        return encoded;
     }
 
     private static char int2digit(int x) {
@@ -120,11 +147,15 @@ public class XSLTExtension {
         return escapeString(string);
     }
 
+    public String escapeJava(String string) {
+        return escapeJavaString(string);
+    }
+
+
     /**
      * Counts amount of spaces in the input line from the beginning
      * to the first new line symbol and returns a string with this
      * amount of spaces.
-     */
     public String prefix(String string) {
         char chr[] = string.toCharArray();
         int i;
@@ -154,12 +185,12 @@ public class XSLTExtension {
         }
         return buffer.toString();
     }
+     */
 
     /**
      * Counts amount of spaces in the input line from the end
      * to the last new line symbol and returns a string with this
      * amount of spaces.
-     */
     public String suffix(String string) {
         char chr[] = string.toCharArray();
 
@@ -179,4 +210,6 @@ public class XSLTExtension {
         }
         return buffer.toString();
     }
-}
+     */
+
+ }

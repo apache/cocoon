@@ -77,7 +77,7 @@ import java.util.StringTokenizer;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.2 2003/03/20 04:12:49 vgritsenko Exp $
+ * @version CVS $Id: JavaLanguage.java,v 1.3 2003/10/07 15:13:20 tcurdt Exp $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
         implements Initializable, ThreadSafe, Composable, Disposable {
@@ -268,7 +268,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
      * @return The escaped string
      */
     public String quoteString(String constant) {
-        return XSLTExtension.escapeString(constant);
+        return XSLTExtension.escapeJavaString(constant);
     }
 
     /**
