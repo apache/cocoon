@@ -75,7 +75,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.13 2003/10/24 14:13:49 sylvain Exp $
+ * @version CVS $Id: Field.java,v 1.14 2003/10/24 22:49:08 joerg Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -257,7 +257,6 @@ public class Field extends AbstractWidget {
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-    private static final String LABEL_EL = "label";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
