@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.30 2000-11-12 21:05:53 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.31 2000-11-12 21:10:32 balld Exp $-->
 <!--
 
  ============================================================================
@@ -446,7 +446,7 @@
 </xsl:template>
 
 <xspdoc:desc>returns the position of the current row in the result set</xspdoc:desc>
-<xsl:template match="esql:row-results//esql:get-row-position">
+<xsl:template match="esql:row-results//esql:get-row-position|esql:results//esql:get-row-position">
   <xsp:expr>_esql_query.position</xsp:expr>
 </xsl:template>
 
