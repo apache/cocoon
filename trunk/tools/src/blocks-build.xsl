@@ -144,6 +144,10 @@
       </target>
 
       <target name="{$block-name}-prepare">
+
+         <!-- Test if this block has mocks -->
+         <available property="{$block-name}.has.mocks" type="dir" file="{string('${blocks}')}/{$block-name}/mocks/"/>
+
          <mkdir dir="{string('${build.blocks}')}/{$block-name}/dest"/>
 
          <mkdir dir="{string('${build.blocks}')}/{$block-name}/conf"/>
@@ -158,11 +162,11 @@
             <fileset dir="{string('${blocks}')}/{$block-name}/lib">
                <include name="*.jar"/>
             </fileset>
-            <pathelement path="{string('${build.blocks}')}/{$block-name}/mocks"/>
+            <pathelement location="{string('${build.blocks}')}/{$block-name}/mocks"/>
          </path>
       </target>
 
-      <target name="{$block-name}-compile" depends="{$block-name}-build,{$block-name}-mocks,{$block-name}-prepare">
+      <target name="{$block-name}-compile" depends="{$block-name}-build,{$block-name}-prepare,{$block-name}-mocks">
 
          <copy filtering="on" todir="{string('${build.blocks}')}/{$block-name}/dest">
             <fileset dir="{string('${blocks}')}/{$block-name}/java">
@@ -224,13 +228,7 @@
          </ant>
       </target>
 
-      <target name="{$block-name}-mocks" if="{$block-name}.has.mocks">
-         <path id="{$block-name}.classpath">
-            <path refid="classpath"/>
-            <fileset dir="{string('${build}')}">
-               <include name="*.jar"/>
-            </fileset>
-         </path>
+      <target name="{$block-name}-mocks" depends="{$block-name}-prepare" if="{$block-name}.has.mocks">
 
          <mkdir dir="{string('${build.blocks}')}/{$block-name}/mocks"/>
 
@@ -300,23 +298,28 @@ select="@project"/>-tests</xsl:for-each></xsl:attribute>
             <fileset dir="{string('${blocks}')}/{$block-name}/test" excludes="**/*.java"/>
          </copy>
 
+         <path id="test.classpath">
+            <fileset dir="{string('${tools.lib}')}">
+               <include name="*.jar"/>
+            </fileset>
+         </path>
+
          <javac srcdir="{string('${blocks}')}/{$block-name}/test"
                 destdir="{string('${build.blocks}')}/{$block-name}/test"
                 fork="true">
+            <classpath refid="test.classpath"/>
             <classpath refid="{$block-name}.classpath"/>
             <classpath>
                <pathelement location="{string('${build.test}')}"/>
-               <pathelement location="{string('${tools.lib}')}"/>
             </classpath>
          </javac>
 
          <junit printsummary="yes" haltonfailure="yes" fork="yes">
-            <classpath refid="{$block-name}.classpath" />
+            <classpath refid="test.classpath"/>
+            <classpath refid="{$block-name}.classpath"/>
             <classpath>
-               <pathelement path="{string('${java.class.path}')}"/>
                <pathelement location="{string('${build.test}')}"/>
                <pathelement location="{string('${build.blocks}')}/{$block-name}/test"/>
-               <pathelement location="{string('${tools.lib}')}"/>
             </classpath>
             <formatter type="plain" usefile="no"/>
             <batchtest>
