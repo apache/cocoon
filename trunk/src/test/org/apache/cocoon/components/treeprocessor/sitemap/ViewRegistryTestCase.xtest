@@ -1,0 +1,69 @@
+   <testcase>
+     <annotation>
+       <![CDATA[
+         <title>ViewRegistryImpl TestCase</title>
+       ]]>
+     </annotation>
+
+     <logger log-level="INFO">
+       <factories>
+         <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
+         <factory type="file" class="org.apache.avalon.excalibur.logger.factory.FileTargetFactory"/>
+       </factories>
+
+       <targets>
+         <stream id="console">
+           <stream>System.out</stream>
+           <format type="avalon">
+             %7.7{priority} %23.23{time:yyyy-MM-dd' 'HH:mm:ss.SSS} [%30.30{category}] (%{context}): %{message}\n%{throwable}
+           </format>
+         </stream>
+         <file id="log-file">
+           <filename>./build/testlogs/TEST-ViewRegistryTestCase.log</filename>
+           <format type="avalon">
+             %7.7{priority} %23.23{time:yyyy-MM-dd' 'HH:mm:ss.SSS} [%30.30{category}] (%{context}): %{message}\n%{throwable}
+           </format>
+         </file>
+       </targets>
+
+       <categories>
+         <category name="" log-level="INFO">
+           <log-target id-ref="console"/>
+           <log-target id-ref="log-file"/>
+           <category name="fortress" log-level="INFO">
+             <category name="test" log-level="INFO">
+               <log-target id-ref="console"/>
+               <log-target id-ref="log-file"/>
+             </category>
+             <category name="view-registry" log-level="INFO">
+               <log-target id-ref="console"/>
+               <log-target id-ref="log-file"/>
+             </category>
+             <log-target id-ref="console"/>
+             <log-target id-ref="log-file"/>
+           </category>
+         </category>
+       </categories>
+     </logger>
+
+     <roles>
+       <role name="org.apache.cocoon.components.treeprocessor.sitemap.ViewRegistry">
+         <component shorthand="view-registry"
+           class="org.apache.cocoon.components.treeprocessor.sitemap.ViewRegistryImpl"
+           handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"/>
+       </role>
+     </roles>
+
+     <components>
+       <view-registry id="default" logger="view-registry">
+         <component id-ref="some-generator" label="gen1, gen2" />
+         <component id-ref="some-transformer" label="trans1" />
+         <view id-ref="gen1view" from-label="gen1" />
+         <view id-ref="gen2view" from-label="gen2" />
+         <view id-ref="trans1view" from-label="trans1" />
+         <view id-ref="trans2view" from-label="trans2" />
+         <view id-ref="firstview" from-position="first" />
+         <view id-ref="lastview" from-position="last" />
+       </view-registry>
+     </components>
+   </testcase>
