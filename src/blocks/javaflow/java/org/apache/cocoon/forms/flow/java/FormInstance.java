@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.5 2004/04/04 17:16:17 stephan Exp $
+ * @version CVS $Id: FormInstance.java,v 1.6 2004/04/16 09:39:57 stephan Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
@@ -47,7 +47,6 @@ public class FormInstance extends AbstractContinuable {
     private Widget formWidget;
     private Locale locale;
     private boolean isValid;
-    private String submitId;
     private Object validator; // Used?
   
     /**
@@ -123,6 +122,13 @@ public class FormInstance extends AbstractContinuable {
             return this.form/*Widget*/.getWidget(name);
         }
     }
+
+		public String getSubmitId() {
+			
+		    Widget widget = this.form.getSubmitWidget();
+  	    // Can be null on "normal" submit
+				return  widget == null ? null : widget.getId();
+		}
 
     /**
      * Sets the point in your script that will be returned to when the form is
@@ -205,10 +211,6 @@ public class FormInstance extends AbstractContinuable {
             // except a sudden change of repeaters whose size changed from a continuation to another.
         
         } while(!finished);
-
-        Widget widget = this.form.getSubmitWidget();
-        // Can be null on "normal" submit
-        this.submitId = widget == null ? null : widget.getId(); 
     }
 
     /**

@@ -15,10 +15,10 @@
  */
 package org.apache.cocoon.components.flow.java.test;
 
-import org.apache.cocoon.components.flow.java.AbstractCocoonFlow;
+import org.apache.cocoon.components.flow.java.*;
 
 
-public abstract class AbstractSimpleFlow extends AbstractCocoonFlow {
+public abstract class AbstractSimpleFlow extends AbstractContinuable {
 
     public void parent() {
 
