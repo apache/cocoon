@@ -79,7 +79,7 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PatternTransformer.java,v 1.9 2004/03/05 13:01:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PatternTransformer extends AbstractTransformer implements LogEnabled, Serviceable,
                                                                        Recyclable, Disposable,
@@ -460,7 +460,7 @@ public class PatternTransformer extends AbstractTransformer implements LogEnable
   /**
    * This class represent a entry in a store to cache the lexical automaton.
    */
-  public class LexicalAutomatonEntry implements Serializable
+  public static class LexicalAutomatonEntry implements Serializable
   {
     private SourceValidity validity = null;
     private LexicalAutomaton automaton = null;

@@ -836,7 +836,7 @@ public class LDAPTransformer extends AbstractTransformer {
         return getLogger();
     }
 
-    class LDAPQuery {
+    static class LDAPQuery {
 
         /** What index are you in daddy's queries list */
         protected int query_index;

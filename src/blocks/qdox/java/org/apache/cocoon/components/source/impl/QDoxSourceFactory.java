@@ -107,7 +107,7 @@ public final class QDoxSourceFactory
      * <p>Using this class, the QDoxSourceFactory can quickly find the right SourceRoot URI given a specified
      * package.</p>
      */
-    protected final class SourceRoot {
+    protected static final class SourceRoot {
         private List packages;
         private String sourceRootUri;
         

@@ -35,7 +35,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  * This is the default implementation for the transaction manager.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultTransactionManager.java,v 1.4 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public final class DefaultTransactionManager
 extends AbstractLogEnabled
@@ -62,7 +62,7 @@ implements Component, ThreadSafe, TransactionManager, Contextualizable {
         return state;
     }
 
-    private class TransactionState {
+    private static class TransactionState {
         /** number readers reading*/
         public int nr=0;
         /** number of readers total (reading or waiting to read)*/

@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.7 2004/03/27 15:41:50 unico Exp $
+ * @version CVS $Id$
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -255,7 +255,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
      * 
      */
     
-    class XPathPrefixResolver implements PrefixResolver {
+    static class XPathPrefixResolver implements PrefixResolver {
     	
     	private Map params;
 

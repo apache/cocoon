@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
     implements Configurable, Serviceable, Recyclable {
 
-    protected class ElementData {
+    protected static class ElementData {
         public String uri = null;
         public String loc = null;
         public String raw = null;

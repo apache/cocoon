@@ -84,7 +84,7 @@ public abstract class CompilingInterpreter
     protected abstract Script compileScript(Context context,
                                             Scriptable scope,
                                             Source source) throws Exception;
-
+    // This class cannot be static 
     protected class ScriptSourceEntry {
         final private Source source;
         private Script script;

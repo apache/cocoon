@@ -348,7 +348,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 	/**
 	 * Configuration data holder for scheduled targets.
 	 */
-	class TargetConfiguration {
+	static class TargetConfiguration {
         
         final Map map;
 		Parameters parameters;

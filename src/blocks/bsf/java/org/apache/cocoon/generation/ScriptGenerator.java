@@ -55,11 +55,11 @@ import java.io.StringReader;
  * </pre>
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptGenerator.java,v 1.7 2004/04/15 08:39:30 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ScriptGenerator extends ServiceableGenerator implements Configurable {
 
-    protected class BSFLanguage {
+    protected static class BSFLanguage {
         public String name;
         public String engineSrc;
         public String[] extensions;

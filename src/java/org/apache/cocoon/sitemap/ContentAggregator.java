@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.7 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
@@ -74,7 +74,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     protected ServiceManager manager;
     
     /** This object holds the part parts :) */
-    protected final class Part {
+    protected static final class Part {
         public String uri;
         public Element element;
         public Source source;
@@ -88,7 +88,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
     }
 
     /** This object holds an element definition */
-    protected final class Element {
+    protected static final class Element {
         public String namespace;
         public String prefix;
         public String name;

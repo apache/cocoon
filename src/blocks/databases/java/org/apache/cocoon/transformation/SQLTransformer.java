@@ -1338,7 +1338,7 @@ public class SQLTransformer extends AbstractSAXTransformer
         }
     }
 
-    private class AncestorValue {
+    private static class AncestorValue {
         protected int level;
         protected String name;
 

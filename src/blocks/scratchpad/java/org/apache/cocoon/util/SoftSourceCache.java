@@ -36,7 +36,7 @@ import org.apache.excalibur.source.SourceValidity;
  * 
  * @since 2.1.4
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SoftSourceCache.java,v 1.4 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SoftSourceCache implements SourceCache {
 
@@ -111,7 +111,7 @@ public class SoftSourceCache implements SourceCache {
 	 * Private helper to hold source validities and cached objects.
 	 * @author <a href="mailto:haul@apache.org">Christian Haul</a>
 	 */
-	private class CacheEntry {
+	private static class CacheEntry {
 		public SourceValidity validity = null;
 		public Object object = null;
 

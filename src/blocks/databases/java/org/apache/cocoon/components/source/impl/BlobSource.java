@@ -302,7 +302,7 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
         return new EmptyIterator();
     }
 
-    class EmptyIterator implements Iterator {
+    static class EmptyIterator implements Iterator {
         public boolean hasNext() { return false; }
         public Object next() { return null; }
         public void remove() {}

@@ -35,7 +35,7 @@ import org.apache.cocoon.environment.Session;
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestWrapper.java,v 1.7 2004/03/11 14:21:56 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class RequestWrapper implements Request {
 
@@ -144,7 +144,7 @@ public final class RequestWrapper implements Request {
         }
     }
 
-    final class EnumerationFromIterator implements Enumeration {
+    static final class EnumerationFromIterator implements Enumeration {
         private Iterator iter;
         EnumerationFromIterator(Iterator iter) {
             this.iter = iter;

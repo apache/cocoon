@@ -201,7 +201,7 @@ public class XSLTAspect
     }
 
 
-    protected class PreparedConfiguration {
+    protected static class PreparedConfiguration {
         public VariableResolver stylesheet;
         public String xsltRole;
         public Map parameters = new HashMap();

@@ -275,7 +275,7 @@ public abstract class AbstractConstrainedTransformer
 	 *@author     Nicola Ken Barozzi
 	 *@since      14 May 2002
 	 */
-	public class RipperListener extends ElementEventAdapter {
+	public static class RipperListener extends ElementEventAdapter {
 
 		public void elementValueRecieved(ElementValueEvent e) {
 			//do nothing so that element doesn't pass through

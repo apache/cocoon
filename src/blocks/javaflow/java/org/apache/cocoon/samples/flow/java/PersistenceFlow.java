@@ -132,7 +132,7 @@ public class PersistenceFlow extends AbstractContinuable {
         sendPage("page/employee-result", new VarMap().add("employee", results));
     }
 
-    public class EmployeeComparator implements Comparator, Continuable {
+    public static class EmployeeComparator implements Comparator, Continuable {
         public int compare(Object o1, Object o2) {
             return ((Employee)o1).getId()-((Employee)o2).getId();
         }

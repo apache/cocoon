@@ -80,7 +80,7 @@ public final class WindowAspect extends AbstractAspect {
         }
     }
 
-    protected class PreparedConfiguration {
+    protected static class PreparedConfiguration {
         public String tagName;
         public boolean rootTag;
         

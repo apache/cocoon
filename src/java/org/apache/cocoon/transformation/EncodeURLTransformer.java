@@ -324,7 +324,7 @@ public class EncodeURLTransformer
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
      * @version    CVS $Id$
      */
-    public class ElementAttributeMatching {
+    public static class ElementAttributeMatching {
         /**
          * Regular expression of including patterns
          *

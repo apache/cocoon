@@ -57,7 +57,7 @@ public class EffectPipe extends AbstractXMLPipe {
     protected static final int EVENT_END_CDATA              =17;
     protected static final int EVENT_COMMENT                =18;
 
-    protected class Element {
+    protected static class Element {
         public final String prefix;
         public final String uri;
         public final String loc;

@@ -58,7 +58,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.13 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Contextualizable {
@@ -442,8 +442,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
         this.bodyDocument = null;
      }
 
-    class IndexHelperField
-    {
+    static class IndexHelperField {
         String localName;
         StringBuffer text;
         Attributes attributes;
@@ -471,7 +470,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
         }
     }
 
-    class IndexerConfiguration {
+    static class IndexerConfiguration {
         String analyzerClassname;
         String indexDirectory;
         int mergeFactor;

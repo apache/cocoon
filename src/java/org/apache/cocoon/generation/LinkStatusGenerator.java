@@ -187,7 +187,7 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
     /**
      * Stores links to process and the referrer links
      */
-    private class Link {
+    private static class Link {
         private URL url;
         private String referrer;
 
