@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh 
 
 # Copyright 2004-2005 The Apache Software Foundation
 #
@@ -21,6 +21,14 @@
 #   - make a local.build.properties, that excludes all documentation stuff
 #   - build all jars and the war file
 #   - copy all jars and the war to the appropriate locations (repository structure)
+#
+# Usually one start the script in the Cocoon root directory by issuing:
+#
+#     ./tools/bin/create-repository-jars.sh tags/RELEASE_2_1_x
+#
+# The-h option will give you a short usage note and the settings of environment 
+# variables the script uses
+#
 
 # The path to the local repository we maintain
 if [ "$LOCAL_PATH" = "" ]; then
@@ -34,7 +42,7 @@ fi
 
 # On which host should the artifacts be published
 if [ "$REMOTE_HOST" = "" ]; then
-  REMOTE_HOST=www.apache.org
+  REMOTE_HOST=svn.apache.org
 fi
 
 # The path to the remote repository
@@ -73,6 +81,7 @@ NOCLEAN=0
 NOJARS=0
 NOWAR=0
 BUILD_SRC_DIST=0
+RC=0
 while getopts ":BdhJkSW" option
 do
   case $option in
@@ -195,7 +204,7 @@ if [ "$NOBUILD" -eq 0 ]; then
   echo
   ./build.sh $CLEAN webapp war | tee $LOCAL_PATH/build.log
   # The build script dosn't report on failures so we have to do that by hand
-  tail -10 $LOCAL_PATH/build.log|grep "BUILD SUCCESSFUL"
+  tail -n 10 $LOCAL_PATH/build.log|grep "BUILD SUCCESSFUL"
   if [ $? = 0 ]; then
     RC=0
   else
