@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.5 2003/03/20 10:42:04 stephan Exp $
+  CVS $Id: todo.xml,v 1.6 2003/03/20 15:09:33 stephan Exp $
 -->
 
 <todo title="Things To Do">
@@ -35,7 +35,7 @@
    Redesign the SitemapConfigurable handling.
   </action>
   
- <action context="docs" assigned-to="open">
+  <action context="docs" assigned-to="open">
    For 2.1: Attend to any high+ issues in the
    <link href="plan/todo-doc.html">Documentation To Do List</link>
   </action> 
@@ -45,7 +45,7 @@
    <link href="plan/release.html">release plan</link>
   </action>
 
- <action context="code" assigned-to="open">
+  <action context="code" assigned-to="open">
    For 2.1: use (only) released versions of excalibur (xml, source, store etc).
    This requires a release of those components in excalibur.
   </action> 
@@ -144,10 +144,6 @@
    server : store fragments in the session rather than in a local store. <br/>
   </action>
 
-  <action context="code" assigned-to="SMS">
-   Measure also the time of the setup() method in the profiler components, which sometimes
-   need more time than the processing.
-  </action>
  </actions>
 
 </todo>
