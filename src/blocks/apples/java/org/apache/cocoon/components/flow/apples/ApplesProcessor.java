@@ -170,6 +170,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
 
     public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.serviceManager = serviceManager;
     }
 
