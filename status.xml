@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.76 2003/07/04 14:37:11 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.77 2003/07/05 04:50:34 joerg Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="21340" due-to="Peter Ross" due-to-email="peter@emailross.com">
+   Refactored the WebServiceProxyGenerator: "host parameter is null" fixed, replaced deprecated
+   stuff, removed all work arounds (hopefully no longer needed), removed the buggy "&lt;?xml" test,
+   replaced getResponseBodyAsString() with getResponseBody() (but encoding issue is still not fixed).
+  </action>
   <action dev="CZ" type="fix" fixes-bug="20115" due-to="Tim Goodwin" due-to-email="tjg@star.le.ac.uk">
     Applied patch for implementing exists for the xmldb source.
   </action>
