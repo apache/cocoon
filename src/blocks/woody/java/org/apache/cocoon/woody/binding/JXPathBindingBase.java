@@ -52,8 +52,10 @@ package org.apache.cocoon.woody.binding;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
+import org.w3c.dom.Node;
 
 /**
  * Provides a base class for hooking up Binding implementations that use the 
@@ -158,8 +160,11 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
             jxpc.setLenient(true);
+            if (objModel instanceof Node) {
+                jxpc.setFactory(new DOMFactory());
+            }
         } else {
-            jxpc = (JXPathContext) objModel;            
+            jxpc = (JXPathContext) objModel;
         }
         return jxpc;
     }
