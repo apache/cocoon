@@ -14,14 +14,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!--
+  Model for the Swan form-binding editor.
+
+  @version $Id$
+-->
+
 <fd:form
   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
   <fd:widgets>
-
-    <!--
-      CVS $Id$
-    -->
 
     <fd:messages id="messages"/>
 

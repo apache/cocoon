@@ -15,9 +15,11 @@
   limitations under the License.
 -->
 
-  <!--
-    CVS $Id$
-  -->
+<!--
+  Success template for the Swan form-model editor.
+
+  @version $Id$
+-->
 
 <page>
   <title>Sample form result</title>
