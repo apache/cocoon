@@ -14,14 +14,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!-- $Id: xsp.xsl,v 1.2 2004/03/17 11:28:22 crossley Exp $-->
+<!-- CVS $Id: xsp.xsl,v 1.3 2004/04/02 21:32:33 joerg Exp $-->
 <!--
  * XSP Core logicsheet for the Java language
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/17 11:28:22 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -233,15 +231,10 @@ Either both 'uri' and 'prefix' or none of them must be specified
       </xsl:choose>
     </xsl:variable>
 
-    <!-- Declare namespaces that are not already present on the parent element.
-         Note : we could use "../../namespace::*[...]" to get parent element namespaces
-         but Xalan 2.0.1 retunrs only the first namespace (Saxon is OK).
-         That's why we store the parent element in a variable -->
-    <xsl:variable name="parent-element" select=".."/>
     <xsl:for-each select="namespace::*">
       <xsl:variable name="ns-prefix" select="local-name(.)"/>
       <xsl:variable name="ns-uri" select="string(.)"/>
-      <xsl:if test="not($parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
+      <xsl:if test="not(../namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
         this.contentHandler.startPrefixMapping(
           "<xsl:value-of select="local-name(.)"/>",
           "<xsl:value-of select="."/>");
@@ -250,14 +243,14 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
     <!-- Declare namespace defined by @uri and @prefix attribute -->
     <xsl:if test="$uri != '&quot;&quot;'">
-      <xsl:if test="not($parent-element/namespace::*[local-name(.) = $prefix and string(.) = $uri])">
+      <xsl:if test="not(../namespace::*[local-name(.) = $prefix and string(.) = $uri])">
         this.contentHandler.startPrefixMapping(
           <xsl:value-of select="$prefix"/>,
           <xsl:value-of select="$uri"/>);
       </xsl:if>
     </xsl:if>
 
-    <xsl:apply-templates select="xsp:attribute | xsp:logic[xsp:attribute]"/>
+    <xsl:apply-templates select="xsp:attribute | xsp:logic[xsp:attribute]" mode="check"/>
 
     this.contentHandler.startElement(
       <xsl:copy-of select="$uri"/>,
@@ -280,7 +273,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
     <!-- Declare namespace defined by @uri and @prefix attribute -->
     <xsl:if test="$uri != '&quot;&quot;'">
-      <xsl:if test="not($parent-element/namespace::*[local-name(.) = $prefix and string(.) = $uri])">
+      <xsl:if test="not(../namespace::*[local-name(.) = $prefix and string(.) = $uri])">
         this.contentHandler.endPrefixMapping(<xsl:value-of select="$prefix"/>);
       </xsl:if>
     </xsl:if>
@@ -288,10 +281,24 @@ Either both 'uri' and 'prefix' or none of them must be specified
     <xsl:for-each select="namespace::*">
       <xsl:variable name="ns-prefix" select="local-name(.)"/>
       <xsl:variable name="ns-uri" select="string(.)"/>
-      <xsl:if test="not($parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
+      <xsl:if test="not(../namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
         this.contentHandler.endPrefixMapping("<xsl:value-of select="local-name(.)"/>");
       </xsl:if>
     </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="xsp:attribute | xsp:logic[xsp:attribute]" mode="check">
+    <xsl:if test="preceding-sibling::text()[normalize-space()]
+                | preceding-sibling::processing-instruction()
+                | preceding-sibling::*[not(self::xsp:attribute
+                                         | self::xsp:logic[xsp:attribute]
+                                         | self::xsp:param
+                                         | self::xsp:text[not(normalize-space())])]">
+      <xsl:message terminate="yes">
+        You can not add attributes to elements after other node types already have been added.
+      </xsl:message>
+    </xsl:if>
+    <xsl:apply-templates select="."/>
   </xsl:template>
 
   <xsl:template match="xsp:attribute">
@@ -488,6 +495,8 @@ Either both 'uri' and 'prefix' or none of them must be specified
     </xsl:choose>
   </xsl:template>
 
+  <!-- FIXME: there seems to be no apply-templates with that mode,
+              i.e. can this template be removed? -->
   <xsl:template match="text()" mode="value">
     <xsl:value-of select="."/>
   </xsl:template>
