@@ -53,11 +53,11 @@ package org.apache.cocoon.components.repository;
  * This interface represents a repository from a CMS.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: Repository.java,v 1.4 2003/11/15 13:26:00 joerg Exp $
+ * @version CVS $Id: Repository.java,v 1.5 2003/11/15 13:31:18 joerg Exp $
  */
 public interface Repository {
 
-    /** Role for the component */
+    /** Role for the object */
     public final static String ROLE = "org.apache.cocoon.components.repository.Repository";
 }
 

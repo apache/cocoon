@@ -94,7 +94,7 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.5 2003/11/15 13:26:00 joerg Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.6 2003/11/15 13:31:18 joerg Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
   implements PrincipalProvider, Serviceable, Configurable, Initializable {
@@ -155,9 +155,9 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
     }
 
     /**
-     * Initialialize the component. Initialization includes
+     * Initialialize the service. Initialization includes
      * allocating any resources required throughout the
-     * components lifecycle.
+     * service's lifecycle.
      *
      * @throws Exception if an error occurs
      */
@@ -191,7 +191,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
             // this.macro = nat.getMacroHelper();
 
         } catch (ServiceException se) {
-            getLogger().error("Could not lookup for component.", se);
+            getLogger().error("Could not lookup for service.", se);
         } finally {
             if (repository!=null) {
                 this.manager.release(repository);
