@@ -1,3 +1,0 @@
-This example always inserts the full instance into the SAX stream and uses
-the different stylesheets to display only parts of it.
-
