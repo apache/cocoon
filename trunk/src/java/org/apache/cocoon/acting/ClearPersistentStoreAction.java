@@ -63,14 +63,13 @@ import org.apache.excalibur.store.Store;
  * Simple action which ensures the persistent store is cleared.
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: ClearPersistentStoreAction.java,v 1.5 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: ClearPersistentStoreAction.java,v 1.6 2004/01/27 13:28:48 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="Action"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="clear-persistent-store"
+ * @avalon.service type=Action
+ * @x-avalon.lifestyle type=singleton
  */
-public class ClearPersistentStoreAction extends ServiceableAction {
+public class ClearPersistentStoreAction extends ServiceableAction implements Action {
 
     /**
      * @avalon.dependency type="Store"

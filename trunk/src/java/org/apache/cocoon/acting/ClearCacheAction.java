@@ -64,14 +64,13 @@ import org.apache.cocoon.environment.SourceResolver;
  * cached results
  *
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: ClearCacheAction.java,v 1.6 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: ClearCacheAction.java,v 1.7 2004/01/27 13:28:48 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="Action"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="clear-cache"
+ * @avalon.service type=Action
+ * @x-avalon.lifestyle type=singleton
  */
-public class ClearCacheAction extends ServiceableAction {
+public class ClearCacheAction extends ServiceableAction implements Action {
 
 
     /**

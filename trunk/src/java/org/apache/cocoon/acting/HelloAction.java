@@ -65,12 +65,11 @@ import org.apache.cocoon.environment.SourceResolver;
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: HelloAction.java,v 1.4 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: HelloAction.java,v 1.5 2004/01/27 13:28:48 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="Action"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="hello"
+ * @avalon.service type=Action
+ * @x-avalon.lifestyle type=singleton
  */
 public class HelloAction extends AbstractLogEnabled implements Action {
 
