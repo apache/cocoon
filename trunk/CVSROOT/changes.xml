@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.98 2000-08-16 15:32:36 stefano Exp $
+  $Id: changes.xml,v 1.99 2000-08-17 22:34:57 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Mark Washeim" due-to-email="esalon@canuck.com">
+   Make Cocoon running better under heavy load.
+  </action>
   <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
    Added Solaris8 and improved Win2k installation case documentation.
   </action>
