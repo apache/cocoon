@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.128 2000-10-20 21:39:44 greenrd Exp $ 
+  $Id: changes.xml,v 1.129 2000-10-21 13:33:45 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Drasko Kokic" due-to-email="drasko_kokic@yahoo.com">
+   get-header-names now works in request taglib.
+  </action>
   <action dev="RDG" type="fix" due-to="Didier Villevalois" due-to-email="dvillevalois@sqli.com">
    Fixed so that XSLT document() function resolves correctly when two arguments used
   </action>

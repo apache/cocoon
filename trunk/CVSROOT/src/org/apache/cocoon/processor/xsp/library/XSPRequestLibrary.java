@@ -344,7 +344,7 @@ public class XSPRequestLibrary {
     Enumeration e = request.getHeaderNames();
 
     while (e.hasMoreElements()) {
-      v.addElement(request.getHeader((String) e.nextElement()));
+      v.addElement((String) e.nextElement());
     }
 
     String[] headerNames = new String[v.size()];
