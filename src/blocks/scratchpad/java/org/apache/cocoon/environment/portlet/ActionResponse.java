@@ -70,7 +70,7 @@ import java.util.Map;
  * the JSR-168 (Portlet) environment.
  *
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
- * @version CVS $Id: ActionResponse.java,v 1.1 2003/12/03 13:09:34 vgritsenko Exp $
+ * @version CVS $Id: ActionResponse.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
  */
 public final class ActionResponse extends PortletResponse {
 

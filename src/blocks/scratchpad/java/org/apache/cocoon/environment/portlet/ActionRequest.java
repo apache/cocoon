@@ -58,7 +58,7 @@ import java.io.InputStream;
  * Implements the {@link org.apache.cocoon.environment.Request} interface for the
  * JSR-168 (Portlet) environment.
  *
- * @version CVS $Id: ActionRequest.java,v 1.1 2003/12/03 13:09:34 vgritsenko Exp $
+ * @version CVS $Id: ActionRequest.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
  */

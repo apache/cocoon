@@ -75,7 +75,7 @@ import java.util.Vector;
  * Portlet action request wrapper for multipart parser.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MultipartActionRequest.java,v 1.1 2003/12/03 13:09:34 vgritsenko Exp $
+ * @version CVS $Id: MultipartActionRequest.java,v 1.2 2003/12/03 13:20:30 vgritsenko Exp $
  */
 public class MultipartActionRequest implements ActionRequest {
 

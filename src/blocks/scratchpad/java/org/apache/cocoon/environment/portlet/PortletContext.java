@@ -65,7 +65,7 @@ import java.util.Enumeration;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletContext.java,v 1.1 2003/12/03 13:09:34 vgritsenko Exp $
+ * @version CVS $Id: PortletContext.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
  */
 public final class PortletContext implements Context {
 
