@@ -18,56 +18,62 @@
 <!--+
     | Convert Gump descriptor with Cocoon blocks to the Blocks Samples page
     |
-    | CVS $Id: gump2samples.xsl,v 1.2 2004/04/02 12:58:01 stephan Exp $
+    | CVS $Id: gump2samples.xsl,v 1.3 2004/04/02 20:40:57 joerg Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:template match="/">
+  <xsl:template match="/root">
     <samples name="Blocks Samples">
       <group name="Back">
-        <sample href=".." name="Back">
+        <sample href="./" name="Back">
           Back to the samples home page.
         </sample>
       </group>
+      <xsl:variable name="xsamples" select="xsamples/sample"/>
+      <xsl:variable name="blocks" select="gump/module/project[starts-with(@name, 'cocoon-block-')]"/>
+      <xsl:variable name="includedBlocks" select="$blocks[@name = $xsamples/@name]"/>
+      <xsl:variable name="excludedBlocks" select="$blocks[not(@name = $xsamples/@name)]"/>
+      <xsl:variable name="includedStableBlocks" select="$includedBlocks[@status = 'stable']"/>
+      <xsl:variable name="includedUnstableBlocks" select="$includedBlocks[@status = 'unstable']"/>
+      <xsl:variable name="includedDeprecatedBlocks" select="$includedBlocks[@status = 'deprecated']"/>
 
-      <group name="Stable Blocks">
-        <xsl:apply-templates select="module/project[starts-with(@name, 'cocoon-block-')][@status = 'stable']">
-          <xsl:sort select="@name"/>
-        </xsl:apply-templates>
-      </group>
+      <xsl:if test="$includedStableBlocks">
+        <group name="Stable Blocks">
+          <xsl:apply-templates select="$includedStableBlocks">
+            <xsl:sort select="@name"/>
+          </xsl:apply-templates>
+        </group>
+      </xsl:if>
 
-      <xsl:variable name="unstable" select="module/project[starts-with(@name, 'cocoon-block-')][@status = 'unstable']"/>
-      <xsl:if test="$unstable">
+      <xsl:if test="$includedUnstableBlocks">
         <group name="Unstable Blocks">
           <note>
             Blocks below are subject to change without notice!
           </note>
-          <xsl:apply-templates select="$unstable">
+          <xsl:apply-templates select="$includedUnstableBlocks">
             <xsl:sort select="@name"/>
           </xsl:apply-templates>
         </group>
       </xsl:if>
 
-      <xsl:variable name="deprecated" select="module/project[starts-with(@name, 'cocoon-block-')][@status = 'deprecated']"/>
-      <xsl:if test="$deprecated">
+      <xsl:if test="$includedDeprecatedBlocks">
         <group name="Deprecated Blocks">
           <note>
             Blocks below will be removed in the future!
           </note>
-          <xsl:apply-templates select="$deprecated">
+          <xsl:apply-templates select="$includedDeprecatedBlocks">
             <xsl:sort select="@name"/>
           </xsl:apply-templates>
         </group>
       </xsl:if>
 
-      <xsl:variable name="excluded" select="module/project[starts-with(@name, 'cocoon-block-')][not(document(concat(substring-after(@name,'cocoon-block-'), '/', substring-after(@name,'cocoon-block-'),'.xsamples')))]"/>
-      <xsl:if test="$excluded">
+      <xsl:if test="$excludedBlocks">
         <group name="Excluded Blocks">
           <note>
-            Blocks below are either excluded from the build or has no samples.
+            Blocks below are either excluded from the build or have no samples.
           </note>
-          <xsl:apply-templates select="$excluded" mode="excluded">
+          <xsl:apply-templates select="$excludedBlocks" mode="excluded">
             <xsl:sort select="@name"/>
           </xsl:apply-templates>
         </group>
@@ -78,14 +84,9 @@
   <xsl:template match="project">
     <xsl:variable name="name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="sample" select="document(concat($name, '/', $name,'.xsamples'))/xsamples/group/sample"/>
-    <xsl:choose>
-      <xsl:when test="$sample">
-        <xsl:apply-templates select="$sample"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- Output nothing for excluded blocks -->
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:if test="$sample">
+      <xsl:apply-templates select="$sample"/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="project" mode="excluded">

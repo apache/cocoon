@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.1 2004/04/01 19:05:42 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.2 2004/04/02 20:40:57 joerg Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -42,12 +42,23 @@
   <map:pipelines>
     <map:pipeline>
       <map:match pattern="">
-        <map:generate src="gump.xml"/>
+        <map:aggregate element="root">
+          <map:part src="gump.xml" element="gump"/>
+          <map:part src="cocoon:/xsamples"/>
+        </map:aggregate>
         <map:transform src="gump2samples.xsl"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
         <map:serialize/>
+      </map:match>
+
+      <map:match pattern="xsamples">
+      	<map:generate type="directory" src=".">
+      	  <map:parameter name="depth" value="2"/>
+      	</map:generate>
+      	<map:transform src="directory2xsamples.xsl"/>
+      	<map:serialize tpye="xml"/>
       </map:match>
 
       <!-- ======================== Automount =============================== -->
