@@ -202,6 +202,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="SW" type="update">
+     Refactored the Deprecation class: the "forbidden-deprecation-level" parameter in web.xml
+     allows to raise deprecation exceptions depending on the log level. For example, DEBUG
+     allows no deprecations (strict mode), and FATAL_ERROR allows all (tolerant mode).
+     Default is ERROR, allowing messages up to WARN.
+   </action>
    <action dev="SW" type="add">
      A flowscript's file encoding can now be specified by a comment on the script's
      very first line, in the form "<code>// encoding = xxxx</code>". Otherwise, the

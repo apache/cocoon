@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.util.BufferedOutputStream;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 
 
 /**
@@ -298,7 +298,7 @@ public class EnvironmentWrapper
      */
     public OutputStream getOutputStream()
     throws IOException {
-        DeprecationLogger.log("The getOutputStream() method of the Environment " +
+        Deprecation.logger.warn("The method Environment.getOutputStream() " +
         "is deprecated. Use getOutputStream(-1) instead.");
         return this.outputStream == null
             ? this.environment.getOutputStream()

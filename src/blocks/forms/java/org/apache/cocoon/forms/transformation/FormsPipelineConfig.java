@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.i18n.I18nUtils;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
@@ -353,7 +353,7 @@ public class FormsPipelineConfig {
         public Object getVariable(String name) {
             Object value = this.vars.get(name);
             if ( deprecatedNames.contains(name) ) {
-                DeprecationLogger.log("CForms: usage of the variable '" + name + "' is deprecated."+ 
+                Deprecation.logger.warn("CForms: usage of the variable '" + name + "' is deprecated."+ 
                                       "Please use 'cocoon/" + name + "' instead. The usage of just '"+
                                       name+"' will be removed in Cocoon 2.2.");
             }

@@ -44,6 +44,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
@@ -848,6 +849,9 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.log = this.loggerManager.getLoggerForCategory(accesslogger);
+        
+        final String deprecationLevel = getInitParameter("forbidden-deprecation-level", "ERROR");
+        Deprecation.setForbiddenLevel(Deprecation.LogLevel.getLevel(deprecationLevel));
     }
 
     private LoggerManager newLoggerManager(String loggerManagerClass, Hierarchy hierarchy) {
