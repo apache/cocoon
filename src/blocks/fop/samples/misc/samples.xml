@@ -15,11 +15,11 @@
     </group>
 
     <group name="XSP + FOP caching test">
-        <sample name="Generate PDF with pageKey=ONE" href="cache-test-ONE-a-250.pdf">
-            Needs the XSP block to generate input, see generated document for info.
+        <sample name="PDF with pageKey=ONE, 250 pages" href="cache-test-250.pdf?pageKey=ONE&amp;other=xyz&amp;validity=60">
+            Needs the serverpages generator to generate input, see generated document or sitemap for info.
         </sample>
-        <sample name="Same with pageKey=TWO" href="cache-test-TWO-b-225.pdf">
-            Same with another pageKey to check that both are cached separately.
+        <sample name="PDF with pageKey=TWO, 125 pages" href="cache-test-125.pdf?pageKey=TWO&amp;validity=45">
+            Uses a different pageKey value to check that both are cached separately.
         </sample>
     </group>
 
