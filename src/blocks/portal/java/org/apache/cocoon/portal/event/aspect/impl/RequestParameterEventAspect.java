@@ -55,6 +55,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Publisher;
@@ -66,7 +67,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RequestParameterEventAspect.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @version CVS $Id: RequestParameterEventAspect.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
  */
 public class RequestParameterEventAspect
 	extends AbstractLogEnabled
@@ -78,7 +79,7 @@ public class RequestParameterEventAspect
 	public void process(EventAspectContext context, PortalService service) {
         final Parameters config = context.getAspectParameters();
         // FIXME Configure more than one parameter name
-        final String requestParameterName = config.getParameter("parameter-name", "cocoon-portal-event");
+        final String requestParameterName = config.getParameter("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
         final Request request = ObjectModelHelper.getRequest( context.getObjectModel() );
         String[] values = request.getParameterValues( requestParameterName );
         if ( values != null ) {

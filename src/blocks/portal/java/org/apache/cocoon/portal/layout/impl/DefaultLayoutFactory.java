@@ -64,7 +64,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.1 2003/05/07 13:28:00 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -100,7 +100,8 @@ public class DefaultLayoutFactory
 
     public void prepareLayout(Layout layout) {
         if ( layout != null ) {
-            // TODO do something here
+            // TODO do something here 
+            // we have to set the aspect data handler
         }
     }
 

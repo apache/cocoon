@@ -57,11 +57,12 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * A renderer is responsible for rendering a layout object.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Renderer.java,v 1.1 2003/05/07 06:22:28 cziegeler Exp $
+ * @version CVS $Id: Renderer.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
  */
 public interface Renderer 
     extends Component {
