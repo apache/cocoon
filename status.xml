@@ -11,20 +11,28 @@
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
   <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>
   <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
+  <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
+  <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
+  <person name="Bruno Dumon" email="bruno@apache.org" id="bruno"/>
   <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Christian Haul" email="haul@apache.org" id="CH"/>
+  <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
   <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
   <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
+  <person name="Matthew Langham" email="mlangham@apache.org" id="BL"/>
   <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Stephan Michels" email="stephan@apache.org" id="SMS"/>
+  <person name="Steven Noels" email="stevenn@apache.org" id="SN"/>
+  <person name="Michael Melhem" email="michaelm@apache.org" id="MM"/>
   <person name="John Morrison" email="morrijr@apache.org" id="JM"/>
-  <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
+  <person name="Christopher Oliver" email="coliver@apache.org" id="CO"/>
+  <person name="Giacomo Pati" email="giacomo@apache.org" id="GP"/>
   <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
   <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
   <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
@@ -32,10 +40,13 @@
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Peter Royal" email="proyal@apache.org" id="PAR"/>
   <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
+  <person name="Andrew Savory" email="asavory@apache.org" id="AS"/>
+  <person name="Diana Shannon" email="shannon@apache.org" id="DS"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
   <person name="Jeff Turner" email="jefft@apache.org" id="JT"/>
   <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
+  <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
   </developers>
   
   <todo>
@@ -146,6 +157,12 @@
    </actions>
 
    <actions priority="medium">
+    <action context="code">
+      XMLize exception handling so that error pages can become more
+      semantically meaningful. Currently all XSP compilation errors are
+      stored in a single string. With XMLized exceptions we could display
+      especially XSP errors much nicer.
+    </action>
 
     <action context="code">
       Remove all useless blank strings in XSP-generated code that hinder performances.
@@ -171,6 +188,18 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="SW" type="add">
+    'handle-errors' sections in the sitemap now do not have an implicit
+    generator: any generator can now be used, whereas previously it was
+    implied and produced an XML representation of the error).
+    <br/>
+    To ensure backwards compatibility, 'handle-errors' sections can have a
+    'type' attribute to continue the implicit-generator behaviour, but are
+    now to be considered as deprecated.
+    <br/>
+    A new ExceptionSelector is also available to drive the error-handling
+    pipeline constuction depending on the error type.
+  </action>
   <action dev="TC" type="update">
     EsqlConnection no longer implements java.sql.Connection.
     No jvm dependency any more.
