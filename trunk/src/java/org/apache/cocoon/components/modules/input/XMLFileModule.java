@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.4 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.5 2003/05/03 11:17:44 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
@@ -199,7 +199,20 @@ public class XMLFileModule extends AbstractJXPathModule
 
 
     /**
-     * @param config a <code>Configuration</code> value
+     * Static (cocoon.xconf) configuration.
+     * Configuration is expected to be of the form:
+     * &lt;...>
+     *   &lt;reloadable>true|<b>false</b>&lt;/reloadable>
+     *   &lt;cacheable><b>true</b>|false&lt;/cacheable>
+     *   &lt;file src="<i>src1</i>" reloadable="true|<b>false</b>" cacheable="<b>true</b>|false"/>
+     *   &lt;file src="<i>src2</i>" reloadable="true|<b>false</b>" cacheable="<b>true</b>|false"/>
+     *   ...
+     * &lt;/...>
+     * Each &lt;file> pre-loads an XML DOM for querying. Typically only one
+     * &lt;file> is specified, and its <i>src</i> is used as a default if not
+     * overridden in the {@link #getContextObject dynamic configuration}
+     *
+     * @param config a <code>Configuration</code> value, as described above.
      * @exception ConfigurationException if an error occurs
      */
     public void configure(Configuration config) throws ConfigurationException {
@@ -231,22 +244,49 @@ public class XMLFileModule extends AbstractJXPathModule
     }
 
 
+    /**
+     * Get the DOM object that JXPath will operate on when evaluating
+     * attributes.  This DOM is loaded from a Source, specified in the
+     * modeConf, or (if modeConf is null) from the {@link #configure static
+     * configuration}.
+     * @param modeConf The dynamic configuration for the current operation. May
+     * be <code>null</code>, in which case static (cocoon.xconf) configuration
+     * is used.  Configuration is expected to have a &lt;file> child node, and
+     * be of the form:
+     * &lt;...>
+     *   &lt;file src="..." reloadable="true|false"/>
+     * &lt;/...>
+     * @param objectModel Object Model for the current module operation.
+     */
     protected Object getContextObject(Configuration modeConf,
                                       Map objectModel) throws ConfigurationException {
 
         String src = this.src;
         boolean reload = this.reloadAll;
         boolean cache = this.cacheAll;
-        
-        if (modeConf != null) 
-            src = modeConf.getChild("file").getAttribute("src",src);
+        boolean hasDynamicConf = false; // whether we have a <file src="..."> dynamic configuration
+        Configuration fileConf = null;  // the nested <file>, if any
+        if (modeConf != null) {
+            fileConf = modeConf.getChild("file", false);
+            if (fileConf == null) {
+                getLogger().error("Error: missing 'file' child element at "+modeConf.getLocation());
+                throw new ConfigurationException(
+                        "Error in dynamic configuration of XMLFileModule: " +
+                        "missing 'file' child element at " + 
+                        modeConf.getLocation());
+            }
+            hasDynamicConf = true;
+        }
+
+        if (hasDynamicConf) {
+            src = fileConf.getAttribute("src");
+        }
 
         if (this.documents == null) 
             this.documents = Collections.synchronizedMap(new HashMap());
 
         if (!this.documents.containsKey(src)) {
-            if (modeConf != null) {
-                final Configuration fileConf = modeConf.getChild("file");
+            if (hasDynamicConf) {
                 reload = fileConf.getAttributeAsBoolean("reloadable",reload);
                 cache = fileConf.getAttributeAsBoolean("cacheable",cache);
                 if (fileConf.getAttribute("cachable", null) != null) {
