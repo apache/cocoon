@@ -43,7 +43,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1 $ $Date: 2000-05-09 05:16:08 $ $Author: balld $
+ * @version CVS $Revision: 1.2 $ $Date: 2000-05-09 05:48:44 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -159,7 +159,7 @@ class XIncludeProcessorWorker {
 		if (uri != null && uri.equals(processor.XINCLUDE_NAMESPACE_URI) && name.equals(processor.XINCLUDE_INCLUDE_ELEMENT)) {
 			String href = element.getAttribute(processor.XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
 			String parse = element.getAttribute(processor.XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-			processXIncludeElement(document, element, href, parse);
+			processXIncludeElement(element, href, parse);
 		}
 		NodeList child_nodes = element.getElementsByTagName("*");
 		int length = child_nodes.getLength();
@@ -186,7 +186,7 @@ class XIncludeProcessorWorker {
 		current_xmlbase_uri = (URL)xmlbase_stack.pop();
 	}
 
-	void processXIncludeElement(Document document, Element element, String href, String parse) throws Exception {
+	void processXIncludeElement(Element element, String href, String parse) throws Exception {
 		if (debug) { System.err.println("Processing XInclude element: href="+href+", parse="+parse); }
 		String suffix;
 		int index = href.indexOf('#');
@@ -247,15 +247,20 @@ class XIncludeProcessorWorker {
 			} else {
 				throw new Exception("Unknown object type: "+object);
 			}
-			Document included_document = parser.parse(input);
+			Document included_document = null;
+			try {
+				included_document = parser.parse(input,false);
+			} catch (Exception e) {}
 			if (suffix.startsWith("xptr(") && suffix.endsWith(")")) {
-				String xpath = suffix.substring(6,suffix.length()-1);
+				String xpath = suffix.substring(5,suffix.length()-1);
 				if (debug) { System.err.println("XPath is "+xpath); }
 				NodeList list = XPathAPI.selectNodeList(included_document,xpath);
 				int length = list.getLength();
+				if (debug) { System.err.println("Found "+length+" nodes"); }
 				for (int i=0; i<length; i++) {
 					result_fragment.appendChild(document.importNode(list.item(i),true));
 				}
+				result_fragment.appendChild(document.importNode(included_document.getDocumentElement(),true));
 			} else {
 				result_fragment.appendChild(document.importNode(included_document.getDocumentElement(),true));
 			}
