@@ -152,10 +152,12 @@
         <param-value>/WEB-INF/log4j.xconf</param-value>
       </init-param>
     -->
+    
     <!--
       Allow reinstantiating (reloading) of the cocoon instance. If this is
       set to "yes" or "true", a new cocoon instance can be created using
-      the request parameter "cocoon-reload". Default is no for security reasons.
+      the request parameter "cocoon-reload". It also enables that Cocoon is 
+      reloaded when cocoon.xconf changes. Default is no for security reasons.
     -->
     <init-param>
       <param-name>allow-reload</param-name>
