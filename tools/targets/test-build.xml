@@ -169,4 +169,51 @@
          inheritRefs="false"
          target="prepare-anteater-tests"/>
   </target>
+
+
+
+  <!--+
+      | Clover tasks
+      +-->
+  <target name="clover">
+    <available property="clover.present"
+               classname="com.cortexeb.tools.clover.tasks.CloverTask">
+      <classpath refid="classpath"/>
+    </available>
+    <!-- echo message="Clover present: ${clover.present}"/ -->
+  </target>
+
+  <target name="clover.init" depends="clover" if="clover.present">
+    <taskdef resource="clovertasks"/>
+  </target>
+
+  <target name="clover.on" depends="clover.init" if="clover.present">
+    <!-- echo message="Clover is ON!"/ -->
+    <echo message="Clover is present? ${clover.present}"/>
+    <clover-setup initString="${build}/clover/coverage.db"
+                  tmpdir="${build}/clover/src"
+                  preserve="false"
+                  enabled="true"/>
+  </target>
+
+  <target name="clover.off" depends="clover.init" if="clover.present">
+    <!-- echo message="Clover is OFF!"/ -->
+    <clover-setup enabled="false"/>
+  </target>
+
+  <target name="clover.historypoint" depends="clover.init" if="clover.present">
+    <clover-historypoint historyDir="${build}/clover/history"/>
+  </target>
+
+  <target name="clover.report" depends="init, clover.on" if="clover.present">
+    <clover-report>
+      <current outfile="${build}/clover-report">
+        <format type="html"/>
+      </current>
+      <historical outfile="${build}/clover-history"
+                  historyDir="${build}/clover/history">
+        <format type="html"/>
+      </historical>
+    </clover-report>
+  </target>
 </project>

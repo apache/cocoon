@@ -21,7 +21,8 @@
     Samples Targets
   </description>
 
-  <target name="samples" depends="prepare" unless="internal.exclude.webapp.samples">
+  <target name="samples" depends="prepare, clover.off"
+          unless="internal.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
     <javac srcdir="${samples}"
