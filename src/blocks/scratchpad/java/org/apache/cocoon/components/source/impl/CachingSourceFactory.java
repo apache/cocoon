@@ -26,12 +26,14 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.Cache;
+import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -105,12 +107,22 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * </tr>
  * </tbody></table>
  *
- * @version CVS $Id: CachingSourceFactory.java,v 1.11 2004/06/11 12:18:23 vgritsenko Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.12 2004/07/01 14:24:36 unico Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory extends AbstractLogEnabled
 implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable, ThreadSafe
 {
+
+    // ---------------------------------------------------- Constants
+    
+    public static final String ASYNC_PARAM = "async";
+    public static final String FAILSAFE_PARAM = "failsafe";
+    public static final String CACHE_ROLE_PARAM = "cache-role";
+    public static final String REFRESHER_ROLE_PARAM = "refresher-role";
+    public static final String DEFAULT_EXPIRES_PARAM = "default-expires";
+
+    // ---------------------------------------------------- Instance variables
 
     /** Protocol prefix / factory name */
     private String scheme;
@@ -159,23 +171,23 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
         Parameters parameters = Parameters.fromConfiguration(configuration);
 
         // 'async' parameter
-        this.async = parameters.getParameterAsBoolean("async", false);
-
+        this.async = parameters.getParameterAsBoolean(ASYNC_PARAM, false);
+        
         // 'cache-role' parameter
-        this.cacheRole = parameters.getParameter("cache-role", Cache.ROLE);
+        this.cacheRole = parameters.getParameter(CACHE_ROLE_PARAM, Cache.ROLE);
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Using cache " + this.cacheRole);
         }
 
         // 'refresher-role' parameter
         if (this.async) {
-            this.refresherRole = parameters.getParameter("refresher-role", Refresher.ROLE);
+            this.refresherRole = parameters.getParameter(REFRESHER_ROLE_PARAM, Refresher.ROLE);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("Using refresher " + this.refresherRole);
             }
         }
 
-        this.defaultExpires = parameters.getParameterAsInteger("default-expires", -1);
+        this.defaultExpires = parameters.getParameterAsInteger(DEFAULT_EXPIRES_PARAM, -1);
     }
 
     /**
@@ -281,50 +293,91 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
             }
         }
 
-        int expires = params.getParameterAsInteger("cache-expires", -1);
-        if (expires == -1) {
-            expires = this.defaultExpires;
-            params.setParameter("cache-expires", String.valueOf(this.defaultExpires));
-        }
-        params.setParameter("cache-role", this.cacheRole);
+        int expires = params.getParameterAsInteger(CachingSource.CACHE_EXPIRES_PARAM, this.defaultExpires);
+        String cacheName = params.getParameter(CachingSource.CACHE_NAME_PARAM, null);
 
-        final Source wrappedSource = this.resolver.resolveURI(uri);
+        final CachingSource source = newCachingSource(this.resolver.resolveURI(uri),
+                                                      this.scheme,
+                                                      location,
+                                                      expires,
+                                                      cacheName,
+                                                      this.async,
+                                                      this.cache,
+                                                      getLogger(),
+                                                      manager);
+        
+        if (this.async && expires > 0) {
+
+            params.setParameter(CachingSource.CACHE_EXPIRES_PARAM, String.valueOf(expires));
+            params.setParameter(CachingSource.CACHE_NAME_PARAM, cacheName);
+            params.setParameter(CACHE_ROLE_PARAM, this.cacheRole);
+
+            // schedule it with the refresher
+            this.refresher.refresh(source.getCacheKey(),
+                                   source.getSourceURI(),
+                                   this.cacheRole,
+                                   params);
+        }
+        
+        return source;
+    }
+    
+    /**
+     * Factory method for creating a new CachingSource.
+     */
+    public static CachingSource newCachingSource(Source wrappedSource, 
+                                                 String scheme,
+                                                 String uri,
+                                                 int expires,
+                                                 String cacheName,
+                                                 boolean async,
+                                                 Cache cache,
+                                                 Logger logger,
+                                                 ServiceManager manager)
+    throws SourceException {
+        
         CachingSource source;
         if (wrappedSource instanceof TraversableSource) {
-            source = new TraversableCachingSource(scheme,
-                                                  location,
-                                                  (TraversableSource) wrappedSource,
-                                                  params,
-                                                  expires,
-                                                  this.async);
+            if (wrappedSource instanceof InspectableSource) {
+                source = new InspectableTraversableCachingSource(scheme,
+                                                                 uri,
+                                                                 (InspectableSource) wrappedSource,
+                                                                 expires,
+                                                                 cacheName,
+                                                                 async);
+            } else {
+                source = new TraversableCachingSource(scheme,
+                                                      uri,
+                                                      (TraversableSource) wrappedSource,
+                                                      expires,
+                                                      cacheName,
+                                                      async);
+            }
         } else {
             source = new CachingSource(scheme,
-                                       location,
+                                       uri,
                                        wrappedSource,
-                                       params,
                                        expires,
-                                       this.async);
+                                       cacheName,
+                                       async);
         }
 
         // set the required components directly for speed
-        source.cache = this.cache;
-        source.resolver = this.resolver;
-        source.refresher = this.refresher;
+        source.cache = cache;
 
-        ContainerUtil.enableLogging(source, this.getLogger());
+        ContainerUtil.enableLogging(source, logger);
         try {
             // call selected avalon lifecycle interfaces. Mmmh.
-            ContainerUtil.service(source, this.manager);
+            ContainerUtil.service(source, manager);
             ContainerUtil.initialize(source);
         } catch (ServiceException se) {
             throw new SourceException("Unable to initialize source.", se);
         } catch (Exception e) {
             throw new SourceException("Unable to initialize source.", e);
         }
-
         return source;
     }
-
+    
     /**
      * Release a {@link Source} object.
      */
@@ -333,6 +386,7 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
             if (this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug("Releasing source " + source.getURI());
             }
+            resolver.release(((CachingSource) source).source);
             ((CachingSource) source).dispose();
         }
     }
