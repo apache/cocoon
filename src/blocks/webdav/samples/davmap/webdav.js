@@ -73,3 +73,34 @@ function move() {
     cocoon.log.error("status/500",{message:""});
   }
 }
+
+function options() {
+  cocoon.response.setHeader("DAV","1");
+  var options = "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PUT" 
+              + ",MKCOL,PROPFIND,PROPPATCH,COPY,MOVE";
+  cocoon.response.setHeader("Allow",options);
+}
+
+/*
+function getDestination() {
+  var destination = cocoon.request.getHeader("Destination");
+  var index = destination.indexOf('://');
+  if (index != -1) {
+    destination = destination.substring(index+3);
+    index = destination.indexOf('/');
+    if (index != -1) {
+      destination = destination.substring(index);
+    }
+  }
+  return destination;
+}
+
+function getUserAgent() {
+  var userAgent = cocoon.request.getHeader("User-Agent");
+  var index = userAgent.indexOf('/');
+  if (index != -1) {
+    return userAgent.substring(0,index);
+  }
+  return userAgent;
+}
+*/
