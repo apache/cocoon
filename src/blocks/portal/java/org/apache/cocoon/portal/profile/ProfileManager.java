@@ -51,7 +51,6 @@
 package org.apache.cocoon.portal.profile;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.cocoon.portal.aspect.AspectStatus;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 
@@ -60,17 +59,11 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.1 2003/05/07 06:22:28 cziegeler Exp $
+ * @version CVS $Id: ProfileManager.java,v 1.2 2003/05/22 12:32:47 cziegeler Exp $
  */
 public interface ProfileManager extends Component {
     
     String ROLE = ProfileManager.class.getName();
-    
-    String REQUEST_STATUS = "request.status";
-    
-    String SESSION_STATUS = "session.status";
-    
-    String PERSISTENT_SESSION_STATUS = "session.status.persistent";
     
     Layout getPortalLayout(String key);
     
@@ -78,8 +71,4 @@ public interface ProfileManager extends Component {
     
     CopletInstanceData getCopletInstanceData(String copletID);
     
-    AspectStatus getAspectStatus(Class statusClass, String mode, String key);
-    
-    // FIXME - rename this
-    void setAspectStatus(String mode, String key, AspectStatus status);
 }

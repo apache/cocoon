@@ -51,6 +51,7 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -62,9 +63,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.aspect.AspectStatus;
+import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.status.SizeableStatus;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -84,7 +85,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.5 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.6 2003/05/22 12:32:48 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -109,10 +110,12 @@ public class SimpleProfileManager
     public Layout getPortalLayout(String key) {
         PortalService service = null;
         LayoutFactory factory = null;
+        CopletFactory copletFactory = null;
         
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
             factory = (LayoutFactory) this.manager.lookup(LayoutFactory.ROLE);
+            copletFactory = (CopletFactory) this.manager.lookup(CopletFactory.ROLE);
             
             if ( null == key ) {
                 Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT");
@@ -153,6 +156,12 @@ public class SimpleProfileManager
 				copletDataManager.update(copletBaseDataManager);
 			}
 			lastLoaded = loaded;
+            // updating
+            Iterator i = copletDataManager.getCopletData().values().iterator();
+            while ( i.hasNext()) {
+                CopletData cd = (CopletData)i.next();
+                copletFactory.prepare(cd);
+            }
 
 			// load coplet instance data
 			map.put("profile", "copletinstancedata");
@@ -164,6 +173,12 @@ public class SimpleProfileManager
 				copletInstanceDataManager.update(copletDataManager);
 			}
 			lastLoaded = loaded;
+            // updating
+            i = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+            while ( i.hasNext()) {
+                CopletInstanceData cid = (CopletInstanceData)i.next();
+                copletFactory.prepare(cid);
+            }
 
 			// load layout
 			map.put("profile", "layout");
@@ -185,6 +200,7 @@ public class SimpleProfileManager
         } finally {
             this.manager.release(service);
             this.manager.release((Component)factory);
+            this.manager.release((Component)copletFactory);
         }
     }
     
@@ -559,60 +575,8 @@ public class SimpleProfileManager
                     throw new ProcessingException("CopletInstanceData " + copletLayout.getCopletInstanceData().getId() + " has no coplet data.");
                 }
             }
-            this.setAspectStatus(ProfileManager.SESSION_STATUS, copletLayout.getCopletInstanceData().getCopletData().getId(), new SizeableStatus());
         }
         layout.setParent(item);
     }
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.profile.ProfileManager#getLayoutStatus(java.lang.String)
-	 */
-	public AspectStatus getAspectStatus(Class type, String mode, String key) {
-        if ( ProfileManager.REQUEST_STATUS.equals( mode )) {
-            PortalService service = null;
-            try {
-                service = (PortalService) this.manager.lookup(PortalService.ROLE);
-                return (AspectStatus)service.getTemporaryAttribute(type.getName()+"."+key);
-            } catch (ComponentException ce) {
-                // ignore
-                return null;
-            } finally {
-                this.manager.release( service );
-            }
-        } else {
-            // FIXME implement session mode
-            Map stati = (Map) this.layoutStati.get( type.getName() );
-            return (stati == null ? null : (AspectStatus)stati.get(key));
-        }
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.profile.ProfileManager#setLayoutStatus(java.lang.String, org.apache.cocoon.portal.layout.LayoutStatus)
-	 */
-	public void setAspectStatus( String mode, String key, AspectStatus status) {
-        if ( ProfileManager.REQUEST_STATUS.equals( mode )) {
-            PortalService service = null;
-            try {
-                service = (PortalService) this.manager.lookup(PortalService.ROLE);
-                final String attribute = status.getClass().getName() + "." + key;
-                if (null == status) {
-                    service.removeTemporaryAttribute(attribute);
-                } else {
-                    service.setTemporaryAttribute(attribute, status);
-                }
-            } catch (ComponentException ce) {
-                // ignore
-            } finally {
-                this.manager.release( service );
-            }
-        } else {
-            // FIXME implement session mode
-            Map stati = (Map) this.layoutStati.get( status.getClass().getName() );
-            if ( stati == null ) {
-                stati = new HashMap(5);
-                this.layoutStati.put( status.getClass().getName(), stati );
-            }
-            stati.put(key, status);
-        }
-	}
 
 }

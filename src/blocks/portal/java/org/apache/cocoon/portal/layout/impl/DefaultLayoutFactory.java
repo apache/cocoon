@@ -83,7 +83,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.5 2003/05/21 13:06:00 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.6 2003/05/22 12:32:46 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -106,8 +106,13 @@ public class DefaultLayoutFactory
         if ( layoutsConf != null ) {
             for(int i=0; i < layoutsConf.length; i++ ) {
                 DefaultLayoutDescription desc = new DefaultLayoutDescription();
-                // TODO unique name test
-                desc.setName(layoutsConf[i].getAttribute("name"));
+                final String name = layoutsConf[i].getAttribute("name");
+                
+                // unique test
+                if ( this.layouts.get(name) != null) {
+                    throw new ConfigurationException("Layout name must be unique. Double definition for " + name);
+                }
+                desc.setName(name);
                 desc.setClassName(layoutsConf[i].getAttribute("class"));        
                 desc.setRendererName(layoutsConf[i].getAttribute("renderer")); 
                 
@@ -120,7 +125,8 @@ public class DefaultLayoutFactory
                         adesc.setName(aspectsConf[m].getAttribute("name"));
                         adesc.setPersistence(aspectsConf[m].getAttribute("store"));
                         adesc.setAutoCreate(aspectsConf[m].getAttributeAsBoolean("auto-create", false));
-                        desc.addAspect( adesc );
+                        adesc.setDefaultValue(aspectsConf[m].getAttribute("value", null));
+                        desc.addAspectDescription( adesc );
                     }
                 }
                 DefaultAspectDataHandler handler = new DefaultAspectDataHandler(desc, this.storeSelector);

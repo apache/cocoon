@@ -62,7 +62,7 @@ import org.apache.cocoon.util.ClassUtils;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AspectUtil.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AspectUtil.java,v 1.2 2003/05/22 12:32:47 cziegeler Exp $
  */
 public class AspectUtil { 
 
@@ -75,8 +75,13 @@ public class AspectUtil {
             Class clazz = ClassUtils.loadClass(desc.getClassName());
             if ( clazz.getName().startsWith("java.lang.")) {
                 Constructor constructor = clazz.getConstructor(new Class[] {String.class});
-                return constructor.newInstance(new String[] {"0"});
+                String value = (desc.getDefaultValue() == null ? "0" : desc.getDefaultValue());
+                return constructor.newInstance(new String[] {value});
             } else {
+                if ( desc.getDefaultValue() != null ) {
+                    Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                    return constructor.newInstance(new String[] {desc.getDefaultValue()});
+                }
                 return clazz.newInstance();
             }
         } catch (Exception ignore) {

@@ -50,16 +50,14 @@
 */
 package org.apache.cocoon.portal.coplet.status;
 
-import org.apache.cocoon.portal.aspect.AspectStatus;
-
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingStatus.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @version CVS $Id: SizingStatus.java,v 1.2 2003/05/22 12:32:46 cziegeler Exp $
  */
-public final class SizingStatus implements AspectStatus {
+public final class SizingStatus {
 
     public final static int STATUS_MINIMIZED = 0;
     public final static int STATUS_MAXIMIZED = 1;

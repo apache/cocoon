@@ -47,35 +47,53 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
-package org.apache.cocoon.portal.layout.aspect;
+ */
+package org.apache.cocoon.portal.coplet.impl;
 
-import org.apache.cocoon.portal.aspect.AspectStatus;
-import org.apache.cocoon.portal.layout.Layout;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.cocoon.portal.aspect.AspectDescription;
+import org.apache.cocoon.portal.factory.impl.AbstractProducibleDescription;
+
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * A description of a coplet data or a coplet instance data
  * 
- * @version CVS $Id: CompositeLayoutStatus.java,v 1.1 2003/05/08 13:38:10 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: DefaultCopletDescription.java,v 1.1 2003/05/22 12:32:47 cziegeler Exp $
  */
-public class CompositeLayoutStatus implements AspectStatus {
+public class DefaultCopletDescription
+    extends AbstractProducibleDescription  {
 
-    protected Layout maxpageLayout;
-    
+    protected List instanceAspects = new ArrayList();
+
     /**
-     * @return Layout
+     * @return
      */
-    public Layout getMaxpageLayout() {
-        return this.maxpageLayout;
+    public List getInstanceAspectDescriptions() {
+        return this.instanceAspects;
+    }
+
+    public void addInstanceAspectDescription(AspectDescription aspect) {
+        this.instanceAspects.add(aspect);
     }
 
     /**
-     * Sets the maxpageLayout.
-     * @param maxpageLayout The maxpageLayout to set
+     * Return the description for an aspect
      */
-    public void setMaxpageLayout(Layout maxpageLayout) {
-        this.maxpageLayout = maxpageLayout;
+    public AspectDescription getInstanceAspectDescription(String name) {
+        AspectDescription desc = null;
+        Iterator i = this.instanceAspects.iterator();
+        while (desc == null && i.hasNext() ) {
+            AspectDescription current = (AspectDescription)i.next();
+            if ( name.equals(current.getName())) {
+                desc = current;
+            }
+        }
+        return desc;
     }
+
 }

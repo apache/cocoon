@@ -63,7 +63,7 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractAspectalizableDescription.java,v 1.2 2003/05/21 13:06:02 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizableDescription.java,v 1.3 2003/05/22 12:32:47 cziegeler Exp $
  */
 public abstract class AbstractAspectalizableDescription
     implements AspectalizableDescription  {
@@ -77,7 +77,7 @@ public abstract class AbstractAspectalizableDescription
         return this.aspects;
     }
 
-    public void addAspect(AspectDescription aspect) {
+    public void addAspectDescription(AspectDescription aspect) {
         this.aspects.add(aspect);
     }
     

@@ -52,10 +52,8 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.aspect.FrameStatus;
 import org.apache.cocoon.portal.layout.impl.FrameLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -64,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameAspect.java,v 1.3 2003/05/08 13:38:11 cziegeler Exp $
+ * @version CVS $Id: FrameAspect.java,v 1.4 2003/05/22 12:32:46 cziegeler Exp $
  */
 public class FrameAspect extends AbstractCIncludeAspect {
 
@@ -75,9 +73,8 @@ public class FrameAspect extends AbstractCIncludeAspect {
             throw new SAXException("Wrong layout type, FrameLayout expected: " + layout.getClass().getName());
         }
 
-        FrameStatus status =
-            (FrameStatus) this.getStatus(FrameStatus.class, ProfileManager.REQUEST_STATUS, layout.getId());
-        String source = (status == null ? null : status.getLink());
+        String status = (String)layout.getAspectData("frame");
+        String source = (status == null ? null : status);
         if (source == null) {
             source = ((FrameLayout) layout).getSource();
         }

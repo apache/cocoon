@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.cocoon.portal.factory.impl.AbstractProducible;
 import org.apache.cocoon.portal.util.DeltaApplicable;
 
 /**
@@ -62,19 +63,16 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.4 2003/05/21 13:06:01 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.5 2003/05/22 12:32:47 cziegeler Exp $
  */
 public class CopletData 
+extends AbstractProducible
 implements DeltaApplicable {
-
-    protected String id;
 
     protected String title;
 
     protected Boolean maxpageable;
     
-    protected Boolean removable;
-
     protected CopletBaseData copletBaseData;
 
     protected Map attributes = new HashMap();
@@ -83,14 +81,6 @@ implements DeltaApplicable {
      * Constructor
      */
     public CopletData() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String name) {
-        this.id = name;
     }
 
     /**
@@ -105,18 +95,6 @@ implements DeltaApplicable {
     	}
     }
 
-    /**
-     * Returns the removable as boolean. If it has not been set "true" is returned.
-     * @return boolean
-     */
-    public boolean isRemovable() {
-		if (this.removable == null) {
-			return true;
-		} else {
-			return this.removable.booleanValue();
-		}
-    }
-
 	/**
 	  * Returns the maxpageable as Boolean.
 	  * @return boolean
@@ -125,28 +103,12 @@ implements DeltaApplicable {
 		return this.maxpageable;
 	}
 
-	/**
-	 * Returns the removable as Boolean.
-	 * @return boolean
-	 */
-	public Boolean getRemovable() {
-		return this.removable;
-	}
-
     /**
      * Sets the maxpageable.
      * @param maxpageable The maxpageable to set
      */
     public void setMaxpageable(boolean maxpageable) {
         this.maxpageable = new Boolean(maxpageable);
-    }
-
-    /**
-     * Sets the removable.
-     * @param removable The removable to set
-     */
-    public void setRemovable(boolean removable) {
-        this.removable = new Boolean(removable);
     }
 
     /**
@@ -204,10 +166,6 @@ implements DeltaApplicable {
 		if (maxpageable != null)
 			this.maxpageable = maxpageable;
 		
-		Boolean removable = data.removable;
-		if (removable != null)
-			this.removable = removable;
-
 		String title = data.getTitle();
 		if (title != null)
 			this.setTitle(title);

@@ -55,16 +55,14 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.aspect.AspectStatus;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: AbstractAspect.java,v 1.2 2003/05/22 12:32:46 cziegeler Exp $
  */
 public abstract class AbstractAspect
     extends AbstractLogEnabled
@@ -79,20 +77,4 @@ public abstract class AbstractAspect
         this.manager = componentManager;
     }
 
-    /**
-     * Get the layout status
-     */
-    protected AspectStatus getStatus(Class type, String mode, String key) {
-        ProfileManager profileManager = null;
-        try {
-            profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-            return profileManager.getAspectStatus(type, mode, key);
-        } catch (ComponentException ce) {
-            // ignore
-        } finally {
-            this.manager.release(profileManager);
-        }
-        return null;
-    }
-    
 }
