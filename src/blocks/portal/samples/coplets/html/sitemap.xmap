@@ -19,6 +19,16 @@
 <map:pipelines>
     
     <map:pipeline>	
+        <map:match pattern="app-coplet">
+            <map:generate src="envelope.xml"/>
+            <map:transform type="portal-proxy">
+              <map:parameter name="envelope-tag" value="envelope"/>
+            </map:transform>
+            <map:transform type="xslt" src="cleanhtml.xsl"/>
+            <map:transform type="portal-html-linktoeventlink"/>
+            <map:serialize type="xml"/>
+        </map:match>
+
         <map:match pattern="application">
             <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
             <map:transform type="xslt" src="cleanhtml.xsl"/>

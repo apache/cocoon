@@ -20,10 +20,11 @@
 <!-- 
 This stylesheet simply removes the surrounding html and body tag
 
-$Id: cleanhtml.xsl,v 1.2 2004/03/06 02:26:04 antonio Exp $ 
+$Id$ 
 
 -->
 <xsl:template match="/" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <xsl:apply-templates select="envelope/xhtml:html/xhtml:body"/>
   <xsl:apply-templates select="xhtml:html/xhtml:body"/>
   <xsl:apply-templates select="html/body"/>
 </xsl:template>
