@@ -18,7 +18,10 @@ package org.apache.cocoon;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.core.container.StandaloneServiceSelector;
 import org.apache.cocoon.core.container.ContainerTestCase;
@@ -33,6 +36,10 @@ import org.apache.excalibur.source.impl.URLSourceFactory;
  * @version CVS $Id: SitemapComponentTestCase.java 55427 2004-10-24 11:38:37Z cziegeler $
  */
 public abstract class CocoonTestCase extends ContainerTestCase {
+
+    protected void addContext(DefaultContext context) {
+        context.put(Core.CONTEXT_SETTINGS, new Settings());
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
