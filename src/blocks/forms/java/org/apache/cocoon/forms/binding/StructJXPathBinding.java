@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: StructJXPathBinding.java,v 1.2 2004/04/12 14:05:08 tim Exp $
+ * @version CVS $Id: StructJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -54,7 +54,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Struct structWidget = (Struct)getWidget(frmModel, this.widgetId);
+        Struct structWidget = (Struct)selectWidget(frmModel, this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doLoad(structWidget, subContext);
         if (getLogger().isDebugEnabled()) {
@@ -68,7 +68,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Struct structWidget = (Struct)frmModel.getWidget(this.widgetId);
+        Struct structWidget = (Struct)selectWidget(frmModel, this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doSave(structWidget, subContext);
         if (getLogger().isDebugEnabled()) {

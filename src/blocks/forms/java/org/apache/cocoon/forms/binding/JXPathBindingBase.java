@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;
@@ -30,7 +31,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.2 2004/04/23 11:42:58 mpo Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -100,16 +101,33 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         return classBinding;
     }
 
-    protected Widget getWidget(Widget widget, String id) {
-        Widget childWidget = widget.getWidget(id);
-        if (childWidget != null) {
-            return childWidget;
-        } else {
+    /**
+     * Helper method that selects a child-widget with a given id from a parent.
+     *  
+     * @param parent co9ntaining the child-widget to return. 
+     * @param id of the childWidget to find, if this is <code>null</code> then the parent is returned.
+     * @return the selected widget
+     * 
+     * @throws a {@link RuntimeException} if the id is not null and points to a 
+     *   child-widget that cannot be found. 
+     */
+    protected Widget selectWidget(Widget parent, String id) {
+        if (id == null) return parent;
+        
+        Widget childWidget = null;
+        
+        if (parent instanceof ContainerWidget) {
+           childWidget = ((ContainerWidget) parent).getWidget(id);
+        }
+            
+        if (childWidget == null) {
             throw new RuntimeException(getClass().getName() + ": Widget \"" +
                     id + "\" does not exist in container \"" +
-                    widget.getFullyQualifiedId() + "\" (" +
-                    widget.getLocation() + ").");
+                    parent.getFullyQualifiedId() + "\" (" +
+                    parent.getLocation() + ").");
         }
+        
+        return childWidget;
     }
 
     /**

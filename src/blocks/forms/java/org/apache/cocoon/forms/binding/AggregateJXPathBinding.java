@@ -28,7 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: AggregateJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: AggregateJXPathBinding.java,v 1.2 2004/04/23 11:42:58 mpo Exp $
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -58,7 +58,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
     public void doLoad(Widget frmModel,
             JXPathContext jxpc) throws BindingException {
         AggregateField aggregate =
-            (AggregateField)frmModel.getWidget(this.widgetId);
+            (AggregateField)selectWidget(frmModel, this.widgetId);
         JXPathContext subContext =
             jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doLoad(aggregate, subContext);
@@ -76,7 +76,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
     public void doSave(Widget frmModel,
             JXPathContext jxpc) throws BindingException {
         AggregateField aggregate =
-            (AggregateField) frmModel.getWidget(this.widgetId);
+            (AggregateField)selectWidget(frmModel, this.widgetId);
         JXPathContext subContext =
             jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doSave(aggregate, subContext);

@@ -15,13 +15,13 @@
  */
 package org.apache.cocoon.forms.binding;
 
+import java.util.Locale;
+
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
-
-import java.util.Locale;
 
 /**
  * ValueJXPathBinding provides an implementation of a {@link Binding}
@@ -29,7 +29,7 @@ import java.util.Locale;
  * (pointing to an attribute or text-node) to and from a specific CForms
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.3 2004/03/12 03:31:39 joerg Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.4 2004/04/23 11:42:58 mpo Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -80,7 +80,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      * context to the CForms-form-widget specified in this object.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Widget widget = frmModel.getWidget(this.fieldId);
+        Widget widget = selectWidget(frmModel, this.fieldId);
         if (widget == null) {
             throw new BindingException("The widget with the ID [" + this.fieldId
                     + "] referenced in the binding does not exist in the form definition.");
@@ -106,7 +106,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      * wrapped in a jxpath context
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Widget widget = frmModel.getWidget(this.fieldId);
+        Widget widget = selectWidget(frmModel, this.fieldId);
         Object value = widget.getValue();
         if (value != null && convertor != null) {
             value = convertor.convertToString(value, convertorLocale, null);
