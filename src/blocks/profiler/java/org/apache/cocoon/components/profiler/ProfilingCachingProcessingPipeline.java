@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingCachingProcessingPipeline.java,v 1.7 2004/03/23 19:48:43 stephan Exp $
+ * @version CVS $Id$
  */
 public class ProfilingCachingProcessingPipeline
   extends CachingProcessingPipeline {
@@ -211,25 +211,7 @@ public class ProfilingCachingProcessingPipeline
             }
             this.data.setSetupTime(index++, System.currentTimeMillis()-time);
 
-            String mimeType = this.serializer.getMimeType();
-
-            if (mimeType!=null) {
-                // we have a mimeType from the component itself
-                environment.setContentType(mimeType);
-            } else if (serializerMimeType!=null) {
-                // there was a mimeType specified in the sitemap pipeline
-                environment.setContentType(serializerMimeType);
-            } else if (this.sitemapSerializerMimeType!=null) {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType(this.sitemapSerializerMimeType);
-            } else {
-                // No mimeType available
-                String message = "Unable to determine MIME type for "+
-                                 environment.getURIPrefix()+"/"+
-                                 environment.getURI();
-
-                throw new ProcessingException(message);
-            }
+            this.setMimeTypeForSerializer(environment);
         } catch (SAXException e) {
             throw new ProcessingException("Could not setup pipeline.", e);
         } catch (IOException e) {
