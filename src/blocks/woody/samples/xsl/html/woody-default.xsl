@@ -32,7 +32,9 @@
   <xsl:template name="field">
     <xsl:param name="fieldelement"/>
     <input name="{$fieldelement/@id}" value="{$fieldelement/wi:value}">
-      <xsl:copy-of select="wi:styling/@*"/>
+      <xsl:if test="wi:styling">
+        <xsl:copy-of select="wi:styling/@*"/>
+      </xsl:if>
     </input>
   </xsl:template>
 
