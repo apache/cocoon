@@ -47,6 +47,14 @@
       <append>false</append>
     </cocoon>
 
+    <cocoon id="handled-errors">
+      <filename>${context-root}/WEB-INF/logs/handled-errors.log</filename>
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+
     <cocoon id="access">
       <filename>${context-root}/WEB-INF/logs/access.log</filename>
       <format type="cocoon">
@@ -133,6 +141,12 @@
     <category name="sitemap" log-level="@loglevel@">
       <log-target id-ref="sitemap"/>
       <log-target id-ref="error"/>
+
+      <category name="handled-errors" log-level="@loglevel@">
+        <!-- Exceptions that will be handled by a sitemap errorhandler are
+             logged to this target. -->
+        <log-target id-ref="handled-errors"/>
+      </category>
     </category>
 
     <category name="access" log-level="@loglevel@">
