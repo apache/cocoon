@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.15 2003/10/08 21:40:43 upayavira Exp $
+:: $Id: cocoon.bat,v 1.16 2003/10/18 18:52:18 upayavira Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -54,7 +54,7 @@ set COCOON_HOME=.
 :gotHome
 
 if not "%COCOON_LIB%" == "" goto gotLib
-set COCOON_LIB=%COCOON_HOME%\build\webapp\WEB-INF\lib
+set COCOON_LIB=%COCOON_HOME%\build\webapp\WEB-INF\lib;%COCOON_HOME%\build\webapp\WEB-INF\classes
 :gotLib
 
 if not "%JETTY_PORT%" == "" goto gotJettyPort
