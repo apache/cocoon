@@ -38,7 +38,7 @@
      </p>
       <p>The flow script is suspended after the page is generated and the whole execution stack saved in the WebContinuation object returned from this function. </p>
      <p> <code>uri</code> is the relative URL of the page to be sent back to the client. <code>bean</code> is a context object which can be accessed inside this page to extract various values and place them in the generated page.</p>
-     <p><code>timeToLive</code> is the time to live for the continuation created.</p>
+     <p><code>timeToLive</code> is the time to live in milliseconds for the continuation created.</p>
      <p>The return value is the <link href="#WebContinuation">continuation</link> object.</p>
     </s2>
   </s1>
@@ -48,31 +48,31 @@
     <s3 title="request">
     <p>The current Cocoon request:</p>
     <p>
-    <em>Property</em> <code>[org.apache.cocoon.environment.Request] request</code>
+    <em>Property</em> <code>[<link href="../../../api/java/org/apache/cocoon/environment/Request.html">org.apache.cocoon.environment.Request</link>] request</code>
     </p>
     </s3>
     <s3 title="response">
     <p>The current Cocoon response:</p>
     <p>
-    <em>Property</em> <code>[org.apache.cocoon.environment.Response] response</code>
+    <em>Property</em> <code>[<link href="../../../api/java/org/apache/cocoon/environment/Response.html">org.apache.cocoon.environment.Response</link>] response</code>
     </p>
     </s3>
     <s3 title="session">
     <p>The current Cocoon session:</p>
     <p>
-    <em>Property</em> <code>[org.apache.cocoon.environment.Session] session</code>
+    <em>Property</em> <code>[<link href="../../../api/java/org/apache/cocoon/environment/Session.html">org.apache.cocoon.environment.Session</link>] session</code>
     </p>
     </s3>
     <s3 title="context">
     <p>The current Cocoon application context:</p>
     <p>
-    <em>Property</em> <code>[org.apache.cocoon.environment.Context] context</code>
+    <em>Property</em> <code>[<link href="../../../api/java/org/apache/cocoon/environment/Context.html">org.apache.cocoon.environment.Context</link>] context</code>
     </p>
     </s3>
     <s3 title="environment">
     <p>The current Cocoon environment:</p>
     <p>
-    <em>Property</em> <code>[org.apache.cocoon.environment.Environment] environment</code>
+    <em>Property</em> <code>[<link href="../../../api/java/org/apache/cocoon/environment/Environment.html">org.apache.cocoon.environment.Environment</link>] environment</code>
     </p>
     </s3>
     <s3 title="componentManager">
@@ -84,7 +84,7 @@
     <s3 title="parameters">
     <p>Any parameters passed to the script by the Sitemap:</p>
     <p>
-    <em>Property</em> <code>[Array] parameters</code>
+    <em>Property</em> <code>[Array [org.apache.avalon.framework.parameters.Parameters]] parameters</code>
     </p>
     <p>The <code>cocoon</code> object also provides the following functions:</p>
     </s3>
