@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.116 2003/10/25 20:05:10 ghoward Exp $
+    | CVS $Id: jars.xml,v 1.117 2003/11/01 10:18:14 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -301,7 +301,7 @@
     </description>
     <ant-target>jar</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xalan-2.5.1.jar</lib>
+    <lib>endorsed/xalan-2.5.2.jar</lib>
     <homepage>http://xml.apache.org/xalan/</homepage>
   </file>
 
@@ -892,7 +892,7 @@
 	    for Java Objects against relational databases.
 	</description>
 	<used-by>OJB</used-by>
-	<lib>ojb/lib/db-ojb-1.0.rc4-20031017.jar</lib>
+	<lib>ojb/lib/db-ojb-1.0.rc4-20031028.jar</lib>
 	<homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
