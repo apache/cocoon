@@ -61,7 +61,7 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.validation.Violation;
 import org.apache.cocoon.components.xmlform.Form;
@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
  * @author Torsten Curdt <tcurdt@dff.st>, March 2002
  * @author Simon Price <price@bristol.ac.uk>, September 2002
- * @version CVS $Id: XMLFormTransformer.java,v 1.4 2003/05/07 11:36:56 cziegeler Exp $
+ * @version CVS $Id: XMLFormTransformer.java,v 1.5 2003/05/18 16:58:27 vgritsenko Exp $
  */
 public class XMLFormTransformer extends AbstractSAXTransformer {
 
@@ -503,7 +503,7 @@ public class XMLFormTransformer extends AbstractSAXTransformer {
 
                         if (continuation!=null) {
                             WebContinuation kont = 
-				Flow.getWebContinuation(objectModel);
+				FlowHelper.getWebContinuation(objectModel);
 
                             if (kont != null) {
                                 int level = 0;
