@@ -44,13 +44,13 @@ CHANGE HISTORY:
   19991124 Added "fork" element for window forking behavior. (SM)
   19991124 Added "img-inline" element to separate from "img". (SM)
   19991129 Removed "affiliation" from "author". (SM)
-  19991129 Made "author" empty and moved "name|email" as attributes (SM)
-  19991215 Simplified table section (SM)
-  19991215 Changed "img-block" in more friendly "figure" (SM)
-  20000125 Added the "icon" image (SM)
-  20000126 Allowed "anchor" in all levels (SM)
-  20000404 Removed the "role" attribute from common-xxx.att (SM)
-  20000606 Allowed nested markup tags (SM)
+  19991129 Made "author" empty and moved "name|email" as attributes. (SM)
+  19991215 Simplified table section. (SM)
+  19991215 Changed "img-block" in more friendly "figure". (SM)
+  20000125 Added the "icon" image. (SM)
+  20000126 Allowed "anchor" in all levels. (SM)
+  20000404 Removed the "role" attribute from common-xxx.att. (SM)
+  20000815 Allowed "code" inside "strong" and "em". (SM)
 
 COPYRIGHT:
   Copyright (c) 1999-2000 The Apache Software Foundation.
@@ -244,24 +244,24 @@ COPYRIGHT:
     <!-- Phrase Markup -->
     <!-- ==================================================== -->
 
+    <!-- Code (typically monospaced) -->
+    <!ELEMENT code (%text;)>
+    <!ATTLIST code %common.att;>
+
     <!-- Strong (typically bold) -->
-    <!ELEMENT strong (%text;|%markup;)*>
+    <!ELEMENT strong (%text;|code)*>
     <!ATTLIST strong %common.att;>
 
     <!-- Emphasis (typically italic) -->
-    <!ELEMENT em (%text;|%markup;)*>
+    <!ELEMENT em (%text;|code)*>
     <!ATTLIST em %common.att;>
 
-    <!-- Code (typically monospaced) -->
-    <!ELEMENT code (%text;|%markup;)*>
-    <!ATTLIST code %common.att;>
-
     <!-- Superscript (typically smaller and higher) -->
-    <!ELEMENT sup (%text;|%markup;)*>
+    <!ELEMENT sup (%text;)>
     <!ATTLIST sup %common.att;>
 
     <!-- Subscript (typically smaller and lower) -->
-    <!ELEMENT sub (%text;|%markup;)*>
+    <!ELEMENT sub (%text;)>
     <!ATTLIST sub %common.att;>
 
     <!-- FIXME (SM): should we add these HTML 4.0 markups
@@ -289,8 +289,7 @@ COPYRIGHT:
 
     <!-- Hard window replacing link (equivalent of <a ... target="_top">) -->
     <!ELEMENT jump (%link-content.mix;)*>
-    <!ATTLIST jump anchor CDATA #IMPLIED
-                   %common.att;
+    <!ATTLIST jump %common.att;
                    %xlink-simple.att;
                    %xlink-user-new.att;>
 
