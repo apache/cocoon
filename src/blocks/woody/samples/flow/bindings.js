@@ -146,6 +146,9 @@ function createBeanForSample(backendType, sampleCode) {
  * Finds the sample specific XML file to bind to and parses it into a DOM Document.
  */
 function createXMLBean(sampleCode) {
+	// note if you want to toss around with the XML model (e.g. sample 02lenient)
+	// then you should do that by editing the files: ../forms/binding/*-data.xml
+
 	var uri = "forms/binding/" + sampleCode +"-data.xml";
 	print("Using the XML data file at " + uri);
 
@@ -203,12 +206,9 @@ function createJSBeanFor02lenient() {
     var contexts = ["one","two","three"];	  
 	for(var i=0; i<contexts.length; i++) {
 	    bean[contexts[i]] = new Object();
-        // to see the runtime effect of non-lenient binding
-        // swap the following line from comment to code 
+        // using javascript beans seem to survive even non lenient binding
+        // so you can do here what you want, the bean itself seems to be leninet?
         //bean[contexts[i]]["breakingField"] = "present";
-        
-        //IMPORTANT: nothing changes! 
-        // looks like we have become too lenient?
     }
 	return bean;
 }
@@ -218,15 +218,16 @@ function createJSBeanFor02lenient() {
  */ 
 function createJavaBeanFor02lenient() {
 	var bean = new Packages.java.util.HashMap();
-    var contexts = ["one","two","three"];	  
+	// to see the runtime effect of non-lenient binding
+	// remove/replace the 'one' in the following list:
+    var contexts = ["one","two","three"];	  // only the 'one' context is required by non-lenient binding
 	for(var i=0; i<contexts.length; i++) {
         // to see the runtime effect of non-lenient binding
         // swap the following 2 lines from comment to code 
-//	    var subBean = new Packages.org.apache.cocoon.woody.samples.bindings.LenientOKBean("init");
-	    var subBean = new Packages.org.apache.cocoon.woody.samples.bindings.LenientNotOKBean("init");
-
-        //IMPORTANT: nothing changes! 
-        // looks like we have become too lenient?
+	    var subBean = new Packages.org.apache.cocoon.woody.samples.bindings.LenientOKBean("init");
+//	    var subBean = new Packages.org.apache.cocoon.woody.samples.bindings.LenientNotOKBean("init");
+	    
+	    // the NotOkBean does not have a getBreakingField() required by the non-lenient binding
 
 	    bean.put(contexts[i], subBean);
     }
