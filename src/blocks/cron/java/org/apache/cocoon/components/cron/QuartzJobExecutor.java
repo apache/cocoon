@@ -52,7 +52,7 @@ public class QuartzJobExecutor implements Job {
     public void execute(final JobExecutionContext context)
     throws JobExecutionException {
         final JobDataMap data = context.getJobDetail().getJobDataMap();
-        data.put(QuartzJobScheduler.DATA_MAP_JOB_EXECUTION_CONTEXT, context);
+        // data.put(QuartzJobScheduler.DATA_MAP_JOB_EXECUTION_CONTEXT, context);
 
         final Logger logger = (Logger)data.get(QuartzJobScheduler.DATA_MAP_LOGGER);
         final String name = (String)data.get(QuartzJobScheduler.DATA_MAP_NAME);
@@ -61,8 +61,7 @@ public class QuartzJobExecutor implements Job {
 
         if (!canRunConcurrently) {
             Boolean isRunning = (Boolean)data.get(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING);
-
-            if ((null != isRunning) && isRunning.booleanValue()) {
+            if (Boolean.TRUE.equals(isRunning)) {
                 logger.warn("Cron job name '" + name +
                             " already running but configured to not allow concurrent runs. Will discard this scheduled run");
                 return;
@@ -70,7 +69,7 @@ public class QuartzJobExecutor implements Job {
         }
 
         if (logger.isInfoEnabled()) {
-            logger.info("Scheduling cron job named '" + name + "'");
+            logger.info("Executing cron job named '" + name + "'");
         }
 
         Context appContext = (Context) data.get(QuartzJobScheduler.DATA_MAP_CONTEXT);
@@ -78,8 +77,7 @@ public class QuartzJobExecutor implements Job {
         org.apache.cocoon.environment.Context envContext;
         try {
         	envContext = (org.apache.cocoon.environment.Context) appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-        }
-        catch (ContextException e) {
+        } catch (ContextException e) {
         	throw new JobExecutionException(e);
         }
 
@@ -132,10 +130,10 @@ public class QuartzJobExecutor implements Job {
                 logger.error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
             }
         } catch (final Throwable t) {
-            logger.error("Cron job name '" + name + " died.", t);
+            logger.error("Cron job name '" + name + "' died.", t);
 
             if (t instanceof JobExecutionException) {
-                throw (JobExecutionException)t;
+                throw (JobExecutionException) t;
             }
         } finally {
             data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);

@@ -307,6 +307,13 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="fix">
+     Cron block: JobScheduler's fireJob method now supports jobs calling Cocoon
+     pipelines.
+   </action>
+   <action dev="VG" type="fix">
+     Allow recursive Flow invocations with processPipelineTo.
+   </action>
    <action dev="CZ" type="update">
      Cache the mime-type of readers and serializers.
    </action>

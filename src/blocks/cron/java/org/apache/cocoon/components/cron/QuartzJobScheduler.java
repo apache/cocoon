@@ -46,11 +46,14 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.jdbcjobstore.InvalidConfigurationException;
 import org.quartz.impl.jdbcjobstore.JobStoreSupport;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.spi.JobStore;
+import org.quartz.spi.TriggerFiredBundle;
 import org.quartz.utils.ConnectionProvider;
 import org.quartz.utils.DBConnectionManager;
 import org.quartz.utils.JNDIConnectionProvider;
@@ -115,8 +118,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     /** Map key for additional Object Map */
     static final String DATA_MAP_OBJECTMAP = "QuartzJobScheduler.Map";
 
-    /** Map key for the last JobExecutionContext */
-    static final String DATA_MAP_JOB_EXECUTION_CONTEXT = "QuartzJobScheduler.JobExecutionContext";
+    /* Map key for the last JobExecutionContext
+    static final String DATA_MAP_JOB_EXECUTION_CONTEXT = "QuartzJobScheduler.JobExecutionContext"; */
 
     /** Map key for the run status */
     static final String DATA_MAP_KEY_ISRUNNING = "QuartzJobExecutor.isRunning";
@@ -537,23 +540,16 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     throws CascadingException {
         try {
             final JobDetail jobdetail = scheduler.getJobDetail(name, DEFAULT_QUARTZ_JOB_GROUP);
-
             if (jobdetail != null) {
                 removeJob(name);
             }
-        } catch (final SchedulerException se) {
+        } catch (final SchedulerException ignored) {
         }
 
-        jobDataMap.put(DATA_MAP_NAME, name);
-        jobDataMap.put(DATA_MAP_LOGGER, getLogger());
-        jobDataMap.put(DATA_MAP_CONTEXT, this.context);
-        jobDataMap.put(DATA_MAP_MANAGER, this.manager);
-        jobDataMap.put(DATA_MAP_RUN_CONCURRENT, new Boolean(canRunConcurrently));
-
+        initDataMap(jobDataMap, name, canRunConcurrently);
         if (null != params) {
             jobDataMap.put(DATA_MAP_PARAMETERS, params);
         }
-
         if (null != objects) {
             jobDataMap.put(DATA_MAP_OBJECTMAP, objects);
         }
@@ -578,6 +574,15 @@ public class QuartzJobScheduler extends AbstractLogEnabled
                 getLogger().debug("Next scheduled time: " + trigger.getNextFireTime());
             }
         }
+    }
+
+    private JobDataMap initDataMap(JobDataMap jobDataMap, String jobName, boolean concurent) {
+        jobDataMap.put(DATA_MAP_NAME, jobName);
+        jobDataMap.put(DATA_MAP_LOGGER, getLogger());
+        jobDataMap.put(DATA_MAP_CONTEXT, this.context);
+        jobDataMap.put(DATA_MAP_MANAGER, this.manager);
+        jobDataMap.put(DATA_MAP_RUN_CONCURRENT, concurent? Boolean.TRUE: Boolean.FALSE);
+        return jobDataMap;
     }
 
     /**
@@ -755,16 +760,32 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     private boolean fireJob(final String name, final Object job) {
         try {
             if (job instanceof CronJob) {
+                JobDataMap jobDataMap = new JobDataMap();
+                jobDataMap.put(DATA_MAP_OBJECT, job);
+                initDataMap(jobDataMap, name, true);
+
+                JobDetail detail = new JobDetail(name, DEFAULT_QUARTZ_JOB_GROUP, QuartzJobExecutor.class);
+                detail.setJobDataMap(jobDataMap);
+
+                TriggerFiredBundle trigger = new TriggerFiredBundle(detail, null, null, false, null, null, null, null);
+
+                final QuartzJobExecutor executor = new QuartzJobExecutor();
+                final JobExecutionContext context = new JobExecutionContext(this.scheduler, trigger, executor);
+
                 this.executor.execute(new Runnable() {
                         public void run() {
-                            ((CronJob)job).execute(name);
+                            // ((CronJob)job).execute(name);
+                            try {
+                                executor.execute(context);
+                            } catch (JobExecutionException e) {
+                                getLogger().error("Job '" + job + "' died.", e);
+                            }
                         }
                     });
             } else if (job instanceof Runnable) {
                 this.executor.execute((Runnable)job);
             } else {
-                getLogger().error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
-
+                getLogger().error("Job named '" + name + "' is of invalid class: " + job.getClass().getName());
                 return false;
             }
 
