@@ -2464,6 +2464,10 @@
           e.g. "Transformer" => "Tr" or delete the word entirely.
           In the generated */book.xml files.
         </li>
+        <li>
+          Monitor the email discussion on the cocoon-dev mailing list:
+          <link href="http://thread.gmane.org/gmane.text.xml.cocoon.devel/44203">review of sitemap component documentation</link>
+        </li>
 <!--
         <li>
         </li>
