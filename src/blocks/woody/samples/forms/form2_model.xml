@@ -82,13 +82,28 @@
     <wd:field id="sex">
       <wd:label>Sex</wd:label>
       <wd:datatype base="enum">
-      	<wd:convertor type="enum">
+        <wd:convertor type="enum">
           <wd:enum>org.apache.cocoon.woody.samples.Sex</wd:enum>
-      	</wd:convertor>
+        </wd:convertor>
       </wd:datatype>
       <wd:selection-list type="enum" class="org.apache.cocoon.woody.samples.Sex"/>
     </wd:field>
   
+    <wd:multivaluefield id="drinks">
+      <wd:label>Indicate which 2 of the following drinks you'd like to receive:</wd:label>
+      <wd:datatype base="string"/>
+      <wd:validation>
+        <wd:value-count exact="2"/>
+      </wd:validation>
+      <wd:selection-list>
+        <wd:item value="Maes"/>
+        <wd:item value="Jupiler"/>
+        <wd:item value="Leffe"/>
+        <wd:item value="Hoegaarden"/>
+        <wd:item value="Coca Cola"/>
+      </wd:selection-list>
+    </wd:multivaluefield>
+
     <wd:repeater id="contacts">
       <wd:widgets>
         <wd:output id="id">

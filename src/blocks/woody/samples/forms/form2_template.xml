@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+      xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
   <title>Sample form</title>
   <content>
     <p>This form is used to illustrate the Woody binding framework. The binding
@@ -9,8 +10,7 @@
       <li>the email address is marked in the binding as "read-only", meaning it
         will only be bound from bean/xml to form, but not in the other
         direction. So you won't see it changed in the bean or the XML.</li>
-      <li>The binding doesn't support all widget types yet (e.g. the
-        multivaluefield is currently not yet supported).</li>
+      <li>The binding doesn't support all widget types yet.</li>
       <li>Note how, in the XML binding, the date is formatted according XML
         Schema date format in the XML, while it is displayed in another format
         to the user, and is stored in the form model as a Java Date
@@ -50,6 +50,14 @@
         <tr>
           <td valign="top"><wt:widget-label id="sex"/></td>
           <td valign="top"><wt:widget id="sex"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="drinks"/></td>
+          <td valign="top">
+            <wt:widget id="drinks">
+              <wi:styling list-type="listbox" listbox-size="4"/>
+            </wt:widget>
+          </td>
         </tr>
       </table>
 

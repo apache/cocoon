@@ -5,15 +5,15 @@
     |   - and form_model file
      -->
 <wb:context 
-  xmlns:wb="http://apache.org/cocoon/woody/binding/1.0" 
-  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0" 
-	path="/data/wrapper/context" >
+            xmlns:wb="http://apache.org/cocoon/woody/binding/1.0" 
+            xmlns:wd="http://apache.org/cocoon/woody/definition/1.0" 
+            path="/data/wrapper/context" >
 
   <wb:context path="info">
-  	<!-- the email value will not be saved because of the @direction="load" -->
+    <!-- the email value will not be saved because of the @direction="load" -->
     <wb:value id="email"   path="email"   direction="load"/>
 
-		<!-- jxpath binds to nodes as well as to attributes -->
+    <!-- jxpath binds to nodes as well as to attributes -->
     <wb:value id="number" path="number/@value">
       <!-- for non-string datatypes, a convertor must be specified. These are
       the same convertors as can be used in form definitions, but require an
@@ -25,9 +25,9 @@
       <wd:convertor datatype="boolean"/>
     </wb:value>
 
-	  <!-- one entry field in the client maps through aggregate fields -->
+    <!-- one entry field in the client maps through aggregate fields -->
     <wb:aggregate id="phone" path="phone" >
-    	<!-- to multiple fields in the XML file -->
+      <!-- to multiple fields in the XML file -->
       <wb:value id="number" path="number" />
       <wb:value id="zone"   path="zone"   />
       <wb:value id="cntr"   path="@cntr"  />
@@ -38,7 +38,7 @@
   
   <wb:value id="ipaddress" path="ipaddress">
     <wb:on-update>
-    	<!-- if the value has changed, the attribute will be set -->
+      <!-- if the value has changed, the attribute will be set -->
       <wb:set-attribute name="changed" value="true"/>
     </wb:on-update>
   </wb:value>
@@ -51,6 +51,7 @@
     </wd:convertor>
   </wb:value>
 
+  <wb:multi-value id="drinks" parent-path="drinks" row-path="drink"/>
 
   <!-- repeater requires unique identification mechanism of the row-nodes -->
   <wb:repeater id="contacts"
@@ -67,7 +68,7 @@
          as a consequence it cannot have dependent children or predicates -->
 
     <wb:on-bind>
-    	<!-- executed on updates AND right after the insert -->
+        <!-- executed on updates AND right after the insert -->
       <wb:value id="firstname" path="firstname" />
       <wb:value id="lastname"  path="lastname"  />
       <wb:value id="phone"     path="phone/@nr" />
@@ -75,8 +76,8 @@
     </wb:on-bind>
 
     <wb:on-delete-row>
-    	<!-- chose on of these to test -->
-    	<!--
+        <!-- chose on of these to test -->
+        <!--
       <wb:set-attribute name="row-state" value="deleted" />
       -->
       <wb:delete-node />
@@ -88,10 +89,10 @@
       attribute on the insert-node element pointing to an external source
       to retrieve the template from. -->
       <wb:insert-node>
-      	<!-- template inserted by the binding for new rows (mapping new nodes) -->
+        <!-- template inserted by the binding for new rows (mapping new nodes) -->
         <contact id="" row-state="new">
           <firstname/><lastname/><phone nr=""/><email/>
-        </contact>      	
+        </contact>              
       </wb:insert-node>
     </wb:on-insert-row>
   </wb:repeater>
